@@ -33,7 +33,7 @@ def collapse_provider(provider_yaml: ProviderYaml) -> int:
                 continue
             elif child_model.prices != parent_model.prices:
                 continue
-            elif child_model.batch_prices != parent_model.batch_prices:
+            elif child_model.price_variants != parent_model.price_variants:
                 continue
 
             # prices are the same and parent_model's id matches the start of the child_model's id

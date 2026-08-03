@@ -142,13 +142,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 1.6,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 0.4,
-          cache_write_mtok: 0.5,
-          cache_read_mtok: 0.04,
-          output_mtok: 2,
-          cache_write_1h_mtok: 0.8,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.4,
+              cache_write_mtok: 0.5,
+              cache_read_mtok: 0.04,
+              output_mtok: 2,
+              cache_write_1h_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-5-sonnet',
@@ -176,13 +183,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 1.5,
-          cache_write_mtok: 1.875,
-          cache_read_mtok: 0.15,
-          output_mtok: 7.5,
-          cache_write_1h_mtok: 3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_write_mtok: 1.875,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+              cache_write_1h_mtok: 3,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-7-sonnet-latest',
@@ -216,13 +230,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 1.5,
-          cache_write_mtok: 1.875,
-          cache_read_mtok: 0.15,
-          output_mtok: 7.5,
-          cache_write_1h_mtok: 3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_write_mtok: 1.875,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+              cache_write_1h_mtok: 3,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-haiku',
@@ -241,13 +262,20 @@ export const data: Provider[] = [
           output_mtok: 1.25,
           cache_write_1h_mtok: 0.5,
         },
-        batch_prices: {
-          input_mtok: 0.125,
-          cache_write_mtok: 0.15,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.625,
-          cache_write_1h_mtok: 0.25,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_write_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.625,
+              cache_write_1h_mtok: 0.25,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-opus-latest',
@@ -267,13 +295,20 @@ export const data: Provider[] = [
           output_mtok: 75,
           cache_write_1h_mtok: 30,
         },
-        batch_prices: {
-          input_mtok: 7.5,
-          cache_write_mtok: 9.375,
-          cache_read_mtok: 0.75,
-          output_mtok: 37.5,
-          cache_write_1h_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 7.5,
+              cache_write_mtok: 9.375,
+              cache_read_mtok: 0.75,
+              output_mtok: 37.5,
+              cache_write_1h_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-sonnet',
@@ -312,13 +347,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 20,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
-          cache_write_1h_mtok: 10,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+              cache_write_1h_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'claude-haiku-4-5',
@@ -351,13 +393,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 2,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 0.5,
-          cache_write_mtok: 0.625,
-          cache_read_mtok: 0.05,
-          output_mtok: 2.5,
-          cache_write_1h_mtok: 1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_write_mtok: 0.625,
+              cache_read_mtok: 0.05,
+              output_mtok: 2.5,
+              cache_write_1h_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-0',
@@ -390,13 +439,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 30,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 7.5,
-          cache_write_mtok: 9.375,
-          cache_read_mtok: 0.75,
-          output_mtok: 37.5,
-          cache_write_1h_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 7.5,
+              cache_write_mtok: 9.375,
+              cache_read_mtok: 0.75,
+              output_mtok: 37.5,
+              cache_write_1h_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-1',
@@ -423,13 +479,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 30,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 7.5,
-          cache_write_mtok: 9.375,
-          cache_read_mtok: 0.75,
-          output_mtok: 37.5,
-          cache_write_1h_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 7.5,
+              cache_write_mtok: 9.375,
+              cache_read_mtok: 0.75,
+              output_mtok: 37.5,
+              cache_write_1h_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-5',
@@ -462,13 +525,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_write_mtok: 3.125,
-          cache_read_mtok: 0.25,
-          output_mtok: 12.5,
-          cache_write_1h_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.25,
+              output_mtok: 12.5,
+              cache_write_1h_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-6',
@@ -559,8 +629,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: {
                 base: 2.5,
@@ -610,6 +683,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2026-03-13',
               type: 'start_date',
@@ -655,13 +731,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_write_mtok: 3.125,
-          cache_read_mtok: 0.25,
-          output_mtok: 12.5,
-          cache_write_1h_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.25,
+              output_mtok: 12.5,
+              cache_write_1h_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-8',
@@ -694,13 +777,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_write_mtok: 3.125,
-          cache_read_mtok: 0.25,
-          output_mtok: 12.5,
-          cache_write_1h_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.25,
+              output_mtok: 12.5,
+              cache_write_1h_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-5',
@@ -733,13 +823,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_write_mtok: 3.125,
-          cache_read_mtok: 0.25,
-          output_mtok: 12.5,
-          cache_write_1h_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.25,
+              output_mtok: 12.5,
+              cache_write_1h_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'claude-sonnet-4-0',
@@ -775,13 +872,20 @@ export const data: Provider[] = [
           cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: 1.5,
-          cache_write_mtok: 1.875,
-          cache_read_mtok: 0.15,
-          output_mtok: 7.5,
-          cache_write_1h_mtok: 3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_write_mtok: 1.875,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+              cache_write_1h_mtok: 3,
+            },
+          },
+        ],
       },
       {
         id: 'claude-sonnet-4-5',
@@ -848,53 +952,60 @@ export const data: Provider[] = [
           },
           web_searches_kcount: 10,
         },
-        batch_prices: {
-          input_mtok: {
-            base: 1.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 3,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 3,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 1.875,
-            tiers: [
-              {
-                start: 200000,
-                price: 3.75,
+              cache_write_mtok: {
+                base: 1.875,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 3.75,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.15,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.3,
+              cache_read_mtok: {
+                base: 0.15,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.3,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 7.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 11.25,
+              output_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 11.25,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_1h_mtok: {
-            base: 3,
-            tiers: [
-              {
-                start: 200000,
-                price: 6,
+              cache_write_1h_mtok: {
+                base: 3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 6,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'claude-sonnet-4-6',
@@ -979,8 +1090,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: {
                 base: 1.5,
@@ -1030,6 +1144,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2026-03-13',
               type: 'start_date',
@@ -1093,8 +1210,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: 1,
               cache_write_mtok: 1.25,
@@ -1104,6 +1224,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2026-09-01',
               type: 'start_date',
@@ -5051,11 +5174,18 @@ export const data: Provider[] = [
           input_audio_mtok: 0.7,
           cache_audio_read_mtok: 0.175,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-          input_audio_mtok: 0.35,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.2,
+              input_audio_mtok: 0.35,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-2.0-flash-lite',
@@ -5070,10 +5200,17 @@ export const data: Provider[] = [
           input_mtok: 0.075,
           output_mtok: 0.3,
         },
-        batch_prices: {
-          input_mtok: 0.0375,
-          output_mtok: 0.15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.0375,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-2.5-flash',
@@ -5100,11 +5237,18 @@ export const data: Provider[] = [
           input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
         },
-        batch_prices: {
-          input_mtok: 0.15,
-          output_mtok: 1.25,
-          input_audio_mtok: 0.5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 1.25,
+              input_audio_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-2.5-flash-image',
@@ -5129,11 +5273,18 @@ export const data: Provider[] = [
           output_mtok: 2.5,
           output_image_mtok: 30,
         },
-        batch_prices: {
-          input_mtok: 0.15,
-          output_mtok: 1.25,
-          output_image_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 1.25,
+              output_image_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-2.5-flash-lite',
@@ -5158,11 +5309,18 @@ export const data: Provider[] = [
           input_audio_mtok: 0.3,
           cache_audio_read_mtok: 0.03,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-          input_audio_mtok: 0.15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.2,
+              input_audio_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-2.5-flash-preview',
@@ -5233,26 +5391,33 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 0.625,
-            tiers: [
-              {
-                start: 200000,
-                price: 1.25,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1.25,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 7.5,
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gemini-3-flash-preview',
@@ -5279,11 +5444,18 @@ export const data: Provider[] = [
           input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
         },
-        batch_prices: {
-          input_mtok: 0.25,
-          output_mtok: 1.5,
-          input_audio_mtok: 0.5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 1.5,
+              input_audio_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-image-preview',
@@ -5308,11 +5480,18 @@ export const data: Provider[] = [
           output_mtok: 12,
           output_image_mtok: 120,
         },
-        batch_prices: {
-          input_mtok: 1,
-          output_mtok: 6,
-          output_image_mtok: 60,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 6,
+              output_image_mtok: 60,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-preview',
@@ -5357,26 +5536,33 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 1,
-            tiers: [
-              {
-                start: 200000,
-                price: 2,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 6,
-            tiers: [
-              {
-                start: 200000,
-                price: 9,
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 9,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gemini-3.1-flash-image-preview',
@@ -5401,11 +5587,18 @@ export const data: Provider[] = [
           output_mtok: 3,
           output_image_mtok: 60,
         },
-        batch_prices: {
-          input_mtok: 0.25,
-          output_mtok: 1.5,
-          output_image_mtok: 30,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 1.5,
+              output_image_mtok: 30,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.1-flash-lite',
@@ -5431,13 +5624,20 @@ export const data: Provider[] = [
           input_audio_mtok: 0.5,
           cache_audio_read_mtok: 0.05,
         },
-        batch_prices: {
-          input_mtok: 0.125,
-          cache_read_mtok: 0.0125,
-          output_mtok: 0.75,
-          input_audio_mtok: 0.25,
-          cache_audio_read_mtok: 0.025,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 0.75,
+              input_audio_mtok: 0.25,
+              cache_audio_read_mtok: 0.025,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.1-flash-lite-image',
@@ -5452,11 +5652,18 @@ export const data: Provider[] = [
           output_mtok: 1.5,
           output_image_mtok: 30,
         },
-        batch_prices: {
-          input_mtok: 0.125,
-          output_mtok: 0.75,
-          output_image_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.125,
+              output_mtok: 0.75,
+              output_image_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.1-flash-live-preview',
@@ -5512,26 +5719,33 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 1,
-            tiers: [
-              {
-                start: 200000,
-                price: 2,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 6,
-            tiers: [
-              {
-                start: 200000,
-                price: 9,
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 9,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gemini-3.5-flash',
@@ -5559,11 +5773,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 9,
         },
-        batch_prices: {
-          input_mtok: 0.75,
-          cache_read_mtok: 0.075,
-          output_mtok: 4.5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 4.5,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.5-flash-lite',
@@ -5581,11 +5802,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.03,
           output_mtok: 2.5,
         },
-        batch_prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.02,
-          output_mtok: 1.25,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.02,
+              output_mtok: 1.25,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.6-flash',
@@ -5603,11 +5831,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 7.5,
         },
-        batch_prices: {
-          input_mtok: 0.75,
-          cache_read_mtok: 0.075,
-          output_mtok: 3.75,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-embedding-001',
@@ -5617,9 +5852,16 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.075,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-embedding-2',
@@ -5636,12 +5878,19 @@ export const data: Provider[] = [
           input_image_mtok: 0.45,
           input_video_mtok: 12,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          input_audio_mtok: 3.25,
-          input_image_mtok: 0.225,
-          input_video_mtok: 6,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.1,
+              input_audio_mtok: 3.25,
+              input_image_mtok: 0.225,
+              input_video_mtok: 6,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-flash-1.5',
@@ -6012,10 +6261,17 @@ export const data: Provider[] = [
           input_mtok: 0.05,
           output_mtok: 0.08,
         },
-        batch_prices: {
-          input_mtok: 0.025,
-          output_mtok: 0.04,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.025,
+              output_mtok: 0.04,
+            },
+          },
+        ],
       },
       {
         id: 'llama-3.2-11b-text-preview',
@@ -6097,10 +6353,17 @@ export const data: Provider[] = [
           input_mtok: 0.59,
           output_mtok: 0.79,
         },
-        batch_prices: {
-          input_mtok: 0.295,
-          output_mtok: 0.395,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.295,
+              output_mtok: 0.395,
+            },
+          },
+        ],
       },
       {
         id: 'llama-guard-3-8b',
@@ -6196,10 +6459,17 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 0.2,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.1,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-saba-24b',
@@ -6261,11 +6531,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.075,
           output_mtok: 0.6,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.075,
-          output_mtok: 0.3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.075,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'openai/gpt-oss-20b',
@@ -6280,11 +6557,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.0375,
           output_mtok: 0.3,
         },
-        batch_prices: {
-          input_mtok: 0.0375,
-          cache_read_mtok: 0.0375,
-          output_mtok: 0.15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.0375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-32b',
@@ -10620,10 +10904,17 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           output_mtok: 0.9,
         },
-        batch_prices: {
-          input_mtok: 0.15,
-          output_mtok: 0.45,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 0.45,
+            },
+          },
+        ],
       },
       {
         id: 'codestral-2508',
@@ -10638,11 +10929,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.03,
           output_mtok: 0.9,
         },
-        batch_prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.45,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.45,
+            },
+          },
+        ],
       },
       {
         id: 'devstral-2512',
@@ -10657,11 +10955,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.04,
           output_mtok: 2,
         },
-        batch_prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.02,
-          output_mtok: 1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.02,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'devstral-small',
@@ -10715,10 +11020,17 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           output_mtok: 1.5,
         },
-        batch_prices: {
-          input_mtok: 0.25,
-          output_mtok: 0.75,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 0.75,
+            },
+          },
+        ],
       },
       {
         id: 'ministral-14b-2512',
@@ -10733,11 +11045,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.02,
           output_mtok: 0.2,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.1,
+            },
+          },
+        ],
       },
       {
         id: 'ministral-3b',
@@ -10765,11 +11084,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.01,
           output_mtok: 0.1,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          cache_read_mtok: 0.005,
-          output_mtok: 0.05,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.005,
+              output_mtok: 0.05,
+            },
+          },
+        ],
       },
       {
         id: 'ministral-8b',
@@ -10783,10 +11109,17 @@ export const data: Provider[] = [
           input_mtok: 0.1,
           output_mtok: 1,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-7b',
@@ -10815,10 +11148,17 @@ export const data: Provider[] = [
           input_mtok: 0.1,
           output_mtok: 0.1,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.05,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.05,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-large',
@@ -10845,10 +11185,17 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 6,
         },
-        batch_prices: {
-          input_mtok: 1,
-          output_mtok: 3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 3,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-large-2512',
@@ -10863,11 +11210,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.05,
           output_mtok: 1.5,
         },
-        batch_prices: {
-          input_mtok: 0.25,
-          cache_read_mtok: 0.025,
-          output_mtok: 0.75,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.025,
+              output_mtok: 0.75,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-medium-3',
@@ -10881,10 +11235,17 @@ export const data: Provider[] = [
           input_mtok: 0.4,
           output_mtok: 2,
         },
-        batch_prices: {
-          input_mtok: 0.2,
-          output_mtok: 1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.2,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-nemo',
@@ -10971,11 +11332,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.015,
           output_mtok: 0.6,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.0075,
-          output_mtok: 0.3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.0075,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-small-3.1-24b-instruct',
@@ -11016,10 +11384,17 @@ export const data: Provider[] = [
           input_mtok: 0.1,
           output_mtok: 0.3,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-tiny',
@@ -12120,10 +12495,17 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           output_mtok: 1.5,
         },
-        batch_prices: {
-          input_mtok: 0.25,
-          output_mtok: 0.75,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 0.75,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-3.5-turbo-0613',
@@ -12220,10 +12602,17 @@ export const data: Provider[] = [
           input_mtok: 30,
           output_mtok: 60,
         },
-        batch_prices: {
-          input_mtok: 15,
-          output_mtok: 30,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 15,
+              output_mtok: 30,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4-32k',
@@ -12281,10 +12670,17 @@ export const data: Provider[] = [
           input_mtok: 10,
           output_mtok: 30,
         },
-        batch_prices: {
-          input_mtok: 5,
-          output_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 5,
+              output_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4-vision-preview',
@@ -12327,11 +12723,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 8,
         },
-        batch_prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.25,
-          output_mtok: 4,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.25,
+              output_mtok: 4,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-mini',
@@ -12354,11 +12757,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.1,
           output_mtok: 1.6,
         },
-        batch_prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.8,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-nano',
@@ -12381,11 +12791,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
         },
-        batch_prices: {
-          input_mtok: 0.05,
-          cache_read_mtok: 0.0125,
-          output_mtok: 0.2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.0125,
+              output_mtok: 0.2,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.5-preview',
@@ -12428,11 +12845,18 @@ export const data: Provider[] = [
           cache_read_mtok: 1.25,
           output_mtok: 10,
         },
-        batch_prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.625,
-          output_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1.25,
+              cache_read_mtok: 0.625,
+              output_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-audio-preview',
@@ -12474,11 +12898,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.075,
           output_mtok: 0.6,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.0375,
-          output_mtok: 0.3,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.0375,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-mini-2024-07-18.ft-',
@@ -12632,11 +13063,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.125,
           output_mtok: 10,
         },
-        batch_prices: {
-          input_mtok: 0.625,
-          cache_read_mtok: 0.0625,
-          output_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-image',
@@ -12682,11 +13120,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 2,
         },
-        batch_prices: {
-          input_mtok: 0.125,
-          cache_read_mtok: 0.0125,
-          output_mtok: 1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-nano',
@@ -12708,11 +13153,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.005,
           output_mtok: 0.4,
         },
-        batch_prices: {
-          input_mtok: 0.025,
-          cache_read_mtok: 0.0025,
-          output_mtok: 0.2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.025,
+              cache_read_mtok: 0.0025,
+              output_mtok: 0.2,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-pro',
@@ -12731,10 +13183,17 @@ export const data: Provider[] = [
           input_mtok: 15,
           output_mtok: 120,
         },
-        batch_prices: {
-          input_mtok: 7.5,
-          output_mtok: 60,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 7.5,
+              output_mtok: 60,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.1',
@@ -12786,11 +13245,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.125,
           output_mtok: 10,
         },
-        batch_prices: {
-          input_mtok: 0.625,
-          cache_read_mtok: 0.0625,
-          output_mtok: 5,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.1-codex-mini',
@@ -12862,11 +13328,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.175,
           output_mtok: 14,
         },
-        batch_prices: {
-          input_mtok: 0.875,
-          cache_read_mtok: 0.0875,
-          output_mtok: 7,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.875,
+              cache_read_mtok: 0.0875,
+              output_mtok: 7,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.2-pro',
@@ -12889,10 +13362,17 @@ export const data: Provider[] = [
           input_mtok: 21,
           output_mtok: 168,
         },
-        batch_prices: {
-          input_mtok: 10.5,
-          output_mtok: 84,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 10.5,
+              output_mtok: 84,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.3',
@@ -12998,35 +13478,42 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 1.25,
-            tiers: [
-              {
-                start: 272000,
-                price: 2.5,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.125,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.25,
+              cache_read_mtok: {
+                base: 0.125,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.25,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 7.5,
-            tiers: [
-              {
-                start: 272000,
-                price: 11.25,
+              output_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 11.25,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gpt-5.4-image-2',
@@ -13069,11 +13556,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.075,
           output_mtok: 4.5,
         },
-        batch_prices: {
-          input_mtok: 0.375,
-          cache_read_mtok: 0.0375,
-          output_mtok: 2.25,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 2.25,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-nano',
@@ -13101,11 +13595,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.02,
           output_mtok: 1.25,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.625,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.625,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-pro',
@@ -13148,26 +13649,33 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 272000,
-                price: 30,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 90,
-            tiers: [
-              {
-                start: 272000,
-                price: 135,
+              output_mtok: {
+                base: 90,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 135,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gpt-5.5',
@@ -13219,11 +13727,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 30,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.25,
-          output_mtok: 15,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5-pro',
@@ -13250,10 +13765,17 @@ export const data: Provider[] = [
           input_mtok: 30,
           output_mtok: 180,
         },
-        batch_prices: {
-          input_mtok: 15,
-          output_mtok: 90,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 15,
+              output_mtok: 90,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-luna',
@@ -13358,8 +13880,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: {
                 base: 0.5,
@@ -13400,6 +13925,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2026-07-30',
               type: 'start_date',
@@ -13506,44 +14034,51 @@ export const data: Provider[] = [
             ],
           },
         },
-        batch_prices: {
-          input_mtok: {
-            base: 2.5,
-            tiers: [
-              {
-                start: 272000,
-                price: 5,
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 3.125,
-            tiers: [
-              {
-                start: 272000,
-                price: 6.25,
+              cache_write_mtok: {
+                base: 3.125,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 6.25,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.25,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.5,
+              cache_read_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 272000,
-                price: 22.5,
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 22.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+        ],
       },
       {
         id: 'gpt-5.6-terra',
@@ -13648,8 +14183,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: {
                 base: 1.25,
@@ -13690,6 +14228,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2026-07-30',
               type: 'start_date',
@@ -13815,13 +14356,20 @@ export const data: Provider[] = [
           input_image_mtok: 10,
           cache_image_read_mtok: 2.5,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.625,
-          output_mtok: 20,
-          input_image_mtok: 5,
-          cache_image_read_mtok: 1.25,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.625,
+              output_mtok: 20,
+              input_image_mtok: 5,
+              cache_image_read_mtok: 1.25,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-image-1-mini',
@@ -13842,13 +14390,20 @@ export const data: Provider[] = [
           input_image_mtok: 2.5,
           cache_image_read_mtok: 0.25,
         },
-        batch_prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.1,
-          output_mtok: 4,
-          input_image_mtok: 1.25,
-          cache_image_read_mtok: 0.125,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.1,
+              output_mtok: 4,
+              input_image_mtok: 1.25,
+              cache_image_read_mtok: 0.125,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-image-1.5',
@@ -13873,14 +14428,21 @@ export const data: Provider[] = [
           cache_image_read_mtok: 2,
           output_image_mtok: 32,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.625,
-          output_mtok: 5,
-          input_image_mtok: 4,
-          cache_image_read_mtok: 1,
-          output_image_mtok: 16,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.625,
+              output_mtok: 5,
+              input_image_mtok: 4,
+              cache_image_read_mtok: 1,
+              output_image_mtok: 16,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-image-2',
@@ -13904,13 +14466,20 @@ export const data: Provider[] = [
           input_image_mtok: 8,
           cache_image_read_mtok: 2,
         },
-        batch_prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.625,
-          output_mtok: 15,
-          input_image_mtok: 4,
-          cache_image_read_mtok: 1,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.625,
+              output_mtok: 15,
+              input_image_mtok: 4,
+              cache_image_read_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-oss-120b',
@@ -14070,11 +14639,18 @@ export const data: Provider[] = [
           cache_read_mtok: 7.5,
           output_mtok: 60,
         },
-        batch_prices: {
-          input_mtok: 7.5,
-          cache_read_mtok: 3.75,
-          output_mtok: 30,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 7.5,
+              cache_read_mtok: 3.75,
+              output_mtok: 30,
+            },
+          },
+        ],
       },
       {
         id: 'o1-mini',
@@ -14096,11 +14672,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.55,
           output_mtok: 4.4,
         },
-        batch_prices: {
-          input_mtok: 0.55,
-          cache_read_mtok: 0.275,
-          output_mtok: 2.2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.275,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'o1-pro',
@@ -14121,10 +14704,17 @@ export const data: Provider[] = [
           input_mtok: 150,
           output_mtok: 600,
         },
-        batch_prices: {
-          input_mtok: 75,
-          output_mtok: 300,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 75,
+              output_mtok: 300,
+            },
+          },
+        ],
       },
       {
         id: 'o3',
@@ -14161,8 +14751,11 @@ export const data: Provider[] = [
             },
           },
         ],
-        batch_prices: [
+        price_variants: [
           {
+            when: {
+              service_tier: 'batch',
+            },
             prices: {
               input_mtok: 5,
               cache_read_mtok: 0.25,
@@ -14170,6 +14763,9 @@ export const data: Provider[] = [
             },
           },
           {
+            when: {
+              service_tier: 'batch',
+            },
             constraint: {
               start_date: '2025-06-10',
               type: 'start_date',
@@ -14223,11 +14819,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.55,
           output_mtok: 4.4,
         },
-        batch_prices: {
-          input_mtok: 0.55,
-          cache_read_mtok: 0.275,
-          output_mtok: 2.2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.275,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'o3-pro',
@@ -14248,10 +14851,17 @@ export const data: Provider[] = [
           input_mtok: 20,
           output_mtok: 80,
         },
-        batch_prices: {
-          input_mtok: 10,
-          output_mtok: 40,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 10,
+              output_mtok: 40,
+            },
+          },
+        ],
       },
       {
         id: 'o4-mini',
@@ -14275,11 +14885,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.275,
           output_mtok: 4.4,
         },
-        batch_prices: {
-          input_mtok: 0.55,
-          cache_read_mtok: 0.1375,
-          output_mtok: 2.2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.1375,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'o4-mini-deep-research',
@@ -24264,11 +24881,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.2,
           output_mtok: 2.5,
         },
-        batch_prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.16,
-          output_mtok: 2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.16,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'grok-4.20-multi-agent',
@@ -24314,11 +24938,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.2,
           output_mtok: 2.5,
         },
-        batch_prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.16,
-          output_mtok: 2,
-        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.16,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'grok-4.5',

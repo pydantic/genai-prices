@@ -6,6 +6,9 @@ import {
   ModelInfo,
   ModelPrice,
   ModelPriceCalculationResult,
+  PriceContext,
+  PriceContextValue,
+  PriceVariant,
   Provider,
   ProviderFindOptions,
   Tier,
@@ -159,23 +162,39 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
   return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date, batch = false): ModelPrice {
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext?: PriceContext): ModelPrice {
   const prices = resolveConditionalPrices(model.prices, timestamp, model.id)
-  // A JSON `null` and an empty list both mean the same thing as no batch prices at all, as in the Python engine.
-  if (!batch || model.batch_prices == null || (Array.isArray(model.batch_prices) && model.batch_prices.length === 0)) {
+  if (priceContext == null || model.price_variants == null) {
     return prices
   }
 
-  // Batch prices override the standard prices key by key; keys they omit stay at the standard rate.
-  const batchPrices = resolveConditionalPrices(model.batch_prices, timestamp, model.id)
+  const matching = model.price_variants.filter((variant) => whenMatches(variant.when, priceContext))
+  if (matching.length === 0) {
+    return prices
+  }
+
+  // A variant's prices override the standard ones key by key; keys they omit stay at the standard rate.
+  const variantPrices = resolveConditionalPrices(matching, timestamp, model.id)
   const merged: ModelPrice = { ...prices }
-  for (const [priceKey, price] of Object.entries(batchPrices)) {
+  for (const [priceKey, price] of Object.entries(variantPrices)) {
     if (price != null) merged[priceKey] = price
   }
   return merged
 }
 
-function resolveConditionalPrices(prices: ConditionalPrice[] | ModelPrice, timestamp: Date, modelId: string): ModelPrice {
+/**
+ * Whether every parameter of a variant matches the request's pricing context.
+ *
+ * Values are compared by type as well as by equality, so a `1` in the context never matches a `true`.
+ */
+function whenMatches(when: Record<string, PriceContextValue>, priceContext: PriceContext): boolean {
+  return Object.entries(when).every(([parameter, expected]) => {
+    const actual = priceContext[parameter]
+    return typeof actual === typeof expected && actual === expected
+  })
+}
+
+function resolveConditionalPrices(prices: (ConditionalPrice | PriceVariant)[] | ModelPrice, timestamp: Date, modelId: string): ModelPrice {
   if (!Array.isArray(prices)) {
     return prices
   }

@@ -238,10 +238,11 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
-    batch_prices:
-      input_mtok: 0.25
-      output_mtok: 0.75
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 0.75
   - id: gpt-3.5-turbo-0613
     match:
       equals: gpt-3.5-turbo-0613
@@ -308,10 +309,11 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 60
-    batch_prices:
-      input_mtok: 15
-      output_mtok: 30
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 15
+          output_mtok: 30
   - id: gpt-4-32k
     name: gpt 4
     description: >-
@@ -346,10 +348,11 @@ models:
     prices:
       input_mtok: 10
       output_mtok: 30
-    batch_prices:
-      input_mtok: 5
-      output_mtok: 15
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 5
+          output_mtok: 15
   - id: gpt-4-vision-preview
     name: gpt 4 vision
     description: GPT-4 Vision is a model that offers a balance between cost and performance.
@@ -378,11 +381,12 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
-    batch_prices:
-      input_mtok: 1
-      cache_read_mtok: 0.25
-      output_mtok: 4
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.25
+          output_mtok: 4
   - id: gpt-4.1-mini
     name: gpt 4.1 mini
     description: >-
@@ -399,11 +403,12 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.1
       output_mtok: 1.6
-    batch_prices:
-      input_mtok: 0.2
-      cache_read_mtok: 0.05
-      output_mtok: 0.8
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.2
+          cache_read_mtok: 0.05
+          output_mtok: 0.8
   - id: gpt-4.1-nano
     name: gpt 4.1 nano
     description: >-
@@ -420,11 +425,12 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
-    batch_prices:
-      input_mtok: 0.05
-      cache_read_mtok: 0.0125
-      output_mtok: 0.2
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.0125
+          output_mtok: 0.2
   - id: gpt-4.5-preview
     name: GPT-4.5 (Preview)
     description: >-
@@ -457,11 +463,12 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
-    batch_prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.625
-      output_mtok: 5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1.25
+          cache_read_mtok: 0.625
+          output_mtok: 5
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview
     description: Audio model for gpt-4o
@@ -494,11 +501,12 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
-    batch_prices:
-      input_mtok: 0.075
-      cache_read_mtok: 0.0375
-      output_mtok: 0.3
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0375
+          output_mtok: 0.3
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
     match:
@@ -611,11 +619,12 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
-    batch_prices:
-      input_mtok: 0.625
-      cache_read_mtok: 0.0625
-      output_mtok: 5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5
   - id: gpt-5-image
     match:
       equals: gpt-5-image
@@ -648,11 +657,12 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
-    batch_prices:
-      input_mtok: 0.125
-      cache_read_mtok: 0.0125
-      output_mtok: 1
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.125
+          cache_read_mtok: 0.0125
+          output_mtok: 1
   - id: gpt-5-nano
     name: GPT-5 nano
     description: >-
@@ -668,11 +678,12 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.005
       output_mtok: 0.4
-    batch_prices:
-      input_mtok: 0.025
-      cache_read_mtok: 0.0025
-      output_mtok: 0.2
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.025
+          cache_read_mtok: 0.0025
+          output_mtok: 0.2
   - id: gpt-5-pro
     match:
       or:
@@ -683,10 +694,11 @@ models:
     prices:
       input_mtok: 15
       output_mtok: 120
-    batch_prices:
-      input_mtok: 7.5
-      output_mtok: 60
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 7.5
+          output_mtok: 60
   - id: gpt-5.1
     name: GPT-5.1
     description: The best model for coding and agentic tasks across industries
@@ -712,11 +724,12 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
-    batch_prices:
-      input_mtok: 0.625
-      cache_read_mtok: 0.0625
-      output_mtok: 5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5
   - id: gpt-5.1-codex-mini
     name: GPT-5.1 Codex Mini
     collapse: false
@@ -756,11 +769,12 @@ models:
       input_mtok: 1.75
       cache_read_mtok: 0.175
       output_mtok: 14
-    batch_prices:
-      input_mtok: 0.875
-      cache_read_mtok: 0.0875
-      output_mtok: 7
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.875
+          cache_read_mtok: 0.0875
+          output_mtok: 7
   - id: gpt-5.2-pro
     description: Version of GPT-5.2 that produces smarter and more precise responses.
     match:
@@ -773,10 +787,11 @@ models:
     prices:
       input_mtok: 21
       output_mtok: 168
-    batch_prices:
-      input_mtok: 10.5
-      output_mtok: 84
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 10.5
+          output_mtok: 84
   - id: gpt-5.3
     name: GPT-5.3 Chat
     description: GPT-5.3 Instant model used in ChatGPT
@@ -839,23 +854,24 @@ models:
         tiers:
           - start: 272000
             price: 22.5
-    batch_prices:
-      input_mtok:
-        base: 1.25
-        tiers:
-          - start: 272000
-            price: 2.5
-      cache_read_mtok:
-        base: 0.125
-        tiers:
-          - start: 272000
-            price: 0.25
-      output_mtok:
-        base: 7.5
-        tiers:
-          - start: 272000
-            price: 11.25
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.125
+            tiers:
+              - start: 272000
+                price: 0.25
+          output_mtok:
+            base: 7.5
+            tiers:
+              - start: 272000
+                price: 11.25
   - id: gpt-5.4-image-2
     name: GPT-5.4 Image 2
     description: >-
@@ -887,11 +903,12 @@ models:
       input_mtok: 0.75
       cache_read_mtok: 0.075
       output_mtok: 4.5
-    batch_prices:
-      input_mtok: 0.375
-      cache_read_mtok: 0.0375
-      output_mtok: 2.25
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.375
+          cache_read_mtok: 0.0375
+          output_mtok: 2.25
   - id: gpt-5.4-nano
     name: GPT-5.4 nano
     description: Our cheapest GPT-5.4-class model for simple high-volume tasks.
@@ -908,11 +925,12 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 1.25
-    batch_prices:
-      input_mtok: 0.1
-      cache_read_mtok: 0.01
-      output_mtok: 0.625
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.1
+          cache_read_mtok: 0.01
+          output_mtok: 0.625
   - id: gpt-5.4-pro
     name: GPT-5.4 Pro
     description: Version of GPT-5.4 that produces smarter and more precise responses.
@@ -935,18 +953,19 @@ models:
         tiers:
           - start: 272000
             price: 270
-    batch_prices:
-      input_mtok:
-        base: 15
-        tiers:
-          - start: 272000
-            price: 30
-      output_mtok:
-        base: 90
-        tiers:
-          - start: 272000
-            price: 135
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 30
+          output_mtok:
+            base: 90
+            tiers:
+              - start: 272000
+                price: 135
   - id: gpt-5.5
     name: GPT-5.5
     description: The best model for coding and agentic tasks across industries
@@ -971,11 +990,12 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
-    batch_prices:
-      input_mtok: 2.5
-      cache_read_mtok: 0.25
-      output_mtok: 15
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 2.5
+          cache_read_mtok: 0.25
+          output_mtok: 15
   - id: gpt-5.5-pro
     name: GPT-5.5 Pro
     description: Version of GPT-5.5 that produces smarter and more precise responses.
@@ -990,10 +1010,11 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 180
-    batch_prices:
-      input_mtok: 15
-      output_mtok: 90
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 15
+          output_mtok: 90
   - id: gpt-5.6-luna
     name: GPT-5.6 Luna
     description: GPT-5.6 model optimized for cost-sensitive workloads.
@@ -1054,8 +1075,9 @@ models:
             tiers:
               - start: 272000
                 price: 1.8
-    batch_prices:
-      - prices:
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
           input_mtok:
             base: 0.5
             tiers:
@@ -1076,7 +1098,8 @@ models:
             tiers:
               - start: 272000
                 price: 4.5
-      - constraint:
+      - when: { service_tier: batch }
+        constraint:
           start_date: 2026-07-30
         prices:
           input_mtok:
@@ -1099,7 +1122,6 @@ models:
             tiers:
               - start: 272000
                 price: 0.9
-
   - id: gpt-5.6-sol
     name: GPT-5.6 Sol
     description: Frontier model for complex professional work.
@@ -1137,28 +1159,29 @@ models:
         tiers:
           - start: 272000
             price: 45
-    batch_prices:
-      input_mtok:
-        base: 2.5
-        tiers:
-          - start: 272000
-            price: 5
-      cache_write_mtok:
-        base: 3.125
-        tiers:
-          - start: 272000
-            price: 6.25
-      cache_read_mtok:
-        base: 0.25
-        tiers:
-          - start: 272000
-            price: 0.5
-      output_mtok:
-        base: 15
-        tiers:
-          - start: 272000
-            price: 22.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_write_mtok:
+            base: 3.125
+            tiers:
+              - start: 272000
+                price: 6.25
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 22.5
   - id: gpt-5.6-terra
     name: GPT-5.6 Terra
     description: GPT-5.6 model that balances intelligence and cost.
@@ -1219,8 +1242,9 @@ models:
             tiers:
               - start: 272000
                 price: 18
-    batch_prices:
-      - prices:
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
           input_mtok:
             base: 1.25
             tiers:
@@ -1241,7 +1265,8 @@ models:
             tiers:
               - start: 272000
                 price: 11.25
-      - constraint:
+      - when: { service_tier: batch }
+        constraint:
           start_date: 2026-07-30
         prices:
           input_mtok:
@@ -1264,7 +1289,6 @@ models:
             tiers:
               - start: 272000
                 price: 9
-
   - id: gpt-audio
     name: GPT Audio
     description: >-
@@ -1329,13 +1353,14 @@ models:
       # The model's sole supported output modality is image, so the aggregate
       # catch-all carries that modality's rate.
       output_mtok: 40
-    batch_prices:
-      input_mtok: 2.5
-      input_image_mtok: 5
-      cache_read_mtok: 0.625
-      cache_image_read_mtok: 1.25
-      output_mtok: 20
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 5
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1.25
+          output_mtok: 20
   - id: gpt-image-1-mini
     name: GPT Image 1 Mini
     description: >-
@@ -1353,13 +1378,14 @@ models:
       # The model's sole supported output modality is image, so the aggregate
       # catch-all carries that modality's rate.
       output_mtok: 8
-    batch_prices:
-      input_mtok: 1
-      input_image_mtok: 1.25
-      cache_read_mtok: 0.1
-      cache_image_read_mtok: 0.125
-      output_mtok: 4
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1
+          input_image_mtok: 1.25
+          cache_read_mtok: 0.1
+          cache_image_read_mtok: 0.125
+          output_mtok: 4
   - id: gpt-image-1.5
     name: GPT Image 1.5
     description: >-
@@ -1377,14 +1403,15 @@ models:
       cache_image_read_mtok: 2
       output_mtok: 10
       output_image_mtok: 32
-    batch_prices:
-      input_mtok: 2.5
-      input_image_mtok: 4
-      cache_read_mtok: 0.625
-      cache_image_read_mtok: 1
-      output_mtok: 5
-      output_image_mtok: 16
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1
+          output_mtok: 5
+          output_image_mtok: 16
   - id: gpt-image-2
     name: GPT Image 2
     description: >-
@@ -1403,13 +1430,14 @@ models:
       # The model's sole supported output modality is image, so the aggregate
       # catch-all carries that modality's rate.
       output_mtok: 30
-    batch_prices:
-      input_mtok: 2.5
-      input_image_mtok: 4
-      cache_read_mtok: 0.625
-      cache_image_read_mtok: 1
-      output_mtok: 15
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1
+          output_mtok: 15
   - id: gpt-oss-120b
     name: gpt-oss-120b
     description: >-
@@ -1528,11 +1556,12 @@ models:
       input_mtok: 15
       cache_read_mtok: 7.5
       output_mtok: 60
-    batch_prices:
-      input_mtok: 7.5
-      cache_read_mtok: 3.75
-      output_mtok: 30
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 7.5
+          cache_read_mtok: 3.75
+          output_mtok: 30
   - id: o1-mini
     name: o1 mini
     description: O1 Mini is a model that offers a balance between cost and performance.
@@ -1546,11 +1575,12 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
-    batch_prices:
-      input_mtok: 0.55
-      cache_read_mtok: 0.275
-      output_mtok: 2.2
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.275
+          output_mtok: 2.2
   - id: o1-pro
     name: o1-pro
     description: >-
@@ -1564,10 +1594,11 @@ models:
     prices:
       input_mtok: 150
       output_mtok: 600
-    batch_prices:
-      input_mtok: 75
-      output_mtok: 300
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 75
+          output_mtok: 300
   - id: o3
     name: o3
     description: >-
@@ -1592,18 +1623,19 @@ models:
           input_mtok: 2
           cache_read_mtok: 0.5
           output_mtok: 8
-    batch_prices:
-      - prices:
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
           input_mtok: 5
           cache_read_mtok: 0.25
           output_mtok: 20
-      - constraint:
+      - when: { service_tier: batch }
+        constraint:
           start_date: 2025-06-10
         prices:
           input_mtok: 1
           cache_read_mtok: 0.25
           output_mtok: 4
-
   - id: o3-deep-research
     match:
       or:
@@ -1629,11 +1661,12 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
-    batch_prices:
-      input_mtok: 0.55
-      cache_read_mtok: 0.275
-      output_mtok: 2.2
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.275
+          output_mtok: 2.2
   - id: o3-pro
     name: o3 Pro
     description: >-
@@ -1646,10 +1679,11 @@ models:
     prices:
       input_mtok: 20
       output_mtok: 80
-    batch_prices:
-      input_mtok: 10
-      output_mtok: 40
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 10
+          output_mtok: 40
   - id: o4-mini
     name: o4 Mini High
     description: >-
@@ -1664,11 +1698,12 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.275
       output_mtok: 4.4
-    batch_prices:
-      input_mtok: 0.55
-      cache_read_mtok: 0.1375
-      output_mtok: 2.2
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.1375
+          output_mtok: 2.2
   - id: o4-mini-deep-research
     match:
       or:

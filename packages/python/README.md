@@ -51,10 +51,9 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
-### Batch API prices
+### Pricing context (batch APIs and service tiers)
 
-Pass `batch=True` for requests made through a provider's batch API - OpenAI's Batch API, Anthropic's Message
-Batches API, Gemini's Batch mode, and so on. Most providers charge 50% of their standard rates for these:
+Some requests are priced differently depending on how they were served. Pass `price_context` to say which:
 
 ```python
 from genai_prices import Usage, calc_price
@@ -63,16 +62,24 @@ price_data = calc_price(
     Usage(input_tokens=1000, output_tokens=100),
     model_ref='claude-opus-5',
     provider_id='anthropic',
-    batch=True,
+    price_context={'service_tier': 'batch'},
 )
 ```
 
-Rates that a provider does not discount in batch mode - Anthropic's per-search web search fee, Google's
-cached input tokens on most models - stay at their standard price. Models we have no batch prices for are
-priced at their standard rates.
+`service_tier` covers the mutually exclusive rate cards - `batch` for a request made through the provider's
+batch API (OpenAI's Batch API, Anthropic's Message Batches API, Gemini's Batch mode), and in future `flex` or
+`priority` for the synchronous tiers. Anthropic and Groq report it under exactly that name in their usage
+payloads, so it can be passed straight through:
 
-`batch=True` is also accepted by `ExtractedUsage.calc_price()` and `ModelInfo.calc_price()`, and the CLI takes
-`--batch`.
+```python
+price = extracted_usage.calc_price(price_context={'service_tier': response['usage']['service_tier']})
+```
+
+`batch=True` is shorthand for `price_context={'service_tier': 'batch'}`, and the CLI takes `--batch`.
+
+A variant only replaces the prices it lists, so rates a provider does not discount - Anthropic's per-search
+web search fee, Google's cached input tokens on most models - stay at their standard price. A model with no
+prices for the given context is charged at its standard rates.
 
 ### `extract_usage`
 

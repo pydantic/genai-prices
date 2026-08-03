@@ -26,18 +26,23 @@ if (result) {
 }
 ```
 
-### Batch API prices
+### Pricing context (batch APIs and service tiers)
 
-Pass `batch: true` for requests made through a provider's batch API - OpenAI's Batch API, Anthropic's Message
-Batches API, Gemini's Batch mode, and so on. Most providers charge 50% of their standard rates for these:
+Some requests are priced differently depending on how they were served. Pass `priceContext` to say which:
 
 ```ts
-const result = calcPrice(usage, 'claude-opus-5', { batch: true, providerId: 'anthropic' })
+const result = calcPrice(usage, 'claude-opus-5', { priceContext: { service_tier: 'batch' }, providerId: 'anthropic' })
 ```
 
-Rates that a provider does not discount in batch mode - Anthropic's per-search web search fee, Google's cached
-input tokens on most models - stay at their standard price. Models we have no batch prices for are priced at
-their standard rates. The CLI takes `--batch` for the same thing.
+`service_tier` covers the mutually exclusive rate cards - `batch` for a request made through the provider's batch
+API (OpenAI's Batch API, Anthropic's Message Batches API, Gemini's Batch mode), and in future `flex` or `priority`
+for the synchronous tiers. Anthropic and Groq report it under exactly that name in their usage payloads, so it can
+be passed straight through. `batch: true` is shorthand for `priceContext: { service_tier: 'batch' }`, and the CLI
+takes `--batch`.
+
+A variant only replaces the prices it lists, so rates a provider does not discount - Anthropic's per-search web
+search fee, Google's cached input tokens on most models - stay at their standard price. A model with no prices for
+the given context is charged at its standard rates.
 
 ### `updatePrices`
 

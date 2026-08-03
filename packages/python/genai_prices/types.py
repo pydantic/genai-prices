@@ -32,6 +32,9 @@ __all__ = (
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
+    'PriceVariant',
+    'PriceContext',
+    'PriceContextValue',
     'StartDateConstraint',
     'TimeOfDateConstraint',
     'ClauseStartsWith',
@@ -98,6 +101,10 @@ class ArrayMatch:
 
 ExtractPath = str | Sequence[str | ArrayMatch]
 
+PriceContextValue = str | bool | int
+PriceContext = Mapping[str, PriceContextValue]
+"""What a caller can report about a request, used to select a `PriceVariant`, e.g. `{'service_tier': 'batch'}`."""
+
 
 @dataclass(repr=False)
 class PriceCalculation:
@@ -134,6 +141,7 @@ class ExtractedUsage:
         *,
         genai_request_timestamp: datetime | None = None,
         model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
         batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
@@ -142,7 +150,8 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
-            batch: Whether the request was made through the provider's batch API, use the model's batch prices if so.
+            price_context: What the request was priced under, e.g. `{'service_tier': 'batch'}`.
+            batch: Shorthand for a `batch` service tier.
         """
         model = model or self.model
         if model is None:
@@ -153,6 +162,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=price_context,
             batch=batch,
         )
 
@@ -668,22 +678,25 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
-    batch_prices: ModelPrice | list[ConditionalPrice] | None = None
-    """Prices for requests made through the provider's batch API, e.g. OpenAI's Batch API.
+    price_variants: list[PriceVariant] | None = None
+    """Prices that apply only to requests made with a particular pricing context, e.g. through a batch API.
 
-    These override `prices` key by key, so a key omitted here is charged at its `prices` rate.
-    Conditional prices are resolved exactly as they are for `prices`.
+    Variants whose `when` matches the request's pricing context override `prices` key by key, so a key
+    they omit is charged at its `prices` rate. Dated variants are resolved exactly as `prices` are.
     """
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime, *, batch: bool = False) -> ModelPrice:
+    def get_prices(self, request_timestamp: datetime, *, price_context: PriceContext | None = None) -> ModelPrice:
         prices = _resolve_conditional_prices(self.prices, request_timestamp)
-        # an empty list of batch prices means the same thing as no batch prices at all
-        if batch and self.batch_prices:
-            prices = _overlay_model_price(prices, _resolve_conditional_prices(self.batch_prices, request_timestamp))
-        return prices
+        if not price_context or not self.price_variants:
+            return prices
+
+        matching = [variant for variant in self.price_variants if _when_matches(variant.when, price_context)]
+        if not matching:
+            return prices
+        return _overlay_model_price(prices, _resolve_conditional_prices(matching, request_timestamp))
 
     def calc_price(
         self,
@@ -692,12 +705,13 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
         batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp, batch=batch)
+        model_price = self.get_prices(genai_request_timestamp, price_context=price_context_for(price_context, batch))
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -713,7 +727,9 @@ class ModelInfo:
         return f'Model(id={self.id!r}, name={self.name!r}, ...)'
 
 
-def _resolve_conditional_prices(prices: ModelPrice | list[ConditionalPrice], request_timestamp: datetime) -> ModelPrice:
+def _resolve_conditional_prices(
+    prices: ModelPrice | Sequence[ConditionalPrice | PriceVariant], request_timestamp: datetime
+) -> ModelPrice:
     if isinstance(prices, ModelPrice):
         return prices
 
@@ -722,6 +738,22 @@ def _resolve_conditional_prices(prices: ModelPrice | list[ConditionalPrice], req
         if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
             return conditional_price.prices
     return prices[0].prices
+
+
+def price_context_for(price_context: PriceContext | None, batch: bool) -> PriceContext | None:
+    """Fold the `batch` shorthand into a pricing context, letting an explicit context win."""
+    return {'service_tier': 'batch', **(price_context or {})} if batch else price_context
+
+
+def _when_matches(when: Mapping[str, PriceContextValue], price_context: PriceContext) -> bool:
+    """Whether every parameter of a variant matches the request's pricing context.
+
+    Values are compared by type as well as by equality, so a `1` in the context never matches a `True`.
+    """
+    return all(
+        type(actual := price_context.get(parameter)) is type(expected) and actual == expected
+        for parameter, expected in when.items()
+    )
 
 
 def _overlay_model_price(base: ModelPrice, overlay: ModelPrice) -> ModelPrice:
@@ -1036,6 +1068,21 @@ class ConditionalPrice:
 
 
 @dataclass
+class PriceVariant:
+    """Prices that replace the standard ones for requests made with a particular pricing context."""
+
+    when: dict[str, PriceContextValue] = dataclasses.field(default_factory=dict)
+    """Pricing context this variant applies to, every entry must match the request's context."""
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Timestamp when this variant's prices start, None means they are always valid."""
+
+    _: dataclasses.KW_ONLY
+
+    prices: ModelPrice
+    """Prices for this variant, applied over the standard prices key by key."""
+
+
+@dataclass
 class StartDateConstraint:
     """Constraint that defines when this price starts, e.g. when a new price is introduced."""
 
@@ -1164,7 +1211,7 @@ def _normalize_model_prices(value: Any) -> Any:
     normalized: dict[str, Any] = {}
     raw_mapping = cast(Mapping[str, Any], value)
     for key, raw_value in raw_mapping.items():
-        if key in ('prices', 'batch_prices'):
+        if key == 'prices':
             normalized[key] = _normalize_prices_field(raw_value)
         else:
             normalized[key] = _normalize_model_prices(raw_value)

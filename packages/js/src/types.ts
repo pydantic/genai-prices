@@ -23,6 +23,17 @@ export interface ConditionalPrice {
   prices: ModelPrice
 }
 
+export type PriceContextValue = boolean | number | string
+/** What a caller can report about a request, used to select a `PriceVariant`, e.g. `{service_tier: 'batch'}`. */
+export type PriceContext = Record<string, PriceContextValue | undefined>
+
+/** Prices that replace the standard ones for requests made with a particular pricing context. */
+export interface PriceVariant {
+  constraint?: StartDateConstraint | TimeOfDateConstraint
+  prices: ModelPrice
+  when: Record<string, PriceContextValue>
+}
+
 export interface StartDateConstraint {
   start_date: string // ISO date string
   type: 'start_date'
@@ -80,7 +91,6 @@ export interface UsageExtractor {
 }
 
 export interface ModelInfo {
-  batch_prices?: ConditionalPrice[] | ModelPrice
   context_window?: number
   deprecated?: boolean
   description?: string
@@ -88,6 +98,7 @@ export interface ModelInfo {
   match: MatchLogic
   name?: string
   price_comments?: string
+  price_variants?: PriceVariant[]
   prices: ConditionalPrice[] | ModelPrice
 }
 
@@ -145,8 +156,10 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
-  /** Whether the request was made through the provider's batch API, e.g. OpenAI's Batch API. */
+  /** Shorthand for `priceContext: {service_tier: 'batch'}`. */
   batch?: boolean
+  /** What the request was priced under, e.g. `{service_tier: 'batch'}`. */
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

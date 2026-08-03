@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from datetime import date, time
 from decimal import Decimal
 from typing import Annotated, Any, Literal, cast
@@ -174,15 +175,30 @@ def _has_any_price(model_price: ModelPrice) -> bool:
     return any(value is not None for value in (*fields, *(model_price.model_extra or {}).values()))
 
 
+def _describe_constraint(constraint: StartDateConstraint | TimeOfDateConstraint) -> str:
+    return ', '.join(f'{key}={value}' for key, value in sorted(constraint.__dict__.items()))
+
+
 def _price_constraints(prices: Any) -> set[str]:
     """Describe each price entry's constraint, e.g. `start_date=2026-01-01`."""
     if not isinstance(prices, list):
         return set()
     return {
-        ', '.join(f'{key}={value}' for key, value in sorted(price.constraint.__dict__.items()))
+        _describe_constraint(price.constraint)
         for price in cast(list[ConditionalPrice], prices)
         if price.constraint is not None
     }
+
+
+def _describe_when(when: Mapping[WhenParameter, PriceContextValue]) -> str:
+    return '{' + ', '.join(f'{key}: {value}' for key, value in sorted(when.items())) + '}'
+
+
+def _group_variants_by_when(variants: list[PriceVariant]) -> list[tuple[str, list[PriceVariant]]]:
+    groups: dict[str, list[PriceVariant]] = {}
+    for variant in variants:
+        groups.setdefault(_describe_when(variant.when), []).append(variant)
+    return list(groups.items())
 
 
 def validate_conditional_prices(prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
@@ -217,14 +233,12 @@ class ModelInfo(_Model):
 
     If no conditional models match the conditions, the first one is used.
     """
-    batch_prices: Annotated[
-        ModelPrice | list[ConditionalPrice] | None, WrapSerializer(serialize_prices, when_used='json')
-    ] = None
-    """Prices for requests made through the provider's batch API, e.g. OpenAI's Batch API.
+    price_variants: list[PriceVariant] | None = None
+    """Prices that apply only to requests made with a particular pricing context, e.g. through a batch API.
 
-    These override `prices` key by key, so only the keys whose rate differs in batch mode need to be listed;
-    any key omitted here is charged at its `prices` rate. Resolution of conditional prices works exactly as it
-    does for `prices`.
+    The first variant whose `when` matches the request's pricing context wins, and its prices override
+    `prices` key by key, so only the keys whose rate differs need to be listed; any key omitted is charged
+    at its `prices` rate. A request whose context matches no variant is charged the `prices` rates.
     """
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
@@ -252,24 +266,32 @@ class ModelInfo(_Model):
     def prices_not_empty(cls, prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
         return validate_conditional_prices(prices)
 
-    @field_validator('batch_prices', mode='after')
+    @field_validator('price_variants', mode='after')
     @classmethod
-    def batch_prices_not_empty(
-        cls, prices: ModelPrice | list[ConditionalPrice] | None, info: ValidationInfo
-    ) -> ModelPrice | list[ConditionalPrice] | None:
-        if prices is None:
+    def validate_price_variants(
+        cls, variants: list[PriceVariant] | None, info: ValidationInfo
+    ) -> list[PriceVariant] | None:
+        if variants is None:
             return None
+        if not variants:
+            raise ValueError('`price_variants` may not be empty, omit it to charge the standard prices')
 
-        validate_conditional_prices(prices)
-        if isinstance(prices, ModelPrice) and not _has_any_price(prices):
-            raise ValueError('`batch_prices` may not be empty, omit it to charge the standard prices')
-        # Batch prices are resolved by the same constraints as the standard prices, so a batch price set that
-        # doesn't repeat a dated change would charge the new batch rate against requests made before it.
-        missing = _price_constraints(info.data.get('prices')) - _price_constraints(prices)
-        if missing:
-            described = ', '.join(sorted(repr(constraint) for constraint in missing))
-            raise ValueError(f'`batch_prices` must repeat the constraints used by `prices`, missing: {described}')
-        return prices
+        standard_constraints = _price_constraints(info.data.get('prices'))
+        for when, group in _group_variants_by_when(variants):
+            if len(group) > 1 and sum(variant.constraint is None for variant in group) != 1:
+                raise ValueError(f'`when: {when}` needs exactly one entry without a constraint')
+            for variant in group:
+                if not _has_any_price(variant.prices):
+                    raise ValueError(f'`when: {when}` has no prices, omit the variant to charge the standard prices')
+            # Variants are resolved by the same constraints as the standard prices, so a variant that doesn't
+            # repeat a dated change would charge the new rate against requests made before that date.
+            missing = standard_constraints - {
+                _describe_constraint(variant.constraint) for variant in group if variant.constraint is not None
+            }
+            if missing:
+                described = ', '.join(sorted(repr(constraint) for constraint in missing))
+                raise ValueError(f'`when: {when}` must repeat the constraints used by `prices`, missing: {described}')
+        return variants
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
@@ -372,6 +394,29 @@ class ConditionalPrice(_Model):
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
+
+
+PriceContextValue = str | bool | int
+"""A value a caller can report about a request, used to select a `PriceVariant`."""
+
+WhenParameter = Literal['service_tier', 'speed', 'inference_geo']
+"""The pricing context parameters a `PriceVariant` can match on.
+
+These are named after the fields providers report them in: `service_tier` covers the mutually exclusive
+rate cards (`batch`, `flex`, `priority`, ...) and is what Anthropic and Groq call batch requests in their
+own usage payloads; `speed` covers Anthropic's fast mode; `inference_geo` covers data residency.
+"""
+
+
+class PriceVariant(_Model):
+    """Prices that replace the standard ones for requests made with a particular pricing context."""
+
+    when: dict[WhenParameter, PriceContextValue] = Field(min_length=1)
+    """Pricing context this variant applies to, every entry must match the request's context."""
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Timestamp when this variant's prices start, None means they are always valid."""
+    prices: ModelPrice
+    """Prices for this variant, applied over the standard prices key by key."""
 
 
 class StartDateConstraint(_Model):

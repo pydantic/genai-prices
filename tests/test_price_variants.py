@@ -1,4 +1,4 @@
-"""Tests for batch API pricing.
+"""Tests for price variants, i.e. prices that depend on the request's pricing context.
 
 The provider payloads below are verbatim responses from real batch jobs run against those APIs.
 """
@@ -18,6 +18,7 @@ from genai_prices.types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
+    PriceVariant,
     Provider,
     StartDateConstraint,
 )
@@ -174,7 +175,7 @@ def test_batch_discount_ratio(provider_id: str, model_ref: str, expected_ratio: 
     assert batch.total_price == standard.total_price * expected_ratio
 
 
-def test_batch_prices_fall_through_for_undiscounted_units():
+def test_variant_prices_fall_through_for_undiscounted_units():
     """Anthropic halves every token rate but publishes no batch rate for web searches."""
     usage = Usage(input_tokens=1_000_000, web_searches=1_000)
     batch = calc_price(usage, model_ref='claude-opus-5', provider_id='anthropic', batch=True)
@@ -195,7 +196,7 @@ def test_google_batch_keeps_standard_cache_read():
     assert batch.total_price == snapshot(Decimal('0.068'))
 
 
-def test_batch_without_batch_prices_uses_standard_prices():
+def test_batch_without_variants_uses_standard_prices():
     usage = Usage(input_tokens=1_000, output_tokens=1_000)
     standard = calc_price(usage, model_ref='deepseek-v4-pro', provider_id='deepseek')
     batch = calc_price(usage, model_ref='deepseek-v4-pro', provider_id='deepseek', batch=True)
@@ -203,7 +204,7 @@ def test_batch_without_batch_prices_uses_standard_prices():
     assert batch.total_price == standard.total_price
 
 
-def test_batch_prices_resolve_conditionals_independently():
+def test_variant_prices_resolve_conditionals_independently():
     model = ModelInfo(
         id='test',
         match=ClauseEquals('test'),
@@ -214,10 +215,11 @@ def test_batch_prices_resolve_conditionals_independently():
                 prices=ModelPrice(input_mtok=Decimal(20)),
             ),
         ],
-        batch_prices=[
-            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal(5))),
-            ConditionalPrice(
-                constraint=StartDateConstraint(datetime(2026, 6, 1).date()),
+        price_variants=[
+            PriceVariant({'service_tier': 'batch'}, prices=ModelPrice(input_mtok=Decimal(5))),
+            PriceVariant(
+                {'service_tier': 'batch'},
+                StartDateConstraint(datetime(2026, 6, 1).date()),
                 prices=ModelPrice(input_mtok=Decimal(8)),
             ),
         ],
@@ -241,28 +243,59 @@ def test_batch_prices_resolve_conditionals_independently():
         set_custom_snapshot(None)
 
 
-@pytest.mark.parametrize('batch_prices', [None, [], ModelPrice()])
-def test_empty_batch_prices_use_standard_prices(batch_prices: object):
+@pytest.mark.parametrize('price_variants', [None, []])
+def test_no_price_variants_uses_standard_prices(price_variants: object):
     model = ModelInfo(
         id='test',
         match=ClauseEquals('test'),
         prices=ModelPrice(input_mtok=Decimal(10)),
-        batch_prices=batch_prices,  # pyright: ignore[reportArgumentType]
+        price_variants=price_variants,  # pyright: ignore[reportArgumentType]
     )
 
-    assert model.get_prices(datetime.now(tz=timezone.utc), batch=True).input_mtok == Decimal(10)
+    prices = model.get_prices(datetime.now(tz=timezone.utc), price_context={'service_tier': 'batch'})
+    assert prices.input_mtok == Decimal(10)
 
 
-def test_batch_prices_override_key_by_key():
+def test_unmatched_context_uses_standard_prices():
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        price_variants=[PriceVariant({'service_tier': 'batch'}, prices=ModelPrice(input_mtok=Decimal(5)))],
+    )
+    timestamp = datetime.now(tz=timezone.utc)
+
+    assert model.get_prices(timestamp, price_context={'service_tier': 'flex'}).input_mtok == Decimal(10)
+    assert model.get_prices(timestamp, price_context={'speed': 'fast'}).input_mtok == Decimal(10)
+    assert model.get_prices(timestamp).input_mtok == Decimal(10)
+    assert model.get_prices(timestamp, price_context={'service_tier': 'batch'}).input_mtok == Decimal(5)
+
+
+def test_when_matching_is_type_strict():
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        price_variants=[PriceVariant({'service_tier': True}, prices=ModelPrice(input_mtok=Decimal(5)))],
+    )
+    timestamp = datetime.now(tz=timezone.utc)
+
+    assert model.get_prices(timestamp, price_context={'service_tier': 1}).input_mtok == Decimal(10)
+    assert model.get_prices(timestamp, price_context={'service_tier': True}).input_mtok == Decimal(5)
+
+
+def test_variant_prices_override_key_by_key():
     model = ModelInfo(
         id='test',
         match=ClauseEquals('test'),
         prices=ModelPrice(input_mtok=Decimal(10), output_mtok=Decimal(20), requests_kcount=Decimal(1)),
         # an unset key falls through to the standard price, exactly like an omitted one
-        batch_prices=ModelPrice(input_mtok=None, output_mtok=Decimal(5)),
+        price_variants=[
+            PriceVariant({'service_tier': 'batch'}, prices=ModelPrice(input_mtok=None, output_mtok=Decimal(5)))
+        ],
     )
 
-    prices = model.get_prices(datetime.now(tz=timezone.utc), batch=True)
+    prices = model.get_prices(datetime.now(tz=timezone.utc), price_context={'service_tier': 'batch'})
 
     assert prices.input_mtok == Decimal(10)
     assert prices.output_mtok == Decimal(5)
