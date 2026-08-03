@@ -144,6 +144,10 @@ little, suspect the importer before the data.
   correct. Discounts are not uniform across providers, so encode published rates rather than halving
   everything: xAI's batch discount is 20%, Groq's batch rate ignores cache status entirely, and a model
   with no `batch_prices` is charged its standard rates.
+- **A dated price change has to be repeated in `batch_prices`.** Both fields are resolved by the same
+  constraints, so a batch price set that skips a change `prices` makes charges the new batch rate against
+  requests from before it - the same hazard as overwriting a `prices` block. `make build` enforces this:
+  every constraint used by `prices` must also appear in `batch_prices`.
 
 ### Adding a unit
 

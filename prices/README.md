@@ -46,6 +46,9 @@ batch_prices:
 ```
 
 `batch_prices` overrides `prices` key by key, so only list the keys whose rate actually changes in batch mode.
+When `prices` carries a dated price history, `batch_prices` has to repeat those dates - both are resolved by the
+same constraints, so a batch block that skips a change would charge the new batch rate against older requests.
+`make build` rejects that.
 Anything omitted keeps its standard rate - above, web searches are not discounted in batch, so they are left
 out rather than repeated. Only add rates the provider publishes: batch discounts are not uniform (xAI's is 20%,
 Google bills batch cache hits at the standard cache rate on most models, Groq's batch rate ignores caching
