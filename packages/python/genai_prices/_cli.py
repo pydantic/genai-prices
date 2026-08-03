@@ -170,10 +170,11 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('k', 'keep-going'),
         description='Whether to continue if a model is not found.',
     )
-    batch: bool = Field(
-        False,
-        validation_alias=AliasChoices('b', 'batch'),
-        description='Whether to use batch API prices, models without them are priced at their standard rates.',
+    price_context: list[str] = Field(
+        default_factory=list,
+        validation_alias=AliasChoices('price-context'),
+        description='What the request was priced under, as `key=value`, e.g. `service_tier=batch`. Repeatable. '
+        'Models with no prices for the context are priced at their standard rates.',
     )
     input_tokens: int | None = Field(
         None,
@@ -308,6 +309,16 @@ def _parse_cli(args_list: Sequence[str] | None) -> CLIRoot:
         sys.argv = original_argv
 
 
+def _parse_price_context(pairs: Sequence[str]) -> dict[str, str]:
+    context: dict[str, str] = {}
+    for pair in pairs:
+        parameter, sep, value = pair.partition('=')
+        if not sep or not parameter:
+            raise SystemExit(f'Invalid --price-context {pair!r}, expected `key=value`')
+        context[parameter] = value
+    return context
+
+
 def calc_prices(args: CalcCLI, *, plain: bool) -> int:
     from .data import providers
 
@@ -320,6 +331,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
         cache_audio_read_tokens=args.cache_audio_read_tokens,
         output_audio_tokens=args.output_audio_tokens,
     )
+    price_context = _parse_price_context(args.price_context)
     console = Console(soft_wrap=True)
     err_console = Console(stderr=True, soft_wrap=True)
     use_color = not args.no_color
@@ -341,7 +353,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
                 model_ref=model,
                 provider_id=provider_id,
                 genai_request_timestamp=args.timestamp,
-                batch=args.batch,
+                price_context=price_context,
             )
         except LookupError as exc:
             had_error = True

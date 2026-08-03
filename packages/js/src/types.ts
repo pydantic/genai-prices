@@ -169,8 +169,6 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
-  /** Shorthand for `priceContext: {service_tier: 'batch'}`. */
-  batch?: boolean
   /** What the request was priced under, e.g. `{service_tier: 'batch'}`. */
   priceContext?: PriceContext
   provider?: Provider

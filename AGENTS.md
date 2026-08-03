@@ -138,7 +138,9 @@ little, suspect the importer before the data.
 - Prices must cover their **ancestors and joins**: a model priced with `cache_write_1h_mtok` also needs
   `cache_write_mtok`, and so on. `make build` enforces this; the error names the missing key.
 - `price_variants:` is an optional sibling of `prices:` holding prices that only apply to a particular
-  pricing context, selected by the caller's `price_context`. Each entry has a `when` (from a fixed set:
+  pricing context, selected by the caller's explicit `price_context` (there is deliberately no
+  provider-independent `batch` shorthand: it would make "no variant for this model" indistinguishable
+  from "verified to cost the same as standard"). Each entry has a `when` (from a fixed set:
   `service_tier`, `speed`, `inference_geo`), an optional `constraint`, and `prices`. A variant
   **overrides `prices` key by key**, so list only the keys whose rate changes - an omitted key keeps its
   standard rate, which is how units a provider does not discount (Anthropic's `web_searches_kcount`,

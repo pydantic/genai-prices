@@ -56,7 +56,6 @@ class DataSnapshot:
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
         price_context: types.PriceContext | None = None,
-        batch: bool = False,
     ) -> types.PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
@@ -68,7 +67,6 @@ class DataSnapshot:
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
             price_context=price_context,
-            batch=batch,
         )
 
     def extract_usage(

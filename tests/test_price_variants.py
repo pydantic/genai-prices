@@ -95,6 +95,8 @@ MISTRAL_BATCH_RESULT = {
         'prompt_tokens_details': {'cached_tokens': 0, 'audio_tokens': 0},
     },
 }
+BATCH = {'service_tier': 'batch'}
+
 GROQ_BATCH_RESULT = {
     'model': 'llama-3.3-70b-versatile',
     'usage': {'prompt_tokens': 46, 'completion_tokens': 2, 'total_tokens': 48},
@@ -105,14 +107,14 @@ GROQ_BATCH_RESULT = {
 def test_anthropic_batch_cache_write():
     extracted = extract_usage(ANTHROPIC_BATCH_CACHE_WRITE, provider_id='anthropic')
 
-    assert extracted.calc_price(batch=True).total_price == snapshot(Decimal('0.00444725'))
+    assert extracted.calc_price(price_context=BATCH).total_price == snapshot(Decimal('0.00444725'))
     assert extracted.calc_price().total_price == snapshot(Decimal('0.0088945'))
 
 
 def test_anthropic_batch_cache_read():
     extracted = extract_usage(ANTHROPIC_BATCH_CACHE_READ, provider_id='anthropic')
 
-    assert extracted.calc_price(batch=True).total_price == snapshot(Decimal('0.0003751'))
+    assert extracted.calc_price(price_context=BATCH).total_price == snapshot(Decimal('0.0003751'))
     assert extracted.calc_price().total_price == snapshot(Decimal('0.0007502'))
 
 
@@ -129,7 +131,7 @@ def test_openai_batch_result():
             output_reasoning_tokens=64,
         )
     )
-    assert extracted.calc_price(batch=True).total_price == snapshot(Decimal('0.00003123'))
+    assert extracted.calc_price(price_context=BATCH).total_price == snapshot(Decimal('0.00003123'))
     assert extracted.calc_price().total_price == snapshot(Decimal('0.00006246'))
 
 
@@ -137,7 +139,7 @@ def test_openai_batch_job_totals():
     """An OpenAI batch object reports the whole job's usage in the shape the responses API uses."""
     extracted = extract_usage(OPENAI_BATCH_JOB, provider_id='openai', api_flavor='responses')
 
-    assert extracted.calc_price(batch=True).total_price == snapshot(Decimal('0.00020358'))
+    assert extracted.calc_price(price_context=BATCH).total_price == snapshot(Decimal('0.00020358'))
     assert extracted.calc_price().total_price == snapshot(Decimal('0.00040716'))
 
 
@@ -152,7 +154,7 @@ def test_openai_batch_job_totals():
 def test_batch_result_halves_standard_price(provider_id: str, response: dict[str, object]):
     extracted = extract_usage(response, provider_id=provider_id)
 
-    assert extracted.calc_price(batch=True).total_price == extracted.calc_price().total_price / 2
+    assert extracted.calc_price(price_context=BATCH).total_price == extracted.calc_price().total_price / 2
 
 
 @pytest.mark.parametrize(
@@ -170,7 +172,7 @@ def test_batch_result_halves_standard_price(provider_id: str, response: dict[str
 def test_batch_discount_ratio(provider_id: str, model_ref: str, expected_ratio: Decimal):
     usage = Usage(input_tokens=1_000_000, output_tokens=100_000)
     standard = calc_price(usage, model_ref=model_ref, provider_id=provider_id)
-    batch = calc_price(usage, model_ref=model_ref, provider_id=provider_id, batch=True)
+    batch = calc_price(usage, model_ref=model_ref, provider_id=provider_id, price_context=BATCH)
 
     assert batch.total_price == standard.total_price * expected_ratio
 
@@ -178,7 +180,7 @@ def test_batch_discount_ratio(provider_id: str, model_ref: str, expected_ratio: 
 def test_variant_prices_fall_through_for_undiscounted_units():
     """Anthropic halves every token rate but publishes no batch rate for web searches."""
     usage = Usage(input_tokens=1_000_000, web_searches=1_000)
-    batch = calc_price(usage, model_ref='claude-opus-5', provider_id='anthropic', batch=True)
+    batch = calc_price(usage, model_ref='claude-opus-5', provider_id='anthropic', price_context=BATCH)
 
     assert batch.model_price.input_mtok == snapshot(Decimal('2.5'))
     assert batch.model_price.web_searches_kcount == snapshot(Decimal('10'))
@@ -189,7 +191,7 @@ def test_google_batch_keeps_standard_cache_read():
     """Google bills batch cache hits "at the standard context caching rates" on this model."""
     usage = Usage(input_tokens=100_000, cache_read_tokens=40_000)
     standard = calc_price(usage, model_ref='gemini-3.1-pro-preview', provider_id='google')
-    batch = calc_price(usage, model_ref='gemini-3.1-pro-preview', provider_id='google', batch=True)
+    batch = calc_price(usage, model_ref='gemini-3.1-pro-preview', provider_id='google', price_context=BATCH)
 
     # only the 60k uncached input tokens are discounted; the 40k cached ones cost the same either way
     assert standard.total_price == snapshot(Decimal('0.128'))
@@ -199,7 +201,7 @@ def test_google_batch_keeps_standard_cache_read():
 def test_batch_without_variants_uses_standard_prices():
     usage = Usage(input_tokens=1_000, output_tokens=1_000)
     standard = calc_price(usage, model_ref='deepseek-v4-pro', provider_id='deepseek')
-    batch = calc_price(usage, model_ref='deepseek-v4-pro', provider_id='deepseek', batch=True)
+    batch = calc_price(usage, model_ref='deepseek-v4-pro', provider_id='deepseek', price_context=BATCH)
 
     assert batch.total_price == standard.total_price
 
@@ -241,7 +243,7 @@ def test_variant_prices_resolve_conditionals_independently():
         ):
             standard = calc_price(usage, model_ref='test', provider_id='test', genai_request_timestamp=timestamp)
             batch = calc_price(
-                usage, model_ref='test', provider_id='test', genai_request_timestamp=timestamp, batch=True
+                usage, model_ref='test', provider_id='test', genai_request_timestamp=timestamp, price_context=BATCH
             )
             assert standard.total_price == expected_standard
             assert batch.total_price == expected_batch

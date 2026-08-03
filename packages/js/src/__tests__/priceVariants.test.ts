@@ -21,7 +21,7 @@ describe('price variants', () => {
   ])('discounts %s/%s by the published ratio', (providerId, modelId, ratio) => {
     const usage = { input_tokens: MILLION, output_tokens: MILLION / 10 }
     const standard = calcPrice(usage, modelId, { providerId, timestamp: TIMESTAMP })
-    const batch = calcPrice(usage, modelId, { batch: true, providerId, timestamp: TIMESTAMP })
+    const batch = calcPrice(usage, modelId, { priceContext: BATCH, providerId, timestamp: TIMESTAMP })
 
     expect(batch?.total_price).toBeCloseTo((standard?.total_price ?? 0) * ratio, 10)
   })
@@ -35,7 +35,7 @@ describe('price variants', () => {
       output_tokens: 5,
     }
     const batch = calcPrice(usage, 'claude-haiku-4-5-20251001', {
-      batch: true,
+      priceContext: BATCH,
       providerId: 'anthropic',
       timestamp: TIMESTAMP,
     })
@@ -45,7 +45,7 @@ describe('price variants', () => {
 
   it('leaves units without a batch rate at the standard rate', () => {
     const batch = calcPrice({ input_tokens: MILLION, web_searches: 1000 }, 'claude-opus-5', {
-      batch: true,
+      priceContext: BATCH,
       providerId: 'anthropic',
       timestamp: TIMESTAMP,
     })
@@ -58,7 +58,7 @@ describe('price variants', () => {
   it('falls back to standard prices when a model has no batch prices', () => {
     const usage = { input_tokens: 1000, output_tokens: 1000 }
     const standard = calcPrice(usage, 'deepseek-v4-pro', { providerId: 'deepseek', timestamp: TIMESTAMP })
-    const batch = calcPrice(usage, 'deepseek-v4-pro', { batch: true, providerId: 'deepseek', timestamp: TIMESTAMP })
+    const batch = calcPrice(usage, 'deepseek-v4-pro', { priceContext: BATCH, providerId: 'deepseek', timestamp: TIMESTAMP })
 
     expect(batch?.total_price).toBe(standard?.total_price)
   })

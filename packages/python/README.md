@@ -75,7 +75,8 @@ payloads, so it can be passed straight through:
 price = extracted_usage.calc_price(price_context={'service_tier': response['usage']['service_tier']})
 ```
 
-`batch=True` is shorthand for `price_context={'service_tier': 'batch'}`, and the CLI takes `--batch`.
+`price_context` is also accepted by `ExtractedUsage.calc_price()` and `ModelInfo.calc_price()`, and the CLI
+takes `--price-context service_tier=batch`.
 
 A variant only replaces the prices it lists, so rates a provider does not discount - Anthropic's per-search
 web search fee, Google's cached input tokens on most models - stay at their standard price. A model with no

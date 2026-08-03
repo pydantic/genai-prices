@@ -142,7 +142,6 @@ class ExtractedUsage:
         genai_request_timestamp: datetime | None = None,
         model: ModelInfo | None = None,
         price_context: PriceContext | None = None,
-        batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -151,7 +150,6 @@ class ExtractedUsage:
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
             price_context: What the request was priced under, e.g. `{'service_tier': 'batch'}`.
-            batch: Shorthand for a `batch` service tier.
         """
         model = model or self.model
         if model is None:
@@ -163,7 +161,6 @@ class ExtractedUsage:
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
             price_context=price_context,
-            batch=batch,
         )
 
     def __repr__(self) -> str:
@@ -710,12 +707,11 @@ class ModelInfo:
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
         price_context: PriceContext | None = None,
-        batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp, price_context=price_context_for(price_context, batch))
+        model_price = self.get_prices(genai_request_timestamp, price_context=price_context)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -742,11 +738,6 @@ def _resolve_conditional_prices(
         if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
             return conditional_price.prices
     return prices[0].prices
-
-
-def price_context_for(price_context: PriceContext | None, batch: bool) -> PriceContext | None:
-    """Fold the `batch` shorthand into a pricing context, letting an explicit context win."""
-    return {'service_tier': 'batch', **(price_context or {})} if batch else price_context
 
 
 def _when_matches(when: Mapping[str, PriceContextValue | None], price_context: PriceContext) -> bool:
