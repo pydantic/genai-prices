@@ -202,11 +202,15 @@ function whenMatches(when: PriceVariant['when'], priceContext: PriceContext): bo
   // `Object.entries` drops the `| undefined` a Partial record's values carry, and caller-supplied data can
   // hold one, so restore it rather than trust the narrower inferred type.
   const entries = Object.entries(when) as [string, PriceContextValue | undefined][]
-  return entries.every(([parameter, expected]) => {
-    const actual = priceContext[parameter]
-    // a variant expecting no value never matches, rather than matching every context missing that parameter
-    return expected !== undefined && typeof actual === typeof expected && actual === expected
-  })
+  // a variant that names no parameter matches nothing, rather than every context
+  return (
+    entries.length > 0 &&
+    entries.every(([parameter, expected]) => {
+      const actual = priceContext[parameter]
+      // a variant expecting no value never matches, rather than matching every context missing it
+      return expected !== undefined && typeof actual === typeof expected && actual === expected
+    })
+  )
 }
 
 function resolveConditionalPrices(prices: (ConditionalPrice | PriceVariant)[] | ModelPrice, timestamp: Date, modelId: string): ModelPrice {

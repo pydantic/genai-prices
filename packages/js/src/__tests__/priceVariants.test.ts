@@ -93,6 +93,18 @@ describe('price variants', () => {
     expect(getActiveModelPrice(model, TIMESTAMP, BATCH)).toEqual({ input_mtok: 10 })
   })
 
+  it('never matches a variant that names no parameter', () => {
+    const model = {
+      id: 'test',
+      match: { equals: 'test' },
+      price_variants: [{ prices: { input_mtok: 1 }, when: {} }],
+      prices: { input_mtok: 10 },
+    } as unknown as ModelInfo
+
+    expect(getActiveModelPrice(model, TIMESTAMP, { speed: 'fast' })).toEqual({ input_mtok: 10 })
+    expect(getActiveModelPrice(model, TIMESTAMP, BATCH)).toEqual({ input_mtok: 10 })
+  })
+
   it('overrides standard prices key by key', () => {
     const model: ModelInfo = {
       id: 'test',

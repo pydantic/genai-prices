@@ -323,6 +323,18 @@ def test_variant_expecting_no_value_never_matches():
     assert model.get_prices(timestamp, price_context={'service_tier': 'batch'}).input_mtok == Decimal(10)
 
 
+def test_variant_naming_no_parameter_never_matches():
+    """A `when` with nothing in it applies to nothing, rather than to every context."""
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        price_variants=[PriceVariant({}, prices=ModelPrice(input_mtok=Decimal(1)))],
+    )
+
+    assert model.get_prices(datetime.now(tz=timezone.utc), price_context={'speed': 'fast'}).input_mtok == Decimal(10)
+
+
 def test_variant_prices_override_key_by_key():
     model = ModelInfo(
         id='test',

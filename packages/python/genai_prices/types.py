@@ -758,7 +758,8 @@ def _when_matches(when: Mapping[str, PriceContextValue | None], price_context: P
     Values are compared by type as well as by equality, so a `1` in the context never matches a `True`,
     and a variant expecting no value at all never matches, rather than matching every context missing it.
     """
-    return all(
+    # a variant that names no parameter matches nothing, rather than every context
+    return bool(when) and all(
         expected is not None and type(actual := price_context.get(parameter)) is type(expected) and actual == expected
         for parameter, expected in when.items()
     )
