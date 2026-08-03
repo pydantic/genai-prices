@@ -5,8 +5,8 @@ pricing_urls:
   - https://mistral.ai/pricing#api-pricing
 api_pattern: 'https://api\.mistral\.ai'
 price_comments: >-
-  Batch API usage is charged at 50% of the standard rates. Only models the API currently serves carry
-  `batch_prices`; the entries kept here to match third-party price sources cannot be batched.
+  Batch API usage is charged at 50% of the standard rates. Only models the API currently serves carry a
+  batch price variant; the entries kept here to match third-party price sources cannot be batched.
   Ref: https://docs.mistral.ai/capabilities/batch/
 provider_match:
   starts_with: mistral

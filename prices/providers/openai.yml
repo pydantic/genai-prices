@@ -12,7 +12,7 @@ api_pattern: 'https://api\.openai\.com'
 price_comments: >-
   Batch API rates are 50% of standard for every published token rate, including cached input and cache
   writes. Tool calls are not discounted, and the audio/realtime, transcription, embeddings and specialised
-  model tables have no batch pane at all, so those models carry no `batch_prices`.
+  model tables have no batch pane at all, so those models carry no batch variant.
   Ref: https://developers.openai.com/api/docs/pricing
 model_match:
   or:

@@ -6,8 +6,8 @@ pricing_urls:
 api_pattern: 'https://api\.anthropic\.com'
 price_comments: >-
   Message Batches API usage is charged at 50% of the standard rates for every token category, including
-  cache writes and cache reads. The per-search web search fee has no published batch rate, so `batch_prices`
-  leaves it out and it stays at the standard price.
+  cache writes and cache reads. The per-search web search fee has no published batch rate, so the batch
+  variant leaves it out and it stays at the standard price.
   Ref: https://platform.claude.com/docs/en/build-with-claude/batch-processing
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 model_match:

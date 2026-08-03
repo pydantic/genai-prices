@@ -240,7 +240,13 @@ models:
       Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines
       low hallucination rates with strict prompt adherence.
     match:
-      equals: grok-4.20
+      or:
+        - equals: grok-4.20
+        - equals: grok-4.20-0309-reasoning
+        - equals: grok-4.20-0309-non-reasoning
+        - equals: x-ai/grok-4.20
+        - equals: x-ai/grok-4.20-0309-reasoning
+        - equals: x-ai/grok-4.20-0309-non-reasoning
     prices_checked: 2026-06-09
     prices:
       input_mtok: 1.25

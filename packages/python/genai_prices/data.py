@@ -13,7 +13,7 @@ providers: list[Provider] = [
         name='Anthropic',
         api_pattern='https://api\\.anthropic\\.com',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
-        price_comments='Message Batches API usage is charged at 50% of the standard rates for every token category, including cache writes and cache reads. The per-search web search fee has no published batch rate, so `batch_prices` leaves it out and it stays at the standard price. Ref: https://platform.claude.com/docs/en/build-with-claude/batch-processing',
+        price_comments='Message Batches API usage is charged at 50% of the standard rates for every token category, including cache writes and cache reads. The per-search web search fee has no published batch rate, so the batch variant leaves it out and it stays at the standard price. Ref: https://platform.claude.com/docs/en/build-with-claude/batch-processing',
         model_match=ClauseContains(contains='claude'),
         provider_match=ClauseContains(contains='anthropic'),
         extractors=[
@@ -2607,7 +2607,7 @@ providers: list[Provider] = [
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
-        price_comments='Batch mode is 50% of the interactive price for input and output tokens of every modality. Cache hits are billed "at the standard context caching rates" except on the models whose batch row publishes its own cached figure, so `batch_prices` lists `cache_read_mtok` only for those. Ref: https://ai.google.dev/gemini-api/docs/batch-api',
+        price_comments='Batch mode is 50% of the interactive price for input and output tokens of every modality. Cache hits are billed "at the standard context caching rates" except on the models whose batch row publishes its own cached figure, so the batch variant lists `cache_read_mtok` only for those. Ref: https://ai.google.dev/gemini-api/docs/batch-api',
         model_match=ClauseContains(contains='gemini'),
         provider_match=ClauseOr(
             or_=[
@@ -3678,7 +3678,7 @@ providers: list[Provider] = [
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
         pricing_urls=['https://groq.com/pricing/'],
-        price_comments='The Batch API costs 50% of the synchronous rates and accepts only the models listed in its docs, so the others carry no `batch_prices`. The discount does not stack with prompt caching: all batch tokens are billed at the halved input rate regardless of cache status. Ref: https://console.groq.com/docs/batch',
+        price_comments='The Batch API costs 50% of the synchronous rates and accepts only the models listed in its docs, so the others carry no batch price variant. The discount does not stack with prompt caching: all batch tokens are billed at the halved input rate regardless of cache status. Ref: https://console.groq.com/docs/batch',
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -6373,7 +6373,7 @@ providers: list[Provider] = [
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
-        price_comments='Batch API usage is charged at 50% of the standard rates. Only models the API currently serves carry `batch_prices`; the entries kept here to match third-party price sources cannot be batched. Ref: https://docs.mistral.ai/capabilities/batch/',
+        price_comments='Batch API usage is charged at 50% of the standard rates. Only models the API currently serves carry a batch price variant; the entries kept here to match third-party price sources cannot be batched. Ref: https://docs.mistral.ai/capabilities/batch/',
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
@@ -7067,7 +7067,7 @@ providers: list[Provider] = [
             'https://platform.openai.com/docs/models',
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
-        price_comments='Batch API rates are 50% of standard for every published token rate, including cached input and cache writes. Tool calls are not discounted, and the audio/realtime, transcription, embeddings and specialised model tables have no batch pane at all, so those models carry no `batch_prices`. Ref: https://developers.openai.com/api/docs/pricing',
+        price_comments='Batch API rates are 50% of standard for every published token rate, including cached input and cache writes. Tool calls are not discounted, and the audio/realtime, transcription, embeddings and specialised model tables have no batch pane at all, so those models carry no batch variant. Ref: https://developers.openai.com/api/docs/pricing',
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
@@ -14385,7 +14385,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='grok-4.20',
-                match=ClauseEquals(equals='grok-4.20'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.20'),
+                        ClauseEquals(equals='grok-4.20-0309-reasoning'),
+                        ClauseEquals(equals='grok-4.20-0309-non-reasoning'),
+                        ClauseEquals(equals='x-ai/grok-4.20'),
+                        ClauseEquals(equals='x-ai/grok-4.20-0309-reasoning'),
+                        ClauseEquals(equals='x-ai/grok-4.20-0309-non-reasoning'),
+                    ]
+                ),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
                 prices=ModelPrice(

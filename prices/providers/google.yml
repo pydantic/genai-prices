@@ -9,7 +9,7 @@ api_pattern: 'https://(.*\.)?googleapis\.com'
 price_comments: >-
   Batch mode is 50% of the interactive price for input and output tokens of every modality. Cache hits are
   billed "at the standard context caching rates" except on the models whose batch row publishes its own
-  cached figure, so `batch_prices` lists `cache_read_mtok` only for those.
+  cached figure, so the batch variant lists `cache_read_mtok` only for those.
   Ref: https://ai.google.dev/gemini-api/docs/batch-api
 model_match:
   contains: gemini
