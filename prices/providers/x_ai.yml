@@ -242,6 +242,10 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
+    batch_prices:
+      input_mtok: 1
+      cache_read_mtok: 0.16
+      output_mtok: 2
 
   - id: grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
@@ -255,6 +259,10 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.2
       output_mtok: 6
+    batch_prices:
+      input_mtok: 1.6
+      cache_read_mtok: 0.16
+      output_mtok: 4.8
 
   - id: grok-4.3
     name: Grok 4.3
@@ -275,6 +283,10 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
+    batch_prices:
+      input_mtok: 1
+      cache_read_mtok: 0.16
+      output_mtok: 2
 
   - id: grok-4.5
     name: Grok 4.5

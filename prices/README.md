@@ -30,6 +30,27 @@ When you edit the prices of a model, remember to:
 - have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
   which will update the v2 and package data when prices change. You can also run `make build` to update these files manually.
 
+### Batch API prices
+
+Models priced differently when called through the provider's batch API carry a `batch_prices` block alongside
+`prices`, with the same shape (a price map, or a list of conditional prices):
+
+```yaml
+prices:
+  input_mtok: 5
+  output_mtok: 25
+  web_searches_kcount: 10
+batch_prices:
+  input_mtok: 2.5
+  output_mtok: 12.5
+```
+
+`batch_prices` overrides `prices` key by key, so only list the keys whose rate actually changes in batch mode.
+Anything omitted keeps its standard rate - above, web searches are not discounted in batch, so they are left
+out rather than repeated. Only add rates the provider publishes: batch discounts are not uniform (xAI's is 20%,
+Google bills batch cache hits at the standard cache rate on most models, Groq's batch rate ignores caching
+entirely), and a model with no `batch_prices` is simply charged its standard rates.
+
 Please do not:
 
 - edit generated JSON files directly — edit the provider YAML and use `make build` instead

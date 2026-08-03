@@ -299,6 +299,21 @@
           "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.\n\nIf no conditional models match the conditions, the first one is used.",
           "title": "Prices"
         },
+        "batch_prices": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelPrice"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/ConditionalPrice"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Prices for requests made through the provider's batch API, e.g. OpenAI's Batch API.\n\nThese override `prices` key by key, so only the keys whose rate differs in batch mode need to be listed;\nany key omitted here is charged at its `prices` rate. Resolution of conditional prices works exactly as it\ndoes for `prices`.",
+          "title": "Batch Prices"
+        },
         "price_discrepancies": {
           "additionalProperties": true,
           "type": "object",

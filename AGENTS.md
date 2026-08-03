@@ -137,6 +137,13 @@ little, suspect the importer before the data.
   YAML and silently wrong by 1000×.
 - Prices must cover their **ancestors and joins**: a model priced with `cache_write_1h_mtok` also needs
   `cache_write_mtok`, and so on. `make build` enforces this; the error names the missing key.
+- `batch_prices:` is an optional sibling of `prices:` with the same shape, used when the caller passes
+  `batch=True` / `batch: true`. It **overrides `prices` key by key**, so list only the keys whose rate
+  changes in batch mode - an omitted key keeps its standard rate, which is how units a provider does not
+  discount in batch (Anthropic's `web_searches_kcount`, Google's `cache_read_mtok` on most models) stay
+  correct. Discounts are not uniform across providers, so encode published rates rather than halving
+  everything: xAI's batch discount is 20%, Groq's batch rate ignores cache status entirely, and a model
+  with no `batch_prices` is charged its standard rates.
 
 ### Adding a unit
 

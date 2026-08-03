@@ -155,16 +155,27 @@ class UsageExtractor(_Model):
 
 
 def serialize_prices(
-    value: ModelPrice | list[ConditionalPrice], _handler: SerializerFunctionWrapHandler, info: SerializationInfo
+    value: ModelPrice | list[ConditionalPrice] | None, _handler: SerializerFunctionWrapHandler, info: SerializationInfo
 ):
     # Serialize each union member on its own. Under the `ModelPrice | list[ConditionalPrice]` union,
     # pydantic-core coerces whole-number `Decimal` prices to float (because `ModelPrice` has typed
     # `extra='allow'`); dumping the concrete member directly keeps whole numbers as ints.
     # No return annotation: WrapSerializer would otherwise adopt it as the serialization JSON schema
     # and collapse the detailed `prices` schema to a generic object.
+    if value is None:
+        return None
     if isinstance(value, list):
         return [cp.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none) for cp in value]
     return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
+
+
+def validate_conditional_prices(prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
+    if isinstance(prices, list):
+        if len(prices) == 0:
+            raise ValueError('model prices may not be empty')
+        if sum(p.constraint is None for p in prices) != 1:
+            raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
+    return prices
 
 
 class ModelInfo(_Model):
@@ -190,6 +201,15 @@ class ModelInfo(_Model):
 
     If no conditional models match the conditions, the first one is used.
     """
+    batch_prices: Annotated[
+        ModelPrice | list[ConditionalPrice] | None, WrapSerializer(serialize_prices, when_used='json')
+    ] = None
+    """Prices for requests made through the provider's batch API, e.g. OpenAI's Batch API.
+
+    These override `prices` key by key, so only the keys whose rate differs in batch mode need to be listed;
+    any key omitted here is charged at its `prices` rate. Resolution of conditional prices works exactly as it
+    does for `prices`.
+    """
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
     prices_checked: date | None = Field(default=None, exclude=True)
@@ -214,12 +234,14 @@ class ModelInfo(_Model):
     @field_validator('prices', mode='after')
     @classmethod
     def prices_not_empty(cls, prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
-        if isinstance(prices, list):
-            if len(prices) == 0:
-                raise ValueError('model prices may not be empty')
-            if sum(p.constraint is None for p in prices) != 1:
-                raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
-        return prices
+        return validate_conditional_prices(prices)
+
+    @field_validator('batch_prices', mode='after')
+    @classmethod
+    def batch_prices_not_empty(
+        cls, prices: ModelPrice | list[ConditionalPrice] | None
+    ) -> ModelPrice | list[ConditionalPrice] | None:
+        return None if prices is None else validate_conditional_prices(prices)
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):

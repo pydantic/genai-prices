@@ -170,6 +170,11 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('k', 'keep-going'),
         description='Whether to continue if a model is not found.',
     )
+    batch: bool = Field(
+        False,
+        validation_alias=AliasChoices('b', 'batch'),
+        description='Whether to use batch API prices, models without them are priced at their standard rates.',
+    )
     input_tokens: int | None = Field(
         None,
         validation_alias=AliasChoices('i', 'input-tokens'),
@@ -336,6 +341,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
                 model_ref=model,
                 provider_id=provider_id,
                 genai_request_timestamp=args.timestamp,
+                batch=args.batch,
             )
         except LookupError as exc:
             had_error = True

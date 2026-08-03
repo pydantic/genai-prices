@@ -26,6 +26,19 @@ if (result) {
 }
 ```
 
+### Batch API prices
+
+Pass `batch: true` for requests made through a provider's batch API - OpenAI's Batch API, Anthropic's Message
+Batches API, Gemini's Batch mode, and so on. Most providers charge 50% of their standard rates for these:
+
+```ts
+const result = calcPrice(usage, 'claude-opus-5', { batch: true, providerId: 'anthropic' })
+```
+
+Rates that a provider does not discount in batch mode - Anthropic's per-search web search fee, Google's cached
+input tokens on most models - stay at their standard price. Models we have no batch prices for are priced at
+their standard rates.
+
 ### `updatePrices`
 
 You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.

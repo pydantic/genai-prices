@@ -1,6 +1,7 @@
 import { computeLeafValues } from './decompose'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import {
+  ConditionalPrice,
   MatchLogic,
   ModelInfo,
   ModelPrice,
@@ -158,17 +159,32 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
   return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
-  if (!Array.isArray(model.prices)) {
-    return model.prices
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, batch = false): ModelPrice {
+  const prices = resolveConditionalPrices(model.prices, timestamp, model.id)
+  if (!batch || model.batch_prices === undefined) {
+    return prices
+  }
+
+  // Batch prices override the standard prices key by key; keys they omit stay at the standard rate.
+  const batchPrices = resolveConditionalPrices(model.batch_prices, timestamp, model.id)
+  const merged: ModelPrice = { ...prices }
+  for (const [priceKey, price] of Object.entries(batchPrices)) {
+    if (price !== undefined) merged[priceKey] = price
+  }
+  return merged
+}
+
+function resolveConditionalPrices(prices: ConditionalPrice[] | ModelPrice, timestamp: Date, modelId: string): ModelPrice {
+  if (!Array.isArray(prices)) {
+    return prices
   }
   if (Number.isNaN(timestamp.getTime())) {
     throw new RangeError('Invalid time value')
   }
   // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
+  for (let i = prices.length - 1; i >= 0; i--) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
+    const cond = prices[i]!
     const constraint = cond.constraint
 
     if (constraint === undefined) {
@@ -208,12 +224,12 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       // calcPrice (see normalizeProvider in
       // api.ts), so anything else reaching this point is unnormalized data.
       constraint satisfies never
-      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
+      throw new Error(`Unknown price constraint for model '${modelId}': ${JSON.stringify(constraint)}`)
     }
   }
   // Fallback to first
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  return prices[0]!.prices
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {

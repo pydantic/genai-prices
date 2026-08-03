@@ -80,6 +80,7 @@ export interface UsageExtractor {
 }
 
 export interface ModelInfo {
+  batch_prices?: ConditionalPrice[] | ModelPrice
   context_window?: number
   deprecated?: boolean
   description?: string
@@ -144,6 +145,8 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  /** Whether the request was made through the provider's batch API, e.g. OpenAI's Batch API. */
+  batch?: boolean
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

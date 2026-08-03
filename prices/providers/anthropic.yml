@@ -90,6 +90,12 @@ models:
       cache_read_mtok: 0.08
       output_mtok: 4
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 0.4
+      cache_write_mtok: 0.5
+      cache_write_1h_mtok: 0.8
+      cache_read_mtok: 0.04
+      output_mtok: 2
 
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5
@@ -112,6 +118,12 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 1.5
+      cache_write_mtok: 1.875
+      cache_write_1h_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 7.5
 
   - id: claude-3-7-sonnet-latest
     name: Claude Sonnet 3.7
@@ -135,6 +147,12 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 1.5
+      cache_write_mtok: 1.875
+      cache_write_1h_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 7.5
 
   - id: claude-3-haiku
     name: Claude Haiku 3
@@ -152,6 +170,12 @@ models:
       cache_write_1h_mtok: 0.5
       cache_read_mtok: 0.03
       output_mtok: 1.25
+    batch_prices:
+      input_mtok: 0.125
+      cache_write_mtok: 0.15
+      cache_write_1h_mtok: 0.25
+      cache_read_mtok: 0.015
+      output_mtok: 0.625
 
   - id: claude-3-opus-latest
     name: Claude Opus 3
@@ -171,6 +195,12 @@ models:
       cache_write_1h_mtok: 30
       cache_read_mtok: 1.5
       output_mtok: 75
+    batch_prices:
+      input_mtok: 7.5
+      cache_write_mtok: 9.375
+      cache_write_1h_mtok: 15
+      cache_read_mtok: 0.75
+      output_mtok: 37.5
 
   - id: claude-3-sonnet
     name: Claude 3 Sonnet
@@ -209,6 +239,12 @@ models:
       cache_write_1h_mtok: 20
       output_mtok: 50
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
 
   - id: claude-haiku-4-5
     name: Claude Haiku 4.5
@@ -231,6 +267,12 @@ models:
       cache_read_mtok: 0.10
       output_mtok: 5
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 0.5
+      cache_write_mtok: 0.625
+      cache_write_1h_mtok: 1
+      cache_read_mtok: 0.05
+      output_mtok: 2.5
 
   - id: claude-instant-1
     description: Retired, here to match price sources
@@ -271,6 +313,12 @@ models:
       cache_read_mtok: 1.5
       output_mtok: 75
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 7.5
+      cache_write_mtok: 9.375
+      cache_write_1h_mtok: 15
+      cache_read_mtok: 0.75
+      output_mtok: 37.5
 
   - id: claude-opus-4-1
     name: Claude Opus 4.1
@@ -292,6 +340,12 @@ models:
       cache_read_mtok: 1.5
       output_mtok: 75
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 7.5
+      cache_write_mtok: 9.375
+      cache_write_1h_mtok: 15
+      cache_read_mtok: 0.75
+      output_mtok: 37.5
 
   - id: claude-opus-4-5
     name: Claude Opus 4.5
@@ -314,6 +368,12 @@ models:
       cache_read_mtok: 0.50
       output_mtok: 25
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_write_1h_mtok: 5
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
 
   - id: claude-opus-4-6
     name: Claude Opus 4.6
@@ -367,6 +427,41 @@ models:
           cache_write_1h_mtok: 10
           output_mtok: 25
           web_searches_kcount: 10
+    batch_prices:
+      - prices:
+          input_mtok:
+            base: 2.5
+            tiers:
+              - start: 200000
+                price: 5
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 200000
+                price: 0.5
+          cache_write_mtok:
+            base: 3.125
+            tiers:
+              - start: 200000
+                price: 6.25
+          cache_write_1h_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 10
+          output_mtok:
+            base: 12.5
+            tiers:
+              - start: 200000
+                price: 18.75
+      - constraint:
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 2.5
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.5
 
   - id: claude-opus-4-7
     name: Claude Opus 4.7
@@ -390,6 +485,12 @@ models:
       cache_write_1h_mtok: 10
       output_mtok: 25
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      cache_write_mtok: 3.125
+      cache_write_1h_mtok: 5
+      output_mtok: 12.5
 
   - id: claude-opus-4-8
     name: Claude Opus 4.8
@@ -413,6 +514,12 @@ models:
       cache_write_1h_mtok: 10
       output_mtok: 25
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      cache_write_mtok: 3.125
+      cache_write_1h_mtok: 5
+      output_mtok: 12.5
 
   - id: claude-opus-5
     name: Claude Opus 5
@@ -437,6 +544,12 @@ models:
       cache_write_1h_mtok: 10
       output_mtok: 25
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      cache_write_mtok: 3.125
+      cache_write_1h_mtok: 5
+      output_mtok: 12.5
 
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
@@ -460,6 +573,12 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok: 1.5
+      cache_write_mtok: 1.875
+      cache_write_1h_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 7.5
 
   - id: claude-sonnet-4-5
     name: Claude Sonnet 4.5
@@ -500,6 +619,32 @@ models:
           - start: 200000
             price: 22.50
       web_searches_kcount: 10
+    batch_prices:
+      input_mtok:
+        base: 1.5
+        tiers:
+          - start: 200000
+            price: 3
+      cache_read_mtok:
+        base: 0.15
+        tiers:
+          - start: 200000
+            price: 0.3
+      cache_write_mtok:
+        base: 1.875
+        tiers:
+          - start: 200000
+            price: 3.75
+      cache_write_1h_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      output_mtok:
+        base: 7.5
+        tiers:
+          - start: 200000
+            price: 11.25
 
   - id: claude-sonnet-4-6
     name: Claude Sonnet 4.6
@@ -551,6 +696,41 @@ models:
           cache_write_1h_mtok: 6
           output_mtok: 15
           web_searches_kcount: 10
+    batch_prices:
+      - prices:
+          input_mtok:
+            base: 1.5
+            tiers:
+              - start: 200000
+                price: 3
+          cache_read_mtok:
+            base: 0.15
+            tiers:
+              - start: 200000
+                price: 0.3
+          cache_write_mtok:
+            base: 1.875
+            tiers:
+              - start: 200000
+                price: 3.75
+          cache_write_1h_mtok:
+            base: 3
+            tiers:
+              - start: 200000
+                price: 6
+          output_mtok:
+            base: 7.5
+            tiers:
+              - start: 200000
+                price: 11.25
+      - constraint:
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          cache_write_mtok: 1.875
+          cache_write_1h_mtok: 3
+          output_mtok: 7.5
 
   - id: claude-sonnet-5
     name: Claude Sonnet 5
@@ -585,6 +765,21 @@ models:
           cache_write_1h_mtok: 6
           output_mtok: 15
           web_searches_kcount: 10
+    batch_prices:
+      - prices:
+          input_mtok: 1
+          cache_read_mtok: 0.1
+          cache_write_mtok: 1.25
+          cache_write_1h_mtok: 2
+          output_mtok: 5
+      - constraint:
+          start_date: 2026-09-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          cache_write_mtok: 1.875
+          cache_write_1h_mtok: 3
+          output_mtok: 7.5
 
   - id: claude-v1
     description: Retired, here to match price sources

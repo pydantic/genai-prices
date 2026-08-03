@@ -4,6 +4,7 @@ import dataclasses
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
+from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -129,7 +130,11 @@ class ExtractedUsage:
     auto_update_timestamp: datetime | None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -137,6 +142,7 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
+            batch: Whether the request was made through the provider's batch API, use the model's batch prices if so.
         """
         model = model or self.model
         if model is None:
@@ -147,6 +153,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            batch=batch,
         )
 
     def __repr__(self) -> str:
@@ -661,19 +668,21 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+    batch_prices: ModelPrice | list[ConditionalPrice] | None = None
+    """Prices for requests made through the provider's batch API, e.g. OpenAI's Batch API.
+
+    These override `prices` key by key, so a key omitted here is charged at its `prices` rate.
+    Conditional prices are resolved exactly as they are for `prices`.
+    """
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
-        if isinstance(self.prices, ModelPrice):
-            return self.prices
-        else:
-            # reversed because the last price takes precedence
-            for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+    def get_prices(self, request_timestamp: datetime, *, batch: bool = False) -> ModelPrice:
+        prices = _resolve_conditional_prices(self.prices, request_timestamp)
+        if batch and self.batch_prices is not None:
+            prices = _overlay_model_price(prices, _resolve_conditional_prices(self.batch_prices, request_timestamp))
+        return prices
 
     def calc_price(
         self,
@@ -682,11 +691,12 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        batch: bool = False,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        model_price = self.get_prices(genai_request_timestamp, batch=batch)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -700,6 +710,26 @@ class ModelInfo:
 
     def summary(self) -> str:
         return f'Model(id={self.id!r}, name={self.name!r}, ...)'
+
+
+def _resolve_conditional_prices(prices: ModelPrice | list[ConditionalPrice], request_timestamp: datetime) -> ModelPrice:
+    if isinstance(prices, ModelPrice):
+        return prices
+
+    # reversed because the last price takes precedence
+    for conditional_price in reversed(prices):
+        if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
+            return conditional_price.prices
+    return prices[0].prices
+
+
+def _overlay_model_price(base: ModelPrice, overlay: ModelPrice) -> ModelPrice:
+    """Return `base` with every price set on `overlay` replaced, keeping the type of `base`."""
+    merged = copy(base)
+    for price_key, price in overlay.__dict__.items():
+        if not price_key.startswith('_') and price is not None:
+            object.__setattr__(merged, price_key, price)
+    return merged
 
 
 class CalcPrice(TypedDict):
@@ -1133,7 +1163,7 @@ def _normalize_model_prices(value: Any) -> Any:
     normalized: dict[str, Any] = {}
     raw_mapping = cast(Mapping[str, Any], value)
     for key, raw_value in raw_mapping.items():
-        if key == 'prices':
+        if key in ('prices', 'batch_prices'):
             normalized[key] = _normalize_prices_field(raw_value)
         else:
             normalized[key] = _normalize_model_prices(raw_value)

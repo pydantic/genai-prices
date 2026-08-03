@@ -1,5 +1,6 @@
 import type {
   ConditionalPrice,
+  ModelPrice,
   PriceCalculationResult,
   PriceOptions,
   Provider,
@@ -70,11 +71,14 @@ function normalizeProvider(provider: Provider): Provider {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
+      ...(model.batch_prices === undefined ? {} : { batch_prices: normalizePrices(model.batch_prices, provider.id, model.id) }),
+      prices: normalizePrices(model.prices, provider.id, model.id),
     })),
   }
+}
+
+function normalizePrices(prices: ConditionalPrice[] | ModelPrice, providerId: string, modelId: string): ConditionalPrice[] | ModelPrice {
+  return Array.isArray(prices) ? prices.map((price) => normalizeConditionalPrice(price, providerId, modelId)) : prices
 }
 
 /**
@@ -226,7 +230,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
+  const modelPrice = getActiveModelPrice(model, timestamp, options?.batch)
   const priceResult = calcPriceInternal(usage, modelPrice)
   return {
     auto_update_timestamp: undefined,

@@ -44,6 +44,9 @@ models:
     prices:
       input_mtok: 0.75
       output_mtok: 0.99
+    batch_prices:
+      input_mtok: 0.375
+      output_mtok: 0.495
 
   - id: gemma-7b-it
     match:
@@ -51,6 +54,9 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.07
+    batch_prices:
+      input_mtok: 0.035
+      output_mtok: 0.035
 
   - id: gemma2-9b-it
     name: Gemma 2 9B 8k
@@ -62,6 +68,9 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+    batch_prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
 
   - id: llama-3.1-405b-reasoning
     match:
@@ -69,6 +78,9 @@ models:
     prices:
       input_mtok: 0.59
       output_mtok: 0.79
+    batch_prices:
+      input_mtok: 0.295
+      output_mtok: 0.395
 
   - id: llama-3.1-70b-versatile
     match:
@@ -76,6 +88,9 @@ models:
     prices:
       input_mtok: 0.59
       output_mtok: 0.79
+    batch_prices:
+      input_mtok: 0.295
+      output_mtok: 0.395
 
   - id: llama-3.1-8b-instant
     name: Llama 3.1 8B Instant 128k
@@ -85,6 +100,9 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.08
+    batch_prices:
+      input_mtok: 0.025
+      output_mtok: 0.04
 
   - id: llama-3.2-11b-text-preview
     match:
@@ -92,6 +110,9 @@ models:
     prices:
       input_mtok: 0.18
       output_mtok: 0.18
+    batch_prices:
+      input_mtok: 0.09
+      output_mtok: 0.09
 
   - id: llama-3.2-11b-vision-preview
     match:
@@ -99,6 +120,9 @@ models:
     prices:
       input_mtok: 0.18
       output_mtok: 0.18
+    batch_prices:
+      input_mtok: 0.09
+      output_mtok: 0.09
 
   - id: llama-3.2-1b-preview
     match:
@@ -106,6 +130,9 @@ models:
     prices:
       input_mtok: 0.04
       output_mtok: 0.04
+    batch_prices:
+      input_mtok: 0.02
+      output_mtok: 0.02
 
   - id: llama-3.2-3b-preview
     match:
@@ -113,6 +140,9 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.06
+    batch_prices:
+      input_mtok: 0.03
+      output_mtok: 0.03
 
   - id: llama-3.2-90b-text-preview
     match:
@@ -120,6 +150,9 @@ models:
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
+    batch_prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
 
   - id: llama-3.2-90b-vision-preview
     match:
@@ -127,6 +160,9 @@ models:
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
+    batch_prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
 
   - id: llama-3.3-70b-specdec
     match:
@@ -134,6 +170,9 @@ models:
     prices:
       input_mtok: 0.59
       output_mtok: 0.99
+    batch_prices:
+      input_mtok: 0.295
+      output_mtok: 0.495
 
   - id: llama-3.3-70b-versatile
     name: Llama 3.3 70B Versatile 128k
@@ -143,6 +182,9 @@ models:
     prices:
       input_mtok: 0.59
       output_mtok: 0.79
+    batch_prices:
+      input_mtok: 0.295
+      output_mtok: 0.395
 
   - id: llama-guard-3-8b
     match:
@@ -150,6 +192,9 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+    batch_prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
 
   - id: llama2-70b-4096
     match:
@@ -157,6 +202,9 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 0.8
+    batch_prices:
+      input_mtok: 0.35
+      output_mtok: 0.4
 
   - id: llama3-70b-8192
     match:
@@ -164,6 +212,9 @@ models:
     prices:
       input_mtok: 0.59
       output_mtok: 0.79
+    batch_prices:
+      input_mtok: 0.295
+      output_mtok: 0.395
 
   - id: llama3-8b-8192
     match:
@@ -171,6 +222,9 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.08
+    batch_prices:
+      input_mtok: 0.025
+      output_mtok: 0.04
 
   - id: llama3-groq-70b-8192-tool-use-preview
     match:
@@ -178,6 +232,9 @@ models:
     prices:
       input_mtok: 0.89
       output_mtok: 0.89
+    batch_prices:
+      input_mtok: 0.445
+      output_mtok: 0.445
 
   - id: llama3-groq-8b-8192-tool-use-preview
     match:
@@ -185,6 +242,9 @@ models:
     prices:
       input_mtok: 0.19
       output_mtok: 0.19
+    batch_prices:
+      input_mtok: 0.095
+      output_mtok: 0.095
 
   - id: meta-llama/llama-4-maverick-17b-128e-instruct
     name: Llama 4 Maverick 17B 128E
@@ -195,6 +255,9 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
+    batch_prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
 
   - id: meta-llama/llama-4-scout-17b-16e-instruct
     name: Llama 4 Scout (17Bx16E) 128k
@@ -204,6 +267,9 @@ models:
     prices:
       input_mtok: 0.11
       output_mtok: 0.34
+    batch_prices:
+      input_mtok: 0.055
+      output_mtok: 0.17
 
   - id: meta-llama/llama-guard-4-12b
     name: Llama Guard 4 12B
@@ -214,6 +280,9 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+    batch_prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
 
   - id: mistral-saba-24b
     match:
@@ -221,6 +290,9 @@ models:
     prices:
       input_mtok: 0.79
       output_mtok: 0.79
+    batch_prices:
+      input_mtok: 0.395
+      output_mtok: 0.395
 
   - id: mixtral-8x7b-32768
     match:
@@ -228,6 +300,9 @@ models:
     prices:
       input_mtok: 0.24
       output_mtok: 0.24
+    batch_prices:
+      input_mtok: 0.12
+      output_mtok: 0.12
 
   - id: moonshotai/kimi-k2-instruct
     name: Kimi K2 1T 128k
@@ -241,6 +316,10 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.5
       output_mtok: 3
+    batch_prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+      cache_read_mtok: 0.5
 
   # https://console.groq.com/docs/model/openai/gpt-oss-120b
   - id: openai/gpt-oss-120b
@@ -257,6 +336,10 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
+    batch_prices:
+      input_mtok: 0.075
+      output_mtok: 0.3
+      cache_read_mtok: 0.075
 
   # https://console.groq.com/docs/model/openai/gpt-oss-20b
   - id: openai/gpt-oss-20b
@@ -271,6 +354,10 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.0375
       output_mtok: 0.30
+    batch_prices:
+      input_mtok: 0.0375
+      output_mtok: 0.15
+      cache_read_mtok: 0.0375
 
   - id: qwen/qwen3-32b
     name: Qwen3 32B 131k
@@ -280,3 +367,6 @@ models:
     prices:
       input_mtok: 0.29
       output_mtok: 0.59
+    batch_prices:
+      input_mtok: 0.145
+      output_mtok: 0.295

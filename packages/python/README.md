@@ -51,6 +51,29 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Batch API prices
+
+Pass `batch=True` for requests made through a provider's batch API - OpenAI's Batch API, Anthropic's Message
+Batches API, Gemini's Batch mode, and so on. Most providers charge 50% of their standard rates for these:
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(input_tokens=1000, output_tokens=100),
+    model_ref='claude-opus-5',
+    provider_id='anthropic',
+    batch=True,
+)
+```
+
+Rates that a provider does not discount in batch mode - Anthropic's per-search web search fee, Google's
+cached input tokens on most models - stay at their standard price. Models we have no batch prices for are
+priced at their standard rates.
+
+`batch=True` is also accepted by `ExtractedUsage.calc_price()` and `ModelInfo.calc_price()`, and the CLI takes
+`--batch`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,

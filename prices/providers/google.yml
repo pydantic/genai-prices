@@ -581,6 +581,10 @@ models:
       output_mtok: 0.4
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.175
+    batch_prices:
+      input_mtok: 0.05
+      input_audio_mtok: 0.35
+      output_mtok: 0.2
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -595,6 +599,9 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
+    batch_prices:
+      input_mtok: 0.0375
+      output_mtok: 0.15
 
   - id: gemini-2.5-flash
     name: Gemini 2.5 Flash
@@ -614,6 +621,10 @@ models:
       cache_read_mtok: 0.03
       cache_audio_read_mtok: 0.1
       output_mtok: 2.5
+    batch_prices:
+      input_mtok: 0.15
+      input_audio_mtok: 0.5
+      output_mtok: 1.25
 
   - id: gemini-2.5-flash-image
     name: Gemini 2.5 Flash Image
@@ -633,6 +644,10 @@ models:
       input_mtok: 0.3
       output_mtok: 2.5
       output_image_mtok: 30
+    batch_prices:
+      input_mtok: 0.15
+      output_mtok: 1.25
+      output_image_mtok: 15
 
   - id: gemini-2.5-flash-lite
     name: Gemini 2.5 Flash Lite
@@ -654,6 +669,10 @@ models:
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
+    batch_prices:
+      input_mtok: 0.05
+      input_audio_mtok: 0.15
+      output_mtok: 0.2
 
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
@@ -703,6 +722,17 @@ models:
         tiers:
           - start: 200000
             price: 15
+    batch_prices:
+      input_mtok:
+        base: 0.625
+        tiers:
+          - start: 200000
+            price: 1.25
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 200000
+            price: 7.5
 
   - id: gemini-3-flash-preview
     name: Gemini 3 Flash Preview
@@ -723,6 +753,10 @@ models:
       cache_read_mtok: 0.05
       cache_audio_read_mtok: 0.1
       output_mtok: 3
+    batch_prices:
+      input_mtok: 0.25
+      input_audio_mtok: 0.5
+      output_mtok: 1.5
 
   - id: gemini-3-pro-image-preview
     name: Gemini 3 Pro Image Preview
@@ -742,6 +776,10 @@ models:
       input_mtok: 2
       output_mtok: 12
       output_image_mtok: 120
+    batch_prices:
+      input_mtok: 1
+      output_mtok: 6
+      output_image_mtok: 60
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
@@ -769,6 +807,17 @@ models:
         tiers:
           - start: 200000
             price: 18
+    batch_prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 200000
+            price: 2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 9
 
   - id: gemini-3.1-flash-image-preview
     name: Gemini 3.1 Flash Image Preview
@@ -789,6 +838,10 @@ models:
       input_mtok: 0.5
       output_mtok: 3
       output_image_mtok: 60
+    batch_prices:
+      input_mtok: 0.25
+      output_mtok: 1.5
+      output_image_mtok: 30
 
   - id: gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
@@ -808,6 +861,12 @@ models:
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.05
       output_mtok: 1.5
+    batch_prices:
+      input_mtok: 0.125
+      input_audio_mtok: 0.25
+      cache_read_mtok: 0.0125
+      cache_audio_read_mtok: 0.025
+      output_mtok: 0.75
 
   - id: gemini-3.1-flash-lite-image
     name: Gemini 3.1 Flash Lite Image
@@ -821,6 +880,10 @@ models:
       input_mtok: 0.25
       output_mtok: 1.5
       output_image_mtok: 30
+    batch_prices:
+      input_mtok: 0.125
+      output_mtok: 0.75
+      output_image_mtok: 15
 
   - id: gemini-3.1-flash-live-preview
     name: Gemini 3.1 Flash Live Preview
@@ -860,6 +923,17 @@ models:
         tiers:
           - start: 200000
             price: 18
+    batch_prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 200000
+            price: 2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 9
 
   - id: gemini-3.5-flash
     name: Gemini 3.5 Flash
@@ -880,6 +954,10 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 9
+    batch_prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
 
   - id: gemini-3.5-flash-lite
     name: Gemini 3.5 Flash Lite
@@ -896,6 +974,10 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 2.5
+    batch_prices:
+      input_mtok: 0.15
+      output_mtok: 1.25
+      cache_read_mtok: 0.02
 
   - id: gemini-3.6-flash
     name: Gemini 3.6 Flash
@@ -912,6 +994,10 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 7.5
+    batch_prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
 
   - id: gemini-embedding-001
     match:
