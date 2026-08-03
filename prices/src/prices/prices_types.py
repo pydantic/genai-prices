@@ -169,6 +169,11 @@ def serialize_prices(
     return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
 
 
+def _has_any_price(model_price: ModelPrice) -> bool:
+    fields = (getattr(model_price, name) for name in model_price.__pydantic_fields__)
+    return any(value is not None for value in (*fields, *(model_price.model_extra or {}).values()))
+
+
 def _price_constraints(prices: Any) -> set[str]:
     """Describe each price entry's constraint, e.g. `start_date=2026-01-01`."""
     if not isinstance(prices, list):
@@ -256,6 +261,8 @@ class ModelInfo(_Model):
             return None
 
         validate_conditional_prices(prices)
+        if isinstance(prices, ModelPrice) and not _has_any_price(prices):
+            raise ValueError('`batch_prices` may not be empty, omit it to charge the standard prices')
         # Batch prices are resolved by the same constraints as the standard prices, so a batch price set that
         # doesn't repeat a dated change would charge the new batch rate against requests made before it.
         missing = _price_constraints(info.data.get('prices')) - _price_constraints(prices)
