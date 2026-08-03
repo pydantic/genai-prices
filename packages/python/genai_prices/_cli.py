@@ -315,6 +315,8 @@ def _parse_price_context(pairs: Sequence[str]) -> dict[str, str]:
         parameter, sep, value = pair.partition('=')
         if not sep or not parameter:
             raise SystemExit(f'Invalid --price-context {pair!r}, expected `key=value`')
+        if parameter in context:
+            raise SystemExit(f'Duplicate --price-context {parameter!r}, it was already set to {context[parameter]!r}')
         context[parameter] = value
     return context
 

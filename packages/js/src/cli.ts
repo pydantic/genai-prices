@@ -83,7 +83,12 @@ function parsePriceContext(pairs: string[] | undefined): Record<string, string> 
       console.error(`Invalid --price-context '${pair}', expected key=value`)
       process.exit(1)
     }
-    context[pair.slice(0, separator)] = pair.slice(separator + 1)
+    const parameter = pair.slice(0, separator)
+    if (parameter in context) {
+      console.error(`Duplicate --price-context '${parameter}', it was already set to '${context[parameter]}'`)
+      process.exit(1)
+    }
+    context[parameter] = pair.slice(separator + 1)
   }
   return context
 }

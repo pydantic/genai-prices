@@ -103,6 +103,11 @@ def test_parse_price_context_rejects_malformed(pair: str):
         _parse_price_context([pair])
 
 
+def test_parse_price_context_rejects_duplicate():
+    with pytest.raises(SystemExit, match='Duplicate --price-context'):
+        _parse_price_context(['service_tier=batch', 'service_tier=standard'])
+
+
 def test_calc_with_price_context(capsys: pytest.CaptureFixture[str]):
     assert (
         cli_module.cli_logic(['-p', 'calc', '-i', '1000000', '--price-context', 'service_tier=batch', 'claude-opus-5'])
