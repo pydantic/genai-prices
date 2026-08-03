@@ -37,7 +37,7 @@ const result = calcPrice(usage, 'claude-opus-5', { batch: true, providerId: 'ant
 
 Rates that a provider does not discount in batch mode - Anthropic's per-search web search fee, Google's cached
 input tokens on most models - stay at their standard price. Models we have no batch prices for are priced at
-their standard rates.
+their standard rates. The CLI takes `--batch` for the same thing.
 
 ### `updatePrices`
 
