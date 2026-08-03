@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, cast
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -169,6 +169,17 @@ def serialize_prices(
     return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
 
 
+def _price_constraints(prices: Any) -> set[str]:
+    """Describe each price entry's constraint, e.g. `start_date=2026-01-01`."""
+    if not isinstance(prices, list):
+        return set()
+    return {
+        ', '.join(f'{key}={value}' for key, value in sorted(price.constraint.__dict__.items()))
+        for price in cast(list[ConditionalPrice], prices)
+        if price.constraint is not None
+    }
+
+
 def validate_conditional_prices(prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
     if isinstance(prices, list):
         if len(prices) == 0:
@@ -239,9 +250,19 @@ class ModelInfo(_Model):
     @field_validator('batch_prices', mode='after')
     @classmethod
     def batch_prices_not_empty(
-        cls, prices: ModelPrice | list[ConditionalPrice] | None
+        cls, prices: ModelPrice | list[ConditionalPrice] | None, info: ValidationInfo
     ) -> ModelPrice | list[ConditionalPrice] | None:
-        return None if prices is None else validate_conditional_prices(prices)
+        if prices is None:
+            return None
+
+        validate_conditional_prices(prices)
+        # Batch prices are resolved by the same constraints as the standard prices, so a batch price set that
+        # doesn't repeat a dated change would charge the new batch rate against requests made before it.
+        missing = _price_constraints(info.data.get('prices')) - _price_constraints(prices)
+        if missing:
+            described = ', '.join(sorted(repr(constraint) for constraint in missing))
+            raise ValueError(f'`batch_prices` must repeat the constraints used by `prices`, missing: {described}')
+        return prices
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):

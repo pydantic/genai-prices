@@ -14,6 +14,7 @@ interface Argv {
   _: (number | string)[]
   'auto-update'?: boolean
   autoUpdate?: boolean
+  batch?: boolean
   'cache-audio-read-tokens'?: number
   'cache-read-tokens'?: number
   'cache-write-tokens'?: number
@@ -44,6 +45,7 @@ const argv = yargs(hideBin(process.argv))
       .option('output-audio-tokens', { type: 'number' })
       .option('requests', { type: 'number' })
       .option('provider', { type: 'string' })
+      .option('batch', { default: false, describe: "Use the provider's batch API prices", type: 'boolean' })
       .option('auto-update', { default: false, type: 'boolean' })
       .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
   )
@@ -57,6 +59,7 @@ const argv = yargs(hideBin(process.argv))
   .option('output-audio-tokens', { type: 'number' })
   .option('requests', { type: 'number' })
   .option('provider', { type: 'string' })
+  .option('batch', { describe: "Use the provider's batch API prices", type: 'boolean' })
   .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
   .version(version)
   .help()
@@ -112,7 +115,7 @@ function main() {
         ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
       }
       try {
-        const result = calcPrice(usage, modelId, { providerId, timestamp })
+        const result = calcPrice(usage, modelId, { batch: argv.batch, providerId, timestamp })
         if (!result) {
           hadError = true
           console.error(`No price found for model ${modelArg}`)

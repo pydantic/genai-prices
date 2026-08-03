@@ -161,7 +161,8 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date, batch = false): ModelPrice {
   const prices = resolveConditionalPrices(model.prices, timestamp, model.id)
-  if (!batch || model.batch_prices === undefined) {
+  // `== null` so a JSON `null` behaves like an omitted value, as it does in the Python engine.
+  if (!batch || model.batch_prices == null) {
     return prices
   }
 
@@ -169,7 +170,7 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, batch = f
   const batchPrices = resolveConditionalPrices(model.batch_prices, timestamp, model.id)
   const merged: ModelPrice = { ...prices }
   for (const [priceKey, price] of Object.entries(batchPrices)) {
-    if (price !== undefined) merged[priceKey] = price
+    if (price != null) merged[priceKey] = price
   }
   return merged
 }

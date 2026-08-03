@@ -74,6 +74,21 @@ describe('batch prices', () => {
     expect(getActiveModelPrice(model, TIMESTAMP)).toEqual({ input_mtok: 10, output_mtok: 20, requests_kcount: 1 })
   })
 
+  it('treats a null price the same way the Python engine does', () => {
+    // Caller-supplied provider data can carry JSON nulls; an unset key falls through to the standard price.
+    const model = {
+      batch_prices: { input_mtok: null, output_mtok: 5 },
+      id: 'test',
+      match: { equals: 'test' },
+      prices: { input_mtok: 10, output_mtok: 20 },
+    } as unknown as ModelInfo
+
+    expect(getActiveModelPrice(model, TIMESTAMP, true)).toEqual({ input_mtok: 10, output_mtok: 5 })
+
+    const nullBatch = { ...model, batch_prices: null } as unknown as ModelInfo
+    expect(getActiveModelPrice(nullBatch, TIMESTAMP, true)).toEqual({ input_mtok: 10, output_mtok: 20 })
+  })
+
   it('resolves batch conditional prices independently of standard ones', () => {
     const model: ModelInfo = {
       batch_prices: [
