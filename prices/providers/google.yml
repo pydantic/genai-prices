@@ -6,6 +6,11 @@ pricing_urls:
   - https://cloud.google.com/vertex-ai/generative-ai/pricing
   # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
 api_pattern: 'https://(.*\.)?googleapis\.com'
+price_comments: >-
+  Batch mode is 50% of the interactive price for input and output tokens of every modality. Cache hits are
+  billed "at the standard context caching rates" except on the models whose batch row publishes its own
+  cached figure, so `batch_prices` lists `cache_read_mtok` only for those.
+  Ref: https://ai.google.dev/gemini-api/docs/batch-api
 model_match:
   contains: gemini
 provider_match:
@@ -1002,6 +1007,7 @@ models:
   - id: gemini-embedding-001
     match:
       equals: gemini-embedding-001
+    prices_checked: 2026-08-03
     prices:
       input_mtok: 0.15
     batch_prices:
@@ -1013,7 +1019,7 @@ models:
     match:
       equals: gemini-embedding-2
     context_window: 8192
-    prices_checked: 2026-07-22
+    prices_checked: 2026-08-03
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2.
     prices:
       input_mtok: 0.2

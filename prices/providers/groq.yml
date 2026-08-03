@@ -4,6 +4,11 @@ id: groq
 pricing_urls:
   - https://groq.com/pricing/
 api_pattern: 'https://api\.groq\.com'
+price_comments: >-
+  The Batch API costs 50% of the synchronous rates and accepts only the models listed in its docs, so the
+  others carry no `batch_prices`. The discount does not stack with prompt caching: all batch tokens are
+  billed at the halved input rate regardless of cache status.
+  Ref: https://console.groq.com/docs/batch
 
 # https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
 extractors:

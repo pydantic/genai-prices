@@ -9,6 +9,11 @@ pricing_urls:
   - https://platform.openai.com/docs/models
   - https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
 api_pattern: 'https://api\.openai\.com'
+price_comments: >-
+  Batch API rates are 50% of standard for every published token rate, including cached input and cache
+  writes. Tool calls are not discounted, and the audio/realtime, transcription, embeddings and specialised
+  model tables have no batch pane at all, so those models carry no `batch_prices`.
+  Ref: https://developers.openai.com/api/docs/pricing
 model_match:
   or:
     - starts_with: "gpt-"
