@@ -76,7 +76,8 @@ const argv = yargs(hideBin(process.argv))
 
 function parsePriceContext(pairs: string[] | undefined): Record<string, string> | undefined {
   if (!pairs?.length) return undefined
-  const context: Record<string, string> = {}
+  // a null prototype so `constructor`/`toString` are not already "present" and `__proto__` is an ordinary key
+  const context = Object.create(null) as Record<string, string>
   for (const pair of pairs) {
     const separator = pair.indexOf('=')
     if (separator < 1) {
@@ -84,7 +85,7 @@ function parsePriceContext(pairs: string[] | undefined): Record<string, string> 
       process.exit(1)
     }
     const parameter = pair.slice(0, separator)
-    if (parameter in context) {
+    if (Object.prototype.hasOwnProperty.call(context, parameter)) {
       console.error(`Duplicate --price-context '${parameter}', it was already set to '${context[parameter]}'`)
       process.exit(1)
     }
