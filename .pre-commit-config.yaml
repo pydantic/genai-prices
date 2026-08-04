@@ -45,7 +45,7 @@ repos:
       - id: prettier
         name: prettier
         entry: npx
-        args: [prettier, --write, --ignore-unknown]
+        args: [--, prettier, --config, package.json, --write, --ignore-unknown]
         language: system
       - id: lint-fix
         name: lint fix

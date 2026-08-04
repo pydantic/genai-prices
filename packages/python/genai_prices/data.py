@@ -1826,7 +1826,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.deepseek\\.com',
         pricing_urls=['https://api-docs.deepseek.com/quick_start/pricing'],
         price_comments='Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing as the default (first) price then the second price with a constraint is the "standard" pricing that applies "UTC 00:30-16:30".',
-        model_match=ClauseContains(contains='deepseek'),
+        model_match=ClauseStartsWith(starts_with='deepseek'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -2089,7 +2089,7 @@ providers: list[Provider] = [
         name='Fireworks',
         api_pattern='https://api\\.fireworks\\.ai',
         pricing_urls=['https://fireworks.ai/pricing'],
-        model_match=ClauseStartsWith(starts_with='accounts/fireworks/models/'),
+        model_match=ClauseStartsWith(starts_with='accounts/fireworks/'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -2137,8 +2137,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-v4-flash',
-                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash'),
+                        ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash-0731'),
+                    ]
+                ),
                 name='DeepSeek-V4-Flash',
+                description='Official release of DeepSeek-V4-Flash with enhanced agentic capabilities and speculative decoding.',
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
                 ),
@@ -2176,6 +2184,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p1-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p1-fast'),
+                name='GLM 5.1 Fast',
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.8'), cache_read_mtok=Decimal('0.52'), output_mtok=Decimal('8.8')
+                ),
+            ),
+            ModelInfo(
                 id='glm-5p2',
                 match=ClauseEquals(equals='accounts/fireworks/models/glm-5p2'),
                 name='GLM-5.2',
@@ -2186,13 +2203,29 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p2-fast',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='accounts/fireworks/routers/glm-5p2-fast'),
+                        ClauseEquals(equals='accounts/fireworks/routers/glm-5p2-fast-us'),
+                    ]
+                ),
+                name='GLM 5.2 Fast',
+                context_window=1040000,
+                price_comments='Fast and US-only serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='accounts/fireworks/models/gpt-oss-120b'),
                 name='OpenAI gpt-oss-120b',
                 description="OpenAI's open-weight 117B parameter MoE model designed for production, general purpose, high reasoning use-cases. Features powerful reasoning, agentic tasks, and versatile developer use cases.",
                 context_window=131072,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('0.6')
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('0.6')
                 ),
             ),
             ModelInfo(
@@ -2201,8 +2234,20 @@ providers: list[Provider] = [
                 name='OpenAI gpt-oss-20b',
                 description="OpenAI's open-weight 21.5B parameter model designed for powerful reasoning, agentic tasks, and versatile developer use cases. Optimized for lower latency and local or specialized tasks.",
                 context_window=131072,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-20b.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.3')
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.3')
+                ),
+            ),
+            ModelInfo(
+                id='inkling',
+                match=ClauseEquals(equals='accounts/fireworks/models/inkling'),
+                name='Inkling',
+                description="Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/inkling.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
                 ),
             ),
             ModelInfo(
@@ -2222,6 +2267,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='kimi-k2p6-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k2p6-fast'),
+                name='Kimi K2.6 Fast',
+                context_window=262144,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('8')),
+            ),
+            ModelInfo(
                 id='kimi-k2p7-code',
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p7-code'),
                 name='Kimi K2.7 Code',
@@ -2229,6 +2282,43 @@ providers: list[Provider] = [
                 context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2p7-code-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k2p7-code-fast'),
+                name='Kimi K2.7 Code Fast',
+                context_window=262144,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('1.9'), cache_read_mtok=Decimal('0.38'), output_mtok=Decimal('8')),
+            ),
+            ModelInfo(
+                id='kimi-k3',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3'),
+                name='Kimi K3',
+                description="Moonshot AI's 2.81T-parameter flagship model with native visual understanding and a 1M-token context window.",
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/kimi-k3. Fast and US router variants have separate model IDs.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='kimi-k3-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3-fast'),
+                name='Kimi K3 Fast',
+                context_window=1040000,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.5'), cache_read_mtok=Decimal('0.45'), output_mtok=Decimal('22.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3-us'),
+                name='Kimi K3 US',
+                context_window=1040000,
+                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.3'), cache_read_mtok=Decimal('0.33'), output_mtok=Decimal('16.5')
                 ),
             ),
             ModelInfo(

@@ -260,7 +260,8 @@ export const data: Provider[] = [
       {
         id: 'claude-fable-5',
         name: 'Claude Fable 5',
-        description: "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+        description:
+          "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
         match: {
           starts_with: 'claude-fable-5',
         },
@@ -2635,7 +2636,8 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-mini-instruct',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
         prices: {
           input_mtok: 0.08,
           output_mtok: 0.35,
@@ -3036,7 +3038,7 @@ export const data: Provider[] = [
     price_comments:
       'Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing as the default (first) price then the second price with a constraint is the "standard" pricing that applies "UTC 00:30-16:30".',
     model_match: {
-      contains: 'deepseek',
+      starts_with: 'deepseek',
     },
     extractors: [
       {
@@ -3232,7 +3234,8 @@ export const data: Provider[] = [
     name: 'Doubleword',
     pricing_urls: ['https://docs.doubleword.ai/inference-api/models'],
     api_pattern: 'https://api\\.doubleword\\.ai',
-    price_comments: 'Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
+    price_comments:
+      'Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
     extractors: [
       {
         api_flavor: 'chat',
@@ -3480,7 +3483,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://fireworks.ai/pricing'],
     api_pattern: 'https://api\\.fireworks\\.ai',
     model_match: {
-      starts_with: 'accounts/fireworks/models/',
+      starts_with: 'accounts/fireworks/',
     },
     extractors: [
       {
@@ -3559,9 +3562,20 @@ export const data: Provider[] = [
       {
         id: 'deepseek-v4-flash',
         name: 'DeepSeek-V4-Flash',
+        description:
+          'Official release of DeepSeek-V4-Flash with enhanced agentic capabilities and speculative decoding.',
         match: {
-          equals: 'accounts/fireworks/models/deepseek-v4-flash',
+          or: [
+            {
+              equals: 'accounts/fireworks/models/deepseek-v4-flash',
+            },
+            {
+              equals: 'accounts/fireworks/models/deepseek-v4-flash-0731',
+            },
+          ],
         },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
         prices: {
           input_mtok: 0.14,
           cache_read_mtok: 0.028,
@@ -3620,6 +3634,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p1-fast',
+        name: 'GLM 5.1 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p1-fast',
+        },
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2.8,
+          cache_read_mtok: 0.52,
+          output_mtok: 8.8,
+        },
+      },
+      {
         id: 'glm-5p2',
         name: 'GLM-5.2',
         description:
@@ -3635,6 +3662,27 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p2-fast',
+        name: 'GLM 5.2 Fast',
+        match: {
+          or: [
+            {
+              equals: 'accounts/fireworks/routers/glm-5p2-fast',
+            },
+            {
+              equals: 'accounts/fireworks/routers/glm-5p2-fast-us',
+            },
+          ],
+        },
+        context_window: 1040000,
+        price_comments: 'Fast and US-only serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.21,
+          output_mtok: 6.6,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'OpenAI gpt-oss-120b',
         description:
@@ -3643,9 +3691,10 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/models/gpt-oss-120b',
         },
         context_window: 131072,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
         prices: {
           input_mtok: 0.15,
-          cache_read_mtok: 0.07,
+          cache_read_mtok: 0.014,
           output_mtok: 0.6,
         },
       },
@@ -3658,10 +3707,27 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/models/gpt-oss-20b',
         },
         context_window: 131072,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-20b.',
         prices: {
           input_mtok: 0.07,
-          cache_read_mtok: 0.04,
+          cache_read_mtok: 0.035,
           output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'inkling',
+        name: 'Inkling',
+        description:
+          "Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",
+        match: {
+          equals: 'accounts/fireworks/models/inkling',
+        },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/inkling.',
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
         },
       },
       {
@@ -3692,6 +3758,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k2p6-fast',
+        name: 'Kimi K2.6 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k2p6-fast',
+        },
+        context_window: 262144,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.3,
+          output_mtok: 8,
+        },
+      },
+      {
         id: 'kimi-k2p7-code',
         name: 'Kimi K2.7 Code',
         description:
@@ -3704,6 +3784,65 @@ export const data: Provider[] = [
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
           output_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k2p7-code-fast',
+        name: 'Kimi K2.7 Code Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k2p7-code-fast',
+        },
+        context_window: 262144,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 1.9,
+          cache_read_mtok: 0.38,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description:
+          "Moonshot AI's 2.81T-parameter flagship model with native visual understanding and a 1M-token context window.",
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k3',
+        },
+        context_window: 1040000,
+        price_comments:
+          'Standard serverless pricing. See https://fireworks.ai/models/fireworks/kimi-k3. Fast and US router variants have separate model IDs.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'kimi-k3-fast',
+        name: 'Kimi K3 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3-fast',
+        },
+        context_window: 1040000,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 4.5,
+          cache_read_mtok: 0.45,
+          output_mtok: 22.5,
+        },
+      },
+      {
+        id: 'kimi-k3-us',
+        name: 'Kimi K3 US',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3-us',
+        },
+        context_window: 1040000,
+        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: {
+          input_mtok: 3.3,
+          cache_read_mtok: 0.33,
+          output_mtok: 16.5,
         },
       },
       {
@@ -3851,7 +3990,10 @@ export const data: Provider[] = [
   {
     id: 'google',
     name: 'Google',
-    pricing_urls: ['https://ai.google.dev/gemini-api/docs/pricing', 'https://cloud.google.com/vertex-ai/generative-ai/pricing'],
+    pricing_urls: [
+      'https://ai.google.dev/gemini-api/docs/pricing',
+      'https://cloud.google.com/vertex-ai/generative-ai/pricing',
+    ],
     api_pattern: 'https://(.*\\.)?googleapis\\.com',
     model_match: {
       contains: 'gemini',
@@ -4962,7 +5104,8 @@ export const data: Provider[] = [
       {
         id: 'gemini-3-pro-preview',
         name: 'Gemini 3 Pro Preview',
-        description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+        description:
+          'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
         match: {
           or: [
             {
@@ -5393,7 +5536,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gemma-2-27b-it',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.65,
           output_mtok: 0.65,
@@ -5402,7 +5546,8 @@ export const data: Provider[] = [
       {
         id: 'gemma-3',
         name: 'Gemma 3 (free)',
-        description: 'Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.',
+        description:
+          'Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.',
         match: {
           or: [
             {
@@ -5418,7 +5563,8 @@ export const data: Provider[] = [
       {
         id: 'gemma-3n',
         name: 'Gemma 3n (free)',
-        description: 'Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.',
+        description:
+          'Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.',
         match: {
           or: [
             {
@@ -5436,7 +5582,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gemma-4-26b-a4b-it',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.33,
@@ -5450,7 +5597,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gemma-4-31b-it',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.12,
           cache_read_mtok: 0.09,
@@ -10036,11 +10184,13 @@ export const data: Provider[] = [
       {
         id: 'minimax-01',
         name: 'MiniMax-01',
-        description: 'MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.',
+        description:
+          'MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.',
         match: {
           equals: 'minimax-01',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.2,
           output_mtok: 1.1,
@@ -10054,7 +10204,8 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax-m1',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.4,
           output_mtok: 2.2,
@@ -10378,7 +10529,8 @@ export const data: Provider[] = [
       {
         id: 'mistral-nemo',
         name: 'Mistral NeMo',
-        description: 'A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
+        description:
+          'A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
         match: {
           or: [
             {
@@ -10397,7 +10549,8 @@ export const data: Provider[] = [
       {
         id: 'mistral-nemo:free',
         name: 'Mistral Nemo (free)',
-        description: 'A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
+        description:
+          'A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
         match: {
           equals: 'mistral-nemo:free',
         },
@@ -10469,7 +10622,8 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-small-3.1-24b-instruct',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.351,
           output_mtok: 0.555,
@@ -10483,7 +10637,8 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-small-3.2-24b-instruct',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.075,
           output_mtok: 0.2,
@@ -10690,7 +10845,8 @@ export const data: Provider[] = [
       {
         id: 'kimi-k2-thinking',
         name: 'Kimi K2 Thinking',
-        description: 'A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
+        description:
+          'A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
         match: {
           equals: 'kimi-k2-thinking',
         },
@@ -12101,7 +12257,8 @@ export const data: Provider[] = [
       {
         id: 'gpt-5-mini',
         name: 'GPT-5 mini',
-        description: "GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
+        description:
+          "GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
         match: {
           or: [
             {
@@ -12122,7 +12279,8 @@ export const data: Provider[] = [
       {
         id: 'gpt-5-nano',
         name: 'GPT-5 nano',
-        description: "GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
+        description:
+          "GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
         match: {
           or: [
             {
@@ -12415,7 +12573,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-5.4-image-2',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 8,
           cache_read_mtok: 2,
@@ -12827,7 +12986,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-chat-latest',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 5,
           cache_read_mtok: 0.5,
@@ -12925,7 +13085,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-120b',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.039,
           output_mtok: 0.18,
@@ -12939,7 +13100,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-20b',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.029,
           output_mtok: 0.14,
@@ -12953,7 +13115,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-safeguard-20b',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.075,
           cache_read_mtok: 0.037,
@@ -21773,11 +21936,13 @@ export const data: Provider[] = [
       {
         id: 'sonar-pro-search',
         name: 'Sonar Pro Search',
-        description: "Sonar Pro Search is Perplexity's advanced agentic search system for deeper reasoning and analysis.",
+        description:
+          "Sonar Pro Search is Perplexity's advanced agentic search system for deeper reasoning and analysis.",
         match: {
           equals: 'sonar-pro-search',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.',
+        price_comments:
+          'Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.',
         prices: {
           input_mtok: 3,
           output_mtok: 15,
