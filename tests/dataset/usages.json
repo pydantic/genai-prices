@@ -7950,6 +7950,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8181,6 +8185,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8316,6 +8324,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -8481,6 +8493,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8636,6 +8652,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -8820,6 +8840,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8996,6 +9020,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -9179,6 +9207,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9347,6 +9379,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -9531,6 +9567,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9706,6 +9746,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9878,6 +9922,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -10058,6 +10106,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10213,6 +10265,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -10406,6 +10462,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -10604,6 +10664,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10797,6 +10861,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10978,6 +11046,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -11154,6 +11226,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -11326,6 +11402,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -11489,6 +11569,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -11669,6 +11753,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -11832,6 +11920,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -12005,6 +12097,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -12190,6 +12286,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -12388,6 +12488,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000343",
             "output_price": "0.00003525",
             "provider_id": "cerebras"
@@ -12579,6 +12683,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00003655",
             "output_price": "0.0000108",
             "provider_id": "cerebras"
@@ -12739,6 +12847,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -12922,6 +13034,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -13109,6 +13225,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -19576,6 +19696,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19926,6 +20050,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20082,6 +20210,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -20293,6 +20425,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20481,6 +20617,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -20803,6 +20943,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20991,6 +21135,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -21361,6 +21509,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -21747,6 +21899,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21913,6 +22069,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -22152,6 +22312,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -22455,6 +22619,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22648,6 +22816,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22836,6 +23008,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22993,6 +23169,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -23181,6 +23361,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -23379,6 +23563,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -23536,6 +23724,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -23728,6 +23920,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -23899,6 +24095,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -24065,6 +24265,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -24264,6 +24468,10 @@
             "input_price": "0.0000375",
             "output_price": "0.000046",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -24556,6 +24764,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -25207,6 +25419,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -25494,6 +25710,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -25776,6 +25996,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -26050,6 +26274,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -26210,6 +26438,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -26791,6 +27023,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -26996,6 +27232,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -27149,6 +27389,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -27539,6 +27783,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -27699,6 +27947,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -28057,6 +28309,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -28247,6 +28503,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -28667,6 +28927,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -28824,6 +29088,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -29362,6 +29630,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -29519,6 +29791,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -29822,6 +30098,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -29979,6 +30259,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -31252,6 +31536,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -31580,6 +31868,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -31737,6 +32029,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -32281,6 +32577,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -32661,6 +32961,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -33287,6 +33591,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -33884,6 +34192,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -34050,6 +34362,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -34244,6 +34560,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -34404,6 +34724,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -34713,6 +35037,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -34979,6 +35307,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -35145,6 +35477,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -35473,6 +35809,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -36368,6 +36708,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -36525,6 +36869,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -36991,6 +37339,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -37154,6 +37506,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -37314,6 +37670,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -37657,6 +38017,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -37828,6 +38192,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -37994,6 +38362,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -38482,6 +38854,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -38648,6 +39024,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -38868,6 +39248,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -39419,6 +39803,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -39877,6 +40265,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -40610,6 +41002,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -41554,6 +41950,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -41865,6 +42265,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -42031,6 +42435,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -42233,6 +42641,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -42399,6 +42811,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -43458,6 +43874,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -43618,6 +44038,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -43783,6 +44207,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -43976,6 +44404,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -44352,6 +44784,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -44509,6 +44945,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -45107,6 +45547,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -45510,6 +45954,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -45724,6 +46172,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -46043,6 +46495,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -46203,6 +46659,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -46548,6 +47008,10 @@
             "input_price": "0.00003225",
             "output_price": "0.000038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -47449,6 +47913,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -47766,6 +48234,10 @@
             "input_price": "0.00003225",
             "output_price": "0.000038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -48238,6 +48710,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -48404,6 +48880,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -48598,6 +49078,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -48758,6 +49242,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -48929,6 +49417,10 @@
             "input_price": "0.00003225",
             "output_price": "0.000038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -49186,6 +49678,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -49352,6 +49848,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -49664,6 +50164,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -49904,6 +50408,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -50063,6 +50571,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -50569,6 +51081,10 @@
             "input_price": "0.00003225",
             "output_price": "0.000038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -51391,6 +51907,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -51548,6 +52068,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -51936,6 +52460,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -52093,6 +52621,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -52363,6 +52895,10 @@
             "input_price": "0.00003225",
             "output_price": "0.000038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -53853,6 +54389,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -54518,6 +55058,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -55039,6 +55583,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -55196,6 +55744,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -55453,6 +56005,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -55619,6 +56175,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -55926,6 +56486,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -56083,6 +56647,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -57076,6 +57644,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -57266,6 +57838,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -57689,6 +58265,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -57849,6 +58429,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -58038,6 +58622,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -58350,6 +58938,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -58507,6 +59099,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -59239,6 +59835,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -59396,6 +59996,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -60439,6 +61043,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -60635,6 +61243,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -60801,6 +61413,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -60995,6 +61611,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -61158,6 +61778,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -61318,6 +61942,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -61631,6 +62259,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -62532,6 +63164,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -62698,6 +63334,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -63082,6 +63722,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -63239,6 +63883,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -63405,6 +64053,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -63562,6 +64214,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -64541,6 +65197,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -64698,6 +65358,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -66413,6 +67077,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -66570,6 +67238,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -66794,6 +67466,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -66954,6 +67630,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -67348,6 +68028,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -67512,6 +68196,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -67672,6 +68360,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -67925,6 +68617,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -68091,6 +68787,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -68380,6 +69080,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -68546,6 +69250,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -68787,6 +69495,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -68944,6 +69656,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -69568,6 +70284,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -69729,6 +70449,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -69905,6 +70629,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -70078,6 +70806,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -70248,6 +70980,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -70425,6 +71161,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -70592,6 +71332,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -70755,6 +71499,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -70931,6 +71679,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -71101,6 +71853,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -71988,6 +72744,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -72142,6 +72902,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -72302,6 +73066,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -72459,6 +73227,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -72613,6 +73385,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -72785,6 +73561,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -72951,6 +73731,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -73223,6 +74007,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -73389,6 +74177,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -73661,6 +74453,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -73836,6 +74632,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -73999,6 +74799,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -74155,6 +74959,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -74329,6 +75137,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -74498,6 +75310,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -74682,6 +75498,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -74884,6 +75704,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -75056,6 +75880,10 @@
             "input_price": "0.00002",
             "output_price": "0.0001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -75234,6 +76062,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -75406,6 +76238,10 @@
             "input_price": "0.0000275",
             "output_price": "0.00017",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -75584,6 +76420,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -75756,6 +76596,10 @@
             "input_price": "0.00003",
             "output_price": "0.000024",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -75934,6 +76778,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -76106,6 +76954,10 @@
             "input_price": "0.0007025",
             "output_price": "0.00017",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -76284,6 +77136,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -76456,6 +77312,10 @@
             "input_price": "0.000115",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -76634,6 +77494,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -76799,6 +77663,10 @@
             "input_price": "0.000002886",
             "output_price": "0.00000648",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -76981,6 +77849,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -77156,6 +78028,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -77328,6 +78204,10 @@
             "input_price": "0.0002225",
             "output_price": "0.00036",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -77579,6 +78459,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -77769,6 +78653,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -77971,6 +78859,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -78137,6 +79029,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0",
             "output_price": "0",
             "provider_id": "cerebras"
@@ -78296,6 +79192,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -78467,6 +79367,10 @@
             "input_price": "0.0002725",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -78645,6 +79549,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -78817,6 +79725,10 @@
             "input_price": "0.0005875",
             "output_price": "0.00016",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -78995,6 +79907,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -79167,6 +80083,10 @@
             "input_price": "0.000735",
             "output_price": "0.00021",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -79345,6 +80265,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -79517,6 +80441,10 @@
             "input_price": "0.0001425",
             "output_price": "0.00202",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -79695,6 +80623,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -79867,6 +80799,10 @@
             "input_price": "0.0001575",
             "output_price": "0.0001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -80045,6 +80981,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -80220,6 +81160,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -80383,6 +81327,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -80627,6 +81575,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -80799,6 +81751,10 @@
             "input_price": "0.000035",
             "output_price": "0.00007",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -80977,6 +81933,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -81149,6 +82109,10 @@
             "input_price": "0.0005875",
             "output_price": "0.00013",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -81327,6 +82291,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -81493,6 +82461,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -81781,6 +82753,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -81956,6 +82932,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -82122,6 +83102,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -82394,6 +83378,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -82566,6 +83554,10 @@
             "input_price": "0.0004525",
             "output_price": "0.00025",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -82808,6 +83800,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -85138,6 +86134,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -85297,6 +86297,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -85462,6 +86466,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -85618,6 +86626,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -85780,6 +86792,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -85939,6 +86955,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -86121,6 +87141,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -86348,6 +87372,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -95950,6 +96978,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -96113,6 +97145,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -96271,6 +97307,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -96440,6 +97480,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000177",
+            "output_price": "0.0000435",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -96626,6 +97672,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -96793,6 +97843,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -96957,6 +98011,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -97129,6 +98187,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -97289,6 +98351,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -97461,6 +98527,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -97624,6 +98694,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -97784,6 +98858,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000178",
+            "output_price": "0.000047",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -97966,6 +99046,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000254",
+            "output_price": "0.000087",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -98174,6 +99260,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -98331,6 +99421,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000301",
+            "output_price": "0.000026",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -98614,6 +99710,12 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0000336",
+            "output_price": "0.000048",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -98826,6 +99928,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000085736",
             "output_price": "0.00003248",
             "provider_id": "deepseek"
@@ -98950,6 +100056,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -99207,6 +100317,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000137088",
             "output_price": "0.00001708",
             "provider_id": "deepseek"
@@ -99331,6 +100445,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -99517,6 +100635,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -99697,6 +100819,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -99883,6 +101009,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -100063,6 +101193,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -100318,6 +101452,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -100438,6 +101576,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -100621,6 +101763,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -101550,6 +102696,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -101756,6 +102906,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -101929,6 +103083,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -102109,6 +103267,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -102283,6 +103445,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -102463,6 +103629,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -102640,6 +103810,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -102810,6 +103984,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -103010,6 +104188,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -103184,6 +104366,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -103364,6 +104550,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -103538,6 +104728,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -103718,6 +104912,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -103892,6 +105090,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -104072,6 +105274,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -104246,6 +105452,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -104455,6 +105665,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -104651,6 +105865,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -104824,6 +106042,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -105004,6 +106226,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -105178,6 +106404,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -105358,6 +106588,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -105532,6 +106766,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -106248,6 +107486,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -106420,6 +107662,10 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -106598,6 +107844,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -106770,6 +108020,10 @@
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -106948,6 +108202,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -107120,6 +108378,10 @@
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -107298,6 +108560,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -107470,6 +108736,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -107648,6 +108918,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -107820,6 +109094,10 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -107998,6 +109276,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -108170,6 +109452,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -108348,6 +109634,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -108520,6 +109810,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -108698,6 +109992,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -108873,6 +110171,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -109045,6 +110347,10 @@
             "input_price": "0.0000147",
             "output_price": "0.0000174",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -109226,6 +110532,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -109506,6 +110816,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -109705,6 +111019,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -109881,6 +111199,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -110043,6 +111365,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -110202,6 +111528,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.000029",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -110406,6 +111738,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.0000065",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -110618,6 +111956,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -110775,6 +112117,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.0000235",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -110983,6 +112331,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -111156,6 +112508,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.000036",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -111363,6 +112721,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.0000525",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -111567,6 +112931,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.000021",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -111768,6 +113138,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.0000335",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -111976,6 +113352,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000028",
             "output_price": "0.00003375",
             "provider_id": "cerebras"
@@ -112170,6 +113550,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -112329,6 +113713,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000084",
+            "output_price": "0.0000205",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -112534,6 +113924,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -112750,6 +114144,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -112926,6 +114324,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -113094,6 +114496,10 @@
             "input_price": "0.0005325",
             "output_price": "0.00041",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -113272,6 +114678,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -113444,6 +114854,10 @@
             "input_price": "0.0001125",
             "output_price": "0.00015",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -113622,6 +115036,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -113794,6 +115212,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -113972,6 +115394,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -114147,6 +115573,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -114319,6 +115749,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -114573,6 +116007,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -114840,6 +116278,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -115012,6 +116454,10 @@
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -115190,6 +116636,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -115362,6 +116812,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -115540,6 +116994,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -115712,6 +117170,10 @@
             "input_price": "0.00053",
             "output_price": "0.00038",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -115890,6 +117352,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -116062,6 +117528,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -116240,6 +117710,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -116412,6 +117886,10 @@
             "input_price": "0.0002325",
             "output_price": "0.0002",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -116590,6 +118068,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -116762,6 +118244,10 @@
             "input_price": "0.000095",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -116940,6 +118426,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -117112,6 +118602,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -118938,6 +120432,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -119110,6 +120608,10 @@
             "input_price": "0.000267",
             "output_price": "0.000108",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -119288,6 +120790,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -119460,6 +120966,10 @@
             "input_price": "0.000198",
             "output_price": "0.000108",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -119638,6 +121148,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -119810,6 +121324,10 @@
             "input_price": "0.00032325",
             "output_price": "0.000063",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -119988,6 +121506,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -120160,6 +121682,10 @@
             "input_price": "0.0001995",
             "output_price": "0.0006615",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -124620,6 +126146,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -124823,6 +126353,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -125076,6 +126610,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -125586,6 +127124,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -125758,6 +127300,10 @@
             "input_price": "0.000185",
             "output_price": "0.00009",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -125936,6 +127482,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -126108,6 +127658,10 @@
             "input_price": "0.0001625",
             "output_price": "0.00001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -126808,6 +128362,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -126980,6 +128538,10 @@
             "input_price": "0.000185",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -127158,6 +128720,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -127330,6 +128896,10 @@
             "input_price": "0.00016",
             "output_price": "0.00001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -129018,6 +130588,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -129190,6 +130764,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -129368,6 +130946,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -129540,6 +131122,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -129718,6 +131304,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -129890,6 +131480,10 @@
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -130068,6 +131662,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -130240,6 +131838,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -130418,6 +132020,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -130590,6 +132196,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -130768,6 +132378,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -130940,6 +132554,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -131118,6 +132736,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -131290,6 +132912,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -131468,6 +133094,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -131643,6 +133273,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "baseten"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -131803,6 +133437,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -131968,6 +133606,10 @@
             "input_price": "0.000042",
             "output_price": "0.000765",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -132144,6 +133786,10 @@
             "input_price": "0.00001625",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
@@ -132390,6 +134036,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "baseten"
           },
           {
             "api_flavor": "chat",
