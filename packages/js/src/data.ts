@@ -23436,6 +23436,71 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'zai',
+    name: 'Z.AI',
+    pricing_urls: ['https://docs.z.ai/guides/overview/pricing'],
+    api_pattern: 'https://api\\.z\\.ai',
+    price_comments:
+      'USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
+    model_match: {
+      or: [
+        {
+          starts_with: 'GLM-',
+        },
+        {
+          starts_with: 'glm-',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'GLM-5.2',
+        name: 'GLM-5.2',
+        description: 'Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.2',
+            },
+            {
+              equals: 'glm-5.2',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+    ],
+  },
+  {
     id: 'zhipuai',
     name: 'Zhipu AI',
     pricing_urls: ['https://open.bigmodel.cn/pricing', 'https://docs.bigmodel.cn/cn/guide/start/model-overview'],

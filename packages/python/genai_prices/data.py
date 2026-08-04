@@ -13532,6 +13532,40 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='zai',
+        name='Z.AI',
+        api_pattern='https://api\\.z\\.ai',
+        pricing_urls=['https://docs.z.ai/guides/overview/pricing'],
+        price_comments='USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
+        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='GLM-'), ClauseStartsWith(starts_with='glm-')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='GLM-5.2',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.2'), ClauseEquals(equals='glm-5.2')]),
+                name='GLM-5.2',
+                description='Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            )
+        ],
+    ),
+    Provider(
         id='zhipuai',
         name='Zhipu AI',
         api_pattern='https://open\\.bigmodel\\.cn',
