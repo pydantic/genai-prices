@@ -2721,6 +2721,217 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'baseten',
+    name: 'Baseten',
+    pricing_urls: ['https://www.baseten.co/pricing'],
+    api_pattern: 'https://inference\\.baseten\\.co',
+    price_comments:
+      'Model APIs bill per million tokens. Rates from https://www.baseten.co/pricing and https://docs.baseten.co/inference/model-apis/overview. Cached input tokens are prompt tokens served from the KV cache, billed at the discounted `cache_read_mtok` rate; every request participates in caching automatically.',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.13,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.26,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Pro',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.145,
+          output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'moonshotai/Kimi-K2.6',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.7-Code',
+        name: 'Kimi K2.7 Code',
+        match: {
+          equals: 'moonshotai/Kimi-K2.7-Code',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/Kimi-K3',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B',
+        name: 'NVIDIA Nemotron 3 Ultra',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B',
+        },
+        context_window: 202000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.12,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'OpenAI GPT 120B',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 128000,
+        price_comments: 'pricing page lists no separate cached-input rate for this model',
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling',
+        name: 'Inkling',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling',
+            },
+            {
+              equals: 'inkling',
+            },
+          ],
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling-small',
+        name: 'Inkling Small',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling-small',
+            },
+            {
+              equals: 'inkling-small',
+            },
+          ],
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.7',
+        name: 'GLM 4.7',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/GLM-4.7',
+            },
+            {
+              equals: 'glm-4-7',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.12,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/GLM-5.2',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.14,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2-Fast',
+        name: 'GLM 5.2 Fast',
+        match: {
+          equals: 'zai-org/GLM-5.2-Fast',
+        },
+        context_window: 524000,
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.21,
+          output_mtok: 6.6,
+        },
+      },
+    ],
+  },
+  {
     id: 'cerebras',
     name: 'Cerebras',
     pricing_urls: ['https://www.cerebras.ai/pricing#pricing', 'https://inference-docs.cerebras.ai/models/openai-oss'],

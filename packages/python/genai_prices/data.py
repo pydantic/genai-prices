@@ -1648,6 +1648,136 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='baseten',
+        name='Baseten',
+        api_pattern='https://inference\\.baseten\\.co',
+        pricing_urls=['https://www.baseten.co/pricing'],
+        price_comments='Model APIs bill per million tokens. Rates from https://www.baseten.co/pricing and https://docs.baseten.co/inference/model-apis/overview. Cached input tokens are prompt tokens served from the KV cache, billed at the discounted `cache_read_mtok` rate; every request participates in caching automatically.',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Flash-0731',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Flash-0731'),
+                name='DeepSeek V4 Flash 0731',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.13'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.26')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro'),
+                name='DeepSeek V4 Pro',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K2.6',
+                match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
+                name='Kimi K2.6',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K2.7-Code',
+                match=ClauseEquals(equals='moonshotai/Kimi-K2.7-Code'),
+                name='Kimi K2.7 Code',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K3',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3'),
+                name='Kimi K3',
+                context_window=1048000,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B',
+                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B'),
+                name='NVIDIA Nemotron 3 Ultra',
+                context_window=202000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('2.4')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                name='OpenAI GPT 120B',
+                context_window=128000,
+                price_comments='pricing page lists no separate cached-input rate for this model',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling',
+                match=ClauseOr(or_=[ClauseEquals(equals='thinkingmachines/inkling'), ClauseEquals(equals='inkling')]),
+                name='Inkling',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-small',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='thinkingmachines/inkling-small'), ClauseEquals(equals='inkling-small')]
+                ),
+                name='Inkling Small',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-4.7',
+                match=ClauseOr(or_=[ClauseEquals(equals='zai-org/GLM-4.7'), ClauseEquals(equals='glm-4-7')]),
+                name='GLM 4.7',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.2',
+                match=ClauseEquals(equals='zai-org/GLM-5.2'),
+                name='GLM 5.2',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.2-Fast',
+                match=ClauseEquals(equals='zai-org/GLM-5.2-Fast'),
+                name='GLM 5.2 Fast',
+                context_window=524000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='cerebras',
         name='Cerebras',
         api_pattern='https://api\\.cerebras\\.ai',
