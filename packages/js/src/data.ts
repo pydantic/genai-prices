@@ -23445,10 +23445,10 @@ export const data: Provider[] = [
     model_match: {
       or: [
         {
-          starts_with: 'GLM-',
+          equals: 'GLM-5.2',
         },
         {
-          starts_with: 'glm-',
+          equals: 'glm-5.2',
         },
       ],
     },

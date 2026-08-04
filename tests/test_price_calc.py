@@ -324,6 +324,13 @@ def test_zai_glm_52_price(provider_api_url: str):
     assert price.total_price == Decimal('0.001156')
 
 
+def test_zai_model_match_does_not_shadow_other_glm_models():
+    price = calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref='glm-4.7')
+
+    assert price.provider.id == 'zhipuai'
+    assert price.model.id == 'GLM-4.7'
+
+
 def test_openrouter_modern_dated_aliases_price():
     for model_ref, model_id, input_price, output_price, total_price in [
         (

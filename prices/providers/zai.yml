@@ -9,8 +9,8 @@ price_comments: >-
   and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.
 model_match:
   or:
-    - starts_with: "GLM-"
-    - starts_with: "glm-"
+    - equals: GLM-5.2
+    - equals: glm-5.2
 extractors:
   - api_flavor: chat
     root: usage
