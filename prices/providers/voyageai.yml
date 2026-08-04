@@ -5,7 +5,7 @@ pricing_urls:
   - https://docs.voyageai.com/docs/pricing
 api_pattern: 'https://api\.voyageai\.com'
 model_match:
-  starts_with: "voyage-"
+  starts_with: 'voyage-'
 provider_match:
   contains: voyage
 price_comments: >-

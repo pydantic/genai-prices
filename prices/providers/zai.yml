@@ -30,7 +30,7 @@ models:
         - equals: GLM-5.2
         - equals: glm-5.2
     context_window: 1000000
-    prices_checked: "2026-08-04"
+    prices_checked: '2026-08-04'
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.26

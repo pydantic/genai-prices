@@ -745,8 +745,7 @@ models:
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
-    description:
-      The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding
+    description: The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding
       model yet.
     match:
       or:
@@ -873,8 +872,7 @@ models:
         - regex: '^gemini-3\.5-flash-\d'
     context_window: 1000000
     prices_checked: 2026-05-19
-    price_comments:
-      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
       offer 50% discount on input/output.
     prices:
       input_mtok: 1.5

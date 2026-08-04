@@ -188,7 +188,16 @@ export const unitData: RawUnitsDict = {json.dumps(runtime_units, indent=2, ensur
     data_units_ts.write_text(units_ts_content)
 
     subprocess.run(
-        ['npx', 'prettier', '--write', 'src/data.ts', 'src/dataUnits.ts'],
+        [
+            'npx',
+            '--',
+            'prettier',
+            '--config',
+            '../../prettier.config.mjs',
+            '--write',
+            'src/data.ts',
+            'src/dataUnits.ts',
+        ],
         cwd=str(js_package_dir),
         check=True,
         stdout=subprocess.PIPE,
