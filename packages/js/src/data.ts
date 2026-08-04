@@ -3569,6 +3569,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4-flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        description:
+          'Official release of DeepSeek-V4-Flash with substantially enhanced agentic capabilities. 304B parameter MoE model from Deepseek.',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4-flash-0731',
+        },
+        context_window: 1040000,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.28,
+        },
+      },
+      {
         id: 'deepseek-v4-pro',
         name: 'DeepSeek-V4-Pro',
         match: {
@@ -3665,6 +3680,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inkling',
+        name: 'Inkling',
+        description:
+          'Multimodal (audio+vision) MoE from Thinking Machines Lab. 975B Mixture-of-Experts with 41B active parameters, trained natively across text, image, and audio.',
+        match: {
+          equals: 'accounts/fireworks/models/inkling',
+        },
+        context_window: 1040000,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
+        },
+      },
+      {
         id: 'kimi-k2p5',
         name: 'Kimi K2.5',
         description:
@@ -3704,6 +3734,21 @@ export const data: Provider[] = [
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
           output_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description:
+          "Moonshot AI's most capable flagship model to date, with 2.81T parameters. Built on Kimi Delta Attention (KDA), with native visual understanding and a 1M-token context window.",
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k3',
+        },
+        context_window: 1040000,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {

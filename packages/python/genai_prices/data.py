@@ -2144,6 +2144,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4-flash-0731',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash-0731'),
+                name='DeepSeek-V4-Flash-0731',
+                description='Official release of DeepSeek-V4-Flash with substantially enhanced agentic capabilities. 304B parameter MoE model from Deepseek.',
+                context_window=1040000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-v4-pro',
                 match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-pro'),
                 name='DeepSeek-V4-Pro',
@@ -2206,6 +2216,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inkling',
+                match=ClauseEquals(equals='accounts/fireworks/models/inkling'),
+                name='Inkling',
+                description='Multimodal (audio+vision) MoE from Thinking Machines Lab. 975B Mixture-of-Experts with 41B active parameters, trained natively across text, image, and audio.',
+                context_window=1040000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
                 id='kimi-k2p5',
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p5'),
                 name='Kimi K2.5',
@@ -2230,6 +2250,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
                 ),
+            ),
+            ModelInfo(
+                id='kimi-k3',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3'),
+                name='Kimi K3',
+                description="Moonshot AI's most capable flagship model to date, with 2.81T parameters. Built on Kimi Delta Attention (KDA), with native visual understanding and a 1M-token context window.",
+                context_window=1040000,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='llama-v3p1-8b-instruct',
