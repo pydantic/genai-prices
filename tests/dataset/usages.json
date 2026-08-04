@@ -8056,6 +8056,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -8253,6 +8257,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -8425,6 +8433,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -8587,6 +8599,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -8720,6 +8736,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -8928,6 +8948,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -9102,6 +9126,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -9285,6 +9313,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -9431,6 +9463,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -9637,6 +9673,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -9812,6 +9852,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -9984,6 +10028,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -10164,6 +10212,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -10297,6 +10349,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -10490,6 +10546,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -10688,6 +10748,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -10878,6 +10942,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -11084,6 +11152,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -11260,6 +11332,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -11432,6 +11508,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -11595,6 +11675,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -11775,6 +11859,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -11941,6 +12029,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -12089,6 +12181,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -12278,6 +12374,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -12473,6 +12573,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -12685,6 +12789,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -12823,6 +12931,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -13006,6 +13118,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -13213,6 +13329,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -19682,6 +19802,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -20032,6 +20156,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -20194,6 +20322,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -20374,6 +20506,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -20593,6 +20729,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -20887,6 +21027,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -21103,6 +21247,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -21473,6 +21621,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -21859,6 +22011,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -22025,6 +22181,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -22264,6 +22424,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -22539,6 +22703,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -22729,6 +22897,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -22942,6 +23114,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -23099,6 +23275,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -23296,6 +23476,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -23485,6 +23669,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -23642,6 +23830,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -23834,6 +24026,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -24005,6 +24201,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -24149,6 +24349,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -24370,6 +24574,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -24640,6 +24848,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -25319,6 +25531,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -25606,6 +25822,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -25888,6 +26108,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -26156,6 +26380,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -26322,6 +26550,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -26883,6 +27115,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -27090,6 +27326,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -27255,6 +27495,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -27645,6 +27889,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -27805,6 +28053,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -28141,6 +28393,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -28331,6 +28587,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -28773,6 +29033,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -28930,6 +29194,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -29468,6 +29736,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -29625,6 +29897,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -29928,6 +30204,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -30085,6 +30365,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -31336,6 +31620,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -31686,6 +31974,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -31843,6 +32135,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -32387,6 +32683,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -32745,6 +33045,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -33393,6 +33697,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -33990,6 +34298,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -34134,6 +34446,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -34350,6 +34666,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -34510,6 +34830,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -34819,6 +35143,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -35085,6 +35413,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -35229,6 +35561,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -35579,6 +35915,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -36474,6 +36814,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -36631,6 +36975,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -37097,6 +37445,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -37260,6 +37612,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -37420,6 +37776,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -37763,6 +38123,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -37934,6 +38298,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -38078,6 +38446,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -38588,6 +38960,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -38732,6 +39108,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -38974,6 +39354,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -39525,6 +39909,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -39983,6 +40371,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -40716,6 +41108,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -41660,6 +42056,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -41971,6 +42371,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -42115,6 +42519,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -42339,6 +42747,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -42483,6 +42895,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -43564,6 +43980,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -43727,6 +44147,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -43867,6 +44291,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -44060,6 +44488,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -44458,6 +44890,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -44615,6 +45051,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -45213,6 +45653,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -45616,6 +46060,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -45830,6 +46278,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -46149,6 +46601,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -46309,6 +46765,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -46654,6 +47114,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -47555,6 +48019,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -47872,6 +48340,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -48344,6 +48816,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -48488,6 +48964,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -48704,6 +49184,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -48864,6 +49348,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -49035,6 +49523,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -49292,6 +49784,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -49436,6 +49932,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -49748,6 +50248,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -50010,6 +50514,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -50169,6 +50677,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -50675,6 +51187,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -51497,6 +52013,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -51654,6 +52174,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -52042,6 +52566,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -52199,6 +52727,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -52469,6 +53001,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -53959,6 +54495,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -54624,6 +55164,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -55145,6 +55689,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -55302,6 +55850,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -55559,6 +56111,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -55703,6 +56259,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -56032,6 +56592,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -56189,6 +56753,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -57160,6 +57728,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -57350,6 +57922,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -57795,6 +58371,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -57955,6 +58535,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -58144,6 +58728,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -58456,6 +59044,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -58613,6 +59205,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -59345,6 +59941,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -59502,6 +60102,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -60545,6 +61149,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -60741,6 +61349,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -60885,6 +61497,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -61101,6 +61717,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -61264,6 +61884,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -61424,6 +62048,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -61737,6 +62365,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -62638,6 +63270,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -62782,6 +63418,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -63188,6 +63828,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -63345,6 +63989,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -63511,6 +64159,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -63668,6 +64320,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -64647,6 +65303,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -64804,6 +65464,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -66519,6 +67183,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -66676,6 +67344,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -66900,6 +67572,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -67060,6 +67736,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -67454,6 +68134,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -67618,6 +68302,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -67778,6 +68466,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -68031,6 +68723,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -68175,6 +68871,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -68486,6 +69186,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -68630,6 +69334,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -68893,6 +69601,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -69050,6 +69762,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -69674,6 +70390,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -69839,6 +70559,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -70015,6 +70739,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -70188,6 +70916,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -70358,6 +71090,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -70537,6 +71273,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -70704,6 +71444,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -70865,6 +71609,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -71041,6 +71789,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -71211,6 +71963,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -72092,6 +72848,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -72246,6 +73006,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -72406,6 +73170,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -72563,6 +73331,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -72717,6 +73489,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -72891,6 +73667,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -73035,6 +73815,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -73329,6 +74113,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -73473,6 +74261,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -73767,6 +74559,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -73942,6 +74738,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -74105,6 +74905,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -74261,6 +75065,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -74435,6 +75243,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -74538,6 +75350,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -74769,6 +75585,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -74990,6 +75810,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -75162,6 +75986,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -75340,6 +76168,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -75512,6 +76344,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -75690,6 +76526,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -75862,6 +76702,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -76040,6 +76884,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -76212,6 +77060,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -76390,6 +77242,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -76562,6 +77418,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -76740,6 +77600,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -76909,6 +77773,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -77087,6 +77955,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -77262,6 +78134,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -77434,6 +78310,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -77663,6 +78543,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -77853,6 +78737,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -78077,6 +78965,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -78243,6 +79135,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -78402,6 +79298,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -78573,6 +79473,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -78751,6 +79655,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -78923,6 +79831,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -79101,6 +80013,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -79273,6 +80189,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -79451,6 +80371,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -79623,6 +80547,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -79801,6 +80729,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -79973,6 +80905,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -80151,6 +81087,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -80326,6 +81266,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -80489,6 +81433,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -80733,6 +81681,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -80905,6 +81857,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -81083,6 +82039,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -81255,6 +82215,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -81433,6 +82397,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -81577,6 +82545,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -81887,6 +82859,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -82062,6 +83038,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -82206,6 +83186,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -82500,6 +83484,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -82672,6 +83660,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -82848,6 +83840,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -85244,6 +86240,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -85403,6 +86403,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -85568,6 +86572,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -85724,6 +86732,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -85886,6 +86898,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -86045,6 +87061,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -86215,6 +87235,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -86454,6 +87478,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -96056,6 +97084,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -96214,6 +97246,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -96383,6 +97419,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -96569,6 +97609,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -96736,6 +97780,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -96900,6 +97948,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -97072,6 +98124,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -97232,6 +98288,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -97404,6 +98464,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -97567,6 +98631,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -97727,6 +98795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -97913,6 +98985,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -98068,6 +99144,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -98278,6 +99358,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -98433,6 +99517,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -98704,6 +99792,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -98900,6 +99992,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -99036,6 +100132,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -99281,6 +100381,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -99417,6 +100521,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -99598,6 +100706,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -99784,6 +100896,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000003588",
             "output_price": "0.000272441",
             "provider_id": "zhipuai"
@@ -99967,6 +101083,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000003588",
             "output_price": "0.000482011",
             "provider_id": "zhipuai"
@@ -100147,6 +101267,12 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000028",
+            "output_price": "0.0002948",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -100390,6 +101516,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -100522,6 +101652,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -100705,6 +101839,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -101642,6 +102780,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -101833,6 +102975,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -102038,6 +103184,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -102212,6 +103362,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -102392,6 +103546,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -102566,6 +103724,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -102746,6 +103908,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -102894,6 +104060,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -103116,6 +104286,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -103290,6 +104464,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -103470,6 +104648,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -103644,6 +104826,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -103824,6 +105010,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -103998,6 +105188,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -104178,6 +105372,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -104338,6 +105536,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -104535,6 +105737,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -104728,6 +105934,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -104933,6 +106143,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -105107,6 +106321,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -105287,6 +106505,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -105464,6 +106686,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -105638,6 +106864,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -106354,6 +107584,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -106526,6 +107760,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -106704,6 +107942,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -106876,6 +108118,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -107054,6 +108300,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -107226,6 +108476,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -107404,6 +108658,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -107576,6 +108834,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -107754,6 +109016,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -107926,6 +109192,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -108104,6 +109374,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -108276,6 +109550,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -108454,6 +109732,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -108626,6 +109908,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -108804,6 +110090,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -108979,6 +110269,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -109151,6 +110445,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -109334,6 +110632,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -109602,6 +110904,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -109825,6 +111131,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -109984,6 +111294,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -110149,6 +111463,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -110304,6 +111622,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -110508,6 +111830,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -110722,6 +112048,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -110877,6 +112207,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -111103,6 +112437,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -111258,6 +112596,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -111465,6 +112807,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -111666,6 +113012,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -111873,6 +113223,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -112061,6 +113415,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -112276,6 +113634,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -112431,6 +113793,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -112657,6 +114023,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -112870,6 +114240,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -113029,6 +114403,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -113200,6 +114578,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -113378,6 +114760,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -113550,6 +114936,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -113728,6 +115118,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -113900,6 +115294,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -114078,6 +115476,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -114253,6 +115655,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -114425,6 +115831,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -114679,6 +116089,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -114946,6 +116360,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -115118,6 +116536,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -115296,6 +116718,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -115468,6 +116894,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -115646,6 +117076,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -115818,6 +117252,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -115996,6 +117434,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -116168,6 +117610,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -116346,6 +117792,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -116518,6 +117968,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -116696,6 +118150,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -116868,6 +118326,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -117046,6 +118508,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -117218,6 +118684,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -119044,6 +120514,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -119216,6 +120690,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -119394,6 +120872,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -119566,6 +121048,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -119744,6 +121230,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -119916,6 +121406,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -120094,6 +121588,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -120266,6 +121764,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -124726,6 +126228,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -124907,6 +126413,10 @@
           {
             "api_flavor": "default",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -125182,6 +126692,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -125692,6 +127206,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -125864,6 +127382,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -126042,6 +127564,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -126214,6 +127740,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -126914,6 +128444,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -127086,6 +128620,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -127264,6 +128802,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -127436,6 +128978,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -129124,6 +130670,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -129296,6 +130846,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -129474,6 +131028,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -129646,6 +131204,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -129824,6 +131386,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -129996,6 +131562,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -130174,6 +131744,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -130346,6 +131920,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -130524,6 +132102,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -130696,6 +132278,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -130874,6 +132460,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -131046,6 +132636,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -131224,6 +132818,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -131396,6 +132994,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -131574,6 +133176,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -131749,6 +133355,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -131914,6 +133524,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "zhipuai"
           }
         ],
@@ -132074,6 +133688,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -132250,6 +133868,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",
@@ -132496,6 +134118,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
           },
           {
             "api_flavor": "chat",

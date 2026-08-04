@@ -1,7 +1,20 @@
 .github/workflows/*.lock.yml linguist-generated=true merge=ours
 
+# Frozen v1 compatibility snapshots. No build step writes these, so drift here is
+# invisible to the `build` hook; their contents are pinned by tests/test_frozen_v1_data.py.
 prices/data.json linguist-generated=true
 prices/data_slim.json linguist-generated=true
+prices/data.schema.json linguist-generated=true
+prices/data_slim.schema.json linguist-generated=true
 
+# Written by `make build`. The pre-commit `build` hook regenerates all of these and
+# fails when the result differs from what is committed.
 prices/new_data/v2/data.json linguist-generated=true
 prices/new_data/v2/data_slim.json linguist-generated=true
+prices/new_data/v2/data.schema.json linguist-generated=true
+prices/new_data/v2/data_slim.schema.json linguist-generated=true
+prices/providers/.schema.json linguist-generated=true
+packages/python/genai_prices/data.py linguist-generated=true
+packages/python/genai_prices/data_units.py linguist-generated=true
+packages/js/src/data.ts linguist-generated=true
+packages/js/src/dataUnits.ts linguist-generated=true
