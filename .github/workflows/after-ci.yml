@@ -16,12 +16,12 @@ jobs:
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true
-          python-version: "3.12"
+          python-version: '3.12'
 
       - uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         with:
           workflow: ci.yml
-          name: "(diff-)?coverage-html.*"
+          name: '(diff-)?coverage-html.*'
           name_is_regexp: true
           commit: ${{ github.event.workflow_run.head_sha }}
           allow_forks: true
