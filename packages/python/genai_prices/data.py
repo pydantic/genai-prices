@@ -13537,7 +13537,6 @@ providers: list[Provider] = [
         api_pattern='https://api\\.z\\.ai',
         pricing_urls=['https://docs.z.ai/guides/overview/pricing'],
         price_comments='USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
-        model_match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.2'), ClauseEquals(equals='glm-5.2')]),
         extractors=[
             UsageExtractor(
                 root='usage',

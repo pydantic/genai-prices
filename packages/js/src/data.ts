@@ -23442,16 +23442,6 @@ export const data: Provider[] = [
     api_pattern: 'https://api\\.z\\.ai',
     price_comments:
       'USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
-    model_match: {
-      or: [
-        {
-          equals: 'GLM-5.2',
-        },
-        {
-          equals: 'glm-5.2',
-        },
-      ],
-    },
     extractors: [
       {
         api_flavor: 'chat',
