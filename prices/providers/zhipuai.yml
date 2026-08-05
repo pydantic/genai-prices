@@ -16,8 +16,8 @@ price_comments: >-
   flagship models (limited-time promotion, not included).
 model_match:
   or:
-    - starts_with: 'GLM-'
-    - starts_with: 'glm-'
+    - starts_with: "GLM-"
+    - starts_with: "glm-"
 extractors:
   - api_flavor: chat
     root: usage
@@ -41,7 +41,7 @@ models:
         - equals: GLM-4-Air
         - equals: glm-4-air
     context_window: 128000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.069
       cache_read_mtok: 0.034
@@ -57,7 +57,7 @@ models:
         - equals: GLM-4-AirX
         - equals: glm-4-airx
     context_window: 8000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 1.379
       output_mtok: 1.379
@@ -72,7 +72,7 @@ models:
         - equals: GLM-4-Assistant
         - equals: glm-4-assistant
     context_window: 128000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.690
       output_mtok: 0.690
@@ -87,7 +87,7 @@ models:
         - equals: GLM-4-FlashX-250414
         - equals: glm-4-flashx-250414
     context_window: 128000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.014
       cache_read_mtok: 0.007
@@ -103,7 +103,7 @@ models:
         - equals: GLM-4-Long
         - equals: glm-4-long
     context_window: 1000000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.138
       cache_read_mtok: 0.069
@@ -119,7 +119,7 @@ models:
         - equals: GLM-4-Plus
         - equals: glm-4-plus
     context_window: 128000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.690
       cache_read_mtok: 0.345
@@ -136,7 +136,7 @@ models:
         - equals: GLM-4.5-Air
         - equals: glm-4.5-air
     context_window: 128000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.110
       cache_read_mtok: 0.022
@@ -152,7 +152,7 @@ models:
         - equals: GLM-4.7
         - equals: glm-4.7
     context_window: 200000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.276
       cache_read_mtok: 0.055
@@ -168,7 +168,7 @@ models:
         - equals: GLM-4.7-FlashX
         - equals: glm-4.7-flashx
     context_window: 200000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.069
       cache_read_mtok: 0.014
@@ -184,7 +184,7 @@ models:
         - equals: GLM-5
         - equals: glm-5
     context_window: 200000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.552
       cache_read_mtok: 0.138
@@ -200,7 +200,7 @@ models:
         - equals: GLM-5-Turbo
         - equals: glm-5-turbo
     context_window: 200000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.690
       cache_read_mtok: 0.166
@@ -219,7 +219,7 @@ models:
         - equals: GLM-5.1-20260406
         - equals: glm-5.1-20260406
     context_window: 200000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.828
       cache_read_mtok: 0.179
@@ -235,7 +235,7 @@ models:
         - equals: GLM-5.2
         - equals: glm-5.2
     context_window: 1000000
-    prices_checked: '2026-06-17'
+    prices_checked: "2026-06-17"
     prices:
       input_mtok: 1.103
       cache_read_mtok: 0.276

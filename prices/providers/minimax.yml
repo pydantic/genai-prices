@@ -11,11 +11,11 @@ price_comments: >-
   rate used by the international platform for current models.
 model_match:
   or:
-    - starts_with: 'MiniMax-M'
-    - starts_with: 'minimax-m'
-    - equals: 'minimax-01'
-    - equals: 'M2-her'
-    - equals: 'm2-her'
+    - starts_with: "MiniMax-M"
+    - starts_with: "minimax-m"
+    - equals: "minimax-01"
+    - equals: "M2-her"
+    - equals: "m2-her"
 extractors:
   # Anthropic-compatible endpoint (api.minimax.io/anthropic/v1/messages): Anthropic
   # accounting — input_tokens excludes cache, so add cache back to get total input.
@@ -71,7 +71,7 @@ models:
         - equals: M2-her
         - equals: m2-her
     context_window: 64000
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.30
       output_mtok: 1.20
@@ -90,7 +90,7 @@ models:
         - equals: MiniMax-M2.5
         - equals: minimax-m2.5
     context_window: 204800
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.30
       cache_read_mtok: 0.03
@@ -103,10 +103,10 @@ models:
       MiniMax M2.1 highspeed variant (legacy) with higher throughput.
     match:
       or:
-        - contains: 'M2.1-highspeed'
-        - contains: 'm2.1-highspeed'
+        - contains: "M2.1-highspeed"
+        - contains: "m2.1-highspeed"
     context_window: 204800
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.03
@@ -119,10 +119,10 @@ models:
       MiniMax M2.5 highspeed variant with higher throughput.
     match:
       or:
-        - contains: 'M2.5-highspeed'
-        - contains: 'm2.5-highspeed'
+        - contains: "M2.5-highspeed"
+        - contains: "m2.5-highspeed"
     context_window: 204800
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.03
@@ -140,7 +140,7 @@ models:
         - equals: MiniMax-M2.7
         - equals: minimax-m2.7
     context_window: 204800
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.30
       cache_read_mtok: 0.06
@@ -153,10 +153,10 @@ models:
       MiniMax M2.7 highspeed variant with higher throughput.
     match:
       or:
-        - contains: 'M2.7-highspeed'
-        - contains: 'm2.7-highspeed'
+        - contains: "M2.7-highspeed"
+        - contains: "m2.7-highspeed"
     context_window: 204800
-    prices_checked: '2026-05-23'
+    prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.06
