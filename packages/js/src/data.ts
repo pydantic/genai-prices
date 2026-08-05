@@ -5432,6 +5432,9 @@ export const data: Provider[] = [
             {
               starts_with: 'gemini-2.5-flash-native-audio-preview',
             },
+            {
+              equals: 'gemini-2.5-flash-native-audio-latest',
+            },
           ],
         },
         price_comments:

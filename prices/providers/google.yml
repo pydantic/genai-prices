@@ -999,6 +999,7 @@ models:
       or:
         - starts_with: gemini-live-2.5-flash
         - starts_with: gemini-2.5-flash-native-audio-preview
+        - equals: gemini-2.5-flash-native-audio-latest
     price_comments: >-
       See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API)
       and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches

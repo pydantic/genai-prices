@@ -3241,6 +3241,7 @@ providers: list[Provider] = [
                     or_=[
                         ClauseStartsWith(starts_with='gemini-live-2.5-flash'),
                         ClauseStartsWith(starts_with='gemini-2.5-flash-native-audio-preview'),
+                        ClauseEquals(equals='gemini-2.5-flash-native-audio-latest'),
                     ]
                 ),
                 name='Gemini Live 2.5 Flash',
