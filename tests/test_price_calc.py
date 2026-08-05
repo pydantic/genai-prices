@@ -225,6 +225,40 @@ def test_openrouter_deepseek_v32_price():
     assert price.provider.id == snapshot('openrouter')
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
+    [
+        ('accounts/fireworks/models/deepseek-v4-flash-0731', Decimal('0.14'), Decimal('0.028'), Decimal('0.28')),
+        ('accounts/fireworks/models/inkling', Decimal('1'), Decimal('0.17'), Decimal('4.05')),
+        ('accounts/fireworks/models/kimi-k3', Decimal('3'), Decimal('0.3'), Decimal('15')),
+        ('accounts/fireworks/routers/glm-5p1-fast', Decimal('2.8'), Decimal('0.52'), Decimal('8.8')),
+        ('accounts/fireworks/routers/glm-5p2-fast', Decimal('2.1'), Decimal('0.21'), Decimal('6.6')),
+        ('accounts/fireworks/routers/glm-5p2-fast-us', Decimal('2.1'), Decimal('0.21'), Decimal('6.6')),
+        ('accounts/fireworks/routers/kimi-k2p6-fast', Decimal('2'), Decimal('0.3'), Decimal('8')),
+        ('accounts/fireworks/routers/kimi-k2p7-code-fast', Decimal('1.9'), Decimal('0.38'), Decimal('8')),
+        ('accounts/fireworks/routers/kimi-k3-fast', Decimal('4.5'), Decimal('0.45'), Decimal('22.5')),
+        ('accounts/fireworks/routers/kimi-k3-us', Decimal('3.3'), Decimal('0.33'), Decimal('16.5')),
+        ('accounts/fireworks/models/gpt-oss-120b', Decimal('0.15'), Decimal('0.014'), Decimal('0.6')),
+        ('accounts/fireworks/models/gpt-oss-20b', Decimal('0.07'), Decimal('0.035'), Decimal('0.3')),
+    ],
+)
+def test_fireworks_serverless_prices(
+    model_ref: str,
+    input_rate: Decimal,
+    cache_read_rate: Decimal,
+    output_rate: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+    )
+
+    assert price.provider.id == 'fireworks'
+    assert price.input_price == input_rate + cache_read_rate
+    assert price.output_price == output_rate
+    assert price.total_price == input_rate + cache_read_rate + output_rate
+
+
 def test_moonshotai_kimi_k27_code_price():
     price = calc_price(
         Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
@@ -301,6 +335,38 @@ def test_zhipuai_glm_52_price():
     assert price.input_price == Decimal('0.001103')
     assert price.output_price == Decimal('0.0003862')
     assert price.total_price == Decimal('0.0014892')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.z.ai/api/paas/v4',
+        'https://api.z.ai/api/coding/paas/v4',
+    ],
+)
+def test_zai_glm_52_price(provider_api_url: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='glm-5.2',
+        provider_api_url=provider_api_url,
+    )
+
+    assert price.provider.id == 'zai'
+    assert price.model.id == 'GLM-5.2'
+    assert price.input_price == Decimal('0.000716')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.001156')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id'),
+    [('glm-4.7', 'GLM-4.7'), ('glm-5.2', 'GLM-5.2')],
+)
+def test_zai_does_not_shadow_zhipuai_model_matching(model_ref: str, model_id: str):
+    price = calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref=model_ref)
+
+    assert price.provider.id == 'zhipuai'
+    assert price.model.id == model_id
 
 
 def test_openrouter_modern_dated_aliases_price():

@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
-- [Fireworks](prices/providers/fireworks.yml) - 24 models
+- [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [Google](prices/providers/google.yml) - 46 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
@@ -65,6 +65,7 @@ The following providers are currently supported:
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 17 models
+- [Z.AI](prices/providers/zai.yml) - 1 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
 [comment]: <> (providers-end)
