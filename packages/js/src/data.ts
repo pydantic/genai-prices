@@ -2264,6 +2264,32 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'writer.palmyra-x4-v1:0',
+        name: 'Palmyra X4',
+        match: {
+          contains: 'writer.palmyra-x4',
+        },
+        price_comments:
+          "Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+        prices: {
+          input_mtok: 2.5,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'writer.palmyra-x5-v1:0',
+        name: 'Palmyra X5',
+        match: {
+          contains: 'writer.palmyra-x5',
+        },
+        price_comments:
+          "Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 6,
+        },
+      },
     ],
   },
   {
@@ -3109,7 +3135,7 @@ export const data: Provider[] = [
     price_comments:
       'Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing as the default (first) price then the second price with a constraint is the "standard" pricing that applies "UTC 00:30-16:30".',
     model_match: {
-      contains: 'deepseek',
+      starts_with: 'deepseek',
     },
     extractors: [
       {
@@ -3553,7 +3579,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://fireworks.ai/pricing'],
     api_pattern: 'https://api\\.fireworks\\.ai',
     model_match: {
-      starts_with: 'accounts/fireworks/models/',
+      starts_with: 'accounts/fireworks/',
     },
     extractors: [
       {
@@ -3632,9 +3658,19 @@ export const data: Provider[] = [
       {
         id: 'deepseek-v4-flash',
         name: 'DeepSeek-V4-Flash',
+        description: 'Official release of DeepSeek-V4-Flash with enhanced agentic capabilities and speculative decoding.',
         match: {
-          equals: 'accounts/fireworks/models/deepseek-v4-flash',
+          or: [
+            {
+              equals: 'accounts/fireworks/models/deepseek-v4-flash',
+            },
+            {
+              equals: 'accounts/fireworks/models/deepseek-v4-flash-0731',
+            },
+          ],
         },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
         prices: {
           input_mtok: 0.14,
           cache_read_mtok: 0.028,
@@ -3693,6 +3729,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p1-fast',
+        name: 'GLM 5.1 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p1-fast',
+        },
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2.8,
+          cache_read_mtok: 0.52,
+          output_mtok: 8.8,
+        },
+      },
+      {
         id: 'glm-5p2',
         name: 'GLM-5.2',
         description:
@@ -3708,6 +3757,27 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p2-fast',
+        name: 'GLM 5.2 Fast',
+        match: {
+          or: [
+            {
+              equals: 'accounts/fireworks/routers/glm-5p2-fast',
+            },
+            {
+              equals: 'accounts/fireworks/routers/glm-5p2-fast-us',
+            },
+          ],
+        },
+        context_window: 1040000,
+        price_comments: 'Fast and US-only serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.21,
+          output_mtok: 6.6,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'OpenAI gpt-oss-120b',
         description:
@@ -3716,9 +3786,10 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/models/gpt-oss-120b',
         },
         context_window: 131072,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
         prices: {
           input_mtok: 0.15,
-          cache_read_mtok: 0.07,
+          cache_read_mtok: 0.014,
           output_mtok: 0.6,
         },
       },
@@ -3731,10 +3802,26 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/models/gpt-oss-20b',
         },
         context_window: 131072,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-20b.',
         prices: {
           input_mtok: 0.07,
-          cache_read_mtok: 0.04,
+          cache_read_mtok: 0.035,
           output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'inkling',
+        name: 'Inkling',
+        description: "Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",
+        match: {
+          equals: 'accounts/fireworks/models/inkling',
+        },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/inkling.',
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
         },
       },
       {
@@ -3765,6 +3852,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k2p6-fast',
+        name: 'Kimi K2.6 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k2p6-fast',
+        },
+        context_window: 262144,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.3,
+          output_mtok: 8,
+        },
+      },
+      {
         id: 'kimi-k2p7-code',
         name: 'Kimi K2.7 Code',
         description:
@@ -3777,6 +3878,64 @@ export const data: Provider[] = [
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
           output_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k2p7-code-fast',
+        name: 'Kimi K2.7 Code Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k2p7-code-fast',
+        },
+        context_window: 262144,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 1.9,
+          cache_read_mtok: 0.38,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description: "Moonshot AI's 2.81T-parameter flagship model with native visual understanding and a 1M-token context window.",
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k3',
+        },
+        context_window: 1040000,
+        price_comments:
+          'Standard serverless pricing. See https://fireworks.ai/models/fireworks/kimi-k3. Fast and US router variants have separate model IDs.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'kimi-k3-fast',
+        name: 'Kimi K3 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3-fast',
+        },
+        context_window: 1040000,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 4.5,
+          cache_read_mtok: 0.45,
+          output_mtok: 22.5,
+        },
+      },
+      {
+        id: 'kimi-k3-us',
+        name: 'Kimi K3 US',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3-us',
+        },
+        context_window: 1040000,
+        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: {
+          input_mtok: 3.3,
+          cache_read_mtok: 0.33,
+          output_mtok: 16.5,
         },
       },
       {
@@ -5371,6 +5530,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'gemini-2.5-flash-native-audio-preview',
+            },
+            {
+              equals: 'gemini-2.5-flash-native-audio-latest',
             },
           ],
         },
@@ -12680,49 +12842,103 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-6-luna',
             },
+            {
+              regex: '^gpt-5\\.6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
           ],
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-luna',
-        prices: {
-          input_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.4,
+          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 0.25,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.5,
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.02,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.04,
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 1.2,
-            tiers: [
-              {
-                start: 272000,
-                price: 1.8,
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 9,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.02,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.04,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.8,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-sol',
@@ -12741,6 +12957,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-6',
+            },
+            {
+              regex: '^gpt-5\\.6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-sol-\\d{4}-\\d{2}-\\d{2}$',
             },
           ],
         },
@@ -12798,49 +13020,103 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-6-terra',
             },
+            {
+              regex: '^gpt-5\\.6-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
           ],
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-terra',
-        prices: {
-          input_mtok: {
-            base: 2,
-            tiers: [
-              {
-                start: 272000,
-                price: 4,
+          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 2.5,
-            tiers: [
-              {
-                start: 272000,
-                price: 5,
+              cache_write_mtok: {
+                base: 3.125,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 6.25,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 272000,
-                price: 0.4,
+              cache_read_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 12,
-            tiers: [
-              {
-                start: 272000,
-                price: 18,
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 22.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 18,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-audio',
@@ -23408,6 +23684,61 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.5,
+        },
+      },
+    ],
+  },
+  {
+    id: 'zai',
+    name: 'Z.AI',
+    pricing_urls: ['https://docs.z.ai/guides/overview/pricing'],
+    api_pattern: 'https://api\\.z\\.ai',
+    price_comments:
+      'USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'GLM-5.2',
+        name: 'GLM-5.2',
+        description: 'Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.2',
+            },
+            {
+              equals: 'glm-5.2',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
         },
       },
     ],

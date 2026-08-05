@@ -1406,6 +1406,20 @@ providers: list[Provider] = [
                     ),
                 ],
             ),
+            ModelInfo(
+                id='writer.palmyra-x4-v1:0',
+                match=ClauseContains(contains='writer.palmyra-x4'),
+                name='Palmyra X4',
+                price_comments="Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='writer.palmyra-x5-v1:0',
+                match=ClauseContains(contains='writer.palmyra-x5'),
+                name='Palmyra X5',
+                price_comments="Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('6')),
+            ),
         ],
     ),
     Provider(
@@ -1866,7 +1880,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.deepseek\\.com',
         pricing_urls=['https://api-docs.deepseek.com/quick_start/pricing'],
         price_comments='Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing as the default (first) price then the second price with a constraint is the "standard" pricing that applies "UTC 00:30-16:30".',
-        model_match=ClauseContains(contains='deepseek'),
+        model_match=ClauseStartsWith(starts_with='deepseek'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -2129,7 +2143,7 @@ providers: list[Provider] = [
         name='Fireworks',
         api_pattern='https://api\\.fireworks\\.ai',
         pricing_urls=['https://fireworks.ai/pricing'],
-        model_match=ClauseStartsWith(starts_with='accounts/fireworks/models/'),
+        model_match=ClauseStartsWith(starts_with='accounts/fireworks/'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -2177,8 +2191,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-v4-flash',
-                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash'),
+                        ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash-0731'),
+                    ]
+                ),
                 name='DeepSeek-V4-Flash',
+                description='Official release of DeepSeek-V4-Flash with enhanced agentic capabilities and speculative decoding.',
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
                 ),
@@ -2216,6 +2238,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p1-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p1-fast'),
+                name='GLM 5.1 Fast',
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.8'), cache_read_mtok=Decimal('0.52'), output_mtok=Decimal('8.8')
+                ),
+            ),
+            ModelInfo(
                 id='glm-5p2',
                 match=ClauseEquals(equals='accounts/fireworks/models/glm-5p2'),
                 name='GLM-5.2',
@@ -2226,13 +2257,29 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p2-fast',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='accounts/fireworks/routers/glm-5p2-fast'),
+                        ClauseEquals(equals='accounts/fireworks/routers/glm-5p2-fast-us'),
+                    ]
+                ),
+                name='GLM 5.2 Fast',
+                context_window=1040000,
+                price_comments='Fast and US-only serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='accounts/fireworks/models/gpt-oss-120b'),
                 name='OpenAI gpt-oss-120b',
                 description="OpenAI's open-weight 117B parameter MoE model designed for production, general purpose, high reasoning use-cases. Features powerful reasoning, agentic tasks, and versatile developer use cases.",
                 context_window=131072,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('0.6')
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('0.6')
                 ),
             ),
             ModelInfo(
@@ -2241,8 +2288,20 @@ providers: list[Provider] = [
                 name='OpenAI gpt-oss-20b',
                 description="OpenAI's open-weight 21.5B parameter model designed for powerful reasoning, agentic tasks, and versatile developer use cases. Optimized for lower latency and local or specialized tasks.",
                 context_window=131072,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-20b.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.3')
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.3')
+                ),
+            ),
+            ModelInfo(
+                id='inkling',
+                match=ClauseEquals(equals='accounts/fireworks/models/inkling'),
+                name='Inkling',
+                description="Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/inkling.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
                 ),
             ),
             ModelInfo(
@@ -2262,6 +2321,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='kimi-k2p6-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k2p6-fast'),
+                name='Kimi K2.6 Fast',
+                context_window=262144,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('8')),
+            ),
+            ModelInfo(
                 id='kimi-k2p7-code',
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p7-code'),
                 name='Kimi K2.7 Code',
@@ -2269,6 +2336,43 @@ providers: list[Provider] = [
                 context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2p7-code-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k2p7-code-fast'),
+                name='Kimi K2.7 Code Fast',
+                context_window=262144,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('1.9'), cache_read_mtok=Decimal('0.38'), output_mtok=Decimal('8')),
+            ),
+            ModelInfo(
+                id='kimi-k3',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3'),
+                name='Kimi K3',
+                description="Moonshot AI's 2.81T-parameter flagship model with native visual understanding and a 1M-token context window.",
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/kimi-k3. Fast and US router variants have separate model IDs.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='kimi-k3-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3-fast'),
+                name='Kimi K3 Fast',
+                context_window=1040000,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.5'), cache_read_mtok=Decimal('0.45'), output_mtok=Decimal('22.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3-us'),
+                name='Kimi K3 US',
+                context_window=1040000,
+                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.3'), cache_read_mtok=Decimal('0.33'), output_mtok=Decimal('16.5')
                 ),
             ),
             ModelInfo(
@@ -3191,6 +3295,7 @@ providers: list[Provider] = [
                     or_=[
                         ClauseStartsWith(starts_with='gemini-live-2.5-flash'),
                         ClauseStartsWith(starts_with='gemini-2.5-flash-native-audio-preview'),
+                        ClauseEquals(equals='gemini-2.5-flash-native-audio-latest'),
                     ]
                 ),
                 name='Gemini Live 2.5 Flash',
@@ -7282,21 +7387,49 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-luna'), ClauseEquals(equals='gpt-5-6-luna')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-luna'),
+                        ClauseEquals(equals='gpt-5-6-luna'),
+                        ClauseRegex(regex='^gpt-5\\.6-luna-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-luna-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
                 name='GPT-5.6 Luna',
                 description='GPT-5.6 model optimized for cost-sensitive workloads.',
                 context_window=1050000,
-                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-luna',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]
+                            ),
+                        ),
                     ),
-                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]),
-                ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.6-sol',
@@ -7306,6 +7439,8 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-6-sol'),
                         ClauseEquals(equals='gpt-5.6'),
                         ClauseEquals(equals='gpt-5-6'),
+                        ClauseRegex(regex='^gpt-5\\.6-sol-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-sol-\\d{4}-\\d{2}-\\d{2}$'),
                     ]
                 ),
                 name='GPT-5.6 Sol',
@@ -7323,17 +7458,51 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.6-terra',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-terra'), ClauseEquals(equals='gpt-5-6-terra')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-terra'),
+                        ClauseEquals(equals='gpt-5-6-terra'),
+                        ClauseRegex(regex='^gpt-5\\.6-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
                 name='GPT-5.6 Terra',
                 description='GPT-5.6 model that balances intelligence and cost.',
                 context_window=1050000,
-                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-terra',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
-                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]),
-                ),
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('3.125'), tiers=[Tier(start=272000, price=Decimal('6.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-audio',
@@ -13521,6 +13690,39 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
                 ),
             ),
+        ],
+    ),
+    Provider(
+        id='zai',
+        name='Z.AI',
+        api_pattern='https://api\\.z\\.ai',
+        pricing_urls=['https://docs.z.ai/guides/overview/pricing'],
+        price_comments='USD prices from the Z.AI pricing page. The API pattern covers both the standard and Coding Plan endpoints, with Coding Plan usage valued at the published API rates.',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='GLM-5.2',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.2'), ClauseEquals(equals='glm-5.2')]),
+                name='GLM-5.2',
+                description='Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            )
         ],
     ),
     Provider(

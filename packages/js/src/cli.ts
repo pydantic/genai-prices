@@ -5,6 +5,7 @@ import { hideBin } from 'yargs/helpers'
 
 import type { Provider } from './types'
 
+import { version } from '../package.json'
 import { data as embeddedData } from './data'
 import { calcPrice } from './index'
 
@@ -57,7 +58,7 @@ const argv = yargs(hideBin(process.argv))
   .option('requests', { type: 'number' })
   .option('provider', { type: 'string' })
   .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
-  .version('0.1.0')
+  .version(version)
   .help()
   .parseSync() as Argv
 

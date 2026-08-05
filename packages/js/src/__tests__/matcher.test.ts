@@ -23,6 +23,14 @@ describe('Match Logic', () => {
 })
 
 describe('Provider Matching', () => {
+  describe('matchProvider with modelId', () => {
+    it('prefers Fireworks for its fully-qualified DeepSeek model IDs', () => {
+      const provider = matchProvider(actualProviders, { modelId: 'accounts/fireworks/models/deepseek-v4-flash-0731' })
+
+      expect(provider?.id).toBe('fireworks')
+    })
+  })
+
   describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
       expect(matchProvider(actualProviders, { providerId: 'google' })?.id).toBe('google')
