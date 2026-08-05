@@ -11,8 +11,8 @@ pricing_urls:
 api_pattern: 'https://api\.openai\.com'
 model_match:
   or:
-    - starts_with: 'gpt-'
-    - regex: '^o[134]'
+    - starts_with: "gpt-"
+    - regex: "^o[134]"
 provider_match:
   contains: openai
 extractors:
@@ -187,26 +187,26 @@ models:
       input_mtok: 20
       output_mtok: 20
 
-  - id: 'ft:gpt-3.5-turbo-'
+  - id: "ft:gpt-3.5-turbo-"
     description: GPT-3.5 Turbo fine tuned.
     match:
-      starts_with: 'ft:gpt-3.5-turbo'
+      starts_with: "ft:gpt-3.5-turbo"
     prices:
       input_mtok: 3
       output_mtok: 6
 
-  - id: 'ft:gpt-4o'
+  - id: "ft:gpt-4o"
     description: GPT-4o fine tuned.
     match:
-      starts_with: 'ft:gpt-4o-2024-'
+      starts_with: "ft:gpt-4o-2024-"
     prices:
       input_mtok: 3.75
       output_mtok: 15
 
-  - id: 'ft:gpt-4o-mini'
+  - id: "ft:gpt-4o-mini"
     description: GPT-4o Mini fine tuned.
     match:
-      starts_with: 'ft:gpt-4o-mini-2024-'
+      starts_with: "ft:gpt-4o-mini-2024-"
     prices:
       input_mtok: 0.3
       output_mtok: 1.2

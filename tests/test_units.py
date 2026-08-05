@@ -840,6 +840,7 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     js_src_dir = tmp_path / 'packages' / 'js' / 'src'
     js_src_dir.mkdir(parents=True)
     monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+    prettier_calls: list[tuple[list[str], str | None]] = []
 
     def skip_prettier(
         args: list[str],
@@ -848,7 +849,8 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
         check: bool = False,
         stdout: int | None = None,
     ) -> subprocess.CompletedProcess[str]:
-        _ = cwd, check, stdout
+        _ = check, stdout
+        prettier_calls.append((args, cwd))
         return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, 'run', skip_prettier)
@@ -865,6 +867,12 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
             'dimensions': {'family': 'tokens', 'direction': 'input'},
         }
     }
+    assert prettier_calls == [
+        (
+            ['npx', '--', 'prettier', '--write', 'src/data.ts', 'src/dataUnits.ts'],
+            str(tmp_path / 'packages' / 'js'),
+        )
+    ]
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:

@@ -6,8 +6,8 @@ pricing_urls:
 api_pattern: 'https://api\.moonshot\.'
 model_match:
   or:
-    - starts_with: 'kimi'
-    - starts_with: 'moonshot'
+    - starts_with: "kimi"
+    - starts_with: "moonshot"
 provider_match:
   contains: moonshot
 extractors:
@@ -130,7 +130,7 @@ models:
     match:
       starts_with: kimi-k2.6
     context_window: 262144
-    prices_checked: '2026-05-22'
+    prices_checked: "2026-05-22"
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.16
@@ -145,8 +145,8 @@ models:
     match:
       equals: kimi-k2.7-code
     context_window: 262144
-    prices_checked: '2026-06-15'
-    price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md'
+    prices_checked: "2026-06-15"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.19
@@ -160,8 +160,8 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
-    prices_checked: '2026-07-16'
-    price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md'
+    prices_checked: "2026-07-16"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30

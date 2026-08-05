@@ -45,13 +45,13 @@ repos:
       - id: prettier
         name: prettier
         entry: npx
-        args: [--, prettier, --config, prettier.config.mjs, --write, --ignore-unknown]
+        args: [--, prettier, --write, --ignore-unknown]
         language: system
       - id: lint-fix
         name: lint fix
         entry: npm
         args: [run, lint-fix]
-        files: 'packages/js/'
+        files: "packages/js/"
         types_or: [ts, javascript]
         language: system
         pass_filenames: false
@@ -66,14 +66,14 @@ repos:
         name: collapse models
         entry: make
         args: [collapse-models]
-        files: 'prices/providers/'
+        files: "prices/providers/"
         language: system
         pass_filenames: false
       - id: build
         name: build prices
         entry: make
         args: [build]
-        files: 'prices/'
+        files: "prices/"
         language: system
         pass_filenames: false
       - id: check-for-price-discrepancies
@@ -81,7 +81,7 @@ repos:
         entry: make
         args: [check-for-price-discrepancies]
         types: [yaml]
-        files: 'prices/'
+        files: "prices/"
         language: system
         pass_filenames: false
       - id: inject-providers
@@ -89,7 +89,7 @@ repos:
         entry: make
         args: [inject-providers]
         types: [yaml]
-        files: 'prices/'
+        files: "prices/"
         language: system
         pass_filenames: false
       - id: typecheck-python

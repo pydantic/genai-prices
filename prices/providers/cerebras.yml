@@ -35,7 +35,7 @@ models:
         - starts_with: cerebras:gpt-oss-120b
     context_window: 131072
     prices_checked: 2025-11-06
-    price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.'
+    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
     prices:
       input_mtok: 0.35
       output_mtok: 0.75
@@ -53,7 +53,7 @@ models:
         - starts_with: cerebras:llama-3.3-70b
     context_window: 128000
     prices_checked: 2025-11-07
-    price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.'
+    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 128k context."
     prices:
       input_mtok: 0.85
       output_mtok: 1.20
@@ -71,7 +71,7 @@ models:
         - starts_with: cerebras:llama3.1-8b
     context_window: 32768
     prices_checked: 2025-11-07
-    price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.'
+    price_comments: "Developer tier pricing. Free tier: 8k context, Paid tier: 32k context."
     prices:
       input_mtok: 0.10
       output_mtok: 0.10
@@ -89,7 +89,7 @@ models:
         - starts_with: cerebras:qwen-3-32b
     context_window: 131072
     prices_checked: 2025-11-07
-    price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.'
+    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
     prices:
       input_mtok: 0.40
       output_mtok: 0.80

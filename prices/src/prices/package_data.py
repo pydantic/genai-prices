@@ -192,8 +192,6 @@ export const unitData: RawUnitsDict = {json.dumps(runtime_units, indent=2, ensur
             'npx',
             '--',
             'prettier',
-            '--config',
-            '../../prettier.config.mjs',
             '--write',
             'src/data.ts',
             'src/dataUnits.ts',
