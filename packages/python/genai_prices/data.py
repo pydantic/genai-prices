@@ -1835,6 +1835,46 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='cursor',
+        name='Cursor',
+        api_pattern='https://(.*\\.)?cursor\\.(com|sh)',
+        pricing_urls=['https://cursor.com/docs/models-and-pricing'],
+        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='composer'), ClauseContains(contains='grok-4.5')]),
+        provider_match=ClauseContains(contains='cursor'),
+        models=[
+            ModelInfo(
+                id='composer-2.5',
+                match=ClauseEquals(equals='composer-2.5'),
+                name='Composer 2.5',
+                description="Cursor's own agentic coding model.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='composer-2.5-fast',
+                match=ClauseEquals(equals='composer-2.5-fast'),
+                name='Composer 2.5 (Fast)',
+                description='Fast-mode variant of Composer 2.5.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='grok-4.5',
+                match=ClauseEquals(equals='grok-4.5'),
+                name='Grok 4.5',
+                description='Jointly trained by Cursor and SpaceXAI for long-running coding and knowledge work.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='grok-4.5-fast',
+                match=ClauseEquals(equals='grok-4.5-fast'),
+                name='Grok 4.5 (Fast)',
+                description='Fast-mode variant of Grok 4.5.',
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('18')),
+            ),
+        ],
+    ),
+    Provider(
         id='deepseek',
         name='Deepseek',
         api_pattern='https://api\\.deepseek\\.com',
