@@ -2264,6 +2264,32 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'writer.palmyra-x4-v1:0',
+        name: 'Palmyra X4',
+        match: {
+          contains: 'writer.palmyra-x4',
+        },
+        price_comments:
+          "Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+        prices: {
+          input_mtok: 2.5,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'writer.palmyra-x5-v1:0',
+        name: 'Palmyra X5',
+        match: {
+          contains: 'writer.palmyra-x5',
+        },
+        price_comments:
+          "Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 6,
+        },
+      },
     ],
   },
   {
