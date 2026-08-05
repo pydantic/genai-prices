@@ -17,10 +17,15 @@ from .types import (
     PriceCalculation,
     Provider,
     TieredPrices,
+    _format_model_price_line,  # pyright: ignore[reportPrivateUsage]
     _iter_model_price_attr_items,  # pyright: ignore[reportPrivateUsage]
     _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
 )
-from .units import UnitDef
+from .units import (
+    UnitDef,
+    _unit_display_name,  # pyright: ignore[reportPrivateUsage]
+    _unit_per_label,  # pyright: ignore[reportPrivateUsage]
+)
 
 try:
     from pydantic_settings import (
@@ -613,46 +618,6 @@ def _price_field_label(field_name: str) -> str:
     return f'{_unit_display_name(unit)}/{_unit_per_label(unit)}'
 
 
-def _unit_display_name(unit: UnitDef) -> str:
-    dimensions = unit.dimensions
-    cache = dimensions.get('cache')
-    direction = dimensions.get('direction')
-    modality = dimensions.get('modality')
-    parts: list[str]
-    if dimensions.get('family') == 'requests':
-        parts = ['requests']
-    elif cache is not None:
-        parts = ['cache']
-        if modality is not None:
-            parts.append(modality)
-        parts.append(cache)
-    else:
-        parts = []
-        if direction is not None:
-            parts.append(direction)
-        if modality is not None:
-            parts.append(modality)
-
-    handled_dimensions = {'family', 'direction', 'modality', 'cache'}
-    parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
-    if not parts:
-        parts.append(unit.usage_key)
-    return ' '.join(part.replace('_', ' ').title() for part in parts)
-
-
-def _unit_per_label(unit: UnitDef) -> str:
-    family = unit.dimensions.get('family')
-    if family == 'tokens' and unit.per == 1_000_000:
-        return 'MTok'
-    if family == 'requests' and unit.per == 1_000:
-        return 'K'
-    if unit.per == 1_000_000:
-        return 'M'
-    if unit.per == 1_000:
-        return 'K'
-    return str(unit.per)
-
-
 def _price_field_header_style(field_name: str) -> str:
     style = _PRICE_STYLES.get(field_name)
     return f'bold {style}' if style else 'bold cyan'
@@ -705,16 +670,6 @@ def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
 
     registry = _get_registry()
     return list(_iter_priced_registered_units(model_price, registry))
-
-
-def _format_model_price_line(value: object, unit: UnitDef) -> str:
-    base_value = value.base if isinstance(value, TieredPrices) else value
-    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
-    unit_name = _unit_display_name(unit).lower()
-    per_label = _unit_per_label(unit)
-    if unit.dimensions.get('family') == 'requests':
-        return f'${base_value} / {per_label} {unit_name}{suffix}'
-    return f'${base_value}/{unit_name} {per_label}{suffix}'
 
 
 def _format_unregistered_model_price_line(value: object, price_key: str) -> str:

@@ -98,20 +98,23 @@ Generated package unit modules contain only usage identity, price identity, norm
 **Remote contracts are versioned instead of repurposed.**
 Every package version keeps fetching a payload shape and unit vocabulary it understands. A new contract uses a new URL rather than changing the artifact consumed by already released auto-updaters.
 
-**The v1 provider artifacts remain unchanged by this work.** _(from "Remote contracts are versioned instead of repurposed")_
-Existing `data.json` and `data_slim.json` consumers continue receiving their provider-array contract and original unit vocabulary. The registry release does not wrap or add new unit-related fields to those artifacts.
+**New remote contract versions use versioned directories.** _(from "Remote contracts are versioned instead of repurposed")_
+Version 2 publishes under `prices/new_data/v2/`, version 3 under `prices/new_data/v3/`, and later contracts follow the same `prices/new_data/v<version>/` layout. Each directory uses stable artifact names such as `data.json`, `data.schema.json`, `data_slim.json`, and `data_slim.schema.json`, so adding a contract version does not keep expanding the flat `prices/` directory.
 
-**Phase 1 delivers a releasable static registry through provider-array v2 data.** _(from "Remote contracts are versioned instead of repurposed", "Registry construction promotes raw data into immutable indexes")_
-[Phase 1: Static Unit Registry Release](phase-1-static-unit-registry-release/spec.md) ([code spec](phase-1-static-unit-registry-release/code-spec.md)) consolidates the completed Python, JavaScript, shared-registry, and polish work. Installed packages construct one bundled registry, auto-update providers from same-shape `data_v2.json`, include new modality pricing, and remove obvious repeated hot-path scans without cache state.
+**The v1 provider artifacts retain their released-client compatibility contract.** _(from "Remote contracts are versioned instead of repurposed")_
+Existing `data.json` and `data_slim.json` consumers continue receiving provider arrays at the same URLs using the v1 structure and vocabulary. The compatibility oracle for both payloads is `prices/data.schema.json` at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c`, which describes the common provider-array input accepted by v1 package decoders. Each maintained payload must validate against that baseline schema. Exact byte identity is not part of this contract, so compatible provider, model, and pricing data may change. The current schema artifacts are not updater inputs and may evolve independently; they do not justify publishing v1 data that fails the baseline oracle.
 
-**Phase 2 adds auto-updating unit definitions through wrapped v3 data.** _(from "Remote contracts are versioned instead of repurposed", "Phase 1 delivers a releasable static registry through provider-array v2 data")_
-[Phase 2: Auto-Updating Unit Definitions](phase-2-auto-updating-units/spec.md) ([code spec](phase-2-auto-updating-units/code-spec.md)) is a future independent PR. It publishes `data_v3.json` with units and providers, activates them atomically, and preserves v1/v2 URLs. It is not required for the Phase 1 release.
+**Phase 1 delivers a releasable static registry through full and slim provider-array v2 data.** _(from "New remote contract versions use versioned directories", "Registry construction promotes raw data into immutable indexes")_
+[Phase 1: Static Unit Registry Release](phase-1-static-unit-registry-release/spec.md) ([code spec](phase-1-static-unit-registry-release/code-spec.md)) consolidates the completed Python, JavaScript, shared-registry, and polish work. Installed packages construct one bundled registry, auto-update providers from full same-shape `prices/new_data/v2/data.json`, include new modality pricing, and remove obvious repeated hot-path scans without cache state. Phase 1 also publishes a compatible slim projection for consumers that choose the smaller artifact.
 
-**Runtime custom units remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+**Phase 2 adds auto-updating unit definitions through wrapped v3 data.** _(from "Remote contracts are versioned instead of repurposed", "Phase 1 delivers a releasable static registry through full and slim provider-array v2 data")_
+[Phase 2: Auto-Updating Unit Definitions](phase-2-auto-updating-units/spec.md) ([code spec](phase-2-auto-updating-units/code-spec.md)) is a future independent PR. It publishes `prices/new_data/v3/data.json` with units and providers, activates them atomically, and preserves v1/v2 URLs. It is not required for the Phase 1 release.
+
+**Runtime custom units remain deferred.** _(from "Phase 1 delivers a releasable static registry through full and slim provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
 Phase 1 supports repo-defined bundled units and Phase 2 supports publisher-defined remote units. Neither phase promises arbitrary caller-defined registry mutation as a public runtime feature.
 
-**Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data")_
+**Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through full and slim provider-array v2 data")_
 Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require a separate specification; they are not an active numbered phase.
 
-**Phase prose specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+**Phase prose specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through full and slim provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
 The root spec defines shared invariants and delivery boundaries, while each numbered phase's `spec.md` contains that phase's complete requirements. A phase's `code-spec.md` is supporting implementation detail: it traces details to prose requirements but cannot introduce a requirement or expand release scope. Later requirements likewise do not expand an earlier phase's release scope.

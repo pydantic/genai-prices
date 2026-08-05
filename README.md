@@ -40,8 +40,8 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
-- [Fireworks](prices/providers/fireworks.yml) - 24 models
-- [Google](prices/providers/google.yml) - 42 models
+- [Fireworks](prices/providers/fireworks.yml) - 32 models
+- [Google](prices/providers/google.yml) - 46 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -58,13 +58,14 @@ The following providers are currently supported:
 - [Mistral](prices/providers/mistral.yml) - 31 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 85 models
+- [OpenAI](prices/providers/openai.yml) - 86 models
 - [OpenRouter](prices/providers/openrouter.yml) - 690 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 17 models
+- [Z.AI](prices/providers/zai.yml) - 1 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
 [comment]: <> (providers-end)
@@ -83,10 +84,18 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 Price data is available in the following files:
 
-- [`prices/data.json`](prices/data.json) - JSON file with all prices
-- [`prices/data.schema.json`](prices/data.schema.json) - JSON Schema for `prices/data.json`
-- [`prices/data_slim.json`](prices/data_slim.json) - JSON file long fields like descriptions removed and free models removed
-- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - JSON Schema for `prices/data_slim.json`
+- [`prices/new_data/v2/data.json`](prices/new_data/v2/data.json) - current generated pricing data for packages that bundle the static unit registry
+- [`prices/new_data/v2/data.schema.json`](prices/new_data/v2/data.schema.json) - JSON Schema for the full v2 data
+- [`prices/new_data/v2/data_slim.json`](prices/new_data/v2/data_slim.json) - compact v2 pricing data with free models and long metadata removed
+- [`prices/new_data/v2/data_slim.schema.json`](prices/new_data/v2/data_slim.schema.json) - JSON Schema for the slim v2 data
+
+The v1 files below are **frozen**: they remain available so released clients keep working, but they no
+longer receive provider, model or price updates. Use the v2 files above for anything new.
+
+- [`prices/data.json`](prices/data.json) - frozen v1-compatible provider and model pricing data
+- [`prices/data.schema.json`](prices/data.schema.json) - JSON Schema published alongside frozen v1 `data.json`
+- [`prices/data_slim.json`](prices/data_slim.json) - frozen slim v1-compatible data with long fields and free models removed
+- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - JSON Schema published alongside frozen v1 `data_slim.json`
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.

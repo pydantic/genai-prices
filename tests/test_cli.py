@@ -146,7 +146,7 @@ def test_calc(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: gpt 4o
-  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/cache read MTok
+  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/input cache read MTok
 Context Window: 128,000
    Input Price: $0.0025
   Output Price: $0.001
@@ -229,7 +229,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $2/input MTok, $8/output MTok, $0.5/cache read MTok
+  Model Prices: $2/input MTok, $8/output MTok, $0.5/input cache read MTok
    Input Price: $0.02
   Output Price: $0
    Total Price: $0.02
@@ -242,7 +242,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $10/input MTok, $40/output MTok, $0.5/cache read MTok
+  Model Prices: $10/input MTok, $40/output MTok, $0.5/input cache read MTok
    Input Price: $0.1
   Output Price: $0
    Total Price: $0.1
@@ -493,14 +493,26 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
     assert cli_logic(['calc', '--table', '--input-tokens', '1000', tiered_ref, requests_ref]) == 0
     out, err = capsys.readouterr()
     assert '(+tiers)' in out
-    assert 'Requests/K' in out
+    assert '/ K requests' in out
     assert err == ''
 
 
 def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('input_mtok') == 'Input/MTok'
-    assert _price_field_label('cache_read_mtok') == 'Cache Read/MTok'
-    assert _price_field_label('cache_audio_read_mtok') == 'Cache Audio Read/MTok'
+    assert _price_field_label('cache_read_mtok') == 'Input Cache Read/MTok'
+    assert _price_field_label('cache_audio_read_mtok') == 'Input Audio Cache Read/MTok'
+    assert _price_field_label('input_mchars') == 'Input Characters/M'
+    assert _price_field_label('audio_hours') == 'Audio/Hour'
+    assert _price_field_label('input_audio_hours') == 'Input Audio/Hour'
+    assert _price_field_label('output_audio_hours') == 'Output Audio/Hour'
+    assert _price_field_label('input_text_messages_kcount') == 'Input Text Messages/K'
+    assert _price_field_label('input_gpixels') == 'Input Pixels/G'
+    assert _price_field_label('input_document_kpages') == 'Input Document Pages/K'
+    assert _price_field_label('input_annotated_document_kpages') == 'Input Annotated Document Pages/K'
+    assert _price_field_label('rerank_searches_kcount') == 'Rerank Searches/K'
+    assert _price_field_label('web_searches_kcount') == 'Web Searches/K'
+    assert _price_field_label('social_searches_kcount') == 'Social Searches/K'
+    assert _price_field_label('code_executions_kcount') == 'Code Executions/K'
     assert _price_field_label('requests_kcount') == 'Requests/K'
 
 
@@ -526,7 +538,7 @@ def test_format_model_prices_uses_bundled_registry_metadata() -> None:
     )
 
     assert _format_model_prices(price, split_lines=False, use_color=False).plain == (
-        '$1/input MTok, $0.5/cache read MTok, $12 / K requests'
+        '$1/input MTok, $0.5/input cache read MTok, $12 / K requests'
     )
 
 
@@ -638,6 +650,7 @@ def test_unknown_price_field_fallbacks() -> None:
     ('unit', 'display_name', 'per_label'),
     [
         (UnitDef('audio_seconds', 'audio_second', 1, {'family': 'time', 'modality': 'audio'}), 'Audio', '1'),
+        (UnitDef('audio_seconds', 'audio_minutes', 60, {'family': 'durations', 'modality': 'audio'}), 'Audio', 'Min'),
         (UnitDef('characters', 'characters_million', 1_000_000, {'family': 'characters'}), 'Characters', 'M'),
         (UnitDef('images', 'images_kcount', 1_000, {'family': 'images'}), 'Images', 'K'),
     ],

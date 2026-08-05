@@ -36,7 +36,7 @@ def load_units() -> dict[str, Any]:
 
 
 def build():
-    """Validate the publication inputs and build the provider authoring schema."""
+    """Validate the publication inputs and build the provider schema and v2 data."""
     units = load_units()
     providers: list[Provider] = []
 
@@ -60,15 +60,13 @@ def build():
         provider.exclude_removed()
     validate_export_payload(providers, units)
 
-    # Write the authoring schema and keep regenerating the v1 publication
-    # artifacts until the v2 publication path exists.
     schema_json_path = package_dir / 'providers' / '.schema.json'
     schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
     print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
-    write_prices(providers, units, 'data.json')
+    write_prices(providers, units, 'new_data/v2/data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, units, 'data_slim.json', slim=True)
+    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
 
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
@@ -98,8 +96,25 @@ def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -
     schema = copy.deepcopy(additional_price_schema)
     schema['title'] = unit.price_key.replace('_', ' ').title()
     normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
-    usage_name = unit.usage_key.replace('_', ' ')
-    schema['description'] = f'price in USD per {normalization} {usage_name}'
+    cache_ttl = unit.dimensions.get('cache_ttl')
+    duration_price_unit = {60: ('minutes', 'minute'), 3_600: ('hours', 'hour')}.get(unit.per)
+    if (
+        duration_price_unit is not None
+        and unit.usage_key.endswith('_seconds')
+        and unit.price_key.endswith(f'_{duration_price_unit[0]}')
+    ):
+        normalization = ''
+        usage_name = f'{unit.usage_key.removesuffix("_seconds").replace("_", " ")} {duration_price_unit[1]}'
+    elif (
+        unit.dimensions.get('token_type') == 'cache_write'
+        and unit.dimensions.get('modality') is None
+        and cache_ttl is not None
+    ):
+        ttl_description = {'5m': '5-minute', '1h': '1-hour'}.get(cache_ttl, cache_ttl)
+        usage_name = f'tokens written to the cache with a {ttl_description} TTL'
+    else:
+        usage_name = unit.usage_key.replace('_', ' ')
+    schema['description'] = f'price in USD per {" ".join(filter(None, (normalization, usage_name)))}'
     return schema
 
 
@@ -112,6 +127,7 @@ def write_prices(
 ) -> None:
     print('')
     prices_json_path = package_dir / prices_file
+    prices_json_path.parent.mkdir(parents=True, exist_ok=True)
 
     providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
     data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
@@ -134,7 +150,7 @@ def write_prices(
     if slim:
         exclude = {
             '__all__': {
-                'pricing_url': True,
+                'pricing_urls': True,
                 'description': True,
                 'price_comments': True,
                 'models': {'__all__': {'name', 'description', 'price_comments'}},

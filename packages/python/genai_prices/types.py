@@ -778,14 +778,16 @@ class ModelPrice:
         for price_key in _iter_effective_model_price_keys(self, registry):
             value = getattr(self, price_key)
             if value is not None:  # pragma: no branch
-                if price_key == 'requests_kcount':
-                    parts.append(f'${value} / K requests')
-                else:
+                try:
+                    unit = registry.unit_for_price_key(price_key)
+                except KeyError:
                     name = price_key.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
                         parts.append(f'${value.base}/{name} MTok (+tiers)')
                     else:
                         parts.append(f'${value}/{name} MTok')
+                else:
+                    parts.append(_format_model_price_line(value, unit))
 
         return ', '.join(parts)
 
@@ -959,6 +961,21 @@ class TieredPrices:
     def __post_init__(self) -> None:
         """Ensure tiers are sorted in ascending order by start threshold."""
         self.tiers.sort(key=lambda tier: tier.start)
+
+
+def _format_model_price_line(value: object, unit: UnitDef) -> str:
+    from genai_prices.units import (
+        _unit_display_name,  # pyright: ignore[reportPrivateUsage]
+        _unit_per_label,  # pyright: ignore[reportPrivateUsage]
+    )
+
+    base_value = value.base if isinstance(value, TieredPrices) else value
+    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
+    unit_name = _unit_display_name(unit).lower()
+    per_label = _unit_per_label(unit)
+    if unit.dimensions.get('family') == 'requests':
+        return f'${base_value} / {per_label} {unit_name}{suffix}'
+    return f'${base_value}/{unit_name} {per_label}{suffix}'
 
 
 @dataclass

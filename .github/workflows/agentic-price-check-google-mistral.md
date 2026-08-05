@@ -80,14 +80,26 @@ Step 4 combines both into a single issue (built fresh each run, replacing the pr
 ## Step 1 — read the recorded prices
 
 Run `cat prices/providers/google.yml` (then `mistral.yml`). Under `models:` each
-entry has an `id`, a `match`, and a `prices:` block. Every number is **USD per
-1,000,000 tokens**. The fields you check:
+entry has an `id`, a `match`, and a `prices:` block.
+
+**Check every key under `prices:`, not a fixed list** — the vocabulary grows, and a key you skip is a
+discrepancy nobody sees. The key suffix tells you the unit, and they are **not** all per-million-tokens:
+`_mtok` is USD per 1,000,000 tokens, `_kcount` per 1,000 (`web_searches_kcount`, `requests_kcount`),
+`_mchars` per 1M characters, `_hours` per 3,600 seconds, `_gpixels` per 1e9 pixels, `_kpages` per 1,000
+pages. Convert the page's figure into the key's unit before comparing, and show the arithmetic in the
+issue row.
+
+The ones you will see most often here:
 
 - `input_mtok` — standard **text** input price
 - `output_mtok` — output price
 - `cache_read_mtok` — cached input price (check only when the page lists one)
 - `input_audio_mtok` — audio input price, on Gemini models that have it (compare it to the page's audio input rate, separately from text)
 - `cache_audio_read_mtok` — cached **audio** input price, on Gemini models that have it (compare to the page's audio context-cache rate, check only when the page lists one)
+- `input_image_mtok` / `input_video_mtok` / `output_image_mtok` — per-modality rates where the page quotes them separately
+
+If a key has no counterpart you can identify on the page, **do not treat it as matching** — list it in
+the issue as unchecked with the key name. A silent skip reads as a clean bill of health.
 
 Some Gemini entries are tiered by prompt size, e.g.
 `input_mtok: {base: 1.25, tiers: [{start: 200000, price: 2.5}]}`. Use the `base`
