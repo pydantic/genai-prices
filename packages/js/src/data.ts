@@ -12743,6 +12743,12 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-6-luna',
             },
+            {
+              regex: '^gpt-5\\.6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
           ],
         },
         context_window: 1050000,
@@ -12853,6 +12859,12 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-6',
             },
+            {
+              regex: '^gpt-5\\.6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
           ],
         },
         context_window: 1050000,
@@ -12908,6 +12920,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-6-terra',
+            },
+            {
+              regex: '^gpt-5\\.6-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-5-6-terra-\\d{4}-\\d{2}-\\d{2}$',
             },
           ],
         },
