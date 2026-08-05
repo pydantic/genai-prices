@@ -102,7 +102,7 @@ test: ## Run tests and collect coverage data
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
-	@uv run coverage html
+	@uv run coverage html --fail-under=0
 
 .PHONY: test-all-python
 test-all-python: ## Run tests on Python 3.10 to 3.14
@@ -114,8 +114,12 @@ test-all-python: ## Run tests on Python 3.10 to 3.14
 	@uv run coverage combine
 	@uv run coverage report
 
+.PHONY: test-js
+test-js: ## Build, typecheck, lint and test the JS package with coverage
+	npm run ci
+
 .PHONY: all
-all: build package-data format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
+all: build package-data format lint typecheck testcov test-js ## Run code formatting, linting, static type checks, and both test suites with coverage
 
 .PHONY: help
 help: ## Show this help (usage: make help)

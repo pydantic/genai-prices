@@ -30,7 +30,7 @@ export default tseslint.config(
       'turbo/no-undeclared-env-vars': 'off',
     },
   },
-  { ignores: ['dist', 'src/data.ts'] },
+  { ignores: ['coverage', 'dist', 'src/data.ts'] },
   {
     languageOptions: {
       parserOptions: {

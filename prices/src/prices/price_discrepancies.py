@@ -165,7 +165,10 @@ def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool
         return True
 
     for field, value in source_price.model_dump(exclude_none=True).items():
-        if current_value := getattr(current_price, field):
+        # `ModelPrice` is `extra='allow'`, so a v2 price key the source reports but our YAML doesn't
+        # carry is absent rather than None — plain `getattr` raises. Absent means we have no price for
+        # that dimension, which is the conflict the `else` branch below already reports.
+        if current_value := getattr(current_price, field, None):
             if isinstance(current_value, TieredPrices) and current_value.base == value:
                 continue
             if current_value != value:

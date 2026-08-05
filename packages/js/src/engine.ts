@@ -256,7 +256,10 @@ export function matchProvider(providers: Provider[], { modelId, providerApiUrl, 
   }
 
   if (providerApiUrl) {
-    return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
+    // Anchored at the start, matching Python's `re.match`. The patterns themselves are unanchored, so
+    // an unanchored `test` would match any URL merely *containing* a provider host — a proxy URL like
+    // `http://localhost/?u=https://api.openai.com/v1` would resolve to OpenAI here but raise in Python.
+    return providers.find((p) => new RegExp(`^(?:${p.api_pattern})`).test(providerApiUrl))
   }
 
   if (modelId) {

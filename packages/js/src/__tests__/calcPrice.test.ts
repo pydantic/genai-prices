@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelInfo, ModelPrice, TieredPrices, Usage } from '../types'
 
+import { calcPrice as calcPriceForModelRef } from '../api'
 import { calcPrice, collectResolvedModelPrices, getActiveModelPrice } from '../engine'
 import { getActiveRegistry, UnitRegistry } from '../units'
 
@@ -186,6 +187,56 @@ describe('getActiveModelPrice', () => {
     }
 
     expect(() => getActiveModelPrice(model, new Date(Number.NaN))).toThrow(new RangeError('Invalid time value'))
+  })
+
+  it('handles daily constraints that span midnight', () => {
+    // No shipped model has a wrapping window; the Python package pins the same synthetic one.
+    const offPeak = { input_mtok: 0.5 }
+    const standard = { input_mtok: 1 }
+    const model: ModelInfo = {
+      id: 'wrapping-window',
+      match: { equals: 'wrapping-window' },
+      prices: [
+        { prices: standard },
+        {
+          constraint: {
+            end_time: '06:00:00Z',
+            start_time: '22:00:00Z',
+            type: 'time_of_date',
+          },
+          prices: offPeak,
+        },
+      ],
+    }
+
+    expect(getActiveModelPrice(model, new Date('2026-07-30T23:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T03:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T22:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T06:00:00Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T12:00:00Z'))).toBe(standard)
+  })
+})
+
+describe('start_date constraints', () => {
+  // `claude-sonnet-5` switches from introductory ($2/MTok input) to standard ($3/MTok) pricing on 2026-09-01.
+  // The boundary is UTC midnight, not the caller's local midnight; the Python package pins the same instants.
+  it.each([
+    { expected: 2, name: '02:00 at +05:00 on the start date is still the previous UTC day', timestamp: '2026-09-01T02:00:00+05:00' },
+    { expected: 2, name: 'the same instant expressed in UTC', timestamp: '2026-08-31T21:00:00Z' },
+    {
+      expected: 3,
+      name: '20:00 at -05:00 the day before the start date is already the start date in UTC',
+      timestamp: '2026-08-31T20:00:00-05:00',
+    },
+    { expected: 3, name: 'the same instant expressed in UTC', timestamp: '2026-09-01T01:00:00Z' },
+  ])('prices $name as $expected', ({ expected, timestamp }) => {
+    const price = calcPriceForModelRef({ input_tokens: MILLION }, 'claude-sonnet-5', {
+      providerId: 'anthropic',
+      timestamp: new Date(timestamp),
+    })
+
+    expect(price?.model_price.input_mtok).toBe(expected)
+    expect(price?.total_price).toBe(expected)
   })
 })
 
