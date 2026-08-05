@@ -24,7 +24,10 @@ def get_snapshot() -> DataSnapshot:
 def _bundled_snapshot() -> DataSnapshot:
     from .data import providers
 
-    return DataSnapshot(providers=providers, from_auto_update=False)
+    return DataSnapshot(
+        providers=providers,
+        from_auto_update=False,
+    )
 
 
 def set_custom_snapshot(snapshot: DataSnapshot | None):

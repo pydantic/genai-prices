@@ -6,6 +6,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
 from genai_prices.data import providers
+from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
     ClauseAnd,
     ClauseContains,
@@ -18,7 +19,10 @@ from genai_prices.types import (
     ModelInfo,
     ModelPrice,
     Provider,
+    Tier,
     TieredPrices,
+    calc_mtok_price,
+    calc_unit_price,
 )
 
 pytestmark = pytest.mark.anyio
@@ -39,8 +43,8 @@ def test_sync_success_with_provider():
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.00625')),
-        ('gpt-5.6-terra', Decimal('0.003125')),
-        ('gpt-5.6-luna', Decimal('0.00125')),
+        ('gpt-5.6-terra', Decimal('0.0025')),
+        ('gpt-5.6-luna', Decimal('0.00025')),
     ],
 )
 def test_gpt_5_6_cache_write_price(model_ref: str, expected_input_price: Decimal):
@@ -59,8 +63,8 @@ def test_gpt_5_6_cache_write_price(model_ref: str, expected_input_price: Decimal
     ('model_ref', 'short_write_rate', 'long_write_rate'),
     [
         ('gpt-5.6-sol', Decimal('6.25'), Decimal('12.5')),
-        ('gpt-5.6-terra', Decimal('3.125'), Decimal('6.25')),
-        ('gpt-5.6-luna', Decimal('1.25'), Decimal('2.5')),
+        ('gpt-5.6-terra', Decimal('2.5'), Decimal('5')),
+        ('gpt-5.6-luna', Decimal('0.25'), Decimal('0.5')),
     ],
 )
 def test_gpt_5_6_cache_write_price_context_boundary(
@@ -85,8 +89,8 @@ def test_gpt_5_6_cache_write_price_context_boundary(
     ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
     [
         ('gpt-5.6-sol', Decimal('10'), Decimal('12.5'), Decimal('1'), Decimal('45')),
-        ('gpt-5.6-terra', Decimal('5'), Decimal('6.25'), Decimal('0.5'), Decimal('22.5')),
-        ('gpt-5.6-luna', Decimal('2'), Decimal('2.5'), Decimal('0.2'), Decimal('9')),
+        ('gpt-5.6-terra', Decimal('4'), Decimal('5'), Decimal('0.4'), Decimal('18')),
+        ('gpt-5.6-luna', Decimal('0.4'), Decimal('0.5'), Decimal('0.04'), Decimal('1.8')),
     ],
 )
 def test_gpt_5_6_long_context_mixed_price(
@@ -112,6 +116,64 @@ def test_gpt_5_6_long_context_mixed_price(
     assert price.input_price == expected_input_price
     assert price.output_price == expected_output_price
     assert price.total_price == expected_input_price + expected_output_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_prices'),
+    [
+        (
+            'gpt-5.6-luna',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
+                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272_000, price=Decimal('9'))]),
+            ),
+        ),
+        (
+            'gpt-5.6-luna',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
+                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272_000, price=Decimal('1.8'))]),
+            ),
+        ),
+        (
+            'gpt-5.6-terra',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                cache_write_mtok=TieredPrices(
+                    base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
+                ),
+                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
+                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272_000, price=Decimal('22.5'))]),
+            ),
+        ),
+        (
+            'gpt-5.6-terra',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
+                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272_000, price=Decimal('18'))]),
+            ),
+        ),
+    ],
+)
+def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expected_prices: ModelPrice) -> None:
+    price = calc_price(
+        Usage(input_tokens=0),
+        model_ref=model_ref,
+        provider_id='openai',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
 
 
 def test_sync_success_with_url():
@@ -161,6 +223,40 @@ def test_openrouter_deepseek_v32_price():
     assert price.total_price == snapshot(Decimal('0.8008'))
     assert price.model.name == snapshot('DeepSeek V3.2')
     assert price.provider.id == snapshot('openrouter')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
+    [
+        ('accounts/fireworks/models/deepseek-v4-flash-0731', Decimal('0.14'), Decimal('0.028'), Decimal('0.28')),
+        ('accounts/fireworks/models/inkling', Decimal('1'), Decimal('0.17'), Decimal('4.05')),
+        ('accounts/fireworks/models/kimi-k3', Decimal('3'), Decimal('0.3'), Decimal('15')),
+        ('accounts/fireworks/routers/glm-5p1-fast', Decimal('2.8'), Decimal('0.52'), Decimal('8.8')),
+        ('accounts/fireworks/routers/glm-5p2-fast', Decimal('2.1'), Decimal('0.21'), Decimal('6.6')),
+        ('accounts/fireworks/routers/glm-5p2-fast-us', Decimal('2.1'), Decimal('0.21'), Decimal('6.6')),
+        ('accounts/fireworks/routers/kimi-k2p6-fast', Decimal('2'), Decimal('0.3'), Decimal('8')),
+        ('accounts/fireworks/routers/kimi-k2p7-code-fast', Decimal('1.9'), Decimal('0.38'), Decimal('8')),
+        ('accounts/fireworks/routers/kimi-k3-fast', Decimal('4.5'), Decimal('0.45'), Decimal('22.5')),
+        ('accounts/fireworks/routers/kimi-k3-us', Decimal('3.3'), Decimal('0.33'), Decimal('16.5')),
+        ('accounts/fireworks/models/gpt-oss-120b', Decimal('0.15'), Decimal('0.014'), Decimal('0.6')),
+        ('accounts/fireworks/models/gpt-oss-20b', Decimal('0.07'), Decimal('0.035'), Decimal('0.3')),
+    ],
+)
+def test_fireworks_serverless_prices(
+    model_ref: str,
+    input_rate: Decimal,
+    cache_read_rate: Decimal,
+    output_rate: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+    )
+
+    assert price.provider.id == 'fireworks'
+    assert price.input_price == input_rate + cache_read_rate
+    assert price.output_price == output_rate
+    assert price.total_price == input_rate + cache_read_rate + output_rate
 
 
 def test_moonshotai_kimi_k27_code_price():
@@ -241,6 +337,38 @@ def test_zhipuai_glm_52_price():
     assert price.total_price == Decimal('0.0014892')
 
 
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.z.ai/api/paas/v4',
+        'https://api.z.ai/api/coding/paas/v4',
+    ],
+)
+def test_zai_glm_52_price(provider_api_url: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='glm-5.2',
+        provider_api_url=provider_api_url,
+    )
+
+    assert price.provider.id == 'zai'
+    assert price.model.id == 'GLM-5.2'
+    assert price.input_price == Decimal('0.000716')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.001156')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id'),
+    [('glm-4.7', 'GLM-4.7'), ('glm-5.2', 'GLM-5.2')],
+)
+def test_zai_does_not_shadow_zhipuai_model_matching(model_ref: str, model_id: str):
+    price = calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref=model_ref)
+
+    assert price.provider.id == 'zhipuai'
+    assert price.model.id == model_id
+
+
 def test_openrouter_modern_dated_aliases_price():
     for model_ref, model_id, input_price, output_price, total_price in [
         (
@@ -299,6 +427,109 @@ def test_model_price_str_tiered_prices_include_dollar_prefix():
     assert str(model_price) == '$2.5/input MTok (+tiers)'
 
 
+def test_model_price_str_requests_and_private_state() -> None:
+    model_price = ModelPrice(requests_kcount=Decimal('2'))
+    object.__setattr__(model_price, '_private_state', Decimal('3'))
+
+    assert str(model_price) == '$2 / K requests'
+
+
+@pytest.mark.parametrize(
+    ('price', 'expected'),
+    [
+        (ModelPrice(web_searches_kcount=Decimal('10')), '$10/web searches K'),
+        (ModelPrice(audio_hours=Decimal('1')), '$1/audio Hour'),
+        (ModelPrice(input_gpixels=Decimal('2')), '$2/input pixels G'),
+        (ModelPrice(input_document_kpages=Decimal('3')), '$3/input document pages K'),
+        (
+            ModelPrice(web_searches_kcount=TieredPrices(base=Decimal('10'), tiers=[])),
+            '$10/web searches K (+tiers)',
+        ),
+    ],
+)
+def test_model_price_str_uses_registered_unit_labels(price: ModelPrice, expected: str) -> None:
+    assert str(price) == expected
+
+
+def test_model_price_str_preserves_tiered_unregistered_price_fallback() -> None:
+    price = ModelPrice(hovercraft_mtok=TieredPrices(base=Decimal('1'), tiers=[]))
+
+    assert str(price) == '$1/hovercraft MTok (+tiers)'
+
+
+def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
+    price = ModelPrice(hovercraft_mtok=Decimal('NaN'))
+
+    with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: hovercraft_mtok'):
+        result = price.calc_price(Usage(input_tokens=1))
+
+    assert result == {
+        'input_price': Decimal(0),
+        'output_price': Decimal(0),
+        'total_price': Decimal(0),
+    }
+
+
+@pytest.mark.parametrize('price', [Decimal('-1'), Decimal('NaN'), Decimal('Infinity')])
+def test_calc_price_rejects_invalid_recognized_flat_price(price: Decimal) -> None:
+    with pytest.raises(
+        ValueError,
+        match='Invalid price value for input_mtok: expected a finite non-negative Decimal or valid tiered prices',
+    ):
+        ModelPrice(input_mtok=price).calc_price(Usage(input_tokens=1))
+
+
+@pytest.mark.parametrize(
+    'price',
+    [
+        TieredPrices(base=Decimal('-1'), tiers=[]),
+        TieredPrices(base=Decimal('NaN'), tiers=[]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=-1, price=Decimal('2'))]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('-2'))]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('Infinity'))]),
+    ],
+)
+def test_calc_price_rejects_invalid_recognized_tiered_price(price: TieredPrices) -> None:
+    with pytest.raises(
+        ValueError,
+        match='Invalid price value for input_mtok: expected a finite non-negative Decimal or valid tiered prices',
+    ):
+        ModelPrice(input_mtok=price).calc_price(Usage(input_tokens=1))
+
+
+def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:
+    price = ModelPrice(cache_image_read_mtok=Decimal('1'))
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_image_read_tokens'):
+        price.calc_price(Usage(cache_image_read_tokens=1))
+
+
+def test_set_custom_snapshot_does_not_validate_dynamic_model_prices() -> None:
+    snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='bad-extra',
+                        match=ClauseEquals('bad-extra'),
+                        prices=ModelPrice(hovercraft_mtok=Decimal('1')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
+
+
 def test_requests_kcount_prices():
     # request count defaults to 1
     price = calc_price(Usage(), model_ref='sonar', provider_id='perplexity')
@@ -307,6 +538,67 @@ def test_requests_kcount_prices():
     assert price.total_price == snapshot(Decimal('0.012'))
     assert price.model.name == snapshot('Sonar')
     assert price.provider.name == snapshot('Perplexity')
+
+
+def test_claude_opus_5_web_search_price():
+    price = calc_price(Usage(web_searches=2), model_ref='claude-opus-5', provider_id='anthropic')
+
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('0.02')
+
+
+def test_claude_opus_5_one_hour_cache_write_price():
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_1h_tokens=1_000_000),
+        model_ref='claude-opus-5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == Decimal('10')
+
+
+def test_distinct_output_category_prices_replace_aggregate_output_rate():
+    price = calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
+        model_ref='sonar-deep-research',
+        provider_id='perplexity',
+    )
+
+    # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
+    assert price.output_price == Decimal('0.000615')
+    assert price.total_price == Decimal('0.000615')
+
+
+def test_custom_model_price_can_override_reasoning_rate():
+    price = ModelPrice(output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')).calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25)
+    )
+
+    assert price['output_price'] == Decimal('0.000675')
+    assert price['total_price'] == Decimal('0.000675')
+
+
+def test_calc_unit_price_matches_mtok_wrapper() -> None:
+    assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
+        Decimal('2.5'), 500_000, total_input_tokens=0
+    )
+
+
+def test_calc_unit_price_handles_absent_price_or_count() -> None:
+    assert calc_unit_price(None, 500, total_input_tokens=0, per=1_000) == Decimal(0)
+    assert calc_unit_price(Decimal('2.5'), None, total_input_tokens=0, per=1_000) == Decimal(0)
+
+
+def test_calc_unit_price_handles_tiered_prices() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'))])
+
+    assert calc_unit_price(price, 10, total_input_tokens=100, per=1_000) == Decimal('0.01')
+    assert calc_unit_price(price, 10, total_input_tokens=101, per=1_000) == Decimal('0.02')
+
+
+def test_calc_unit_price_uses_non_million_normalization_factor() -> None:
+    assert calc_unit_price(Decimal('12'), 2, total_input_tokens=0, per=1_000) == Decimal('0.024')
 
 
 def test_price_constraint_before():

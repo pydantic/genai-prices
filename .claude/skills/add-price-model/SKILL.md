@@ -1,16 +1,18 @@
 ---
 name: add-price-model
 description: >-
-  Add a new LLM model (or provider) to genai-prices pricing data. Use when asked to add/update
-  pricing for a model — e.g. "add grok 4.5", "add the new Claude", "update openai o5 prices". Covers
-  sourcing prices, probing OpenRouter for undocumented dated snapshot IDs, editing the provider YAML,
-  building, verifying resolution, and opening the PR.
+  Add a new LLM model (or provider) to genai-prices pricing data, or change the price of one that is
+  already there. Use when asked to add/update pricing for a model — e.g. "add grok 4.5", "add the new
+  Claude", "update openai o5 prices", "provider X cut its prices". Covers sourcing prices, probing
+  OpenRouter for undocumented dated snapshot IDs, editing the provider YAML, preserving price history
+  across a rate change, building, verifying resolution, and opening the PR.
 ---
 
 # Add a model to genai-prices
 
-Never edit `prices/data.json` / `prices/data_slim.json` by hand — they are generated. Edit the
-provider YAML in `prices/providers/<provider>.yml`, then `make build-prices`.
+Never hand-edit generated data. Edit the provider YAML in `prices/providers/<provider>.yml`, then
+`make build`. The live published payload is `prices/new_data/v2/data.json`; `prices/data.json` and
+`prices/data_slim.json` are **frozen v1** snapshots that no build step writes any more — leave them alone.
 
 ## 0. Scope: every provider that hosts this model, not just the one you were named
 
@@ -91,6 +93,16 @@ fields). Include:
 
 Add a `price_comments` field when a value needs explanation/reference.
 
+Those three keys cover the common case. The full vocabulary is derived from `prices/units.yml` — check
+it when the model bills for anything else (reasoning or citation tokens, per-modality rates, 1h cache
+writes, web searches, requests). **Not every key is per-Mtok:** `_kcount` is per 1,000, `_mchars` per
+1M characters, `_hours` per 3,600s, `_gpixels` per 1e9, `_kpages` per 1,000. A per-Mtok figure under a
+`_kcount` key is valid YAML and wrong by 1000×. Prices must also cover their ancestors — a model with
+`cache_write_1h_mtok` needs `cache_write_mtok` too; `make build` will tell you which key is missing.
+
+Do **not** add a new unit to `prices/units.yml` to make a model fit. That widens the published v2
+schema and is a v3 change — see `AGENTS.md` § "Adding a unit". Open an issue instead.
+
 **Migrate family-level `-latest` aliases when the new model is the current flagship.** Two kinds of
 `-latest` alias coexist, and they behave differently:
 
@@ -104,13 +116,64 @@ to — check the provider docs and, if you can, hit the API and read the respons
 match that. Don't assume; the aliasing scheme is provider-specific (some vendors have no bare-family
 alias at all).
 
+## 4b. Changing the price of a model that already exists
+
+A provider changing its rates is **not** an edit to the existing `prices:` block. Overwriting those
+values re-prices every request the library ever priced for that model, so a request from before the
+change gets billed at the new rate. That is what happened to GPT-5.6 Luna and Terra in #531, and #535
+had to undo it.
+
+Add a dated entry instead. Convert `prices:` from a mapping to a list of conditional entries:
+
+```yaml
+prices:
+  - prices: # the rates that were already there, unchanged and unconstrained
+      input_mtok: 1
+      output_mtok: 6
+  - constraint:
+      # https://developers.openai.com/api/docs/changelog
+      start_date: 2026-07-30
+    prices: # the new rates
+      input_mtok: 0.2
+      output_mtok: 1.2
+```
+
+- Put the entry with no `constraint` **first**. Both engines scan the list backwards and take the
+  first entry whose constraint is active, so an unconstrained entry placed last would always win.
+- Set `start_date` to the date the provider's new price took effect, not to today. Cite the changelog
+  or announcement that states that date, in a YAML comment beside `start_date`.
+- Set `prices_checked` to today. It records when you verified the rates, which is a different fact
+  from when the rates changed.
+- Append one entry to a model that already uses a list. Leave the existing entries alone.
+
+Overwrite in place in exactly one case: the old value was wrong when it was written. A correction has
+no history worth preserving. State which of the two cases you are in, in the PR body.
+
+Verify both sides of the boundary:
+
+```bash
+uv run python -c "
+from datetime import datetime, timezone
+from genai_prices import calc_price, Usage
+u = Usage(input_tokens=1_000_000)
+for day in [(2026, 7, 29), (2026, 7, 30)]:
+    t = datetime(*day, tzinfo=timezone.utc)
+    r = calc_price(u, '<id>', provider_id='<provider_id>', genai_request_timestamp=t)
+    print(t.date(), '->', r.model_price.input_mtok, r.total_price)
+"
+```
+
+Then pin both sides in `tests/test_price_calc.py` — one assertion the day before the change, one on
+the day of. A test that only covers the current rate passes just as well against an overwritten
+history, which is why #531 went green.
+
 ## 5. Build + verify resolution
 
 Use `make build`, not just `make build-prices`. The installed `genai_prices` package (and the JS
-package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`)
-— NOT `prices/data.json`. `make build-prices` only writes `prices/data.json`, so a `calc_price` check
-run after it verifies **stale** package data and can silently show the wrong result. `make build` runs
-`build-prices` + `package-data` + `inject-providers`.
+package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`).
+`make build-prices` writes only `prices/new_data/v2/*` and `prices/providers/.schema.json` — it does not
+touch the bundled data, so a `calc_price` check run after it verifies **stale** package data and can
+silently show the wrong result. `make build` runs `build-prices` + `package-data` + `inject-providers`.
 
 ```bash
 make build    # build-prices + package-data + inject-providers
@@ -132,19 +195,27 @@ for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-l
 
 ## 6. Commit, push, PR
 
-Pre-commit hooks regenerate more than the JSON — **README.md**, **packages/js/src/data.ts**, and
-**packages/python/genai_prices/data.py**. The first `git commit` will abort after the hooks rewrite
-these; re-stage the regenerated files and commit again.
-
-Stage files explicitly — **never `git add -A`** (it leaks local/scratch files):
+The pre-commit `build` hook regenerates ten paths, so the first `git commit` will abort after it
+rewrites them; re-stage and commit again. Stage files explicitly — **never `git add -A`** (it leaks
+local/scratch files) — and never `--no-verify`, since that hook is what keeps the published data in
+sync with the YAML:
 
 ```bash
-git add prices/providers/<provider>.yml prices/data.json prices/data_slim.json \
-        README.md packages/js/src/data.ts packages/python/genai_prices/data.py
+git add prices/providers/<provider>.yml \
+        prices/providers/.schema.json \
+        prices/new_data/v2/data.json prices/new_data/v2/data.schema.json \
+        prices/new_data/v2/data_slim.json prices/new_data/v2/data_slim.schema.json \
+        packages/python/genai_prices/data.py packages/python/genai_prices/data_units.py \
+        packages/js/src/data.ts packages/js/src/dataUnits.ts \
+        README.md
 git commit -m "Add <Provider> <Model> pricing"   # re-run once if hooks rewrite files
 git push -u origin <slug>
 gh pr create --base main --title "Add <Provider> <Model> pricing" --body "..."
 ```
+
+A plain price addition usually only dirties a subset of these — `git status` after the aborted commit
+tells you which. The schema and `*_units` files change only when `prices/units.yml` does, which a price
+addition should not do.
 
 Never force-push. PR body: pricing table, sources (provider docs + OpenRouter for cache rate), and
 scope notes (e.g. single variant / no cache-write / any `-latest` alias you moved, each with its

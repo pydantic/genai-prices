@@ -92,12 +92,23 @@ entry looks like this:
     cache_read_mtok: 1.25
 ```
 
-Every number in `prices:` is **USD per 1,000,000 tokens**. The fields you check:
+**Check every key under `prices:`, not a fixed list** — the vocabulary grows, and a key you skip is a
+discrepancy nobody sees.
 
-- `input_mtok` — standard input price
-- `output_mtok` — output price
-- `cache_read_mtok` — cached / cache-hit input price (check only when the page lists a cache price)
-- `cache_write_mtok` — cache-write price (check only when the page lists one)
+The key suffix tells you the unit, and they are **not** all per-million-tokens:
+
+- `_mtok` — USD per 1,000,000 tokens (`input_mtok`, `output_mtok`, `cache_read_mtok`,
+  `cache_write_mtok`, `cache_write_1h_mtok`, `output_reasoning_mtok`, `input_image_mtok`, …)
+- `_kcount` — USD per 1,000 (`web_searches_kcount`, `requests_kcount`)
+- `_mchars` per 1M characters, `_hours` per 3,600 seconds, `_gpixels` per 1e9 pixels, `_kpages` per 1,000 pages
+
+Convert the page's figure into the key's unit before comparing, and show the arithmetic in the issue row.
+
+Note `cache_write_mtok` and `cache_write_1h_mtok` are different keys: the plain one is the default
+(5-minute) TTL, the `_1h` one is the 1-hour TTL. Match each against its own column.
+
+If a key has no counterpart you can identify on the page, **do not treat it as matching** — list it in
+the issue as unchecked with the key name. A silent skip reads as a clean bill of health.
 
 A few entries are tiered, e.g. `input_mtok: {base: 3, tiers: [{start: 200000, price: 6}]}`.
 Use the `base` value (here `3`) and set the tiers aside.
@@ -130,8 +141,11 @@ number the page didn't give you.
 - Page: <https://platform.claude.com/docs/en/about-claude/pricing.md>
 - Read the "Model pricing" table. Map its columns to the YAML fields:
   **Base Input Tokens** → `input_mtok`, **Output Tokens** → `output_mtok`,
-  **5m Cache Writes** → `cache_write_mtok`, **Cache Hits & Refreshes** →
-  `cache_read_mtok`. A cell like "$5 / MTok" means `5`.
+  **5m Cache Writes** → `cache_write_mtok`, **1h Cache Writes** → `cache_write_1h_mtok`,
+  **Cache Hits & Refreshes** → `cache_read_mtok`. A cell like "$5 / MTok" means `5`.
+- Anthropic entries may also carry `web_searches_kcount`, priced per **1,000 searches**. The pricing
+  page lists web search under its tool-use / agent-tools section, not the model table — a page figure
+  of "$10 per 1,000 searches" means `10`.
 
 ## Step 3 — match models and compare
 
