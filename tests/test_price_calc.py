@@ -176,6 +176,72 @@ def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expec
     assert price.model_price == expected_prices
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_prices'),
+    [
+        (
+            'openai.gpt-5.6-sol',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('5.5'),
+                cache_write_mtok=Decimal('6.875'),
+                cache_read_mtok=Decimal('0.55'),
+                output_mtok=Decimal('33'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-terra',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('2.75'),
+                cache_write_mtok=Decimal('3.4375'),
+                cache_read_mtok=Decimal('0.275'),
+                output_mtok=Decimal('16.5'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-terra',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('2.2'),
+                cache_write_mtok=Decimal('2.75'),
+                cache_read_mtok=Decimal('0.22'),
+                output_mtok=Decimal('13.2'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-luna',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('1.1'),
+                cache_write_mtok=Decimal('1.375'),
+                cache_read_mtok=Decimal('0.11'),
+                output_mtok=Decimal('6.6'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-luna',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('0.22'),
+                cache_write_mtok=Decimal('0.275'),
+                cache_read_mtok=Decimal('0.022'),
+                output_mtok=Decimal('1.32'),
+            ),
+        ),
+    ],
+)
+def test_aws_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expected_prices: ModelPrice) -> None:
+    price = calc_price(
+        Usage(input_tokens=0),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),
