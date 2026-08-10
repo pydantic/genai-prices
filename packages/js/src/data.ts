@@ -1617,9 +1617,9 @@ export const data: Provider[] = [
         match: {
           equals: 'openai.gpt-5.6-luna',
         },
-        context_window: 272000,
+        context_window: 1000000,
         price_comments:
-          'Bedrock serves GPT-5.6 with a 272K context window, so there is no long-context tier. Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/',
+          'Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -1635,10 +1635,42 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.22,
-              cache_write_mtok: 0.275,
-              cache_read_mtok: 0.022,
-              output_mtok: 1.32,
+              input_mtok: {
+                base: 0.22,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.44,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.275,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.55,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.022,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.044,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.32,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.98,
+                  },
+                ],
+              },
             },
           },
         ],
@@ -1649,14 +1681,46 @@ export const data: Provider[] = [
         match: {
           equals: 'openai.gpt-5.6-sol',
         },
-        context_window: 272000,
+        context_window: 1000000,
         price_comments:
-          'Bedrock serves GPT-5.6 with a 272K context window, so there is no long-context tier. Cache writes (30m TTL) are billed at 1.25x the input rate. Sol pricing is unchanged since Bedrock GA (2026-07-13). Ref: https://aws.amazon.com/bedrock/pricing/',
+          'Cache writes (30m TTL) are billed at 1.25x the input rate. Sol pricing is unchanged since Bedrock GA (2026-07-13). The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: {
-          input_mtok: 5.5,
-          cache_write_mtok: 6.875,
-          cache_read_mtok: 0.55,
-          output_mtok: 33,
+          input_mtok: {
+            base: 5.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 11,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.875,
+            tiers: [
+              {
+                start: 272000,
+                price: 13.75,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 272000,
+                price: 1.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 33,
+            tiers: [
+              {
+                start: 272000,
+                price: 49.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -1665,9 +1729,9 @@ export const data: Provider[] = [
         match: {
           equals: 'openai.gpt-5.6-terra',
         },
-        context_window: 272000,
+        context_window: 1000000,
         price_comments:
-          'Bedrock serves GPT-5.6 with a 272K context window, so there is no long-context tier. Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/',
+          'Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -1683,10 +1747,42 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 2.2,
-              cache_write_mtok: 2.75,
-              cache_read_mtok: 0.22,
-              output_mtok: 13.2,
+              input_mtok: {
+                base: 2.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4.4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.75,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.22,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.44,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 13.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 19.8,
+                  },
+                ],
+              },
             },
           },
         ],
