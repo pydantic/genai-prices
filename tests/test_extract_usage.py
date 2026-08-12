@@ -190,6 +190,39 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_modal_responses_usage() -> None:
+    response_data = {
+        'model': 'moonshotai/Kimi-K3',
+        'usage': {
+            'input_tokens': 90,
+            'input_tokens_details': {'cached_tokens': 64, 'cache_write_tokens': 0},
+            'output_tokens': 188,
+            'output_tokens_details': {'reasoning_tokens': 169},
+            'total_tokens': 278,
+        },
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://example--kimi-k3.modal.run/v1',
+        api_flavor='responses',
+    )
+
+    assert extracted_usage.provider.id == 'modal'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'moonshotai/Kimi-K3'
+    assert extracted_usage.usage == Usage(
+        input_tokens=90,
+        cache_read_tokens=64,
+        cache_write_tokens=0,
+        output_tokens=188,
+        output_reasoning_tokens=169,
+    )
+    assert extracted_usage.calc_price().input_price == Decimal('0.0000972')
+    assert extracted_usage.calc_price().output_price == Decimal('0.00282')
+    assert extracted_usage.calc_price().total_price == Decimal('0.0029172')
+
+
 @pytest.mark.parametrize(
     ('api_flavor', 'usage_data'),
     [

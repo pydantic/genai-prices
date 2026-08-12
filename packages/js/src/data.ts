@@ -10766,11 +10766,7 @@ export const data: Provider[] = [
   {
     id: 'modal',
     name: 'Modal',
-    pricing_urls: [
-      'https://modal.com/endpoints',
-      'https://modal.com/library/moonshot/kimi-k3',
-      'https://modal.com/blog/kimi-k3-by-moonshot-now-available-on-modal',
-    ],
+    pricing_urls: ['https://modal.com/library'],
     api_pattern: 'https://[^/]+\\.modal\\.(?:run|direct)',
     provider_match: {
       contains: 'modal',
@@ -10798,6 +10794,38 @@ export const data: Provider[] = [
           },
           {
             path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
           },

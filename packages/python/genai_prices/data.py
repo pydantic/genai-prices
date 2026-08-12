@@ -6272,11 +6272,7 @@ providers: list[Provider] = [
         id='modal',
         name='Modal',
         api_pattern='https://[^/]+\\.modal\\.(?:run|direct)',
-        pricing_urls=[
-            'https://modal.com/endpoints',
-            'https://modal.com/library/moonshot/kimi-k3',
-            'https://modal.com/blog/kimi-k3-by-moonshot-now-available-on-modal',
-        ],
+        pricing_urls=['https://modal.com/library'],
         provider_match=ClauseContains(contains='modal'),
         extractors=[
             UsageExtractor(
@@ -6295,7 +6291,27 @@ providers: list[Provider] = [
                 ],
                 api_flavor='chat',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(

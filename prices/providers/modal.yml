@@ -2,14 +2,12 @@
 name: Modal
 id: modal
 pricing_urls:
-  - https://modal.com/endpoints
-  - https://modal.com/library/moonshot/kimi-k3
-  - https://modal.com/blog/kimi-k3-by-moonshot-now-available-on-modal
+  - https://modal.com/library
 api_pattern: 'https://[^/]+\.modal\.(?:run|direct)'
 provider_match:
   contains: modal
 
-# Modal Shared Endpoints use the OpenAI-compatible chat completions API.
+# Modal Shared Endpoints use the OpenAI-compatible chat completions and responses APIs.
 extractors:
   - api_flavor: chat
     root: usage
@@ -23,6 +21,23 @@ extractors:
         dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
+        dest: output_tokens
+
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
         dest: output_tokens
 
 models:
