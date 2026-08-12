@@ -10764,6 +10764,80 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'modal',
+    name: 'Modal',
+    pricing_urls: [
+      'https://modal.com/endpoints',
+      'https://modal.com/library/moonshot/kimi-k3',
+      'https://modal.com/blog/kimi-k3-by-moonshot-now-available-on-modal',
+    ],
+    api_pattern: 'https://[^/]+\\.modal\\.(?:run|direct)',
+    provider_match: {
+      contains: 'modal',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi K3',
+        description: "Moonshot AI's 2.8-trillion-parameter multimodal reasoning model, served by Modal as a Shared Endpoint.",
+        match: {
+          equals: 'moonshotai/Kimi-K3',
+        },
+        context_window: 1048576,
+        price_comments:
+          'Modal Shared Endpoint pricing. Reasoning tokens use the same $15/MTok rate as completion tokens. See https://modal.com/library/moonshot/kimi-k3.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'thinkingmachines/Inkling-NVFP4',
+        name: 'Inkling NVFP4',
+        description: "Thinking Machines Lab's reasoning model, served by Modal as a Shared Endpoint.",
+        match: {
+          equals: 'thinkingmachines/Inkling-NVFP4',
+        },
+        price_comments: 'Modal Shared Endpoint dashboard pricing. Reasoning tokens use the same $5/MTok rate as completion tokens.',
+        prices: {
+          input_mtok: 1.2,
+          cache_read_mtok: 0.27,
+          output_mtok: 5,
+        },
+      },
+    ],
+  },
+  {
     id: 'moonshotai',
     name: 'MoonshotAi',
     pricing_urls: ['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],

@@ -155,6 +155,42 @@ def test_openai():
 
 
 @pytest.mark.parametrize(
+    ('model_id', 'expected_price'),
+    [
+        ('moonshotai/Kimi-K3', Decimal('18.3')),
+        ('thinkingmachines/Inkling-NVFP4', Decimal('6.47')),
+    ],
+)
+def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
+    response_data = {
+        'model': model_id,
+        'usage': {
+            'prompt_tokens': 2_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000},
+            'completion_tokens': 1_000_000,
+            'completion_tokens_details': {'reasoning_tokens': 500_000},
+        },
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://example--kimi-k3.modal.run/v1',
+        api_flavor='chat',
+    )
+
+    assert extracted_usage.provider.id == 'modal'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == model_id
+    assert extracted_usage.usage == Usage(
+        input_tokens=2_000_000,
+        cache_read_tokens=1_000_000,
+        output_tokens=1_000_000,
+        output_reasoning_tokens=500_000,
+    )
+    assert extracted_usage.calc_price().total_price == expected_price
+
+
+@pytest.mark.parametrize(
     ('api_flavor', 'usage_data'),
     [
         (
