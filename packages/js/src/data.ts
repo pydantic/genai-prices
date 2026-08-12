@@ -10793,7 +10793,7 @@ export const data: Provider[] = [
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'reasoning_tokens'],
+            path: 'reasoning_tokens',
             dest: 'output_reasoning_tokens',
             required: false,
           },

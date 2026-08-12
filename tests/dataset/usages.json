@@ -8296,10 +8296,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -8398,6 +8394,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -8883,6 +8883,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -8924,10 +8928,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -9626,6 +9626,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -9667,10 +9671,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -10532,6 +10532,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -10573,10 +10577,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -10733,6 +10733,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -10774,10 +10778,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -10936,6 +10936,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -10977,10 +10981,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -11137,6 +11137,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -11178,10 +11182,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -12404,6 +12404,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -12445,10 +12449,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -12599,6 +12599,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -12644,10 +12648,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -12802,6 +12802,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -12847,10 +12851,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -13170,6 +13170,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -13211,10 +13215,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -13361,6 +13361,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -13402,10 +13406,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -21073,6 +21073,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -21116,10 +21120,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -21607,6 +21607,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -21650,10 +21654,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -23327,6 +23327,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -23370,10 +23374,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -23528,6 +23528,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -23571,10 +23575,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -25012,6 +25012,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -25055,10 +25059,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -25519,6 +25519,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -25562,10 +25566,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -29165,6 +29165,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -29208,10 +29212,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -29366,6 +29366,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -29409,10 +29413,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -32468,6 +32468,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -32511,10 +32515,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -33924,6 +33924,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -33967,10 +33971,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -35353,6 +35353,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -35396,10 +35400,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -36488,6 +36488,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -36531,10 +36535,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -39449,6 +39449,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -39492,10 +39496,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -40127,6 +40127,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -40170,10 +40174,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -43598,6 +43598,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -43641,10 +43645,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -43982,6 +43982,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -44025,10 +44029,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -45410,6 +45410,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -45453,10 +45457,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -45611,6 +45611,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -45654,10 +45658,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -50167,6 +50167,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -50210,10 +50214,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -51155,6 +51155,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -51198,10 +51202,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -51472,6 +51472,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -51515,10 +51519,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -57622,6 +57622,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -57665,10 +57669,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -59116,6 +59116,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -59159,10 +59163,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -59317,6 +59317,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -59360,10 +59364,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -62980,6 +62980,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -63023,10 +63027,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -64937,6 +64937,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -64980,10 +64984,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -70478,6 +70478,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -70521,10 +70525,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -70949,6 +70949,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -70992,10 +70996,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -75546,6 +75546,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -75589,10 +75593,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -76004,6 +76004,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -76047,10 +76051,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -77357,6 +77357,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -77400,10 +77404,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -80383,6 +80383,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -80426,10 +80430,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -80584,6 +80584,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -80627,10 +80631,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -84480,6 +84480,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -84523,10 +84527,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -85133,6 +85133,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -85176,10 +85180,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -101719,6 +101719,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -101762,10 +101766,6 @@
             "input_price": "0.0000381",
             "output_price": "0.0001044",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102100,6 +102100,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -102143,10 +102147,6 @@
             "input_price": "0.00004515",
             "output_price": "0.0000312",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102260,10 +102260,6 @@
             "input_price": "0.0000312",
             "output_price": "0.0000576",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102388,6 +102384,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -102482,10 +102482,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102589,6 +102585,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102727,6 +102727,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -102768,10 +102772,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -102882,10 +102882,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -102986,6 +102982,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -103124,6 +103124,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -103165,10 +103169,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -103313,6 +103313,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -103356,10 +103360,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -103504,6 +103504,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -103547,10 +103551,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -103695,6 +103695,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -103738,10 +103742,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -103886,6 +103886,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -103931,10 +103935,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -104043,10 +104043,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -104145,6 +104141,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -104279,6 +104279,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -104322,10 +104326,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -104470,6 +104470,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -104513,10 +104517,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -106727,6 +106727,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -106768,10 +106772,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -113708,6 +113708,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -113751,10 +113755,6 @@
             "input_price": "0.00000609",
             "output_price": "0.00008378",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -114445,6 +114445,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -114488,10 +114492,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000348",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -114657,6 +114657,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -114700,10 +114704,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000078",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -115042,6 +115042,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -115085,10 +115089,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000282",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -115439,6 +115439,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -115482,10 +115486,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000432",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -115651,6 +115651,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -115694,10 +115698,6 @@
             "input_price": "0.0000126",
             "output_price": "0.000063",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -115863,6 +115863,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -115906,10 +115910,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000252",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -116075,6 +116075,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -116118,10 +116122,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000402",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -116272,6 +116272,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -116317,10 +116321,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -116660,6 +116660,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -116703,10 +116707,6 @@
             "input_price": "0.0000126",
             "output_price": "0.0000246",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -129712,6 +129712,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -129755,10 +129759,6 @@
           {
             "api_flavor": "default",
             "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",

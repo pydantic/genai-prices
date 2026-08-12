@@ -168,7 +168,7 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
             'prompt_tokens': 3_000_000,
             'prompt_tokens_details': {'cached_tokens': 1_000_000, 'cache_write_tokens': 1_000_000},
             'completion_tokens': 1_000_000,
-            'completion_tokens_details': {'reasoning_tokens': 500_000},
+            'reasoning_tokens': 500_000,
         },
     }
 

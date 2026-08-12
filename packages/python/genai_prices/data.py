@@ -6285,11 +6285,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
-                    UsageExtractorMapping(
-                        path=['completion_tokens_details', 'reasoning_tokens'],
-                        dest='output_reasoning_tokens',
-                        required=False,
-                    ),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='chat',
