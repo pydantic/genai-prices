@@ -3,7 +3,7 @@ name: Modal
 id: modal
 pricing_urls:
   - https://modal.com/library
-api_pattern: 'https://[^/]+\.modal\.(?:run|direct)'
+api_pattern: 'https://[^/]+\.modal\.(?:run|direct)(?:/|$)'
 provider_match:
   contains: modal
 
@@ -16,6 +16,9 @@ extractors:
         dest: input_tokens
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: [completion_tokens_details, reasoning_tokens]
         dest: output_reasoning_tokens

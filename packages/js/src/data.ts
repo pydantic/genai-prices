@@ -10767,7 +10767,7 @@ export const data: Provider[] = [
     id: 'modal',
     name: 'Modal',
     pricing_urls: ['https://modal.com/library'],
-    api_pattern: 'https://[^/]+\\.modal\\.(?:run|direct)',
+    api_pattern: 'https://[^/]+\\.modal\\.(?:run|direct)(?:/|$)',
     provider_match: {
       contains: 'modal',
     },
@@ -10785,6 +10785,11 @@ export const data: Provider[] = [
           {
             path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {

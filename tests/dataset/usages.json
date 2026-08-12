@@ -27851,10 +27851,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -27915,6 +27911,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -105412,10 +105412,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -105472,6 +105468,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -105622,10 +105622,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -105675,6 +105671,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -108231,10 +108231,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -108291,6 +108287,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -108441,10 +108441,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -108494,6 +108490,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",
@@ -108645,10 +108645,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "modal"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -108698,6 +108694,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "modal"
           },
           {
             "api_flavor": "chat",

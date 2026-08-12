@@ -157,16 +157,16 @@ def test_openai():
 @pytest.mark.parametrize(
     ('model_id', 'expected_price'),
     [
-        ('moonshotai/Kimi-K3', Decimal('18.3')),
-        ('thinkingmachines/Inkling-NVFP4', Decimal('6.47')),
+        ('moonshotai/Kimi-K3', Decimal('21.3')),
+        ('thinkingmachines/Inkling-NVFP4', Decimal('7.67')),
     ],
 )
 def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
     response_data = {
         'model': model_id,
         'usage': {
-            'prompt_tokens': 2_000_000,
-            'prompt_tokens_details': {'cached_tokens': 1_000_000},
+            'prompt_tokens': 3_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000, 'cache_write_tokens': 1_000_000},
             'completion_tokens': 1_000_000,
             'completion_tokens_details': {'reasoning_tokens': 500_000},
         },
@@ -182,8 +182,9 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == model_id
     assert extracted_usage.usage == Usage(
-        input_tokens=2_000_000,
+        input_tokens=3_000_000,
         cache_read_tokens=1_000_000,
+        cache_write_tokens=1_000_000,
         output_tokens=1_000_000,
         output_reasoning_tokens=500_000,
     )

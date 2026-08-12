@@ -319,6 +319,18 @@ def test_modal_kimi_k3_price_by_api_url() -> None:
     assert_modal_kimi_k3_price(price)
 
 
+def test_modal_api_url_does_not_match_spoofed_hostname() -> None:
+    with pytest.raises(
+        LookupError,
+        match="Unable to find provider provider_api_url='https://example.modal.run.evil.test/v1'",
+    ):
+        calc_price(
+            Usage(input_tokens=1),
+            model_ref='moonshotai/Kimi-K3',
+            provider_api_url='https://example.modal.run.evil.test/v1',
+        )
+
+
 def test_modal_inkling_nvfp4_price() -> None:
     price = calc_price(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
