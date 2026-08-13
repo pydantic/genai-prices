@@ -177,6 +177,45 @@ def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expec
     assert price.model_price == expected_prices
 
 
+@pytest.mark.parametrize(
+    'model_ref,request_timestamp,expected_prices',
+    [
+        (
+            'gemini-3.6-flash',
+            datetime(2026, 12, 31, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+        ),
+        (
+            'gemini-3.6-flash',
+            datetime(2027, 1, 1, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+        ),
+        (
+            'gemini-3.7-flash',
+            datetime(2026, 12, 31, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+        ),
+        (
+            'gemini-3.7-flash',
+            datetime(2027, 1, 1, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+        ),
+    ],
+)
+def test_gemini_flash_introductory_price_expiry(
+    model_ref: str, request_timestamp: datetime, expected_prices: ModelPrice
+) -> None:
+    """Introductory rates run through 2026-12-31, standard rates take over on 2027-01-01."""
+    price = calc_price(
+        Usage(input_tokens=0),
+        model_ref=model_ref,
+        provider_id='google',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),
