@@ -3281,10 +3281,41 @@ providers: list[Provider] = [
                 name='Gemini 3.6 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
-                ),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-3.7-flash',
+                match=ClauseStartsWith(starts_with='gemini-3.7-flash'),
+                name='Gemini 3.7 Flash',
+                description="Google's most capable Flash model, built for complex coding, web development, agentic workflows and reliable multi-step execution.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemini-embedding-001',

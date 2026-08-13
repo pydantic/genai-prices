@@ -5510,12 +5510,59 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
-        prices: {
-          input_mtok: 1.5,
-          cache_read_mtok: 0.15,
-          output_mtok: 7.5,
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-3.7-flash',
+        name: 'Gemini 3.7 Flash',
+        description:
+          "Google's most capable Flash model, built for complex coding, web development, agentic workflows and reliable multi-step execution.",
+        match: {
+          starts_with: 'gemini-3.7-flash',
         },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-embedding-001',
