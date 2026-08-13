@@ -18,6 +18,7 @@ from genai_prices.types import (
     MatchLogic,
     ModelInfo,
     ModelPrice,
+    PriceCalculation,
     Provider,
     Tier,
     TieredPrices,
@@ -390,6 +391,60 @@ def test_openrouter_kimi_k27_code_dated_price():
     assert price.input_price == Decimal('1.5285225')
     assert price.output_price == Decimal('0.0456190')
     assert price.total_price == Decimal('1.5741415')
+
+
+def test_modal_kimi_k3_price_by_provider_id() -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='moonshotai/Kimi-K3',
+        provider_id='modal',
+    )
+
+    assert_modal_kimi_k3_price(price)
+
+
+def test_modal_kimi_k3_price_by_api_url() -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='moonshotai/Kimi-K3',
+        provider_api_url='https://example--kimi-k3.modal.run/v1',
+    )
+
+    assert_modal_kimi_k3_price(price)
+
+
+def test_modal_api_url_does_not_match_spoofed_hostname() -> None:
+    with pytest.raises(
+        LookupError,
+        match="Unable to find provider provider_api_url='https://example.modal.run.evil.test/v1'",
+    ):
+        calc_price(
+            Usage(input_tokens=1),
+            model_ref='moonshotai/Kimi-K3',
+            provider_api_url='https://example.modal.run.evil.test/v1',
+        )
+
+
+def test_modal_inkling_nvfp4_price() -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='thinkingmachines/Inkling-NVFP4',
+        provider_id='modal',
+    )
+
+    assert price.provider.id == 'modal'
+    assert price.model.id == 'thinkingmachines/Inkling-NVFP4'
+    assert price.input_price == Decimal('1.47')
+    assert price.output_price == Decimal('5')
+    assert price.total_price == Decimal('6.47')
+
+
+def assert_modal_kimi_k3_price(price: PriceCalculation) -> None:
+    assert price.provider.id == 'modal'
+    assert price.model.id == 'moonshotai/Kimi-K3'
+    assert price.input_price == Decimal('3.3')
+    assert price.output_price == Decimal('15')
+    assert price.total_price == Decimal('18.3')
 
 
 def test_openrouter_glm_51_dated_price():
