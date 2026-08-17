@@ -295,6 +295,18 @@ def test_model_price_decomposition_handles_audio_cache_overlap() -> None:
     }
 
 
+def test_model_price_decomposition_handles_fractional_usage() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')).calc_price(
+        Usage(input_tokens=0.3, cache_read_tokens=0.1)
+    )
+
+    assert price == {
+        'input_price': Decimal('0.0000004'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.0000004'),
+    }
+
+
 def test_overlap_price_parity_handles_cached_audio_overlap() -> None:
     price = ModelPrice(
         input_mtok=Decimal('1'),

@@ -695,6 +695,20 @@ def test_calc_unit_price_uses_non_million_normalization_factor() -> None:
     assert calc_unit_price(Decimal('12'), 2, total_input_tokens=0, per=1_000) == Decimal('0.024')
 
 
+def test_calc_unit_price_uses_shortest_decimal_fractional_count() -> None:
+    assert calc_unit_price(Decimal('3.6'), 0.1, total_input_tokens=0, per=3_600) == Decimal('0.0001')
+
+
+def test_model_price_handles_fractional_duration() -> None:
+    price = ModelPrice(audio_hours=Decimal('3.6')).calc_price(Usage(audio_seconds=0.1))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.0001'),
+    }
+
+
 def test_price_constraint_before():
     price = calc_price(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
     assert price.input_price == snapshot(Decimal('0.01'))

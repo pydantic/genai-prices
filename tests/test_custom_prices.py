@@ -177,7 +177,7 @@ def test_extra_source_sausage():
 def test_custom_price_override_gets_original_usage_and_super_prices_registered_fields() -> None:
     @dataclass
     class BonusUsage:
-        input_tokens: int
+        input_tokens: int | float
         bonus_units: int
 
     class BonusModelPrice(types.ModelPrice):
@@ -214,6 +214,10 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     # A non-BonusUsage skips the bonus branch, returning only the super() prices.
     plain_price = model.calc_price(types.Usage(input_tokens=1_000_000), provider)
     assert plain_price.total_price == Decimal('1')
+
+    fractional_price = model.calc_price(BonusUsage(input_tokens=0.5, bonus_units=3), provider)
+    assert fractional_price.input_price == Decimal('0.0000005')
+    assert fractional_price.total_price == Decimal('6.0000005')
 
 
 def test_base_model_price_accepts_registry_price_kwargs() -> None:
