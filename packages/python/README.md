@@ -51,6 +51,26 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Fractional usage values
+
+Every reportable usage unit accepts finite non-negative integers or fractional values. For example, duration usage can
+include fractions of a second:
+
+```python
+import json
+
+from genai_prices import Usage
+
+duration = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+
+assert duration.audio_seconds == 0.3
+json.dumps(duration.__dict__)  # Usage stores only built-in int and float values.
+```
+
+Python preserves integer inputs as `int` and float inputs as `float`. Arithmetic involving floats follows their shortest
+round-trippable decimal spellings, so ordinary submitted decimal values add intuitively while remaining JSON-native.
+This cannot recover decimal precision that was already lost before a value reached `Usage`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,
