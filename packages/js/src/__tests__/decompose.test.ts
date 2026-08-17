@@ -187,7 +187,7 @@ describe('computeLeafValues', () => {
     })
   })
 
-  it('rejects materially negative fractional leaves', () => {
+  it('rejects fractional descendants that exceed their parent', () => {
     expect(() =>
       computeLeafValues(
         new Set(['cache_read_tokens', 'input_tokens']),
