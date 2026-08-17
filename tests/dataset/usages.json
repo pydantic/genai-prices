@@ -137848,5 +137848,84 @@
       }
     ],
     "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "file": "generated/fractional-usage-values.json",
+      "model": "claude-3-5-haiku",
+      "usage": {
+        "cache_creation_input_tokens": 0.2,
+        "input_tokens": 0.1,
+        "output_tokens": 0.25
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "2.8E-7",
+            "output_price": "0.000001",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "2.8E-7",
+            "output_price": "0.000001",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "2.8E-7",
+            "output_price": "0.000001",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_write_tokens": 0.2,
+          "input_tokens": 0.3,
+          "output_tokens": 0.25
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "8E-8",
+            "output_price": "0.000001",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "modal"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 0.1,
+          "output_tokens": 0.25
+        }
+      }
+    ],
+    "model": "claude-3-5-haiku"
   }
 ]

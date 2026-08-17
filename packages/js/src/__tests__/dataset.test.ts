@@ -108,8 +108,13 @@ describe('dataset', () => {
             }
           }
           for (const key of Object.keys(extracted.usage)) {
-            const k = key
-            expect(extractedUsage[k]).toBe(extracted.usage[k])
+            const expectedValue = extracted.usage[key]
+            if (expectedValue === undefined) throw new Error(`Expected usage value for ${key}`)
+            if (Number.isInteger(expectedValue)) {
+              expect(extractedUsage[key]).toBe(expectedValue)
+            } else {
+              expect(extractedUsage[key]).toBeCloseTo(expectedValue, 15)
+            }
           }
         }
       }
