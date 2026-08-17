@@ -1,0 +1,23 @@
+packages/js/src/__tests__/dataset.test.ts
+  s_8d48111fdfe481::t_0f27b887b89508 111-117
+tests/dataset/extract_usages.py
+  s_8d48111fdfe481::t_0f27b887b89508 44-53,64-65
+tests/dataset/usages.json
+  s_8d48111fdfe481::t_c9273373edf295 137851-137929
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fd35102d2ccce57bd08e841aba2a4459f00b646b",
+  "prompts": {},
+  "sessions": {
+    "s_8d48111fdfe481": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a01012-80a3-7053-95ed-d6f10ca0ecd2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
