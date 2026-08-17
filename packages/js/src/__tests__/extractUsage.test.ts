@@ -7,6 +7,23 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const fractionalProvider: Provider = {
+  api_pattern: 'fractional',
+  extractors: [
+    {
+      api_flavor: 'default',
+      mappings: [
+        { dest: 'audio_seconds', path: 'first_seconds', required: false },
+        { dest: 'audio_seconds', path: 'second_seconds', required: true },
+      ],
+      model_path: 'model',
+      root: 'usage',
+    },
+  ],
+  id: 'fractional',
+  models: [],
+  name: 'Fractional',
+}
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -72,6 +89,24 @@ describe('extractUsage', () => {
         input_tokens: 504,
         output_tokens: 97,
       })
+    })
+
+    it('should preserve and accumulate fractional values', () => {
+      const { usage } = extractUsage(fractionalProvider, {
+        model: 'fractional-model',
+        usage: { first_seconds: 0.1, second_seconds: 0.2 },
+      })
+
+      expect(usage.audio_seconds).toBeCloseTo(0.3, 15)
+    })
+
+    it('should preserve optional structural probing for non-number leaves', () => {
+      expect(
+        extractUsage(fractionalProvider, {
+          model: 'fractional-model',
+          usage: { first_seconds: 'unknown', second_seconds: 0.25 },
+        }).usage
+      ).toEqual({ audio_seconds: 0.25 })
     })
   })
 
@@ -342,6 +377,17 @@ describe('extractUsage', () => {
       [{ model: 'x', usage: { input_tokens: [] } }, 'Expected `usage.input_tokens` value to be a number, got array'],
     ])('should throw error for invalid data: %j', (responseData, expectedError) => {
       expect(() => extractUsage(anthropicProvider, responseData)).toThrow(expectedError)
+    })
+
+    it.each([
+      { first_seconds: -1, second_seconds: 2 },
+      { first_seconds: Number.NaN, second_seconds: 2 },
+      { first_seconds: Number.POSITIVE_INFINITY, second_seconds: 2 },
+      { first_seconds: 2, second_seconds: -1 },
+    ])('should reject invalid numeric components before accumulation: %j', (usage) => {
+      expect(() => extractUsage(fractionalProvider, { model: 'fractional-model', usage })).toThrow(
+        'Invalid usage value for audio_seconds: expected a finite non-negative number'
+      )
     })
 
     it('should throw when a required nested path has the wrong intermediate shape', () => {

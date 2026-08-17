@@ -187,6 +187,19 @@ describe('computeLeafValues', () => {
     })
   })
 
+  it('rejects materially negative fractional leaves', () => {
+    expect(() =>
+      computeLeafValues(
+        new Set(['cache_read_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_read_tokens: 0.2,
+          input_tokens: 0.1,
+        }),
+        getActiveRegistry()
+      )
+    ).toThrow('Invalid usage data: cache_read_tokens (0.2) cannot exceed input_tokens (0.1)')
+  })
+
   it('ignores unpriced reported descendants when priced ancestors cover them', () => {
     expect(
       computeLeafValues(
