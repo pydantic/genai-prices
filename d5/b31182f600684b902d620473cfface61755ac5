@@ -1,0 +1,28 @@
+tests/test_decompose.py
+  s_8d48111fdfe481::t_49382a89578966 3,76-138,209-217
+  s_8d48111fdfe481::t_0bc4090c07bbb9 218-219
+packages/python/genai_prices/types.py
+  s_8d48111fdfe481::t_49382a89578966 918,921
+  s_8d48111fdfe481::t_c3623a81ee1cc7 15,823,839,845,855,857
+packages/python/genai_prices/decompose.py
+  s_8d48111fdfe481::t_49382a89578966 6,16,21,24-29,39,41,44-46,61
+packages/python/genai_prices/_usage.py
+  s_8d48111fdfe481::t_49382a89578966 46-58,68-72
+  s_8d48111fdfe481::t_93335b6a898979 73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d5b31182f600684b902d620473cfface61755ac5",
+  "prompts": {},
+  "sessions": {
+    "s_8d48111fdfe481": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a01012-80a3-7053-95ed-d6f10ca0ecd2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
