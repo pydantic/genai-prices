@@ -7,12 +7,12 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
 from typing_extensions import Self, TypedDict
 
+from genai_prices._usage import UsageValue, add_usage_values, validate_usage_value
 from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
@@ -198,7 +198,7 @@ AbstractUsage = object
 class Usage:
     """Simple token usage container."""
 
-    def __init__(self, **kwargs: int | None) -> None:
+    def __init__(self, **kwargs: UsageValue | None) -> None:
         reported_usage_keys = _reported_usage_keys()
         unknown_keys = kwargs.keys() - reported_usage_keys
         if unknown_keys:
@@ -217,7 +217,7 @@ class Usage:
             obj._reported_values()
             return obj
 
-        values: dict[str, int] = {}
+        values: dict[str, UsageValue] = {}
         for key in _reported_usage_keys():
             value = _raw_usage_value(obj, key)
             if value is not None:
@@ -225,35 +225,35 @@ class Usage:
 
         return cls(**values)
 
-    def __setattr__(self, name: str, value: int | None) -> None:
+    def __setattr__(self, name: str, value: UsageValue | None) -> None:
         if name in _reported_usage_keys():
             self._store_values({name: value})
         else:
             object.__setattr__(self, name, value)
 
-    def __getattr__(self, name: str) -> int:
+    def __getattr__(self, name: str) -> UsageValue:
         if name in _reported_usage_keys():
             return self._infer_missing_value(name)
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
-    def _store_values(self, values: Mapping[str, int | None]) -> None:
+    def _store_values(self, values: Mapping[str, UsageValue | None]) -> None:
         reported_usage_keys = _reported_usage_keys()
         for key, value in values.items():
             if value is None:
                 self.__dict__.pop(key, None)
             elif key in reported_usage_keys:
-                self.__dict__[key] = _validate_usage_value(key, value)
+                self.__dict__[key] = validate_usage_value(key, value)
             else:
                 self.__dict__[key] = value
 
-    def _reported_values(self) -> dict[str, int]:
+    def _reported_values(self) -> dict[str, UsageValue]:
         reported_usage_keys = _reported_usage_keys()
         return {
-            key: _validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
+            key: validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
         }
 
-    def reported_value(self, usage_key: str) -> int:
+    def reported_value(self, usage_key: str) -> UsageValue:
         return self._reported_values().get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Self:
@@ -264,7 +264,7 @@ class Usage:
         other_values = other._reported_values()
         return type(self)(
             **{
-                key: self_values.get(key, 0) + other_values.get(key, 0)
+                key: add_usage_values(self_values.get(key, 0), other_values.get(key, 0))
                 for key in self_values.keys() | other_values.keys()
             }
         )
@@ -287,11 +287,11 @@ class Usage:
         values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
         return f'{type(self).__name__}({values})'
 
-    def _ordered_values(self) -> list[tuple[str, int]]:
+    def _ordered_values(self) -> list[tuple[str, UsageValue]]:
         values = self._reported_values()
         return [(key, values[key]) for key in _reported_usage_key_order() if key in values]
 
-    def _infer_missing_value(self, usage_key: str) -> int:
+    def _infer_missing_value(self, usage_key: str) -> UsageValue:
         from genai_prices.decompose import is_descendant_or_self
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
@@ -329,12 +329,6 @@ class Usage:
             f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
             f'require explicit {usage_key}'
         )
-
-
-def _validate_usage_value(usage_key: str, value: object) -> int:
-    if isinstance(value, bool) or not isinstance(value, Integral) or value < 0:
-        raise ValueError(f'Invalid usage value for {usage_key}: expected a non-negative integer')
-    return int(value)
 
 
 def _reported_overlap_keys_for_join(
@@ -627,11 +621,11 @@ def _reported_usage_key_order() -> tuple[str, ...]:
     return _get_registry()._reported_usage_keys_in_order  # pyright: ignore[reportPrivateUsage]
 
 
-def _raw_usage_value(obj: object, key: str) -> int | None:
+def _raw_usage_value(obj: object, key: str) -> UsageValue | None:
     value = getattr(obj, key, None)
     if value is None:
         return None
-    return cast(int, value)
+    return cast(UsageValue, value)
 
 
 @dataclass
@@ -810,7 +804,7 @@ def _is_registered_price_key(name: str) -> bool:
 
 
 def calc_mtok_price(
-    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
+    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: UsageValue
 ) -> Decimal:
     """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
 
@@ -826,7 +820,7 @@ def calc_mtok_price(
 
 
 def calc_unit_price(
-    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: int, per: int
+    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: UsageValue, per: int
 ) -> Decimal:
     """Calculate the price for a unit count normalized by the unit's ``per`` value."""
     if price is None or count is None:

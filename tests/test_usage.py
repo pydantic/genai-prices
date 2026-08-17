@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from decimal import Decimal, localcontext
 from types import SimpleNamespace
 from typing import Any
 from unittest.mock import patch
@@ -28,10 +30,21 @@ def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
     assert usage.output_tokens == 0
 
 
-@pytest.mark.parametrize('value', [-1, 1.5, float('NaN'), float('Infinity'), True])
+@pytest.mark.parametrize('value', [-1, -0.1, float('NaN'), float('Infinity'), True, Decimal('1.5'), 1 + 2j])
 def test_usage_direct_construction_rejects_invalid_reported_values(value: Any) -> None:
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int or float'
+    ):
         Usage(input_tokens=value)
+
+
+def test_usage_direct_construction_preserves_float_values() -> None:
+    usage = Usage(audio_seconds=0.125, input_tokens=13.0)
+
+    assert usage.__dict__ == {'audio_seconds': 0.125, 'input_tokens': 13.0}
+    assert type(usage.audio_seconds) is float
+    assert type(usage.input_tokens) is float
+    assert json.loads(json.dumps(usage.__dict__)) == usage.__dict__
 
 
 def test_usage_direct_construction_normalizes_integer_subclasses() -> None:
@@ -89,7 +102,9 @@ def test_usage_assignment_updates_registered_reported_values() -> None:
 def test_usage_assignment_rejects_invalid_reported_values() -> None:
     usage = Usage()
 
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int or float'
+    ):
         usage.input_tokens = -1
 
 
@@ -101,10 +116,41 @@ def test_usage_missing_registered_reads_return_zero() -> None:
 
 
 def test_usage_addition_operates_on_reported_values() -> None:
-    assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=5) == Usage(
+    usage = Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=5)
+
+    assert usage == Usage(
         input_tokens=10,
         output_tokens=15,
     )
+    assert type(usage.input_tokens) is int
+    assert type(usage.output_tokens) is int
+
+
+def test_usage_addition_uses_shortest_decimal_float_values() -> None:
+    usage = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+
+    assert usage.audio_seconds == 0.3
+    assert type(usage.audio_seconds) is float
+
+
+def test_usage_addition_preserves_float_result_for_mixed_values() -> None:
+    usage = Usage(audio_seconds=1) + Usage(audio_seconds=0.25) + Usage(audio_seconds=2)
+
+    assert usage.audio_seconds == 3.25
+    assert type(usage.audio_seconds) is float
+
+
+def test_usage_addition_ignores_ambient_decimal_context() -> None:
+    with localcontext() as context:
+        context.prec = 1
+        usage = Usage(audio_seconds=0.15) + Usage(audio_seconds=0.16)
+
+    assert usage.audio_seconds == 0.31
+
+
+def test_usage_addition_rejects_non_finite_float_result() -> None:
+    with pytest.raises(ValueError, match='Usage arithmetic produced a non-finite float'):
+        _ = Usage(audio_seconds=10**400) + Usage(audio_seconds=0.1)
 
 
 def test_usage_equality_operates_on_reported_values() -> None:
@@ -176,21 +222,25 @@ def test_usage_from_raw_ignores_mapping_keys() -> None:
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:
-    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50))
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50, audio_seconds=0.125))
 
-    assert usage == Usage(input_tokens=100, output_tokens=50)
+    assert usage == Usage(input_tokens=100, output_tokens=50, audio_seconds=0.125)
 
 
 def test_usage_from_raw_rejects_invalid_known_object_attributes() -> None:
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
-        Usage.from_raw(SimpleNamespace(input_tokens=1.5))
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int or float'
+    ):
+        Usage.from_raw(SimpleNamespace(input_tokens=Decimal('1.5')))
 
 
 def test_usage_from_raw_revalidates_existing_usage_storage() -> None:
     usage = Usage()
-    usage.__dict__['input_tokens'] = 1.5
+    usage.__dict__['input_tokens'] = Decimal('1.5')
 
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int or float'
+    ):
         Usage.from_raw(usage)
 
 
