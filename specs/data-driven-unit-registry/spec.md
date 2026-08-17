@@ -19,7 +19,7 @@ Registry structure, price ancestor coverage, price join coverage, and extractor 
 A repo-defined unit is declared once and propagated to Python, JavaScript, authoring schemas, validation, extraction, pricing, and display without copying ordinary unit names into each handwritten module.
 
 **The runtime compatibility surface is deliberately minimal.**
-Installed packages expose and carry only metadata required to identify units, read usage, validate selected prices, decompose counts, and calculate costs. Build-time convenience does not justify adding fields to generated runtime data or runtime types: even nominally internal fields can constrain future representation changes once shipped.
+Installed packages expose and carry only metadata required to identify units, read usage, validate selected prices, decompose quantities, and calculate costs. Build-time convenience does not justify adding fields to generated runtime data or runtime types: even nominally internal fields can constrain future representation changes once shipped.
 
 **Backward compatibility is preserved unless it conflicts with accurate registry pricing.**
 Existing calculation APIs, price and usage attributes, provider/model lookup, custom snapshots, Python custom pricing overrides, JavaScript plain objects, tiered prices, and request pricing remain supported. Fixed-field introspection and incomplete overlap fallbacks are not promises when they conflict with data-driven units or complete pricing.
@@ -32,6 +32,12 @@ Each unit has a usage key, a price key, a normalization factor, and dimensions i
 
 **Dimension axes remain unit-local and general.** _(from "The registry is a usage-keyed dimension graph")_
 Unit dimension mappings are the only declaration of dimension keys and values; there is no separate allowed-dimension schema. Families may represent tokens, requests, characters, duration, tool calls, or future reported quantities that use `usage * price / normalization`, provided their actual unit graph satisfies the shared structural rules.
+
+**Usage values are finite non-negative quantities.** _(from "Dimension axes remain unit-local and general", "Correct pricing semantics beat algorithmic convenience")_
+Every reportable unit accepts whole or fractional usage. The registry does not classify units as discrete or continuous: duration naturally requires fractions, and rejecting fractions for selected families is not needed for correct linear pricing or decomposition. Python stores recognized usage as built-in `int | float`, preserving the submitted built-in numeric kind, while JavaScript stores `number`. Booleans, non-finite values, negative values, Python `Decimal` values, and other nonstandard numeric objects are invalid recognized usage. Missing values remain distinct from explicit zero.
+
+**Usage arithmetic preserves JSON-native values with intuitive decimal sums.** _(from "Usage values are finite non-negative quantities", "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
+Python integer-only usage arithmetic remains integer arithmetic. When a Python usage operation involves a float, it interprets each float through its shortest round-trippable decimal spelling, performs the operation in a private Decimal context independent of caller context, and converts the result back to float. Thus ordinary submitted decimal quantities retain JSON-native storage while `0.1 + 0.2` produces the same stored float as literal `0.3`. This policy does not claim to recover decimal intent already lost before the value reaches the package. JavaScript retains ordinary number arithmetic and its existing rounding guardrails; cross-language fractional behavior requires numerical equivalence rather than bit-identical intermediates.
 
 **Build validation may use replaceable metadata for conditional dimensions.** _(from "Dimension axes remain unit-local and general", "Validation exists to protect pricing semantics", "The runtime compatibility surface is deliberately minimal")_
 The source registry must give publication validation enough information to recognize subtype-specific axes. In particular, a candidate dimension set containing `cache_ttl` is structurally meaningful only with `token_type: cache_write`. The exact source representation and validation technique are build implementation details: `dimension_requirements` is an acceptable current mechanism, but the build may replace it with another approach without changing generated runtime data or package compatibility.
@@ -74,6 +80,9 @@ The built-in token family defines input, output, cache-read, cache-write, cache-
 **Usage remains explicit-only.** _(from "Price data must be complete while usage data may be incomplete")_
 Stored values return directly. Safely missing registered values read as zero without becoming reported. Missing ancestors or overlaps raise when positive related reports would require inference. Contradictions remain inert until a read or selected price set must interpret them.
 
+**Extractors validate each reported component before accumulation.** _(from "Usage values are finite non-negative quantities", "Validation exists to protect pricing semantics")_
+Every recognized mapped number is validated before it is added to its destination. A negative or non-finite component cannot be hidden by a positive sibling mapping, and Python booleans cannot become integer counts through addition. Optional mappings may still probe absent or structurally incompatible paths according to their optional-path rules, but a present numeric value outside the valid domain is an error. Cross-field ancestor and overlap consistency remains lazy and demand-driven after extraction.
+
 **Commercial price categories do not imply reported usage dimensions.** _(from "Usage remains explicit-only", "Correct pricing semantics beat algorithmic convenience")_
 A provider saying that reasoning is billed at its text rate does not establish that the provider's reasoning count has text modality. Extractors record a reasoning/modality intersection only when the response contract reports or defines that intersection; pricing can still leave unclassified reasoning in a text-rate ancestor catch-all.
 
@@ -84,7 +93,7 @@ Usage key `requests`, price key `requests_kcount`, `family: requests`, and `per:
 Usage key `web_searches`, price key `web_searches_kcount`, `family: tool_calls`, and `per: 1_000` represent provider-reported billable web searches. Extractors map a provider's documented search count to this unit. Because the unit has no input or output direction, its price contributes to total cost without being assigned to input or output cost.
 
 **Tiered pricing behavior is preserved.** _(from "Correct pricing semantics beat algorithmic convenience")_
-Existing threshold-based `TieredPrices` semantics remain unchanged. A selected tiered price reads `input_tokens` through the same explicit-only usage rules.
+Existing threshold-based `TieredPrices` semantics and integer tier starts remain unchanged. A selected tiered price reads whole or fractional `input_tokens` through the same explicit-only usage rules and compares that quantity directly with the integer threshold.
 
 **Manual custom Python pricing remains supported.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
 Custom `ModelPrice` subclasses may inspect their own state and the original usage object. Standard registry pricing considers registered price fields without consuming unrelated custom fields.

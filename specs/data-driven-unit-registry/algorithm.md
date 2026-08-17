@@ -20,7 +20,7 @@ Descendant/ancestor relationships are determined by the full registry poset
 participate in the subtraction.
 
 Process priced units from most specific to least specific. For each priced unit
-U, the leaf value (exclusive token count) is:
+U, the leaf value (exclusive usage quantity) is:
 
 ```
 leaf(U) = usage(U) - sum over all strict priced descendants V of U: leaf(V)
@@ -31,6 +31,26 @@ already-exclusive descendants works for ordinary orthogonal dimensions and for
 conditional dimensions whose valid containment poset is not a full Cartesian
 product. The current `requests` unit is an explicit one-request-per-`Usage`-
 object pricing rule, not caller-reported usage that needs decomposition.
+
+## Numeric Domain
+
+Reported usage values are finite non-negative whole or fractional quantities.
+The containment algorithm is unchanged over that domain: addition,
+subtraction, positivity, and normalization do not require integral counts.
+
+Python stores reported values as built-in `int | float`. Integer-only
+decomposition remains integer arithmetic. When floats participate, Python
+interprets them through their shortest round-trippable decimal spellings and
+performs descendant accumulation and subtraction in a private Decimal context
+before converting leaf results back to floats. This avoids false contradictions
+for ordinary decimal identities such as `0.3 - 0.1 - 0.2 == 0` without exposing
+Decimal usage values or depending on the caller's ambient Decimal context.
+
+JavaScript retains ordinary finite numbers. It normalizes a negative residual
+to zero only when the magnitude is within its scale-aware floating-point
+tolerance; materially negative leaves still fail. Fractional Python and
+JavaScript results must be numerically equivalent, but their binary
+intermediates need not be identical.
 
 ## Sparse Registry Guardrails
 
@@ -74,7 +94,7 @@ representation and asks for only the explicit values it needs:
   read, and it raises the usage-read error when a priced key is missing and
   would require an omitted ancestor or omitted overlap.
 - After those priced values are read, decomposition raises if explicit reported
-  priced values imply an impossible negative exclusive bucket.
+  priced values imply an impossible materially negative exclusive bucket.
 
 This document describes explicit-value decomposition only. For direct reads, a
 missing registered value is ambiguous when
