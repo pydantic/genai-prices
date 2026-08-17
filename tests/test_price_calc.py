@@ -391,6 +391,61 @@ def assert_modal_kimi_k3_price(price: PriceCalculation) -> None:
     assert price.total_price == Decimal('18.3')
 
 
+@pytest.mark.parametrize(
+    ('model_id', 'input_price', 'output_price', 'total_price'),
+    [
+        ('deepseek/deepseek-v4-flash-latest', Decimal('0.168'), Decimal('0.28'), Decimal('0.448')),
+        ('trinity-large-thinking', Decimal('0.31'), Decimal('0.80'), Decimal('1.11')),
+        ('thinkingmachines/inkling-small', Decimal('0.60'), Decimal('1.20'), Decimal('1.80')),
+        ('deepseek/deepseek-v4-pro', Decimal('1.94'), Decimal('3.48'), Decimal('5.42')),
+        ('zai-org/glm-5.2', Decimal('1.66'), Decimal('4.40'), Decimal('6.06')),
+        ('moonshotai/kimi-k3', Decimal('3.30'), Decimal('15.00'), Decimal('18.30')),
+        ('deepseek/deepseek-v4-pro-0813', Decimal('1.364'), Decimal('3.96'), Decimal('5.324')),
+    ],
+)
+def test_arcee_model_prices(
+    model_id: str,
+    input_price: Decimal,
+    output_price: Decimal,
+    total_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_id,
+        provider_id='arcee',
+    )
+
+    assert price.provider.id == 'arcee'
+    assert price.model.id == model_id
+    assert price.input_price == input_price
+    assert price.output_price == output_price
+    assert price.total_price == total_price
+
+
+def test_arcee_price_by_api_url() -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='trinity-large-thinking',
+        provider_api_url='https://api.arcee.ai/api/v1',
+    )
+
+    assert price.provider.id == 'arcee'
+    assert price.model.id == 'trinity-large-thinking'
+    assert price.total_price == Decimal('1.11')
+
+
+def test_arcee_api_url_does_not_match_spoofed_hostname() -> None:
+    with pytest.raises(
+        LookupError,
+        match="Unable to find provider provider_api_url='https://api.arcee.ai.evil.test/api/v1'",
+    ):
+        calc_price(
+            Usage(input_tokens=1),
+            model_ref='trinity-large-thinking',
+            provider_api_url='https://api.arcee.ai.evil.test/api/v1',
+        )
+
+
 def test_openrouter_glm_51_dated_price():
     price = calc_price(
         Usage(input_tokens=27_447, output_tokens=83),

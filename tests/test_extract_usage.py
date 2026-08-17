@@ -224,6 +224,33 @@ def test_modal_responses_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.0029172')
 
 
+def test_arcee_chat_usage() -> None:
+    response_data = {
+        'model': 'moonshotai/kimi-k3',
+        'usage': {
+            'prompt_tokens': 3_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000},
+            'completion_tokens': 1_000_000,
+        },
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://api.arcee.ai/api/v1',
+        api_flavor='chat',
+    )
+
+    assert extracted_usage.provider.id == 'arcee'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'moonshotai/kimi-k3'
+    assert extracted_usage.usage == Usage(
+        input_tokens=3_000_000,
+        cache_read_tokens=1_000_000,
+        output_tokens=1_000_000,
+    )
+    assert extracted_usage.calc_price().total_price == Decimal('21.3')
+
+
 @pytest.mark.parametrize(
     ('api_flavor', 'usage_data'),
     [

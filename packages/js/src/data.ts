@@ -833,6 +833,135 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'arcee',
+    name: 'Arcee',
+    pricing_urls: ['https://docs.arcee.ai/get-started/pricing', 'https://api.arcee.ai/api/v1/models'],
+    api_pattern: 'https://api\\.arcee\\.ai(?:/|$)',
+    price_comments:
+      'USD prices per million tokens. The public pricing page lists every model except deepseek/deepseek-v4-pro-0813; its pricing and all context windows were checked against the authenticated models endpoint.',
+    provider_match: {
+      contains: 'arcee',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'deepseek/deepseek-v4-flash-latest',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4-flash-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro',
+        },
+        context_window: 512000,
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.2,
+          output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro-0813',
+        },
+        context_window: 1048576,
+        price_comments: "Pricing is exposed by Arcee's authenticated models endpoint and is not yet listed on the public pricing page.",
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling-small',
+        name: 'Inkling Small',
+        match: {
+          equals: 'thinkingmachines/inkling-small',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'trinity-large-thinking',
+        name: 'Trinity Large Thinking',
+        match: {
+          equals: 'trinity-large-thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.06,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.2',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/glm-5.2',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+    ],
+  },
+  {
     id: 'avian',
     name: 'Avian',
     pricing_urls: ['https://avian.io/pricing/'],
