@@ -380,11 +380,11 @@ describe('extractUsage', () => {
     })
 
     it.each([
-      { first_seconds: -1, second_seconds: 2 },
-      { first_seconds: Number.NaN, second_seconds: 2 },
-      { first_seconds: Number.POSITIVE_INFINITY, second_seconds: 2 },
-      { first_seconds: 2, second_seconds: -1 },
-    ])('should reject invalid numeric components before accumulation: %j', (usage) => {
+      ['negative optional component', { first_seconds: -1, second_seconds: 2 }],
+      ['NaN optional component', { first_seconds: Number.NaN, second_seconds: 2 }],
+      ['infinite optional component', { first_seconds: Number.POSITIVE_INFINITY, second_seconds: 2 }],
+      ['negative required component', { first_seconds: 2, second_seconds: -1 }],
+    ])('should reject invalid numeric components before accumulation: %s', (_name, usage) => {
       expect(() => extractUsage(fractionalProvider, { model: 'fractional-model', usage })).toThrow(
         'Invalid usage value for audio_seconds: expected a finite non-negative number'
       )
