@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, c
 import pydantic
 from typing_extensions import Self, TypedDict
 
-from genai_prices._usage import UsageValue, add_usage_values, validate_usage_value
+from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
 from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
@@ -820,7 +820,7 @@ def _is_registered_price_key(name: str) -> bool:
 
 
 def calc_mtok_price(
-    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: UsageValue
+    field_mtok: Decimal | TieredPrices | None, token_count: UsageValue | None, total_input_tokens: UsageValue
 ) -> Decimal:
     """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
 
@@ -836,12 +836,13 @@ def calc_mtok_price(
 
 
 def calc_unit_price(
-    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: UsageValue, per: int
+    price: Decimal | TieredPrices | None, count: UsageValue | None, total_input_tokens: UsageValue, per: int
 ) -> Decimal:
     """Calculate the price for a unit count normalized by the unit's ``per`` value."""
     if price is None or count is None:
         return Decimal(0)
 
+    decimal_count = usage_value_as_decimal(count)
     if isinstance(price, TieredPrices):
         # Threshold-based pricing: tier is determined by total_input_tokens
         # Find the highest tier that applies based on total input tokens
@@ -851,9 +852,9 @@ def calc_unit_price(
             if total_input_tokens > tier.start:
                 applicable_price = tier.price
                 break
-        unit_price = applicable_price * count
+        unit_price = applicable_price * decimal_count
     else:
-        unit_price = price * count
+        unit_price = price * decimal_count
     return unit_price / per
 
 
@@ -914,10 +915,10 @@ def _is_valid_price_decimal(value: object) -> TypeGuard[Decimal]:
 
 def _compute_registry_priced_counts(
     resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]], usage: Usage
-) -> dict[str, int]:
+) -> dict[str, UsageValue]:
     from genai_prices.decompose import compute_leaf_values
 
-    counts: dict[str, int] = {}
+    counts: dict[str, UsageValue] = {}
     priced_units_by_usage_key = {unit.usage_key: unit for unit, _ in resolved_prices if unit.usage_key != 'requests'}
     if priced_units_by_usage_key:
         counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))

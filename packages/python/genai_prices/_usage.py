@@ -43,10 +43,19 @@ def sum_usage_values(values: Iterable[UsageValue]) -> UsageValue:
     with localcontext(_usage_context(decimal_values)):
         total = sum(decimal_values, start=Decimal(0))
 
-    result = float(total)
-    if not math.isfinite(result):
-        raise ValueError('Usage arithmetic produced a non-finite float')
-    return result
+    return _decimal_result_as_float(total)
+
+
+def subtract_usage_values(minuend: UsageValue, subtrahends: Iterable[UsageValue]) -> UsageValue:
+    subtrahends = tuple(subtrahends)
+    if isinstance(minuend, int) and all(isinstance(value, int) for value in subtrahends):
+        return minuend - sum(subtrahends)
+
+    decimal_values = tuple(usage_value_as_decimal(value) for value in (minuend, *subtrahends))
+    with localcontext(_usage_context(decimal_values)):
+        result = decimal_values[0] - sum(decimal_values[1:], start=Decimal(0))
+
+    return _decimal_result_as_float(result)
 
 
 def _usage_context(values: tuple[Decimal, ...]) -> Context:
@@ -54,6 +63,13 @@ def _usage_context(values: tuple[Decimal, ...]) -> Context:
     max_adjusted = max(value.adjusted() for value in values)
     precision = max_adjusted - min(exponents) + 1 + len(str(len(values)))
     return Context(prec=max(precision, 1), Emax=MAX_EMAX, Emin=MIN_EMIN)
+
+
+def _decimal_result_as_float(value: Decimal) -> float:
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError('Usage arithmetic produced a non-finite float')
+    return result
 
 
 def _invalid_usage_value(usage_key: str) -> ValueError:
