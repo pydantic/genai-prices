@@ -1,0 +1,22 @@
+packages/python/README.md
+  s_8d48111fdfe481::t_252499c319ffa2 54-73
+packages/js/README.md
+  s_8d48111fdfe481::t_9f841e2b66d7f7 36
+  s_8d48111fdfe481::t_252499c319ffa2 29-35,37-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "914992db7c10addd44147c2303ee09b92739bf02",
+  "prompts": {},
+  "sessions": {
+    "s_8d48111fdfe481": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a01012-80a3-7053-95ed-d6f10ca0ecd2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
