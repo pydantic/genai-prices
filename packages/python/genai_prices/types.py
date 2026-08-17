@@ -487,16 +487,17 @@ class UsageExtractor:
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
-        values: dict[str, int] = {}
+        values: dict[str, UsageValue] = {}
         values_set = False
         supported_mappings = 0
         for mapping in self.mappings:
             if mapping.dest not in self._reported_usage_keys:
                 continue
             supported_mappings += 1
-            value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
+            value = _extract_path(mapping.path, usage_obj, (int, float), mapping.required, root)
             if value is not None:
-                values[mapping.dest] = values.get(mapping.dest, 0) + value
+                value = validate_usage_value(mapping.dest, value)
+                values[mapping.dest] = add_usage_values(values.get(mapping.dest, 0), value)
                 values_set = True
         if supported_mappings and not values_set:
             raise ValueError(f'No usage information found at {self.root}')
@@ -508,7 +509,11 @@ E = TypeVar('E')
 
 @overload
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: Literal[True], data_path: Sequence[str | ArrayMatch]
+    path: ExtractPath,
+    data: Any,
+    extract_type: type[E] | tuple[type[E], ...],
+    required: Literal[True],
+    data_path: Sequence[str | ArrayMatch],
 ) -> E: ...
 
 
@@ -516,14 +521,18 @@ def _extract_path(
 def _extract_path(
     path: ExtractPath,
     data: Any,
-    extract_type: type[E],
+    extract_type: type[E] | tuple[type[E], ...],
     required: Literal[False],
     data_path: Sequence[str | ArrayMatch],
 ) -> E | None: ...
 
 
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: bool, data_path: Sequence[str | ArrayMatch]
+    path: ExtractPath,
+    data: Any,
+    extract_type: type[E] | tuple[type[E], ...],
+    required: bool,
+    data_path: Sequence[str | ArrayMatch],
 ) -> E | None:
     if isinstance(path, str):
         path = [path]
@@ -579,7 +588,8 @@ def _extract_path(
         elif required:
             error_path.append(last)
             raise ValueError(
-                f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
+                f'Expected `{_dot_path(data_path, error_path)}` value to be a {_extract_type_name(extract_type)}, '
+                f'got {_type_name(value)}'
             )
 
 
@@ -607,6 +617,12 @@ def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | 
 
 def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
+
+
+def _extract_type_name(extract_type: type[object] | tuple[type[object], ...]) -> str:
+    if isinstance(extract_type, tuple):
+        return ' or '.join(item.__name__ for item in extract_type)
+    return extract_type.__name__
 
 
 def _reported_usage_keys() -> frozenset[str]:

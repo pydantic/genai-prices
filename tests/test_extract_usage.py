@@ -549,12 +549,8 @@ def test_extracted_usage_calc_price_requires_model():
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
         (
-            {'model': 'x', 'usage': {'input_tokens': 123.0}},
-            snapshot('Expected `usage.input_tokens` value to be a int, got float'),
-        ),
-        (
             {'model': 'x', 'usage': {'input_tokens': []}},
-            snapshot('Expected `usage.input_tokens` value to be a int, got list'),
+            snapshot('Expected `usage.input_tokens` value to be a int or float, got list'),
         ),
     ],
 )
@@ -670,7 +666,7 @@ def test_usage_extractor_skips_optional_nested_path_with_null_parent():
     )
 
 
-def test_usage_extractor_skips_optional_float_value():
+def test_usage_extractor_accepts_optional_integral_float_value():
     extractor = UsageExtractor(
         root='usage',
         mappings=[
@@ -681,8 +677,58 @@ def test_usage_extractor_skips_optional_float_value():
 
     assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 13.0, 'output_tokens': 2}}) == (
         'test-model',
-        Usage(output_tokens=2),
+        Usage(input_tokens=13.0, output_tokens=2),
     )
+
+
+def test_usage_extractor_accumulates_fractional_values_by_destination() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='first_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='second_seconds', dest='audio_seconds'),
+        ],
+    )
+
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'first_seconds': 0.1, 'second_seconds': 0.2}})
+
+    assert model == 'test-model'
+    assert usage.audio_seconds == 0.3
+    assert type(usage.audio_seconds) is float
+
+
+@pytest.mark.parametrize('invalid_value', [-1, -0.1, float('nan'), float('inf'), True])
+def test_usage_extractor_rejects_invalid_component_before_accumulation(invalid_value: Any) -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='invalid', dest='audio_seconds', required=False),
+            UsageExtractorMapping(path='offset', dest='audio_seconds'),
+        ],
+    )
+
+    with pytest.raises(
+        ValueError, match='Invalid usage value for audio_seconds: expected a finite non-negative int or float'
+    ):
+        extractor.extract({'model': 'test-model', 'usage': {'invalid': invalid_value, 'offset': 2}})
+
+
+def test_public_extract_usage_preserves_fractional_values() -> None:
+    response_data = {
+        'model': 'gpt-4.1',
+        'usage': {
+            'prompt_tokens': 13.0,
+            'completion_tokens': 0.25,
+            'prompt_tokens_details': {'cached_tokens': None},
+            'completion_tokens_details': {'reasoning_tokens': None},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='openai', api_flavor='chat')
+
+    assert extracted.usage == Usage(input_tokens=13.0, output_tokens=0.25)
+    assert type(extracted.usage.input_tokens) is float
+    assert type(extracted.usage.output_tokens) is float
 
 
 def test_usage_extractor_skips_optional_nested_path_after_wrong_type_parent():
