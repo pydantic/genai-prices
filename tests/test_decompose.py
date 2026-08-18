@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from decimal import Decimal, localcontext
 from types import SimpleNamespace
 
 import pytest
@@ -72,6 +73,106 @@ def test_compute_leaf_values_handles_cached_audio_overlap() -> None:
     }
 
 
+def test_compute_leaf_values_handles_fractional_overlap() -> None:
+    registry = UnitRegistry(load_units())
+
+    leaf_values = compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens', 'input_audio_tokens', 'cache_audio_read_tokens'},
+        Usage(
+            input_tokens=0.7,
+            cache_read_tokens=0.3,
+            input_audio_tokens=0.2,
+            cache_audio_read_tokens=0.1,
+        ),
+        registry.units,
+    )
+
+    assert leaf_values == {
+        'cache_audio_read_tokens': 0.1,
+        'cache_read_tokens': 0.2,
+        'input_audio_tokens': 0.1,
+        'input_tokens': 0.3,
+    }
+    assert all(type(value) is float for value in leaf_values.values())
+
+
+def test_compute_leaf_values_handles_exact_fractional_remainder() -> None:
+    registry = UnitRegistry(load_units())
+
+    leaf_values = compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+        Usage(input_tokens=0.3, cache_read_tokens=0.1, input_audio_tokens=0.2),
+        registry.units,
+    )
+
+    assert leaf_values['input_tokens'] == 0.0
+    assert type(leaf_values['input_tokens']) is float
+
+
+def test_compute_leaf_values_handles_mixed_integer_and_fractional_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    leaf_values = compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens'},
+        Usage(input_tokens=1, cache_read_tokens=0.25),
+        registry.units,
+    )
+
+    assert leaf_values == {'cache_read_tokens': 0.25, 'input_tokens': 0.75}
+    assert type(leaf_values['input_tokens']) is float
+
+
+def test_compute_leaf_values_promotes_mixed_decimal_and_float_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    leaf_values = compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+        Usage(input_tokens=Decimal('0.3'), cache_read_tokens=0.1, input_audio_tokens=Decimal('0.2')),
+        registry.units,
+    )
+
+    assert leaf_values == {
+        'cache_read_tokens': 0.1,
+        'input_audio_tokens': Decimal('0.2'),
+        'input_tokens': Decimal('0.0'),
+    }
+    assert type(leaf_values['cache_read_tokens']) is float
+    assert isinstance(leaf_values['input_audio_tokens'], Decimal)
+    assert isinstance(leaf_values['input_tokens'], Decimal)
+
+
+def test_compute_leaf_values_ignores_ambient_decimal_context() -> None:
+    registry = UnitRegistry(load_units())
+
+    with localcontext() as context:
+        context.prec = 1
+        leaf_values = compute_leaf_values(
+            {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+            Usage(input_tokens=0.31, cache_read_tokens=0.15, input_audio_tokens=0.16),
+            registry.units,
+        )
+
+    assert leaf_values['input_tokens'] == 0.0
+
+
+def test_compute_leaf_values_with_decimal_ignores_ambient_context() -> None:
+    registry = UnitRegistry(load_units())
+
+    with localcontext() as context:
+        context.prec = 1
+        leaf_values = compute_leaf_values(
+            {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+            Usage(
+                input_tokens=Decimal('0.31'),
+                cache_read_tokens=Decimal('0.15'),
+                input_audio_tokens=Decimal('0.16'),
+            ),
+            registry.units,
+        )
+
+    assert leaf_values['input_tokens'] == Decimal('0.00')
+
+
 def test_compute_leaf_values_handles_conditional_dimension_chain() -> None:
     registry = UnitRegistry(load_units())
 
@@ -138,6 +239,17 @@ def test_compute_leaf_values_rejects_negative_leaf_values() -> None:
         compute_leaf_values(
             {'input_tokens', 'cache_read_tokens'},
             Usage(input_tokens=100, cache_read_tokens=200),
+            registry.units,
+        )
+
+
+def test_compute_leaf_values_rejects_materially_negative_fractional_leaf_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(ValueError, match=r'cache_read_tokens \(0\.2\) cannot exceed input_tokens \(0\.1\)'):
+        compute_leaf_values(
+            {'input_tokens', 'cache_read_tokens'},
+            Usage(input_tokens=0.1, cache_read_tokens=0.2),
             registry.units,
         )
 
