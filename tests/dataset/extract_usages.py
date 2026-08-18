@@ -41,16 +41,6 @@ body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extr
 assert 'file' not in body_keys
 body_keys.add('file')
 
-fractional_usage_body = {
-    'file': 'generated/fractional-usage-values.json',
-    'model': 'claude-3-5-haiku',
-    'usage': {
-        'cache_creation_input_tokens': 0.2,
-        'input_tokens': 0.1,
-        'output_tokens': 0.25,
-    },
-}
-
 
 def main():
     usages_file = this_dir / 'usages.json'
@@ -61,8 +51,6 @@ def main():
     else:
         result = current_result
     simplified_bodies = [r['body'] for r in result]
-    if fractional_usage_body not in simplified_bodies:
-        simplified_bodies.append(fractional_usage_body)
     result = get_usages(simplified_bodies)
     dumped = json.dumps(result, indent=2, sort_keys=True)
     usages_file.write_text(dumped + '\n')
