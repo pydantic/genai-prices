@@ -26,6 +26,20 @@ if (result) {
 }
 ```
 
+### Fractional usage values
+
+Every reportable usage unit accepts finite non-negative numbers, including fractions. This is useful for duration units
+such as seconds:
+
+```ts
+const usage = { audio_seconds: 0.25 }
+JSON.stringify(usage)
+```
+
+Usage remains a plain JSON-serializable object. JavaScript uses ordinary `number` arithmetic, so compare fractional
+results with an appropriate numerical tolerance. The package guards decomposition against insignificant floating-point
+residuals, but it cannot recover decimal precision that was already lost before a value was supplied.
+
 ### `updatePrices`
 
 You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.

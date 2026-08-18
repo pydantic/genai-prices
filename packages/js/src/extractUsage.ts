@@ -1,7 +1,7 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
 import { getActiveRegistry } from './units'
-import { normalizeUsage } from './usage'
+import { normalizeUsage, validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 interface ExtractedUsage {
@@ -41,8 +41,9 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     supportedMappings += 1
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
     if (value !== null) {
+      const validatedValue = validateUsageValue(mapping.dest, value)
       const currentValue = usage[mapping.dest] ?? 0
-      usage[mapping.dest] = currentValue + value
+      usage[mapping.dest] = currentValue + validatedValue
     }
   }
 
