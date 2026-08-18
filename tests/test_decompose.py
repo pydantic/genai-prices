@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from decimal import localcontext
+from decimal import Decimal, localcontext
 from types import SimpleNamespace
 
 import pytest
@@ -122,6 +122,25 @@ def test_compute_leaf_values_handles_mixed_integer_and_fractional_values() -> No
     assert type(leaf_values['input_tokens']) is float
 
 
+def test_compute_leaf_values_promotes_mixed_decimal_and_float_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    leaf_values = compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+        Usage(input_tokens=Decimal('0.3'), cache_read_tokens=0.1, input_audio_tokens=Decimal('0.2')),
+        registry.units,
+    )
+
+    assert leaf_values == {
+        'cache_read_tokens': 0.1,
+        'input_audio_tokens': Decimal('0.2'),
+        'input_tokens': Decimal('0.0'),
+    }
+    assert type(leaf_values['cache_read_tokens']) is float
+    assert isinstance(leaf_values['input_audio_tokens'], Decimal)
+    assert isinstance(leaf_values['input_tokens'], Decimal)
+
+
 def test_compute_leaf_values_ignores_ambient_decimal_context() -> None:
     registry = UnitRegistry(load_units())
 
@@ -134,6 +153,24 @@ def test_compute_leaf_values_ignores_ambient_decimal_context() -> None:
         )
 
     assert leaf_values['input_tokens'] == 0.0
+
+
+def test_compute_leaf_values_with_decimal_ignores_ambient_context() -> None:
+    registry = UnitRegistry(load_units())
+
+    with localcontext() as context:
+        context.prec = 1
+        leaf_values = compute_leaf_values(
+            {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
+            Usage(
+                input_tokens=Decimal('0.31'),
+                cache_read_tokens=Decimal('0.15'),
+                input_audio_tokens=Decimal('0.16'),
+            ),
+            registry.units,
+        )
+
+    assert leaf_values['input_tokens'] == Decimal('0.00')
 
 
 def test_compute_leaf_values_handles_conditional_dimension_chain() -> None:

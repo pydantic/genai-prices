@@ -699,8 +699,22 @@ def test_calc_unit_price_uses_shortest_decimal_fractional_count() -> None:
     assert calc_unit_price(Decimal('3.6'), 0.1, total_input_tokens=0, per=3_600) == Decimal('0.0001')
 
 
+def test_calc_unit_price_uses_decimal_fractional_count_directly() -> None:
+    assert calc_unit_price(Decimal('3.6'), Decimal('0.1'), total_input_tokens=0, per=3_600) == Decimal('0.0001')
+
+
 def test_model_price_handles_fractional_duration() -> None:
     price = ModelPrice(audio_hours=Decimal('3.6')).calc_price(Usage(audio_seconds=0.1))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.0001'),
+    }
+
+
+def test_model_price_handles_decimal_duration() -> None:
+    price = ModelPrice(audio_hours=Decimal('3.6')).calc_price(Usage(audio_seconds=Decimal('0.1')))
 
     assert price == {
         'input_price': Decimal('0'),
