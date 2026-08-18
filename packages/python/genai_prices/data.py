@@ -540,6 +540,92 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='arcee',
+        name='Arcee',
+        api_pattern='https://api\\.arcee\\.ai(?:/|$)',
+        pricing_urls=['https://docs.arcee.ai/get-started/pricing', 'https://api.arcee.ai/api/v1/models'],
+        price_comments='USD prices per million tokens. The public pricing page lists every model except deepseek/deepseek-v4-pro-0813; its pricing and all context windows were checked against the authenticated models endpoint.',
+        provider_match=ClauseContains(contains='arcee'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-latest',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-latest'),
+                name='DeepSeek V4 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
+                name='DeepSeek V4 Pro',
+                context_window=512000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.48')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                context_window=1048576,
+                price_comments="Pricing is exposed by Arcee's authenticated models endpoint and is not yet listed on the public pricing page.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3',
+                match=ClauseEquals(equals='moonshotai/kimi-k3'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-small'),
+                name='Inkling Small',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='trinity-large-thinking',
+                match=ClauseEquals(equals='trinity-large-thinking'),
+                name='Trinity Large Thinking',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('0.8')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5.2',
+                match=ClauseEquals(equals='zai-org/glm-5.2'),
+                name='GLM 5.2',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='avian',
         name='Avian',
         api_pattern='https://api\\.avian\\.io',
