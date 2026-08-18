@@ -7,6 +7,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
+from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
@@ -494,10 +495,13 @@ class UsageExtractor:
             if mapping.dest not in self._reported_usage_keys:
                 continue
             supported_mappings += 1
-            value = _extract_path(mapping.path, usage_obj, (int, float), mapping.required, root)
+            value = _extract_path(mapping.path, usage_obj, (Integral, float, Decimal), mapping.required, root)
             if value is not None:
                 value = validate_usage_value(mapping.dest, value)
-                values[mapping.dest] = add_usage_values(values.get(mapping.dest, 0), value)
+                if mapping.dest not in values:
+                    values[mapping.dest] = value
+                else:
+                    values[mapping.dest] = add_usage_values(values[mapping.dest], value)
                 values_set = True
         if supported_mappings and not values_set:
             raise ValueError(f'No usage information found at {self.root}')
@@ -621,7 +625,7 @@ def _type_name(v: Any) -> str:
 
 def _extract_type_name(extract_type: type[object] | tuple[type[object], ...]) -> str:
     if isinstance(extract_type, tuple):
-        return ' or '.join(item.__name__ for item in extract_type)
+        return ' or '.join('int' if item is Integral else item.__name__ for item in extract_type)
     return extract_type.__name__
 
 

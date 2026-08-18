@@ -550,7 +550,7 @@ def test_extracted_usage_calc_price_requires_model():
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
         (
             {'model': 'x', 'usage': {'input_tokens': []}},
-            snapshot('Expected `usage.input_tokens` value to be a int or float, got list'),
+            snapshot('Expected `usage.input_tokens` value to be a int or float or Decimal, got list'),
         ),
     ],
 )
@@ -675,10 +675,26 @@ def test_usage_extractor_accepts_optional_integral_float_value():
         ],
     )
 
-    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 13.0, 'output_tokens': 2}}) == (
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 3.0, 'output_tokens': 2}})
+
+    assert (model, usage) == (
         'test-model',
-        Usage(input_tokens=13.0, output_tokens=2),
+        Usage(input_tokens=3.0, output_tokens=2),
     )
+    assert type(usage.input_tokens) is float
+
+
+def test_usage_extractor_preserves_decimal_value() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='duration', dest='audio_seconds')],
+    )
+    value = Decimal('3.00')
+
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'duration': value}})
+
+    assert model == 'test-model'
+    assert usage.audio_seconds is value
 
 
 def test_usage_extractor_accumulates_fractional_values_by_destination() -> None:
@@ -697,7 +713,45 @@ def test_usage_extractor_accumulates_fractional_values_by_destination() -> None:
     assert type(usage.audio_seconds) is float
 
 
-@pytest.mark.parametrize('invalid_value', [-1, -0.1, float('nan'), float('inf'), True])
+def test_usage_extractor_accumulates_mixed_values_as_decimal() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='first_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='second_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='whole_seconds', dest='audio_seconds'),
+        ],
+    )
+
+    model, usage = extractor.extract(
+        {
+            'model': 'test-model',
+            'usage': {
+                'first_seconds': Decimal('0.1'),
+                'second_seconds': 0.2,
+                'whole_seconds': 1,
+            },
+        }
+    )
+
+    assert model == 'test-model'
+    assert usage.audio_seconds == Decimal('1.3')
+    assert isinstance(usage.audio_seconds, Decimal)
+
+
+@pytest.mark.parametrize(
+    'invalid_value',
+    [
+        -1,
+        -0.1,
+        float('nan'),
+        float('inf'),
+        Decimal('-0.1'),
+        Decimal('NaN'),
+        Decimal('Infinity'),
+        True,
+    ],
+)
 def test_usage_extractor_rejects_invalid_component_before_accumulation(invalid_value: Any) -> None:
     extractor = UsageExtractor(
         root='usage',
@@ -708,7 +762,7 @@ def test_usage_extractor_rejects_invalid_component_before_accumulation(invalid_v
     )
 
     with pytest.raises(
-        ValueError, match='Invalid usage value for audio_seconds: expected a finite non-negative int or float'
+        ValueError, match='Invalid usage value for audio_seconds: expected a finite non-negative int, float, or Decimal'
     ):
         extractor.extract({'model': 'test-model', 'usage': {'invalid': invalid_value, 'offset': 2}})
 
