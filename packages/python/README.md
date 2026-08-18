@@ -57,19 +57,26 @@ Every reportable usage unit accepts finite non-negative integers or fractional v
 include fractions of a second:
 
 ```python
-import json
+from decimal import Decimal
 
 from genai_prices import Usage
 
 duration = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+exact_duration = Usage(audio_seconds=Decimal('0.1')) + Usage(audio_seconds=0.2)
 
 assert duration.audio_seconds == 0.3
-json.dumps(duration.__dict__)  # Usage stores only built-in int and float values.
+assert type(duration.audio_seconds) is float
+assert exact_duration.audio_seconds == Decimal('0.3')
+assert type(Usage(audio_seconds=3.0).audio_seconds) is float
 ```
 
-Python preserves integer inputs as `int` and float inputs as `float`. Arithmetic involving floats follows their shortest
-round-trippable decimal spellings, so ordinary submitted decimal values add intuitively while remaining JSON-native.
-This cannot recover decimal precision that was already lost before a value reached `Usage`.
+Python preserves supplied `int`, `float`, and `Decimal` values, including `3.0` as a float. Other accepted non-boolean
+integer implementations normalize to built-in `int`. Arithmetic interprets floats through their shortest round-trippable
+decimal spellings: a result is Decimal if any operand was Decimal, otherwise float if any operand was float, otherwise
+int. This cannot recover decimal precision that was already lost before a float reached `Usage`.
+
+Standard JSON decoding normally supplies `int` and `float`, while callers may request Decimal parsing before extraction.
+Decimal-bearing usage is not serializable by Python's standard JSON encoder without a custom conversion.
 
 ### `extract_usage`
 
