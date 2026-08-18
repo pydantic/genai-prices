@@ -823,22 +823,6 @@ def _is_registered_price_key(name: str) -> bool:
         return True
 
 
-def calc_mtok_price(
-    field_mtok: Decimal | TieredPrices | None, token_count: UsageValue | None, total_input_tokens: UsageValue
-) -> Decimal:
-    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
-
-    For tiered pricing, uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
-    This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
-
-    Args:
-        field_mtok: Price per million tokens, either flat rate or tiered
-        token_count: Number of tokens of this specific type to price
-        total_input_tokens: Total input tokens for tier determination (used only for tiered pricing)
-    """
-    return calc_unit_price(field_mtok, token_count, total_input_tokens, 1_000_000)
-
-
 def calc_unit_price(
     price: Decimal | TieredPrices | None, count: UsageValue | None, total_input_tokens: UsageValue, per: int
 ) -> Decimal:

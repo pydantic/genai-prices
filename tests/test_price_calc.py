@@ -22,7 +22,6 @@ from genai_prices.types import (
     Provider,
     Tier,
     TieredPrices,
-    calc_mtok_price,
     calc_unit_price,
 )
 
@@ -671,12 +670,6 @@ def test_custom_model_price_can_override_reasoning_rate():
 
     assert price['output_price'] == Decimal('0.000675')
     assert price['total_price'] == Decimal('0.000675')
-
-
-def test_calc_unit_price_matches_mtok_wrapper() -> None:
-    assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
-        Decimal('2.5'), 500_000, total_input_tokens=0
-    )
 
 
 def test_calc_unit_price_handles_absent_price_or_count() -> None:
