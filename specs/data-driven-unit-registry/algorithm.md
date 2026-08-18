@@ -38,13 +38,17 @@ Reported usage values are finite non-negative whole or fractional quantities.
 The containment algorithm is unchanged over that domain: addition,
 subtraction, positivity, and normalization do not require integral counts.
 
-Python stores reported values as built-in `int | float`. Integer-only
-decomposition remains integer arithmetic. When floats participate, Python
-interprets them through their shortest round-trippable decimal spellings and
-performs descendant accumulation and subtraction in a private Decimal context
-before converting leaf results back to floats. This avoids false contradictions
-for ordinary decimal identities such as `0.3 - 0.1 - 0.2 == 0` without exposing
-Decimal usage values or depending on the caller's ambient Decimal context.
+Python stores reported values as `int | float | Decimal`. Supplied built-in
+values retain their numeric kind, including integral floats such as `3.0`, while
+accepted non-boolean `Integral` implementations normalize to built-in `int` for
+backward compatibility. Integer-only decomposition remains integer arithmetic.
+For other operations, Python converts integers exactly, interprets floats
+through their shortest round-trippable decimal spellings, and uses supplied
+Decimals directly in a private Decimal context. A derived result is Decimal if
+any operand was Decimal, otherwise float if any operand was float, otherwise
+int. This avoids false contradictions for ordinary decimal identities such as
+`0.3 - 0.1 - 0.2 == 0` without depending on the caller's ambient Decimal
+context.
 
 JavaScript retains ordinary finite numbers. It normalizes a negative residual
 to zero only when the magnitude is within its scale-aware floating-point
