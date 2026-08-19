@@ -417,6 +417,19 @@ def test_openrouter_glm_52_dated_price():
     assert price.total_price == Decimal('0.00184')
 
 
+def test_openrouter_glm_53_dated_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='z-ai/glm-5.3-20260816',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'z-ai/glm-5.3'
+    assert price.input_price == Decimal('0.0014')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.00184')
+
+
 def test_zhipuai_glm_52_price():
     price = calc_price(
         Usage(input_tokens=1_000, output_tokens=100),
@@ -452,6 +465,27 @@ def test_zai_glm_52_price(provider_api_url: str):
 
 
 @pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.z.ai/api/paas/v4',
+        'https://api.z.ai/api/coding/paas/v4',
+    ],
+)
+def test_zai_glm_53_price(provider_api_url: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='glm-5.3',
+        provider_api_url=provider_api_url,
+    )
+
+    assert price.provider.id == 'zai'
+    assert price.model.id == 'GLM-5.3'
+    assert price.input_price == Decimal('0.000716')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.001156')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id'),
     [('glm-4.7', 'GLM-4.7'), ('glm-5.2', 'GLM-5.2')],
 )
@@ -460,6 +494,12 @@ def test_zai_does_not_shadow_zhipuai_model_matching(model_ref: str, model_id: st
 
     assert price.provider.id == 'zhipuai'
     assert price.model.id == model_id
+
+
+def test_bare_glm_53_ref_is_claimed_by_zhipuai():
+    """zhipuai claims every `glm-*` ref, so GLM-5.3 needs an explicit provider until Zhipu publishes its CNY rates."""
+    with pytest.raises(LookupError, match="Unable to find model with model_ref='glm-5.3' in zhipuai"):
+        calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref='glm-5.3')
 
 
 def test_openrouter_modern_dated_aliases_price():

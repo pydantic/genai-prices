@@ -12562,6 +12562,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='z-ai/glm-5.3',
+                match=ClauseOr(or_=[ClauseEquals(equals='z-ai/glm-5.3'), ClauseEquals(equals='z-ai/glm-5.3-20260816')]),
+                name='GLM 5.3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
                 id='~anthropic/claude-fable-latest',
                 match=ClauseEquals(equals='~anthropic/claude-fable-latest'),
                 name='Claude Fable Latest',
@@ -13777,7 +13786,17 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
-            )
+            ),
+            ModelInfo(
+                id='GLM-5.3',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3'), ClauseEquals(equals='glm-5.3')]),
+                name='GLM-5.3',
+                description='Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling. Reasoning is always enabled, with low, high and max effort levels.',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
         ],
     ),
     Provider(

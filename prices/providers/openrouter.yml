@@ -5466,6 +5466,18 @@ models:
       output_mtok: 4.4
     context_window: 1048576
 
+  - id: z-ai/glm-5.3
+    name: GLM 5.3
+    match:
+      or:
+        - equals: z-ai/glm-5.3
+        - equals: z-ai/glm-5.3-20260816
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    context_window: 1048576
+
   - id: ~anthropic/claude-fable-latest
     name: Claude Fable Latest
     match:

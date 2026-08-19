@@ -21660,6 +21660,26 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'z-ai/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5.3',
+            },
+            {
+              equals: 'z-ai/glm-5.3-20260816',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
         id: '~anthropic/claude-fable-latest',
         name: 'Claude Fable Latest',
         match: {
@@ -23812,6 +23832,28 @@ export const data: Provider[] = [
             },
             {
               equals: 'glm-5.2',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'GLM-5.3',
+        name: 'GLM-5.3',
+        description:
+          'Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling. Reasoning is always enabled, with low, high and max effort levels.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.3',
+            },
+            {
+              equals: 'glm-5.3',
             },
           ],
         },
