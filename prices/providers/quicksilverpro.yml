@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=.schema.json
+name: QuickSilver Pro
+id: quicksilverpro
+pricing_urls:
+  - https://quicksilverpro.io/#pricing
+  - https://quicksilverpro.io/pricing.json
+api_pattern: 'https://api\.quicksilverpro\.io'
+description: OpenAI-compatible inference gateway serving frontier and open models via one endpoint.
+models:
+  - id: claude-opus-5
+    match:
+      equals: claude-opus-5
+    prices:
+      input_mtok: 4
+      output_mtok: 20
+
+  - id: claude-sonnet-5
+    match:
+      equals: claude-sonnet-5
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+
+  - id: gpt-5.6-sol
+    match:
+      equals: gpt-5.6-sol
+    prices:
+      input_mtok: 4
+      output_mtok: 24
+      cache_read_mtok: 0.4
+
+  - id: gpt-5.6-terra
+    match:
+      equals: gpt-5.6-terra
+    prices:
+      input_mtok: 0.8
+      output_mtok: 4.8
+      cache_read_mtok: 0.08
+
+  - id: qwen3.8-max
+    match:
+      equals: qwen3.8-max
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+      cache_read_mtok: 0.25
+
+  - id: qwen3.7-max
+    match:
+      equals: qwen3.7-max
+    prices:
+      input_mtok: 1.25
+      output_mtok: 3.75
+      cache_read_mtok: 0.25
+
+  - id: kimi-k3
+    match:
+      equals: kimi-k3
+    prices:
+      input_mtok: 2.4
+      output_mtok: 12
+      cache_read_mtok: 0.24
+
+  - id: deepseek-v4-pro
+    match:
+      equals: deepseek-v4-pro
+    prices:
+      input_mtok: 0.348
+      output_mtok: 0.696
+      cache_read_mtok: 0.002784
+
+  - id: deepseek-v4-flash
+    match:
+      equals: deepseek-v4-flash
+    prices:
+      input_mtok: 0.112
+      output_mtok: 0.224
+      cache_read_mtok: 0.0144
+
+  - id: glm-5.2
+    match:
+      equals: glm-5.2
+    prices:
+      input_mtok: 1.12
+      output_mtok: 3.52
+      cache_read_mtok: 0.208
+
+  - id: minimax-m3
+    match:
+      equals: minimax-m3
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.96
+      cache_read_mtok: 0.048
+
+  - id: grok-4.5
+    match:
+      equals: grok-4.5
+    prices:
+      input_mtok: 1.6
+      output_mtok: 4.8
+      cache_read_mtok: 0.4
+
+  - id: gemini-3.6-flash
+    match:
+      equals: gemini-3.6-flash
+    prices:
+      input_mtok: 1.275
+      output_mtok: 6.375
+
+  - id: muse-spark-1.2
+    match:
+      equals: muse-spark-1.2
+    prices:
+      input_mtok: 1
+      output_mtok: 3.4
+      cache_read_mtok: 0.12
