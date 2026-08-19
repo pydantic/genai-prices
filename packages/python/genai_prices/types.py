@@ -218,6 +218,15 @@ class Usage:
             obj._reported_values()
             return obj
 
+        # Usage values are read with getattr, so a mapping contributes nothing and
+        # would price at zero however many tokens it names. Mappings are not a
+        # supported usage input, so say so rather than undercharge silently.
+        if isinstance(obj, Mapping):
+            raise TypeError(
+                'Mappings are not supported as usage input. '
+                f'Pass a Usage instance or an object with usage attributes, not {type(obj).__name__}.'
+            )
+
         values: dict[str, UsageValue] = {}
         for key in _reported_usage_keys():
             value = _raw_usage_value(obj, key)
