@@ -177,6 +177,100 @@ def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expec
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_prices'),
+    [
+        (
+            'openai.gpt-5.6-sol',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272_000, price=Decimal('11'))]),
+                cache_write_mtok=TieredPrices(
+                    base=Decimal('6.875'), tiers=[Tier(start=272_000, price=Decimal('13.75'))]
+                ),
+                cache_read_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=272_000, price=Decimal('1.1'))]),
+                output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=272_000, price=Decimal('49.5'))]),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-terra',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('2.75'),
+                cache_write_mtok=Decimal('3.4375'),
+                cache_read_mtok=Decimal('0.275'),
+                output_mtok=Decimal('16.5'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-terra',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=272_000, price=Decimal('4.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.75'), tiers=[Tier(start=272_000, price=Decimal('5.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
+                output_mtok=TieredPrices(base=Decimal('13.2'), tiers=[Tier(start=272_000, price=Decimal('19.8'))]),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-luna',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('1.1'),
+                cache_write_mtok=Decimal('1.375'),
+                cache_read_mtok=Decimal('0.11'),
+                output_mtok=Decimal('6.6'),
+            ),
+        ),
+        (
+            'openai.gpt-5.6-luna',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
+                cache_write_mtok=TieredPrices(
+                    base=Decimal('0.275'), tiers=[Tier(start=272_000, price=Decimal('0.55'))]
+                ),
+                cache_read_mtok=TieredPrices(
+                    base=Decimal('0.022'), tiers=[Tier(start=272_000, price=Decimal('0.044'))]
+                ),
+                output_mtok=TieredPrices(base=Decimal('1.32'), tiers=[Tier(start=272_000, price=Decimal('1.98'))]),
+            ),
+        ),
+    ],
+)
+def test_aws_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expected_prices: ModelPrice) -> None:
+    price = calc_price(
+        Usage(input_tokens=0),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'short_input_rate', 'long_input_rate'),
+    [
+        ('openai.gpt-5.6-sol', Decimal('5.5'), Decimal('11')),
+        ('openai.gpt-5.6-terra', Decimal('2.2'), Decimal('4.4')),
+        ('openai.gpt-5.6-luna', Decimal('0.22'), Decimal('0.44')),
+    ],
+)
+def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal, long_input_rate: Decimal) -> None:
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
+        price = calc_price(
+            Usage(input_tokens=tokens),
+            model_ref=model_ref,
+            provider_id='aws',
+        )
+
+        expected_input_price = rate * tokens / 1_000_000
+        assert price.input_price == expected_input_price
+        assert price.output_price == Decimal(0)
+        assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
     'model_ref,request_timestamp,expected_prices',
     [
         (
