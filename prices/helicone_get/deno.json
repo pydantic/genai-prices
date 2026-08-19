@@ -1,6 +1,7 @@
 {
+  "//": "--allow-write is scoped to the one directory main.ts writes. main.ts imports Helicone's TypeScript, so upstream code runs during this task; keeping the permission narrow means an unexpected change upstream can only affect the file we already expect it to write. Deno denies net/run/read/env by default. Please don't widen this to a bare --allow-write. See README.md.",
   "tasks": {
-    "run": "deno run --unstable-sloppy-imports --allow-write main.ts"
+    "run": "deno run --unstable-sloppy-imports --allow-write=../source_prices main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"

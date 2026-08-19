@@ -11,7 +11,7 @@ if [ -d "helicone-repo" ]; then
     git pull origin main
     cd ..
 else
-    git clone --branch main --single-branch --depth 1 git@github.com:Helicone/helicone.git helicone-repo
+    git clone --branch main --single-branch --depth 1 https://github.com/Helicone/helicone.git helicone-repo
 fi
 
 cp -r helicone-repo/packages/cost .
