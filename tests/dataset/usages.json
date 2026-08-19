@@ -74076,6 +74076,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0000484",
+            "output_price": "0.0001056",
             "provider_id": "aws"
           },
           {
@@ -74145,6 +74147,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0000968",
+            "output_price": "0.0000924",
             "provider_id": "aws"
           },
           {
@@ -74223,6 +74227,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0001265",
+            "output_price": "0.0000924",
             "provider_id": "aws"
           },
           {
@@ -74301,6 +74307,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0001562",
+            "output_price": "0.0002178",
             "provider_id": "aws"
           },
           {
@@ -74389,6 +74397,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0001199",
+            "output_price": "0.000033",
             "provider_id": "aws"
           },
           {

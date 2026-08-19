@@ -1014,6 +1014,91 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='openai.gpt-5.6-luna',
+                match=ClauseEquals(equals='openai.gpt-5.6-luna'),
+                name='GPT-5.6 Luna',
+                context_window=1000000,
+                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.1'),
+                            cache_write_mtok=Decimal('1.375'),
+                            cache_read_mtok=Decimal('0.11'),
+                            output_mtok=Decimal('6.6'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.275'), tiers=[Tier(start=272000, price=Decimal('0.55'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.022'), tiers=[Tier(start=272000, price=Decimal('0.044'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('1.32'), tiers=[Tier(start=272000, price=Decimal('1.98'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='openai.gpt-5.6-sol',
+                match=ClauseEquals(equals='openai.gpt-5.6-sol'),
+                name='GPT-5.6 Sol',
+                context_window=1000000,
+                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. Sol pricing is unchanged since Bedrock GA (2026-07-13). The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('11'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.875'), tiers=[Tier(start=272000, price=Decimal('13.75'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.55'), tiers=[Tier(start=272000, price=Decimal('1.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=272000, price=Decimal('49.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai.gpt-5.6-terra',
+                match=ClauseEquals(equals='openai.gpt-5.6-terra'),
+                name='GPT-5.6 Terra',
+                context_window=1000000,
+                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.75'),
+                            cache_write_mtok=Decimal('3.4375'),
+                            cache_read_mtok=Decimal('0.275'),
+                            output_mtok=Decimal('16.5'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('2.2'), tiers=[Tier(start=272000, price=Decimal('4.4'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.75'), tiers=[Tier(start=272000, price=Decimal('5.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('13.2'), tiers=[Tier(start=272000, price=Decimal('19.8'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
                 match=ClauseContains(contains='openai.gpt-oss-120b-1'),
                 name='gpt-oss-120b',
