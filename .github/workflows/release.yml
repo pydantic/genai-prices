@@ -1,0 +1,85 @@
+# Auto-cuts a patch release whenever packaged data or package source lands on main,
+# so consumers can pin a fresh, specific version (instead of floating @latest or
+# hitting the raw.githubusercontent data.json from prod).
+#
+# Flow: bump patch across both packages -> commit + tag on main -> the tag push
+# triggers the `release-pypi` / `release-npm` jobs in ci.yml that actually publish.
+#
+# Required org setup (one-time):
+#   - A GitHub App with `contents: write`, installed on this repo.
+#   - Add the App to the `main` ruleset's bypass list (it pushes the bump commit + tag
+#     directly to the protected branch).
+#   - Repo variable  RELEASE_APP_ID            = the App's id
+#   - Repo secret     RELEASE_APP_PRIVATE_KEY  = the App's private key
+# (A fine-grained PAT with the same bypass works too; swap the app-token step for a
+#  `token: ${{ secrets.RELEASE_PAT }}` on checkout.)
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+    # Only the packaged artifacts / source — NOT the version files the bump itself
+    # touches (pyproject.toml, package.json, *.lock), so a release commit can't
+    # re-trigger this workflow.
+    paths:
+      - "packages/python/genai_prices/**"
+      - "packages/js/src/**"
+
+permissions:
+  contents: read
+
+# Serialise releases so two quick merges don't race on the same version number.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          token: ${{ steps.app-token.outputs.token }} # zizmor: ignore[artipacked] -- credentials are required to push the bump commit and tag back to main
+
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: false
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.x
+          package-manager-cache: false
+
+      - name: Bump patch version
+        env:
+          UV_FROZEN: "0"
+        run: |
+          uv version --package genai-prices --bump patch
+          npm version patch --no-git-tag-version --workspace=packages/js
+
+      - name: Read new version
+        id: version
+        run: echo "version=$(uv version --package genai-prices --short)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit, tag and push
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add packages/python/pyproject.toml packages/js/package.json uv.lock package-lock.json
+          git commit -m "Release v${VERSION}"
+          git tag "v${VERSION}"
+          git push origin HEAD:main
+          git push origin "v${VERSION}"
+          gh release create "v${VERSION}" --generate-notes --verify-tag
