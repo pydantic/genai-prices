@@ -32,6 +32,7 @@ dev = [
 
 [tool.uv]
 exclude-newer = "1 week"
+required-version = ">=0.12.1"
 
 [tool.uv.workspace]
 members = ["prices", "packages/python"]
