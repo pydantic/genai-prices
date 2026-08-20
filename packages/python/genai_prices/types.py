@@ -222,9 +222,12 @@ class Usage:
         # would price at zero however many tokens it names. Mappings are not a
         # supported usage input, so say so rather than undercharge silently.
         if isinstance(obj, Mapping):
+            # isinstance narrows to Mapping[Unknown, Unknown], so name the type through a
+            # cast to keep the type checker from seeing partially unknown arguments.
+            unsupported = cast('Mapping[Any, Any]', obj)
             raise TypeError(
                 'Mappings are not supported as usage input. '
-                f'Pass a Usage instance or an object with usage attributes, not {type(obj).__name__}.'
+                f'Pass a Usage instance or an object with usage attributes, not {type(unsupported).__name__}.'
             )
 
         values: dict[str, UsageValue] = {}
