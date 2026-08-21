@@ -1008,3 +1008,33 @@ def test_package_data_accepts_current_provider_extractor_destinations() -> None:
     registry = UnitRegistry(load_units())
 
     package_data.validate_provider_extractor_destinations(data.providers, registry)
+
+
+def test_package_data_accepts_current_provider_extractor_reasoning_coverage() -> None:
+    package_data.validate_provider_extractor_reasoning_coverage(data.providers)
+
+
+def test_package_data_extractor_validation_rejects_unmapped_reasoning_tokens() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+        extractors=[
+            build_types.UsageExtractor.model_construct(
+                root='usage',
+                mappings=[
+                    _build_extractor_mapping('prompt_tokens', 'input_tokens'),
+                    _build_extractor_mapping('completion_tokens', 'output_tokens'),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid extractor for testing/chat: Missing output_reasoning_tokens mapping: '
+            'extractors reading completion_tokens must also map reasoning tokens'
+        ),
+    ):
+        package_data.validate_provider_extractor_reasoning_coverage([provider])
