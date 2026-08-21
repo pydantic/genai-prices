@@ -714,6 +714,13 @@ class ModelInfo:
         model_price = self.get_prices(genai_request_timestamp)
         if self.minimum_audio_seconds is not None:
             usage = copy(Usage.from_raw(usage))
+            audio_seconds = usage.__dict__.get('audio_seconds')
+            input_audio_seconds = usage.__dict__.get('input_audio_seconds')
+            if audio_seconds is not None and input_audio_seconds is not None and input_audio_seconds > audio_seconds:
+                raise ValueError(
+                    f'Invalid usage data: input_audio_seconds ({input_audio_seconds}) '
+                    f'cannot exceed audio_seconds ({audio_seconds})'
+                )
             for usage_key in ('audio_seconds', 'input_audio_seconds'):
                 value = usage.__dict__.get(usage_key)
                 if value is not None and 0 < value < self.minimum_audio_seconds:

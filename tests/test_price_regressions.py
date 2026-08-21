@@ -141,6 +141,18 @@ def test_groq_minimum_billed_duration_preserves_zero_subtypes_and_usage() -> Non
     assert usage.reported_value('input_audio_seconds') == 0
 
 
+def test_groq_minimum_billed_duration_rejects_invalid_original_relationship() -> None:
+    with pytest.raises(
+        ValueError,
+        match=r'input_audio_seconds \(6\) cannot exceed audio_seconds \(5\)',
+    ):
+        calc_price(
+            Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(6)),
+            model_ref='whisper-large-v3',
+            provider_id='groq',
+        )
+
+
 def test_openai_transcription_model_ids_fail_closed() -> None:
     price = calc_price(
         Usage(input_tokens=1, input_audio_tokens=1),

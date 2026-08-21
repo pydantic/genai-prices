@@ -243,7 +243,20 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     billedUsage = { ...usage }
     for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
       const value = billedUsage[usageKey]
-      if (value !== undefined && validateUsageValue(usageKey, value) > 0 && value < model.minimum_audio_seconds) {
+      if (value !== undefined) validateUsageValue(usageKey, value)
+    }
+    if (
+      billedUsage.audio_seconds !== undefined &&
+      billedUsage.input_audio_seconds !== undefined &&
+      billedUsage.input_audio_seconds > billedUsage.audio_seconds
+    ) {
+      throw new Error(
+        `Invalid usage data: input_audio_seconds (${billedUsage.input_audio_seconds.toString()}) cannot exceed audio_seconds (${billedUsage.audio_seconds.toString()})`
+      )
+    }
+    for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
+      const value = billedUsage[usageKey]
+      if (value !== undefined && value > 0 && value < model.minimum_audio_seconds) {
         billedUsage[usageKey] = model.minimum_audio_seconds
       }
     }

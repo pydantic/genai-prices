@@ -201,6 +201,12 @@ describe('generated data split', () => {
     }
   )
 
+  it('rejects invalid original duration relationships before applying a minimum', () => {
+    expect(() => calcPrice({ audio_seconds: 5, input_audio_seconds: 6 }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
+      'Invalid usage data: input_audio_seconds (6) cannot exceed audio_seconds (5)'
+    )
+  })
+
   it('matches only verified OpenAI diarization model IDs', () => {
     expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
       'gpt-4o-transcribe'
