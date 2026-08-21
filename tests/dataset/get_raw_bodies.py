@@ -16,7 +16,17 @@ for f in pydantic_ai_tests.rglob('*.yaml'):
         parsed_body = interaction.get('response', {}).get('parsed_body', {})
         if parsed_body and isinstance(parsed_body, dict):
             assert 'file' not in parsed_body
-            parsed_body['file'] = str(f.relative_to(pydantic_ai_tests))
+            filename = str(f.relative_to(pydantic_ai_tests))
+            if (
+                filename
+                == 'models/openrouter/cassettes/test_cache/test_openrouter_cache_instructions_gemini_real_api.yaml'
+            ):
+                # This contains inconsistent usage in the sense that some tokens are counted as both cache read
+                # and cache write, which adds up to more than the input tokens.
+                # This is specific to how OpenRouter+Gemini work.
+                # Probably the best solution is https://github.com/pydantic/genai-prices/issues/239.
+                continue
+            parsed_body['file'] = filename
             bodies.append(parsed_body)
 
 raw_bodies_path.write_text(json.dumps(bodies))

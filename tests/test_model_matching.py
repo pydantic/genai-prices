@@ -13,6 +13,9 @@ mark_xfail_todo = pytest.mark.xfail(reason='todo')
 test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-4o-mini', snapshot(('openai', 'gpt-4o-mini'))),
     ('openai', 'gpt-4.1', snapshot(('openai', 'gpt-4.1'))),
+    ('google', 'gemini-3.1-flash-lite', snapshot(('google', 'gemini-3.1-flash-lite'))),
+    ('google', 'gemini-3.1-flash-lite-preview', snapshot(('google', 'gemini-3.1-flash-lite'))),
+    ('google', 'gemini-3.1-flash-lite-image', snapshot(('google', 'gemini-3.1-flash-lite-image'))),
     ('openai', 'gpt-4o-mini-2024-07-18', snapshot(('openai', 'gpt-4o-mini'))),
     ('openai', 'gpt-4.1-mini', snapshot(('openai', 'gpt-4.1-mini'))),
     ('openai', 'gpt-4.1-mini-2025-04-14', snapshot(('openai', 'gpt-4.1-mini'))),
@@ -418,6 +421,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
+    pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
+    pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
+    pytest.param('bedrock', 'writer.palmyra-x5-v1:0', snapshot(('aws', 'writer.palmyra-x5-v1:0'))),
+    pytest.param('bedrock', 'us.writer.palmyra-x5-v1:0', snapshot(('aws', 'writer.palmyra-x5-v1:0'))),
 ]
 
 

@@ -73,6 +73,7 @@ interface ExtractorInfo {
   input_price?: string
   output_price?: string
   provider_id: string
+  total_price?: string
 }
 
 describe('dataset', () => {
@@ -97,13 +98,17 @@ describe('dataset', () => {
             if (price) {
               expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!), 8)
               expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!), 8)
+              if (extractor.total_price !== undefined) {
+                expect(price.total_price).toBeCloseTo(parseFloat(extractor.total_price), 8)
+              }
             } else {
               expect(extractor.input_price).toBeUndefined()
               expect(extractor.output_price).toBeUndefined()
+              expect(extractor.total_price).toBeUndefined()
             }
           }
           for (const key of Object.keys(extracted.usage)) {
-            const k = key as keyof Usage
+            const k = key
             expect(extractedUsage[k]).toBe(extracted.usage[k])
           }
         }

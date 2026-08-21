@@ -1,52 +1,84 @@
-from typing import Any, cast
+from pydantic_core import from_json
 
-import pytest
-from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
-from pydantic_core import core_schema, from_json
-
-from genai_prices.data import providers_schema
-from prices.utils import package_dir as prices_package_dir, simplify_json_schema
+from genai_prices.types import _providers_from_raw
+from prices import build as build_module
+from prices.utils import package_dir as prices_package_dir
 
 
-class CustomGenerateJsonSchema(GenerateJsonSchema):
-    def decimal_schema(self, schema: core_schema.DecimalSchema) -> JsonSchemaValue:
-        return self.float_schema(core_schema.float_schema())
+def test_legacy_provider_payload_remains_runtime_compatible() -> None:
+    raw_providers = from_json((prices_package_dir / 'data.json').read_bytes())
+    providers = _providers_from_raw(raw_providers)
+
+    assert providers
+    assert all(provider.id for provider in providers)
 
 
-def remove_ignored_fields(json_schema: Any):
-    if isinstance(json_schema, dict):
-        json_schema = cast(dict[str, Any], json_schema)
+def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
+    schema = build_module._provider_yaml_schema(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+        }
+    )
 
-        for f in 'description', 'maxLength', 'minLength', 'pattern', 'additionalProperties':
-            json_schema.pop(f, None)
+    model_price_schema = schema['$defs']['ModelPrice']
+    properties = model_price_schema['properties']
+    assert properties['input_mtok']['description'] == 'price in USD per million uncached text input/prompt token'
+    assert properties['sausage_mtok']['title'] == 'Sausage Mtok'
+    assert properties['sausage_mtok']['description'] == 'price in USD per million sausage tokens'
+    assert properties['sausage_mtok']['anyOf'] == model_price_schema['additionalProperties']['anyOf']
+    assert isinstance(model_price_schema['additionalProperties'], dict)
 
-        for value in json_schema.values():
-            remove_ignored_fields(value)
-    elif isinstance(json_schema, list):
-        for item in cast(list[Any], json_schema):
-            remove_ignored_fields(item)
+
+def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> None:
+    schema = build_module._provider_yaml_schema(build_module.load_units())
+
+    properties = schema['$defs']['ModelPrice']['properties']
+    assert 'cache_image_read_mtok' in properties
+    assert properties['audio_hours']['description'] == 'price in USD per audio hour'
+    assert properties['input_audio_hours']['description'] == 'price in USD per input audio hour'
+    assert properties['output_audio_hours']['description'] == 'price in USD per output audio hour'
+    assert properties['input_text_messages_kcount']['description'] == 'price in USD per thousand input text messages'
+    assert 'cache_write_5m_mtok' in properties
+    assert (
+        properties['cache_write_5m_mtok']['description']
+        == 'price in USD per million tokens written to the cache with a 5-minute TTL'
+    )
+    assert (
+        properties['cache_write_1h_mtok']['description']
+        == 'price in USD per million tokens written to the cache with a 1-hour TTL'
+    )
 
 
-@pytest.mark.requires_latest_pydantic
-def test_package_schema():
-    package_schema = simplify_json_schema(providers_schema.json_schema(schema_generator=CustomGenerateJsonSchema))
-    remove_ignored_fields(package_schema)
+def test_provider_yaml_schema_suggests_extractor_dests_from_reported_registry_units() -> None:
+    schema = build_module._provider_yaml_schema(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+            'requests': {
+                'per': 1_000,
+                'price_key': 'requests_kcount',
+                'dimensions': {'family': 'requests'},
+            },
+        }
+    )
 
-    # prices is not required in the model info package schema for simplicity
-    package_schema['$defs']['ModelInfo']['required'].append('prices')
-
-    # models is not required in the provider package schema for simplicity
-    package_schema['$defs']['Provider']['required'].append('models')
-    package_schema['$defs']['Provider']['properties']['pricing_urls']['items']['format'] = 'uri'
-
-    # work around for hack on ConditionalPrice
-    package_schema['$defs']['ConditionalPrice']['required'] = ['prices']
-
-    package_schema['$defs']['ClauseRegex']['properties']['regex']['format'] = 'regex'
-
-    prices_schema_path = prices_package_dir / 'data.schema.json'
-    prices_schema = from_json(prices_schema_path.read_bytes())
-
-    remove_ignored_fields(prices_schema)
-
-    assert prices_schema == package_schema
+    dest_schema = schema['$defs']['UsageExtractorMapping']['properties']['dest']
+    assert dest_schema['enum'] == ['input_tokens', 'sausage_tokens']
+    assert 'requests' not in dest_schema['enum']
