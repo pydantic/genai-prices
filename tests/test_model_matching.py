@@ -720,3 +720,19 @@ def test_find_provider_requires_some_lookup_input():
 
     with pytest.raises(LookupError, match='Unable to find provider with model matching None'):
         snapshot.find_provider(None, None, None)
+
+
+@pytest.mark.parametrize(
+    'model_ref',
+    [
+        'command-a-plus-05-2026',
+        'command-a-reasoning-08-2025',
+        'command-a-vision-07-2025',
+        'command-a-translate-08-2025',
+    ],
+)
+def test_command_a_variants_do_not_match_base_command_a(model_ref: str):
+    """These ship at their own (currently unpublished) rate; matching them to command-a would silently misprice them."""
+    provider = find_provider_by_id(providers, 'cohere')
+    assert provider is not None
+    assert provider.find_model(model_ref, all_providers=providers) is None
