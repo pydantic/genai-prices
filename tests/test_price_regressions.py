@@ -9,6 +9,7 @@ from genai_prices.types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
+    Provider,
     StartDateConstraint,
     Tier,
     TieredPrices,
@@ -151,6 +152,42 @@ def test_groq_minimum_billed_duration_rejects_invalid_original_relationship() ->
             model_ref='whisper-large-v3',
             provider_id='groq',
         )
+
+
+def test_groq_minimum_billed_duration_rejects_invalid_directional_total() -> None:
+    with pytest.raises(
+        ValueError,
+        match=r'input_audio_seconds, output_audio_seconds totals 6, which exceeds audio_seconds \(5\)',
+    ):
+        calc_price(
+            Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(3), output_audio_seconds=Decimal(3)),
+            model_ref='whisper-large-v3',
+            provider_id='groq',
+        )
+
+
+def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
+    usage = Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(2), output_audio_seconds=Decimal(3))
+    model = ModelInfo(
+        id='minimum-duration',
+        match=ClauseEquals('minimum-duration'),
+        minimum_audio_seconds=Decimal(10),
+        prices=ModelPrice(
+            audio_hours=Decimal('0.1'),
+            input_audio_hours=Decimal('0.1'),
+            output_audio_hours=Decimal('0.1'),
+        ),
+    )
+    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+
+    price = model.calc_price(usage, provider)
+
+    assert price.input_price == Decimal('0.1') * Decimal(4) / Decimal(3_600)
+    assert price.output_price == Decimal('0.1') * Decimal(6) / Decimal(3_600)
+    assert price.total_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
+    assert usage.reported_value('audio_seconds') == 5
+    assert usage.reported_value('input_audio_seconds') == 2
+    assert usage.reported_value('output_audio_seconds') == 3
 
 
 def test_openai_transcription_model_ids_fail_closed() -> None:

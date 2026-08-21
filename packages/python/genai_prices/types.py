@@ -715,16 +715,35 @@ class ModelInfo:
         if self.minimum_audio_seconds is not None:
             usage = copy(Usage.from_raw(usage))
             audio_seconds = usage.__dict__.get('audio_seconds')
-            input_audio_seconds = usage.__dict__.get('input_audio_seconds')
-            if audio_seconds is not None and input_audio_seconds is not None and input_audio_seconds > audio_seconds:
-                raise ValueError(
-                    f'Invalid usage data: input_audio_seconds ({input_audio_seconds}) '
-                    f'cannot exceed audio_seconds ({audio_seconds})'
-                )
-            for usage_key in ('audio_seconds', 'input_audio_seconds'):
-                value = usage.__dict__.get(usage_key)
-                if value is not None and 0 < value < self.minimum_audio_seconds:
-                    setattr(usage, usage_key, self.minimum_audio_seconds)
+            if audio_seconds is not None:
+                reported_seconds = usage_value_as_decimal(audio_seconds)
+                directional_values: list[tuple[str, Decimal]] = []
+                for usage_key in ('input_audio_seconds', 'output_audio_seconds'):
+                    value = usage.__dict__.get(usage_key)
+                    if value is None:
+                        continue
+                    decimal_value = usage_value_as_decimal(value)
+                    if decimal_value > reported_seconds:
+                        raise ValueError(
+                            f'Invalid usage data: {usage_key} ({value}) cannot exceed audio_seconds ({audio_seconds})'
+                        )
+                    directional_values.append((usage_key, decimal_value))
+                if len(directional_values) == 2:
+                    directional_total = sum((value[1] for value in directional_values), Decimal(0))
+                    if directional_total > reported_seconds:
+                        directional_keys = ', '.join(value[0] for value in directional_values)
+                        raise ValueError(
+                            f'Invalid usage data: more-specific usage for {directional_keys} totals {directional_total}, '
+                            f'which exceeds audio_seconds ({audio_seconds})'
+                        )
+                minimum_seconds = usage_value_as_decimal(self.minimum_audio_seconds)
+                if 0 < reported_seconds < minimum_seconds:
+                    scale = minimum_seconds / reported_seconds
+                    usage.audio_seconds = self.minimum_audio_seconds
+                    for usage_key in ('input_audio_seconds', 'output_audio_seconds'):
+                        value = usage.__dict__.get(usage_key)
+                        if value is not None:
+                            setattr(usage, usage_key, usage_value_as_decimal(value) * scale)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],

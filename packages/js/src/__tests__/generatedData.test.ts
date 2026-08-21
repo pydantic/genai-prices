@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import type { Provider } from '../types'
+
 import { calcPrice } from '../api'
 import * as providerDataModule from '../data'
 import { unitData } from '../dataUnits'
@@ -205,6 +207,40 @@ describe('generated data split', () => {
     expect(() => calcPrice({ audio_seconds: 5, input_audio_seconds: 6 }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
       'Invalid usage data: input_audio_seconds (6) cannot exceed audio_seconds (5)'
     )
+  })
+
+  it('rejects invalid directional duration totals before applying a minimum', () => {
+    expect(() =>
+      calcPrice({ audio_seconds: 5, input_audio_seconds: 3, output_audio_seconds: 3 }, 'whisper-large-v3', {
+        providerId: 'groq',
+      })
+    ).toThrow(
+      'Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals 6, which exceeds audio_seconds (5)'
+    )
+  })
+
+  it('scales directional audio usage when applying a minimum duration', () => {
+    const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
+    const provider: Provider = {
+      api_pattern: '',
+      id: 'testing',
+      models: [
+        {
+          id: 'minimum-duration',
+          match: { equals: 'minimum-duration' },
+          minimum_audio_seconds: 10,
+          prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
+        },
+      ],
+      name: 'Testing',
+    }
+
+    const result = calcPrice(usage, 'minimum-duration', { provider })
+
+    expect(result?.input_price).toBeCloseTo((0.1 * 4) / 3_600, 15)
+    expect(result?.output_price).toBeCloseTo((0.1 * 6) / 3_600, 15)
+    expect(result?.total_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
+    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 })
   })
 
   it('matches only verified OpenAI diarization model IDs', () => {

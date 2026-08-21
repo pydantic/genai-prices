@@ -241,23 +241,35 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   let billedUsage = usage
   if (model.minimum_audio_seconds !== undefined) {
     billedUsage = { ...usage }
-    for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
+    for (const usageKey of ['audio_seconds', 'input_audio_seconds', 'output_audio_seconds'] as const) {
       const value = billedUsage[usageKey]
       if (value !== undefined) validateUsageValue(usageKey, value)
     }
-    if (
-      billedUsage.audio_seconds !== undefined &&
-      billedUsage.input_audio_seconds !== undefined &&
-      billedUsage.input_audio_seconds > billedUsage.audio_seconds
-    ) {
-      throw new Error(
-        `Invalid usage data: input_audio_seconds (${billedUsage.input_audio_seconds.toString()}) cannot exceed audio_seconds (${billedUsage.audio_seconds.toString()})`
-      )
-    }
-    for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
-      const value = billedUsage[usageKey]
-      if (value !== undefined && value > 0 && value < model.minimum_audio_seconds) {
-        billedUsage[usageKey] = model.minimum_audio_seconds
+    const audioSeconds = billedUsage.audio_seconds
+    if (audioSeconds !== undefined) {
+      const directionalUsageKeys = ['input_audio_seconds', 'output_audio_seconds'] as const
+      for (const usageKey of directionalUsageKeys) {
+        const value = billedUsage[usageKey]
+        if (value !== undefined && value > audioSeconds) {
+          throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
+        }
+      }
+      const inputAudioSeconds = billedUsage.input_audio_seconds
+      const outputAudioSeconds = billedUsage.output_audio_seconds
+      if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined && inputAudioSeconds + outputAudioSeconds > audioSeconds) {
+        throw new Error(
+          `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${(inputAudioSeconds + outputAudioSeconds).toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
+        )
+      }
+      if (audioSeconds > 0 && audioSeconds < model.minimum_audio_seconds) {
+        const scale = model.minimum_audio_seconds / audioSeconds
+        billedUsage.audio_seconds = model.minimum_audio_seconds
+        for (const usageKey of directionalUsageKeys) {
+          const value = billedUsage[usageKey]
+          if (value !== undefined) {
+            billedUsage[usageKey] = value * scale
+          }
+        }
       }
     }
   }
