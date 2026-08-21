@@ -243,6 +243,26 @@ describe('generated data split', () => {
     expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 })
   })
 
+  it('scales extremely small directional audio usage without overflowing', () => {
+    const provider: Provider = {
+      api_pattern: '',
+      id: 'testing',
+      models: [
+        {
+          id: 'minimum-duration',
+          match: { equals: 'minimum-duration' },
+          minimum_audio_seconds: 10,
+          prices: { audio_hours: 0.1, input_audio_hours: 0.1 },
+        },
+      ],
+      name: 'Testing',
+    }
+
+    const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'minimum-duration', { provider })
+
+    expect(result?.input_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
+  })
+
   it('matches only verified OpenAI diarization model IDs', () => {
     expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
       'gpt-4o-transcribe'

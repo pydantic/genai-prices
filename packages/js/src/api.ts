@@ -262,12 +262,11 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
         )
       }
       if (audioSeconds > 0 && audioSeconds < model.minimum_audio_seconds) {
-        const scale = model.minimum_audio_seconds / audioSeconds
         billedUsage.audio_seconds = model.minimum_audio_seconds
         for (const usageKey of directionalUsageKeys) {
           const value = billedUsage[usageKey]
           if (value !== undefined) {
-            billedUsage[usageKey] = value * scale
+            billedUsage[usageKey] = (value / audioSeconds) * model.minimum_audio_seconds
           }
         }
       }

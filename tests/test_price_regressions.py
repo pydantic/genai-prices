@@ -190,6 +190,21 @@ def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
     assert usage.reported_value('output_audio_seconds') == 3
 
 
+def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
+    usage = Usage(audio_seconds=Decimal('1e-1000000'), input_audio_seconds=Decimal('1e-1000000'))
+    model = ModelInfo(
+        id='minimum-duration',
+        match=ClauseEquals('minimum-duration'),
+        minimum_audio_seconds=Decimal(10),
+        prices=ModelPrice(audio_hours=Decimal('0.1'), input_audio_hours=Decimal('0.1')),
+    )
+    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+
+    price = model.calc_price(usage, provider)
+
+    assert price.input_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
+
+
 def test_openai_transcription_model_ids_fail_closed() -> None:
     price = calc_price(
         Usage(input_tokens=1, input_audio_tokens=1),

@@ -738,12 +738,12 @@ class ModelInfo:
                         )
                 minimum_seconds = usage_value_as_decimal(self.minimum_audio_seconds)
                 if 0 < reported_seconds < minimum_seconds:
-                    scale = minimum_seconds / reported_seconds
                     usage.audio_seconds = self.minimum_audio_seconds
                     for usage_key in ('input_audio_seconds', 'output_audio_seconds'):
                         value = usage.__dict__.get(usage_key)
                         if value is not None:
-                            setattr(usage, usage_key, usage_value_as_decimal(value) * scale)
+                            directional_ratio = usage_value_as_decimal(value) / reported_seconds
+                            setattr(usage, usage_key, directional_ratio * minimum_seconds)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
