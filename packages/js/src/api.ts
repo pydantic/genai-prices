@@ -68,12 +68,22 @@ function activateProviderData(data: Provider[]): Provider[] {
 function normalizeProvider(provider: Provider): Provider {
   return {
     ...provider,
-    models: provider.models.map((model) => ({
-      ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
-    })),
+    models: provider.models.map((model) => {
+      if (
+        model.minimum_audio_seconds !== undefined &&
+        (!Number.isFinite(model.minimum_audio_seconds) || model.minimum_audio_seconds <= 0)
+      ) {
+        throw new Error(
+          `Invalid minimum_audio_seconds for provider '${provider.id}' model '${model.id}': expected a finite positive number`
+        )
+      }
+      return {
+        ...model,
+        prices: Array.isArray(model.prices)
+          ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
+          : model.prices,
+      }
+    }),
   }
 }
 
@@ -227,7 +237,17 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  let billedUsage = usage
+  if (model.minimum_audio_seconds !== undefined) {
+    billedUsage = { ...usage }
+    for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
+      const value = billedUsage[usageKey]
+      if (value !== undefined && value < model.minimum_audio_seconds) {
+        billedUsage[usageKey] = model.minimum_audio_seconds
+      }
+    }
+  }
+  const priceResult = calcPriceInternal(billedUsage, modelPrice)
   return {
     auto_update_timestamp: undefined,
     model,

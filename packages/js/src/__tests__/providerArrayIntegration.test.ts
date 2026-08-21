@@ -121,6 +121,28 @@ describe('provider array integration', () => {
     )
   })
 
+  it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(
+    'rejects invalid minimum billed audio duration %s without replacing active data',
+    (minimumAudioSeconds) => {
+      const stableProviders = providerArray()
+      updatePrices(({ setProviderData }) => {
+        setProviderData(stableProviders)
+      })
+      const invalidProviders = providerArray()
+      const invalidProvider = invalidProviders[0]
+      const invalidModel = invalidProvider?.models[0]
+      if (invalidModel === undefined) throw new Error('Expected a model')
+      invalidModel.minimum_audio_seconds = minimumAudioSeconds
+
+      expect(() => {
+        updatePrices(({ setProviderData }) => {
+          setProviderData(invalidProviders)
+        })
+      }).toThrow("Invalid minimum_audio_seconds for provider 'testing' model 'image-cache'")
+      expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
+    }
+  )
+
   it('re-activates the bundled data unchanged (round-trips already-discriminated constraints)', async () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(data)

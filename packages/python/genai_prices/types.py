@@ -662,6 +662,8 @@ class ModelInfo:
     """Description of the model"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
+    minimum_audio_seconds: UsageValue | None = None
+    """Minimum audio duration billed for a request."""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     deprecated: bool | None = None
@@ -675,6 +677,14 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+
+    def __post_init__(self) -> None:
+        if self.minimum_audio_seconds is None:
+            return
+        minimum = validate_usage_value('minimum_audio_seconds', self.minimum_audio_seconds)
+        if minimum == 0:
+            raise ValueError('Invalid minimum_audio_seconds: expected a finite positive int, float, or Decimal')
+        self.minimum_audio_seconds = minimum
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
@@ -701,6 +711,12 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
+        if self.minimum_audio_seconds is not None:
+            usage = Usage.from_raw(usage)
+            for usage_key in ('audio_seconds', 'input_audio_seconds'):
+                value = usage.__dict__.get(usage_key)
+                if value is not None and value < self.minimum_audio_seconds:
+                    setattr(usage, usage_key, self.minimum_audio_seconds)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],

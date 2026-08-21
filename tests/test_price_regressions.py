@@ -67,6 +67,49 @@ def test_transcription_duration_prices_are_zero_without_reported_duration(provid
     assert price.total_price == 0
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'hourly_rate'),
+    [
+        ('whisper-large-v3', Decimal('0.111')),
+        ('whisper-large-v3-turbo', Decimal('0.04')),
+    ],
+)
+@pytest.mark.parametrize(
+    ('reported_seconds', 'billed_seconds'),
+    [
+        (Decimal('1'), Decimal('10')),
+        (Decimal('10'), Decimal('10')),
+        (Decimal('11'), Decimal('11')),
+    ],
+)
+def test_groq_transcription_prices_apply_minimum_billed_duration(
+    model_ref: str,
+    hourly_rate: Decimal,
+    reported_seconds: Decimal,
+    billed_seconds: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(audio_seconds=reported_seconds, input_audio_seconds=reported_seconds),
+        model_ref=model_ref,
+        provider_id='groq',
+    )
+    expected_price = hourly_rate * billed_seconds / Decimal(3_600)
+
+    assert price.input_price == expected_price
+    assert price.total_price == expected_price
+
+
+@pytest.mark.parametrize('minimum_audio_seconds', [0, -1, float('nan'), float('inf')])
+def test_model_info_rejects_invalid_minimum_billed_duration(minimum_audio_seconds: float) -> None:
+    with pytest.raises(ValueError, match='minimum_audio_seconds'):
+        ModelInfo(
+            id='invalid-minimum',
+            match=ClauseEquals('invalid-minimum'),
+            minimum_audio_seconds=minimum_audio_seconds,
+            prices=ModelPrice(),
+        )
+
+
 def test_openai_transcription_model_ids_fail_closed() -> None:
     price = calc_price(
         Usage(input_tokens=1, input_audio_tokens=1),

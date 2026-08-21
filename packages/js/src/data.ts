@@ -6265,6 +6265,7 @@ export const data: Provider[] = [
         match: {
           equals: 'whisper-large-v3',
         },
+        minimum_audio_seconds: 10,
         price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3.',
         prices: {
           audio_hours: 0.111,
@@ -6277,6 +6278,7 @@ export const data: Provider[] = [
         match: {
           equals: 'whisper-large-v3-turbo',
         },
+        minimum_audio_seconds: 10,
         price_comments: 'See https://console.groq.com/docs/speech-to-text.',
         prices: {
           audio_hours: 0.04,

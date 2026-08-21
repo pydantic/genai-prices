@@ -164,6 +164,24 @@ describe('generated data split', () => {
     expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
   })
 
+  it.each([
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 1 },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 10 },
+    { billedSeconds: 11, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 11 },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 1 },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 10 },
+    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 11 },
+  ])(
+    'applies the minimum billed duration for $model at $reportedSeconds seconds',
+    ({ billedSeconds, hourlyRate, model, reportedSeconds }) => {
+      const result = calcPrice({ audio_seconds: reportedSeconds, input_audio_seconds: reportedSeconds }, model, { providerId: 'groq' })
+      const expectedPrice = (hourlyRate * billedSeconds) / 3_600
+
+      expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+      expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+    }
+  )
+
   it('matches only verified OpenAI diarization model IDs', () => {
     expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
       'gpt-4o-transcribe'
