@@ -1891,7 +1891,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='command-a',
-                match=ClauseStartsWith(starts_with='command-a'),
+                match=ClauseOr(or_=[ClauseEquals(equals='command-a'), ClauseEquals(equals='command-a-03-2025')]),
                 name='Command A',
                 description='Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
