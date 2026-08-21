@@ -210,6 +210,32 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract token and fractional duration transcription usage', () => {
+      const tokenResult = extractUsage(
+        openaiProvider,
+        {
+          usage: {
+            input_token_details: { audio_tokens: 5, text_tokens: 0 },
+            input_tokens: 5,
+            output_tokens: 2,
+            total_tokens: 7,
+            type: 'tokens',
+          },
+        },
+        'transcription'
+      )
+      const durationResult = extractUsage(openaiProvider, { usage: { seconds: 0.5, type: 'duration' } }, 'transcription')
+
+      expect(tokenResult).toEqual({
+        model: null,
+        usage: { input_audio_tokens: 5, input_text_tokens: 0, input_tokens: 5, output_tokens: 2 },
+      })
+      expect(durationResult).toEqual({
+        model: null,
+        usage: { audio_seconds: 0.5, input_audio_seconds: 0.5 },
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
@@ -217,6 +243,50 @@ describe('extractUsage', () => {
       }
 
       expect(() => extractUsage(openaiProvider, responseData)).toThrow("Unknown apiFlavor 'default', allowed values: chat, responses")
+    })
+  })
+
+  describe('Azure provider', () => {
+    const azureProvider: Provider = data.find((provider) => provider.id === 'azure')!
+
+    it('should extract fractional transcription duration usage', () => {
+      expect(extractUsage(azureProvider, { usage: { seconds: 0.5, type: 'duration' } }, 'transcription')).toEqual({
+        model: null,
+        usage: { audio_seconds: 0.5, input_audio_seconds: 0.5 },
+      })
+    })
+  })
+
+  describe('Mistral provider', () => {
+    const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
+
+    it('should extract transcription usage without double counting audio tokens', () => {
+      const result = extractUsage(
+        mistralProvider,
+        {
+          model: 'voxtral-mini-latest',
+          usage: {
+            completion_tokens: 1,
+            prompt_audio_seconds: 0.5,
+            prompt_tokens: 3,
+            prompt_tokens_details: { audio_tokens: 375, cached_tokens: 0 },
+            total_tokens: 379,
+          },
+        },
+        'transcription'
+      )
+
+      expect(result).toEqual({
+        model: 'voxtral-mini-latest',
+        usage: {
+          audio_seconds: 0.5,
+          cache_read_tokens: 0,
+          input_audio_seconds: 0.5,
+          input_audio_tokens: 375,
+          input_tokens: 378,
+          output_tokens: 1,
+        },
+      })
     })
   })
 

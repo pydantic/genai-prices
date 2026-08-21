@@ -1563,6 +1563,23 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
@@ -3666,6 +3683,20 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen3-32b'),
                 name='Qwen3 32B 131k',
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3',
+                match=ClauseEquals(equals='whisper-large-v3'),
+                name='Whisper Large V3',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3.',
+                prices=ModelPrice(audio_hours=Decimal('0.111'), input_audio_hours=Decimal('0.111')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3-turbo',
+                match=ClauseEquals(equals='whisper-large-v3-turbo'),
+                name='Whisper Large V3 Turbo',
+                price_comments='See https://console.groq.com/docs/speech-to-text.',
+                prices=ModelPrice(audio_hours=Decimal('0.04'), input_audio_hours=Decimal('0.04')),
             ),
         ],
     ),
@@ -6125,7 +6156,7 @@ providers: list[Provider] = [
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
-        model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
+        model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral|voxtral'),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
             UsageExtractor(
@@ -6139,7 +6170,27 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(path='prompt_audio_seconds', dest='audio_seconds', required=True),
+                    UsageExtractorMapping(path='prompt_audio_seconds', dest='input_audio_seconds', required=True),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -6372,6 +6423,15 @@ providers: list[Provider] = [
                 name='Pixtral Large 2411',
                 description='Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able to understand documents, charts and natural images.',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='voxtral-mini-2602',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='voxtral-mini-latest'), ClauseEquals(equals='voxtral-mini-2602')]
+                ),
+                name='Voxtral Mini Transcribe 2',
+                price_comments='See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+                prices=ModelPrice(audio_hours=Decimal('0.18'), input_audio_hours=Decimal('0.18')),
             ),
             ModelInfo(
                 id='voxtral-small-24b-2507',
@@ -6792,7 +6852,9 @@ providers: list[Provider] = [
             'https://platform.openai.com/docs/models',
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
-        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        model_match=ClauseOr(
+            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+        ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
             UsageExtractor(
@@ -6908,6 +6970,23 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
+                ],
+                api_flavor='transcription',
                 model_path='model',
             ),
         ],
@@ -7235,6 +7314,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
@@ -7832,6 +7912,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-transcribe',
+                match=ClauseEquals(equals='gpt-transcribe'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+                prices=ModelPrice(audio_hours=Decimal('0.27'), input_audio_hours=Decimal('0.27')),
+            ),
+            ModelInfo(
                 id='moderation',
                 match=ClauseContains(contains='moderation'),
                 description='All OpenAI moderation models and endpoints are free of charge',
@@ -7981,6 +8067,12 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='whisper-1',
+                match=ClauseEquals(equals='whisper-1'),
+                price_comments='See https://developers.openai.com/api/docs/models/whisper-1.',
+                prices=ModelPrice(audio_hours=Decimal('0.36'), input_audio_hours=Decimal('0.36')),
             ),
         ],
     ),

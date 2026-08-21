@@ -2553,6 +2553,43 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: false,
+          },
+        ],
+      },
+      {
         api_flavor: 'anthropic',
         root: 'usage',
         model_path: 'model',
@@ -6220,6 +6257,30 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'whisper-large-v3',
+        name: 'Whisper Large V3',
+        match: {
+          equals: 'whisper-large-v3',
+        },
+        price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3.',
+        prices: {
+          audio_hours: 0.111,
+          input_audio_hours: 0.111,
+        },
+      },
+      {
+        id: 'whisper-large-v3-turbo',
+        name: 'Whisper Large V3 Turbo',
+        match: {
+          equals: 'whisper-large-v3-turbo',
+        },
+        price_comments: 'See https://console.groq.com/docs/speech-to-text.',
+        prices: {
+          audio_hours: 0.04,
+          input_audio_hours: 0.04,
         },
       },
     ],
@@ -10494,7 +10555,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '(?:mi|code|dev|magi|mini)stral',
+      regex: '(?:mi|code|dev|magi|mini)stral|voxtral',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -10518,6 +10579,48 @@ export const data: Provider[] = [
           {
             path: 'completion_tokens',
             dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+          {
+            path: 'prompt_audio_seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'prompt_audio_seconds',
+            dest: 'input_audio_seconds',
             required: true,
           },
         ],
@@ -10968,6 +11071,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'voxtral-mini-2602',
+        name: 'Voxtral Mini Transcribe 2',
+        match: {
+          or: [
+            {
+              equals: 'voxtral-mini-latest',
+            },
+            {
+              equals: 'voxtral-mini-2602',
+            },
+          ],
+        },
+        price_comments: 'See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+        prices: {
+          audio_hours: 0.18,
+          input_audio_hours: 0.18,
         },
       },
       {
@@ -11717,6 +11839,9 @@ export const data: Provider[] = [
           starts_with: 'gpt-',
         },
         {
+          equals: 'whisper-1',
+        },
+        {
           regex: '^o[134]',
         },
       ],
@@ -11907,6 +12032,43 @@ export const data: Provider[] = [
             path: 'prompt_tokens',
             dest: 'input_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: false,
           },
         ],
       },
@@ -12517,6 +12679,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -13648,6 +13811,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-transcribe',
+        match: {
+          equals: 'gpt-transcribe',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+        prices: {
+          audio_hours: 0.27,
+          input_audio_hours: 0.27,
+        },
+      },
+      {
         id: 'moderation',
         description: 'All OpenAI moderation models and endpoints are free of charge',
         match: {
@@ -13926,6 +14100,17 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'whisper-1',
+        match: {
+          equals: 'whisper-1',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/whisper-1.',
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
         },
       },
     ],

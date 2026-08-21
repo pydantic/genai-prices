@@ -23,6 +23,63 @@ def mtok(rate: str, tokens: int) -> Decimal:
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'seconds', 'expected_price'),
+    [
+        ('openai', 'gpt-transcribe', Decimal('0.5'), Decimal('0.0000375')),
+        ('openai', 'whisper-1', Decimal('30'), Decimal('0.003')),
+        ('groq', 'whisper-large-v3', Decimal('60'), Decimal('0.00185')),
+        ('groq', 'whisper-large-v3-turbo', Decimal('90'), Decimal('0.001')),
+        ('mistral', 'voxtral-mini-2602', Decimal('60'), Decimal('0.003')),
+    ],
+)
+def test_transcription_duration_prices(
+    provider_id: str,
+    model_ref: str,
+    seconds: Decimal,
+    expected_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(audio_seconds=seconds, input_audio_seconds=seconds),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.input_price == expected_price
+    assert price.output_price == 0
+    assert price.total_price == expected_price
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref'),
+    [
+        ('openai', 'gpt-transcribe'),
+        ('openai', 'whisper-1'),
+        ('groq', 'whisper-large-v3'),
+        ('groq', 'whisper-large-v3-turbo'),
+        ('mistral', 'voxtral-mini-2602'),
+    ],
+)
+def test_transcription_duration_prices_are_zero_without_reported_duration(provider_id: str, model_ref: str) -> None:
+    price = calc_price(Usage(), model_ref=model_ref, provider_id=provider_id)
+
+    assert price.input_price == 0
+    assert price.output_price == 0
+    assert price.total_price == 0
+
+
+def test_openai_transcription_model_ids_fail_closed() -> None:
+    price = calc_price(
+        Usage(input_tokens=1, input_audio_tokens=1),
+        model_ref='gpt-4o-transcribe-diarize',
+        provider_id='openai',
+    )
+
+    assert price.model.id == 'gpt-4o-transcribe'
+    with pytest.raises(LookupError, match="model_ref='gpt-transcribe-diarize'"):
+        calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
         ('gemini-2.5-flash-image', '2.5', '30'),
