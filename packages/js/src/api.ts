@@ -12,6 +12,7 @@ import type {
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
+import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
@@ -242,7 +243,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     billedUsage = { ...usage }
     for (const usageKey of ['audio_seconds', 'input_audio_seconds'] as const) {
       const value = billedUsage[usageKey]
-      if (value !== undefined && value < model.minimum_audio_seconds) {
+      if (value !== undefined && validateUsageValue(usageKey, value) > 0 && value < model.minimum_audio_seconds) {
         billedUsage[usageKey] = model.minimum_audio_seconds
       }
     }

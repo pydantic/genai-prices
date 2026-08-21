@@ -4,6 +4,7 @@ import dataclasses
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
+from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -662,8 +663,6 @@ class ModelInfo:
     """Description of the model"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
-    minimum_audio_seconds: UsageValue | None = None
-    """Minimum audio duration billed for a request."""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     deprecated: bool | None = None
@@ -677,6 +676,8 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+    minimum_audio_seconds: UsageValue | None = None
+    """Minimum audio duration billed for a request."""
 
     def __post_init__(self) -> None:
         if self.minimum_audio_seconds is None:
@@ -712,10 +713,10 @@ class ModelInfo:
 
         model_price = self.get_prices(genai_request_timestamp)
         if self.minimum_audio_seconds is not None:
-            usage = Usage.from_raw(usage)
+            usage = copy(Usage.from_raw(usage))
             for usage_key in ('audio_seconds', 'input_audio_seconds'):
                 value = usage.__dict__.get(usage_key)
-                if value is not None and value < self.minimum_audio_seconds:
+                if value is not None and 0 < value < self.minimum_audio_seconds:
                     setattr(usage, usage_key, self.minimum_audio_seconds)
         price = model_price.calc_price(usage)
         return PriceCalculation(

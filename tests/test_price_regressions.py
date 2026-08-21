@@ -110,6 +110,37 @@ def test_model_info_rejects_invalid_minimum_billed_duration(minimum_audio_second
         )
 
 
+def test_model_info_preserves_positional_constructor_compatibility() -> None:
+    prices = ModelPrice(audio_hours=Decimal('0.1'))
+    model = ModelInfo(
+        'positional',
+        ClauseEquals('positional'),
+        'Positional',
+        'Description',
+        1_000,
+        'Comments',
+        True,
+        prices,
+        Decimal('10'),
+    )
+
+    assert model.price_comments == 'Comments'
+    assert model.deprecated is True
+    assert model.prices is prices
+    assert model.minimum_audio_seconds == 10
+
+
+def test_groq_minimum_billed_duration_preserves_zero_subtypes_and_usage() -> None:
+    usage = Usage(audio_seconds=Decimal('5'), input_audio_seconds=Decimal(0))
+
+    price = calc_price(usage, model_ref='whisper-large-v3', provider_id='groq')
+
+    assert price.input_price == 0
+    assert price.total_price == Decimal('0.111') * Decimal(10) / Decimal(3_600)
+    assert usage.reported_value('audio_seconds') == 5
+    assert usage.reported_value('input_audio_seconds') == 0
+
+
 def test_openai_transcription_model_ids_fail_closed() -> None:
     price = calc_price(
         Usage(input_tokens=1, input_audio_tokens=1),

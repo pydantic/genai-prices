@@ -182,6 +182,25 @@ describe('generated data split', () => {
     }
   )
 
+  it('preserves zero duration subtypes and the caller usage when applying a minimum', () => {
+    const usage = { audio_seconds: 5, input_audio_seconds: 0 }
+
+    const result = calcPrice(usage, 'whisper-large-v3', { providerId: 'groq' })
+
+    expect(result?.input_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
+    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 0 })
+  })
+
+  it.each([-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, Number.NaN])(
+    'rejects invalid reported audio duration %s before applying a minimum',
+    (seconds) => {
+      expect(() => calcPrice({ audio_seconds: seconds }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
+        'Invalid usage value for audio_seconds: expected a finite non-negative number'
+      )
+    }
+  )
+
   it('matches only verified OpenAI diarization model IDs', () => {
     expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
       'gpt-4o-transcribe'
