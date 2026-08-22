@@ -489,7 +489,9 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
         lambda price: price.requests_kcount is not None,
         exclude={tiered_ref},
     )
-    monkeypatch.setenv('COLUMNS', '200')
+    # Narrow enough that the table splits into stacked columns, wide enough that the
+    # rich price fields still fit on one line. Depends on the two models picked above.
+    monkeypatch.setenv('COLUMNS', '140')
     assert cli_logic(['calc', '--table', '--input-tokens', '1000', tiered_ref, requests_ref]) == 0
     out, err = capsys.readouterr()
     assert '(+tiers)' in out
