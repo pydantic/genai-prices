@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Collection
+from collections.abc import Collection, Iterable, Sequence
 
 from genai_prices.units import UnitDef, UnitRegistry
+
+_COMPLETION_TOKENS = 'completion_tokens'
+_OUTPUT_REASONING_TOKENS = 'output_reasoning_tokens'
 
 
 def validate_price_keys(price_keys: set[str], registry: UnitRegistry) -> None:
@@ -82,6 +85,34 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
     if invalid_destinations:
         bad_keys = ', '.join(sorted(invalid_destinations))
         raise ValueError(f'Invalid extractor destination: {bad_keys}')
+
+
+def validate_extractor_reasoning_coverage(
+    source_paths: Iterable[str | Sequence[object]], dest_keys: Collection[str], *, api_flavor: str = 'default'
+) -> None:
+    """Require an extractor that reads top-level `completion_tokens` to also map reasoning tokens.
+
+    OpenAI-compatible chat responses count reasoning tokens inside `completion_tokens` and report the
+    breakdown under `completion_tokens_details.reasoning_tokens`. An unmapped response field is dropped
+    without a warning, so an extractor missing that mapping silently loses the breakdown.
+    """
+    if api_flavor not in {'default', 'chat'}:
+        return
+
+    if _OUTPUT_REASONING_TOKENS in dest_keys:
+        return
+
+    if any(_reads_completion_tokens(source_path) for source_path in source_paths):
+        raise ValueError(
+            f'Missing {_OUTPUT_REASONING_TOKENS} mapping: '
+            f'extractors reading {_COMPLETION_TOKENS} must also map reasoning tokens'
+        )
+
+
+def _reads_completion_tokens(source_path: str | Sequence[object]) -> bool:
+    if isinstance(source_path, str):
+        return source_path == _COMPLETION_TOKENS
+    return len(source_path) == 1 and source_path[0] == _COMPLETION_TOKENS
 
 
 def _unit_for_price_key(price_key: str, registry: UnitRegistry) -> UnitDef | None:

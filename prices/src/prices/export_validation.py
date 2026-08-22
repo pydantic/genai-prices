@@ -118,12 +118,17 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
 
 
 def validate_export_payload(providers: list[Provider], units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
-    """Validate registry structure, provider model prices, and extractor destinations before export."""
-    from prices.package_data import validate_provider_extractor_destinations, validate_provider_model_prices
+    """Validate registry structure, provider model prices, and provider extractors before export."""
+    from prices.package_data import (
+        validate_provider_extractor_destinations,
+        validate_provider_extractor_reasoning_coverage,
+        validate_provider_model_prices,
+    )
 
     registry = validate_units(units)
     validate_provider_model_prices(providers, registry)
     validate_provider_extractor_destinations(providers, registry)
+    validate_provider_extractor_reasoning_coverage(providers)
     return registry
 
 

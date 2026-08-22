@@ -137,6 +137,12 @@ little, suspect the importer before the data.
   YAML and silently wrong by 1000×.
 - Prices must cover their **ancestors and joins**: a model priced with `cache_write_1h_mtok` also needs
   `cache_write_mtok`, and so on. `make build` enforces this; the error names the missing key.
+- An extractor that maps `completion_tokens` must also map `output_reasoning_tokens`. OpenAI-compatible
+  chat responses count reasoning tokens inside `completion_tokens` and report the breakdown under
+  `completion_tokens_details.reasoning_tokens`; an unmapped response field is dropped with no warning, so
+  omitting it silently loses the breakdown. `make build` enforces this and names the provider and flavor.
+  `openai.yml`'s `chat` extractor is the reference shape to copy for any OpenAI-compatible provider —
+  `huggingface_*.yml` and `ovhcloud.yml` are generated copies of it.
 
 ### Adding a unit
 

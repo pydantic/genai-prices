@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
@@ -33,6 +33,7 @@ def package_python_data(provider_data: Any, units: dict[str, Any]):
     build_providers = build_providers_schema.validate_python(provider_data)
     validate_provider_model_prices(build_providers, registry)
     validate_provider_extractor_destinations(build_providers, registry)
+    validate_provider_extractor_reasoning_coverage(build_providers)
     providers = runtime_types._providers_from_raw(provider_data, registry)  # pyright: ignore[reportPrivateUsage]
 
     provider_data_content = f'''\
@@ -128,6 +129,31 @@ def validate_provider_extractor_destinations(providers: Iterable[object], regist
     from genai_prices.validation import validate_extractor_destinations
 
     reported_usage_keys = registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
+    for provider_id, api_flavor, extractor in _iter_provider_extractors(providers):
+        dest_keys = {
+            cast(str, getattr(mapping, 'dest')) for mapping in cast(Iterable[object], getattr(extractor, 'mappings'))
+        }
+        try:
+            validate_extractor_destinations(dest_keys, reported_usage_keys)
+        except ValueError as exc:
+            raise ValueError(f'Invalid extractor destination for {provider_id}/{api_flavor}: {exc}') from exc
+
+
+def validate_provider_extractor_reasoning_coverage(providers: Iterable[object]) -> None:
+    from genai_prices.validation import validate_extractor_reasoning_coverage
+
+    for provider_id, api_flavor, extractor in _iter_provider_extractors(providers):
+        mappings = list(cast(Iterable[object], getattr(extractor, 'mappings')))
+        source_paths = [cast('str | Sequence[object]', getattr(mapping, 'path')) for mapping in mappings]
+        dest_keys = {cast(str, getattr(mapping, 'dest')) for mapping in mappings}
+        try:
+            validate_extractor_reasoning_coverage(source_paths, dest_keys, api_flavor=cast(str, api_flavor))
+        except ValueError as exc:
+            raise ValueError(f'Invalid extractor for {provider_id}/{api_flavor}: {exc}') from exc
+
+
+def _iter_provider_extractors(providers: Iterable[object]) -> Iterator[tuple[str, object, object]]:
+    """Yield `(provider_id, api_flavor, extractor)` for every extractor of every provider."""
     for provider in providers:
         provider_id = cast(str, getattr(provider, 'id'))
         extractors = getattr(provider, 'extractors', None)
@@ -135,15 +161,7 @@ def validate_provider_extractor_destinations(providers: Iterable[object], regist
             continue
 
         for index, extractor in enumerate(cast(Iterable[object], extractors)):
-            dest_keys = {
-                cast(str, getattr(mapping, 'dest'))
-                for mapping in cast(Iterable[object], getattr(extractor, 'mappings'))
-            }
-            try:
-                validate_extractor_destinations(dest_keys, reported_usage_keys)
-            except ValueError as exc:
-                api_flavor = getattr(extractor, 'api_flavor', index)
-                raise ValueError(f'Invalid extractor destination for {provider_id}/{api_flavor}: {exc}') from exc
+            yield provider_id, getattr(extractor, 'api_flavor', index), extractor
 
 
 def _iter_model_prices(prices: object) -> Iterator[tuple[str, object]]:
