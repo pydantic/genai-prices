@@ -871,11 +871,26 @@ models:
         - equals: gpt-5.5-codex
         - equals: gpt-5-5-codex
     context_window: 1000000
-    prices_checked: 2026-04-24
+    price_comments: >-
+      Prompts above 272k tokens are billed at the long-context rate for the whole request.
+      Ref: https://developers.openai.com/api/docs/pricing
+    prices_checked: 2026-08-22
     prices:
-      input_mtok: 5
-      cache_read_mtok: 0.5
-      output_mtok: 30
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
 
   - id: gpt-5.5-pro
     name: GPT-5.5 Pro
@@ -887,10 +902,21 @@ models:
         - equals: gpt-5-5-pro
         - equals: gpt-5-5-pro-2026-04-23
     context_window: 1000000
-    prices_checked: 2026-04-24
+    price_comments: >-
+      Prompts above 272k tokens are billed at the long-context rate for the whole request.
+      Ref: https://developers.openai.com/api/docs/pricing
+    prices_checked: 2026-08-22
     prices:
-      input_mtok: 30
-      output_mtok: 180
+      input_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 60
+      output_mtok:
+        base: 180
+        tiers:
+          - start: 272000
+            price: 270
 
   - id: gpt-5.6-luna
     name: GPT-5.6 Luna
