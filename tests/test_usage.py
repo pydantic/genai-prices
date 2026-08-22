@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 import pytest
 
-from genai_prices.types import Usage
+from genai_prices.types import ModelPrice, Usage
 from genai_prices.units import UnitRegistry
 
 
@@ -279,10 +279,21 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_ignores_mapping_keys() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
+def test_usage_from_raw_rejects_mappings() -> None:
+    # A mapping used to price at zero however many tokens it named, because usage
+    # values are read with getattr. Unsupported input has to say so.
+    with pytest.raises(TypeError, match='Mappings are not supported'):
+        Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
 
-    assert usage == Usage()
+
+def test_calc_price_rejects_mapping_instead_of_pricing_it_at_zero() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'))
+
+    with pytest.raises(TypeError, match='Mappings are not supported'):
+        price.calc_price({'input_tokens': 1_000_000})
+
+    # The same usage as an object still prices, so only the unsupported shape changed.
+    assert price.calc_price(SimpleNamespace(input_tokens=1_000_000))['total_price'] == Decimal('1')
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:
