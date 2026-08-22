@@ -2001,3 +2001,31 @@ def test_output_audio_usage():
         == snapshot(Decimal('80020.0'))
         == Decimal('20') * output_text_tokens / mil + Decimal('80') * output_audio_tokens / mil
     )
+
+
+def test_grok_4_6_long_context_cliff():
+    """Grok 4.6 bills the whole request at the long-context rate, not just the tokens past 200k.
+
+    Ref: https://docs.x.ai/docs/models/grok-4.6 - "billed at the higher rate for all tokens in
+    the request". Pinning both sides of the threshold: reading it as a marginal tier would put
+    a 500k-token prompt at $1.40 instead of $2.00.
+    """
+    under = calc_price(Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai')
+    assert under.input_price == snapshot(Decimal('0.4'))
+
+    over = calc_price(Usage(input_tokens=200_001), 'grok-4.6', provider_id='x-ai')
+    assert over.input_price == snapshot(Decimal('0.800004'))
+
+    # One more token roughly doubles the bill; under marginal pricing it would barely move.
+    assert over.input_price > under.input_price * 2 - Decimal('0.0001')
+
+    full = calc_price(Usage(input_tokens=500_000), 'grok-4.6', provider_id='x-ai')
+    assert full.input_price == snapshot(Decimal('2.0'))
+    assert full.input_price != Decimal('200000') * 2 / 1_000_000 + Decimal('300000') * 4 / 1_000_000
+
+    mixed = calc_price(
+        Usage(input_tokens=300_000, cache_read_tokens=10_000, output_tokens=1_000),
+        'grok-4.6',
+        provider_id='x-ai',
+    )
+    assert mixed.total_price == snapshot(Decimal('1.182'))
