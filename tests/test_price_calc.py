@@ -891,6 +891,83 @@ def test_price_constraint_time_of_date():
     assert price.provider.name == snapshot('Deepseek')
 
 
+@pytest.mark.parametrize(
+    'model_ref,model_name,off_peak,peak',
+    [
+        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('44.00')),
+        ('deepseek-v4-pro', 'DeepSeek V4 Pro', Decimal('66.00'), Decimal('132.00')),
+    ],
+)
+@pytest.mark.parametrize(
+    'hour,is_peak',
+    [
+        (0, False),  # before the first peak window
+        (1, True),  # start of the first peak window, inclusive
+        (4, False),  # end of the first peak window, exclusive
+        (5, False),  # the gap between the two peak windows
+        (6, True),  # start of the second peak window, inclusive
+        (9, True),
+        (10, False),  # end of the second peak window, exclusive
+        (23, False),
+    ],
+)
+def test_price_constraint_two_time_of_date_windows(
+    model_ref: str,
+    model_name: str,
+    off_peak: Decimal,
+    peak: Decimal,
+    hour: int,
+    is_peak: bool,
+):
+    """Deepseek V4 charges peak rates in two disjoint daily windows, so it has two constrained prices."""
+    price = calc_price(
+        Usage(input_tokens=100_000_000),
+        model_ref=model_ref,
+        genai_request_timestamp=datetime(2026, 8, 20, hour, tzinfo=timezone.utc),
+    )
+    assert price.input_price == (peak if is_peak else off_peak)
+    assert price.model.name == model_name
+    assert price.provider.name == 'Deepseek'
+
+
+@pytest.mark.parametrize(
+    'model_ref,historic,peak',
+    [
+        ('deepseek-v4-flash', Decimal('14.00'), Decimal('44.00')),
+        ('deepseek-v4-pro', Decimal('43.50'), Decimal('132.00')),
+    ],
+)
+@pytest.mark.parametrize(
+    'hour,in_peak_window',
+    [
+        (0, False),
+        (2, True),  # inside a post-2026-08-17 peak window, so the old flat rate is shadowed
+        (12, False),
+        (23, False),
+    ],
+)
+def test_price_deepseek_v4_before_repricing(
+    model_ref: str,
+    historic: Decimal,
+    peak: Decimal,
+    hour: int,
+    in_peak_window: bool,
+):
+    """Before 2026-08-17 the V4 models were billed at a single flat rate.
+
+    That rate is the unconstrained first price, so it is preserved for the 17 hours a day that fall
+    outside the two peak windows. `constraint` is a union, so the peak entries cannot also be gated
+    on a start date, and during those windows a pre-repricing request still resolves to the peak
+    rate - see https://github.com/pydantic/genai-prices/issues/582.
+    """
+    price = calc_price(
+        Usage(input_tokens=100_000_000),
+        model_ref=model_ref,
+        genai_request_timestamp=datetime(2026, 5, 1, hour, tzinfo=timezone.utc),
+    )
+    assert price.input_price == (peak if in_peak_window else historic)
+
+
 def test_provider_not_found_id():
     with pytest.raises(LookupError, match="Unable to find provider provider_id='foobar'"):
         calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')

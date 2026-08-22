@@ -2042,9 +2042,38 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Flash',
                 description='DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.22'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('0.66')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek-v4-pro',
@@ -2052,9 +2081,40 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Pro',
                 description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.435'),
+                            cache_read_mtok=Decimal('0.003625'),
+                            output_mtok=Decimal('0.87'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.66'), cache_read_mtok=Decimal('0.022'), output_mtok=Decimal('1.98')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                ],
             ),
         ],
     ),
