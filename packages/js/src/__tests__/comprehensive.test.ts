@@ -259,6 +259,40 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
+  describe('calcPrice - long-context cliff', () => {
+    const cases: [string, string, number, number, number][] = [
+      ['x-ai', 'grok-4.5', 200_000, 2, 4],
+      ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
+      ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
+      ['x-ai', 'grok-build-0.1', 200_000, 1, 2],
+      ['openai', 'gpt-5.5', 272_000, 5, 10],
+      ['openai', 'gpt-5.5-pro', 272_000, 30, 60],
+    ]
+
+    it.each(cases)(
+      '%s/%s bills the whole request at the long-context rate past %i tokens',
+      (providerId, modelRef, threshold, baseInput, longInput) => {
+        const under = calcPrice({ input_tokens: threshold }, modelRef, { providerId })
+        expect(under).not.toBeNull()
+        expect(under!.input_price).toBeCloseTo((threshold * baseInput) / 1_000_000, 6)
+
+        const over = calcPrice({ input_tokens: threshold + 1 }, modelRef, { providerId })
+        expect(over).not.toBeNull()
+        expect(over!.input_price).toBeCloseTo(((threshold + 1) * longInput) / 1_000_000, 6)
+
+        expect(over!.input_price).toBeGreaterThan(under!.input_price * 1.99)
+      }
+    )
+
+    it('is not marginal pricing well past the threshold', () => {
+      const result = calcPrice({ input_tokens: 1_000_000 }, 'gpt-5.5', { providerId: 'openai' })
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(10, 6)
+      const marginal = (272_000 * 5) / 1_000_000 + (728_000 * 10) / 1_000_000
+      expect(result!.input_price).not.toBeCloseTo(marginal, 6)
+    })
+  })
+
   describe('calcPrice - GPT-5.6 tiered cache pricing', () => {
     it('should apply long-context rates to every token bucket', () => {
       const usage: Usage = {
