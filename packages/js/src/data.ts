@@ -24208,6 +24208,63 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'grok-4.6',
+        name: 'Grok 4.6',
+        description:
+          "xAI's flagship model, recommended on their models page for both coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.6',
+            },
+            {
+              regex: '^grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.6',
+            },
+            {
+              regex: '^x-ai/grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.6-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-build-0.1',
         name: 'Grok Build 0.1',
         description:
