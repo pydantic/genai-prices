@@ -905,13 +905,48 @@ models:
     match:
       starts_with: gemini-3.6-flash
     context_window: 1000000
-    prices_checked: 2026-07-22
+    prices_checked: 2026-08-13
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
-      tiers offer 50% discount. No separate audio input rate documented.
+      tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through
+      2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is
+      not represented here.
     prices:
-      input_mtok: 1.5
-      cache_read_mtok: 0.15
-      output_mtok: 7.5
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
+
+  - id: gemini-3.7-flash
+    name: Gemini 3.7 Flash
+    description: >-
+      Google's most capable Flash model, built for complex coding, web development, agentic workflows
+      and reliable multi-step execution.
+    match:
+      starts_with: gemini-3.7-flash
+    context_window: 1000000
+    prices_checked: 2026-08-13
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
+      tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache
+      storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
+    prices:
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
 
   - id: gemini-embedding-001
     match:
@@ -999,6 +1034,7 @@ models:
       or:
         - starts_with: gemini-live-2.5-flash
         - starts_with: gemini-2.5-flash-native-audio-preview
+        - equals: gemini-2.5-flash-native-audio-latest
     price_comments: >-
       See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API)
       and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches

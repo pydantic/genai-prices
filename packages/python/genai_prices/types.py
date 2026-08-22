@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, c
 import pydantic
 from typing_extensions import Self, TypedDict
 
+from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
 from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
@@ -198,7 +199,7 @@ AbstractUsage = object
 class Usage:
     """Simple token usage container."""
 
-    def __init__(self, **kwargs: int | None) -> None:
+    def __init__(self, **kwargs: UsageValue | None) -> None:
         reported_usage_keys = _reported_usage_keys()
         unknown_keys = kwargs.keys() - reported_usage_keys
         if unknown_keys:
@@ -217,7 +218,7 @@ class Usage:
             obj._reported_values()
             return obj
 
-        values: dict[str, int] = {}
+        values: dict[str, UsageValue] = {}
         for key in _reported_usage_keys():
             value = _raw_usage_value(obj, key)
             if value is not None:
@@ -225,35 +226,35 @@ class Usage:
 
         return cls(**values)
 
-    def __setattr__(self, name: str, value: int | None) -> None:
+    def __setattr__(self, name: str, value: UsageValue | None) -> None:
         if name in _reported_usage_keys():
             self._store_values({name: value})
         else:
             object.__setattr__(self, name, value)
 
-    def __getattr__(self, name: str) -> int:
+    def __getattr__(self, name: str) -> UsageValue:
         if name in _reported_usage_keys():
             return self._infer_missing_value(name)
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
-    def _store_values(self, values: Mapping[str, int | None]) -> None:
+    def _store_values(self, values: Mapping[str, UsageValue | None]) -> None:
         reported_usage_keys = _reported_usage_keys()
         for key, value in values.items():
             if value is None:
                 self.__dict__.pop(key, None)
             elif key in reported_usage_keys:
-                self.__dict__[key] = _validate_usage_value(key, value)
+                self.__dict__[key] = validate_usage_value(key, value)
             else:
                 self.__dict__[key] = value
 
-    def _reported_values(self) -> dict[str, int]:
+    def _reported_values(self) -> dict[str, UsageValue]:
         reported_usage_keys = _reported_usage_keys()
         return {
-            key: _validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
+            key: validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
         }
 
-    def reported_value(self, usage_key: str) -> int:
+    def reported_value(self, usage_key: str) -> UsageValue:
         return self._reported_values().get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Self:
@@ -264,7 +265,7 @@ class Usage:
         other_values = other._reported_values()
         return type(self)(
             **{
-                key: self_values.get(key, 0) + other_values.get(key, 0)
+                key: add_usage_values(self_values.get(key, 0), other_values.get(key, 0))
                 for key in self_values.keys() | other_values.keys()
             }
         )
@@ -287,11 +288,11 @@ class Usage:
         values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
         return f'{type(self).__name__}({values})'
 
-    def _ordered_values(self) -> list[tuple[str, int]]:
+    def _ordered_values(self) -> list[tuple[str, UsageValue]]:
         values = self._reported_values()
         return [(key, values[key]) for key in _reported_usage_key_order() if key in values]
 
-    def _infer_missing_value(self, usage_key: str) -> int:
+    def _infer_missing_value(self, usage_key: str) -> UsageValue:
         from genai_prices.decompose import is_descendant_or_self
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
@@ -329,12 +330,6 @@ class Usage:
             f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
             f'require explicit {usage_key}'
         )
-
-
-def _validate_usage_value(usage_key: str, value: object) -> int:
-    if isinstance(value, bool) or not isinstance(value, Integral) or value < 0:
-        raise ValueError(f'Invalid usage value for {usage_key}: expected a non-negative integer')
-    return int(value)
 
 
 def _reported_overlap_keys_for_join(
@@ -493,16 +488,20 @@ class UsageExtractor:
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
-        values: dict[str, int] = {}
+        values: dict[str, UsageValue] = {}
         values_set = False
         supported_mappings = 0
         for mapping in self.mappings:
             if mapping.dest not in self._reported_usage_keys:
                 continue
             supported_mappings += 1
-            value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
+            value = _extract_path(mapping.path, usage_obj, (Integral, float, Decimal), mapping.required, root)
             if value is not None:
-                values[mapping.dest] = values.get(mapping.dest, 0) + value
+                value = validate_usage_value(mapping.dest, value)
+                if mapping.dest not in values:
+                    values[mapping.dest] = value
+                else:
+                    values[mapping.dest] = add_usage_values(values[mapping.dest], value)
                 values_set = True
         if supported_mappings and not values_set:
             raise ValueError(f'No usage information found at {self.root}')
@@ -514,7 +513,11 @@ E = TypeVar('E')
 
 @overload
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: Literal[True], data_path: Sequence[str | ArrayMatch]
+    path: ExtractPath,
+    data: Any,
+    extract_type: type[E] | tuple[type[E], ...],
+    required: Literal[True],
+    data_path: Sequence[str | ArrayMatch],
 ) -> E: ...
 
 
@@ -522,14 +525,18 @@ def _extract_path(
 def _extract_path(
     path: ExtractPath,
     data: Any,
-    extract_type: type[E],
+    extract_type: type[E] | tuple[type[E], ...],
     required: Literal[False],
     data_path: Sequence[str | ArrayMatch],
 ) -> E | None: ...
 
 
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: bool, data_path: Sequence[str | ArrayMatch]
+    path: ExtractPath,
+    data: Any,
+    extract_type: type[E] | tuple[type[E], ...],
+    required: bool,
+    data_path: Sequence[str | ArrayMatch],
 ) -> E | None:
     if isinstance(path, str):
         path = [path]
@@ -585,7 +592,8 @@ def _extract_path(
         elif required:
             error_path.append(last)
             raise ValueError(
-                f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
+                f'Expected `{_dot_path(data_path, error_path)}` value to be a {_extract_type_name(extract_type)}, '
+                f'got {_type_name(value)}'
             )
 
 
@@ -615,6 +623,12 @@ def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
 
 
+def _extract_type_name(extract_type: type[object] | tuple[type[object], ...]) -> str:
+    if isinstance(extract_type, tuple):
+        return ' or '.join('int' if item is Integral else item.__name__ for item in extract_type)
+    return extract_type.__name__
+
+
 def _reported_usage_keys() -> frozenset[str]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
@@ -627,11 +641,11 @@ def _reported_usage_key_order() -> tuple[str, ...]:
     return _get_registry()._reported_usage_keys_in_order  # pyright: ignore[reportPrivateUsage]
 
 
-def _raw_usage_value(obj: object, key: str) -> int | None:
+def _raw_usage_value(obj: object, key: str) -> UsageValue | None:
     value = getattr(obj, key, None)
     if value is None:
         return None
-    return cast(int, value)
+    return cast(UsageValue, value)
 
 
 @dataclass
@@ -809,29 +823,14 @@ def _is_registered_price_key(name: str) -> bool:
         return True
 
 
-def calc_mtok_price(
-    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
-) -> Decimal:
-    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
-
-    For tiered pricing, uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
-    This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
-
-    Args:
-        field_mtok: Price per million tokens, either flat rate or tiered
-        token_count: Number of tokens of this specific type to price
-        total_input_tokens: Total input tokens for tier determination (used only for tiered pricing)
-    """
-    return calc_unit_price(field_mtok, token_count, total_input_tokens, 1_000_000)
-
-
 def calc_unit_price(
-    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: int, per: int
+    price: Decimal | TieredPrices | None, count: UsageValue | None, total_input_tokens: UsageValue, per: int
 ) -> Decimal:
     """Calculate the price for a unit count normalized by the unit's ``per`` value."""
     if price is None or count is None:
         return Decimal(0)
 
+    decimal_count = usage_value_as_decimal(count)
     if isinstance(price, TieredPrices):
         # Threshold-based pricing: tier is determined by total_input_tokens
         # Find the highest tier that applies based on total input tokens
@@ -841,9 +840,9 @@ def calc_unit_price(
             if total_input_tokens > tier.start:
                 applicable_price = tier.price
                 break
-        unit_price = applicable_price * count
+        unit_price = applicable_price * decimal_count
     else:
-        unit_price = price * count
+        unit_price = price * decimal_count
     return unit_price / per
 
 
@@ -904,10 +903,10 @@ def _is_valid_price_decimal(value: object) -> TypeGuard[Decimal]:
 
 def _compute_registry_priced_counts(
     resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]], usage: Usage
-) -> dict[str, int]:
+) -> dict[str, UsageValue]:
     from genai_prices.decompose import compute_leaf_values
 
-    counts: dict[str, int] = {}
+    counts: dict[str, UsageValue] = {}
     priced_units_by_usage_key = {unit.usage_key: unit for unit, _ in resolved_prices if unit.usage_key != 'requests'}
     if priced_units_by_usage_key:
         counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))

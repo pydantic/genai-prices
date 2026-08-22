@@ -840,6 +840,7 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     js_src_dir = tmp_path / 'packages' / 'js' / 'src'
     js_src_dir.mkdir(parents=True)
     monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+    prettier_calls: list[tuple[list[str], str | None]] = []
 
     def skip_prettier(
         args: list[str],
@@ -848,7 +849,8 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
         check: bool = False,
         stdout: int | None = None,
     ) -> subprocess.CompletedProcess[str]:
-        _ = cwd, check, stdout
+        _ = check, stdout
+        prettier_calls.append((args, cwd))
         return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, 'run', skip_prettier)
@@ -865,6 +867,12 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
             'dimensions': {'family': 'tokens', 'direction': 'input'},
         }
     }
+    assert prettier_calls == [
+        (
+            ['npx', '--', 'prettier', '--write', 'src/data.ts', 'src/dataUnits.ts'],
+            str(tmp_path / 'packages' / 'js'),
+        )
+    ]
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
@@ -1000,3 +1008,33 @@ def test_package_data_accepts_current_provider_extractor_destinations() -> None:
     registry = UnitRegistry(load_units())
 
     package_data.validate_provider_extractor_destinations(data.providers, registry)
+
+
+def test_package_data_accepts_current_provider_extractor_reasoning_coverage() -> None:
+    package_data.validate_provider_extractor_reasoning_coverage(data.providers)
+
+
+def test_package_data_extractor_validation_rejects_unmapped_reasoning_tokens() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+        extractors=[
+            build_types.UsageExtractor.model_construct(
+                root='usage',
+                mappings=[
+                    _build_extractor_mapping('prompt_tokens', 'input_tokens'),
+                    _build_extractor_mapping('completion_tokens', 'output_tokens'),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid extractor for testing/chat: Missing output_reasoning_tokens mapping: '
+            'extractors reading completion_tokens must also map reasoning tokens'
+        ),
+    ):
+        package_data.validate_provider_extractor_reasoning_coverage([provider])

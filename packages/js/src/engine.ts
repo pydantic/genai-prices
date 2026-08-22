@@ -9,6 +9,7 @@ import {
   ProviderFindOptions,
   Tier,
   TieredPrices,
+  TimeOfDateConstraint,
   UnitDef,
   Usage,
 } from './types'
@@ -153,6 +154,10 @@ function isTieredPrice(price: number | TieredPrices | undefined): price is Tiere
   return typeof price === 'object'
 }
 
+function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateConstraint {
+  return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
+}
+
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
   if (!Array.isArray(model.prices)) {
     return model.prices
@@ -174,7 +179,7 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       if (timestamp >= new Date(constraint.start_date)) {
         return cond.prices
       }
-    } else {
+    } else if (isTimeOfDateConstraint(constraint)) {
       const time =
         timestamp.getUTCHours() * 3_600 +
         timestamp.getUTCMinutes() * 60 +
@@ -195,6 +200,15 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
           return cond.prices
         }
       }
+    } else {
+      // Unreachable for well-typed data (constraint is `never` here): the two
+      // branches above cover the discriminated union. At runtime it guards
+      // against a representation leak - constraints are normalized into the
+      // discriminated form at activation and for caller-supplied providers in
+      // calcPrice (see normalizeProvider in
+      // api.ts), so anything else reaching this point is unnormalized data.
+      constraint satisfies never
+      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
     }
   }
   // Fallback to first

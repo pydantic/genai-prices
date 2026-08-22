@@ -50,6 +50,13 @@ describe('normalizeUsage', () => {
     })
   })
 
+  it('preserves fractional values', () => {
+    expect(normalizeUsage({ audio_seconds: 0.125, input_tokens: 13.0 })).toEqual({
+      audio_seconds: 0.125,
+      input_tokens: 13,
+    })
+  })
+
   it('rejects invalid numeric values for registered usage keys', () => {
     for (const value of [Number.NaN, Number.POSITIVE_INFINITY, -1]) {
       expect(() =>

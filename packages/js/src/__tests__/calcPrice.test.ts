@@ -241,6 +241,14 @@ describe('start_date constraints', () => {
 })
 
 describe('Core Price Calculation Function', () => {
+  it('prices fractional duration usage', () => {
+    const result = calcPrice({ audio_seconds: 0.1 }, { audio_hours: 3.6 })
+
+    expect(result.input_price).toBe(0)
+    expect(result.output_price).toBe(0)
+    expect(result.total_price).toBeCloseTo(0.0001, 15)
+  })
+
   it('warns and ignores unsupported usage and price keys', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 

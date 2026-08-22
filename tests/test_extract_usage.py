@@ -155,6 +155,76 @@ def test_openai():
 
 
 @pytest.mark.parametrize(
+    ('model_id', 'expected_price'),
+    [
+        ('moonshotai/Kimi-K3', Decimal('21.3')),
+        ('thinkingmachines/Inkling-NVFP4', Decimal('7.67')),
+    ],
+)
+def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
+    response_data = {
+        'model': model_id,
+        'usage': {
+            'prompt_tokens': 3_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000, 'cache_write_tokens': 1_000_000},
+            'completion_tokens': 1_000_000,
+            'reasoning_tokens': 500_000,
+        },
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://example--kimi-k3.modal.run/v1',
+        api_flavor='chat',
+    )
+
+    assert extracted_usage.provider.id == 'modal'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == model_id
+    assert extracted_usage.usage == Usage(
+        input_tokens=3_000_000,
+        cache_read_tokens=1_000_000,
+        cache_write_tokens=1_000_000,
+        output_tokens=1_000_000,
+        output_reasoning_tokens=500_000,
+    )
+    assert extracted_usage.calc_price().total_price == expected_price
+
+
+def test_modal_responses_usage() -> None:
+    response_data = {
+        'model': 'moonshotai/Kimi-K3',
+        'usage': {
+            'input_tokens': 90,
+            'input_tokens_details': {'cached_tokens': 64, 'cache_write_tokens': 0},
+            'output_tokens': 188,
+            'output_tokens_details': {'reasoning_tokens': 169},
+            'total_tokens': 278,
+        },
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://example--kimi-k3.modal.run/v1',
+        api_flavor='responses',
+    )
+
+    assert extracted_usage.provider.id == 'modal'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'moonshotai/Kimi-K3'
+    assert extracted_usage.usage == Usage(
+        input_tokens=90,
+        cache_read_tokens=64,
+        cache_write_tokens=0,
+        output_tokens=188,
+        output_reasoning_tokens=169,
+    )
+    assert extracted_usage.calc_price().input_price == Decimal('0.0000972')
+    assert extracted_usage.calc_price().output_price == Decimal('0.00282')
+    assert extracted_usage.calc_price().total_price == Decimal('0.0029172')
+
+
+@pytest.mark.parametrize(
     ('api_flavor', 'usage_data'),
     [
         (
@@ -479,12 +549,8 @@ def test_extracted_usage_calc_price_requires_model():
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
         (
-            {'model': 'x', 'usage': {'input_tokens': 123.0}},
-            snapshot('Expected `usage.input_tokens` value to be a int, got float'),
-        ),
-        (
             {'model': 'x', 'usage': {'input_tokens': []}},
-            snapshot('Expected `usage.input_tokens` value to be a int, got list'),
+            snapshot('Expected `usage.input_tokens` value to be a int or float or Decimal, got list'),
         ),
     ],
 )
@@ -600,7 +666,7 @@ def test_usage_extractor_skips_optional_nested_path_with_null_parent():
     )
 
 
-def test_usage_extractor_skips_optional_float_value():
+def test_usage_extractor_accepts_optional_integral_float_value():
     extractor = UsageExtractor(
         root='usage',
         mappings=[
@@ -609,10 +675,114 @@ def test_usage_extractor_skips_optional_float_value():
         ],
     )
 
-    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 13.0, 'output_tokens': 2}}) == (
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 3.0, 'output_tokens': 2}})
+
+    assert (model, usage) == (
         'test-model',
-        Usage(output_tokens=2),
+        Usage(input_tokens=3.0, output_tokens=2),
     )
+    assert type(usage.input_tokens) is float
+
+
+def test_usage_extractor_preserves_decimal_value() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='duration', dest='audio_seconds')],
+    )
+    value = Decimal('3.00')
+
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'duration': value}})
+
+    assert model == 'test-model'
+    assert usage.audio_seconds is value
+
+
+def test_usage_extractor_accumulates_fractional_values_by_destination() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='first_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='second_seconds', dest='audio_seconds'),
+        ],
+    )
+
+    model, usage = extractor.extract({'model': 'test-model', 'usage': {'first_seconds': 0.1, 'second_seconds': 0.2}})
+
+    assert model == 'test-model'
+    assert usage.audio_seconds == 0.3
+    assert type(usage.audio_seconds) is float
+
+
+def test_usage_extractor_accumulates_mixed_values_as_decimal() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='first_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='second_seconds', dest='audio_seconds'),
+            UsageExtractorMapping(path='whole_seconds', dest='audio_seconds'),
+        ],
+    )
+
+    model, usage = extractor.extract(
+        {
+            'model': 'test-model',
+            'usage': {
+                'first_seconds': Decimal('0.1'),
+                'second_seconds': 0.2,
+                'whole_seconds': 1,
+            },
+        }
+    )
+
+    assert model == 'test-model'
+    assert usage.audio_seconds == Decimal('1.3')
+    assert isinstance(usage.audio_seconds, Decimal)
+
+
+@pytest.mark.parametrize(
+    'invalid_value',
+    [
+        -1,
+        -0.1,
+        float('nan'),
+        float('inf'),
+        Decimal('-0.1'),
+        Decimal('NaN'),
+        Decimal('Infinity'),
+        True,
+    ],
+)
+def test_usage_extractor_rejects_invalid_component_before_accumulation(invalid_value: Any) -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='invalid', dest='audio_seconds', required=False),
+            UsageExtractorMapping(path='offset', dest='audio_seconds'),
+        ],
+    )
+
+    with pytest.raises(
+        ValueError, match='Invalid usage value for audio_seconds: expected a finite non-negative int, float, or Decimal'
+    ):
+        extractor.extract({'model': 'test-model', 'usage': {'invalid': invalid_value, 'offset': 2}})
+
+
+def test_public_extract_usage_preserves_fractional_values() -> None:
+    response_data = {
+        'model': 'gpt-4.1',
+        'usage': {
+            'prompt_tokens': 13.0,
+            'completion_tokens': 0.25,
+            'prompt_tokens_details': {'cached_tokens': None},
+            'completion_tokens_details': {'reasoning_tokens': None},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='openai', api_flavor='chat')
+
+    assert extracted.usage == Usage(input_tokens=13.0, output_tokens=0.25)
+    assert type(extracted.usage.input_tokens) is float
+    assert type(extracted.usage.output_tokens) is float
 
 
 def test_usage_extractor_skips_optional_nested_path_after_wrong_type_parent():

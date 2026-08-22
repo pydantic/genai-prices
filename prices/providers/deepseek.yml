@@ -9,7 +9,7 @@ price_comments: >-
   as the default (first) price then the second price with a constraint is the "standard" pricing
   that applies "UTC 00:30-16:30".
 model_match:
-  contains: deepseek
+  starts_with: deepseek
 
 extractors:
   # assuming this API matches OpenAI
@@ -23,6 +23,9 @@ extractors:
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens

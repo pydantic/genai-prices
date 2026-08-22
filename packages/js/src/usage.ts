@@ -81,7 +81,7 @@ function validateOptionalUsageValue(usageKey: string, value: unknown): number | 
   return validateUsageValue(usageKey, value)
 }
 
-function validateUsageValue(usageKey: string, value: number): number {
+export function validateUsageValue(usageKey: string, value: number): number {
   if (!Number.isFinite(value) || value < 0) {
     throw new Error(`Invalid usage value for ${usageKey}: expected a finite non-negative number`)
   }

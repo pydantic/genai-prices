@@ -1,3 +1,30 @@
+# The unit registry: the single source of truth for every billable unit.
+#
+# ADDING A UNIT HERE IS A v3 CHANGE, NOT A v2 PRICE UPDATE.
+# `make build` regenerates prices/new_data/v2/data.schema.json from this file — it adds a property per
+# price_key and rebuilds the extractor `dest` enum. So editing this file silently widens the *published*
+# v2 contract. Clients that haven't upgraded warn-and-drop an unknown key rather than failing, which
+# means silently under-priced usage in production. Nothing enforces this; it is a maintainer
+# responsibility. Read specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+# before touching this file.
+#
+# Each entry maps a usage key (what a provider reports) to how it is priced:
+#   per        - how many usage counts one price unit covers (1_000_000 tokens, 1_000 searches, 3_600
+#                seconds...). Every unit in a `family` must share the same `per`.
+#   price_key  - the key providers use under `prices:`. Defaults to the usage key when identical.
+#   dimensions - what this unit *is*. Containment defines ancestry (input_tokens is an ancestor of
+#                cache_read_tokens), and compatible unions define joins. `family` is required; a unit
+#                with no `direction` contributes to total_price but to neither input nor output.
+#   dimension_requirements - conditional validity, e.g. cache_ttl only means something on a cache_write.
+#
+# Two closure rules are enforced by prices/src/prices/export_validation.py::validate_units, so adding
+# one unit usually forces adding several:
+#   interval closure - every dimension set between an ancestor and a descendant must also exist
+#   join closedness  - any two units whose dimensions can be combined need that combination to exist
+#
+# Adding a unit here does NOT make it priceable on its own — a provider YAML has to use the price_key,
+# and it must also price the unit's ancestors and joins.
+
 input_tokens:
   per: 1_000_000
   price_key: input_mtok
