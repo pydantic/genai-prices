@@ -891,6 +891,43 @@ def test_price_constraint_time_of_date():
     assert price.provider.name == snapshot('Deepseek')
 
 
+@pytest.mark.parametrize(
+    'model_ref,threshold,base_input,long_input',
+    [
+        ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
+        ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
+        ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
+        ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
+        ('gpt-5.5', 272_000, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_000, Decimal('30'), Decimal('60')),
+    ],
+)
+def test_price_long_context_cliff(model_ref: str, threshold: int, base_input: Decimal, long_input: Decimal):
+    """xAI and OpenAI bill long-context requests as a cliff, not a marginal tier.
+
+    Both vendors state that once the prompt reaches the threshold the higher rate applies
+    to *every* token in the request, so a request just over the line costs about double one
+    just under it, and the tokens below the threshold are not priced at the base rate.
+    """
+    under = calc_price(Usage(input_tokens=threshold), model_ref=model_ref)
+    assert under.input_price == threshold * base_input / 1_000_000
+
+    over = calc_price(Usage(input_tokens=threshold + 1), model_ref=model_ref)
+    assert over.input_price == (threshold + 1) * long_input / 1_000_000
+
+    # The whole request is repriced, not just the tokens past the threshold. If this were
+    # marginal pricing the answer would be threshold * base + 1 * long, which is roughly half.
+    assert over.input_price > under.input_price * Decimal('1.99')
+
+
+def test_price_long_context_cliff_is_not_marginal():
+    """Pin the cliff against the marginal reading on a request well past the threshold."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref='gpt-5.5')
+    assert price.input_price == Decimal('10')  # 1M tokens x $10, all of them
+    marginal = Decimal('272000') * Decimal('5') / 1_000_000 + Decimal('728000') * Decimal('10') / 1_000_000
+    assert price.input_price != marginal
+
+
 def test_provider_not_found_id():
     with pytest.raises(LookupError, match="Unable to find provider provider_id='foobar'"):
         calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')

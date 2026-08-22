@@ -13205,10 +13205,36 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Prompts above 272k tokens are billed at the long-context rate for the whole request. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
-          input_mtok: 5,
-          cache_read_mtok: 0.5,
-          output_mtok: 30,
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 45,
+              },
+            ],
+          },
         },
       },
       {
@@ -13232,9 +13258,27 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Prompts above 272k tokens are billed at the long-context rate for the whole request. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
-          input_mtok: 30,
-          output_mtok: 180,
+          input_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 180,
+            tiers: [
+              {
+                start: 272000,
+                price: 270,
+              },
+            ],
+          },
         },
       },
       {
@@ -24000,10 +24044,36 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-4.20',
         },
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24045,10 +24115,36 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24079,10 +24175,36 @@ export const data: Provider[] = [
           ],
         },
         context_window: 500000,
+        price_comments:
+          "Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6's. Ref: https://docs.x.ai/docs/models/grok-4.5",
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -24093,10 +24215,36 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-build-0.1',
         },
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.2,
-          output_mtok: 2,
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
         },
       },
       {
