@@ -13906,8 +13906,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20'),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
+                context_window=1000000,
+                price_comments='Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=200000, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -13915,7 +13919,13 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20-multi-agent'),
                 name='Grok 4.20 Multi-Agent',
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
+                context_window=1000000,
+                price_comments='Priced as "grok-4.20-multi-agent-0309" on xAI\'s models page, at the same rates as the other grok-4.20 variants. Long context pricing: two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=200000, price=Decimal('5'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-4.3',
@@ -13931,8 +13941,11 @@ providers: list[Provider] = [
                 name='Grok 4.3',
                 description='Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
                 context_window=1000000,
+                price_comments='Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=200000, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -13950,7 +13963,33 @@ providers: list[Provider] = [
                 name='Grok 4.5',
                 description="xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". The cached input rate below 200k is $0.30, not the $0.50 that grok-4.6 charges. Ref: https://docs.x.ai/docs/models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.6'),
+                        ClauseRegex(regex='^grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.6'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.6-latest'),
+                    ]
+                ),
+                name='Grok 4.6',
+                description="xAI's flagship model, recommended on their models page for both coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+                context_window=500000,
+                price_comments='Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-build-0.1',

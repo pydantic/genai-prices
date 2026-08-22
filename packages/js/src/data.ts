@@ -24000,10 +24000,37 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-4.20',
         },
+        context_window: 1000000,
+        price_comments:
+          'Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24014,10 +24041,37 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-4.20-multi-agent',
         },
+        context_window: 1000000,
+        price_comments:
+          'Priced as "grok-4.20-multi-agent-0309" on xAI\'s models page, at the same rates as the other grok-4.20 variants. Long context pricing: two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.2,
-          output_mtok: 6,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24045,10 +24099,36 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24079,10 +24159,93 @@ export const data: Provider[] = [
           ],
         },
         context_window: 500000,
+        price_comments:
+          'Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". The cached input rate below 200k is $0.30, not the $0.50 that grok-4.6 charges. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.6',
+        name: 'Grok 4.6',
+        description:
+          "xAI's flagship model, recommended on their models page for both coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.6',
+            },
+            {
+              regex: '^grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.6',
+            },
+            {
+              regex: '^x-ai/grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.6-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
