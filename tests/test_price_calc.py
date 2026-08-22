@@ -1126,6 +1126,36 @@ def test_time_of_date_constraint_spanning_midnight_reads_naive_timestamp_as_utc(
     assert model.get_prices(datetime(2026, 7, 30, 12)) == ModelPrice(input_mtok=Decimal('1'))
 
 
+def _naive_window_model() -> ModelInfo:
+    return ModelInfo(
+        id='naive-window',
+        match=ClauseEquals('naive-window'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('1'))),
+            ConditionalPrice(
+                TimeOfDateConstraint(start_time=time(0, 30), end_time=time(16, 30)),
+                prices=ModelPrice(input_mtok=Decimal('0.5')),
+            ),
+        ],
+    )
+
+
+@pytest.mark.parametrize(
+    'genai_request_timestamp',
+    [
+        datetime(2026, 7, 30, 12),
+        datetime(2026, 7, 30, 12, tzinfo=timezone.utc),
+        datetime(2026, 7, 30, 14, tzinfo=timezone(timedelta(hours=2))),
+    ],
+)
+def test_time_of_date_constraint_naive_window_is_utc(genai_request_timestamp: datetime) -> None:
+    """A naive constraint window is UTC, same as a naive request timestamp."""
+    model = _naive_window_model()
+
+    assert model.get_prices(genai_request_timestamp) == ModelPrice(input_mtok=Decimal('0.5'))
+    assert model.get_prices(datetime(2026, 7, 30, 17)) == ModelPrice(input_mtok=Decimal('1'))
+
+
 @pytest.mark.parametrize('offset_hours', [-11, -5, 0, 5, 9, 14])
 @pytest.mark.parametrize('hour', range(24))
 def test_time_of_date_constraint_is_offset_independent(offset_hours: int, hour: int) -> None:
