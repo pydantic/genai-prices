@@ -12,6 +12,7 @@ import type {
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
+import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
@@ -68,12 +69,22 @@ function activateProviderData(data: Provider[]): Provider[] {
 function normalizeProvider(provider: Provider): Provider {
   return {
     ...provider,
-    models: provider.models.map((model) => ({
-      ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
-    })),
+    models: provider.models.map((model) => {
+      if (
+        model.minimum_audio_seconds !== undefined &&
+        (!Number.isFinite(model.minimum_audio_seconds) || model.minimum_audio_seconds <= 0)
+      ) {
+        throw new Error(
+          `Invalid minimum_audio_seconds for provider '${provider.id}' model '${model.id}': expected a finite positive number`
+        )
+      }
+      return {
+        ...model,
+        prices: Array.isArray(model.prices)
+          ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
+          : model.prices,
+      }
+    }),
   }
 }
 
@@ -227,7 +238,41 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  let billedUsage = usage
+  if (model.minimum_audio_seconds !== undefined) {
+    billedUsage = { ...usage }
+    for (const usageKey of ['audio_seconds', 'input_audio_seconds', 'output_audio_seconds'] as const) {
+      const value = billedUsage[usageKey]
+      if (value !== undefined) validateUsageValue(usageKey, value)
+    }
+    const audioSeconds = billedUsage.audio_seconds
+    if (audioSeconds !== undefined) {
+      const directionalUsageKeys = ['input_audio_seconds', 'output_audio_seconds'] as const
+      for (const usageKey of directionalUsageKeys) {
+        const value = billedUsage[usageKey]
+        if (value !== undefined && value > audioSeconds) {
+          throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
+        }
+      }
+      const inputAudioSeconds = billedUsage.input_audio_seconds
+      const outputAudioSeconds = billedUsage.output_audio_seconds
+      if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined && inputAudioSeconds + outputAudioSeconds > audioSeconds) {
+        throw new Error(
+          `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${(inputAudioSeconds + outputAudioSeconds).toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
+        )
+      }
+      if (audioSeconds > 0 && audioSeconds < model.minimum_audio_seconds) {
+        billedUsage.audio_seconds = model.minimum_audio_seconds
+        for (const usageKey of directionalUsageKeys) {
+          const value = billedUsage[usageKey]
+          if (value !== undefined) {
+            billedUsage[usageKey] = (value / audioSeconds) * model.minimum_audio_seconds
+          }
+        }
+      }
+    }
+  }
+  const priceResult = calcPriceInternal(billedUsage, modelPrice)
   return {
     auto_update_timestamp: undefined,
     model,

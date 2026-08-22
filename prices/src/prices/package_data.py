@@ -147,7 +147,7 @@ def validate_provider_extractor_reasoning_coverage(providers: Iterable[object]) 
         source_paths = [cast('str | Sequence[object]', getattr(mapping, 'path')) for mapping in mappings]
         dest_keys = {cast(str, getattr(mapping, 'dest')) for mapping in mappings}
         try:
-            validate_extractor_reasoning_coverage(source_paths, dest_keys)
+            validate_extractor_reasoning_coverage(source_paths, dest_keys, api_flavor=cast(str, api_flavor))
         except ValueError as exc:
             raise ValueError(f'Invalid extractor for {provider_id}/{api_flavor}: {exc}') from exc
 

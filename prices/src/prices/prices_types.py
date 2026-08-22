@@ -167,6 +167,18 @@ def serialize_prices(
     return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
 
 
+def serialize_decimal(v: Decimal) -> float | int:
+    return float(v) if v % 1 != 0 else int(v)
+
+
+PositiveDecimal = Annotated[
+    Decimal,
+    Gt(0),
+    WithJsonSchema({'type': 'number'}),
+    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
+]
+
+
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
@@ -180,6 +192,8 @@ class ModelInfo(_Model):
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
+    minimum_audio_seconds: PositiveDecimal | None = None
+    """Minimum audio duration billed for a request."""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]
@@ -228,16 +242,7 @@ class ModelInfo(_Model):
             return self.prices.is_free()
 
 
-def serialize_decimal(v: Decimal) -> float | int:
-    return float(v) if v % 1 != 0 else int(v)
-
-
-DollarPrice = Annotated[
-    Decimal,
-    Gt(0),
-    WithJsonSchema({'type': 'number'}),
-    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
-]
+DollarPrice = PositiveDecimal
 
 
 class ModelPrice(_Model):

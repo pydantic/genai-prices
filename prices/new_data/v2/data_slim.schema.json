@@ -266,6 +266,11 @@
           "description": "Maximum number of input tokens allowed for this model",
           "title": "Context Window"
         },
+        "minimum_audio_seconds": {
+          "type": "number",
+          "description": "Minimum audio duration billed for a request.",
+          "title": "Minimum Audio Seconds"
+        },
         "prices": {
           "anyOf": [
             {

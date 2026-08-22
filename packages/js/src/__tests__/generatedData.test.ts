@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import type { Provider } from '../types'
+
 import { calcPrice } from '../api'
 import * as providerDataModule from '../data'
 import { unitData } from '../dataUnits'
@@ -148,5 +150,123 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
 
     expect(result?.model_price).toEqual(expectedPrices)
+  })
+
+  it.each([
+    { expectedPrice: 0.0000375, model: 'gpt-transcribe', providerId: 'openai', seconds: 0.5 },
+    { expectedPrice: 0.003, model: 'whisper-1', providerId: 'openai', seconds: 30 },
+    { expectedPrice: 0.00185, model: 'whisper-large-v3', providerId: 'groq', seconds: 60 },
+    { expectedPrice: 0.001, model: 'whisper-large-v3-turbo', providerId: 'groq', seconds: 90 },
+    { expectedPrice: 0.003, model: 'voxtral-mini-2602', providerId: 'mistral', seconds: 60 },
+  ])('prices $model transcription duration', ({ expectedPrice, model, providerId, seconds }) => {
+    const result = calcPrice({ audio_seconds: seconds, input_audio_seconds: seconds }, model, { providerId })
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+  })
+
+  it.each([
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 1 },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 10 },
+    { billedSeconds: 11, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 11 },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 1 },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 10 },
+    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 11 },
+  ])(
+    'applies the minimum billed duration for $model at $reportedSeconds seconds',
+    ({ billedSeconds, hourlyRate, model, reportedSeconds }) => {
+      const result = calcPrice({ audio_seconds: reportedSeconds, input_audio_seconds: reportedSeconds }, model, { providerId: 'groq' })
+      const expectedPrice = (hourlyRate * billedSeconds) / 3_600
+
+      expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+      expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+    }
+  )
+
+  it('preserves zero duration subtypes and the caller usage when applying a minimum', () => {
+    const usage = { audio_seconds: 5, input_audio_seconds: 0 }
+
+    const result = calcPrice(usage, 'whisper-large-v3', { providerId: 'groq' })
+
+    expect(result?.input_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
+    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 0 })
+  })
+
+  it.each([-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, Number.NaN])(
+    'rejects invalid reported audio duration %s before applying a minimum',
+    (seconds) => {
+      expect(() => calcPrice({ audio_seconds: seconds }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
+        'Invalid usage value for audio_seconds: expected a finite non-negative number'
+      )
+    }
+  )
+
+  it('rejects invalid original duration relationships before applying a minimum', () => {
+    expect(() => calcPrice({ audio_seconds: 5, input_audio_seconds: 6 }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
+      'Invalid usage data: input_audio_seconds (6) cannot exceed audio_seconds (5)'
+    )
+  })
+
+  it('rejects invalid directional duration totals before applying a minimum', () => {
+    expect(() =>
+      calcPrice({ audio_seconds: 5, input_audio_seconds: 3, output_audio_seconds: 3 }, 'whisper-large-v3', {
+        providerId: 'groq',
+      })
+    ).toThrow(
+      'Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals 6, which exceeds audio_seconds (5)'
+    )
+  })
+
+  it('scales directional audio usage when applying a minimum duration', () => {
+    const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
+    const provider: Provider = {
+      api_pattern: '',
+      id: 'testing',
+      models: [
+        {
+          id: 'minimum-duration',
+          match: { equals: 'minimum-duration' },
+          minimum_audio_seconds: 10,
+          prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
+        },
+      ],
+      name: 'Testing',
+    }
+
+    const result = calcPrice(usage, 'minimum-duration', { provider })
+
+    expect(result?.input_price).toBeCloseTo((0.1 * 4) / 3_600, 15)
+    expect(result?.output_price).toBeCloseTo((0.1 * 6) / 3_600, 15)
+    expect(result?.total_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
+    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 })
+  })
+
+  it('scales extremely small directional audio usage without overflowing', () => {
+    const provider: Provider = {
+      api_pattern: '',
+      id: 'testing',
+      models: [
+        {
+          id: 'minimum-duration',
+          match: { equals: 'minimum-duration' },
+          minimum_audio_seconds: 10,
+          prices: { audio_hours: 0.1, input_audio_hours: 0.1 },
+        },
+      ],
+      name: 'Testing',
+    }
+
+    const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'minimum-duration', { provider })
+
+    expect(result?.input_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
+  })
+
+  it('matches only verified OpenAI diarization model IDs', () => {
+    expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
+      'gpt-4o-transcribe'
+    )
+    expect(calcPrice({}, 'gpt-transcribe-diarize', { providerId: 'openai' })).toBeNull()
   })
 })

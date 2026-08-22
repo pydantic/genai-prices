@@ -42,7 +42,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [Google](prices/providers/google.yml) - 47 models
-- [Groq](prices/providers/groq.yml) - 29 models
+- [Groq](prices/providers/groq.yml) - 31 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models
@@ -55,11 +55,11 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 31 models
+- [Mistral](prices/providers/mistral.yml) - 32 models
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 86 models
+- [OpenAI](prices/providers/openai.yml) - 88 models
 - [OpenRouter](prices/providers/openrouter.yml) - 691 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models

@@ -292,6 +292,14 @@ def test_validate_extractor_reasoning_coverage_accepts_extractor_without_complet
     )
 
 
+def test_validate_extractor_reasoning_coverage_accepts_non_chat_completion_tokens() -> None:
+    validate_extractor_reasoning_coverage(
+        ['prompt_tokens', 'completion_tokens'],
+        {'input_tokens', 'output_tokens'},
+        api_flavor='transcription',
+    )
+
+
 def test_validate_extractor_reasoning_coverage_ignores_nested_completion_tokens() -> None:
     validate_extractor_reasoning_coverage(
         [['usage', 'completion_tokens']],
@@ -319,6 +327,7 @@ def test_bundled_provider_extractors_map_reasoning_tokens() -> None:
                 validate_extractor_reasoning_coverage(
                     [mapping.path for mapping in extractor.mappings],
                     {mapping.dest for mapping in extractor.mappings},
+                    api_flavor=extractor.api_flavor,
                 )
             except ValueError as exc:  # pragma: no cover
                 failures.append(f'{provider.id}/{extractor.api_flavor}: {exc}')

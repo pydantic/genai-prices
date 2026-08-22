@@ -88,7 +88,7 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
 
 
 def validate_extractor_reasoning_coverage(
-    source_paths: Iterable[str | Sequence[object]], dest_keys: Collection[str]
+    source_paths: Iterable[str | Sequence[object]], dest_keys: Collection[str], *, api_flavor: str = 'default'
 ) -> None:
     """Require an extractor that reads top-level `completion_tokens` to also map reasoning tokens.
 
@@ -96,6 +96,9 @@ def validate_extractor_reasoning_coverage(
     breakdown under `completion_tokens_details.reasoning_tokens`. An unmapped response field is dropped
     without a warning, so an extractor missing that mapping silently loses the breakdown.
     """
+    if api_flavor not in {'default', 'chat'}:
+        return
+
     if _OUTPUT_REASONING_TOKENS in dest_keys:
         return
 
