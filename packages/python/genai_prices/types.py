@@ -1011,7 +1011,17 @@ class StartDateConstraint:
     """Date when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
+        # UTC date, matching the JS package (instant vs UTC midnight). Naive timestamps are UTC.
+        if request_timestamp.tzinfo is not None:
+            request_timestamp = request_timestamp.astimezone(timezone.utc)
         return request_timestamp.date() >= self.start_date
+
+
+def _utc_timetz(value: time) -> time:
+    """`value` as a UTC-aware time of day. Naive times are UTC."""
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return datetime.combine(date(1970, 1, 1), value).astimezone(timezone.utc).timetz()
 
 
 @dataclass
@@ -1024,7 +1034,16 @@ class TimeOfDateConstraint:
     """End time of the interval."""
 
     def active(self, request_timestamp: datetime) -> bool:
-        return self.start_time <= request_timestamp.timetz() < self.end_time
+        # Convert both sides to UTC before comparing so an offset that crosses midnight stays
+        # inside the day. Naive timestamps and naive constraint times are UTC.
+        if request_timestamp.tzinfo is None:
+            request_timestamp = request_timestamp.replace(tzinfo=timezone.utc)
+        request_time = request_timestamp.astimezone(timezone.utc).timetz()
+        start_time = _utc_timetz(self.start_time)
+        end_time = _utc_timetz(self.end_time)
+        if end_time < start_time:
+            return request_time >= start_time or request_time < end_time
+        return start_time <= request_time < end_time
 
 
 @dataclass

@@ -256,7 +256,8 @@ export function matchProvider(providers: Provider[], { modelId, providerApiUrl, 
   }
 
   if (providerApiUrl) {
-    return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
+    // Start-anchored, matching Python's `re.match`. The patterns themselves are unanchored.
+    return providers.find((p) => new RegExp(`^(?:${p.api_pattern})`).test(providerApiUrl))
   }
 
   if (modelId) {
