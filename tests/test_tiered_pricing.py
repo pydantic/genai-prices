@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import pytest
@@ -10,6 +11,11 @@ from genai_prices.data_snapshot import DataSnapshot
 from genai_prices.update_prices import UpdatePrices
 
 pytestmark = pytest.mark.anyio
+
+# Claude Sonnet 4.5 only ever exceeded 200k tokens under the `context-1m-2025-08-07` beta,
+# which was retired on 2026-04-30, so its long-context tiers are dated.
+DURING_1M_BETA = datetime(2025, 11, 6, tzinfo=timezone.utc)
+AFTER_1M_BETA = datetime(2026, 5, 1, tzinfo=timezone.utc)
 
 
 class MultiTierUpdatePrices(UpdatePrices):
@@ -94,7 +100,12 @@ def test_claude_sonnet_4_5_tiered_pricing_above_threshold():
     Calculation for 1,000,000 tokens:
     - ALL tokens at tier price: (6 * 1,000,000) / 1,000,000 = $6.00
     """
-    price = calc_price(Usage(input_tokens=1_000_000), model_ref='claude-sonnet-4.5', provider_id='anthropic')
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref='claude-sonnet-4.5',
+        provider_id='anthropic',
+        genai_request_timestamp=DURING_1M_BETA,
+    )
 
     assert price.input_price == snapshot(Decimal('6'))
     assert price.output_price == snapshot(Decimal('0'))
@@ -126,7 +137,12 @@ def test_claude_sonnet_4_5_tiered_pricing_just_above_threshold():
     - Threshold crossed, so ALL tokens pay tier price
     - ALL tokens at tier price: (6 * 200,001) / 1,000,000 = $1.200006
     """
-    price = calc_price(Usage(input_tokens=200_001), model_ref='claude-sonnet-4.5', provider_id='anthropic')
+    price = calc_price(
+        Usage(input_tokens=200_001),
+        model_ref='claude-sonnet-4.5',
+        provider_id='anthropic',
+        genai_request_timestamp=DURING_1M_BETA,
+    )
 
     assert price.input_price == snapshot(Decimal('1.200006'))
     assert price.output_price == snapshot(Decimal('0'))
@@ -182,11 +198,38 @@ def test_claude_sonnet_4_5_with_output_above_threshold():
         Usage(input_tokens=300_000, output_tokens=100_000),
         model_ref='claude-sonnet-4.5',
         provider_id='anthropic',
+        genai_request_timestamp=DURING_1M_BETA,
     )
 
     assert price.input_price == snapshot(Decimal('1.8'))
     assert price.output_price == snapshot(Decimal('2.25'))
     assert price.total_price == snapshot(Decimal('4.05'))
+    assert price.model.name == snapshot('Claude Sonnet 4.5')
+    assert price.provider.id == snapshot('anthropic')
+
+
+def test_claude_sonnet_4_5_tiers_gone_after_1m_beta_retired():
+    """Test Claude Sonnet 4.5 after the 1M context beta was retired on 2026-04-30.
+
+    The beta header stopped having any effect on that date and requests over the
+    standard 200k window now error, so there is no longer a >200k tier to apply.
+    Ref: https://platform.claude.com/docs/en/release-notes/api
+
+    Calculation for the same 300K input / 100K output as the test above:
+    - Input: base rate for all tokens: (3 * 300,000) / 1,000,000 = $0.90
+    - Output: base rate for all tokens: (15 * 100,000) / 1,000,000 = $1.50
+    - Total: $0.90 + $1.50 = $2.40
+    """
+    price = calc_price(
+        Usage(input_tokens=300_000, output_tokens=100_000),
+        model_ref='claude-sonnet-4.5',
+        provider_id='anthropic',
+        genai_request_timestamp=AFTER_1M_BETA,
+    )
+
+    assert price.input_price == snapshot(Decimal('0.90'))
+    assert price.output_price == snapshot(Decimal('1.5'))
+    assert price.total_price == snapshot(Decimal('2.40'))
     assert price.model.name == snapshot('Claude Sonnet 4.5')
     assert price.provider.id == snapshot('anthropic')
 

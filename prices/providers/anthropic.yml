@@ -471,38 +471,53 @@ models:
       or:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
-    context_window: 1000000
+    context_window: 200000
     prices_checked: 2026-07-29
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      The 1M context window was beta-only here and was retired on 2026-04-30, so the
+      >200k tiers below only apply to requests made before that date.
+      Ref: https://platform.claude.com/docs/en/release-notes/api
     prices:
-      input_mtok:
-        base: 3
-        tiers:
-          - start: 200000
-            price: 6
-      cache_read_mtok:
-        base: 0.30
-        tiers:
-          - start: 200000
-            price: 0.60
-      cache_write_mtok:
-        base: 3.75
-        tiers:
-          - start: 200000
-            price: 7.50
-      cache_write_1h_mtok:
-        base: 6
-        tiers:
-          - start: 200000
-            price: 12
-      output_mtok:
-        base: 15
-        tiers:
-          - start: 200000
-            price: 22.50
-      web_searches_kcount: 10
+      - prices:
+          input_mtok:
+            base: 3
+            tiers:
+              - start: 200000
+                price: 6
+          cache_read_mtok:
+            base: 0.30
+            tiers:
+              - start: 200000
+                price: 0.60
+          cache_write_mtok:
+            base: 3.75
+            tiers:
+              - start: 200000
+                price: 7.50
+          cache_write_1h_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 12
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 200000
+                price: 22.50
+          web_searches_kcount: 10
+      - constraint:
+          # 1M context beta (context-1m-2025-08-07) retired; >200k requests now error,
+          # so the long-context tiers are unreachable from this date on.
+          start_date: 2026-04-30
+        prices:
+          input_mtok: 3
+          cache_read_mtok: 0.30
+          cache_write_mtok: 3.75
+          cache_write_1h_mtok: 6
+          output_mtok: 15
+          web_searches_kcount: 10
 
   - id: claude-sonnet-4-6
     name: Claude Sonnet 4.6
