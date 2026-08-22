@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import ROUND_CEILING, Decimal, localcontext
 
 import pytest
 
@@ -203,6 +203,28 @@ def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
     price = model.calc_price(usage, provider)
 
     assert price.input_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
+
+
+def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
+    usage = Usage(audio_seconds=Decimal(3), input_audio_seconds=Decimal(1), output_audio_seconds=Decimal(2))
+    model = ModelInfo(
+        id='minimum-duration',
+        match=ClauseEquals('minimum-duration'),
+        minimum_audio_seconds=Decimal(10),
+        prices=ModelPrice(
+            audio_hours=Decimal('0.1'),
+            input_audio_hours=Decimal('0.1'),
+            output_audio_hours=Decimal('0.1'),
+        ),
+    )
+    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+
+    with localcontext() as context:
+        context.prec = 1
+        context.rounding = ROUND_CEILING
+        price = model.calc_price(usage, provider)
+
+    assert price.total_price.is_finite()
 
 
 def test_openai_transcription_model_ids_fail_closed() -> None:

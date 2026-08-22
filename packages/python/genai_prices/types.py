@@ -7,14 +7,20 @@ from collections.abc import Iterator, Mapping, Sequence
 from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
-from decimal import Decimal
+from decimal import MAX_EMAX, MIN_EMIN, ROUND_DOWN, Context, Decimal, localcontext
 from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
 from typing_extensions import Self, TypedDict
 
-from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
+from genai_prices._usage import (
+    UsageValue,
+    add_usage_values,
+    sum_usage_values,
+    usage_value_as_decimal,
+    validate_usage_value,
+)
 from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
@@ -728,8 +734,11 @@ class ModelInfo:
                             f'Invalid usage data: {usage_key} ({value}) cannot exceed audio_seconds ({audio_seconds})'
                         )
                     directional_values.append((usage_key, decimal_value))
+                directional_total: Decimal | None = None
                 if len(directional_values) == 2:
-                    directional_total = sum((value[1] for value in directional_values), Decimal(0))
+                    directional_total = usage_value_as_decimal(
+                        sum_usage_values(value[1] for value in directional_values)
+                    )
                     if directional_total > reported_seconds:
                         directional_keys = ', '.join(value[0] for value in directional_values)
                         raise ValueError(
@@ -738,12 +747,30 @@ class ModelInfo:
                         )
                 minimum_seconds = usage_value_as_decimal(self.minimum_audio_seconds)
                 if 0 < reported_seconds < minimum_seconds:
+                    precision = max(
+                        28,
+                        sum(
+                            len(value.as_tuple().digits)
+                            for value in (
+                                reported_seconds,
+                                minimum_seconds,
+                                *(value[1] for value in directional_values),
+                            )
+                        ),
+                    )
+                    scaled_directional_values: dict[str, Decimal] = {}
+                    with localcontext(Context(prec=precision, rounding=ROUND_DOWN, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+                        for usage_key, value in directional_values:
+                            scaled_directional_values[usage_key] = value / reported_seconds * minimum_seconds
+                        if directional_total == reported_seconds:
+                            first_key, _ = directional_values[0]
+                            second_key, _ = directional_values[1]
+                            scaled_directional_values[second_key] = (
+                                minimum_seconds - scaled_directional_values[first_key]
+                            )
                     usage.audio_seconds = self.minimum_audio_seconds
-                    for usage_key in ('input_audio_seconds', 'output_audio_seconds'):
-                        value = usage.__dict__.get(usage_key)
-                        if value is not None:
-                            directional_ratio = usage_value_as_decimal(value) / reported_seconds
-                            setattr(usage, usage_key, directional_ratio * minimum_seconds)
+                    for usage_key, value in scaled_directional_values.items():
+                        setattr(usage, usage_key, value)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
