@@ -222,7 +222,7 @@ describe('Comprehensive API Tests', () => {
 
         // One extra token roughly doubles the bill. Under marginal pricing it would barely move.
         expect(over!.input_price).toBeGreaterThan(under!.input_price * 1.99)
-      },
+      }
     )
 
     it('is not marginal pricing well past the threshold', () => {
