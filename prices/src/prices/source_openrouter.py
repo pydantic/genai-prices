@@ -73,10 +73,8 @@ class OpenRouterModel(BaseModel):
 
 
 class OpenRouterPricing(BaseModel, extra='allow'):
-    # `extra='allow'`, not `forbid`: OpenRouter adds pricing dimensions without notice, and `forbid`
-    # turned every addition into a hard crash that froze the whole pull until a human noticed (#532).
-    # The signal `forbid` was meant to give is preserved by `report_unknown_pricing_fields`, which
-    # prints what was ignored so new dimensions still get looked at.
+    # extra='allow': OpenRouter adds pricing fields without notice; forbid used to abort the whole pull.
+    # report_unknown_pricing_fields prints what was ignored.
 
     audio: Decimal | None = None
     prompt: Decimal | None = None

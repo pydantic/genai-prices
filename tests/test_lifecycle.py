@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -109,29 +108,8 @@ def test_removed_field_not_in_v2_data() -> None:
                 )
 
 
-# sha256 of the v1 artifacts as frozen by e15b266 ('feat: publish v2 pricing data for expanded billing units', PR #512).
-_V1_PAYLOAD_SHA256 = {
-    'data.json': 'f41075aab069a7dc378f83b7586523f72682a6c9860b23a89ad0b57c073aec41',
-    'data_slim.json': 'cca400c914ecd66dbb3c3f9e26fb66e5528a2986aeceed14b831361722cd4740',
-}
-
-
-def test_v1_payloads_are_byte_frozen() -> None:
-    """v1 is still served at its original URLs to pre-0.1.0 auto-update clients but `build.py` no longer writes it.
-
-    With no build step regenerating these files, the pre-commit build-diff mechanism cannot protect them either,
-    so the bytes are pinned here — otherwise a hand edit ships to every legacy client with green CI.
-    """
-    for filename, expected_digest in _V1_PAYLOAD_SHA256.items():
-        digest = hashlib.sha256((package_dir / filename).read_bytes()).hexdigest()
-        assert digest == expected_digest, (
-            f'{filename} is frozen; if this change is intentional, update the hash and say why in the PR'
-        )
-
-
-# Every price key present across both frozen v1 payloads. v2 adds nine more (`input_image_mtok`,
-# `output_reasoning_mtok`, `web_searches_kcount`, ...), so a v2-shaped regeneration of v1 — the exact
-# regression a deliberate hash bump would wave through — surfaces here as an unexpected key.
+# Every price key present across both frozen v1 payloads. Byte identity is pinned in
+# `tests/test_frozen_v1_data.py`; this is the semantic companion a hash bump would not catch.
 _V1_PRICE_KEYS = frozenset(
     {
         'cache_audio_read_mtok',

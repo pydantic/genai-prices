@@ -77,9 +77,8 @@ markers = [
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
-# `prices/src/prices` is measured but held to a lower bar than the published package — see the two
-# filtered `coverage report` invocations in the `coverage` CI job. It was excluded entirely until the
-# data pipeline turned out to be where the bugs were hiding (#533).
+# Pipeline is measured but held to a lower bar than the published package — see the two filtered
+# `coverage report` invocations in Makefile `coverage-report` and the CI `coverage` job.
 source = [
     "prices/src/prices",
     "packages/python",
@@ -99,7 +98,8 @@ skip_covered = true
 show_missing = true
 ignore_errors = true
 precision = 2
-fail_under = 100
+# Bars live on the filtered reports (package 100 / pipeline 52), not on an unfiltered total.
+fail_under = 0
 exclude_lines = [
     'pragma: no cover',
     'raise NotImplementedError',

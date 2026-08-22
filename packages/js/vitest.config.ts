@@ -3,9 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     coverage: {
-      // Ratcheted, not aspirational. The JS package had no coverage tooling at all until #533, while
-      // the Python package is held to 100% across five interpreters. Raise these as they improve;
-      // never lower them.
+      // Ratchet: raise as coverage improves; never lower.
       exclude: ['src/examples/**', 'src/__tests__/**', 'src/data.ts', 'src/dataUnits.ts', '**/*.d.ts'],
       include: ['src/**/*.ts'],
       provider: 'v8',

@@ -1,9 +1,6 @@
 """Tests for `prices.source_simonw_prices`.
 
-This importer decoded `{model_id: {...}}` through `TypeAdapter(dict[str, OnErrorOmit[SimonWModel]])`.
-When upstream moved to `{"updated_at": ..., "prices": [...]}`, `OnErrorOmit` swallowed every entry: the
-importer wrote `{}` and exited 0 for months. The drop-count and legacy-shape tests below are what make
-that class of failure loud.
+Drop-count and legacy-shape tests: OnErrorOmit used to swallow a payload-shape change into an empty write.
 """
 
 from __future__ import annotations

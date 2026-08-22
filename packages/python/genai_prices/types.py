@@ -1011,9 +1011,7 @@ class StartDateConstraint:
     """Date when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
-        # Compare the UTC date, not the caller's wall-clock date, so a request made at
-        # 2026-09-01T02:00+05:00 resolves the same here as in the JS package (which compares the
-        # instant against UTC midnight). A naive timestamp has no offset to convert and is read as UTC.
+        # UTC date, matching the JS package (instant vs UTC midnight). Naive timestamps are UTC.
         if request_timestamp.tzinfo is not None:
             request_timestamp = request_timestamp.astimezone(timezone.utc)
         return request_timestamp.date() >= self.start_date
@@ -1029,20 +1027,12 @@ class TimeOfDateConstraint:
     """End time of the interval."""
 
     def active(self, request_timestamp: datetime) -> bool:
-        # Convert to UTC *before* taking the time of day. Comparing the offset-aware `timetz()`
-        # directly looks like it should work - Python compares aware times by their UTC-adjusted value
-        # - but that adjustment is not wrapped into [00:00, 24:00), so any offset that pushes the time
-        # across midnight compares against a value outside the day and picks the wrong price. That is
-        # not hypothetical: it disagrees with the JS package on 23 of 144 sampled offset/hour pairs
-        # against the live DeepSeek 00:30-16:30 window.
-        # A naive timestamp is read as UTC; the constraint times are always offset-aware, and comparing
-        # them against a naive one raises.
+        # Convert to UTC before taking the time of day so an offset that crosses midnight stays
+        # inside the day. Naive timestamps are UTC.
         if request_timestamp.tzinfo is None:
             request_timestamp = request_timestamp.replace(tzinfo=timezone.utc)
         request_time = request_timestamp.astimezone(timezone.utc).timetz()
         if self.end_time < self.start_time:
-            # Window spans midnight, e.g. 22:00-06:00: active from the start time to midnight, and
-            # from midnight to the end time.
             return request_time >= self.start_time or request_time < self.end_time
         return self.start_time <= request_time < self.end_time
 

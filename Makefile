@@ -97,12 +97,17 @@ typecheck:
 test: ## Run tests and collect coverage data
 	uv run coverage run -m pytest
 	uv run python tests/dataset/extract_usages.py
-	@uv run coverage report --fail-under=0
+	@$(MAKE) coverage-report
 
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
-	@uv run coverage html --fail-under=0
+	@uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under=0
+
+.PHONY: coverage-report
+coverage-report: ## Package 100% / pipeline 52% — same split as the CI coverage job
+	@uv run coverage report --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under 100
+	@uv run coverage report --include='prices/src/*,tests/dataset/*' --fail-under 52
 
 .PHONY: test-all-python
 test-all-python: ## Run tests on Python 3.10 to 3.14
@@ -112,7 +117,7 @@ test-all-python: ## Run tests on Python 3.10 to 3.14
 	UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv314 uv run --python 3.14 --all-extras --all-packages coverage run -p -m pytest
 	@uv run coverage combine
-	@uv run coverage report
+	@$(MAKE) coverage-report
 
 .PHONY: test-js
 test-js: ## Build, typecheck, lint and test the JS package with coverage

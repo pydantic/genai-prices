@@ -91,9 +91,7 @@ jobs:
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: uv sync --only-dev
       - run: uv run coverage combine coverage
-      # Scoped to the strict tree: smokeshow reads this report's total and the public coverage badge has
-      # always meant "the published package is 100% covered". The pipeline's ratchet is enforced by its
-      # own `coverage report` run below rather than folded into the badge.
+      # Smokeshow / the public badge are the published package at 100%. Pipeline ratchet is the next step.
       - run: uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
       - name: Store coverage html
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -101,11 +99,8 @@ jobs:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
-      # The published package and its tests are held to 100%.
       - run: uv run coverage report --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under 100
-      # The data pipeline and the dataset generator are held to a ratchet instead: they were excluded
-      # from coverage entirely until #533, so they start well below 100. Raise this number as it
-      # improves; never lower it.
+      # Pipeline ratchet: raise this number as it improves; never lower it.
       - run: uv run coverage report --include='prices/src/*,tests/dataset/*' --fail-under 52
 
   test-js:
@@ -145,10 +140,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
-  # The py/js version-equality half of version-guard, without its `pull_request` gate. version-guard is
-  # correctly PR-only (a downgrade needs a base branch to compare against), but that meant the equality
-  # assertion was skipped on the tag push that actually publishes — so a tag where the two version files
-  # disagree would publish to PyPI irreversibly and then fail on npm.
+  # py/js version equality without the pull_request gate, so it still runs on the tag that publishes.
   version-match:
     runs-on: ubuntu-latest
     steps:
@@ -161,10 +153,7 @@ jobs:
       - run: uv sync --only-dev
       - run: uv run --no-sync python .github/scripts/check_version_not_downgraded.py
 
-  # The published v2 schema is a frozen contract. `make build` regenerates it from `prices/units.yml`,
-  # so adding a unit silently widens it — and clients that haven't upgraded warn-and-drop the unknown
-  # key rather than failing, i.e. silently under-priced usage in production. Adding a unit requires v3;
-  # see specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md.
+  # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
   v2-schema-frozen:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
