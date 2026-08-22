@@ -23998,52 +23998,18 @@ export const data: Provider[] = [
         description:
           'Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
         match: {
-          equals: 'grok-4.20',
+          or: [
+            {
+              equals: 'grok-4.20',
+            },
+            {
+              equals: 'grok-4.20-multi-agent',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
           'Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
-        prices: {
-          input_mtok: {
-            base: 1.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 2.5,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.4,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 2.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 5,
-              },
-            ],
-          },
-        },
-      },
-      {
-        id: 'grok-4.20-multi-agent',
-        name: 'Grok 4.20 Multi-Agent',
-        description:
-          "Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-        match: {
-          equals: 'grok-4.20-multi-agent',
-        },
-        context_window: 1000000,
-        price_comments:
-          'Priced as "grok-4.20-multi-agent-0309" on xAI\'s models page, at the same rates as the other grok-4.20 variants. Long context pricing: two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
         prices: {
           input_mtok: {
             base: 1.25,

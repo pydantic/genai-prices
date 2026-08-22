@@ -13903,24 +13903,11 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='grok-4.20',
-                match=ClauseEquals(equals='grok-4.20'),
+                match=ClauseOr(or_=[ClauseEquals(equals='grok-4.20'), ClauseEquals(equals='grok-4.20-multi-agent')]),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
                 context_window=1000000,
                 price_comments='Long context pricing: xAI lists this model as two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and notes that "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=200000, price=Decimal('5'))]),
-                ),
-            ),
-            ModelInfo(
-                id='grok-4.20-multi-agent',
-                match=ClauseEquals(equals='grok-4.20-multi-agent'),
-                name='Grok 4.20 Multi-Agent',
-                description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-                context_window=1000000,
-                price_comments='Priced as "grok-4.20-multi-agent-0309" on xAI\'s models page, at the same rates as the other grok-4.20 variants. Long context pricing: two rows, "< 200k prompt tokens" and "≥ 200k prompt tokens", and "requests whose prompt reaches the listed token threshold are billed at the higher rate for all tokens in the request". Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
