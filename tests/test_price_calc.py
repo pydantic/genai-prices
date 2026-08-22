@@ -1145,7 +1145,8 @@ def _naive_window_model() -> ModelInfo:
     [
         datetime(2026, 7, 30, 12),
         datetime(2026, 7, 30, 12, tzinfo=timezone.utc),
-        datetime(2026, 7, 30, 14, tzinfo=timezone(timedelta(hours=2))),
+        # 18:00+02:00 is 16:00Z (inside). Local 18:00 is outside 00:30–16:30, so a wall-clock compare fails.
+        datetime(2026, 7, 30, 18, tzinfo=timezone(timedelta(hours=2))),
     ],
 )
 def test_time_of_date_constraint_naive_window_is_utc(genai_request_timestamp: datetime) -> None:
