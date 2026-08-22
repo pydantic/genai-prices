@@ -327,7 +327,7 @@ models:
         - starts_with: claude-opus-4.6
         - starts_with: claude-4-6-opus
         - starts_with: claude-4.6-opus
-    context_window: 200000
+    context_window: 1000000
     prices_checked: 2026-07-29
     price_comments: >-
       One-hour cache writes cost 2x the base input price.

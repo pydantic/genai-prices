@@ -423,7 +423,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 200000,
+        context_window: 1000000,
         price_comments:
           'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: [
