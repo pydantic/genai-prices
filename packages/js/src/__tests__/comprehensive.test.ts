@@ -196,6 +196,69 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
+  describe('calcPrice - Deepseek V4 peak windows', () => {
+    // Deepseek V4 charges peak rates in two disjoint daily windows, so it has two constrained prices.
+    const hours: [hour: number, isPeak: boolean][] = [
+      [0, false], // before the first peak window
+      [1, true], // start of the first peak window, inclusive
+      [4, false], // end of the first peak window, exclusive
+      [5, false], // the gap between the two peak windows
+      [6, true], // start of the second peak window, inclusive
+      [9, true],
+      [10, false], // end of the second peak window, exclusive
+      [23, false],
+    ]
+    const models: [modelRef: string, offPeak: number, peak: number][] = [
+      ['deepseek-v4-flash', 22, 44],
+      ['deepseek-v4-pro', 66, 132],
+    ]
+    const cases = models.flatMap(([modelRef, offPeak, peak]) =>
+      hours.map(([hour, isPeak]): [string, number, number] => [modelRef, hour, isPeak ? peak : offPeak])
+    )
+
+    it.each(cases)('should charge %s the right rate at %i:00 UTC', (modelRef, hour, expected) => {
+      const usage: Usage = { input_tokens: 100_000_000 }
+      const result = calcPrice(usage, modelRef, {
+        providerId: 'deepseek',
+        timestamp: new Date(Date.UTC(2026, 7, 20, hour)),
+      })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+  })
+
+  describe('calcPrice - Deepseek V4 before the 2026-08-17 repricing', () => {
+    // The pre-repricing flat rate is the unconstrained first price, so it is preserved for the 17
+    // hours a day outside the two peak windows. `constraint` is a union, so the peak entries cannot
+    // also be gated on a start date, and inside those windows a pre-repricing request still
+    // resolves to the peak rate - see https://github.com/pydantic/genai-prices/issues/582.
+    const hours: [hour: number, inPeakWindow: boolean][] = [
+      [0, false],
+      [2, true], // inside a post-2026-08-17 peak window, so the old flat rate is shadowed
+      [12, false],
+      [23, false],
+    ]
+    const models: [modelRef: string, historic: number, peak: number][] = [
+      ['deepseek-v4-flash', 14, 44],
+      ['deepseek-v4-pro', 43.5, 132],
+    ]
+    const cases = models.flatMap(([modelRef, historic, peak]) =>
+      hours.map(([hour, inPeakWindow]): [string, number, number] => [modelRef, hour, inPeakWindow ? peak : historic])
+    )
+
+    it.each(cases)('should charge %s the right rate at %i:00 UTC on 2026-05-01', (modelRef, hour, expected) => {
+      const usage: Usage = { input_tokens: 100_000_000 }
+      const result = calcPrice(usage, modelRef, {
+        providerId: 'deepseek',
+        timestamp: new Date(Date.UTC(2026, 4, 1, hour)),
+      })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+  })
+
   describe('calcPrice - GPT-5.6 tiered cache pricing', () => {
     it('should apply long-context rates to every token bucket', () => {
       const usage: Usage = {

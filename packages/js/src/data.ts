@@ -3417,11 +3417,52 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.14,
-          cache_read_mtok: 0.0028,
-          output_mtok: 0.28,
-        },
+        price_comments:
+          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.0028,
+              output_mtok: 0.28,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-17',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.22,
+              cache_read_mtok: 0.007,
+              output_mtok: 0.66,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4-pro',
@@ -3436,11 +3477,52 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.003625,
-          output_mtok: 0.87,
-        },
+        price_comments:
+          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.003625,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-17',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.66,
+              cache_read_mtok: 0.022,
+              output_mtok: 1.98,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 1.32,
+              cache_read_mtok: 0.044,
+              output_mtok: 3.96,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 1.32,
+              cache_read_mtok: 0.044,
+              output_mtok: 3.96,
+            },
+          },
+        ],
       },
     ],
   },
