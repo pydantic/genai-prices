@@ -1664,23 +1664,23 @@ def test_price_deepseek_v4_before_repricing(
 
 
 @pytest.mark.parametrize(
-    'model_ref,threshold,base_input,long_input',
+    'model_ref,first_long_token,base_input,long_input',
     [
         ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
-        ('gpt-5.5', 272_000, Decimal('5'), Decimal('10')),
-        ('gpt-5.5-pro', 272_000, Decimal('30'), Decimal('60')),
+        ('gpt-5.5', 272_001, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_001, Decimal('30'), Decimal('60')),
     ],
 )
-def test_price_long_context_cliff(model_ref: str, threshold: int, base_input: Decimal, long_input: Decimal):
+def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):
     """xAI and OpenAI bill long-context requests as a cliff, not a marginal tier."""
-    under = calc_price(Usage(input_tokens=threshold), model_ref=model_ref)
-    assert under.input_price == threshold * base_input / 1_000_000
+    under = calc_price(Usage(input_tokens=first_long_token - 1), model_ref=model_ref)
+    assert under.input_price == (first_long_token - 1) * base_input / 1_000_000
 
-    over = calc_price(Usage(input_tokens=threshold + 1), model_ref=model_ref)
-    assert over.input_price == (threshold + 1) * long_input / 1_000_000
+    over = calc_price(Usage(input_tokens=first_long_token), model_ref=model_ref)
+    assert over.input_price == first_long_token * long_input / 1_000_000
     assert over.input_price > under.input_price * Decimal('1.99')
 
 

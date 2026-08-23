@@ -265,20 +265,20 @@ describe('Comprehensive API Tests', () => {
       ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-build-0.1', 200_000, 1, 2],
-      ['openai', 'gpt-5.5', 272_000, 5, 10],
-      ['openai', 'gpt-5.5-pro', 272_000, 30, 60],
+      ['openai', 'gpt-5.5', 272_001, 5, 10],
+      ['openai', 'gpt-5.5-pro', 272_001, 30, 60],
     ]
 
     it.each(cases)(
-      '%s/%s bills the whole request at the long-context rate past %i tokens',
-      (providerId, modelRef, threshold, baseInput, longInput) => {
-        const under = calcPrice({ input_tokens: threshold }, modelRef, { providerId })
+      '%s/%s bills the whole request at the long-context rate from %i tokens',
+      (providerId, modelRef, firstLongToken, baseInput, longInput) => {
+        const under = calcPrice({ input_tokens: firstLongToken - 1 }, modelRef, { providerId })
         expect(under).not.toBeNull()
-        expect(under!.input_price).toBeCloseTo((threshold * baseInput) / 1_000_000, 6)
+        expect(under!.input_price).toBeCloseTo(((firstLongToken - 1) * baseInput) / 1_000_000, 6)
 
-        const over = calcPrice({ input_tokens: threshold + 1 }, modelRef, { providerId })
+        const over = calcPrice({ input_tokens: firstLongToken }, modelRef, { providerId })
         expect(over).not.toBeNull()
-        expect(over!.input_price).toBeCloseTo(((threshold + 1) * longInput) / 1_000_000, 6)
+        expect(over!.input_price).toBeCloseTo((firstLongToken * longInput) / 1_000_000, 6)
 
         expect(over!.input_price).toBeGreaterThan(under!.input_price * 1.99)
       }
