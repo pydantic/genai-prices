@@ -1149,14 +1149,17 @@ def test_grok_4_6_long_context_cliff():
     the request". Pinning both sides of the threshold: reading it as a marginal tier would put
     a 500k-token prompt at $1.40 instead of $2.00.
     """
-    under = calc_price(Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai')
-    assert under.input_price == snapshot(Decimal('0.4'))
+    # The boundary is inclusive on xAI's side (">= 200k prompt tokens") but a tier here
+    # fires on `tokens > start`, so the threshold is pinned from both directions: one
+    # token below stays on the base rate, exactly 200k is already on the higher one.
+    under = calc_price(Usage(input_tokens=199_999), 'grok-4.6', provider_id='x-ai')
+    assert under.input_price == snapshot(Decimal('0.399998'))
 
-    over = calc_price(Usage(input_tokens=200_001), 'grok-4.6', provider_id='x-ai')
-    assert over.input_price == snapshot(Decimal('0.800004'))
+    at = calc_price(Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai')
+    assert at.input_price == snapshot(Decimal('0.8'))
 
     # One more token roughly doubles the bill; under marginal pricing it would barely move.
-    assert over.input_price > under.input_price * 2 - Decimal('0.0001')
+    assert at.input_price > under.input_price * 2 - Decimal('0.0001')
 
     full = calc_price(Usage(input_tokens=500_000), 'grok-4.6', provider_id='x-ai')
     assert full.input_price == snapshot(Decimal('2.0'))

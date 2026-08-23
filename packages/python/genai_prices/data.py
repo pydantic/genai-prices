@@ -13966,11 +13966,11 @@ providers: list[Provider] = [
                 name='Grok 4.6',
                 description="xAI's latest flagship model, released 2026-08-12. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning, over a 500k-token context window.",
                 context_window=500000,
-                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models/grok-4.6',
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=199999, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
                 ),
             ),
             ModelInfo(
