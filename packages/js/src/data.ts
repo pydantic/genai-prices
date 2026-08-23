@@ -25025,13 +25025,13 @@ export const data: Provider[] = [
         },
         context_window: 500000,
         price_comments:
-          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. Ref: https://docs.x.ai/docs/models/grok-4.6',
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6',
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 4,
               },
             ],
@@ -25040,7 +25040,7 @@ export const data: Provider[] = [
             base: 0.5,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 1,
               },
             ],
@@ -25049,7 +25049,7 @@ export const data: Provider[] = [
             base: 6,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 12,
               },
             ],
