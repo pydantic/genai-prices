@@ -1199,28 +1199,36 @@ def test_provider_api_url_matches_at_the_start_of_the_url():
 
     assert price.provider.id == 'openai'
 @pytest.mark.parametrize(
-    'model_ref,threshold,base_input,long_input',
+    'model_ref,first_long_token,base_input,long_input',
     [
+        # xAI's boundary is inclusive -- the table columns read "< 200k prompt tokens" and
+        # ">= 200k prompt tokens" -- so 200000 itself is already on the higher rate.
         ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
-        ('gpt-5.5', 272_000, Decimal('5'), Decimal('10')),
-        ('gpt-5.5-pro', 272_000, Decimal('30'), Decimal('60')),
+        # OpenAI only labels the cheap column "<272K context length" and says nothing about
+        # 272000 itself, so the first count we can hold them to on the higher rate is one past
+        # it. That is also where the existing data puts the line.
+        ('gpt-5.5', 272_001, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_001, Decimal('30'), Decimal('60')),
     ],
 )
-def test_price_long_context_cliff(model_ref: str, threshold: int, base_input: Decimal, long_input: Decimal):
+def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):
     """xAI and OpenAI bill long-context requests as a cliff, not a marginal tier.
 
     Both vendors state that once the prompt reaches the threshold the higher rate applies
     to *every* token in the request, so a request just over the line costs about double one
     just under it, and the tokens below the threshold are not priced at the base rate.
-    """
-    under = calc_price(Usage(input_tokens=threshold), model_ref=model_ref)
-    assert under.input_price == threshold * base_input / 1_000_000
 
-    over = calc_price(Usage(input_tokens=threshold + 1), model_ref=model_ref)
-    assert over.input_price == (threshold + 1) * long_input / 1_000_000
+    The two disagree on which side of the line the threshold count itself falls, so the
+    parameter is the first token count that is billed long, not the threshold.
+    """
+    under = calc_price(Usage(input_tokens=first_long_token - 1), model_ref=model_ref)
+    assert under.input_price == (first_long_token - 1) * base_input / 1_000_000
+
+    over = calc_price(Usage(input_tokens=first_long_token), model_ref=model_ref)
+    assert over.input_price == first_long_token * long_input / 1_000_000
 
     # The whole request is repriced, not just the tokens past the threshold. If this were
     # marginal pricing the answer would be threshold * base + 1 * long, which is roughly half.
