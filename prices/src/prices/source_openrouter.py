@@ -72,7 +72,10 @@ class OpenRouterModel(BaseModel):
         )
 
 
-class OpenRouterPricing(BaseModel, extra='forbid'):
+class OpenRouterPricing(BaseModel, extra='allow'):
+    # extra='allow': OpenRouter adds pricing fields without notice; forbid used to abort the whole pull.
+    # report_unknown_pricing_fields prints what was ignored.
+
     audio: Decimal | None = None
     prompt: Decimal | None = None
     completion: Decimal | None = None
@@ -126,12 +129,32 @@ class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
 
 
+def report_unknown_pricing_fields(models: list[OpenRouterModel]) -> dict[str, int]:
+    """Count pricing fields OpenRouter sent that `OpenRouterPricing` doesn't model, and print them.
+
+    These are dropped from the import. A field appearing here means OpenRouter has added a pricing
+    dimension we may now be able to represent — see `prices/units.yml` for the ones v2 can express.
+    """
+    counts: dict[str, int] = {}
+    for model in models:
+        for field in model.pricing.model_extra or {}:
+            counts[field] = counts.get(field, 0) + 1
+
+    if counts:
+        print('OpenRouter sent pricing fields we ignore:')
+        for field, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])):
+            print(f'  {field}: {count} models')
+        print('')
+    return counts
+
+
 def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     """Update provider prices and metadata based on OpenRouter API."""
     r = httpx2.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
+    report_unknown_pricing_fields(or_response.data)
 
     providers_yaml = get_providers_yaml()
 

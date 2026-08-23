@@ -66,12 +66,19 @@ def _matched_version(pyproject_text: str, package_json_text: str, source: str) -
         sys.exit(f'::error::Invalid version {py_version!r} in {source}: {exc}')
 
 
-def main(base_ref: str) -> None:
+def main(base_ref: str | None) -> None:
     pr_version = _matched_version(
         _read_working_tree(PYPROJECT_PATH),
         _read_working_tree(PACKAGE_JSON_PATH),
         source='this PR',
     )
+    if base_ref is None:
+        # No base ref to compare against (tag builds): the py/js equality assertion above is the whole
+        # check. It has to run here too — a tag whose two version files disagree publishes to PyPI and
+        # then fails on npm, which is a half-release that cannot be undone.
+        print(f'Python and JS both declare {pr_version} - ok.')
+        return
+
     base_version = _matched_version(
         _read_from_ref(base_ref, PYPROJECT_PATH),
         _read_from_ref(base_ref, PACKAGE_JSON_PATH),
@@ -93,6 +100,6 @@ def main(base_ref: str) -> None:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.exit('usage: check_version_not_downgraded.py <base-ref>')
-    main(sys.argv[1])
+    if len(sys.argv) > 2:
+        sys.exit('usage: check_version_not_downgraded.py [<base-ref>]')
+    main(sys.argv[1] if len(sys.argv) == 2 else None)
