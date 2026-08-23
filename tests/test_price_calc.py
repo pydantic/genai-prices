@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+import re
+from datetime import datetime, time, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -15,6 +16,7 @@ from genai_prices.types import (
     ClauseOr,
     ClauseRegex,
     ClauseStartsWith,
+    ConditionalPrice,
     MatchLogic,
     ModelInfo,
     ModelPrice,
@@ -22,8 +24,10 @@ from genai_prices.types import (
     Provider,
     Tier,
     TieredPrices,
+    TimeOfDateConstraint,
     calc_unit_price,
 )
+from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 
 pytestmark = pytest.mark.anyio
 
@@ -785,6 +789,38 @@ def test_claude_opus_5_one_hour_cache_write_price():
     assert price.input_price == Decimal('10')
 
 
+def test_claude_opus_5_five_minute_cache_write_price():
+    """No shipped model prices `cache_write_5m_mtok`, so a 5m breakdown bills at the generic cache write rate."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_5m_tokens=1_000_000),
+        model_ref='claude-opus-5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == Decimal('6.25')
+
+
+def test_five_minute_cache_write_price_decomposes_alongside_one_hour():
+    price = ModelPrice(
+        input_mtok=Decimal('5'),
+        cache_write_mtok=Decimal('6.25'),
+        cache_write_5m_mtok=Decimal('6.25'),
+        cache_write_1h_mtok=Decimal('10'),
+    ).calc_price(
+        Usage(
+            input_tokens=1_000_000,
+            cache_write_tokens=1_000_000,
+            cache_write_5m_tokens=600_000,
+            cache_write_1h_tokens=400_000,
+        )
+    )
+
+    # 600k at the 5m rate + 400k at the 1h rate, leaving nothing at the generic cache write or base input rates.
+    assert price['input_price'] == Decimal('7.75')
+    assert price['output_price'] == Decimal('0')
+    assert price['total_price'] == Decimal('7.75')
+
+
 def test_distinct_output_category_prices_replace_aggregate_output_rate():
     price = calc_price(
         Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
@@ -850,6 +886,93 @@ def test_model_price_handles_decimal_duration() -> None:
     }
 
 
+# Rate for the unit under test, and a deliberately different rate for the ancestor prices it must be
+# accompanied by: the unit under test consumes the whole reported count, so ancestors must bill nothing.
+UNIT_UNDER_TEST_RATE = Decimal('3')
+ANCESTOR_RATE = Decimal('7')
+
+REGISTRY_USAGE_KEYS = sorted(_get_registry().units)
+NON_DIRECTIONAL_USAGE_KEYS = sorted(
+    usage_key for usage_key, unit in _get_registry().units.items() if 'direction' not in unit.dimensions
+)
+
+
+def _minimal_priced_units(unit: UnitDef, registry: UnitRegistry) -> list[UnitDef]:
+    """`unit` plus every ancestor price the validator requires alongside it.
+
+    Every join of two of those ancestors is itself an ancestor of `unit`, so ancestors alone satisfy
+    `validate_priced_units`; this test fails if a newly registered unit breaks that.
+    """
+    ancestor_keys = sorted(registry.ancestor_usage_keys(unit.usage_key))
+    return [unit, *(registry.units[ancestor_key] for ancestor_key in ancestor_keys)]
+
+
+def _minimal_model_price(unit: UnitDef, priced_units: list[UnitDef]) -> ModelPrice:
+    return ModelPrice(
+        **{
+            priced_unit.price_key: UNIT_UNDER_TEST_RATE if priced_unit is unit else ANCESTOR_RATE
+            for priced_unit in priced_units
+        }
+    )
+
+
+def _usage_of_one_unit(unit: UnitDef, priced_units: list[UnitDef]) -> Usage:
+    """Report `unit.per` for the unit under test and every ancestor, so all of it decomposes to `unit`."""
+    return Usage(
+        **{priced_unit.usage_key: unit.per for priced_unit in priced_units if priced_unit.usage_key != 'requests'}
+    )
+
+
+def _expected_price(unit: UnitDef) -> Decimal:
+    # `requests` is not a reportable usage key: the engine always prices exactly one request.
+    count = 1 if unit.usage_key == 'requests' else unit.per
+    return UNIT_UNDER_TEST_RATE * count / unit.per
+
+
+@pytest.mark.parametrize('usage_key', REGISTRY_USAGE_KEYS)
+def test_every_registry_unit_prices_end_to_end(usage_key: str) -> None:
+    """Every unit in the registry produces a non-zero price, whether or not any shipped model uses it."""
+    registry = _get_registry()
+    unit = registry.units[usage_key]
+    priced_units = _minimal_priced_units(unit, registry)
+    expected = _expected_price(unit)
+
+    price = _minimal_model_price(unit, priced_units).calc_price(_usage_of_one_unit(unit, priced_units))
+
+    assert price['total_price'] == expected > Decimal(0)
+    direction = unit.dimensions.get('direction')
+    assert price['input_price'] == (expected if direction == 'input' else Decimal(0))
+    assert price['output_price'] == (expected if direction == 'output' else Decimal(0))
+
+
+def test_non_directional_units_inventory() -> None:
+    assert NON_DIRECTIONAL_USAGE_KEYS == [
+        'audio_seconds',
+        'code_executions',
+        'requests',
+        'rerank_searches',
+        'social_searches',
+        'storage_searches',
+        'web_searches',
+    ]
+
+
+@pytest.mark.parametrize('usage_key', NON_DIRECTIONAL_USAGE_KEYS)
+def test_non_directional_units_excluded_from_input_and_output_price(usage_key: str) -> None:
+    """A unit with no `direction` dimension bills into `total_price` only, so input + output < total."""
+    registry = _get_registry()
+    unit = registry.units[usage_key]
+    priced_units = _minimal_priced_units(unit, registry)
+    expected = _expected_price(unit)
+
+    price = _minimal_model_price(unit, priced_units).calc_price(_usage_of_one_unit(unit, priced_units))
+
+    assert price['input_price'] == Decimal(0)
+    assert price['output_price'] == Decimal(0)
+    assert price['total_price'] == expected > Decimal(0)
+    assert price['input_price'] + price['output_price'] != price['total_price']
+
+
 def test_price_constraint_before():
     price = calc_price(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
     assert price.input_price == snapshot(Decimal('0.01'))
@@ -891,6 +1014,190 @@ def test_price_constraint_time_of_date():
     assert price.provider.name == snapshot('Deepseek')
 
 
+# `claude-sonnet-5` switches from introductory ($2/MTok input) to standard ($3/MTok) pricing on 2026-09-01.
+CLAUDE_SONNET_5_INTRODUCTORY_MTOK = Decimal('2')
+CLAUDE_SONNET_5_STANDARD_MTOK = Decimal('3')
+
+
+@pytest.mark.parametrize(
+    ('genai_request_timestamp', 'expected_input_mtok'),
+    [
+        # 02:00 on the start date at +05:00 is still 2026-08-31 in UTC, so the old price applies.
+        pytest.param(
+            datetime(2026, 9, 1, 2, tzinfo=timezone(timedelta(hours=5))),
+            CLAUDE_SONNET_5_INTRODUCTORY_MTOK,
+            id='start-date-local-day-utc-day-before',
+        ),
+        pytest.param(
+            datetime(2026, 8, 31, 21, tzinfo=timezone.utc),
+            CLAUDE_SONNET_5_INTRODUCTORY_MTOK,
+            id='same-instant-expressed-in-utc',
+        ),
+        # 20:00 the day before the start date at -05:00 is already 2026-09-01 in UTC.
+        pytest.param(
+            datetime(2026, 8, 31, 20, tzinfo=timezone(timedelta(hours=-5))),
+            CLAUDE_SONNET_5_STANDARD_MTOK,
+            id='start-date-local-day-before-utc-day-of',
+        ),
+        pytest.param(
+            datetime(2026, 9, 1, 1, tzinfo=timezone.utc),
+            CLAUDE_SONNET_5_STANDARD_MTOK,
+            id='same-instant-expressed-in-utc-after',
+        ),
+        pytest.param(datetime(2026, 8, 31, 23, 59), CLAUDE_SONNET_5_INTRODUCTORY_MTOK, id='naive-before'),
+        pytest.param(datetime(2026, 9, 1), CLAUDE_SONNET_5_STANDARD_MTOK, id='naive-at-boundary'),
+    ],
+)
+def test_start_date_constraint_compares_the_utc_date(
+    genai_request_timestamp: datetime, expected_input_mtok: Decimal
+) -> None:
+    """The boundary is UTC midnight, not the caller's wall-clock midnight, matching the JS package."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref='claude-sonnet-5',
+        provider_id='anthropic',
+        genai_request_timestamp=genai_request_timestamp,
+    )
+
+    assert price.model_price.input_mtok == expected_input_mtok
+    assert price.total_price == expected_input_mtok
+
+
+@pytest.mark.parametrize(
+    ('genai_request_timestamp', 'expected_input_price'),
+    [
+        # DeepSeek's off-peak window is 00:30:00Z-16:30:00Z; a naive timestamp is read as UTC.
+        (datetime(2025, 6, 1, 16), Decimal('27.00')),
+        (datetime(2025, 6, 1, 17), Decimal('13.500')),
+    ],
+)
+def test_time_of_date_constraint_reads_naive_timestamp_as_utc(
+    genai_request_timestamp: datetime, expected_input_price: Decimal
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=100_000_000),
+        model_ref='deepseek-chat',
+        genai_request_timestamp=genai_request_timestamp,
+    )
+
+    assert price.input_price == expected_input_price
+
+
+def _midnight_spanning_model() -> ModelInfo:
+    """A model whose off-peak window wraps around midnight; no shipped model has one."""
+    return ModelInfo(
+        id='wrapping-window',
+        match=ClauseEquals('wrapping-window'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('1'))),
+            ConditionalPrice(
+                TimeOfDateConstraint(
+                    start_time=time(22, tzinfo=timezone.utc),
+                    end_time=time(6, tzinfo=timezone.utc),
+                ),
+                prices=ModelPrice(input_mtok=Decimal('0.5')),
+            ),
+        ],
+    )
+
+
+@pytest.mark.parametrize(
+    ('genai_request_timestamp', 'expected_input_mtok'),
+    [
+        (datetime(2026, 7, 30, 23, tzinfo=timezone.utc), Decimal('0.5')),
+        (datetime(2026, 7, 30, 3, tzinfo=timezone.utc), Decimal('0.5')),
+        (datetime(2026, 7, 30, 22, tzinfo=timezone.utc), Decimal('0.5')),
+        (datetime(2026, 7, 30, 6, tzinfo=timezone.utc), Decimal('1')),
+        (datetime(2026, 7, 30, 12, tzinfo=timezone.utc), Decimal('1')),
+    ],
+)
+def test_time_of_date_constraint_spanning_midnight(
+    genai_request_timestamp: datetime, expected_input_mtok: Decimal
+) -> None:
+    model = _midnight_spanning_model()
+
+    assert model.get_prices(genai_request_timestamp) == ModelPrice(input_mtok=expected_input_mtok)
+
+
+def test_time_of_date_constraint_spanning_midnight_reads_naive_timestamp_as_utc() -> None:
+    model = _midnight_spanning_model()
+
+    assert model.get_prices(datetime(2026, 7, 30, 23)) == ModelPrice(input_mtok=Decimal('0.5'))
+    assert model.get_prices(datetime(2026, 7, 30, 12)) == ModelPrice(input_mtok=Decimal('1'))
+
+
+def _naive_window_model() -> ModelInfo:
+    return ModelInfo(
+        id='naive-window',
+        match=ClauseEquals('naive-window'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('1'))),
+            ConditionalPrice(
+                TimeOfDateConstraint(start_time=time(0, 30), end_time=time(16, 30)),
+                prices=ModelPrice(input_mtok=Decimal('0.5')),
+            ),
+        ],
+    )
+
+
+@pytest.mark.parametrize(
+    'genai_request_timestamp',
+    [
+        datetime(2026, 7, 30, 12),
+        datetime(2026, 7, 30, 12, tzinfo=timezone.utc),
+        # 18:00+02:00 is 16:00Z (inside). Local 18:00 is outside 00:30–16:30, so a wall-clock compare fails.
+        datetime(2026, 7, 30, 18, tzinfo=timezone(timedelta(hours=2))),
+    ],
+)
+def test_time_of_date_constraint_naive_window_is_utc(genai_request_timestamp: datetime) -> None:
+    """A naive constraint window is UTC, same as a naive request timestamp."""
+    model = _naive_window_model()
+
+    assert model.get_prices(genai_request_timestamp) == ModelPrice(input_mtok=Decimal('0.5'))
+    assert model.get_prices(datetime(2026, 7, 30, 17)) == ModelPrice(input_mtok=Decimal('1'))
+
+
+@pytest.mark.parametrize('offset_hours', [-11, -5, 0, 5, 9, 14])
+@pytest.mark.parametrize('hour', range(24))
+def test_time_of_date_constraint_is_offset_independent(offset_hours: int, hour: int) -> None:
+    """The same instant must price the same however the caller's timezone expresses it.
+
+    Comparing an offset-aware `timetz()` directly does not survive an offset that crosses midnight,
+    which silently picked the wrong side of DeepSeek's off-peak window for non-UTC callers.
+    """
+    tz = timezone(timedelta(hours=offset_hours))
+    local = datetime(2026, 1, 15, hour, tzinfo=tz)
+
+    usage = Usage(input_tokens=1_000)
+    local_price = calc_price(usage, model_ref='deepseek-chat', provider_id='deepseek', genai_request_timestamp=local)
+    utc_price = calc_price(
+        usage,
+        model_ref='deepseek-chat',
+        provider_id='deepseek',
+        genai_request_timestamp=local.astimezone(timezone.utc),
+    )
+
+    assert local_price.total_price == utc_price.total_price
+
+
+# An unanchored `api_pattern` must not match a provider host that merely appears inside the URL.
+PROXIED_OPENAI_API_URL = 'http://localhost:8080/proxy?u=https://api.openai.com/v1'
+
+
+def test_provider_api_url_matching_is_anchored():
+    expected_error = re.escape(f"Unable to find provider provider_api_url='{PROXIED_OPENAI_API_URL}'")
+    with pytest.raises(LookupError, match=expected_error):
+        calc_price(Usage(input_tokens=1_000), model_ref='gpt-4o', provider_api_url=PROXIED_OPENAI_API_URL)
+
+
+def test_provider_api_url_matches_at_the_start_of_the_url():
+    price = calc_price(
+        Usage(input_tokens=1_000),
+        model_ref='gpt-4o',
+        provider_api_url='https://api.openai.com/v1/chat/completions',
+    )
+
+    assert price.provider.id == 'openai'
 @pytest.mark.parametrize(
     'model_ref,model_name,off_peak,peak',
     [
@@ -988,63 +1295,71 @@ def test_model_not_found():
         calc_price(Usage(input_tokens=500_000), model_ref='wrong', provider_id='google')
 
 
-EXAMPLES: list[tuple[str, str]] = [
+EXAMPLES: list[tuple[str, str, Decimal]] = [
     # ('openrouter', 'amazon/us.amazon.nova-micro-v1:0'),
     # ('openrouter', 'amazon/us.amazon.nova-pro-v1:0'),
-    ('anthropic', 'anthropic.claude-v2'),
-    ('anthropic', 'claude-3-5-haiku-123'),
-    ('anthropic', 'claude-3-5-haiku-20241022'),
-    ('anthropic', 'claude-3-5-haiku-latest'),
-    ('anthropic', 'claude-3-5-sonnet-20241022'),
-    ('anthropic', 'claude-3-5-sonnet-latest'),
-    ('anthropic', 'claude-3-7-sonnet-20250219'),
-    ('anthropic', 'claude-3-7-sonnet-latest'),
-    ('anthropic', 'claude-3-opus-20240229'),
-    ('anthropic', 'claude-opus-4-20250514'),
-    ('anthropic', 'claude-opus-4-20250514'),
-    ('anthropic', 'claude-opus-4-0'),
-    ('cohere', 'command-r7b-12-2024'),
-    ('deepseek', 'deepseek-r1-distill-llama-70b'),
-    ('google', 'gemini-1.5-flash-002'),
-    ('google', 'gemini-1.5-flash-123'),
-    ('google', 'gemini-1.5-flash'),
-    ('google', 'gemini-1.5-pro-002'),
-    ('google', 'gemini-2.0-flash-exp'),
-    ('google', 'gemini-2.0-flash-thinking-exp-01-21'),
-    ('google', 'gemini-2.0-flash'),
-    ('google', 'gemini-2.5-pro-preview-03-25'),
+    ('anthropic', 'anthropic.claude-v2', snapshot(Decimal('0.0104'))),
+    ('anthropic', 'claude-3-5-haiku-123', snapshot(Decimal('0.0012'))),
+    ('anthropic', 'claude-3-5-haiku-20241022', snapshot(Decimal('0.0012'))),
+    ('anthropic', 'claude-3-5-haiku-latest', snapshot(Decimal('0.0012'))),
+    ('anthropic', 'claude-3-5-sonnet-20241022', snapshot(Decimal('0.0045'))),
+    ('anthropic', 'claude-3-5-sonnet-latest', snapshot(Decimal('0.0045'))),
+    ('anthropic', 'claude-3-7-sonnet-20250219', snapshot(Decimal('0.0045'))),
+    ('anthropic', 'claude-3-7-sonnet-latest', snapshot(Decimal('0.0045'))),
+    ('anthropic', 'claude-3-opus-20240229', snapshot(Decimal('0.0225'))),
+    ('anthropic', 'claude-opus-4-20250514', snapshot(Decimal('0.0225'))),
+    ('anthropic', 'claude-opus-4-20250514', snapshot(Decimal('0.0225'))),
+    ('anthropic', 'claude-opus-4-0', snapshot(Decimal('0.0225'))),
+    ('cohere', 'command-r7b-12-2024', snapshot(Decimal('0.0000525'))),
+    ('deepseek', 'deepseek-r1-distill-llama-70b', snapshot(Decimal('0.000769'))),
+    ('google', 'gemini-1.5-flash-002', snapshot(Decimal('0.000105'))),
+    ('google', 'gemini-1.5-flash-123', snapshot(Decimal('0.000105'))),
+    ('google', 'gemini-1.5-flash', snapshot(Decimal('0.000105'))),
+    ('google', 'gemini-1.5-pro-002', snapshot(Decimal('0.00175'))),
+    ('google', 'gemini-2.0-flash-exp', snapshot(Decimal('0.00014'))),
+    ('google', 'gemini-2.0-flash-thinking-exp-01-21', snapshot(Decimal('0.00014'))),
+    ('google', 'gemini-2.0-flash', snapshot(Decimal('0.00014'))),
+    ('google', 'gemini-2.5-pro-preview-03-25', snapshot(Decimal('0.00225'))),
     # ('openrouter', 'meta-llama/llama-3.3-70b-versatile'),
     # ('openrouter', 'meta-llama/llama-4-scout-17b-16e-instruct'),
-    ('mistral', 'mistral-small-latest'),
-    ('mistral', 'pixtral-12b-latest'),
-    ('openai', 'gpt-3.5-turbo-0125'),
-    ('openai', 'gpt-3.5-turbo-instruct:20230824-v2'),
-    ('openai', 'gpt-4-0613'),
-    ('openai', 'gpt-4.1-2025-04-14'),
-    ('openai', 'gpt-4.1-mini-2025-04-14'),
-    ('openai', 'gpt-4.1-mini'),
-    ('openai', 'gpt-4.1-nano-2025-04-14'),
-    ('openai', 'gpt-4.5-preview-2025-02-27'),
-    ('openai', 'gpt-4o-2024-08-06'),
-    ('openai', 'gpt-4o-2024-11-20'),
-    ('openai', 'gpt-4o-audio-preview-2024-10-01'),
-    ('openai', 'gpt-4o-audio-preview-2024-12-17'),
-    ('openai', 'gpt-4o-mini-2024-07-18'),
-    ('openai', 'gpt-4o-mini'),
-    ('openai', 'gpt-4o'),
-    ('openai', 'o3-mini-2025-01-31'),
-    ('openai', 'gpt-5.4'),
-    ('openai', 'gpt-5.4-pro'),
-    ('openai', 'gpt-5.6-sol'),
-    ('openai', 'gpt-5.6-terra'),
-    ('openai', 'gpt-5.6-luna'),
-    ('openai', 'text-embedding-3-small'),
+    ('mistral', 'mistral-small-latest', snapshot(Decimal('0.00013'))),
+    ('mistral', 'pixtral-12b-latest', snapshot(Decimal('0.000165'))),
+    ('openai', 'gpt-3.5-turbo-0125', snapshot(Decimal('0.00065'))),
+    ('openai', 'gpt-3.5-turbo-instruct:20230824-v2', snapshot(Decimal('0.0017'))),
+    ('openai', 'gpt-4-0613', snapshot(Decimal('0.036'))),
+    ('openai', 'gpt-4.1-2025-04-14', snapshot(Decimal('0.0028'))),
+    ('openai', 'gpt-4.1-mini-2025-04-14', snapshot(Decimal('0.00056'))),
+    ('openai', 'gpt-4.1-mini', snapshot(Decimal('0.00056'))),
+    ('openai', 'gpt-4.1-nano-2025-04-14', snapshot(Decimal('0.00014'))),
+    ('openai', 'gpt-4.5-preview-2025-02-27', snapshot(Decimal('0.090'))),
+    ('openai', 'gpt-4o-2024-08-06', snapshot(Decimal('0.0035'))),
+    ('openai', 'gpt-4o-2024-11-20', snapshot(Decimal('0.0035'))),
+    ('openai', 'gpt-4o-audio-preview-2024-10-01', snapshot(Decimal('0.0035'))),
+    ('openai', 'gpt-4o-audio-preview-2024-12-17', snapshot(Decimal('0.0035'))),
+    ('openai', 'gpt-4o-mini-2024-07-18', snapshot(Decimal('0.00021'))),
+    ('openai', 'gpt-4o-mini', snapshot(Decimal('0.00021'))),
+    ('openai', 'gpt-4o', snapshot(Decimal('0.0035'))),
+    ('openai', 'o3-mini-2025-01-31', snapshot(Decimal('0.00154'))),
+    ('openai', 'gpt-5.4', snapshot(Decimal('0.0040'))),
+    ('openai', 'gpt-5.4-pro', snapshot(Decimal('0.048'))),
+    ('openai', 'gpt-5.6-sol', snapshot(Decimal('0.008'))),
+    ('openai', 'gpt-5.6-terra', snapshot(Decimal('0.0032'))),
+    ('openai', 'gpt-5.6-luna', snapshot(Decimal('0.00032'))),
+    ('openai', 'text-embedding-3-small', snapshot(Decimal('0.00002'))),
 ]
 
 
-@pytest.mark.parametrize('provider,model', EXAMPLES)
-def test_models_found(provider: str, model: str):
-    calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)
+@pytest.mark.parametrize('provider,model,expected_total_price', EXAMPLES)
+def test_models_found(provider: str, model: str, expected_total_price: Decimal):
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        model_ref=model,
+        provider_id=provider,
+        # Pinned so the snapshots stay stable: some of these models price by time of day or start date.
+        genai_request_timestamp=datetime(2026, 7, 30, 12, tzinfo=timezone.utc),
+    )
+
+    assert price.total_price == expected_total_price
 
 
 def test_all_bundled_models_have_a_priceable_public_ref():

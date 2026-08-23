@@ -165,7 +165,8 @@ def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool
         return True
 
     for field, value in source_price.model_dump(exclude_none=True).items():
-        if current_value := getattr(current_price, field):
+        # extra='allow': a key our YAML doesn't carry is absent, not None — getattr without a default raises.
+        if current_value := getattr(current_price, field, None):
             if isinstance(current_value, TieredPrices) and current_value.base == value:
                 continue
             if current_value != value:
