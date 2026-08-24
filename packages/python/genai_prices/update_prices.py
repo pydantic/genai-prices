@@ -179,6 +179,7 @@ class UpdatePrices:
             if update_prices is None:
                 update_prices = _SharedUpdater(config, self)
                 try:
+                    self._fetch_updater = update_prices
                     _global_update_prices = update_prices
                     update_prices.claims = 1
                     self._updater = update_prices
@@ -186,11 +187,17 @@ class UpdatePrices:
                 except BaseException as exc:
                     # The thread may already be alive even if Thread.start() raised after delegating.
                     # Publish a stopping state before releasing the condition so no caller can join it.
-                    update_prices.phase = _UpdaterPhase.STOPPING
-                    update_prices.claims = 0
-                    self._updater = None
                     failed_worker = update_prices
                     start_error = exc
+
+                    def rollback_start() -> None:
+                        update_prices.phase = _UpdaterPhase.STOPPING
+                        update_prices.claims = 0
+                        self._updater = None
+                        self._fetch_updater = None
+
+                    rollback_interrupted = _finish_despite_interruption(rollback_start)
+                    start_error = rollback_interrupted or start_error
             else:
                 if update_prices.phase is _UpdaterPhase.DEAD:
                     raise RuntimeError('UpdatePrices background task terminated unexpectedly')
@@ -201,8 +208,18 @@ class UpdatePrices:
                         f'update_interval={update_prices.config.update_interval!r}, '
                         f'request_timeout={update_prices.config.request_timeout!r}'
                     )
-                update_prices.claims += 1
-                self._updater = update_prices
+                previous_claims = update_prices.claims
+                try:
+                    update_prices.claims = previous_claims + 1
+                    self._updater = update_prices
+                except BaseException as exc:
+                    # Both fields must describe the same ownership if acquisition is interrupted.
+                    def rollback_claim() -> None:
+                        self._updater = None
+                        update_prices.claims = previous_claims
+
+                    rollback_interrupted = _finish_despite_interruption(rollback_claim)
+                    raise rollback_interrupted or exc
 
         if failed_worker is not None:
             _finish_shutdown(failed_worker)
@@ -310,7 +327,6 @@ class _SharedUpdater:
         self.outcome = _UpdateOutcome()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
         self.owner = owner
-        owner._fetch_updater = self  # pyright: ignore[reportPrivateUsage]
 
     def start(self) -> None:
         self.thread.start()

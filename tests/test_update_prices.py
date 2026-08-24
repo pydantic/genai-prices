@@ -47,6 +47,17 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
+class InterruptingOwnershipUpdatePrices(NullUpdatePrices):
+    interrupt_on: str | None = None
+
+    def __setattr__(self, name: str, value: object) -> None:
+        assignment = 'clear' if value is None else 'set'
+        if name == '_updater' and self.interrupt_on == assignment:
+            self.interrupt_on = None
+            raise KeyboardInterrupt
+        super().__setattr__(name, value)
+
+
 def _mock_update_prices_get(
     monkeypatch: pytest.MonkeyPatch,
     content: bytes = PROVIDER_ARRAY_PAYLOAD,
@@ -241,6 +252,37 @@ def test_thread_start_failure_does_not_acquire_ownership(monkeypatch: pytest.Mon
 
     update_prices.start(wait=True)
     update_prices.stop()
+
+
+def test_interrupted_start_rollback_finishes_cleanup(monkeypatch: pytest.MonkeyPatch) -> None:
+    update_prices = InterruptingOwnershipUpdatePrices()
+    update_prices.interrupt_on = 'clear'
+
+    def fail_start(_thread: threading.Thread) -> None:
+        raise RuntimeError('failed')
+
+    with monkeypatch.context() as context:
+        context.setattr(threading.Thread, 'start', fail_start)
+        with pytest.raises(KeyboardInterrupt):
+            update_prices.start()
+
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+
+
+def test_interrupted_shared_claim_is_rolled_back() -> None:
+    first = NullUpdatePrices()
+    first.start(wait=True)
+    second = InterruptingOwnershipUpdatePrices()
+    second.interrupt_on = 'set'
+    try:
+        with pytest.raises(KeyboardInterrupt):
+            second.start()
+        first.stop()
+        assert wait_prices_updated_sync(timeout=0) is False
+    finally:
+        second.stop()
+        first.stop()
 
 
 def test_overridden_fetch_drives_shared_updater(monkeypatch: pytest.MonkeyPatch) -> None:
