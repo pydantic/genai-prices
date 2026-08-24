@@ -312,4 +312,11 @@ describe('generated data split', () => {
     )
     expect(calcPrice({}, 'gpt-transcribe-diarize', { providerId: 'openai' })).toBeNull()
   })
+
+  it('uses OpenRouter pricing for qualified Voxtral model IDs', () => {
+    const result = calcPrice({ input_tokens: 1_000 }, 'mistralai/voxtral-small-24b-2507', { providerId: 'openrouter' })
+
+    expect(result?.provider.id).toBe('openrouter')
+    expect(result?.model.id).toBe('mistralai/voxtral-small-24b-2507')
+  })
 })

@@ -271,6 +271,17 @@ def test_openai_transcription_model_ids_fail_closed() -> None:
         calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
 
 
+def test_qualified_openrouter_voxtral_model_uses_openrouter_price() -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000),
+        model_ref='mistralai/voxtral-small-24b-2507',
+        provider_id='openrouter',
+    )
+
+    assert price.provider.id == 'openrouter'
+    assert price.model.id == 'mistralai/voxtral-small-24b-2507'
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
