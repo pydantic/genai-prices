@@ -35,7 +35,7 @@ The following providers are currently supported:
 - [Anthropic](prices/providers/anthropic.yml) - 23 models
 - [Avian](prices/providers/avian.yml) - 4 models
 - [AWS Bedrock](prices/providers/aws.yml) - 86 models
-- [Microsoft Azure](prices/providers/azure.yml) - 22 models
+- [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
@@ -59,7 +59,7 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 86 models
+- [OpenAI](prices/providers/openai.yml) - 87 models
 - [OpenRouter](prices/providers/openrouter.yml) - 691 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models

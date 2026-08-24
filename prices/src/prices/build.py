@@ -56,9 +56,7 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    for provider in providers:
-        provider.exclude_removed()
-    inherit_context_windows(providers)
+    prepare_providers_for_export(providers)
     validate_export_payload(providers, units)
 
     schema_json_path = package_dir / 'providers' / '.schema.json'
@@ -68,6 +66,13 @@ def build():
     for provider in providers:
         provider.exclude_free()
     write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
+
+
+def prepare_providers_for_export(providers: list[Provider]) -> None:
+    """Resolve authoring relationships before filtering models from published data."""
+    inherit_context_windows(providers)
+    for provider in providers:
+        provider.exclude_removed()
 
 
 def inherit_context_windows(providers: list[Provider]) -> None:

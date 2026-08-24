@@ -2,16 +2,23 @@ from decimal import Decimal
 
 import pytest
 
-from prices.build import inherit_context_windows
+from prices.build import inherit_context_windows, prepare_providers_for_export
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider
 
 
-def make_model(model_id: str, *, context_window: int | None = None, canonical_model: str | None = None) -> ModelInfo:
+def make_model(
+    model_id: str,
+    *,
+    context_window: int | None = None,
+    canonical_model: str | None = None,
+    removed: bool = False,
+) -> ModelInfo:
     return ModelInfo(
         id=model_id,
         match=ClauseEquals(equals=model_id),
         canonical_model=canonical_model,
         context_window=context_window,
+        removed=removed,
         prices=ModelPrice(input_mtok=Decimal('1')),
     )
 
@@ -92,3 +99,25 @@ def test_chained_canonical_models_are_rejected():
         ValueError, match='Canonical model `native/canonical` must not reference another canonical model'
     ):
         inherit_context_windows(providers)
+
+
+def test_removed_canonical_model_can_supply_active_offering():
+    canonical = make_model('canonical', context_window=200_000, removed=True)
+    offering = make_model('offering', canonical_model='native/canonical')
+    providers = [
+        Provider(id='native', name='Native', api_pattern='native', models=[canonical]),
+        Provider(id='host', name='Host', api_pattern='host', models=[offering]),
+    ]
+
+    prepare_providers_for_export(providers)
+
+    assert providers[0].models == []
+    assert offering.context_window == 200_000
+
+
+def test_removed_offering_canonical_reference_is_validated():
+    offering = make_model('offering', canonical_model='native/missing', removed=True)
+    providers = [Provider(id='host', name='Host', api_pattern='host', models=[offering])]
+
+    with pytest.raises(ValueError, match='unknown canonical model `native/missing`'):
+        prepare_providers_for_export(providers)

@@ -250,6 +250,7 @@ models:
     canonical_model: anthropic/claude-sonnet-4-5
     match:
       contains: global.anthropic.claude-sonnet-4-5-20250929
+    context_window: 200000
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -1017,6 +1018,7 @@ models:
         - contains: eu.anthropic.claude-sonnet-4-5-20250929
         - contains: us-gov.anthropic.claude-sonnet-4-5-20250929
         - contains: jp.anthropic.claude-sonnet-4-5-20250929
+    context_window: 200000
     prices:
       input_mtok: 3.3
       cache_write_mtok: 4.125

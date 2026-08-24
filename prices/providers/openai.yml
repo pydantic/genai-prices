@@ -1288,9 +1288,7 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
-    context_window: 128000
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 15
@@ -1310,6 +1308,21 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
+
+  - id: o1-preview
+    name: o1 preview
+    description: Preview release of OpenAI's first reasoning model.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    context_window: 128000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
 
   - id: o1-pro
     name: o1-pro
@@ -1336,6 +1349,7 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
+    context_window: 200000
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -1370,6 +1384,7 @@ models:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
         - equals: o3-mini-high
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
@@ -1398,6 +1413,7 @@ models:
         - equals: o4-mini-2025-04-16
         - equals: o4-mini-high
         - equals: o4-mini
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1

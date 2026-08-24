@@ -133,8 +133,6 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
     prices_checked: 2025-07-03
     prices:
       input_mtok: 15
@@ -152,6 +150,19 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
+
+  - id: o1-preview
+    canonical_model: openai/o1-preview
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    prices_checked: 2025-07-03
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
 
   - id: o3-2025-04-16
     canonical_model: openai/o3

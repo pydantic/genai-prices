@@ -277,7 +277,7 @@
           "maxLength": 201,
           "pattern": "^\\S+/\\S+$",
           "type": "string",
-          "description": "Exact `provider/model` reference from which provider-independent metadata can be inherited.",
+          "description": "Exact `provider/model` record from which metadata valid for this entire offering record can be inherited.",
           "title": "Canonical Model"
         },
         "context_window": {

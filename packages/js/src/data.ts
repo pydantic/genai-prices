@@ -1221,7 +1221,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
-        context_window: 1000000,
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -2374,7 +2374,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 1000000,
+        context_window: 200000,
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
@@ -2727,15 +2727,9 @@ export const data: Provider[] = [
             {
               equals: 'o1-2024-12-17',
             },
-            {
-              equals: 'o1-preview',
-            },
-            {
-              equals: 'o1-preview-2024-09-12',
-            },
           ],
         },
-        context_window: 128000,
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_read_mtok: 7.5,
@@ -2762,6 +2756,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'o1-preview',
+        match: {
+          or: [
+            {
+              equals: 'o1-preview',
+            },
+            {
+              equals: 'o1-preview-2024-09-12',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 15,
+          cache_read_mtok: 7.5,
+          output_mtok: 60,
+        },
+      },
+      {
         id: 'o3-2025-04-16',
         match: {
           or: [
@@ -2773,6 +2786,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -2791,6 +2805,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.55,
@@ -2809,6 +2824,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.28,
@@ -13854,15 +13870,9 @@ export const data: Provider[] = [
             {
               equals: 'o1-2024-12-17',
             },
-            {
-              equals: 'o1-preview',
-            },
-            {
-              equals: 'o1-preview-2024-09-12',
-            },
           ],
         },
-        context_window: 128000,
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_read_mtok: 7.5,
@@ -13888,6 +13898,27 @@ export const data: Provider[] = [
           input_mtok: 1.1,
           cache_read_mtok: 0.55,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'o1-preview',
+        name: 'o1 preview',
+        description: "Preview release of OpenAI's first reasoning model.",
+        match: {
+          or: [
+            {
+              equals: 'o1-preview',
+            },
+            {
+              equals: 'o1-preview-2024-09-12',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 15,
+          cache_read_mtok: 7.5,
+          output_mtok: 60,
         },
       },
       {
@@ -13925,6 +13956,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: [
           {
             prices: {
@@ -13982,6 +14014,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.55,
@@ -14025,6 +14058,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.275,

@@ -789,7 +789,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
-                context_window=1000000,
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1461,7 +1461,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929'),
                     ]
                 ),
-                context_window=1000000,
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
@@ -1663,15 +1663,8 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='o1',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='o1'),
-                        ClauseEquals(equals='o1-2024-12-17'),
-                        ClauseEquals(equals='o1-preview'),
-                        ClauseEquals(equals='o1-preview-2024-09-12'),
-                    ]
-                ),
-                context_window=128000,
+                match=ClauseOr(or_=[ClauseEquals(equals='o1'), ClauseEquals(equals='o1-2024-12-17')]),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
@@ -1683,13 +1676,21 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='o1-preview',
+                match=ClauseOr(or_=[ClauseEquals(equals='o1-preview'), ClauseEquals(equals='o1-preview-2024-09-12')]),
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
+            ),
+            ModelInfo(
                 id='o3-2025-04-16',
                 match=ClauseOr(or_=[ClauseEquals(equals='o3'), ClauseEquals(equals='o3-2025-04-16')]),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='o3-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='o3-mini'), ClauseEquals(equals='o3-mini-2025-01-31')]),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('4.4')
                 ),
@@ -1697,6 +1698,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='o4-mini',
                 match=ClauseOr(or_=[ClauseContains(contains='o4-mini'), ClauseContains(contains='o4-mini-2025-04-16')]),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('4.4')
                 ),
@@ -8004,17 +8006,10 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='o1',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='o1'),
-                        ClauseEquals(equals='o1-2024-12-17'),
-                        ClauseEquals(equals='o1-preview'),
-                        ClauseEquals(equals='o1-preview-2024-09-12'),
-                    ]
-                ),
+                match=ClauseOr(or_=[ClauseEquals(equals='o1'), ClauseEquals(equals='o1-2024-12-17')]),
                 name='o1',
                 description='O1 is a model that offers a balance between cost and performance.',
-                context_window=128000,
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
@@ -8028,6 +8023,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='o1-preview',
+                match=ClauseOr(or_=[ClauseEquals(equals='o1-preview'), ClauseEquals(equals='o1-preview-2024-09-12')]),
+                name='o1 preview',
+                description="Preview release of OpenAI's first reasoning model.",
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
+            ),
+            ModelInfo(
                 id='o1-pro',
                 match=ClauseOr(or_=[ClauseEquals(equals='o1-pro'), ClauseEquals(equals='o1-pro-2025-03-19')]),
                 name='o1-pro',
@@ -8039,6 +8042,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='o3'), ClauseEquals(equals='o3-2025-04-16')]),
                 name='o3',
                 description='o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following. Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required for this model. Set up here: https://openrouter.ai/settings/integrations',
+                context_window=200000,
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -8071,6 +8075,7 @@ providers: list[Provider] = [
                 ),
                 name='o3 Mini',
                 description='OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and coding.',
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('4.4')
                 ),
@@ -8093,6 +8098,7 @@ providers: list[Provider] = [
                 ),
                 name='o4 Mini High',
                 description='OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.',
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('4.4')
                 ),
