@@ -133,9 +133,11 @@ settings raises `RuntimeError` instead of silently ignoring its configuration. T
 Applications that need custom behavior should start their updater before integrations initialize and retain it
 until shutdown.
 
-The last `stop()` keeps the existing shutdown behavior: it waits for an in-flight fetch to finish, then restores
-the bundled snapshot. Background failures remain process-wide and are raised once by the first `wait()` or
-`stop()` that observes them. `calc_price()` does not acquire either updater lock.
+The last `stop()` waits for an in-flight fetch to finish, then restores the bundled snapshot. It does not raise
+background fetch failures: those failures are logged and reported by every `wait()` call until a later fetch
+succeeds. This makes failure observation independent of which library owns or stops the updater first. Cancelling
+`wait_prices_updated_async()` does not consume or change that shared outcome. `calc_price()` does not acquire the
+updater lock.
 
 As with other background threads, start the updater only after calling `os.fork()`; inheriting a running updater
 in a child process is unsupported.
