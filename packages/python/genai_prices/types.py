@@ -716,28 +716,50 @@ class ModelInfo:
             audio_seconds = usage.__dict__.get('audio_seconds')
             if audio_seconds is not None:
                 reported_seconds = usage_value_as_decimal(audio_seconds)
+                directional_usage_keys = ('input_audio_seconds', 'output_audio_seconds')
                 directional_values: list[tuple[str, Decimal]] = []
-                for usage_key in ('input_audio_seconds', 'output_audio_seconds'):
+                for usage_key in directional_usage_keys:
                     value = usage.__dict__.get(usage_key)
                     if value is None:
                         continue
                     decimal_value = usage_value_as_decimal(value)
-                    if decimal_value > reported_seconds:
+                    with localcontext(Context(prec=28, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+                        rounding_tolerance = (
+                            Decimal('2.220446049250313e-16')
+                            * max(abs(reported_seconds), abs(decimal_value))
+                            * (len(directional_usage_keys) + 1)
+                        )
+                        excess = decimal_value - reported_seconds
+                    if excess > rounding_tolerance:
                         raise ValueError(
                             f'Invalid usage data: {usage_key} ({value}) cannot exceed audio_seconds ({audio_seconds})'
                         )
+                    if excess > 0:
+                        decimal_value = reported_seconds
                     directional_values.append((usage_key, decimal_value))
                 directional_total: Decimal | None = None
                 if len(directional_values) == 2:
                     directional_total = usage_value_as_decimal(
                         sum_usage_values(value[1] for value in directional_values)
                     )
-                    if directional_total > reported_seconds:
+                    with localcontext(Context(prec=28, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+                        rounding_tolerance = (
+                            Decimal('2.220446049250313e-16')
+                            * max(
+                                abs(reported_seconds),
+                                *(abs(value[1]) for value in directional_values),
+                            )
+                            * (len(directional_usage_keys) + 1)
+                        )
+                        excess = directional_total - reported_seconds
+                    if excess > rounding_tolerance:
                         directional_keys = ', '.join(value[0] for value in directional_values)
                         raise ValueError(
                             f'Invalid usage data: more-specific usage for {directional_keys} totals {directional_total}, '
                             f'which exceeds audio_seconds ({audio_seconds})'
                         )
+                    if abs(excess) <= rounding_tolerance:
+                        directional_total = reported_seconds
                 minimum_seconds = usage_value_as_decimal(minimum_audio_seconds)
                 if 0 < reported_seconds < minimum_seconds:
                     precision = max(
@@ -764,7 +786,11 @@ class ModelInfo:
                     usage.audio_seconds = minimum_audio_seconds
                     for usage_key, value in scaled_directional_values.items():
                         setattr(usage, usage_key, value)
-        price = model_price.calc_price(usage)
+        if minimum_audio_seconds is None:
+            price = model_price.calc_price(usage)
+        else:
+            with localcontext(Context(prec=28, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+                price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
