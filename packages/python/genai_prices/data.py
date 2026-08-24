@@ -302,7 +302,7 @@ providers: list[Provider] = [
                 ),
                 name='Claude Opus 4.6',
                 description='Our most intelligent model for building agents and coding',
-                context_window=200000,
+                context_window=1000000,
                 price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=[
                     ConditionalPrice(
@@ -439,7 +439,7 @@ providers: list[Provider] = [
                 ),
                 name='Claude Sonnet 4.5',
                 description='Our best combination of speed and intelligence',
-                context_window=1000000,
+                context_window=200000,
                 price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
@@ -734,7 +734,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
-                context_window=200000,
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -1354,7 +1354,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-6'),
                     ]
                 ),
-                context_window=200000,
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -2977,7 +2977,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='claude-opus-4.6'),
                     ]
                 ),
-                context_window=200000,
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
                     cache_write_mtok=TieredPrices(
@@ -9235,7 +9235,6 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-v4-pro',
                 match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
                 name='DeepSeek V4 Pro',
-                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
                 ),

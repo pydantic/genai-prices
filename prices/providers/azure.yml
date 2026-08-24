@@ -127,6 +127,7 @@ models:
       equals: mai-ds-r1:free
     prices: {}
 
+  # These reasoning limits are inherited from OpenAI and verified for Azure: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
   - id: o1
     canonical_model: openai/o1
     match:
@@ -316,6 +317,7 @@ models:
     prices: {}
 
   - id: text-embedding-3-large
+    # Azure documents 8,192 input tokens for both text-embedding-3 models: https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/azureopenai/embeddings
     canonical_model: openai/text-embedding-3-large
     match:
       equals: text-embedding-3-large

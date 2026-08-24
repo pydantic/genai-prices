@@ -90,6 +90,7 @@ models:
     name: DeepSeek-V4-Pro
     match:
       equals: accounts/fireworks/models/deepseek-v4-pro
+    # Fireworks publishes this exact hosted limit: https://fireworks.ai/models/fireworks/deepseek-v4-pro
     context_window: 1048576
     prices_checked: 2026-06-24
     prices:

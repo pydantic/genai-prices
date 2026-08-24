@@ -423,7 +423,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 200000,
+        context_window: 1000000,
         price_comments:
           'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: [
@@ -638,7 +638,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 1000000,
+        context_window: 200000,
         price_comments:
           'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
@@ -1156,7 +1156,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-4-6',
         },
-        context_window: 200000,
+        context_window: 1000000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -2194,7 +2194,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 200000,
+        context_window: 1000000,
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -4923,7 +4923,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 200000,
+        context_window: 1000000,
         prices: {
           input_mtok: {
             base: 5,
@@ -15996,7 +15996,6 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-pro',
         },
-        context_window: 1000000,
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.003625,

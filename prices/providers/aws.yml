@@ -250,6 +250,7 @@ models:
     canonical_model: anthropic/claude-sonnet-4-5
     match:
       contains: global.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
     context_window: 200000
     prices:
       input_mtok: 3
@@ -1018,6 +1019,7 @@ models:
         - contains: eu.anthropic.claude-sonnet-4-5-20250929
         - contains: us-gov.anthropic.claude-sonnet-4-5-20250929
         - contains: jp.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
     context_window: 200000
     prices:
       input_mtok: 3.3

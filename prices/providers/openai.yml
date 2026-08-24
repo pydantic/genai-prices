@@ -1341,6 +1341,7 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
+    # https://developers.openai.com/api/docs/models/o1
     context_window: 200000
     prices_checked: 2025-07-04
     prices:
@@ -1355,6 +1356,7 @@ models:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-mini
     context_window: 128000
     prices_checked: 2025-07-04
     prices:
@@ -1370,6 +1372,7 @@ models:
       or:
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-preview
     context_window: 128000
     prices_checked: 2025-07-04
     prices:
@@ -1402,6 +1405,7 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
+    # https://developers.openai.com/api/docs/models/o3
     context_window: 200000
     prices_checked: 2025-07-12
     prices:
@@ -1437,6 +1441,7 @@ models:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
         - equals: o3-mini-high
+    # https://developers.openai.com/api/docs/models/o3-mini
     context_window: 200000
     prices_checked: 2025-07-04
     prices:
@@ -1466,6 +1471,7 @@ models:
         - equals: o4-mini-2025-04-16
         - equals: o4-mini-high
         - equals: o4-mini
+    # https://developers.openai.com/api/docs/models/o4-mini
     context_window: 200000
     prices_checked: 2025-07-04
     prices:

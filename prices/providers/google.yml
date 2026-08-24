@@ -419,13 +419,13 @@ models:
 
   - id: claude-opus-4-6
     canonical_model: anthropic/claude-opus-4-6
+    # Google documents the inherited 1M limit for this exact model: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/opus-4-6
     match:
       or:
         - contains: claude-4-6-opus
         - contains: claude-opus-4-6
         - contains: claude-4.6-opus
         - contains: claude-opus-4.6
-    context_window: 200000
     prices_checked: 2026-02-05
     prices:
       input_mtok:

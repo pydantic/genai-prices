@@ -693,6 +693,8 @@ def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: st
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
     [
+        ('anthropic', 'claude-sonnet-4-5-20250929', 'anthropic', 'claude-sonnet-4-5', 200_000),
+        ('anthropic', 'claude-opus-4-6', 'anthropic', 'claude-opus-4-6', 1_000_000),
         ('azure', 'o1', 'azure', 'o1', 200_000),
         ('azure', 'o1-preview', 'azure', 'o1-preview', 128_000),
         ('azure', 'o1-mini', 'azure', 'o1-mini', 128_000),
@@ -700,12 +702,13 @@ def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: st
         ('azure', 'o3-mini', 'azure', 'o3-mini', 200_000),
         ('azure', 'o4-mini', 'azure', 'o4-mini', 200_000),
         ('google-vertex', 'claude-3-opus', 'google', 'claude-3-opus', 200_000),
+        ('google-vertex', 'claude-opus-4-6', 'google', 'claude-opus-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
-        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', 1_000_000),
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
     ],
 )
-def test_hosted_model_has_effective_context_window(
-    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int
+def test_model_has_effective_context_window(
+    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int | None
 ):
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 
