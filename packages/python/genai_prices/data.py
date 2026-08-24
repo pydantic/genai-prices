@@ -6370,6 +6370,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='mistral-medium-2312',
+                match=ClauseEquals(equals='mistral-medium-2312'),
+                name='Mistral Medium 1',
+                description="Mistral's first enterprise-grade model, released in December 2023.",
+                price_comments='Retired on 2025-06-16; retained for historical usage records at its original $2.70/$8.10 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-1-0-23-12.ts',
+                prices=ModelPrice(input_mtok=Decimal('2.7'), output_mtok=Decimal('8.1')),
+            ),
+            ModelInfo(
                 id='mistral-medium-3-1',
                 match=ClauseOr(
                     or_=[

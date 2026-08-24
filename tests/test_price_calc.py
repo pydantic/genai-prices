@@ -1194,6 +1194,13 @@ def test_mistral_voxtral_small_price_change(
             Decimal('0.15'),
         ),
         (
+            'mistral-medium-2312',
+            datetime(2025, 6, 15, tzinfo=timezone.utc),
+            'mistral-medium-2312',
+            Decimal('2.7'),
+            Decimal('8.1'),
+        ),
+        (
             'mistral-medium-2505',
             datetime(2026, 8, 24, tzinfo=timezone.utc),
             'mistral-medium-3-1',

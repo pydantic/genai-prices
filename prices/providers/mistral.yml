@@ -256,6 +256,19 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 1.5
 
+  - id: mistral-medium-2312
+    name: Mistral Medium 1
+    description: Mistral's first enterprise-grade model, released in December 2023.
+    match:
+      equals: mistral-medium-2312
+    prices_checked: 2026-08-24
+    price_comments: >-
+      Retired on 2025-06-16; retained for historical usage records at its original $2.70/$8.10 per MTok rates.
+      Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-1-0-23-12.ts
+    prices:
+      input_mtok: 2.7
+      output_mtok: 8.1
+
   - id: mistral-medium-3-1
     name: Mistral Medium 3 and 3.1
     description: >-
