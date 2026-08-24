@@ -2496,6 +2496,68 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'realtime',
+        root: ['response', 'usage'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'image_tokens'],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'text_tokens'],
+            dest: 'cache_text_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'audio_tokens'],
+            dest: 'cache_audio_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'image_tokens'],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+        ],
+      },
+      {
         api_flavor: 'embeddings',
         root: 'usage',
         model_path: 'model',

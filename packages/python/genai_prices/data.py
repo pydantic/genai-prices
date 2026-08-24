@@ -1519,6 +1519,48 @@ providers: list[Provider] = [
                 model_path='model',
             ),
             UsageExtractor(
+                root=['response', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'image_tokens'], dest='input_image_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'text_tokens'],
+                        dest='cache_text_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'audio_tokens'],
+                        dest='cache_audio_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'image_tokens'],
+                        dest='cache_image_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'text_tokens'], dest='output_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                ],
+                api_flavor='realtime',
+                model_path='model',
+            ),
+            UsageExtractor(
                 root='usage',
                 mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',
