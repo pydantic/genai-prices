@@ -472,7 +472,7 @@ models:
       or:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
-    # The 1M beta ended April 30, 2026; the current limit is 200K: https://platform.claude.com/docs/en/release-notes/overview
+    # The 1M beta was retired without graduating; requests over the standard 200K limit now error: https://platform.claude.com/docs/en/release-notes/overview
     context_window: 200000
     prices_checked: 2026-07-29
     price_comments: >-
