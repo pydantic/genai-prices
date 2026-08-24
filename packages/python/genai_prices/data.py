@@ -14146,19 +14146,40 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='grok-transcribe',
-                match=ClauseEquals(equals='grok-transcribe'),
-                price_comments='See https://docs.x.ai/developers/model-capabilities/audio/speech-to-text.',
-                prices=ModelPrice(audio_hours=Decimal('0.2'), input_audio_hours=Decimal('0.2')),
+                id='grok-stt',
+                match=ClauseOr(or_=[ClauseEquals(equals='grok-stt'), ClauseEquals(equals='grok-transcribe')]),
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing. The generic audio rate applies to streaming usage, while the directional input-audio rate applies to REST usage.',
+                prices=ModelPrice(audio_hours=Decimal('0.2'), input_audio_hours=Decimal('0.1')),
             ),
             ModelInfo(
                 id='grok-voice-latest',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='grok-voice-latest'), ClauseEquals(equals='grok-voice-think-fast-1.0')]
-                ),
+                match=ClauseEquals(equals='grok-voice-latest'),
                 name='Grok Voice',
-                price_comments='See https://docs.x.ai/developers/models#voice-pricing.',
+                price_comments='See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(audio_hours=Decimal('3'), input_text_messages_kcount=Decimal('4'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 5)),
+                        prices=ModelPrice(audio_hours=Decimal('4.8'), input_text_messages_kcount=Decimal('4')),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='grok-voice-think-fast-1.0',
+                match=ClauseEquals(equals='grok-voice-think-fast-1.0'),
+                name='Grok Voice Think Fast 1.0',
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing.',
+                deprecated=True,
                 prices=ModelPrice(audio_hours=Decimal('3'), input_text_messages_kcount=Decimal('4')),
+            ),
+            ModelInfo(
+                id='grok-voice-think-fast-2.0',
+                match=ClauseEquals(equals='grok-voice-think-fast-2.0'),
+                name='Grok Voice Think Fast 2.0',
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing.',
+                prices=ModelPrice(audio_hours=Decimal('4.8'), input_text_messages_kcount=Decimal('4')),
             ),
         ],
     ),

@@ -65,7 +65,7 @@ The following providers are currently supported:
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
-- [X AI](prices/providers/x_ai.yml) - 19 models
+- [X AI](prices/providers/x_ai.yml) - 21 models
 - [Z.AI](prices/providers/zai.yml) - 2 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 

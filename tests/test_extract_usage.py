@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -1349,8 +1350,6 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
     }
 
     model, usage = provider.extract_usage(response_data, api_flavor='realtime')
-    price = calc_price(usage, model_ref='grok-voice-think-fast-1.0', provider_id='x-ai')
-
     assert model is None
     assert usage == Usage(
         input_tokens=5,
@@ -1362,9 +1361,21 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
         input_text_messages=2,
         audio_seconds=60,
     )
-    assert price.input_price == Decimal('0.008')
-    assert price.output_price == 0
-    assert price.total_price == Decimal('0.058')
+    for model_ref, timestamp, expected_total in [
+        ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
+        ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+    ]:
+        price = calc_price(
+            usage,
+            model_ref=model_ref,
+            provider_id='x-ai',
+            genai_request_timestamp=timestamp,
+        )
+        assert price.input_price == Decimal('0.008')
+        assert price.output_price == 0
+        assert price.total_price == expected_total
 
 
 def test_xai_transcription_duration_usage_and_price() -> None:
@@ -1374,13 +1385,17 @@ def test_xai_transcription_duration_usage_and_price() -> None:
         {'text': 'Hello.', 'language': 'en', 'duration': 90, 'words': []},
         api_flavor='transcription',
     )
-    price = calc_price(usage, model_ref='grok-transcribe', provider_id='x-ai')
+    rest_price = calc_price(usage, model_ref='grok-stt', provider_id='x-ai')
+    streaming_price = calc_price(Usage(audio_seconds=90), model_ref='grok-transcribe', provider_id='x-ai')
 
     assert model is None
     assert usage == Usage(audio_seconds=90, input_audio_seconds=90)
-    assert price.input_price == Decimal('0.005')
-    assert price.output_price == 0
-    assert price.total_price == Decimal('0.005')
+    assert rest_price.input_price == Decimal('0.0025')
+    assert rest_price.output_price == 0
+    assert rest_price.total_price == Decimal('0.0025')
+    assert streaming_price.input_price == 0
+    assert streaming_price.output_price == 0
+    assert streaming_price.total_price == Decimal('0.005')
 
 
 @pytest.mark.parametrize(

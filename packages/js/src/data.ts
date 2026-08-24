@@ -24482,32 +24482,72 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'grok-transcribe',
+        id: 'grok-stt',
         match: {
-          equals: 'grok-transcribe',
+          or: [
+            {
+              equals: 'grok-stt',
+            },
+            {
+              equals: 'grok-transcribe',
+            },
+          ],
         },
-        price_comments: 'See https://docs.x.ai/developers/model-capabilities/audio/speech-to-text.',
+        price_comments:
+          'See https://docs.x.ai/developers/pricing#voice-pricing. The generic audio rate applies to streaming usage, while the directional input-audio rate applies to REST usage.',
         prices: {
           audio_hours: 0.2,
-          input_audio_hours: 0.2,
+          input_audio_hours: 0.1,
         },
       },
       {
         id: 'grok-voice-latest',
         name: 'Grok Voice',
         match: {
-          or: [
-            {
-              equals: 'grok-voice-latest',
-            },
-            {
-              equals: 'grok-voice-think-fast-1.0',
-            },
-          ],
+          equals: 'grok-voice-latest',
         },
-        price_comments: 'See https://docs.x.ai/developers/models#voice-pricing.',
+        price_comments: 'See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.',
+        prices: [
+          {
+            prices: {
+              audio_hours: 3,
+              input_text_messages_kcount: 4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-05',
+              type: 'start_date',
+            },
+            prices: {
+              audio_hours: 4.8,
+              input_text_messages_kcount: 4,
+            },
+          },
+        ],
+      },
+      {
+        id: 'grok-voice-think-fast-1.0',
+        name: 'Grok Voice Think Fast 1.0',
+        match: {
+          equals: 'grok-voice-think-fast-1.0',
+        },
+        price_comments: 'See https://docs.x.ai/developers/pricing#voice-pricing.',
         prices: {
           audio_hours: 3,
+          input_text_messages_kcount: 4,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'grok-voice-think-fast-2.0',
+        name: 'Grok Voice Think Fast 2.0',
+        match: {
+          equals: 'grok-voice-think-fast-2.0',
+        },
+        price_comments: 'See https://docs.x.ai/developers/pricing#voice-pricing.',
+        prices: {
+          audio_hours: 4.8,
           input_text_messages_kcount: 4,
         },
       },

@@ -383,7 +383,6 @@ describe('extractUsage', () => {
       }
 
       const { model, usage } = extractUsage(xaiProvider, responseData, 'realtime')
-      const price = calcPrice(usage, 'grok-voice-think-fast-1.0', { provider: xaiProvider })
 
       expect(model).toBeNull()
       expect(usage).toEqual({
@@ -396,22 +395,35 @@ describe('extractUsage', () => {
         output_text_tokens: 3,
         output_tokens: 42,
       })
-      expect(price).not.toBeNull()
-      expect(price!.input_price).toBeCloseTo(0.008, 15)
-      expect(price!.output_price).toBe(0)
-      expect(price!.total_price).toBeCloseTo(0.058, 15)
+      for (const [modelRef, timestamp, expectedTotal] of [
+        ['grok-voice-think-fast-1.0', undefined, 0.058],
+        ['grok-voice-think-fast-2.0', undefined, 0.088],
+        ['grok-voice-latest', new Date('2026-08-04T00:00:00Z'), 0.058],
+        ['grok-voice-latest', new Date('2026-08-05T00:00:00Z'), 0.088],
+      ] as const) {
+        const price = calcPrice(usage, modelRef, { provider: xaiProvider, timestamp })
+        expect(price).not.toBeNull()
+        expect(price!.input_price).toBeCloseTo(0.008, 15)
+        expect(price!.output_price).toBe(0)
+        expect(price!.total_price).toBeCloseTo(expectedTotal, 15)
+      }
     })
 
     it('should extract and price top-level transcription duration usage', () => {
       const { model, usage } = extractUsage(xaiProvider, { duration: 90, language: 'en', text: 'Hello.', words: [] }, 'transcription')
-      const price = calcPrice(usage, 'grok-transcribe', { provider: xaiProvider })
+      const restPrice = calcPrice(usage, 'grok-stt', { provider: xaiProvider })
+      const streamingPrice = calcPrice({ audio_seconds: 90 }, 'grok-transcribe', { provider: xaiProvider })
 
       expect(model).toBeNull()
       expect(usage).toEqual({ audio_seconds: 90, input_audio_seconds: 90 })
-      expect(price).not.toBeNull()
-      expect(price!.input_price).toBeCloseTo(0.005, 15)
-      expect(price!.output_price).toBe(0)
-      expect(price!.total_price).toBeCloseTo(0.005, 15)
+      expect(restPrice).not.toBeNull()
+      expect(restPrice!.input_price).toBeCloseTo(0.0025, 15)
+      expect(restPrice!.output_price).toBe(0)
+      expect(restPrice!.total_price).toBeCloseTo(0.0025, 15)
+      expect(streamingPrice).not.toBeNull()
+      expect(streamingPrice!.input_price).toBe(0)
+      expect(streamingPrice!.output_price).toBe(0)
+      expect(streamingPrice!.total_price).toBeCloseTo(0.005, 15)
     })
   })
 
