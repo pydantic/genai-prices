@@ -219,6 +219,14 @@ describe('generated data split', () => {
     )
   })
 
+  it('accepts directional duration totals within floating-point rounding tolerance', () => {
+    const result = calcPrice({ audio_seconds: 0.3, input_audio_seconds: 0.1, output_audio_seconds: 0.2 }, 'whisper-large-v3', {
+      providerId: 'groq',
+    })
+
+    expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
+  })
+
   it('scales directional audio usage when applying a minimum duration', () => {
     const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
     const provider: Provider = {

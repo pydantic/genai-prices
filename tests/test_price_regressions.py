@@ -191,6 +191,7 @@ def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
         price = model.calc_price(usage, provider)
 
     assert price.input_price == Decimal('2e-9')
+    assert price.total_price.is_finite()
 
 
 def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
