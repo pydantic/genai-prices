@@ -309,17 +309,21 @@ def test_check_for_price_discrepancies_reports_each_affected_provider(
 ) -> None:
     affected = model('affected', ModelPrice(input_mtok=Decimal('1')))
     affected.price_discrepancies = {'source': {}}
+    another_affected = model('another-affected', ModelPrice(input_mtok=Decimal('1')))
+    another_affected.price_discrepancies = {'source': {}}
     second_affected = model('also-affected', ModelPrice(input_mtok=Decimal('1')))
     second_affected.price_discrepancies = {'source': {}}
     provider_ymls = {
-        'first': FakeProviderYaml(provider('first', [affected, model('clear', ModelPrice(input_mtok=Decimal('1')))])),
+        'first': FakeProviderYaml(
+            provider('first', [affected, another_affected, model('clear', ModelPrice(input_mtok=Decimal('1')))])
+        ),
         'second': FakeProviderYaml(provider('second', [second_affected])),
         'third': FakeProviderYaml(provider('third', [model('clear', ModelPrice(input_mtok=Decimal('1')))])),
     }
     monkeypatch.setattr(price_discrepancies, 'get_providers_yaml', loaded_providers(provider_ymls))
 
-    assert check_for_price_discrepancies() == 2
-    assert capsys.readouterr().out == 'price discrepancies:\n               First: 1\n              Second: 1\n'
+    assert check_for_price_discrepancies() == 3
+    assert capsys.readouterr().out == 'price discrepancies:\n               First: 2\n              Second: 1\n'
 
 
 def test_check_for_price_discrepancies_reports_when_there_are_none(

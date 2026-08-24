@@ -87,7 +87,7 @@ def test_rebuild_usages_uses_available_recordings(
 
     assert rebuilt_current == current
     expected_bodies = recordings if has_raw_bodies else [{'file': 'current.json'}]
-    assert calls == [expected_bodies, expected_bodies] if has_raw_bodies else [expected_bodies]
+    assert calls == ([expected_bodies, expected_bodies] if has_raw_bodies else [expected_bodies])
     assert rebuilt == [{'body': body} for body in expected_bodies]
 
 
@@ -106,7 +106,7 @@ def test_main_reports_current_dataset(
 
 
 def test_main_rejects_stale_dataset_without_writing(
-    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch
+    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     current: list[dict[str, object]] = []
     rebuilt: list[dict[str, object]] = [{'body': {'file': 'recorded.json'}}]
@@ -114,10 +114,15 @@ def test_main_rejects_stale_dataset_without_writing(
     def stale_result() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
         return current, rebuilt
 
+    usages_file = tmp_path / 'usages.json'
+    usages_file.write_text('unchanged')
+    monkeypatch.setattr(extract_usages_module, 'this_dir', tmp_path)
     monkeypatch.setattr(extract_usages_module, 'rebuild_usages', stale_result)
 
     with pytest.raises(AssertionError, match='usages.json is out of date'):
         extract_usages_module.main(write=False)  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+
+    assert usages_file.read_text() == 'unchanged'
 
 
 def test_main_writes_and_reports_a_stale_dataset(

@@ -152,7 +152,7 @@ def check_for_price_discrepancies() -> int:
         if discs:
             if not found:
                 print('price discrepancies:')
-            found += 1
+            found += discs
             print(f'{provider_yml.provider.name:>20}: {discs}')
 
     if not found:
