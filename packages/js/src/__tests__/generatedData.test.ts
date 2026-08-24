@@ -195,4 +195,21 @@ describe('generated data split', () => {
     expect(result?.output_price).toBe(expectedOutput)
     expect(result?.total_price).toBe(expectedOutput)
   })
+
+  it('infers Mistral for the native Voxtral alias', () => {
+    const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
+
+    expect(result?.provider.id).toBe('mistral')
+    expect(result?.model.id).toBe('voxtral-small-24b-2507')
+  })
+
+  it('does not infer Mistral for a qualified OpenRouter Voxtral model', () => {
+    const model = 'mistralai/voxtral-small-24b-2507'
+
+    expect(calcPrice({ output_tokens: 1 }, model)).toBeNull()
+
+    const result = calcPrice({ output_tokens: 1 }, model, { providerApiUrl: 'https://openrouter.ai/api/v1' })
+    expect(result?.provider.id).toBe('openrouter')
+    expect(result?.model.id).toBe(model)
+  })
 })

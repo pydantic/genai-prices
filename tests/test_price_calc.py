@@ -1162,6 +1162,28 @@ def test_mistral_voxtral_small_price_change(
     assert price.total_price == expected_output_price
 
 
+def test_voxtral_provider_inference() -> None:
+    price = calc_price(Usage(output_tokens=1), model_ref='voxtral-small-latest')
+
+    assert price.provider.id == 'mistral'
+    assert price.model.id == 'voxtral-small-24b-2507'
+
+
+def test_qualified_openrouter_voxtral_model_does_not_infer_mistral() -> None:
+    model_ref = 'mistralai/voxtral-small-24b-2507'
+
+    with pytest.raises(LookupError, match=f"Unable to find provider with model matching '{model_ref}'"):
+        calc_price(Usage(output_tokens=1), model_ref=model_ref)
+
+    price = calc_price(
+        Usage(output_tokens=1),
+        model_ref=model_ref,
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+    assert price.provider.id == 'openrouter'
+    assert price.model.id == model_ref
+
+
 @pytest.mark.parametrize(
     ('genai_request_timestamp', 'expected_input_price'),
     [
