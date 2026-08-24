@@ -210,6 +210,37 @@ describe('extractUsage', () => {
       })
     })
 
+    it.each(['openai', 'azure'])('should extract realtime cached audio usage for %s', (providerId) => {
+      const provider: Provider = data.find((candidate) => candidate.id === providerId)!
+      const responseData = {
+        response: {
+          usage: {
+            input_token_details: {
+              audio_tokens: 250,
+              cached_tokens: 100,
+              cached_tokens_details: { audio_tokens: 100 },
+              text_tokens: 150,
+            },
+            input_tokens: 400,
+            output_token_details: { audio_tokens: 300, text_tokens: 200 },
+            output_tokens: 500,
+          },
+        },
+        type: 'response.done',
+      }
+
+      expect(extractUsage(provider, responseData, 'realtime').usage).toEqual({
+        cache_audio_read_tokens: 100,
+        cache_read_tokens: 100,
+        input_audio_tokens: 250,
+        input_text_tokens: 150,
+        input_tokens: 400,
+        output_audio_tokens: 300,
+        output_text_tokens: 200,
+        output_tokens: 500,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
