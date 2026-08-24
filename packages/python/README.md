@@ -205,3 +205,8 @@ int. This cannot recover decimal precision that was already lost before a float 
 
 Standard JSON decoding normally supplies `int` and `float`, while callers may request Decimal parsing before extraction.
 Decimal-bearing usage is not serializable by Python's standard JSON encoder without a custom conversion.
+
+For input-only duration pricing, report the same duration as both `audio_seconds` and `input_audio_seconds`. The model
+price must define the same rate as both `audio_hours` and `input_audio_hours`. Aggregate usage is explicit and is not
+inferred from its input or output descendants. A missing duration costs zero; negative and non-finite durations raise a
+`ValueError`. Groq's Whisper models apply their documented 10-second minimum to reported duration values.

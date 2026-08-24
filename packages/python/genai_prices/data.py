@@ -3692,6 +3692,20 @@ providers: list[Provider] = [
                 name='Qwen3 32B 131k',
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
             ),
+            ModelInfo(
+                id='whisper-large-v3',
+                match=ClauseEquals(equals='whisper-large-v3'),
+                name='Whisper Large V3',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3.',
+                prices=ModelPrice(audio_hours=Decimal('0.111'), input_audio_hours=Decimal('0.111')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3-turbo',
+                match=ClauseEquals(equals='whisper-large-v3-turbo'),
+                name='Whisper Large V3 Turbo',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
+                prices=ModelPrice(audio_hours=Decimal('0.04'), input_audio_hours=Decimal('0.04')),
+            ),
         ],
     ),
     Provider(

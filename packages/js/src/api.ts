@@ -12,6 +12,7 @@ import type {
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
+import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
@@ -227,7 +228,52 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  const minimumAudioSeconds =
+    provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo') ? 10 : undefined
+  let billedUsage = usage
+  if (minimumAudioSeconds !== undefined) {
+    billedUsage = { ...usage }
+    for (const usageKey of ['audio_seconds', 'input_audio_seconds', 'output_audio_seconds'] as const) {
+      const value = billedUsage[usageKey]
+      if (value !== undefined) validateUsageValue(usageKey, value)
+    }
+    const audioSeconds = billedUsage.audio_seconds
+    if (audioSeconds !== undefined) {
+      const directionalUsageKeys = ['input_audio_seconds', 'output_audio_seconds'] as const
+      for (const usageKey of directionalUsageKeys) {
+        const value = billedUsage[usageKey]
+        if (value === undefined) continue
+        const roundingTolerance = Number.EPSILON * Math.max(Math.abs(audioSeconds), Math.abs(value)) * (directionalUsageKeys.length + 1)
+        if (value - audioSeconds > roundingTolerance) {
+          throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
+        }
+      }
+      const inputAudioSeconds = billedUsage.input_audio_seconds
+      const outputAudioSeconds = billedUsage.output_audio_seconds
+      if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined) {
+        const directionalTotal = inputAudioSeconds + outputAudioSeconds
+        const roundingTolerance =
+          Number.EPSILON *
+          Math.max(Math.abs(audioSeconds), Math.abs(inputAudioSeconds), Math.abs(outputAudioSeconds)) *
+          (directionalUsageKeys.length + 1)
+        if (directionalTotal - audioSeconds > roundingTolerance) {
+          throw new Error(
+            `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${directionalTotal.toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
+          )
+        }
+      }
+      if (audioSeconds > 0 && audioSeconds < minimumAudioSeconds) {
+        billedUsage.audio_seconds = minimumAudioSeconds
+        for (const usageKey of directionalUsageKeys) {
+          const value = billedUsage[usageKey]
+          if (value !== undefined) {
+            billedUsage[usageKey] = (value / audioSeconds) * minimumAudioSeconds
+          }
+        }
+      }
+    }
+  }
+  const priceResult = calcPriceInternal(billedUsage, modelPrice)
   return {
     auto_update_timestamp: undefined,
     model,
