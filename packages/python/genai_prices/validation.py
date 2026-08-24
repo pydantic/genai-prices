@@ -90,7 +90,7 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
 def validate_extractor_reasoning_coverage(
     source_paths: Iterable[str | Sequence[object]], dest_keys: Collection[str], *, api_flavor: str = 'default'
 ) -> None:
-    """Require an extractor that reads top-level `completion_tokens` to also map reasoning tokens.
+    """Require default and chat extractors reading top-level `completion_tokens` to map reasoning tokens.
 
     OpenAI-compatible chat responses count reasoning tokens inside `completion_tokens` and report the
     breakdown under `completion_tokens_details.reasoning_tokens`. An unmapped response field is dropped
