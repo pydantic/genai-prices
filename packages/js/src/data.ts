@@ -12168,6 +12168,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -13995,6 +14012,17 @@ export const data: Provider[] = [
           output_audio_mtok: 20,
           input_image_mtok: 0.8,
           cache_image_read_mtok: 0.08,
+        },
+      },
+      {
+        id: 'gpt-realtime-whisper',
+        match: {
+          equals: 'gpt-realtime-whisper',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
+        prices: {
+          audio_hours: 1.02,
+          input_audio_hours: 1.02,
         },
       },
       {
@@ -23911,6 +23939,70 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'realtime',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'billable_audio_seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'input_text_messages',
+            dest: 'input_text_messages',
+            required: false,
+          },
+        ],
+      },
+      {
+        api_flavor: 'transcription',
+        root: '$',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'duration',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'duration',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -24305,6 +24397,36 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'grok-transcribe',
+        match: {
+          equals: 'grok-transcribe',
+        },
+        price_comments: 'See https://docs.x.ai/developers/model-capabilities/audio/speech-to-text.',
+        prices: {
+          audio_hours: 0.2,
+          input_audio_hours: 0.2,
+        },
+      },
+      {
+        id: 'grok-voice-latest',
+        name: 'Grok Voice',
+        match: {
+          or: [
+            {
+              equals: 'grok-voice-latest',
+            },
+            {
+              equals: 'grok-voice-think-fast-1.0',
+            },
+          ],
+        },
+        price_comments: 'See https://docs.x.ai/developers/models#voice-pricing.',
+        prices: {
+          audio_hours: 3,
+          input_text_messages_kcount: 4,
         },
       },
     ],

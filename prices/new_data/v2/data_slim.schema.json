@@ -1240,7 +1240,7 @@
               "type": "array"
             }
           ],
-          "description": "Path to the root of the usage information in the response, generally `usage`.",
+          "description": "Path to the root of the usage information in the response, generally `usage`.\n\nUse `$` when the response itself contains the usage fields.",
           "title": "Root"
         },
         "model_path": {

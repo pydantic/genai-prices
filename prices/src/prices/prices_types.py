@@ -144,7 +144,10 @@ class UsageExtractor(_Model):
     api_flavor: str = 'default'
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     root: ExtractPath
-    """Path to the root of the usage information in the response, generally `usage`."""
+    """Path to the root of the usage information in the response, generally `usage`.
+
+    Use `$` when the response itself contains the usage fields.
+    """
     model_path: ExtractPath = 'model'
     """Path to the model name in the response.
 

@@ -300,6 +300,22 @@ def test_openai_realtime_usage_modalities():
     )
 
 
+def test_openai_transcription_duration_usage_and_price() -> None:
+    provider = next(provider for provider in providers if provider.id == 'openai')
+
+    model, usage = provider.extract_usage(
+        {'usage': {'type': 'duration', 'seconds': 30}},
+        api_flavor='transcription',
+    )
+    price = calc_price(usage, model_ref='gpt-realtime-whisper', provider_id='openai')
+
+    assert model is None
+    assert usage == Usage(audio_seconds=30, input_audio_seconds=30)
+    assert price.input_price == Decimal('0.0085')
+    assert price.output_price == 0
+    assert price.total_price == Decimal('0.0085')
+
+
 def test_openai_image_usage_modalities():
     provider = next(provider for provider in providers if provider.id == 'openai')
     usage_data = {
@@ -1302,6 +1318,56 @@ def test_xai_native():
     extracted_usage = extract_usage(response_data, provider_id='x-ai')
     assert extracted_usage.usage == usage
     assert extracted_usage.calc_price().total_price == Decimal('0.0000349')
+
+
+def test_xai_realtime_duration_and_message_usage_and_price() -> None:
+    provider = next(provider for provider in providers if provider.id == 'x-ai')
+    response_data: dict[str, Any] = {
+        'type': 'response.done',
+        'response': {'usage': {}},
+        'usage': {
+            'input_tokens': 5,
+            'input_token_details': {'text_tokens': 5, 'audio_tokens': 0},
+            'output_tokens': 42,
+            'output_token_details': {'text_tokens': 3, 'audio_tokens': 39},
+            'billable_audio_seconds': 60,
+            'input_text_messages': 2,
+        },
+    }
+
+    model, usage = provider.extract_usage(response_data, api_flavor='realtime')
+    price = calc_price(usage, model_ref='grok-voice-think-fast-1.0', provider_id='x-ai')
+
+    assert model is None
+    assert usage == Usage(
+        input_tokens=5,
+        output_tokens=42,
+        input_text_tokens=5,
+        output_text_tokens=3,
+        input_audio_tokens=0,
+        output_audio_tokens=39,
+        input_text_messages=2,
+        audio_seconds=60,
+    )
+    assert price.input_price == Decimal('0.008')
+    assert price.output_price == 0
+    assert price.total_price == Decimal('0.058')
+
+
+def test_xai_transcription_duration_usage_and_price() -> None:
+    provider = next(provider for provider in providers if provider.id == 'x-ai')
+
+    model, usage = provider.extract_usage(
+        {'text': 'Hello.', 'language': 'en', 'duration': 90, 'words': []},
+        api_flavor='transcription',
+    )
+    price = calc_price(usage, model_ref='grok-transcribe', provider_id='x-ai')
+
+    assert model is None
+    assert usage == Usage(audio_seconds=90, input_audio_seconds=90)
+    assert price.input_price == Decimal('0.005')
+    assert price.output_price == 0
+    assert price.total_price == Decimal('0.005')
 
 
 @pytest.mark.parametrize(

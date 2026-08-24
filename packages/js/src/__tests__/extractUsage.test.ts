@@ -210,6 +210,18 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract and price realtime transcription duration usage', () => {
+      const { model, usage } = extractUsage(openaiProvider, { usage: { seconds: 30, type: 'duration' } }, 'transcription')
+      const price = calcPrice(usage, 'gpt-realtime-whisper', { provider: openaiProvider })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({ audio_seconds: 30, input_audio_seconds: 30 })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.0085, 15)
+      expect(price!.output_price).toBe(0)
+      expect(price!.total_price).toBeCloseTo(0.0085, 15)
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
@@ -303,6 +315,52 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 6,
         output_tokens: 14,
       })
+    })
+
+    it('should extract and price realtime duration and message usage', () => {
+      const responseData = {
+        response: { usage: {} },
+        type: 'response.done',
+        usage: {
+          billable_audio_seconds: 60,
+          input_text_messages: 2,
+          input_token_details: { audio_tokens: 0, text_tokens: 5 },
+          input_tokens: 5,
+          output_token_details: { audio_tokens: 39, text_tokens: 3 },
+          output_tokens: 42,
+        },
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData, 'realtime')
+      const price = calcPrice(usage, 'grok-voice-think-fast-1.0', { provider: xaiProvider })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({
+        audio_seconds: 60,
+        input_audio_tokens: 0,
+        input_text_messages: 2,
+        input_text_tokens: 5,
+        input_tokens: 5,
+        output_audio_tokens: 39,
+        output_text_tokens: 3,
+        output_tokens: 42,
+      })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.008, 15)
+      expect(price!.output_price).toBe(0)
+      expect(price!.total_price).toBeCloseTo(0.058, 15)
+    })
+
+    it('should extract and price top-level transcription duration usage', () => {
+      const { model, usage } = extractUsage(xaiProvider, { duration: 90, language: 'en', text: 'Hello.', words: [] }, 'transcription')
+      const price = calcPrice(usage, 'grok-transcribe', { provider: xaiProvider })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({ audio_seconds: 90, input_audio_seconds: 90 })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.005, 15)
+      expect(price!.output_price).toBe(0)
+      expect(price!.total_price).toBeCloseTo(0.005, 15)
     })
   })
 
