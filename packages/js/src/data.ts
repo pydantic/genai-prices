@@ -2447,6 +2447,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
             required: false,
@@ -2481,6 +2486,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {
