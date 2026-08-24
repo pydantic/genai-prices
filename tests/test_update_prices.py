@@ -655,7 +655,8 @@ def test_interrupted_start_cannot_publish_from_a_late_worker(monkeypatch: pytest
     allow_worker_start = threading.Event()
     worker_started = threading.Event()
     worker_thread: threading.Thread | None = None
-    initial_fetch_count = CountingNullUpdatePrices.count
+    update_prices = CountingNullUpdatePrices()
+    initial_fetch_count = update_prices.count
 
     original_start = threading.Thread.start
 
@@ -672,7 +673,6 @@ def test_interrupted_start_cannot_publish_from_a_late_worker(monkeypatch: pytest
         original_start(starter)
         raise KeyboardInterrupt
 
-    update_prices = CountingNullUpdatePrices()
     with monkeypatch.context() as context:
         context.setattr(threading.Thread, 'start', start_later_then_interrupt)
         with pytest.raises(KeyboardInterrupt):
@@ -685,7 +685,7 @@ def test_interrupted_start_cannot_publish_from_a_late_worker(monkeypatch: pytest
         assert worker_thread is not None
         worker_thread.join(timeout=5)
         assert not worker_thread.is_alive()
-        assert CountingNullUpdatePrices.count == initial_fetch_count
+        assert update_prices.count == initial_fetch_count
 
 
 def test_interrupted_snapshot_reset_still_publishes_idle(monkeypatch: pytest.MonkeyPatch) -> None:
