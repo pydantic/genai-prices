@@ -425,7 +425,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'One-hour cache writes cost 2x the base input price. The 1M context window is generally available. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model',
         prices: [
           {
             prices: {
@@ -640,7 +640,7 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         price_comments:
-          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing The 1M context window was beta-only here and was retired on 2026-04-30, so the >200k tiers below only apply to requests made before that date. Ref: https://platform.claude.com/docs/en/release-notes/api',
+          'One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30, so the >200k tiers only apply to earlier requests. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
         prices: [
           {
             prices: {

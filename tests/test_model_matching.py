@@ -671,6 +671,18 @@ def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
 SHARED_MODEL_REF = 'claude-opus-4-6'
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'context_window'),
+    [('claude-opus-4-6', 1_000_000), ('claude-sonnet-4-5', 200_000)],
+)
+def test_anthropic_claude_context_windows(model_ref: str, context_window: int) -> None:
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    _, model = snapshot.find_provider_model(model_ref, None, 'anthropic', None)
+
+    assert model.context_window == context_window
+
+
 def test_provider_specific_extraction_does_not_affect_unqualified_lookup():
     usage = Usage(input_tokens=1_000_000, output_tokens=1_000_000)
     baseline_snapshot = DataSnapshot(providers=providers, from_auto_update=False)

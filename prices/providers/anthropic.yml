@@ -328,10 +328,12 @@ models:
         - starts_with: claude-4-6-opus
         - starts_with: claude-4.6-opus
     context_window: 1000000
-    prices_checked: 2026-07-29
+    prices_checked: 2026-08-24
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
-      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      The 1M context window is generally available.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model
     prices:
       - prices:
           input_mtok:
@@ -472,13 +474,13 @@ models:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
     context_window: 200000
-    prices_checked: 2026-07-29
+    prices_checked: 2026-08-24
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
-      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
-      The 1M context window was beta-only here and was retired on 2026-04-30, so the
-      >200k tiers below only apply to requests made before that date.
-      Ref: https://platform.claude.com/docs/en/release-notes/api
+      The 1M context beta was retired on 2026-04-30, so the >200k tiers only apply
+      to earlier requests.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/release-notes/overview
     prices:
       - prices:
           input_mtok:
@@ -508,8 +510,6 @@ models:
                 price: 22.50
           web_searches_kcount: 10
       - constraint:
-          # 1M context beta (context-1m-2025-08-07) retired; >200k requests now error,
-          # so the long-context tiers are unreachable from this date on.
           start_date: 2026-04-30
         prices:
           input_mtok: 3
