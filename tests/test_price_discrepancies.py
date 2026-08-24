@@ -322,7 +322,7 @@ def test_check_for_price_discrepancies_reports_each_affected_provider(
     }
     monkeypatch.setattr(price_discrepancies, 'get_providers_yaml', loaded_providers(provider_ymls))
 
-    assert check_for_price_discrepancies() == 3
+    assert check_for_price_discrepancies() == 1
     assert capsys.readouterr().out == 'price discrepancies:\n               First: 2\n              Second: 1\n'
 
 

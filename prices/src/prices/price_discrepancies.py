@@ -142,22 +142,22 @@ def check_for_price_discrepancies() -> int:
     """List price discrepancies between providers and source prices.
 
     Returns:
-        The number of price discrepancies found.
+        A process exit status: 1 when discrepancies exist, otherwise 0.
     """
     providers_yml = get_providers_yaml()
 
-    found = 0
+    found = False
     for provider_yml in providers_yml.values():
         discs = sum(int(bool(model.price_discrepancies)) for model in provider_yml.provider.models)
         if discs:
             if not found:
                 print('price discrepancies:')
-            found += discs
+            found = True
             print(f'{provider_yml.provider.name:>20}: {discs}')
 
     if not found:
         print('no price discrepancies found')
-    return found
+    return int(found)
 
 
 def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool:
