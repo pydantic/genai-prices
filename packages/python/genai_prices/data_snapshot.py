@@ -42,9 +42,10 @@ class DataSnapshot:
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
         default_factory=lambda: {}
     )
-    _provider_cache: dict[tuple[str | None, str | None, str | None], types.Provider | str] = field(
+    _provider_cache: dict[tuple[str | None, str | None, str | None], types.Provider] = field(
         default_factory=lambda: {}, init=False
     )
+    _provider_misses: set[tuple[str | None, str | None, str | None]] = field(default_factory=set, init=False)
     timestamp: datetime = field(default_factory=datetime.now)
 
     def active(self, ttl: timedelta) -> bool:
@@ -127,29 +128,26 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         cache_key = (model_ref, provider_id, provider_api_url)
-        cached = self._provider_cache.get(cache_key)
-        if isinstance(cached, str):
-            raise LookupError(cached)
-        if cached is not None:
-            return cached
+        if provider := self._provider_cache.get(cache_key):
+            return provider
+        if cache_key in self._provider_misses:
+            raise _provider_lookup_error(model_ref, provider_id, provider_api_url)
 
         if provider_id is not None:
             if provider := find_provider_by_id(self.providers, provider_id):
                 self._provider_cache[cache_key] = provider
                 return provider
             if provider_id.lower() != 'litellm':
-                error = f'Unable to find provider {provider_id=!r}'
-                self._provider_cache[cache_key] = error
-                raise LookupError(error)
+                self._provider_misses.add(cache_key)
+                raise _provider_lookup_error(model_ref, provider_id, provider_api_url)
 
         if provider_api_url is not None:
             for provider in self.providers:
                 if re.match(provider.api_pattern, provider_api_url):
                     self._provider_cache[cache_key] = provider
                     return provider
-            error = f'Unable to find provider {provider_api_url=!r}'
-            self._provider_cache[cache_key] = error
-            raise LookupError(error)
+            self._provider_misses.add(cache_key)
+            raise _provider_lookup_error(model_ref, provider_id, provider_api_url)
 
         if model_ref:
             for provider in self.providers:
@@ -157,9 +155,8 @@ class DataSnapshot:
                     self._provider_cache[cache_key] = provider
                     return provider
 
-        error = f'Unable to find provider with model matching {model_ref!r}'
-        self._provider_cache[cache_key] = error
-        raise LookupError(error)
+        self._provider_misses.add(cache_key)
+        raise _provider_lookup_error(model_ref, provider_id, provider_api_url)
 
 
 def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> types.Provider | None:
@@ -183,3 +180,11 @@ def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> ty
             return provider
 
     return None
+
+
+def _provider_lookup_error(model_ref: str | None, provider_id: str | None, provider_api_url: str | None) -> LookupError:
+    if provider_id is not None and provider_id.lower() != 'litellm':
+        return LookupError(f'Unable to find provider {provider_id=!r}')
+    if provider_api_url is not None:
+        return LookupError(f'Unable to find provider {provider_api_url=!r}')
+    return LookupError(f'Unable to find provider with model matching {model_ref!r}')
