@@ -42,6 +42,21 @@ def test_provider_context_window_overrides_canonical_model():
     assert offering.context_window == 100_000
 
 
+def test_canonical_reference_accepts_maximum_length_ids():
+    provider_id = 'p' * 100
+    model_id = 'm' * 100
+    canonical = make_model(model_id, context_window=200_000)
+    offering = make_model('offering', canonical_model=f'{provider_id}/{model_id}')
+    providers = [
+        Provider(id=provider_id, name='Native', api_pattern='native', models=[canonical]),
+        Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
+    ]
+
+    inherit_context_windows(providers)
+
+    assert offering.context_window == 200_000
+
+
 def test_unknown_canonical_model_is_rejected():
     offering = make_model('offering', canonical_model='native/missing')
     providers = [Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering])]

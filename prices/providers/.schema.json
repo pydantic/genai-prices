@@ -274,8 +274,8 @@
           "title": "Match"
         },
         "canonical_model": {
-          "maxLength": 100,
-          "pattern": "^\\S+$",
+          "maxLength": 201,
+          "pattern": "^\\S+/\\S+$",
           "type": "string",
           "description": "Exact `provider/model` reference from which provider-independent metadata can be inherited.",
           "title": "Canonical Model"
