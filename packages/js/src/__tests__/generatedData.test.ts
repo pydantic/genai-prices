@@ -227,6 +227,24 @@ describe('generated data split', () => {
     expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
   })
 
+  it('rejects a positive directional duration when the aggregate duration is zero', () => {
+    expect(() =>
+      calcPrice({ audio_seconds: 0, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { providerId: 'groq' })
+    ).toThrow(`Invalid usage data: input_audio_seconds (${Number.MIN_VALUE.toString()}) cannot exceed audio_seconds (0)`)
+  })
+
+  it('rejects a directional duration total that overflows', () => {
+    expect(() =>
+      calcPrice(
+        { audio_seconds: Number.MAX_VALUE, input_audio_seconds: Number.MAX_VALUE, output_audio_seconds: Number.MAX_VALUE },
+        'whisper-large-v3',
+        { providerId: 'groq' }
+      )
+    ).toThrow(
+      `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals Infinity, which exceeds audio_seconds (${Number.MAX_VALUE.toString()})`
+    )
+  })
+
   it('scales directional audio usage when applying a minimum duration', () => {
     const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
     const provider: Provider = {

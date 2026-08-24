@@ -245,7 +245,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
       for (const usageKey of directionalUsageKeys) {
         const value = billedUsage[usageKey]
         if (value === undefined) continue
-        const roundingTolerance = Number.EPSILON * Math.max(1, Math.abs(audioSeconds), Math.abs(value)) * (directionalUsageKeys.length + 1)
+        const roundingTolerance = Number.EPSILON * Math.max(Math.abs(audioSeconds), Math.abs(value)) * (directionalUsageKeys.length + 1)
         if (value - audioSeconds > roundingTolerance) {
           throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
         }
@@ -255,7 +255,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
       if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined) {
         const directionalTotal = inputAudioSeconds + outputAudioSeconds
         const roundingTolerance =
-          Number.EPSILON * Math.max(1, Math.abs(audioSeconds), Math.abs(directionalTotal)) * (directionalUsageKeys.length + 1)
+          Number.EPSILON *
+          Math.max(Math.abs(audioSeconds), Math.abs(inputAudioSeconds), Math.abs(outputAudioSeconds)) *
+          (directionalUsageKeys.length + 1)
         if (directionalTotal - audioSeconds > roundingTolerance) {
           throw new Error(
             `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${directionalTotal.toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
