@@ -42,7 +42,7 @@ class DataSnapshot:
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
         default_factory=lambda: {}
     )
-    _provider_cache: dict[tuple[str | None, str | None, str | None], types.Provider | None] = field(
+    _provider_cache: dict[tuple[str | None, str | None, str | None], types.Provider | str] = field(
         default_factory=lambda: {}, init=False
     )
     timestamp: datetime = field(default_factory=datetime.now)
@@ -127,35 +127,39 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         cache_key = (model_ref, provider_id, provider_api_url)
-        if cache_key in self._provider_cache:
-            provider = self._provider_cache[cache_key]
-        else:
-            provider = find_provider_by_id(self.providers, provider_id) if provider_id is not None else None
-            allow_fallback = provider_id is None or provider_id.lower() == 'litellm'
+        cached = self._provider_cache.get(cache_key)
+        if isinstance(cached, str):
+            raise LookupError(cached)
+        if cached is not None:
+            return cached
 
-            if provider is None and allow_fallback and provider_api_url is not None:
-                provider = next(
-                    (provider for provider in self.providers if re.match(provider.api_pattern, provider_api_url)), None
-                )
-            elif provider is None and allow_fallback and model_ref:
-                provider = next(
-                    (
-                        provider
-                        for provider in self.providers
-                        if provider.model_match is not None and provider.model_match.is_match(model_ref)
-                    ),
-                    None,
-                )
+        if provider_id is not None:
+            if provider := find_provider_by_id(self.providers, provider_id):
+                self._provider_cache[cache_key] = provider
+                return provider
+            if provider_id.lower() != 'litellm':
+                error = f'Unable to find provider {provider_id=!r}'
+                self._provider_cache[cache_key] = error
+                raise LookupError(error)
 
-            self._provider_cache[cache_key] = provider
-
-        if provider is not None:
-            return provider
-        if provider_id is not None and provider_id.lower() != 'litellm':
-            raise LookupError(f'Unable to find provider {provider_id=!r}')
         if provider_api_url is not None:
-            raise LookupError(f'Unable to find provider {provider_api_url=!r}')
-        raise LookupError(f'Unable to find provider with model matching {model_ref!r}')
+            for provider in self.providers:
+                if re.match(provider.api_pattern, provider_api_url):
+                    self._provider_cache[cache_key] = provider
+                    return provider
+            error = f'Unable to find provider {provider_api_url=!r}'
+            self._provider_cache[cache_key] = error
+            raise LookupError(error)
+
+        if model_ref:
+            for provider in self.providers:
+                if provider.model_match is not None and provider.model_match.is_match(model_ref):
+                    self._provider_cache[cache_key] = provider
+                    return provider
+
+        error = f'Unable to find provider with model matching {model_ref!r}'
+        self._provider_cache[cache_key] = error
+        raise LookupError(error)
 
 
 def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> types.Provider | None:
