@@ -382,7 +382,7 @@ def test_stop_does_not_deadlock_when_fetch_reenters_start() -> None:
         def fetch(self) -> data_snapshot.DataSnapshot | None:
             fetch_started.set()
             assert allow_reentry.wait(timeout=5)
-            with pytest.raises(RuntimeError, match='background task is stopping'):
+            with pytest.raises(RuntimeError, match='cannot call start from its worker'):
                 other.start()
             return None
 
@@ -407,11 +407,13 @@ def test_stop_does_not_deadlock_when_fetch_reenters_start() -> None:
         other.stop()
 
 
-def test_fetch_cannot_release_its_own_last_claim() -> None:
+def test_fetch_cannot_change_its_own_ownership() -> None:
     class SelfStoppingUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
-            with pytest.raises(RuntimeError, match='background task cannot stop itself'):
+            with pytest.raises(RuntimeError, match='cannot call stop from its worker'):
                 self.stop()
+            with pytest.raises(RuntimeError, match='cannot call start from its worker'):
+                self.start()
             return None
 
     with SelfStoppingUpdatePrices() as update_prices:

@@ -132,6 +132,7 @@ settings raises `RuntimeError` instead of silently ignoring its configuration. T
 `fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
 Custom `fetch()` implementations are responsible for keeping any configuration they read stable while the shared
 updater is running.
+Calling `start()`, `stop()`, or a synchronous wait API from the worker raises `RuntimeError` instead of deadlocking.
 Applications that need custom behavior should start their updater before integrations initialize and retain it
 until shutdown.
 

@@ -145,6 +145,7 @@ class UpdatePrices:
     """The timeout for HTTP requests."""
     _updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
     _fetch_updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
+    _ownership_lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
         """Acquire a claim on the process-wide background updater.
@@ -153,6 +154,14 @@ class UpdatePrices:
             wait: Whether to wait for the first fetch outcome; if a number is passed, wait that
                 many seconds, and if `True`, wait for 30 seconds.
         """
+        self._reject_worker_call('start')
+        with self._ownership_lock:
+            update_prices = self._start()
+
+        if wait:
+            update_prices.wait(timeout=30 if wait is True else wait)
+
+    def _start(self) -> _SharedUpdater:
         global _global_update_prices
 
         failed_worker: _SharedUpdater | None = None
@@ -161,8 +170,6 @@ class UpdatePrices:
             while (
                 update_prices := _global_update_prices
             ) is not None and update_prices.phase is _UpdaterPhase.STOPPING:
-                if threading.current_thread() is update_prices.thread:
-                    raise RuntimeError('UpdatePrices background task is stopping')
                 _lifecycle.wait()
 
             if self._updater is not None:
@@ -201,9 +208,7 @@ class UpdatePrices:
             _finish_shutdown(failed_worker)
             assert start_error is not None
             raise start_error
-
-        if wait:
-            self.wait(timeout=30 if wait is True else wait)
+        return update_prices
 
     def stop(self):
         """Release this instance's claim on the shared updater.
@@ -212,6 +217,18 @@ class UpdatePrices:
         prices. Fetch failures are logged and reported by `wait()`; they never make `stop()` fail.
         Lifecycle interruptions such as `KeyboardInterrupt` are preserved after cleanup completes.
         """
+        self._reject_worker_call('stop')
+        with self._ownership_lock:
+            self._stop()
+
+    @staticmethod
+    def _reject_worker_call(action: str) -> None:
+        with _lifecycle:
+            update_prices = _global_update_prices
+            if update_prices is not None and threading.current_thread() is update_prices.thread:
+                raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
+
+    def _stop(self) -> None:
         update_prices: _SharedUpdater | None = None
         remaining_claims: int | None = None
         release_prepared = False
@@ -222,8 +239,6 @@ class UpdatePrices:
                 if not release_prepared:
                     update_prices = self._updater
                     if update_prices is not None:
-                        if update_prices.claims == 1 and threading.current_thread() is update_prices.thread:
-                            raise RuntimeError('UpdatePrices background task cannot stop itself')
                         remaining_claims = update_prices.claims - 1
                     # A retry must finish the same release instead of decrementing twice.
                     release_prepared = True
