@@ -210,31 +210,15 @@ describe('extractUsage', () => {
       })
     })
 
-    it('should extract and price realtime transcription duration usage', () => {
-      const { model, usage } = extractUsage(openaiProvider, { usage: { seconds: 30, type: 'duration' } }, 'transcription')
-      const price = calcPrice(usage, 'gpt-realtime-whisper', { provider: openaiProvider })
+    it('should price realtime transcription duration usage', () => {
+      const price = calcPrice({ audio_seconds: 30, input_audio_seconds: 30 }, 'gpt-realtime-whisper', {
+        provider: openaiProvider,
+      })
 
-      expect(model).toBeNull()
-      expect(usage).toEqual({ audio_seconds: 30, input_audio_seconds: 30 })
       expect(price).not.toBeNull()
       expect(price!.input_price).toBeCloseTo(0.0085, 15)
       expect(price!.output_price).toBe(0)
       expect(price!.total_price).toBeCloseTo(0.0085, 15)
-
-      expect(
-        extractUsage(
-          openaiProvider,
-          {
-            usage: {
-              input_token_details: { audio_tokens: 5, text_tokens: 0 },
-              input_tokens: 5,
-              output_tokens: 2,
-              type: 'tokens',
-            },
-          },
-          'transcription'
-        ).usage
-      ).toEqual({ input_audio_tokens: 5, input_text_tokens: 0, input_tokens: 5, output_tokens: 2 })
     })
 
     it.each(['openai', 'azure'])('should extract realtime cached audio usage for %s', (providerId) => {

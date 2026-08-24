@@ -301,32 +301,14 @@ def test_openai_realtime_usage_modalities(provider_id: str):
     )
 
 
-def test_openai_transcription_duration_usage_and_price() -> None:
-    provider = next(provider for provider in providers if provider.id == 'openai')
+def test_openai_realtime_whisper_duration_price() -> None:
+    usage = Usage(audio_seconds=30, input_audio_seconds=30)
 
-    model, usage = provider.extract_usage(
-        {'usage': {'type': 'duration', 'seconds': 30}},
-        api_flavor='transcription',
-    )
     price = calc_price(usage, model_ref='gpt-realtime-whisper', provider_id='openai')
 
-    assert model is None
-    assert usage == Usage(audio_seconds=30, input_audio_seconds=30)
     assert price.input_price == Decimal('0.0085')
     assert price.output_price == 0
     assert price.total_price == Decimal('0.0085')
-
-    assert provider.extract_usage(
-        {
-            'usage': {
-                'type': 'tokens',
-                'input_tokens': 5,
-                'input_token_details': {'text_tokens': 0, 'audio_tokens': 5},
-                'output_tokens': 2,
-            }
-        },
-        api_flavor='transcription',
-    ) == (None, Usage(input_tokens=5, input_text_tokens=0, input_audio_tokens=5, output_tokens=2))
 
 
 def test_openai_image_usage_modalities():

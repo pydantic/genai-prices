@@ -12230,43 +12230,6 @@ export const data: Provider[] = [
           },
         ],
       },
-      {
-        api_flavor: 'transcription',
-        root: 'usage',
-        model_path: 'model',
-        mappings: [
-          {
-            path: 'input_tokens',
-            dest: 'input_tokens',
-            required: false,
-          },
-          {
-            path: ['input_token_details', 'text_tokens'],
-            dest: 'input_text_tokens',
-            required: false,
-          },
-          {
-            path: ['input_token_details', 'audio_tokens'],
-            dest: 'input_audio_tokens',
-            required: false,
-          },
-          {
-            path: 'output_tokens',
-            dest: 'output_tokens',
-            required: false,
-          },
-          {
-            path: 'seconds',
-            dest: 'audio_seconds',
-            required: false,
-          },
-          {
-            path: 'seconds',
-            dest: 'input_audio_seconds',
-            required: false,
-          },
-        ],
-      },
     ],
     models: [
       {
