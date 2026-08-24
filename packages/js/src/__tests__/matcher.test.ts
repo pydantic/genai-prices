@@ -5,6 +5,7 @@ import type { Provider } from '../types'
 
 import { data } from '../data'
 import { matchLogic, matchModel, matchModelWithFallback, matchProvider } from '../engine'
+import { calcPrice } from '../index'
 
 const actualProviders = data
 
@@ -66,6 +67,22 @@ describe('Provider Matching', () => {
     it('should not match model names as providers', () => {
       expect(matchProvider(actualProviders, { providerId: 'claude' })).toBeUndefined()
       expect(matchProvider(actualProviders, { providerId: 'gpt' })).toBeUndefined()
+    })
+  })
+
+  describe('matchProvider with providerApiUrl', () => {
+    // Every `api_pattern` is unanchored, so matching must be anchored at the start of the URL — as
+    // Python's `re.match` is. Otherwise a proxy URL carrying a provider host resolves to that provider
+    // in JS while raising `LookupError` in Python.
+    const proxiedOpenaiApiUrl = 'http://localhost:8080/proxy?u=https://api.openai.com/v1'
+
+    it('should match a provider at the start of the URL', () => {
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.openai.com/v1/chat/completions' })?.id).toBe('openai')
+    })
+
+    it('should not match a provider embedded later in the URL', () => {
+      expect(matchProvider(actualProviders, { providerApiUrl: proxiedOpenaiApiUrl })).toBeUndefined()
+      expect(calcPrice({ input_tokens: 1_000 }, 'gpt-4o', { providerApiUrl: proxiedOpenaiApiUrl })).toBeNull()
     })
   })
 })

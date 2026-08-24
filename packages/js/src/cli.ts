@@ -23,7 +23,6 @@ interface Argv {
   'output-audio-tokens'?: number
   'output-tokens'?: number
   provider?: string
-  requests?: number
   timestamp?: string
 }
 
@@ -42,7 +41,6 @@ const argv = yargs(hideBin(process.argv))
       .option('input-audio-tokens', { type: 'number' })
       .option('cache-audio-read-tokens', { type: 'number' })
       .option('output-audio-tokens', { type: 'number' })
-      .option('requests', { type: 'number' })
       .option('provider', { type: 'string' })
       .option('auto-update', { default: false, type: 'boolean' })
       .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
@@ -55,7 +53,6 @@ const argv = yargs(hideBin(process.argv))
   .option('input-audio-tokens', { type: 'number' })
   .option('cache-audio-read-tokens', { type: 'number' })
   .option('output-audio-tokens', { type: 'number' })
-  .option('requests', { type: 'number' })
   .option('provider', { type: 'string' })
   .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
   .version(version)
@@ -100,7 +97,6 @@ function main() {
       input_tokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
       output_audio_tokens: argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
       output_tokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
-      requests: argv.requests !== undefined ? Number(argv.requests) : undefined,
     }
     const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined
     let hadError = false
