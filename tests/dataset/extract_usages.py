@@ -28,7 +28,13 @@ extractors = [
 
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
     keys = set[str]()
-    for path in [extractor.model_path, extractor.root]:
+    paths = [extractor.model_path]
+    if extractor.root == '$':
+        paths.extend(mapping.path for mapping in extractor.mappings)
+    else:
+        paths.append(extractor.root)
+
+    for path in paths:
         if path:
             if isinstance(path, list):
                 path = path[0]

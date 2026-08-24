@@ -1336,14 +1336,15 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
     provider = next(provider for provider in providers if provider.id == 'x-ai')
     response_data: dict[str, Any] = {
         'type': 'response.done',
-        'response': {'usage': {}},
-        'usage': {
-            'input_tokens': 5,
-            'input_token_details': {'text_tokens': 5, 'audio_tokens': 0},
-            'output_tokens': 42,
-            'output_token_details': {'text_tokens': 3, 'audio_tokens': 39},
-            'billable_audio_seconds': 60,
-            'input_text_messages': 2,
+        'response': {
+            'usage': {
+                'input_tokens': 5,
+                'input_token_details': {'text_tokens': 5, 'audio_tokens': 0},
+                'output_tokens': 42,
+                'output_token_details': {'text_tokens': 3, 'audio_tokens': 39},
+                'billable_audio_seconds': 60,
+                'input_text_messages': 2,
+            }
         },
     }
 

@@ -24023,7 +24023,7 @@ export const data: Provider[] = [
       },
       {
         api_flavor: 'realtime',
-        root: 'usage',
+        root: ['response', 'usage'],
         model_path: 'model',
         mappings: [
           {

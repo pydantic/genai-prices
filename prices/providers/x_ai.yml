@@ -51,7 +51,7 @@ extractors:
         dest: output_tokens
   # https://docs.x.ai/developers/rest-api-reference/inference/voice#response.done
   - api_flavor: realtime
-    root: usage
+    root: [response, usage]
     mappings:
       - path: input_tokens
         dest: input_tokens
