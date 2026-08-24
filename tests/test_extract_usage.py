@@ -301,34 +301,6 @@ def test_openai_realtime_usage_modalities(provider_id: str):
     )
 
 
-def test_openai_transcription_duration_usage_and_price() -> None:
-    provider = next(provider for provider in providers if provider.id == 'openai')
-
-    model, usage = provider.extract_usage(
-        {'usage': {'type': 'duration', 'seconds': 30}},
-        api_flavor='transcription',
-    )
-    price = calc_price(usage, model_ref='gpt-realtime-whisper', provider_id='openai')
-
-    assert model is None
-    assert usage == Usage(audio_seconds=30, input_audio_seconds=30)
-    assert price.input_price == Decimal('0.0085')
-    assert price.output_price == 0
-    assert price.total_price == Decimal('0.0085')
-
-    assert provider.extract_usage(
-        {
-            'usage': {
-                'type': 'tokens',
-                'input_tokens': 5,
-                'input_token_details': {'text_tokens': 0, 'audio_tokens': 5},
-                'output_tokens': 2,
-            }
-        },
-        api_flavor='transcription',
-    ) == (None, Usage(input_tokens=5, input_text_tokens=0, input_audio_tokens=5, output_tokens=2))
-
-
 def test_openai_image_usage_modalities():
     provider = next(provider for provider in providers if provider.id == 'openai')
     usage_data = {
@@ -1376,32 +1348,6 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
         assert price.input_price == Decimal('0.008')
         assert price.output_price == 0
         assert price.total_price == expected_total
-
-
-def test_xai_transcription_duration_usage_and_price() -> None:
-    provider = next(provider for provider in providers if provider.id == 'x-ai')
-
-    model, usage = provider.extract_usage(
-        {'text': 'Hello.', 'language': 'en', 'duration': 90, 'words': []},
-        api_flavor='transcription',
-    )
-    streaming_model, streaming_usage = provider.extract_usage(
-        {'type': 'transcript.done', 'text': 'Hello.', 'duration': 90},
-        api_flavor='transcription_streaming',
-    )
-    rest_price = calc_price(usage, model_ref='grok-stt', provider_id='x-ai')
-    streaming_price = calc_price(streaming_usage, model_ref='grok-transcribe', provider_id='x-ai')
-
-    assert model is None
-    assert usage == Usage(audio_seconds=90, input_audio_seconds=90)
-    assert streaming_model is None
-    assert streaming_usage == Usage(audio_seconds=90)
-    assert rest_price.input_price == Decimal('0.0025')
-    assert rest_price.output_price == 0
-    assert rest_price.total_price == Decimal('0.0025')
-    assert streaming_price.input_price == 0
-    assert streaming_price.output_price == 0
-    assert streaming_price.total_price == Decimal('0.005')
 
 
 @pytest.mark.parametrize(

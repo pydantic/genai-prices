@@ -68,10 +68,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -155,10 +151,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -236,10 +228,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -320,10 +308,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -402,10 +386,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -486,10 +466,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -569,10 +545,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -651,10 +623,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -732,10 +700,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -816,10 +780,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -899,10 +859,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -980,10 +936,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -1063,10 +1015,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1144,10 +1092,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -1227,10 +1171,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1309,10 +1249,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1390,10 +1326,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -1474,10 +1406,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1556,10 +1484,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -1640,10 +1564,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1721,10 +1641,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -1804,10 +1720,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1886,10 +1798,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -1967,10 +1875,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -2051,10 +1955,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -2132,10 +2032,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -2215,10 +2111,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -2296,10 +2188,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -2379,10 +2267,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -2460,10 +2344,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -2543,10 +2423,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -2625,10 +2501,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -3514,12 +3386,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00005625",
-            "output_price": "0.01719",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -4934,10 +4800,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -5801,12 +5663,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00004625",
-            "output_price": "0.00272",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -5890,12 +5746,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00047375",
-            "output_price": "0.00077",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -13857,10 +13707,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -13938,10 +13784,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14034,10 +13876,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -14123,10 +13961,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14225,10 +14059,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14361,10 +14191,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -14442,10 +14268,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14525,10 +14347,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -14607,10 +14425,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -14688,10 +14502,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14772,10 +14582,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -14854,10 +14660,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -14966,10 +14768,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15048,10 +14846,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15129,10 +14923,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -15225,10 +15015,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15320,10 +15106,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15403,10 +15185,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15484,10 +15262,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -15567,10 +15341,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15649,10 +15419,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -15736,10 +15502,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -15829,10 +15591,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -15910,10 +15668,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -15993,10 +15747,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16074,10 +15824,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -16157,10 +15903,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16232,12 +15974,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000658",
-            "output_price": "0.000096",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000658",
             "output_price": "0.000096",
             "provider_id": "openai"
@@ -16320,10 +16056,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16402,10 +16134,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -16490,10 +16218,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16576,10 +16300,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -16673,10 +16393,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16759,10 +16475,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -16840,10 +16552,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -16923,10 +16631,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17004,10 +16708,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -17087,10 +16787,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17168,10 +16864,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -17251,10 +16943,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17332,10 +17020,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -17415,10 +17099,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17497,10 +17177,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17578,10 +17254,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -17690,10 +17362,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -17785,10 +17453,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -17921,10 +17585,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18020,10 +17680,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18103,10 +17759,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18184,10 +17836,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -18280,10 +17928,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -18416,10 +18060,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18507,10 +18147,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -18612,10 +18248,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18696,10 +18328,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -18782,10 +18410,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -18863,10 +18487,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -18946,10 +18566,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19028,10 +18644,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19090,12 +18702,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00002875",
-            "output_price": "0.02211",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19199,10 +18805,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19294,10 +18896,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -19391,10 +18989,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19487,10 +19081,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19570,10 +19160,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19652,10 +19238,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -19749,10 +19331,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19832,10 +19410,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -19914,10 +19488,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -20000,10 +19570,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -20139,10 +19705,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -20225,10 +19787,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -20313,10 +19871,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -20395,10 +19949,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -20457,12 +20007,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000143",
-            "output_price": "0.0098604",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -20994,10 +20538,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -21891,10 +21431,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -21972,10 +21508,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -22413,12 +21945,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000245",
-            "output_price": "0.000598",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -22502,12 +22028,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00010375",
-            "output_price": "0.000448",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -22901,12 +22421,6 @@
             "input_price": "0.0000125",
             "output_price": "0.000162",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000125",
-            "output_price": "0.000162",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -22978,12 +22492,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00003725",
-            "output_price": "0.000034",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00003725",
             "output_price": "0.000034",
             "provider_id": "openai"
@@ -23418,10 +22926,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -26332,12 +25836,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000125",
-            "output_price": "0.001134",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26441,10 +25939,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26523,10 +26017,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26604,10 +26094,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -26844,12 +26330,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000012",
-            "output_price": "0.00021",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27212,10 +26692,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27476,12 +26952,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000185",
-            "output_price": "0.001792",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27910,12 +27380,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000017",
-            "output_price": "0.00019",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28009,10 +27473,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28085,10 +27545,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28183,12 +27639,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0201",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28259,12 +27709,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0201",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28929,12 +28373,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000132",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000132",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -28993,12 +28431,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00005975",
-            "output_price": "0.000964",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -29102,10 +28534,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -30120,10 +29548,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -30202,10 +29626,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -30757,12 +30177,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000011",
-            "output_price": "0.000214",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -30846,12 +30260,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0002865",
-            "output_price": "0.001006",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -31953,12 +31361,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000102",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000102",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32033,12 +31435,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000112",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000112",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32097,12 +31493,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000235",
-            "output_price": "0.000604",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32387,12 +31777,6 @@
             "input_price": "0.00001175",
             "output_price": "0.00013",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00013",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32451,12 +31835,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00020375",
-            "output_price": "0.001756",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32556,12 +31934,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000142",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000142",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -32620,12 +31992,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0002165",
-            "output_price": "0.001064",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -33876,10 +33242,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -33959,10 +33321,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -34041,10 +33399,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -34979,10 +34333,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -35061,10 +34411,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -35648,12 +34994,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000104",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000104",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -35731,10 +35071,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -37637,12 +36973,6 @@
             "input_price": "0.00001175",
             "output_price": "0.0001",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.0001",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -38131,10 +37461,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -38212,10 +37538,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -38324,10 +37646,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -38744,10 +38062,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -38826,10 +38140,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -38910,10 +38220,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -38992,10 +38298,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -39588,10 +38890,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -39669,10 +38967,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -40469,12 +39763,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000086",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000086",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -40533,12 +39821,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00002025",
-            "output_price": "0.00119",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -41512,12 +40794,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000256",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -41945,10 +41221,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -42026,10 +41298,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -42277,10 +41545,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -42358,10 +41622,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -42500,10 +41760,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -42582,10 +41838,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -42805,10 +42057,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -44965,10 +44213,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -45098,10 +44342,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -45180,10 +44420,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -45264,10 +44500,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -45346,10 +44578,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -47181,12 +46409,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00016",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -47270,12 +46492,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000162",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -47359,12 +46575,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00012325",
-            "output_price": "0.000714",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -48870,12 +48080,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000154",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000154",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -49786,12 +48990,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000114",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000114",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -49850,12 +49048,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000069",
-            "output_price": "0.001024",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -50611,12 +49803,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000132",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000132",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -50675,12 +49861,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00020375",
-            "output_price": "0.001374",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -53855,12 +53035,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000194",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -53944,12 +53118,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000079",
-            "output_price": "0.00122",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -54978,12 +54146,6 @@
             "input_price": "0.00001175",
             "output_price": "0.00013",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00013",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55246,10 +54408,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55328,10 +54486,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -55412,10 +54566,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55490,12 +54640,6 @@
             "input_price": "0.00001175",
             "output_price": "0.00014",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00014",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55554,12 +54698,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00003275",
-            "output_price": "0.000538",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55876,12 +55014,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000148",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000148",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -55940,12 +55072,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00012325",
-            "output_price": "0.000788",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56133,10 +55259,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56215,10 +55337,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56277,12 +55395,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000011",
-            "output_price": "0.00018",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56366,12 +55478,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00014425",
-            "output_price": "0.000626",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56894,10 +56000,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -56976,10 +56078,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -57060,10 +56158,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -57135,12 +56229,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00001175",
-            "output_price": "0.000132",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00001175",
             "output_price": "0.000132",
             "provider_id": "openai"
@@ -57594,10 +56682,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -57719,12 +56803,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00001175",
-            "output_price": "0.00011",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00001175",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -59178,10 +58256,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -59260,10 +58334,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -59472,12 +58542,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000252",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -59561,12 +58625,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000059",
-            "output_price": "0.000712",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -60520,10 +59578,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -60602,10 +59656,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -61220,12 +60270,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000106",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000106",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -61284,12 +60328,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000212",
-            "output_price": "0.00096",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -61841,12 +60879,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000098",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000098",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -61905,12 +60937,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00003075",
-            "output_price": "0.000474",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -62094,10 +61120,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -62177,10 +61199,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -62259,10 +61277,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -63058,12 +62072,6 @@
             "input_price": "0.00001175",
             "output_price": "0.00013",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00013",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -63138,12 +62146,6 @@
             "input_price": "0.00001175",
             "output_price": "0.000098",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000098",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -63202,12 +62204,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001305",
-            "output_price": "0.000566",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -64679,10 +63675,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -64761,10 +63753,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -65008,12 +63996,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00001175",
-            "output_price": "0.00009",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00001175",
             "output_price": "0.00009",
             "provider_id": "openai"
@@ -68331,12 +67313,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.000218",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -68420,12 +67396,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001455",
-            "output_price": "0.000612",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -68694,10 +67664,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -69026,12 +67992,6 @@
             "input_price": "0.00001175",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001175",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -69325,12 +68285,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001275",
-            "output_price": "0.00036",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -69414,12 +68368,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00020325",
-            "output_price": "0.000258",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -70647,10 +69595,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -74812,10 +73756,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -74886,10 +73826,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -74962,10 +73898,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75037,10 +73969,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75100,10 +74028,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75196,10 +74120,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75263,10 +74183,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75347,10 +74263,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75427,10 +74339,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -75525,10 +74433,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -76829,12 +75733,6 @@
             "input_price": "0.0000515",
             "output_price": "0.0000024",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000515",
-            "output_price": "0.0000024",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -77290,12 +76188,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00000375",
-            "output_price": "0.000006",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00000375",
             "output_price": "0.000006",
             "provider_id": "openai"
@@ -81378,12 +80270,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000143",
-            "output_price": "0.008426",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -84591,12 +83477,6 @@
             "input_price": "0.0000023",
             "output_price": "0.0000204",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000023",
-            "output_price": "0.0000204",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -86440,12 +85320,6 @@
             "input_price": "0.000054",
             "output_price": "0.000063",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000054",
-            "output_price": "0.000063",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -86883,12 +85757,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0000023",
-            "output_price": "0.0000288",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0000023",
             "output_price": "0.0000288",
             "provider_id": "openai"
@@ -87919,12 +86787,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00002875",
-            "output_price": "0.0203",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -90494,12 +89356,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000143",
-            "output_price": "0.0071104",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -90742,12 +89598,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.01212875",
-            "output_price": "0.00638",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -90865,12 +89715,6 @@
             "input_price": "0.00154",
             "output_price": "0.00098",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00154",
-            "output_price": "0.00098",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -90945,12 +89789,6 @@
             "input_price": "0.000044",
             "output_price": "0.000024",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000044",
-            "output_price": "0.000024",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91010,12 +89848,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000015",
-            "output_price": "0.01351",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91115,12 +89947,6 @@
             "input_price": "0.0001275",
             "output_price": "0.00011",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001275",
-            "output_price": "0.00011",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91195,12 +90021,6 @@
             "input_price": "0.000135",
             "output_price": "0.00018",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000135",
-            "output_price": "0.00018",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91272,12 +90092,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000105",
-            "output_price": "0.00008",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000105",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -91356,12 +90170,6 @@
             "input_price": "0.000036",
             "output_price": "0.000288",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000036",
-            "output_price": "0.000288",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91420,12 +90228,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000143",
-            "output_price": "0.0009988",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91509,12 +90311,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000315",
-            "output_price": "0.00216",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91614,12 +90410,6 @@
             "input_price": "0.00075",
             "output_price": "0.00048",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00075",
-            "output_price": "0.00048",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91694,12 +90484,6 @@
             "input_price": "0.0000072",
             "output_price": "0.0000448",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000072",
-            "output_price": "0.0000448",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91758,12 +90542,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00281625",
-            "output_price": "0.01755",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91847,12 +90625,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00073375",
-            "output_price": "0.02587",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -91928,12 +90700,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00186625",
-            "output_price": "0.00125",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92051,12 +90817,6 @@
             "input_price": "0.00099125",
             "output_price": "0.00007",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00099125",
-            "output_price": "0.00007",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92131,12 +90891,6 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92195,12 +90949,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0149275",
-            "output_price": "0.001372",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92284,12 +91032,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.014413",
-            "output_price": "0.001036",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92389,12 +91131,6 @@
             "input_price": "0.00000285",
             "output_price": "0.000006",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00000285",
-            "output_price": "0.000006",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92469,12 +91205,6 @@
             "input_price": "0.000006",
             "output_price": "0.0000144",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000006",
-            "output_price": "0.0000144",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92541,10 +91271,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -92616,12 +91342,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0001275",
-            "output_price": "0.00015",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0001275",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -92699,12 +91419,6 @@
             "input_price": "0.000195",
             "output_price": "0.00017",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000195",
-            "output_price": "0.00017",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92755,12 +91469,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.01242375",
-            "output_price": "0.0161",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92878,12 +91586,6 @@
             "input_price": "0.00000285",
             "output_price": "0.000006",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00000285",
-            "output_price": "0.000006",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -92951,10 +91653,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93004,12 +91702,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.01182875",
-            "output_price": "0.0066",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93111,12 +91803,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0013277",
-            "output_price": "0.002354",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93200,12 +91886,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0012199",
-            "output_price": "0.0019536",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93305,12 +91985,6 @@
             "input_price": "0.000028",
             "output_price": "0.000072",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000028",
-            "output_price": "0.000072",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93385,12 +92059,6 @@
             "input_price": "0.000072",
             "output_price": "0.000072",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000072",
-            "output_price": "0.000072",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93457,10 +92125,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -93535,12 +92199,6 @@
             "input_price": "0.000552",
             "output_price": "0.000064",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000552",
-            "output_price": "0.000064",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93607,10 +92265,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -93685,12 +92339,6 @@
             "input_price": "0.00057",
             "output_price": "0.000072",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00057",
-            "output_price": "0.000072",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93757,10 +92405,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -93835,12 +92479,6 @@
             "input_price": "0.000556",
             "output_price": "0.00132",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000556",
-            "output_price": "0.00132",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -93899,12 +92537,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.002265",
-            "output_price": "0.01313",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94004,12 +92636,6 @@
             "input_price": "0.0000575",
             "output_price": "0.00088",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000575",
-            "output_price": "0.00088",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94085,12 +92711,6 @@
             "input_price": "0.00009",
             "output_price": "0.00015",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94149,12 +92769,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000595",
-            "output_price": "0.003164",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94238,12 +92852,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000195",
-            "output_price": "0.00924",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94327,12 +92935,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0011715",
-            "output_price": "0.003344",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94432,12 +93034,6 @@
             "input_price": "0.0002675",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0002675",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94509,12 +93105,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000325",
-            "output_price": "0.00012",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000325",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -94592,12 +93182,6 @@
             "input_price": "0.0016575",
             "output_price": "0.0002",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0016575",
-            "output_price": "0.0002",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94669,12 +93253,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0000125",
-            "output_price": "0.00001",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
@@ -94752,12 +93330,6 @@
             "input_price": "0.000155",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000155",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94829,12 +93401,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0002125",
-            "output_price": "0.0002",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0002125",
             "output_price": "0.0002",
             "provider_id": "openai"
@@ -94912,12 +93478,6 @@
             "input_price": "0.002175",
             "output_price": "0.0003",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.002175",
-            "output_price": "0.0003",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -94989,12 +93549,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00297",
-            "output_price": "0.00055",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00297",
             "output_price": "0.00055",
             "provider_id": "openai"
@@ -95073,12 +93627,6 @@
             "input_price": "0.007745",
             "output_price": "0.0009",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.007745",
-            "output_price": "0.0009",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95137,12 +93685,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00236125",
-            "output_price": "0.01434",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95242,12 +93784,6 @@
             "input_price": "0.00005",
             "output_price": "0.003088",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00005",
-            "output_price": "0.003088",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95319,12 +93855,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00087",
-            "output_price": "0.003104",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00087",
             "output_price": "0.003104",
             "provider_id": "openai"
@@ -95402,12 +93932,6 @@
             "input_price": "0.001694",
             "output_price": "0.009432",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.001694",
-            "output_price": "0.009432",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95482,12 +94006,6 @@
             "input_price": "0.001104",
             "output_price": "0.000064",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.001104",
-            "output_price": "0.000064",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95538,12 +94056,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00371625",
-            "output_price": "0.00707",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95637,12 +94149,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0057675",
-            "output_price": "0.01844",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95760,12 +94266,6 @@
             "input_price": "0.000104",
             "output_price": "0.000016",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000104",
-            "output_price": "0.000016",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -95837,12 +94337,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000154",
-            "output_price": "0.000072",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000154",
             "output_price": "0.000072",
             "provider_id": "openai"
@@ -95920,12 +94414,6 @@
             "input_price": "0.000042",
             "output_price": "0.000016",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000042",
-            "output_price": "0.000016",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96000,12 +94488,6 @@
             "input_price": "0.00007",
             "output_price": "0.000024",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00007",
-            "output_price": "0.000024",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96056,12 +94538,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.01162375",
-            "output_price": "0.00577",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96155,12 +94631,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0118825",
-            "output_price": "0.00439",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96278,12 +94748,6 @@
             "input_price": "0.00009",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96358,12 +94822,6 @@
             "input_price": "0.0001475",
             "output_price": "0.00011",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001475",
-            "output_price": "0.00011",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96423,12 +94881,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.04288",
-            "output_price": "0.00156",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96542,10 +94994,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96604,12 +95052,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0003825",
-            "output_price": "0.03134",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96693,12 +95135,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00005",
-            "output_price": "0.00148",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96798,12 +95234,6 @@
             "input_price": "0.00032125",
             "output_price": "0.00005",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00032125",
-            "output_price": "0.00005",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96862,12 +95292,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001625",
-            "output_price": "0.00248",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -96951,12 +95375,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001775",
-            "output_price": "0.00355",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97056,12 +95474,6 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000125",
-            "output_price": "0.00001",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97133,12 +95545,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0000125",
-            "output_price": "0.00001",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
@@ -97216,12 +95622,6 @@
             "input_price": "0.0000375",
             "output_price": "0.00009",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000375",
-            "output_price": "0.00009",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97272,12 +95672,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0033725",
-            "output_price": "0.0001",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97386,12 +95780,6 @@
             "input_price": "0.00009",
             "output_price": "0.00015",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97450,12 +95838,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000155",
-            "output_price": "0.01926",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97531,12 +95913,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00260875",
-            "output_price": "0.00124",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97628,12 +96004,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00048",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97733,12 +96103,6 @@
             "input_price": "0.00006",
             "output_price": "0.00008",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00006",
-            "output_price": "0.00008",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97813,12 +96177,6 @@
             "input_price": "0.00000285",
             "output_price": "0.000006",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00000285",
-            "output_price": "0.000006",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -97885,10 +96243,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -97960,12 +96314,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000715",
-            "output_price": "0.00011",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000715",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -98043,12 +96391,6 @@
             "input_price": "0.00008",
             "output_price": "0.000024",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00008",
-            "output_price": "0.000024",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98120,12 +96462,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000112",
-            "output_price": "0.000128",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000112",
             "output_price": "0.000128",
             "provider_id": "openai"
@@ -98203,12 +96539,6 @@
             "input_price": "0.00022",
             "output_price": "0.000128",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00022",
-            "output_price": "0.000128",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98280,12 +96610,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000278",
-            "output_price": "0.000112",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000278",
             "output_price": "0.000112",
             "provider_id": "openai"
@@ -98363,12 +96687,6 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000072",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98443,12 +96761,6 @@
             "input_price": "0.000122",
             "output_price": "0.000448",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000122",
-            "output_price": "0.000448",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98499,12 +96811,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.1448575",
-            "output_price": "0.0172",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98622,12 +96928,6 @@
             "input_price": "0.002945",
             "output_price": "0.00045",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.002945",
-            "output_price": "0.00045",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98699,12 +96999,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000045",
-            "output_price": "0.00216",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000045",
             "output_price": "0.00216",
             "provider_id": "openai"
@@ -98782,12 +97076,6 @@
             "input_price": "0.000165",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000165",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -98859,12 +97147,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0002225",
-            "output_price": "0.00016",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0002225",
             "output_price": "0.00016",
             "provider_id": "openai"
@@ -98942,12 +97224,6 @@
             "input_price": "0.000045",
             "output_price": "0.000075",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000045",
-            "output_price": "0.000075",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99006,12 +97282,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000968",
-            "output_price": "0.0024068",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99095,12 +97365,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00223625",
-            "output_price": "0.01312",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99200,12 +97464,6 @@
             "input_price": "0.0003825",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0003825",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99277,12 +97535,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00044",
-            "output_price": "0.00026",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00044",
             "output_price": "0.00026",
             "provider_id": "openai"
@@ -99360,12 +97612,6 @@
             "input_price": "0.0001",
             "output_price": "0.00018",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0001",
-            "output_price": "0.00018",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99437,12 +97683,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0001675",
-            "output_price": "0.00011",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0001675",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -99520,12 +97760,6 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000125",
-            "output_price": "0.00001",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99597,12 +97831,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000114",
-            "output_price": "0.000104",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000114",
             "output_price": "0.000104",
             "provider_id": "openai"
@@ -99680,12 +97908,6 @@
             "input_price": "0.000176",
             "output_price": "0.00008",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000176",
-            "output_price": "0.00008",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99757,12 +97979,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0000375",
-            "output_price": "0.00009",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0000375",
             "output_price": "0.00009",
             "provider_id": "openai"
@@ -99841,12 +98057,6 @@
             "input_price": "0.00007",
             "output_price": "0.00036",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00007",
-            "output_price": "0.00036",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -99919,12 +98129,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00009",
-            "output_price": "0.00015",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00009",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -100002,12 +98206,6 @@
             "input_price": "0.00009",
             "output_price": "0.00015",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100082,12 +98280,6 @@
             "input_price": "0.00",
             "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00",
-            "output_price": "0",
-            "provider_id": "openai"
           }
         ],
         "usage": {}
@@ -100156,12 +98348,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0008375",
-            "output_price": "0.00044",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0008375",
             "output_price": "0.00044",
             "provider_id": "openai"
@@ -100239,12 +98425,6 @@
             "input_price": "0.0007075",
             "output_price": "0.00012",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0007075",
-            "output_price": "0.00012",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100316,12 +98496,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000765",
-            "output_price": "0.00022",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.000765",
             "output_price": "0.00022",
             "provider_id": "openai"
@@ -100400,12 +98574,6 @@
             "input_price": "0.00009",
             "output_price": "0.00015",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00009",
-            "output_price": "0.00015",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100464,12 +98632,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00001625",
-            "output_price": "0.02199",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100553,12 +98715,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0003925",
-            "output_price": "0.02737",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100658,12 +98814,6 @@
             "input_price": "0.00000435",
             "output_price": "0.0000054",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00000435",
-            "output_price": "0.0000054",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100738,12 +98888,6 @@
             "input_price": "0.00000765",
             "output_price": "0.0000054",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00000765",
-            "output_price": "0.0000054",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100810,10 +98954,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -100888,12 +99028,6 @@
             "input_price": "0.0000447",
             "output_price": "0.0000048",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0000447",
-            "output_price": "0.0000048",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -100952,12 +99086,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00048625",
-            "output_price": "0.00721",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -101057,12 +99185,6 @@
             "input_price": "0.0016175",
             "output_price": "0.00065",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0016175",
-            "output_price": "0.00065",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -101137,12 +99259,6 @@
             "input_price": "0.00014",
             "output_price": "0.000064",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00014",
-            "output_price": "0.000064",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -101201,12 +99317,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00012875",
-            "output_price": "0.00409",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -101290,12 +99400,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.02751625",
-            "output_price": "0.01737",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -101393,12 +99497,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00001625",
-            "output_price": "0.00063",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00001625",
             "output_price": "0.00063",
             "provider_id": "openai"
@@ -106691,10 +104789,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -115515,10 +113609,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -120813,12 +118903,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0264675",
-            "output_price": "0.01844",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -121077,12 +119161,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0157425",
-            "output_price": "0.0115",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -123762,12 +121840,6 @@
             "input_price": "0.000365",
             "output_price": "0.0003",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000365",
-            "output_price": "0.0003",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -123842,12 +121914,6 @@
             "input_price": "0.000915",
             "output_price": "0.00039",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000915",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -123919,12 +121985,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.001045",
-            "output_price": "0.00036",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.001045",
             "output_price": "0.00036",
             "provider_id": "openai"
@@ -124081,10 +122141,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124163,10 +122219,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -124247,10 +122299,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124325,12 +122373,6 @@
             "input_price": "0.00134",
             "output_price": "0.000675",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00134",
-            "output_price": "0.000675",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124402,12 +122444,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0015175",
-            "output_price": "0.00027",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0015175",
             "output_price": "0.00027",
             "provider_id": "openai"
@@ -124490,10 +122526,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124572,10 +122604,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -124656,10 +122684,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124739,10 +122763,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -124821,10 +122841,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -124923,10 +122939,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -125027,10 +123039,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -125180,12 +123188,6 @@
             "input_price": "0.000365",
             "output_price": "0.0003",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000365",
-            "output_price": "0.0003",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -125260,12 +123262,6 @@
             "input_price": "0.000915",
             "output_price": "0.00039",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000915",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -125337,12 +123333,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.001045",
-            "output_price": "0.00036",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.001045",
             "output_price": "0.00036",
             "provider_id": "openai"
@@ -125425,10 +123415,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -125507,10 +123493,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -127050,12 +125032,6 @@
             "input_price": "0.00043925",
             "output_price": "0.000266",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00043925",
-            "output_price": "0.000266",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127127,12 +125103,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00060025",
-            "output_price": "0.000238",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00060025",
             "output_price": "0.000238",
             "provider_id": "openai"
@@ -127210,12 +125180,6 @@
             "input_price": "0.00064925",
             "output_price": "0.00007",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00064925",
-            "output_price": "0.00007",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127275,12 +125239,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.001425",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127381,12 +125339,6 @@
             "input_price": "0.00055",
             "output_price": "0.00033",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00055",
-            "output_price": "0.00033",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127462,12 +125414,6 @@
             "input_price": "0.00066",
             "output_price": "0.00018",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00066",
-            "output_price": "0.00018",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127527,12 +125473,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00145",
-            "output_price": "0.000645",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127633,12 +125573,6 @@
             "input_price": "0.0006075",
             "output_price": "0.000195",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0006075",
-            "output_price": "0.000195",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127717,10 +125651,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -127801,10 +125731,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127879,12 +125805,6 @@
             "input_price": "0.00043725",
             "output_price": "0.000117",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00043725",
-            "output_price": "0.000117",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -127956,12 +125876,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00047325",
-            "output_price": "0.000054",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00047325",
             "output_price": "0.000054",
             "provider_id": "openai"
@@ -128044,10 +125958,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128126,10 +126036,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -128214,10 +126120,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128297,10 +126199,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128360,12 +126258,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.001425",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128466,12 +126358,6 @@
             "input_price": "0.00055",
             "output_price": "0.00033",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00055",
-            "output_price": "0.00033",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128544,12 +126430,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00066",
-            "output_price": "0.00018",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00066",
             "output_price": "0.00018",
             "provider_id": "openai"
@@ -128627,12 +126507,6 @@
             "input_price": "0.000585",
             "output_price": "0.00054",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.000585",
-            "output_price": "0.00054",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128707,12 +126581,6 @@
             "input_price": "0.0010725",
             "output_price": "0.00039",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0010725",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -128784,12 +126652,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0011925",
-            "output_price": "0.000195",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0011925",
             "output_price": "0.000195",
             "provider_id": "openai"
@@ -129252,10 +127114,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129335,10 +127193,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129414,12 +127268,6 @@
             "input_price": "0.0008525",
             "output_price": "0.000315",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0008525",
-            "output_price": "0.000315",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129492,12 +127340,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0009575",
-            "output_price": "0.000195",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0009575",
             "output_price": "0.000195",
             "provider_id": "openai"
@@ -129580,10 +127422,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129663,10 +127501,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129726,12 +127560,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.003065",
-            "output_price": "0.00183",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129832,12 +127660,6 @@
             "input_price": "0.00255",
             "output_price": "0.0006",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00255",
-            "output_price": "0.0006",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -129921,10 +127743,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130004,10 +127822,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130083,12 +127897,6 @@
             "input_price": "0.0008475",
             "output_price": "0.000495",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0008475",
-            "output_price": "0.000495",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130161,12 +127969,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0009825",
-            "output_price": "0.000195",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.0009825",
             "output_price": "0.000195",
             "provider_id": "openai"
@@ -130249,10 +128051,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130331,10 +128129,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -130415,10 +128209,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130497,10 +128287,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -130581,10 +128367,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130663,10 +128445,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -130747,10 +128525,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130829,10 +128603,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -130913,10 +128683,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -130996,10 +128762,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -131078,10 +128840,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -131385,12 +129143,6 @@
             "input_price": "0.00155",
             "output_price": "0.00039",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00155",
-            "output_price": "0.00039",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -131465,12 +129217,6 @@
             "input_price": "0.00168",
             "output_price": "0.000345",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00168",
-            "output_price": "0.000345",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -131529,12 +129275,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0015",
-            "output_price": "0.000705",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -131634,12 +129374,6 @@
             "input_price": "0.00124",
             "output_price": "0.00027",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00124",
-            "output_price": "0.00027",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -131713,10 +129447,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -132443,10 +130173,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -132537,10 +130263,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -132633,10 +130355,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -132727,10 +130445,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -133555,10 +131269,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -133650,10 +131360,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -133744,10 +131450,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -133840,10 +131542,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -133935,10 +131633,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -134029,10 +131723,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -134874,10 +132564,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -134986,10 +132672,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135094,10 +132776,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135201,10 +132879,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -135314,10 +132988,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135426,10 +133096,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135533,10 +133199,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -135642,10 +133304,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135704,12 +133362,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.001685",
-            "output_price": "0.00624",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135818,10 +133470,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135905,10 +133553,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -135991,10 +133635,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -136131,10 +133771,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -136185,12 +133821,6 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.0548775",
-            "output_price": "0.04474",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -136292,12 +133922,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "transcription",
-            "input_price": "0.00163",
-            "output_price": "0.00066",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -136405,10 +134029,6 @@
           },
           {
             "api_flavor": "responses",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "provider_id": "openai"
           }
         ],
@@ -140197,10 +137817,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -140275,12 +137891,6 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00001625",
-            "output_price": "0.00008",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "transcription",
             "input_price": "0.00001625",
             "output_price": "0.00008",
             "provider_id": "openai"

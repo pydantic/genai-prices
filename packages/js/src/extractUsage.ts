@@ -30,8 +30,8 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   const model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
 
-  const root = extractor.root === '$' ? [] : asArray(extractor.root)
-  const usageObj = extractor.root === '$' ? responseData : extractPath(root, responseData, mappingCheck, true, [])
+  const root = asArray(extractor.root)
+  const usageObj = extractPath(root, responseData, mappingCheck, true, [])
 
   const usage: Usage = {}
   let supportedMappings = 0

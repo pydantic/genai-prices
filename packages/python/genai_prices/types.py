@@ -443,10 +443,7 @@ class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
     root: ExtractPath
-    """Path to the root of the usage information in the response, generally `usage`.
-
-    Use `$` when the response itself contains the usage fields.
-    """
+    """Path to the root of the usage information in the response, generally `usage`."""
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
     api_flavor: str = 'default'
@@ -486,12 +483,10 @@ class UsageExtractor:
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
-        if root == '$':
-            usage_obj = cast(dict[str, Any], response_data)
-            root_path: Sequence[str | ArrayMatch] = []
-        else:
-            root_path = [root] if isinstance(root, str) else root
-            usage_obj = cast(dict[str, Any], _extract_path(root_path, response_data, Mapping, True, []))
+        if isinstance(root, str):
+            root = [root]
+
+        usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
         values: dict[str, UsageValue] = {}
         values_set = False
@@ -500,7 +495,7 @@ class UsageExtractor:
             if mapping.dest not in self._reported_usage_keys:
                 continue
             supported_mappings += 1
-            value = _extract_path(mapping.path, usage_obj, (Integral, float, Decimal), mapping.required, root_path)
+            value = _extract_path(mapping.path, usage_obj, (Integral, float, Decimal), mapping.required, root)
             if value is not None:
                 value = validate_usage_value(mapping.dest, value)
                 if mapping.dest not in values:
