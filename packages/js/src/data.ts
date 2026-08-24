@@ -24085,6 +24085,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'transcription_streaming',
+        root: '$',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'duration',
+            dest: 'audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {

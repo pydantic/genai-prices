@@ -13906,6 +13906,12 @@ providers: list[Provider] = [
                 api_flavor='transcription',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='$',
+                mappings=[UsageExtractorMapping(path='duration', dest='audio_seconds', required=True)],
+                api_flavor='transcription_streaming',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(

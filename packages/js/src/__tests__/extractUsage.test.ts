@@ -411,11 +411,14 @@ describe('extractUsage', () => {
 
     it('should extract and price top-level transcription duration usage', () => {
       const { model, usage } = extractUsage(xaiProvider, { duration: 90, language: 'en', text: 'Hello.', words: [] }, 'transcription')
+      const streaming = extractUsage(xaiProvider, { duration: 90, text: 'Hello.', type: 'transcript.done' }, 'transcription_streaming')
       const restPrice = calcPrice(usage, 'grok-stt', { provider: xaiProvider })
-      const streamingPrice = calcPrice({ audio_seconds: 90 }, 'grok-transcribe', { provider: xaiProvider })
+      const streamingPrice = calcPrice(streaming.usage, 'grok-transcribe', { provider: xaiProvider })
 
       expect(model).toBeNull()
       expect(usage).toEqual({ audio_seconds: 90, input_audio_seconds: 90 })
+      expect(streaming.model).toBeNull()
+      expect(streaming.usage).toEqual({ audio_seconds: 90 })
       expect(restPrice).not.toBeNull()
       expect(restPrice!.input_price).toBeCloseTo(0.0025, 15)
       expect(restPrice!.output_price).toBe(0)

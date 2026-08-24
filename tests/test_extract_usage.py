@@ -1385,11 +1385,17 @@ def test_xai_transcription_duration_usage_and_price() -> None:
         {'text': 'Hello.', 'language': 'en', 'duration': 90, 'words': []},
         api_flavor='transcription',
     )
+    streaming_model, streaming_usage = provider.extract_usage(
+        {'type': 'transcript.done', 'text': 'Hello.', 'duration': 90},
+        api_flavor='transcription_streaming',
+    )
     rest_price = calc_price(usage, model_ref='grok-stt', provider_id='x-ai')
-    streaming_price = calc_price(Usage(audio_seconds=90), model_ref='grok-transcribe', provider_id='x-ai')
+    streaming_price = calc_price(streaming_usage, model_ref='grok-transcribe', provider_id='x-ai')
 
     assert model is None
     assert usage == Usage(audio_seconds=90, input_audio_seconds=90)
+    assert streaming_model is None
+    assert streaming_usage == Usage(audio_seconds=90)
     assert rest_price.input_price == Decimal('0.0025')
     assert rest_price.output_price == 0
     assert rest_price.total_price == Decimal('0.0025')

@@ -84,6 +84,12 @@ extractors:
         dest: audio_seconds
       - path: duration
         dest: input_audio_seconds
+  # https://docs.x.ai/developers/model-capabilities/audio/speech-to-text#server-events
+  - api_flavor: transcription_streaming
+    root: "$"
+    mappings:
+      - path: duration
+        dest: audio_seconds
 
 models:
   - id: grok-2-1212
