@@ -651,6 +651,43 @@ def test_interrupted_start_does_not_orphan_worker(monkeypatch: pytest.MonkeyPatc
         update_prices_module._global_update_prices = None
 
 
+def test_interrupted_start_cannot_publish_from_a_late_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    allow_worker_start = threading.Event()
+    worker_started = threading.Event()
+    worker_thread: threading.Thread | None = None
+    initial_fetch_count = CountingNullUpdatePrices.count
+
+    original_start = threading.Thread.start
+
+    def start_later_then_interrupt(thread: threading.Thread) -> None:
+        nonlocal worker_thread
+        worker_thread = thread
+
+        def start_worker() -> None:
+            assert allow_worker_start.wait(timeout=5)
+            original_start(thread)
+            worker_started.set()
+
+        starter = threading.Thread(target=start_worker)
+        original_start(starter)
+        raise KeyboardInterrupt
+
+    update_prices = CountingNullUpdatePrices()
+    with monkeypatch.context() as context:
+        context.setattr(threading.Thread, 'start', start_later_then_interrupt)
+        with pytest.raises(KeyboardInterrupt):
+            update_prices.start()
+
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+        allow_worker_start.set()
+        assert worker_started.wait(timeout=5)
+        assert worker_thread is not None
+        worker_thread.join(timeout=5)
+        assert not worker_thread.is_alive()
+        assert CountingNullUpdatePrices.count == initial_fetch_count
+
+
 def test_interrupted_snapshot_reset_still_publishes_idle(monkeypatch: pytest.MonkeyPatch) -> None:
     update_prices = NullUpdatePrices()
     update_prices.start(wait=True)

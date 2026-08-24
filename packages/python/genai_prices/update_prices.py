@@ -255,11 +255,15 @@ class _SharedUpdater:
         self.claims = 0
         self.phase = _UpdaterPhase.ACTIVE
         self.stop_event = threading.Event()
+        self.run_event = threading.Event()
         self.outcome = _UpdateOutcome()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
 
     def start(self) -> None:
         self.thread.start()
+        # A caller can be interrupted inside Thread.start() after the OS thread is launched but
+        # before its identity is published. Do not let the worker fetch until start() returns.
+        self.run_event.set()
 
     def wait(self, timeout: float | None) -> bool:
         if threading.current_thread() is self.thread:
@@ -270,6 +274,7 @@ class _SharedUpdater:
 
     def stop(self) -> BaseException | None:
         self.stop_event.set()
+        self.run_event.set()
         interrupted: BaseException | None = None
         if self.thread.ident is not None:
             while True:
@@ -291,6 +296,9 @@ class _SharedUpdater:
     def _run(self) -> None:
         terminal_error: BaseException | None = None
         try:
+            self.run_event.wait()
+            if self.stop_event.is_set():
+                return
             self._log(logger.info, 'Starting genai-prices background task')
             while True:
                 try:
