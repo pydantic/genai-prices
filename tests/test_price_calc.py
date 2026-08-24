@@ -1162,6 +1162,134 @@ def test_mistral_voxtral_small_price_change(
     assert price.total_price == expected_output_price
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_model_id', 'expected_input_price', 'expected_output_price'),
+    [
+        (
+            'ministral-8b-2410',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'ministral-8b',
+            Decimal('0.1'),
+            Decimal('0.1'),
+        ),
+        (
+            'ministral-8b-2512',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'ministral-8b-2512',
+            Decimal('0.15'),
+            Decimal('0.15'),
+        ),
+        (
+            'ministral-8b-latest',
+            datetime(2025, 12, 1, tzinfo=timezone.utc),
+            'ministral-8b-latest',
+            Decimal('0.1'),
+            Decimal('0.1'),
+        ),
+        (
+            'ministral-8b-latest',
+            datetime(2025, 12, 2, tzinfo=timezone.utc),
+            'ministral-8b-latest',
+            Decimal('0.15'),
+            Decimal('0.15'),
+        ),
+        (
+            'mistral-medium-2312',
+            datetime(2025, 6, 15, tzinfo=timezone.utc),
+            'mistral-medium-2312',
+            Decimal('2.7'),
+            Decimal('8.1'),
+        ),
+        (
+            'mistral-medium-2505',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-1',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-2508',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-1',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-3.5',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-3-5',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-3',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-latest',
+            datetime(2026, 6, 15, tzinfo=timezone.utc),
+            'mistral-medium-latest',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-latest',
+            datetime(2026, 6, 16, tzinfo=timezone.utc),
+            'mistral-medium-latest',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+    ],
+)
+def test_mistral_versioned_model_prices(
+    model_ref: str,
+    request_timestamp: datetime,
+    expected_model_id: str,
+    expected_input_price: Decimal,
+    expected_output_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model.id == expected_model_id
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+    assert price.total_price == expected_input_price + expected_output_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp'),
+    [
+        ('mistral-medium-2508', datetime(2026, 8, 24, tzinfo=timezone.utc)),
+        ('mistral-medium-latest', datetime(2026, 6, 15, tzinfo=timezone.utc)),
+    ],
+)
+def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: datetime) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.input_price == Decimal('0.04')
+    assert price.total_price == Decimal('0.04')
+
+
 def test_voxtral_provider_inference() -> None:
     price = calc_price(Usage(output_tokens=1), model_ref='voxtral-small-latest')
 

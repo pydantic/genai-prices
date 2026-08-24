@@ -196,6 +196,116 @@ describe('generated data split', () => {
     expect(result?.total_price).toBe(expectedOutput)
   })
 
+  it.each([
+    {
+      expectedInput: 0.1,
+      expectedModelId: 'ministral-8b',
+      expectedOutput: 0.1,
+      model: 'ministral-8b-2410',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.15,
+      expectedModelId: 'ministral-8b-2512',
+      expectedOutput: 0.15,
+      model: 'ministral-8b-2512',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.1,
+      expectedModelId: 'ministral-8b-latest',
+      expectedOutput: 0.1,
+      model: 'ministral-8b-latest',
+      timestamp: new Date('2025-12-01T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.15,
+      expectedModelId: 'ministral-8b-latest',
+      expectedOutput: 0.15,
+      model: 'ministral-8b-latest',
+      timestamp: new Date('2025-12-02T00:00:00Z'),
+    },
+    {
+      expectedInput: 2.7,
+      expectedModelId: 'mistral-medium-2312',
+      expectedOutput: 8.1,
+      model: 'mistral-medium-2312',
+      timestamp: new Date('2025-06-15T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-3-1',
+      expectedOutput: 2,
+      model: 'mistral-medium-2505',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-3-1',
+      expectedOutput: 2,
+      model: 'mistral-medium-2508',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3.5',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3-5',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-latest',
+      expectedOutput: 2,
+      model: 'mistral-medium-latest',
+      timestamp: new Date('2026-06-15T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-latest',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-latest',
+      timestamp: new Date('2026-06-16T00:00:00Z'),
+    },
+  ])('prices $model at $timestamp', ({ expectedInput, expectedModelId, expectedOutput, model, timestamp }) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'mistral',
+      timestamp,
+    })
+
+    expect(result?.model.id).toBe(expectedModelId)
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.output_price).toBe(expectedOutput)
+    expect(result?.total_price).toBe(expectedInput + expectedOutput)
+  })
+
+  it.each([
+    { model: 'mistral-medium-2508', timestamp: new Date('2026-08-24T00:00:00Z') },
+    { model: 'mistral-medium-latest', timestamp: new Date('2026-06-15T00:00:00Z') },
+  ])('prices cached input for $model at $timestamp', ({ model, timestamp }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }, model, {
+      providerId: 'mistral',
+      timestamp,
+    })
+
+    expect(result?.input_price).toBe(0.04)
+    expect(result?.total_price).toBe(0.04)
+  })
+
   it('infers Mistral for the native Voxtral alias', () => {
     const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
 
