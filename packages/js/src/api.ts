@@ -247,9 +247,11 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
         if (value - audioSeconds > roundingTolerance) {
           throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
         }
+        if (value > audioSeconds) billedUsage[usageKey] = audioSeconds
       }
       const inputAudioSeconds = billedUsage.input_audio_seconds
       const outputAudioSeconds = billedUsage.output_audio_seconds
+      let fullyAttributed = false
       if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined) {
         const directionalTotal = inputAudioSeconds + outputAudioSeconds
         const roundingTolerance =
@@ -261,6 +263,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
             `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${directionalTotal.toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
           )
         }
+        fullyAttributed = Math.abs(directionalTotal - audioSeconds) <= roundingTolerance
       }
       if (audioSeconds > 0 && audioSeconds < minimumAudioSeconds) {
         billedUsage.audio_seconds = minimumAudioSeconds
@@ -269,6 +272,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
           if (value !== undefined) {
             billedUsage[usageKey] = (value / audioSeconds) * minimumAudioSeconds
           }
+        }
+        if (fullyAttributed) {
+          billedUsage.output_audio_seconds = minimumAudioSeconds - (billedUsage.input_audio_seconds ?? 0)
         }
       }
     }

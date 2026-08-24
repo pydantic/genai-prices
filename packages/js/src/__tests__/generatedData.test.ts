@@ -227,6 +227,25 @@ describe('generated data split', () => {
     expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
   })
 
+  it('preserves the billed aggregate when directional durations fully attribute it', () => {
+    const provider: Provider = {
+      api_pattern: '',
+      id: 'groq',
+      models: [
+        {
+          id: 'whisper-large-v3',
+          match: { equals: 'whisper-large-v3' },
+          prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
+        },
+      ],
+      name: 'Groq',
+    }
+    const result = calcPrice({ audio_seconds: 0.3, input_audio_seconds: 0.1, output_audio_seconds: 0.2 }, 'whisper-large-v3', { provider })
+
+    expect(result?.input_price).toBeCloseTo((0.1 * (10 / 3)) / 3_600, 15)
+    expect((result?.input_price ?? 0) + (result?.output_price ?? 0)).toBe(result?.total_price)
+  })
+
   it('rejects a positive directional duration when the aggregate duration is zero', () => {
     expect(() =>
       calcPrice({ audio_seconds: 0, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { providerId: 'groq' })
