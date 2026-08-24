@@ -1568,6 +1568,23 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
@@ -6276,7 +6293,27 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(path='prompt_audio_seconds', dest='audio_seconds', required=True),
+                    UsageExtractorMapping(path='prompt_audio_seconds', dest='input_audio_seconds', required=True),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -7061,6 +7098,23 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
+                ],
+                api_flavor='transcription',
                 model_path='model',
             ),
         ],

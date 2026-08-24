@@ -2558,6 +2558,43 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: false,
+          },
+        ],
+      },
+      {
         api_flavor: 'anthropic',
         root: 'usage',
         model_path: 'model',
@@ -10691,6 +10728,48 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+          {
+            path: 'prompt_audio_seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'prompt_audio_seconds',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -12103,6 +12182,43 @@ export const data: Provider[] = [
             path: 'prompt_tokens',
             dest: 'input_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: false,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: false,
           },
         ],
       },
