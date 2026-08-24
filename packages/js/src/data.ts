@@ -12230,6 +12230,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'realtime_transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -14057,6 +14074,17 @@ export const data: Provider[] = [
           output_audio_mtok: 20,
           input_image_mtok: 0.8,
           cache_image_read_mtok: 0.08,
+        },
+      },
+      {
+        id: 'gpt-realtime-whisper',
+        match: {
+          equals: 'gpt-realtime-whisper',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
+        prices: {
+          audio_hours: 1.02,
+          input_audio_hours: 1.02,
         },
       },
       {
@@ -24020,6 +24048,35 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'transcription',
+        root: '$',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'duration',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'duration',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'transcription_streaming',
+        root: '$',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'duration',
+            dest: 'audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -24414,6 +24471,25 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'grok-stt',
+        match: {
+          or: [
+            {
+              equals: 'grok-stt',
+            },
+            {
+              equals: 'grok-transcribe',
+            },
+          ],
+        },
+        price_comments:
+          'See https://docs.x.ai/developers/pricing#voice-pricing. The generic audio rate applies to streaming usage, while the directional input-audio rate applies to REST usage.',
+        prices: {
+          audio_hours: 0.2,
+          input_audio_hours: 0.1,
         },
       },
       {

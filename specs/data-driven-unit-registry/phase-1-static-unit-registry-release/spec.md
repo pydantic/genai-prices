@@ -61,7 +61,7 @@ Recognized usage values are finite non-negative quantities rather than integer-o
 Dimension-driven decomposition must not double-count, drop, or guess the placement of usage. Contradictory reported values may remain inert until a requested read or selected price set requires interpreting them; impossible exclusive buckets then raise a user-facing data error.
 
 **Repo-authored prices avoid redundant equal-rate descendants.** _(from "Price data is complete while usage data may be incomplete", "Every priced usage value lands in exactly one bucket")_
-A model includes a child-unit price when its rate differs from the ancestor catch-all or when ancestor or join coverage requires the explicit child. It does not duplicate an equal-rate child merely to describe the model's modality. This is a checked-in pricing-data convention, not a runtime rejection rule for custom prices.
+A model includes a child-unit price when its rate differs from the ancestor catch-all, when ancestor or join coverage requires the explicit child, or when the child adds input or output direction needed for price attribution. It does not duplicate an equal-rate child merely to describe the model's modality. This is a checked-in pricing-data convention, not a runtime rejection rule for custom prices.
 
 **`requests_kcount` remains an explicit one-request pricing exception.** _(from "Units are repo-defined data used by handwritten runtime code")_
 The registry represents usage key `requests`, price key `requests_kcount`, `per: 1_000`, and `family: requests`, but callers and extractors do not report it. Pricing supplies one request per calculation and includes its cost only in the total.
