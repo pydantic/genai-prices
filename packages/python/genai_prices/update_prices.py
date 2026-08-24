@@ -8,6 +8,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from time import time
+from types import TracebackType
 
 import httpx2
 
@@ -39,7 +40,21 @@ class _UpdateConfig:
 
     @classmethod
     def from_values(cls, url: str, update_interval: float, request_timeout: httpx2.Timeout) -> _UpdateConfig:
+        # Timeout is mutable, so the worker needs a launch-time copy.
         return cls(url, update_interval, httpx2.Timeout(request_timeout))
+
+
+def _fetch_prices(config: _UpdateConfig) -> data_snapshot.DataSnapshot:
+    from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+
+    response = httpx2.get(config.url, timeout=config.request_timeout)
+    response.raise_for_status()
+    raw_payload = json.loads(response.content)
+    if not isinstance(raw_payload, list):
+        raise ValueError('Expected fetched prices payload to be a provider array')
+
+    providers = _providers_from_raw(raw_payload)
+    return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
 @dataclass
@@ -49,26 +64,30 @@ class _UpdateOutcome:
     ready: threading.Event = field(default_factory=threading.Event)
     lock: threading.Lock = field(default_factory=threading.Lock)
     error: Exception | None = None
+    error_traceback: TracebackType | None = None
     succeeded: bool = False
 
     def publish_success(self) -> None:
         with self.lock:
             self.error = None
+            self.error_traceback = None
             self.succeeded = True
             self.ready.set()
 
     def publish_failure(self, error: Exception) -> None:
         with self.lock:
             self.error = error
+            self.error_traceback = error.__traceback__
             self.succeeded = False
             self.ready.set()
 
     def read(self) -> bool:
         with self.lock:
             error = self.error
+            error_traceback = self.error_traceback
             succeeded = self.succeeded
         if error is not None:
-            raise error
+            raise error.with_traceback(error_traceback)
         return succeeded
 
 
@@ -125,7 +144,6 @@ class UpdatePrices:
     request_timeout: httpx2.Timeout = field(default_factory=_default_request_timeout)
     """The timeout for HTTP requests."""
     _updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
-    _active_config: _UpdateConfig | None = field(default=None, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
         """Acquire a claim on the process-wide background updater.
@@ -156,7 +174,6 @@ class UpdatePrices:
                     _global_update_prices = update_prices
                     update_prices.claims = 1
                     self._updater = update_prices
-                    self._active_config = config
                     update_prices.start()
                 except BaseException as exc:
                     # The thread may already be alive even if Thread.start() raised after delegating.
@@ -225,17 +242,8 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetch the latest provider data from this instance's configured URL."""
-        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
-
-        config = self._active_config or _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
-        response = httpx2.get(config.url, timeout=config.request_timeout)
-        response.raise_for_status()
-        raw_payload = json.loads(response.content)
-        if not isinstance(raw_payload, list):
-            raise ValueError('Expected fetched prices payload to be a provider array')
-
-        providers = _providers_from_raw(raw_payload)
-        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+        config = _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
+        return _fetch_prices(config)
 
     def __enter__(self):
         self.start()
@@ -250,8 +258,11 @@ class _SharedUpdater:
 
     def __init__(self, config: _UpdateConfig, owner: UpdatePrices) -> None:
         self.config = config
-        self.owner = owner
-        self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = owner.fetch
+        # The base fetch uses frozen lifecycle settings; subclasses keep their supported override hook.
+        if type(owner).fetch is UpdatePrices.fetch:
+            self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(config)
+        else:
+            self.fetch = owner.fetch
         self.claims = 0
         self.phase = _UpdaterPhase.ACTIVE
         self.stop_event = threading.Event()
@@ -261,8 +272,8 @@ class _SharedUpdater:
 
     def start(self) -> None:
         self.thread.start()
-        # A caller can be interrupted inside Thread.start() after the OS thread is launched but
-        # before its identity is published. Do not let the worker fetch until start() returns.
+        # Thread.start() can be interrupted after OS launch, so a late worker needs this gate to
+        # observe cleanup before it can publish prices.
         self.run_event.set()
 
     def wait(self, timeout: float | None) -> bool:
@@ -275,23 +286,12 @@ class _SharedUpdater:
     def stop(self) -> BaseException | None:
         self.stop_event.set()
         self.run_event.set()
-        interrupted: BaseException | None = None
-        if self.thread.ident is not None:
-            while True:
-                try:
-                    self.thread.join()
-                    break
-                except BaseException as exc:
-                    interrupted = exc
-
-        while True:
-            try:
-                data_snapshot.set_custom_snapshot(None)
-                break
-            except BaseException as exc:
-                interrupted = exc
-        self.owner._active_config = None  # pyright: ignore[reportPrivateUsage]
-        return interrupted
+        # An interrupted Thread.start() can publish ident before join() becomes legal.
+        interrupted = _finish_despite_interruption(self.thread.join) if self.thread.is_alive() else None
+        # A worker stopped before its first fetch has no outcome of its own to wake waiters with.
+        self.outcome.ready.set()
+        reset_interrupted = _finish_despite_interruption(lambda: data_snapshot.set_custom_snapshot(None))
+        return reset_interrupted or interrupted
 
     def _run(self) -> None:
         terminal_error: BaseException | None = None
@@ -357,14 +357,24 @@ def _finish_shutdown(update_prices: _SharedUpdater) -> BaseException | None:
     global _global_update_prices
 
     interrupted = update_prices.stop()
+
+    def publish_idle() -> None:
+        global _global_update_prices
+        _global_update_prices = None
+        _lifecycle.notify_all()
+
+    # Keep the lock across retries so a retry cannot clear a replacement updater.
+    with _lifecycle:
+        publish_interrupted = _finish_despite_interruption(publish_idle)
+    return publish_interrupted or interrupted
+
+
+def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
+    """Finish lifecycle cleanup before propagating Ctrl-C or process exit."""
+    interrupted: BaseException | None = None
     while True:
         try:
-            with _lifecycle:
-                if _global_update_prices is update_prices:
-                    _global_update_prices = None
-                _lifecycle.notify_all()
+            action()
             return interrupted
-        except BaseException as exc:
-            # Publication is idempotent. Retry before preserving the interruption so starters
-            # cannot remain asleep behind a worker that has already exited.
+        except (KeyboardInterrupt, SystemExit) as exc:
             interrupted = exc

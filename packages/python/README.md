@@ -130,6 +130,8 @@ This lets libraries such as Logfire and Pydantic AI opt in independently without
 The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
 settings raises `RuntimeError` instead of silently ignoring its configuration. The first owner also supplies the
 `fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
+Custom `fetch()` implementations are responsible for keeping any configuration they read stable while the shared
+updater is running.
 Applications that need custom behavior should start their updater before integrations initialize and retain it
 until shutdown.
 
