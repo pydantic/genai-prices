@@ -72,6 +72,13 @@ def test_unknown_providers():
     assert result is None
 
 
+def test_mistral_model_matching_ignores_qualified_openrouter_ids() -> None:
+    mistral = next(provider for provider in providers if provider.id == 'mistral')
+
+    assert mistral.model_match is not None
+    assert not mistral.model_match.is_match('mistralai/voxtral-small-24b-2507')
+
+
 @pytest.mark.parametrize(
     'provider_ref,provider_id',
     [

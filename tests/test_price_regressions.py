@@ -158,6 +158,29 @@ def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
     assert usage.reported_value('output_audio_seconds') == 3
 
 
+def test_minimum_billed_duration_preserves_unattributed_audio_usage() -> None:
+    model = ModelInfo(
+        id='whisper-large-v3',
+        match=ClauseEquals('whisper-large-v3'),
+        prices=ModelPrice(
+            audio_hours=Decimal('0.1'),
+            input_audio_hours=Decimal('0.1'),
+            output_audio_hours=Decimal('0.1'),
+        ),
+    )
+    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
+
+    price = model.calc_price(
+        Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(1), output_audio_seconds=Decimal(1)),
+        provider,
+    )
+
+    assert price.input_price == Decimal('0.1') * Decimal(2) / Decimal(3_600)
+    assert price.output_price == Decimal('0.1') * Decimal(2) / Decimal(3_600)
+    unattributed_price = Decimal('0.1') * Decimal(6) / Decimal(3_600)
+    assert price.total_price == unattributed_price + price.input_price + price.output_price
+
+
 def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
     usage = Usage(audio_seconds=Decimal('1e-1000000'), input_audio_seconds=Decimal('1e-1000000'))
     model = ModelInfo(
@@ -190,8 +213,18 @@ def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
         context.rounding = ROUND_CEILING
         price = model.calc_price(usage, provider)
 
-    assert price.input_price == Decimal('2e-9')
+    assert price.input_price == Decimal('0.000002') * Decimal(10) / Decimal(3) / Decimal(3_600)
     assert price.total_price.is_finite()
+
+
+def test_minimum_billed_duration_accepts_float_rounding_excess() -> None:
+    price = calc_price(
+        Usage(audio_seconds=0.3, input_audio_seconds=0.1 + 0.2),
+        model_ref='whisper-large-v3',
+        provider_id='groq',
+    )
+
+    assert price.input_price == Decimal('0.111') * Decimal(10) / Decimal(3_600)
 
 
 def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
@@ -236,6 +269,17 @@ def test_openai_transcription_model_ids_fail_closed() -> None:
     assert price.model.id == 'gpt-4o-transcribe'
     with pytest.raises(LookupError, match="model_ref='gpt-transcribe-diarize'"):
         calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
+
+
+def test_qualified_openrouter_voxtral_model_uses_openrouter_price() -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000),
+        model_ref='mistralai/voxtral-small-24b-2507',
+        provider_id='openrouter',
+    )
+
+    assert price.provider.id == 'openrouter'
+    assert price.model.id == 'mistralai/voxtral-small-24b-2507'
 
 
 @pytest.mark.parametrize(
