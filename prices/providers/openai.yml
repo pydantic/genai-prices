@@ -117,6 +117,28 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
+  # https://github.com/openai/openai-python/blob/main/src/openai/types/audio/transcription.py
+  - api_flavor: transcription
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
+      - path: seconds
+        dest: audio_seconds
+        required: false
+      - path: seconds
+        dest: input_audio_seconds
+        required: false
 
 models:
   - id: ada
@@ -1327,6 +1349,15 @@ models:
       cache_image_read_mtok: 0.08
       output_mtok: 2.4
       output_audio_mtok: 20
+
+  - id: gpt-realtime-whisper
+    match:
+      equals: gpt-realtime-whisper
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.
+    prices:
+      audio_hours: 1.02
+      input_audio_hours: 1.02
 
   - id: moderation
     description: All OpenAI moderation models and endpoints are free of charge

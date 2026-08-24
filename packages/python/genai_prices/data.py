@@ -7134,6 +7134,23 @@ providers: list[Provider] = [
                 api_flavor='embeddings',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -8086,6 +8103,12 @@ providers: list[Provider] = [
                     input_image_mtok=Decimal('0.8'),
                     cache_image_read_mtok=Decimal('0.08'),
                 ),
+            ),
+            ModelInfo(
+                id='gpt-realtime-whisper',
+                match=ClauseEquals(equals='gpt-realtime-whisper'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
+                prices=ModelPrice(audio_hours=Decimal('1.02'), input_audio_hours=Decimal('1.02')),
             ),
             ModelInfo(
                 id='moderation',
@@ -13874,6 +13897,21 @@ providers: list[Provider] = [
                 api_flavor='realtime',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='$',
+                mappings=[
+                    UsageExtractorMapping(path='duration', dest='audio_seconds', required=True),
+                    UsageExtractorMapping(path='duration', dest='input_audio_seconds', required=True),
+                ],
+                api_flavor='transcription',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='$',
+                mappings=[UsageExtractorMapping(path='duration', dest='audio_seconds', required=True)],
+                api_flavor='transcription_streaming',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -14112,6 +14150,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
                 ),
+            ),
+            ModelInfo(
+                id='grok-stt',
+                match=ClauseOr(or_=[ClauseEquals(equals='grok-stt'), ClauseEquals(equals='grok-transcribe')]),
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing. The generic audio rate applies to streaming usage, while the directional input-audio rate applies to REST usage.',
+                prices=ModelPrice(audio_hours=Decimal('0.2'), input_audio_hours=Decimal('0.1')),
             ),
             ModelInfo(
                 id='grok-voice-latest',
