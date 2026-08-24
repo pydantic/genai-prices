@@ -210,11 +210,11 @@ def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
     model = ModelInfo(
         id='minimum-duration',
         match=ClauseEquals('minimum-duration'),
-        minimum_audio_seconds=Decimal(10),
+        minimum_audio_seconds=Decimal(9),
         prices=ModelPrice(
-            audio_hours=Decimal('0.1'),
-            input_audio_hours=Decimal('0.1'),
-            output_audio_hours=Decimal('0.1'),
+            audio_hours=Decimal(1),
+            input_audio_hours=Decimal(1),
+            output_audio_hours=Decimal(1),
         ),
     )
     provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
@@ -224,7 +224,40 @@ def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
         context.rounding = ROUND_CEILING
         price = model.calc_price(usage, provider)
 
-    assert price.total_price.is_finite()
+    assert price.input_price == Decimal('0.0009')
+
+
+def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
+    usage = Usage(
+        audio_seconds=Decimal(1),
+        input_audio_seconds=Decimal('0e-999999999999999999'),
+        output_audio_seconds=Decimal(1),
+    )
+    model = ModelInfo(
+        id='minimum-duration',
+        match=ClauseEquals('minimum-duration'),
+        minimum_audio_seconds=Decimal(10),
+        prices=ModelPrice(
+            audio_hours=Decimal('0.1'),
+            input_audio_hours=Decimal('0.1'),
+            output_audio_hours=Decimal('0.1'),
+        ),
+    )
+    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+
+    price = model.calc_price(usage, provider)
+    zero_price = model.calc_price(
+        Usage(
+            audio_seconds=Decimal(0),
+            input_audio_seconds=Decimal('0e-999999999999999999'),
+            output_audio_seconds=Decimal('0e-999999999999999999'),
+        ),
+        provider,
+    )
+
+    assert price.input_price == 0
+    assert price.output_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
+    assert zero_price.total_price == 0
 
 
 def test_openai_transcription_model_ids_fail_closed() -> None:

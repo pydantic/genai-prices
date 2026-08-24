@@ -67,8 +67,12 @@ def subtract_usage_values(minuend: UsageValue, subtrahends: Iterable[UsageValue]
 
 
 def _usage_context(values: tuple[Decimal, ...]) -> Context:
-    exponents = tuple(int(value.as_tuple().exponent) for value in values)
-    max_adjusted = max(value.adjusted() for value in values)
+    nonzero_values = tuple(value for value in values if value)
+    if not nonzero_values:
+        return Context(prec=1, Emax=MAX_EMAX, Emin=MIN_EMIN)
+
+    exponents = tuple(int(value.as_tuple().exponent) for value in nonzero_values)
+    max_adjusted = max(value.adjusted() for value in nonzero_values)
     precision = max_adjusted - min(exponents) + 1 + len(str(len(values)))
     return Context(prec=max(precision, 1), Emax=MAX_EMAX, Emin=MIN_EMIN)
 
