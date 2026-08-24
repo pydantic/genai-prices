@@ -210,11 +210,12 @@ describe('extractUsage', () => {
       })
     })
 
-    it('should price realtime transcription duration usage', () => {
-      const price = calcPrice({ audio_seconds: 30, input_audio_seconds: 30 }, 'gpt-realtime-whisper', {
-        provider: openaiProvider,
-      })
+    it('should extract and price realtime transcription duration usage', () => {
+      const { model, usage } = extractUsage(openaiProvider, { usage: { seconds: 30, type: 'duration' } }, 'realtime_transcription')
+      const price = calcPrice(usage, 'gpt-realtime-whisper', { provider: openaiProvider })
 
+      expect(model).toBeNull()
+      expect(usage).toEqual({ audio_seconds: 30, input_audio_seconds: 30 })
       expect(price).not.toBeNull()
       expect(price!.input_price).toBeCloseTo(0.0085, 15)
       expect(price!.output_price).toBe(0)

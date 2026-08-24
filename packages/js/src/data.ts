@@ -12230,6 +12230,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'realtime_transcription',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'seconds',
+            dest: 'input_audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {

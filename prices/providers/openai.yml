@@ -117,6 +117,15 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
+  # https://platform.openai.com/docs/api-reference/realtime-server-events/conversation/item/input_audio_transcription/completed
+  - api_flavor: realtime_transcription
+    root: usage
+    mappings:
+      - path: seconds
+        dest: audio_seconds
+      - path: seconds
+        dest: input_audio_seconds
+
 models:
   - id: ada
     match:

@@ -7134,6 +7134,15 @@ providers: list[Provider] = [
                 api_flavor='embeddings',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=True),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=True),
+                ],
+                api_flavor='realtime_transcription',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
