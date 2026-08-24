@@ -32,11 +32,11 @@ def main():
     )
     if len(sys.argv) == 2:
         command = sys.argv[1]
+        if command == 'check_for_price_discrepancies':
+            sys.exit(int(check_for_price_discrepancies() > 0))
         action = next((f for f in actions if f.__name__ == command), None)
         if action:
-            return_value = action()
-            if isinstance(return_value, int):
-                sys.exit(return_value)
+            action()
             return
         else:
             print('Invalid command')

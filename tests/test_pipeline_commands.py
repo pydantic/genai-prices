@@ -199,15 +199,30 @@ def test_command_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
     assert called is True
 
 
-def test_command_dispatch_exits_with_integer_result(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_command_dispatch_ignores_an_ordinary_action_integer_result(monkeypatch: pytest.MonkeyPatch) -> None:
     def build() -> int:
         return 3
 
     monkeypatch.setattr(commands, 'build', build)
     monkeypatch.setattr(sys, 'argv', ['prices', 'build'])
 
-    with pytest.raises(SystemExit, match='3'):
+    assert commands.main() is None
+
+
+@pytest.mark.parametrize(('count', 'exit_code'), [(0, 0), (3, 1), (256, 1)])
+def test_check_for_price_discrepancies_command_normalizes_count_to_exit_status(
+    monkeypatch: pytest.MonkeyPatch, count: int, exit_code: int
+) -> None:
+    def check_for_price_discrepancies() -> int:
+        return count
+
+    monkeypatch.setattr(commands, 'check_for_price_discrepancies', check_for_price_discrepancies)
+    monkeypatch.setattr(sys, 'argv', ['prices', 'check_for_price_discrepancies'])
+
+    with pytest.raises(SystemExit) as exc_info:
         commands.main()
+
+    assert exc_info.value.code == exit_code
 
 
 @pytest.mark.parametrize('argv', (['prices'], ['prices', 'unknown']))
