@@ -70,14 +70,6 @@ function normalizeProvider(provider: Provider): Provider {
   return {
     ...provider,
     models: provider.models.map((model) => {
-      if (
-        model.minimum_audio_seconds !== undefined &&
-        (!Number.isFinite(model.minimum_audio_seconds) || model.minimum_audio_seconds <= 0)
-      ) {
-        throw new Error(
-          `Invalid minimum_audio_seconds for provider '${provider.id}' model '${model.id}': expected a finite positive number`
-        )
-      }
       return {
         ...model,
         prices: Array.isArray(model.prices)
@@ -238,8 +230,10 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
+  const minimumAudioSeconds =
+    provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo') ? 10 : undefined
   let billedUsage = usage
-  if (model.minimum_audio_seconds !== undefined) {
+  if (minimumAudioSeconds !== undefined) {
     billedUsage = { ...usage }
     for (const usageKey of ['audio_seconds', 'input_audio_seconds', 'output_audio_seconds'] as const) {
       const value = billedUsage[usageKey]
@@ -261,12 +255,12 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
           `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${(inputAudioSeconds + outputAudioSeconds).toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
         )
       }
-      if (audioSeconds > 0 && audioSeconds < model.minimum_audio_seconds) {
-        billedUsage.audio_seconds = model.minimum_audio_seconds
+      if (audioSeconds > 0 && audioSeconds < minimumAudioSeconds) {
+        billedUsage.audio_seconds = minimumAudioSeconds
         for (const usageKey of directionalUsageKeys) {
           const value = billedUsage[usageKey]
           if (value !== undefined) {
-            billedUsage[usageKey] = (value / audioSeconds) * model.minimum_audio_seconds
+            billedUsage[usageKey] = (value / audioSeconds) * minimumAudioSeconds
           }
         }
       }

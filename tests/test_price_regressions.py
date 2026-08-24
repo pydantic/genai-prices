@@ -100,37 +100,6 @@ def test_groq_transcription_prices_apply_minimum_billed_duration(
     assert price.total_price == expected_price
 
 
-@pytest.mark.parametrize('minimum_audio_seconds', [0, -1, float('nan'), float('inf')])
-def test_model_info_rejects_invalid_minimum_billed_duration(minimum_audio_seconds: float) -> None:
-    with pytest.raises(ValueError, match='minimum_audio_seconds'):
-        ModelInfo(
-            id='invalid-minimum',
-            match=ClauseEquals('invalid-minimum'),
-            minimum_audio_seconds=minimum_audio_seconds,
-            prices=ModelPrice(),
-        )
-
-
-def test_model_info_preserves_positional_constructor_compatibility() -> None:
-    prices = ModelPrice(audio_hours=Decimal('0.1'))
-    model = ModelInfo(
-        'positional',
-        ClauseEquals('positional'),
-        'Positional',
-        'Description',
-        1_000,
-        'Comments',
-        True,
-        prices,
-        Decimal('10'),
-    )
-
-    assert model.price_comments == 'Comments'
-    assert model.deprecated is True
-    assert model.prices is prices
-    assert model.minimum_audio_seconds == 10
-
-
 def test_groq_minimum_billed_duration_preserves_zero_subtypes_and_usage() -> None:
     usage = Usage(audio_seconds=Decimal('5'), input_audio_seconds=Decimal(0))
 
@@ -169,16 +138,15 @@ def test_groq_minimum_billed_duration_rejects_invalid_directional_total() -> Non
 def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
     usage = Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(2), output_audio_seconds=Decimal(3))
     model = ModelInfo(
-        id='minimum-duration',
-        match=ClauseEquals('minimum-duration'),
-        minimum_audio_seconds=Decimal(10),
+        id='whisper-large-v3',
+        match=ClauseEquals('whisper-large-v3'),
         prices=ModelPrice(
             audio_hours=Decimal('0.1'),
             input_audio_hours=Decimal('0.1'),
             output_audio_hours=Decimal('0.1'),
         ),
     )
-    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
 
     price = model.calc_price(usage, provider)
 
@@ -193,12 +161,11 @@ def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
 def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
     usage = Usage(audio_seconds=Decimal('1e-1000000'), input_audio_seconds=Decimal('1e-1000000'))
     model = ModelInfo(
-        id='minimum-duration',
-        match=ClauseEquals('minimum-duration'),
-        minimum_audio_seconds=Decimal(10),
+        id='whisper-large-v3',
+        match=ClauseEquals('whisper-large-v3'),
         prices=ModelPrice(audio_hours=Decimal('0.1'), input_audio_hours=Decimal('0.1')),
     )
-    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
 
     price = model.calc_price(usage, provider)
 
@@ -208,23 +175,22 @@ def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
 def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
     usage = Usage(audio_seconds=Decimal(3), input_audio_seconds=Decimal(1), output_audio_seconds=Decimal(2))
     model = ModelInfo(
-        id='minimum-duration',
-        match=ClauseEquals('minimum-duration'),
-        minimum_audio_seconds=Decimal(9),
+        id='whisper-large-v3',
+        match=ClauseEquals('whisper-large-v3'),
         prices=ModelPrice(
-            audio_hours=Decimal(1),
-            input_audio_hours=Decimal(1),
-            output_audio_hours=Decimal(1),
+            audio_hours=Decimal('0.000002'),
+            input_audio_hours=Decimal('0.000002'),
+            output_audio_hours=Decimal('0.000002'),
         ),
     )
-    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
 
     with localcontext() as context:
         context.prec = 1
         context.rounding = ROUND_CEILING
         price = model.calc_price(usage, provider)
 
-    assert price.input_price == Decimal('0.0009')
+    assert price.input_price == Decimal('2e-9')
 
 
 def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
@@ -234,16 +200,15 @@ def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
         output_audio_seconds=Decimal(1),
     )
     model = ModelInfo(
-        id='minimum-duration',
-        match=ClauseEquals('minimum-duration'),
-        minimum_audio_seconds=Decimal(10),
+        id='whisper-large-v3',
+        match=ClauseEquals('whisper-large-v3'),
         prices=ModelPrice(
             audio_hours=Decimal('0.1'),
             input_audio_hours=Decimal('0.1'),
             output_audio_hours=Decimal('0.1'),
         ),
     )
-    provider = Provider(id='testing', name='Testing', api_pattern='', models=[model])
+    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
 
     price = model.calc_price(usage, provider)
     zero_price = model.calc_price(

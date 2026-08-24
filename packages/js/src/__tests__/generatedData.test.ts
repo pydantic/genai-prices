@@ -223,19 +223,18 @@ describe('generated data split', () => {
     const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
     const provider: Provider = {
       api_pattern: '',
-      id: 'testing',
+      id: 'groq',
       models: [
         {
-          id: 'minimum-duration',
-          match: { equals: 'minimum-duration' },
-          minimum_audio_seconds: 10,
+          id: 'whisper-large-v3',
+          match: { equals: 'whisper-large-v3' },
           prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
         },
       ],
-      name: 'Testing',
+      name: 'Groq',
     }
 
-    const result = calcPrice(usage, 'minimum-duration', { provider })
+    const result = calcPrice(usage, 'whisper-large-v3', { provider })
 
     expect(result?.input_price).toBeCloseTo((0.1 * 4) / 3_600, 15)
     expect(result?.output_price).toBeCloseTo((0.1 * 6) / 3_600, 15)
@@ -246,19 +245,18 @@ describe('generated data split', () => {
   it('scales extremely small directional audio usage without overflowing', () => {
     const provider: Provider = {
       api_pattern: '',
-      id: 'testing',
+      id: 'groq',
       models: [
         {
-          id: 'minimum-duration',
-          match: { equals: 'minimum-duration' },
-          minimum_audio_seconds: 10,
+          id: 'whisper-large-v3',
+          match: { equals: 'whisper-large-v3' },
           prices: { audio_hours: 0.1, input_audio_hours: 0.1 },
         },
       ],
-      name: 'Testing',
+      name: 'Groq',
     }
 
-    const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'minimum-duration', { provider })
+    const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { provider })
 
     expect(result?.input_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
   })

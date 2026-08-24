@@ -285,7 +285,6 @@ models:
     name: Whisper Large V3
     match:
       equals: whisper-large-v3
-    minimum_audio_seconds: 10
     prices_checked: 2026-08-21
     price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
     prices:
@@ -296,7 +295,6 @@ models:
     name: Whisper Large V3 Turbo
     match:
       equals: whisper-large-v3-turbo
-    minimum_audio_seconds: 10
     prices_checked: 2026-08-21
     price_comments: See https://console.groq.com/docs/speech-to-text.
     prices:

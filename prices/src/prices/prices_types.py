@@ -192,8 +192,6 @@ class ModelInfo(_Model):
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
-    minimum_audio_seconds: PositiveDecimal | None = None
-    """Minimum audio duration billed for a request."""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]

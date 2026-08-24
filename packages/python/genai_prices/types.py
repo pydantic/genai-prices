@@ -682,16 +682,6 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
-    minimum_audio_seconds: UsageValue | None = None
-    """Minimum audio duration billed for a request."""
-
-    def __post_init__(self) -> None:
-        if self.minimum_audio_seconds is None:
-            return
-        minimum = validate_usage_value('minimum_audio_seconds', self.minimum_audio_seconds)
-        if minimum == 0:
-            raise ValueError('Invalid minimum_audio_seconds: expected a finite positive int, float, or Decimal')
-        self.minimum_audio_seconds = minimum
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
@@ -718,7 +708,10 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
-        if self.minimum_audio_seconds is not None:
+        minimum_audio_seconds = (
+            10 if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo') else None
+        )
+        if minimum_audio_seconds is not None:
             usage = copy(Usage.from_raw(usage))
             audio_seconds = usage.__dict__.get('audio_seconds')
             if audio_seconds is not None:
@@ -745,7 +738,7 @@ class ModelInfo:
                             f'Invalid usage data: more-specific usage for {directional_keys} totals {directional_total}, '
                             f'which exceeds audio_seconds ({audio_seconds})'
                         )
-                minimum_seconds = usage_value_as_decimal(self.minimum_audio_seconds)
+                minimum_seconds = usage_value_as_decimal(minimum_audio_seconds)
                 if 0 < reported_seconds < minimum_seconds:
                     precision = max(
                         28,
@@ -768,7 +761,7 @@ class ModelInfo:
                             scaled_directional_values[second_key] = (
                                 minimum_seconds - scaled_directional_values[first_key]
                             )
-                    usage.audio_seconds = self.minimum_audio_seconds
+                    usage.audio_seconds = minimum_audio_seconds
                     for usage_key, value in scaled_directional_values.items():
                         setattr(usage, usage_key, value)
         price = model_price.calc_price(usage)
@@ -1081,7 +1074,17 @@ class StartDateConstraint:
     """Date when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
+        # UTC date, matching the JS package (instant vs UTC midnight). Naive timestamps are UTC.
+        if request_timestamp.tzinfo is not None:
+            request_timestamp = request_timestamp.astimezone(timezone.utc)
         return request_timestamp.date() >= self.start_date
+
+
+def _utc_timetz(value: time) -> time:
+    """`value` as a UTC-aware time of day. Naive times are UTC."""
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return datetime.combine(date(1970, 1, 1), value).astimezone(timezone.utc).timetz()
 
 
 @dataclass
@@ -1094,7 +1097,16 @@ class TimeOfDateConstraint:
     """End time of the interval."""
 
     def active(self, request_timestamp: datetime) -> bool:
-        return self.start_time <= request_timestamp.timetz() < self.end_time
+        # Convert both sides to UTC before comparing so an offset that crosses midnight stays
+        # inside the day. Naive timestamps and naive constraint times are UTC.
+        if request_timestamp.tzinfo is None:
+            request_timestamp = request_timestamp.replace(tzinfo=timezone.utc)
+        request_time = request_timestamp.astimezone(timezone.utc).timetz()
+        start_time = _utc_timetz(self.start_time)
+        end_time = _utc_timetz(self.end_time)
+        if end_time < start_time:
+            return request_time >= start_time or request_time < end_time
+        return start_time <= request_time < end_time
 
 
 @dataclass

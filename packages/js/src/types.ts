@@ -85,7 +85,6 @@ export interface ModelInfo {
   description?: string
   id: string
   match: MatchLogic
-  minimum_audio_seconds?: number
   name?: string
   price_comments?: string
   prices: ConditionalPrice[] | ModelPrice

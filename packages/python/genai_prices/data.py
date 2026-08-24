@@ -3715,7 +3715,6 @@ providers: list[Provider] = [
                 name='Whisper Large V3',
                 price_comments='See https://console.groq.com/docs/model/whisper-large-v3.',
                 prices=ModelPrice(audio_hours=Decimal('0.111'), input_audio_hours=Decimal('0.111')),
-                minimum_audio_seconds=10,
             ),
             ModelInfo(
                 id='whisper-large-v3-turbo',
@@ -3723,7 +3722,6 @@ providers: list[Provider] = [
                 name='Whisper Large V3 Turbo',
                 price_comments='See https://console.groq.com/docs/speech-to-text.',
                 prices=ModelPrice(audio_hours=Decimal('0.04'), input_audio_hours=Decimal('0.04')),
-                minimum_audio_seconds=10,
             ),
         ],
     ),
