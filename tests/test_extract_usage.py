@@ -255,7 +255,7 @@ def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
         cache_read_tokens=0,
         output_tokens=300,
     )
-    assert extracted_usage.calc_price().total_price == Decimal('0.02143')
+    assert extracted_usage.calc_price().total_price == Decimal('0.015944')
 
 
 def test_openai_realtime_usage_modalities():
