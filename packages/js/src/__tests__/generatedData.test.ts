@@ -169,4 +169,30 @@ describe('generated data split', () => {
 
     expect(result?.model_price).toEqual(expectedPrices)
   })
+
+  it.each([
+    { expectedInput: 2, model: 'claude-sonnet-5', providerId: 'anthropic' },
+    { expectedInput: 2, model: 'global.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
+    { expectedInput: 2.2, model: 'us.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
+    { expectedInput: 2, model: 'anthropic/claude-sonnet-5', providerId: 'openrouter' },
+  ])('keeps $providerId $model at its launch price', ({ expectedInput, model, providerId }) => {
+    const result = calcPrice({ input_tokens: 1_000_000 }, model, {
+      providerId,
+      timestamp: new Date('2026-09-01T00:00:00Z'),
+    })
+
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.total_price).toBe(expectedInput)
+  })
+
+  it.each([
+    { expectedOutput: 0.3, model: 'voxtral-small-2507', timestamp: new Date('2026-08-10T00:00:00Z') },
+    { expectedOutput: 0.4, model: 'voxtral-small-latest', timestamp: new Date('2026-08-11T00:00:00Z') },
+  ])('preserves Voxtral Small output pricing at $timestamp', ({ expectedOutput, model, timestamp }) => {
+    const result = calcPrice({ output_tokens: 1_000_000 }, model, { providerId: 'mistral', timestamp })
+
+    expect(result?.model.id).toBe('voxtral-small-24b-2507')
+    expect(result?.output_price).toBe(expectedOutput)
+    expect(result?.total_price).toBe(expectedOutput)
+  })
 })
