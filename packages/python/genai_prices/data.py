@@ -440,38 +440,19 @@ providers: list[Provider] = [
                 name='Claude Sonnet 4.5',
                 description='Our best combination of speed and intelligence',
                 context_window=200000,
-                price_comments='One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30, so the >200k tiers only apply to earlier requests. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
-                            cache_write_mtok=TieredPrices(
-                                base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
-                            ),
-                            cache_read_mtok=TieredPrices(
-                                base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]
-                            ),
-                            output_mtok=TieredPrices(
-                                base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
-                            ),
-                            cache_write_1h_mtok=TieredPrices(
-                                base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
-                            ),
-                            web_searches_kcount=Decimal('10'),
-                        )
+                price_comments='One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers are retained for historical usage. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
                     ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 4, 30)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                            cache_write_1h_mtok=Decimal('6'),
-                            web_searches_kcount=Decimal('10'),
-                        ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
                     ),
-                ],
+                    web_searches_kcount=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='claude-sonnet-4-6',

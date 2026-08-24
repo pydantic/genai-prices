@@ -640,73 +640,55 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         price_comments:
-          'One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30, so the >200k tiers only apply to earlier requests. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
-        prices: [
-          {
-            prices: {
-              input_mtok: {
-                base: 3,
-                tiers: [
-                  {
-                    start: 200000,
-                    price: 6,
-                  },
-                ],
+          'One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers are retained for historical usage. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
               },
-              cache_write_mtok: {
-                base: 3.75,
-                tiers: [
-                  {
-                    start: 200000,
-                    price: 7.5,
-                  },
-                ],
-              },
-              cache_read_mtok: {
-                base: 0.3,
-                tiers: [
-                  {
-                    start: 200000,
-                    price: 0.6,
-                  },
-                ],
-              },
-              output_mtok: {
-                base: 15,
-                tiers: [
-                  {
-                    start: 200000,
-                    price: 22.5,
-                  },
-                ],
-              },
-              cache_write_1h_mtok: {
-                base: 6,
-                tiers: [
-                  {
-                    start: 200000,
-                    price: 12,
-                  },
-                ],
-              },
-              web_searches_kcount: 10,
-            },
+            ],
           },
-          {
-            constraint: {
-              start_date: '2026-04-30',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-              cache_write_1h_mtok: 6,
-              web_searches_kcount: 10,
-            },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
           },
-        ],
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
       },
       {
         id: 'claude-sonnet-4-6',

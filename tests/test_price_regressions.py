@@ -164,8 +164,6 @@ def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
 
 
 def test_anthropic_prices_one_hour_cache_writes_at_the_ttl_rate() -> None:
-    # Dated inside the `context-1m-2025-08-07` beta, retired 2026-04-30, so that this
-    # 300k-token request still exercises the long-context tier of each cache-write rate.
     price = calc_price(
         Usage(
             input_tokens=300_000,
@@ -175,7 +173,6 @@ def test_anthropic_prices_one_hour_cache_writes_at_the_ttl_rate() -> None:
         ),
         model_ref='claude-sonnet-4-5',
         provider_id='anthropic',
-        genai_request_timestamp=datetime(2025, 11, 6),
     )
 
     expected_input = mtok('6', 100_000) + mtok('7.5', 100_000) + mtok('12', 100_000)
