@@ -12,6 +12,7 @@ api_pattern: 'https://api\.openai\.com'
 model_match:
   or:
     - starts_with: "gpt-"
+    - equals: whisper-1
     - regex: "^o[134]"
 provider_match:
   contains: openai
@@ -117,7 +118,6 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
-
 models:
   - id: ada
     match:
@@ -544,6 +544,8 @@ models:
       or:
         - equals: gpt-4o-transcribe
         - equals: gpt-4o-transcribe-diarize
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.
     prices:
       input_mtok: 2.5
       input_audio_mtok: 6
@@ -1275,6 +1277,15 @@ models:
       output_mtok: 2.4
       output_audio_mtok: 20
 
+  - id: gpt-transcribe
+    match:
+      equals: gpt-transcribe
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-transcribe.
+    prices:
+      audio_hours: 0.27
+      input_audio_hours: 0.27
+
   - id: moderation
     description: All OpenAI moderation models and endpoints are free of charge
     match:
@@ -1460,3 +1471,12 @@ models:
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
+
+  - id: whisper-1
+    match:
+      equals: whisper-1
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/whisper-1.
+    prices:
+      audio_hours: 0.36
+      input_audio_hours: 0.36

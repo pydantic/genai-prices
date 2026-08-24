@@ -26,8 +26,11 @@ def mtok(rate: str, tokens: int) -> Decimal:
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'seconds', 'expected_price'),
     [
+        ('openai', 'gpt-transcribe', Decimal('0.5'), Decimal('0.0000375')),
+        ('openai', 'whisper-1', Decimal('30'), Decimal('0.003')),
         ('groq', 'whisper-large-v3', Decimal('60'), Decimal('0.00185')),
         ('groq', 'whisper-large-v3-turbo', Decimal('90'), Decimal('0.001')),
+        ('mistral', 'voxtral-mini-2602', Decimal('60'), Decimal('0.003')),
     ],
 )
 def test_transcription_duration_prices(
@@ -50,8 +53,11 @@ def test_transcription_duration_prices(
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref'),
     [
+        ('openai', 'gpt-transcribe'),
+        ('openai', 'whisper-1'),
         ('groq', 'whisper-large-v3'),
         ('groq', 'whisper-large-v3-turbo'),
+        ('mistral', 'voxtral-mini-2602'),
     ],
 )
 def test_transcription_duration_prices_are_zero_without_reported_duration(provider_id: str, model_ref: str) -> None:
@@ -218,6 +224,18 @@ def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
     assert price.input_price == 0
     assert price.output_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
     assert zero_price.total_price == 0
+
+
+def test_openai_transcription_model_ids_fail_closed() -> None:
+    price = calc_price(
+        Usage(input_tokens=1, input_audio_tokens=1),
+        model_ref='gpt-4o-transcribe-diarize',
+        provider_id='openai',
+    )
+
+    assert price.model.id == 'gpt-4o-transcribe'
+    with pytest.raises(LookupError, match="model_ref='gpt-transcribe-diarize'"):
+        calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
 
 
 @pytest.mark.parametrize(
