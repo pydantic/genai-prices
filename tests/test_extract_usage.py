@@ -258,8 +258,8 @@ def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
     assert extracted_usage.calc_price().total_price == Decimal('0.015944')
 
 
-def test_openai_realtime_usage_modalities():
-    provider = next(provider for provider in providers if provider.id == 'openai')
+@pytest.mark.parametrize('provider_id', ['openai', 'azure'])
+def test_openai_realtime_usage_modalities(provider_id: str):
     response_data = {
         'type': 'response.done',
         'response': {
@@ -282,21 +282,21 @@ def test_openai_realtime_usage_modalities():
         },
     }
 
-    assert provider.extract_usage(response_data, api_flavor='realtime') == (
-        None,
-        Usage(
-            input_tokens=1_000,
-            output_tokens=500,
-            cache_read_tokens=400,
-            input_text_tokens=600,
-            output_text_tokens=200,
-            input_audio_tokens=250,
-            output_audio_tokens=300,
-            input_image_tokens=150,
-            cache_text_read_tokens=250,
-            cache_audio_read_tokens=100,
-            cache_image_read_tokens=50,
-        ),
+    extracted_usage = extract_usage(response_data, provider_id=provider_id, api_flavor='realtime')
+
+    assert extracted_usage.provider.id == provider_id
+    assert extracted_usage.usage == Usage(
+        input_tokens=1_000,
+        output_tokens=500,
+        cache_read_tokens=400,
+        input_text_tokens=600,
+        output_text_tokens=200,
+        input_audio_tokens=250,
+        output_audio_tokens=300,
+        input_image_tokens=150,
+        cache_text_read_tokens=250,
+        cache_audio_read_tokens=100,
+        cache_image_read_tokens=50,
     )
 
 
