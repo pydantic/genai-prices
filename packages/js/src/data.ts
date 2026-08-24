@@ -796,33 +796,15 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5 Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-              cache_write_1h_mtok: 4,
-              web_searches_kcount: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-              cache_write_1h_mtok: 6,
-              web_searches_kcount: 10,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+          web_searches_kcount: 10,
+        },
       },
       {
         id: 'claude-v1',
@@ -1238,29 +1220,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-5',
         },
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
       },
       {
         id: 'google.gemma-3-12b-it',
@@ -2421,29 +2387,13 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2.2,
-              cache_write_mtok: 2.75,
-              cache_read_mtok: 0.22,
-              output_mtok: 11,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3.3,
-              cache_write_mtok: 4.125,
-              cache_read_mtok: 0.33,
-              output_mtok: 16.5,
-            },
-          },
-        ],
+          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2.2,
+          cache_write_mtok: 2.75,
+          cache_read_mtok: 0.22,
+          output_mtok: 11,
+        },
       },
       {
         id: 'writer.palmyra-x4-v1:0',
@@ -10634,7 +10584,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '(?:mi|code|dev|magi|mini)stral',
+      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|voxtral|open-(?:mistral|mixtral))',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -11121,13 +11071,40 @@ export const data: Provider[] = [
         description:
           'Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
         match: {
-          equals: 'voxtral-small-24b-2507',
+          or: [
+            {
+              equals: 'voxtral-small-24b-2507',
+            },
+            {
+              equals: 'voxtral-small-2507',
+            },
+            {
+              equals: 'voxtral-small-latest',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.3,
-        },
+        price_comments:
+          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-11',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+            },
+          },
+        ],
       },
     ],
   },
@@ -15017,29 +14994,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase. Refs: https://openrouter.ai/anthropic/claude-sonnet-5, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
       },
       {
         id: 'anubis-pro-105b-v1',
