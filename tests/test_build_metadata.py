@@ -65,7 +65,7 @@ def test_unknown_canonical_model_is_rejected():
         inherit_context_windows(providers)
 
 
-def test_canonical_model_without_context_window_is_rejected():
+def test_canonical_model_without_context_window_is_allowed():
     canonical = make_model('canonical')
     offering = make_model('offering', canonical_model='native/canonical')
     providers = [
@@ -73,8 +73,9 @@ def test_canonical_model_without_context_window_is_rejected():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    with pytest.raises(ValueError, match='Canonical model `native/canonical` has no context window'):
-        inherit_context_windows(providers)
+    inherit_context_windows(providers)
+
+    assert offering.context_window is None
 
 
 def test_chained_canonical_models_are_rejected():

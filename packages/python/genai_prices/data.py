@@ -1671,11 +1671,13 @@ providers: list[Provider] = [
                         ClauseEquals(equals='o1-preview-2024-09-12'),
                     ]
                 ),
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='o1-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='o1-mini'), ClauseEquals(equals='o1-mini-2024-09-12')]),
+                context_window=128000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('4.4')
                 ),
@@ -1766,11 +1768,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='text-embedding-3-large',
                 match=ClauseEquals(equals='text-embedding-3-large'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.13')),
             ),
             ModelInfo(
                 id='text-embedding-3-small',
                 match=ClauseEquals(equals='text-embedding-3-small'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -2310,6 +2314,7 @@ providers: list[Provider] = [
                 id='deepseek-v4-pro',
                 match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-pro'),
                 name='DeepSeek-V4-Pro',
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
                 ),
@@ -2908,6 +2913,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='claude-3-opus',
                 match=ClauseContains(contains='claude-3-opus'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
@@ -9191,6 +9197,7 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-v4-pro',
                 match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
                 name='DeepSeek V4 Pro',
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
                 ),

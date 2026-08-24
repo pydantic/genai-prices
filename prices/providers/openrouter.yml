@@ -1162,6 +1162,7 @@ models:
       output_mtok: 0.1966
 
   - id: deepseek/deepseek-v4-pro
+    canonical_model: deepseek/deepseek-v4-pro
     name: DeepSeek V4 Pro
     match:
       equals: deepseek/deepseek-v4-pro

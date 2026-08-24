@@ -680,6 +680,27 @@ def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: st
     assert model.context_window == context_window
 
 
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
+    [
+        ('azure', 'o1', 'azure', 'o1', 128_000),
+        ('google-vertex', 'claude-3-opus', 'google', 'claude-3-opus', 200_000),
+        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_000_000),
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', 1_000_000),
+    ],
+)
+def test_hosted_model_has_effective_context_window(
+    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int
+):
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model(model_ref, None, provider_id, None)
+
+    assert provider.id == expected_provider
+    assert model.id == provider_model
+    assert model.context_window == context_window
+
+
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 

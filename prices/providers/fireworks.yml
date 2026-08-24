@@ -86,6 +86,7 @@ models:
       output_mtok: 0.28
 
   - id: deepseek-v4-pro
+    canonical_model: deepseek/deepseek-v4-pro
     name: DeepSeek-V4-Pro
     match:
       equals: accounts/fireworks/models/deepseek-v4-pro

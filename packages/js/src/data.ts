@@ -2735,6 +2735,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 15,
           cache_read_mtok: 7.5,
@@ -2753,6 +2754,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.55,
@@ -2930,6 +2932,7 @@ export const data: Provider[] = [
         match: {
           equals: 'text-embedding-3-large',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.13,
         },
@@ -2939,6 +2942,7 @@ export const data: Provider[] = [
         match: {
           equals: 'text-embedding-3-small',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.02,
         },
@@ -3842,6 +3846,7 @@ export const data: Provider[] = [
         match: {
           equals: 'accounts/fireworks/models/deepseek-v4-pro',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 1.74,
           cache_read_mtok: 0.145,
@@ -4812,6 +4817,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-opus',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
@@ -15864,6 +15870,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-pro',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.003625,

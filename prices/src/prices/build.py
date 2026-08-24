@@ -84,9 +84,7 @@ def inherit_context_windows(providers: list[Provider]) -> None:
                     )
                 if canonical.canonical_model is not None:
                     raise ValueError(f'Canonical model `{canonical_ref}` must not reference another canonical model')
-                if model.context_window is None:
-                    if canonical.context_window is None:
-                        raise ValueError(f'Canonical model `{canonical_ref}` has no context window')
+                if model.context_window is None and canonical.context_window is not None:
                     model.context_window = canonical.context_window
 
 
