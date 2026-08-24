@@ -302,8 +302,8 @@ providers: list[Provider] = [
                 ),
                 name='Claude Opus 4.6',
                 description='Our most intelligent model for building agents and coding',
-                context_window=200000,
-                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                context_window=1000000,
+                price_comments='One-hour cache writes cost 2x the base input price. The 1M context window is generally available. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -439,8 +439,8 @@ providers: list[Provider] = [
                 ),
                 name='Claude Sonnet 4.5',
                 description='Our best combination of speed and intelligence',
-                context_window=1000000,
-                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers describe historical usage from before retirement. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
