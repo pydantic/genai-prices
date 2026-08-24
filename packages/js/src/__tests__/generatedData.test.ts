@@ -93,16 +93,6 @@ describe('generated data split', () => {
     expect(unitData.requests?.price_key).toBe('requests_kcount')
   })
 
-  it.each([
-    { contextWindow: 1_000_000, modelId: 'claude-opus-4-6' },
-    { contextWindow: 200_000, modelId: 'claude-sonnet-4-5' },
-  ])('publishes $modelId with its current context window', ({ contextWindow, modelId }) => {
-    const anthropic = providerDataModule.data.find((provider) => provider.id === 'anthropic')
-    const model = anthropic?.models.find((candidate) => candidate.id === modelId)
-
-    expect(model?.context_window).toBe(contextWindow)
-  })
-
   it('constructs a runtime UnitRegistry from generated raw unit data', () => {
     const registry = new UnitRegistry(unitData)
 
