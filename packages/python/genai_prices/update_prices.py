@@ -144,6 +144,7 @@ class UpdatePrices:
     request_timeout: httpx2.Timeout = field(default_factory=_default_request_timeout)
     """The timeout for HTTP requests."""
     _updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
+    _fetch_updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
         """Acquire a claim on the process-wide background updater.
@@ -211,20 +212,38 @@ class UpdatePrices:
         prices. Fetch failures are logged and reported by `wait()`; they never make `stop()` fail.
         Lifecycle interruptions such as `KeyboardInterrupt` are preserved after cleanup completes.
         """
-        with _lifecycle:
-            update_prices = self._updater
-            if update_prices is None:
-                return
-            if update_prices.claims == 1 and threading.current_thread() is update_prices.thread:
-                raise RuntimeError('UpdatePrices background task cannot stop itself')
+        update_prices: _SharedUpdater | None = None
+        remaining_claims: int | None = None
+        release_prepared = False
 
-            self._updater = None
-            update_prices.claims -= 1
-            if update_prices.claims > 0:
-                return
-            update_prices.phase = _UpdaterPhase.STOPPING
+        def release_claim() -> None:
+            nonlocal update_prices, remaining_claims, release_prepared
+            with _lifecycle:
+                if not release_prepared:
+                    update_prices = self._updater
+                    if update_prices is not None:
+                        if update_prices.claims == 1 and threading.current_thread() is update_prices.thread:
+                            raise RuntimeError('UpdatePrices background task cannot stop itself')
+                        remaining_claims = update_prices.claims - 1
+                    # A retry must finish the same release instead of decrementing twice.
+                    release_prepared = True
 
-        interrupted = _finish_shutdown(update_prices)
+                if update_prices is not None:
+                    assert remaining_claims is not None
+                    self._updater = None
+                    update_prices.claims = remaining_claims
+                    if remaining_claims == 0:
+                        update_prices.phase = _UpdaterPhase.STOPPING
+
+        release_interrupted: BaseException | None = None
+        shutdown_interrupted: BaseException | None = None
+        try:
+            release_interrupted = _finish_despite_interruption(release_claim)
+        finally:
+            # Once the last release starts, no interruption may leave it stuck in STOPPING.
+            if update_prices is not None and update_prices.claims == 0:
+                shutdown_interrupted = _finish_shutdown(update_prices)
+        interrupted = shutdown_interrupted or release_interrupted
         if interrupted is not None:
             raise interrupted
 
@@ -242,7 +261,12 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetch the latest provider data from this instance's configured URL."""
-        config = _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
+        worker = self._fetch_updater
+        if worker is not None and threading.current_thread() is worker.thread:
+            # A subclass calling super() must use the settings accepted when its worker started.
+            config = worker.config
+        else:
+            config = _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
         return _fetch_prices(config)
 
     def __enter__(self):
@@ -259,16 +283,19 @@ class _SharedUpdater:
     def __init__(self, config: _UpdateConfig, owner: UpdatePrices) -> None:
         self.config = config
         # The base fetch uses frozen lifecycle settings; subclasses keep their supported override hook.
-        if type(owner).fetch is UpdatePrices.fetch:
+        fetch = owner.fetch
+        if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
             self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(config)
         else:
-            self.fetch = owner.fetch
+            self.fetch = fetch
         self.claims = 0
         self.phase = _UpdaterPhase.ACTIVE
         self.stop_event = threading.Event()
         self.run_event = threading.Event()
         self.outcome = _UpdateOutcome()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
+        self.owner = owner
+        owner._fetch_updater = self  # pyright: ignore[reportPrivateUsage]
 
     def start(self) -> None:
         self.thread.start()
@@ -286,12 +313,17 @@ class _SharedUpdater:
     def stop(self) -> BaseException | None:
         self.stop_event.set()
         self.run_event.set()
-        # An interrupted Thread.start() can publish ident before join() becomes legal.
-        interrupted = _finish_despite_interruption(self.thread.join) if self.thread.is_alive() else None
-        # A worker stopped before its first fetch has no outcome of its own to wake waiters with.
-        self.outcome.ready.set()
-        reset_interrupted = _finish_despite_interruption(lambda: data_snapshot.set_custom_snapshot(None))
-        return reset_interrupted or interrupted
+
+        def cleanup() -> None:
+            # An interrupted Thread.start() can publish ident before join() becomes legal.
+            if self.thread.is_alive():
+                self.thread.join()
+            # A worker stopped before its first fetch has no outcome of its own to wake waiters with.
+            self.outcome.ready.set()
+            data_snapshot.set_custom_snapshot(None)
+            self.owner._fetch_updater = None  # pyright: ignore[reportPrivateUsage]
+
+        return _finish_despite_interruption(cleanup)
 
     def _run(self) -> None:
         terminal_error: BaseException | None = None
@@ -352,21 +384,30 @@ class _SharedUpdater:
             pass
 
 
-def _finish_shutdown(update_prices: _SharedUpdater) -> BaseException | None:
-    """Drain one worker and always publish the final idle state."""
+def _publish_idle(update_prices: _SharedUpdater) -> None:
     global _global_update_prices
 
-    interrupted = update_prices.stop()
-
-    def publish_idle() -> None:
-        global _global_update_prices
-        _global_update_prices = None
+    with _lifecycle:
+        # A retry must not clear a replacement installed after the first publication succeeded.
+        if _global_update_prices is update_prices:
+            _global_update_prices = None
         _lifecycle.notify_all()
 
-    # Keep the lock across retries so a retry cannot clear a replacement updater.
-    with _lifecycle:
-        publish_interrupted = _finish_despite_interruption(publish_idle)
-    return publish_interrupted or interrupted
+
+def _finish_shutdown(update_prices: _SharedUpdater) -> BaseException | None:
+    """Drain one worker and always publish the final idle state."""
+    stopped = False
+    stop_interrupted: BaseException | None = None
+
+    def finish() -> None:
+        nonlocal stopped, stop_interrupted
+        if not stopped:
+            stop_interrupted = update_prices.stop()
+            stopped = True
+        _publish_idle(update_prices)
+
+    finish_interrupted = _finish_despite_interruption(finish)
+    return finish_interrupted or stop_interrupted
 
 
 def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:

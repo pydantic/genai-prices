@@ -47,7 +47,11 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
-def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
+def _mock_update_prices_get(
+    monkeypatch: pytest.MonkeyPatch,
+    content: bytes = PROVIDER_ARRAY_PAYLOAD,
+    expected_url: str | None = None,
+) -> None:
     class Response:
         def __init__(self, content: bytes) -> None:
             self.content = content
@@ -56,7 +60,10 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
             pass
 
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        assert url in {'https://example.test/prices.json', DEFAULT_UPDATE_URL}
+        if expected_url is None:
+            assert url in {'https://example.test/prices.json', DEFAULT_UPDATE_URL}
+        else:
+            assert url == expected_url
         assert timeout is not None
         return Response(content)
 
@@ -236,18 +243,48 @@ def test_thread_start_failure_does_not_acquire_ownership(monkeypatch: pytest.Mon
     update_prices.stop()
 
 
-def test_overridden_fetch_drives_shared_updater():
-    first = CountingNullUpdatePrices()
+def test_overridden_fetch_drives_shared_updater(monkeypatch: pytest.MonkeyPatch) -> None:
+    first = NullUpdatePrices()
     second = CountingNullUpdatePrices()
+    calls = 0
+
+    def fetch() -> None:
+        nonlocal calls
+        calls += 1
+
+    monkeypatch.setattr(first, 'fetch', fetch)
     first.start(wait=True)
     second.start()
     try:
-        assert first.count == 1
+        assert calls == 1
         assert second.wait(timeout=0)
         assert second.count == 0
     finally:
         first.stop()
         second.stop()
+
+
+def test_overridden_fetch_super_uses_launch_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
+    fetch_started = threading.Event()
+    allow_fetch = threading.Event()
+
+    class SuperFetchUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            fetch_started.set()
+            assert allow_fetch.wait(timeout=5)
+            return super().fetch()
+
+    _mock_update_prices_get(monkeypatch, expected_url='https://example.test/prices.json')
+    update_prices = SuperFetchUpdatePrices(url='https://example.test/prices.json')
+    update_prices.start()
+    try:
+        assert fetch_started.wait(timeout=5)
+        update_prices.url = 'https://changed.test/prices.json'
+        allow_fetch.set()
+        assert update_prices.wait(timeout=5)
+    finally:
+        allow_fetch.set()
+        update_prices.stop()
 
 
 def test_update_prices_continues_after_interval_until_stopped():
@@ -384,24 +421,42 @@ def test_fetch_cannot_release_its_own_last_claim() -> None:
 def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.MonkeyPatch) -> None:
     update_prices = NullUpdatePrices()
     update_prices.start(wait=True)
-    assert update_prices._updater is not None
-    thread = update_prices._updater.thread
-    original_join = thread.join
-    interrupted = False
+    finish_despite_interruption = update_prices_module._finish_despite_interruption
 
-    def interrupt_join_once(timeout: float | None = None) -> None:
-        nonlocal interrupted
-        if not interrupted:
-            interrupted = True
-            raise KeyboardInterrupt
-        original_join(timeout)
+    def interrupt_each_cleanup_once(action: Callable[[], None]) -> BaseException | None:
+        interrupted = False
 
-    monkeypatch.setattr(thread, 'join', interrupt_join_once)
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
+        def interrupt_after_action() -> None:
+            nonlocal interrupted
+            action()
+            if not interrupted:
+                interrupted = True
+                raise KeyboardInterrupt
+
+        return finish_despite_interruption(interrupt_after_action)
+
+    # Exercise retries after both ownership release and worker cleanup have changed state.
+    with monkeypatch.context() as context:
+        context.setattr(update_prices_module, '_finish_despite_interruption', interrupt_each_cleanup_once)
+        with pytest.raises(KeyboardInterrupt):
+            update_prices.stop()
 
     with NullUpdatePrices() as replacement:
         assert replacement.wait(timeout=5)
+
+
+def test_idle_publication_retry_cannot_clear_replacement() -> None:
+    first = NullUpdatePrices()
+    first.start(wait=True)
+    assert first._updater is not None
+    stopped_worker = first._updater
+    first.stop()
+
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+        # A delayed cleanup retry belongs to the old lifecycle, not its replacement.
+        update_prices_module._publish_idle(stopped_worker)
+        assert wait_prices_updated_sync(timeout=0)
 
 
 def test_logging_failure_cannot_strand_stopping_worker(monkeypatch: pytest.MonkeyPatch) -> None:
