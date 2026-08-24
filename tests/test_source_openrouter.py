@@ -3,10 +3,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from decimal import Decimal
 
+import httpx2
 import pytest
 from inline_snapshot import snapshot
 
-from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
+from prices import source_openrouter, source_prices
+from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from prices.source_openrouter import (
     OpenRouterModel,
     OpenRouterPricing,
@@ -229,3 +231,212 @@ def test_openrouter_payload_builds_model_info_for_every_priced_model():
             'sonar-deep-research': Decimal('2'),
         }
     )
+
+
+class FakeResponse:
+    def __init__(self, content: bytes) -> None:
+        self.content = content
+
+    def raise_for_status(self) -> None:
+        pass
+
+
+class FakeProvider:
+    def __init__(self, id: str, matching_models: dict[str, ModelInfo]) -> None:
+        self.id = id
+        self.matching_models = matching_models
+
+    def find_model(self, model_id: str) -> ModelInfo | None:
+        return self.matching_models.get(model_id)
+
+
+class FakeProviderYaml:
+    def __init__(self, provider: FakeProvider, *, existing_model_ids: set[str] | None = None) -> None:
+        self.provider = provider
+        self.existing_model_ids = existing_model_ids or set()
+        self.added: list[ModelInfo] = []
+        self.updated: list[tuple[str, ModelInfo]] = []
+        self.saved = False
+
+    def update_model(self, model_id: str, model: ModelInfo) -> None:
+        if model_id not in self.existing_model_ids:
+            raise LookupError(model_id)
+        self.updated.append((model_id, model))
+
+    def add_model(self, model: ModelInfo) -> int:
+        self.added.append(model)
+        return 1
+
+    def save(self) -> None:
+        self.saved = True
+
+
+def orchestration_response() -> OpenRouterResponse:
+    response = OpenRouterResponse.model_validate_json(load_payload('openrouter_models.json'))
+    claude = next(model for model in response.data if model.id == 'anthropic/claude-opus-5')
+    response.data.extend(
+        [
+            openrouter_model('anthropic/identical', pricing=claude.pricing),
+            openrouter_model('anthropic/free', pricing=OpenRouterPricing()),
+            openrouter_model(
+                'anthropic/different',
+                pricing=OpenRouterPricing(prompt=Decimal('0.000004'), completion=Decimal('0.000008')),
+            ),
+            openrouter_model('anthropic/free-source', pricing=OpenRouterPricing()),
+            openrouter_model(
+                'anthropic/replaces-free',
+                pricing=OpenRouterPricing(prompt=Decimal('0.000004'), completion=Decimal('0.000008')),
+            ),
+            openrouter_model(
+                'microsoft/dynamic',
+                pricing=OpenRouterPricing(prompt=Decimal('-1')),
+            ),
+        ]
+    )
+    return response
+
+
+def matched_model(id: str) -> ModelInfo:
+    return ModelInfo(
+        id=id,
+        match=ClauseEquals(equals=id),
+        prices=ModelPrice(input_mtok=Decimal('1')),
+    )
+
+
+def fake_providers() -> tuple[dict[str, FakeProviderYaml], FakeProviderYaml, FakeProviderYaml]:
+    openrouter_yaml = FakeProviderYaml(
+        FakeProvider('openrouter', {}),
+        existing_model_ids={'anthropic/claude-opus-5'},
+    )
+    anthropic_yaml = FakeProviderYaml(
+        FakeProvider(
+            'anthropic',
+            {
+                'claude-opus-5': matched_model('shared'),
+                'identical': matched_model('shared'),
+                'free': matched_model('shared'),
+                'different': matched_model('shared'),
+                'free-source': matched_model('was-free'),
+                'replaces-free': matched_model('was-free'),
+            },
+        ),
+        existing_model_ids={'shared', 'was-free'},
+    )
+    perplexity_yaml = FakeProviderYaml(FakeProvider('perplexity', {}))
+    return (
+        {
+            'openrouter': openrouter_yaml,
+            'anthropic': anthropic_yaml,
+            'perplexity': perplexity_yaml,
+        },
+        openrouter_yaml,
+        anthropic_yaml,
+    )
+
+
+def test_openrouter_main_updates_metadata_and_reports_unknown_pricing_fields(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+):
+    providers, openrouter_yaml, anthropic_yaml = fake_providers()
+    response = orchestration_response()
+
+    def fake_get(url: str) -> FakeResponse:
+        assert url == 'https://openrouter.ai/api/v1/models'
+        return FakeResponse(response.model_dump_json().encode())
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(source_openrouter, 'get_providers_yaml', lambda: providers)
+
+    source_openrouter.main('metadata')
+
+    output = capsys.readouterr().out
+    assert 'OpenRouter sent pricing fields we ignore:' in output
+    assert 'input_audio_cache: 2 models' in output
+    assert 'Provider openrouter:' in output
+    assert 'Provider anthropic:' in output
+    assert 'Provider perplexity:' in output
+    assert openrouter_yaml.saved
+    assert anthropic_yaml.saved
+    assert len(anthropic_yaml.updated) == 6
+    assert [model.id for model in providers['perplexity'].added] == ['sonar-deep-research']
+
+
+def test_openrouter_main_writes_prices(monkeypatch: pytest.MonkeyPatch):
+    providers, _, _ = fake_providers()
+    response = orchestration_response()
+    written: dict[str, source_prices.SourcePricesType] = {}
+
+    def fake_write(source: str, prices: source_prices.SourcePricesType) -> None:
+        written[source] = prices
+
+    def fake_get(url: str) -> FakeResponse:
+        assert url == 'https://openrouter.ai/api/v1/models'
+        return FakeResponse(response.model_dump_json().encode())
+
+    monkeypatch.setattr(
+        httpx2,
+        'get',
+        fake_get,
+    )
+    monkeypatch.setattr(source_openrouter, 'get_providers_yaml', lambda: providers)
+    monkeypatch.setattr(
+        source_openrouter.source_prices,
+        'write_source_prices',
+        fake_write,
+    )
+
+    source_openrouter.main('prices')
+
+    assert set(written) == {'openrouter'}
+    prices = written['openrouter']
+    assert set(prices) == {'anthropic', 'perplexity'}
+    assert prices['anthropic']['shared'].input_mtok == Decimal('5')
+    assert prices['anthropic']['was-free'].input_mtok == Decimal('4')
+    assert prices['perplexity']['sonar-deep-research'].input_mtok == Decimal('2')
+
+
+@pytest.mark.parametrize(
+    'existing_model_ids',
+    [
+        {'anthropic/one'},
+        set[str](),
+    ],
+)
+def test_openrouter_main_metadata_reports_only_the_changed_kind(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], existing_model_ids: set[str]
+):
+    response = OpenRouterResponse(data=[openrouter_model('anthropic/one')])
+    openrouter_yaml = FakeProviderYaml(FakeProvider('openrouter', {}), existing_model_ids=existing_model_ids)
+
+    def fake_get(url: str) -> FakeResponse:
+        assert url == 'https://openrouter.ai/api/v1/models'
+        return FakeResponse(response.model_dump_json().encode())
+
+    monkeypatch.setattr(
+        httpx2,
+        'get',
+        fake_get,
+    )
+    monkeypatch.setattr(source_openrouter, 'get_providers_yaml', lambda: {'openrouter': openrouter_yaml})
+
+    source_openrouter.main('metadata')
+
+    output = capsys.readouterr().out
+    if existing_model_ids:
+        assert '1 models updated' in output
+        assert 'models added' not in output
+    else:
+        assert '1 models added' in output
+        assert 'models updated' not in output
+
+
+def test_openrouter_entrypoints_delegate_to_main(monkeypatch: pytest.MonkeyPatch):
+    modes: list[str] = []
+
+    monkeypatch.setattr(source_openrouter, 'main', modes.append)
+
+    source_openrouter.update_from_openrouter()
+    source_openrouter.get_openrouter_prices()
+
+    assert modes == ['metadata', 'prices']

@@ -1,16 +1,17 @@
-"""Tests for `prices.source_ovhcloud`.
-
-Covers the payload-shaped half of the importer. `main()` itself writes a provider YAML file, so only the
-pure `get_model_infos` extraction is exercised here, against a recorded slice of the real response.
-"""
+"""Tests for `prices.source_ovhcloud` against a recorded API response."""
 
 from __future__ import annotations
 
 from decimal import Decimal
+from pathlib import Path
+from types import SimpleNamespace
 
+import httpx2
+import pytest
 from inline_snapshot import snapshot
 
-from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
+from prices import source_ovhcloud
+from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice, UsageExtractor
 from prices.source_ovhcloud import get_model_infos
 
 from .fixtures import load_entries
@@ -54,3 +55,119 @@ def test_ovhcloud_mixed_case_id_also_matches_lowercase():
         ]
     )
     assert infos['gpt-oss-120b'] == ClauseEquals(equals='gpt-oss-120b')
+
+
+def test_ovhcloud_skips_models_without_pricing():
+    models = [
+        {
+            'id': 'without-pricing',
+        }
+    ]
+
+    assert list(get_model_infos(models)) == []
+
+
+def test_ovhcloud_main_writes_and_collapses_generated_provider(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+):
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            pass
+
+        def json(self) -> dict[str, list[dict[str, object]]]:
+            return {'data': ovhcloud_models()}
+
+    class FakeProviderYaml:
+        instances: list[FakeProviderYaml] = []
+
+        def __init__(self, path: Path) -> None:
+            self.path = path
+            self.provider = SimpleNamespace(
+                extractors=[UsageExtractor(api_flavor='chat', root='usage', mappings=[])],
+            )
+            self.saved = False
+            self.instances.append(self)
+
+        def save(self) -> None:
+            self.saved = True
+
+    source_file = tmp_path / 'src' / 'prices' / 'source_ovhcloud.py'
+    source_file.parent.mkdir(parents=True)
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+
+    def fake_path(_: str) -> Path:
+        return source_file
+
+    def fake_get(url: str, *, timeout: float) -> FakeResponse:
+        assert url == 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'
+        assert timeout == 30.0
+        return FakeResponse()
+
+    monkeypatch.setattr(source_ovhcloud, 'Path', fake_path)
+    monkeypatch.setattr(source_ovhcloud, 'ProviderYaml', FakeProviderYaml)
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    collapse_results = iter([True, False])
+
+    def fake_collapse(_: FakeProviderYaml) -> bool:
+        return next(collapse_results)
+
+    monkeypatch.setattr(source_ovhcloud, 'collapse_provider', fake_collapse)
+
+    source_ovhcloud.main()
+    source_ovhcloud.main()
+
+    output_path = providers_dir / 'ovhcloud.yml'
+    assert output_path.is_file()
+    assert 'gpt-oss-120b' in output_path.read_text()
+    output = capsys.readouterr().out
+    assert output.count('Created ') == 2
+    assert output.count('Collapsed and saved ') == 1
+    assert len([provider_yaml for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved]) == 1
+
+
+def test_ovhcloud_main_reports_request_errors(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    def fake_get(_: str, *, timeout: float) -> None:
+        assert timeout == 30.0
+        raise RuntimeError('not available')
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+
+    source_ovhcloud.main()
+
+    assert capsys.readouterr().out == 'Error fetching OVHcloud AI Endpoints models: not available\n'
+
+
+def test_ovhcloud_main_reports_when_no_models_have_prices(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+):
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            pass
+
+        def json(self) -> dict[str, list[dict[str, object]]]:
+            return {'data': [{'id': 'free', 'pricing': {'prompt': '0', 'completion': '0'}}]}
+
+    def fake_get(_: str, *, timeout: float) -> FakeResponse:
+        assert timeout == 30.0
+        return FakeResponse()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+
+    source_ovhcloud.main()
+
+    assert capsys.readouterr().out == 'No valid models found with pricing information\n'
+
+
+def test_get_ovhcloud_prices_delegates_to_main(monkeypatch: pytest.MonkeyPatch):
+    called = False
+
+    def fake_main() -> None:
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(source_ovhcloud, 'main', fake_main)
+
+    source_ovhcloud.get_ovhcloud_prices()
+
+    assert called
