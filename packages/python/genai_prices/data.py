@@ -2314,7 +2314,7 @@ providers: list[Provider] = [
                 id='deepseek-v4-pro',
                 match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-pro'),
                 name='DeepSeek-V4-Pro',
-                context_window=1000000,
+                context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
                 ),

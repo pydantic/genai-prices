@@ -3846,7 +3846,7 @@ export const data: Provider[] = [
         match: {
           equals: 'accounts/fireworks/models/deepseek-v4-pro',
         },
-        context_window: 1000000,
+        context_window: 1048576,
         prices: {
           input_mtok: 1.74,
           cache_read_mtok: 0.145,

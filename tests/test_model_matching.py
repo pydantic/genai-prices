@@ -685,7 +685,7 @@ def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: st
     [
         ('azure', 'o1', 'azure', 'o1', 128_000),
         ('google-vertex', 'claude-3-opus', 'google', 'claude-3-opus', 200_000),
-        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_000_000),
+        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
         ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', 1_000_000),
     ],
 )
