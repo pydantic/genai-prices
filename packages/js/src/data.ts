@@ -10767,12 +10767,63 @@ export const data: Provider[] = [
         description:
           'Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
         match: {
-          starts_with: 'ministral-8b',
+          or: [
+            {
+              equals: 'ministral-8b',
+            },
+            {
+              equals: 'ministral-8b-2410',
+            },
+          ],
         },
+        price_comments:
+          'The previous $1 output price was incorrect; Mistral documented $0.10 from launch. Ref: https://github.com/mistralai/platform-docs-public/blob/4422b455194a/src/schema/models/models/ministral-8b-24-1.ts',
         prices: {
           input_mtok: 0.1,
-          output_mtok: 1,
+          output_mtok: 0.1,
         },
+      },
+      {
+        id: 'ministral-8b-2512',
+        name: 'Ministral 3 8B 2512',
+        description: 'Ministral 3 8B is an efficient text and vision model for edge deployment.',
+        match: {
+          equals: 'ministral-8b-2512',
+        },
+        price_comments: 'Ref: https://mistral.ai/pricing/api',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'ministral-8b-latest',
+        name: 'Ministral 8B Latest',
+        match: {
+          equals: 'ministral-8b-latest',
+        },
+        price_comments:
+          'The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-12-02',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-7b',
@@ -10843,17 +10894,81 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'mistral-medium-3',
-        name: 'Mistral Medium 3',
+        id: 'mistral-medium-3-1',
+        name: 'Mistral Medium 3 and 3.1',
         description:
           'Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
         match: {
-          starts_with: 'mistral-medium',
+          or: [
+            {
+              equals: 'mistral-medium',
+            },
+            {
+              equals: 'mistral-medium-2505',
+            },
+            {
+              equals: 'mistral-medium-2508',
+            },
+          ],
         },
+        price_comments:
+          'Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts',
         prices: {
           input_mtok: 0.4,
           output_mtok: 2,
         },
+      },
+      {
+        id: 'mistral-medium-3-5',
+        name: 'Mistral Medium 3.5',
+        description: 'Mistral Medium 3.5 is a frontier-class multimodal model optimized for agentic and coding use cases.',
+        match: {
+          or: [
+            {
+              equals: 'mistral-medium-3.5',
+            },
+            {
+              equals: 'mistral-medium-3-5',
+            },
+            {
+              equals: 'mistral-medium-3',
+            },
+          ],
+        },
+        price_comments: 'Ref: https://mistral.ai/pricing/api',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.15,
+          output_mtok: 7.5,
+        },
+      },
+      {
+        id: 'mistral-medium-latest',
+        name: 'Mistral Medium Latest',
+        match: {
+          equals: 'mistral-medium-latest',
+        },
+        price_comments:
+          'The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-06-16',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-nemo',
