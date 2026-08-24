@@ -7137,8 +7137,16 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=True),
-                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=True),
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='seconds', dest='audio_seconds', required=False),
+                    UsageExtractorMapping(path='seconds', dest='input_audio_seconds', required=False),
                 ],
                 api_flavor='transcription',
                 model_path='model',

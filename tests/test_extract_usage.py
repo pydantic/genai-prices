@@ -315,6 +315,18 @@ def test_openai_transcription_duration_usage_and_price() -> None:
     assert price.output_price == 0
     assert price.total_price == Decimal('0.0085')
 
+    assert provider.extract_usage(
+        {
+            'usage': {
+                'type': 'tokens',
+                'input_tokens': 5,
+                'input_token_details': {'text_tokens': 0, 'audio_tokens': 5},
+                'output_tokens': 2,
+            }
+        },
+        api_flavor='transcription',
+    ) == (None, Usage(input_tokens=5, input_text_tokens=0, input_audio_tokens=5, output_tokens=2))
+
 
 def test_openai_image_usage_modalities():
     provider = next(provider for provider in providers if provider.id == 'openai')
