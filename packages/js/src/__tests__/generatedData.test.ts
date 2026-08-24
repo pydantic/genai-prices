@@ -106,6 +106,26 @@ describe('generated data split', () => {
   it.each([
     {
       expectedPrices: {
+        cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
+        cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
+        input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-sol',
+      timestamp: new Date('2026-08-20T23:59:59Z'),
+    },
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 272_000 }] },
+        cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
+        output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-sol',
+      timestamp: new Date('2026-08-21T00:00:00Z'),
+    },
+    {
+      expectedPrices: {
         cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
         cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
         input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
