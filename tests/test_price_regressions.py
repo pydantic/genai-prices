@@ -280,6 +280,9 @@ def test_qualified_openrouter_voxtral_model_uses_openrouter_price() -> None:
 
     assert price.provider.id == 'openrouter'
     assert price.model.id == 'mistralai/voxtral-small-24b-2507'
+    assert price.input_price == Decimal('0.0001')
+    assert price.output_price == 0
+    assert price.total_price == Decimal('0.0001')
 
 
 @pytest.mark.parametrize(

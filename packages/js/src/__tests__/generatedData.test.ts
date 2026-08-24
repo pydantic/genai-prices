@@ -318,5 +318,8 @@ describe('generated data split', () => {
 
     expect(result?.provider.id).toBe('openrouter')
     expect(result?.model.id).toBe('mistralai/voxtral-small-24b-2507')
+    expect(result?.input_price).toBe(0.0001)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBe(0.0001)
   })
 })
