@@ -31,10 +31,11 @@ describe('Provider Matching', () => {
       expect(provider?.id).toBe('fireworks')
     })
 
-    it('does not claim qualified OpenRouter Voxtral model IDs as Mistral', () => {
-      const provider = matchProvider(actualProviders, { modelId: 'mistralai/voxtral-small-24b-2507' })
-
-      expect(provider).toBeUndefined()
+    it('preserves Mistral aliases without claiming qualified OpenRouter model IDs', () => {
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-nemo' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mixtral-8x7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'mistralai/voxtral-small-24b-2507' })).toBeUndefined()
     })
   })
 
