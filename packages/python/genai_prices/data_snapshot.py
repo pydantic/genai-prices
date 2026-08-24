@@ -43,7 +43,7 @@ class DataSnapshot:
         default_factory=lambda: {}
     )
     _provider_cache: dict[tuple[str | None, str | None, str | None], types.Provider | None] = field(
-        default_factory=lambda: {}
+        default_factory=lambda: {}, init=False
     )
     timestamp: datetime = field(default_factory=datetime.now)
 
