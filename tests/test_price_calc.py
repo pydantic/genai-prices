@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -22,6 +22,7 @@ from genai_prices.types import (
     ModelPrice,
     PriceCalculation,
     Provider,
+    StartDateConstraint,
     Tier,
     TieredPrices,
     TimeOfDateConstraint,
@@ -1064,53 +1065,251 @@ def test_price_constraint_time_of_date():
     assert price.provider.name == snapshot('Deepseek')
 
 
-# `claude-sonnet-5` switches from introductory ($2/MTok input) to standard ($3/MTok) pricing on 2026-09-01.
-CLAUDE_SONNET_5_INTRODUCTORY_MTOK = Decimal('2')
-CLAUDE_SONNET_5_STANDARD_MTOK = Decimal('3')
-
-
 @pytest.mark.parametrize(
     ('genai_request_timestamp', 'expected_input_mtok'),
     [
         # 02:00 on the start date at +05:00 is still 2026-08-31 in UTC, so the old price applies.
         pytest.param(
             datetime(2026, 9, 1, 2, tzinfo=timezone(timedelta(hours=5))),
-            CLAUDE_SONNET_5_INTRODUCTORY_MTOK,
+            Decimal('2'),
             id='start-date-local-day-utc-day-before',
         ),
         pytest.param(
             datetime(2026, 8, 31, 21, tzinfo=timezone.utc),
-            CLAUDE_SONNET_5_INTRODUCTORY_MTOK,
+            Decimal('2'),
             id='same-instant-expressed-in-utc',
         ),
         # 20:00 the day before the start date at -05:00 is already 2026-09-01 in UTC.
         pytest.param(
             datetime(2026, 8, 31, 20, tzinfo=timezone(timedelta(hours=-5))),
-            CLAUDE_SONNET_5_STANDARD_MTOK,
+            Decimal('3'),
             id='start-date-local-day-before-utc-day-of',
         ),
         pytest.param(
             datetime(2026, 9, 1, 1, tzinfo=timezone.utc),
-            CLAUDE_SONNET_5_STANDARD_MTOK,
+            Decimal('3'),
             id='same-instant-expressed-in-utc-after',
         ),
-        pytest.param(datetime(2026, 8, 31, 23, 59), CLAUDE_SONNET_5_INTRODUCTORY_MTOK, id='naive-before'),
-        pytest.param(datetime(2026, 9, 1), CLAUDE_SONNET_5_STANDARD_MTOK, id='naive-at-boundary'),
+        pytest.param(datetime(2026, 8, 31, 23, 59), Decimal('2'), id='naive-before'),
+        pytest.param(datetime(2026, 9, 1), Decimal('3'), id='naive-at-boundary'),
     ],
 )
 def test_start_date_constraint_compares_the_utc_date(
     genai_request_timestamp: datetime, expected_input_mtok: Decimal
 ) -> None:
     """The boundary is UTC midnight, not the caller's wall-clock midnight, matching the JS package."""
-    price = calc_price(
-        Usage(input_tokens=1_000_000),
-        model_ref='claude-sonnet-5',
-        provider_id='anthropic',
-        genai_request_timestamp=genai_request_timestamp,
+    model = ModelInfo(
+        id='start-date-model',
+        match=ClauseEquals('start-date-model'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('2'))),
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date(2026, 9, 1)),
+                prices=ModelPrice(input_mtok=Decimal('3')),
+            ),
+        ],
     )
 
-    assert price.model_price.input_mtok == expected_input_mtok
+    assert model.get_prices(genai_request_timestamp).input_mtok == expected_input_mtok
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_input_mtok'),
+    [
+        ('anthropic', 'claude-sonnet-5', Decimal('2')),
+        ('aws', 'global.anthropic.claude-sonnet-5-v1:0', Decimal('2')),
+        ('aws', 'us.anthropic.claude-sonnet-5-v1:0', Decimal('2.2')),
+        ('openrouter', 'anthropic/claude-sonnet-5', Decimal('2')),
+    ],
+)
+def test_claude_sonnet_5_price_does_not_increase(
+    provider_id: str,
+    model_ref: str,
+    expected_input_mtok: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 9, 1, tzinfo=timezone.utc),
+    )
+
+    assert price.input_price == expected_input_mtok
     assert price.total_price == expected_input_mtok
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_output_price'),
+    [
+        ('voxtral-small-2507', datetime(2026, 8, 10, tzinfo=timezone.utc), Decimal('0.3')),
+        ('voxtral-small-latest', datetime(2026, 8, 11, tzinfo=timezone.utc), Decimal('0.4')),
+    ],
+)
+def test_mistral_voxtral_small_price_change(
+    model_ref: str,
+    request_timestamp: datetime,
+    expected_output_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model.id == 'voxtral-small-24b-2507'
+    assert price.output_price == expected_output_price
+    assert price.total_price == expected_output_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_model_id', 'expected_input_price', 'expected_output_price'),
+    [
+        (
+            'ministral-8b-2410',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'ministral-8b',
+            Decimal('0.1'),
+            Decimal('0.1'),
+        ),
+        (
+            'ministral-8b-2512',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'ministral-8b-2512',
+            Decimal('0.15'),
+            Decimal('0.15'),
+        ),
+        (
+            'ministral-8b-latest',
+            datetime(2025, 12, 1, tzinfo=timezone.utc),
+            'ministral-8b-latest',
+            Decimal('0.1'),
+            Decimal('0.1'),
+        ),
+        (
+            'ministral-8b-latest',
+            datetime(2025, 12, 2, tzinfo=timezone.utc),
+            'ministral-8b-latest',
+            Decimal('0.15'),
+            Decimal('0.15'),
+        ),
+        (
+            'mistral-medium-2312',
+            datetime(2025, 6, 15, tzinfo=timezone.utc),
+            'mistral-medium-2312',
+            Decimal('2.7'),
+            Decimal('8.1'),
+        ),
+        (
+            'mistral-medium-2505',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-1',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-2508',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-1',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-3.5',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-3-5',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-3',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-latest',
+            datetime(2026, 6, 15, tzinfo=timezone.utc),
+            'mistral-medium-latest',
+            Decimal('0.4'),
+            Decimal('2'),
+        ),
+        (
+            'mistral-medium-latest',
+            datetime(2026, 6, 16, tzinfo=timezone.utc),
+            'mistral-medium-latest',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+    ],
+)
+def test_mistral_versioned_model_prices(
+    model_ref: str,
+    request_timestamp: datetime,
+    expected_model_id: str,
+    expected_input_price: Decimal,
+    expected_output_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model.id == expected_model_id
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+    assert price.total_price == expected_input_price + expected_output_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp'),
+    [
+        ('mistral-medium-2508', datetime(2026, 8, 24, tzinfo=timezone.utc)),
+        ('mistral-medium-latest', datetime(2026, 6, 15, tzinfo=timezone.utc)),
+    ],
+)
+def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: datetime) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.input_price == Decimal('0.04')
+    assert price.total_price == Decimal('0.04')
+
+
+def test_voxtral_provider_inference() -> None:
+    price = calc_price(Usage(output_tokens=1), model_ref='voxtral-small-latest')
+
+    assert price.provider.id == 'mistral'
+    assert price.model.id == 'voxtral-small-24b-2507'
+
+
+def test_qualified_openrouter_voxtral_model_does_not_infer_mistral() -> None:
+    model_ref = 'mistralai/voxtral-small-24b-2507'
+
+    with pytest.raises(LookupError, match=f"Unable to find provider with model matching '{model_ref}'"):
+        calc_price(Usage(output_tokens=1), model_ref=model_ref)
+
+    price = calc_price(
+        Usage(output_tokens=1),
+        model_ref=model_ref,
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+    assert price.provider.id == 'openrouter'
+    assert price.model.id == model_ref
 
 
 @pytest.mark.parametrize(

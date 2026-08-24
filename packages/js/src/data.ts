@@ -796,33 +796,15 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5 Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-              cache_write_1h_mtok: 4,
-              web_searches_kcount: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-              cache_write_1h_mtok: 6,
-              web_searches_kcount: 10,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+          web_searches_kcount: 10,
+        },
       },
       {
         id: 'claude-v1',
@@ -1249,29 +1231,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
       },
       {
         id: 'google.gemma-3-12b-it',
@@ -2452,29 +2418,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2.2,
-              cache_write_mtok: 2.75,
-              cache_read_mtok: 0.22,
-              output_mtok: 11,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3.3,
-              cache_write_mtok: 4.125,
-              cache_read_mtok: 0.33,
-              output_mtok: 16.5,
-            },
-          },
-        ],
+          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2.2,
+          cache_write_mtok: 2.75,
+          cache_read_mtok: 0.22,
+          output_mtok: 11,
+        },
       },
       {
         id: 'writer.palmyra-x4-v1:0',
@@ -10687,7 +10637,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '(?:mi|code|dev|magi|mini)stral',
+      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|voxtral|open-(?:mistral|mixtral))',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -10870,12 +10820,63 @@ export const data: Provider[] = [
         description:
           'Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
         match: {
-          starts_with: 'ministral-8b',
+          or: [
+            {
+              equals: 'ministral-8b',
+            },
+            {
+              equals: 'ministral-8b-2410',
+            },
+          ],
         },
+        price_comments:
+          'The previous $1 output price was incorrect; Mistral documented $0.10 from launch. Ref: https://github.com/mistralai/platform-docs-public/blob/4422b455194a/src/schema/models/models/ministral-8b-24-1.ts',
         prices: {
           input_mtok: 0.1,
-          output_mtok: 1,
+          output_mtok: 0.1,
         },
+      },
+      {
+        id: 'ministral-8b-2512',
+        name: 'Ministral 3 8B 2512',
+        description: 'Ministral 3 8B is an efficient text and vision model for edge deployment.',
+        match: {
+          equals: 'ministral-8b-2512',
+        },
+        price_comments: 'Ref: https://mistral.ai/pricing/api',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'ministral-8b-latest',
+        name: 'Ministral 8B Latest',
+        match: {
+          equals: 'ministral-8b-latest',
+        },
+        price_comments:
+          'The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-12-02',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-7b',
@@ -10946,17 +10947,97 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'mistral-medium-3',
-        name: 'Mistral Medium 3',
+        id: 'mistral-medium-2312',
+        name: 'Mistral Medium 1',
+        description: "Mistral's first enterprise-grade model, released in December 2023.",
+        match: {
+          equals: 'mistral-medium-2312',
+        },
+        price_comments:
+          'Retired on 2025-06-16; retained for historical usage records at its original $2.70/$8.10 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-1-0-23-12.ts',
+        prices: {
+          input_mtok: 2.7,
+          output_mtok: 8.1,
+        },
+      },
+      {
+        id: 'mistral-medium-3-1',
+        name: 'Mistral Medium 3 and 3.1',
         description:
           'Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
         match: {
-          starts_with: 'mistral-medium',
+          or: [
+            {
+              equals: 'mistral-medium',
+            },
+            {
+              equals: 'mistral-medium-2505',
+            },
+            {
+              equals: 'mistral-medium-2508',
+            },
+          ],
         },
+        price_comments:
+          'Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts',
         prices: {
           input_mtok: 0.4,
+          cache_read_mtok: 0.04,
           output_mtok: 2,
         },
+      },
+      {
+        id: 'mistral-medium-3-5',
+        name: 'Mistral Medium 3.5',
+        description: 'Mistral Medium 3.5 is a frontier-class multimodal model optimized for agentic and coding use cases.',
+        match: {
+          or: [
+            {
+              equals: 'mistral-medium-3.5',
+            },
+            {
+              equals: 'mistral-medium-3-5',
+            },
+            {
+              equals: 'mistral-medium-3',
+            },
+          ],
+        },
+        price_comments: 'Ref: https://mistral.ai/pricing/api',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.15,
+          output_mtok: 7.5,
+        },
+      },
+      {
+        id: 'mistral-medium-latest',
+        name: 'Mistral Medium Latest',
+        match: {
+          equals: 'mistral-medium-latest',
+        },
+        price_comments:
+          'The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.04,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-06-16',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-nemo',
@@ -11174,13 +11255,40 @@ export const data: Provider[] = [
         description:
           'Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
         match: {
-          equals: 'voxtral-small-24b-2507',
+          or: [
+            {
+              equals: 'voxtral-small-24b-2507',
+            },
+            {
+              equals: 'voxtral-small-2507',
+            },
+            {
+              equals: 'voxtral-small-latest',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.3,
-        },
+        price_comments:
+          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-11',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+            },
+          },
+        ],
       },
     ],
   },
@@ -15088,29 +15196,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
-        prices: [
-          {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-09-01',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
-        ],
+          'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase. Refs: https://openrouter.ai/anthropic/claude-sonnet-5, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
       },
       {
         id: 'anubis-pro-105b-v1',
