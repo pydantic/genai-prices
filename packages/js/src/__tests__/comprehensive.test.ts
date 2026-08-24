@@ -208,9 +208,33 @@ describe('Comprehensive API Tests', () => {
       const result = calcPrice(usage, 'gpt-5.6-sol', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
-      expect(result!.input_price).toBeCloseTo(2.8)
-      expect(result!.output_price).toBeCloseTo(0.45)
-      expect(result!.total_price).toBeCloseTo(3.25)
+      expect(result!.input_price).toBeCloseTo(2.24)
+      expect(result!.output_price).toBeCloseTo(0.3)
+      expect(result!.total_price).toBeCloseTo(2.54)
+    })
+  })
+
+  describe('calcPrice - GPT-5.5 long-context pricing', () => {
+    it.each([
+      {
+        expectedInput: 1.82001,
+        expectedOutput: 0.045,
+        model: 'gpt-5.5',
+        usage: { cache_read_tokens: 100_000, input_tokens: 272_001, output_tokens: 1_000 },
+      },
+      {
+        expectedInput: 16.32006,
+        expectedOutput: 0.27,
+        model: 'gpt-5.5-pro',
+        usage: { input_tokens: 272_001, output_tokens: 1_000 },
+      },
+    ])('should apply long-context rates to $model', ({ expectedInput, expectedOutput, model, usage }) => {
+      const result = calcPrice(usage, model, { providerId: 'openai' })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expectedInput)
+      expect(result!.output_price).toBeCloseTo(expectedOutput)
+      expect(result!.total_price).toBeCloseTo(expectedInput + expectedOutput)
     })
   })
 

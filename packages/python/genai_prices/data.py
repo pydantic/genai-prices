@@ -7675,7 +7675,12 @@ providers: list[Provider] = [
                 name='GPT-5.5',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+                price_comments='Prompts with >272K input tokens are billed at 2x input and cached input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.5-pro',
@@ -7690,7 +7695,11 @@ providers: list[Provider] = [
                 name='GPT-5.5 Pro',
                 description='Version of GPT-5.5 that produces smarter and more precise responses.',
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                price_comments='Prompts with >272K input tokens are billed at 2x input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
@@ -7753,15 +7762,38 @@ providers: list[Provider] = [
                 name='GPT-5.6 Sol',
                 description='Frontier model for complex professional work.',
                 context_window=1050000,
-                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-sol',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.6-terra',
