@@ -1264,6 +1264,25 @@ def test_mistral_versioned_model_prices(
     assert price.total_price == expected_input_price + expected_output_price
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp'),
+    [
+        ('mistral-medium-2508', datetime(2026, 8, 24, tzinfo=timezone.utc)),
+        ('mistral-medium-latest', datetime(2026, 6, 15, tzinfo=timezone.utc)),
+    ],
+)
+def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: datetime) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.input_price == Decimal('0.04')
+    assert price.total_price == Decimal('0.04')
+
+
 def test_voxtral_provider_inference() -> None:
     price = calc_price(Usage(output_tokens=1), model_ref='voxtral-small-latest')
 

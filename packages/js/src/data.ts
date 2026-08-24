@@ -10915,6 +10915,7 @@ export const data: Provider[] = [
           'Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts',
         prices: {
           input_mtok: 0.4,
+          cache_read_mtok: 0.04,
           output_mtok: 2,
         },
       },
@@ -10954,6 +10955,7 @@ export const data: Provider[] = [
           {
             prices: {
               input_mtok: 0.4,
+              cache_read_mtok: 0.04,
               output_mtok: 2,
             },
           },

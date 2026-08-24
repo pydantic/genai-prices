@@ -6381,7 +6381,7 @@ providers: list[Provider] = [
                 name='Mistral Medium 3 and 3.1',
                 description='Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
                 price_comments='Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistral-medium-3-5',
@@ -6406,7 +6406,9 @@ providers: list[Provider] = [
                 price_comments='The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
                 prices=[
                     ConditionalPrice(
-                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2'))
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')
+                        )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 16)),

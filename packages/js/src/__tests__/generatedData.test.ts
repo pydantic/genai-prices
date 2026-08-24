@@ -286,6 +286,19 @@ describe('generated data split', () => {
     expect(result?.total_price).toBe(expectedInput + expectedOutput)
   })
 
+  it.each([
+    { model: 'mistral-medium-2508', timestamp: new Date('2026-08-24T00:00:00Z') },
+    { model: 'mistral-medium-latest', timestamp: new Date('2026-06-15T00:00:00Z') },
+  ])('prices cached input for $model at $timestamp', ({ model, timestamp }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }, model, {
+      providerId: 'mistral',
+      timestamp,
+    })
+
+    expect(result?.input_price).toBe(0.04)
+    expect(result?.total_price).toBe(0.04)
+  })
+
   it('infers Mistral for the native Voxtral alias', () => {
     const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
 
