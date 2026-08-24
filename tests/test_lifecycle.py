@@ -69,15 +69,6 @@ def test_v1_remote_payloads_are_provider_arrays():
         assert all(isinstance(provider, dict) for provider in payload)
 
 
-def test_model_metadata_has_single_packaged_artifact():
-    from prices.utils import package_dir, root_dir
-
-    packaged_path = root_dir / 'packages' / 'python' / 'genai_prices' / '_model_metadata.json'
-
-    assert packaged_path.is_file()
-    assert not (package_dir / 'model_metadata.json').exists()
-
-
 def test_v2_remote_payloads_are_provider_arrays_with_static_unit_vocabulary():
     """V2 publishes current providers without embedding mutable unit registry state."""
     from prices.utils import package_dir

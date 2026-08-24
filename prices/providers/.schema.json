@@ -273,6 +273,13 @@
           ],
           "title": "Match"
         },
+        "canonical_model": {
+          "maxLength": 100,
+          "pattern": "^\\S+$",
+          "type": "string",
+          "description": "Exact `provider/model` reference from which provider-independent metadata can be inherited.",
+          "title": "Canonical Model"
+        },
         "context_window": {
           "type": "integer",
           "description": "Maximum number of input tokens allowed for this model",

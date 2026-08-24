@@ -35,10 +35,6 @@ build-prices: ## Validate providers and build the authoring schema and v2 price 
 package-data: ## Build static unit registries and v2 provider data for packages
 	uv run -m prices package_data
 
-.PHONY: update-model-metadata
-update-model-metadata: ## Update bundled model metadata from models.dev
-	uv run -m prices update_model_metadata
-
 .PHONY: build
 build: build-prices package-data inject-providers ## Build v2 prices, package data, and the provider inventory
 

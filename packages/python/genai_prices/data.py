@@ -696,6 +696,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-fable-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-fable-5'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
@@ -706,6 +707,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
@@ -716,6 +718,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -726,6 +729,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -736,6 +740,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-7-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-7'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -746,6 +751,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-8-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-8'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -756,6 +762,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-5',
                 match=ClauseContains(contains='global.anthropic.claude-opus-5'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -766,6 +773,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -776,6 +784,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -786,6 +795,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -796,6 +806,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-5'),
+                context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
                 prices=[
                     ConditionalPrice(
@@ -1152,6 +1163,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
                 match=ClauseContains(contains='claude-3-5-haiku-20241022'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
                     cache_write_mtok=Decimal('1'),
@@ -1162,6 +1174,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
                 match=ClauseContains(contains='claude-3-5-sonnet-20240620'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1172,6 +1185,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
                 match=ClauseContains(contains='claude-3-5-sonnet-20241022'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1182,6 +1196,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
                 match=ClauseContains(contains='claude-3-7-sonnet-20250219'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1192,16 +1207,19 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-haiku-20240307-v1:0',
                 match=ClauseContains(contains='claude-3-haiku-20240307'),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-opus-20240229-v1:0',
                 match=ClauseContains(contains='claude-3-opus-20240229'),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-sonnet-20240229-v1:0',
                 match=ClauseContains(contains='claude-3-sonnet-20240229'),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1221,6 +1239,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-fable-5'),
                     ]
                 ),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('11'),
                     cache_write_mtok=Decimal('13.75'),
@@ -1242,6 +1261,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-haiku-4-5-20251001'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'),
                     cache_write_mtok=Decimal('1.375'),
@@ -1263,6 +1283,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-1-20250805'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
@@ -1284,6 +1305,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-20250514'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
@@ -1305,6 +1327,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-5'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1326,6 +1349,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-6'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1347,6 +1371,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-7'),
                     ]
                 ),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1366,6 +1391,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-8'),
                     ]
                 ),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1385,6 +1411,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-5'),
                     ]
                 ),
+                context_window=1000000,
                 price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
@@ -1407,6 +1434,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-4-20250514'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1428,6 +1456,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929'),
                     ]
                 ),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
@@ -1449,6 +1478,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-4-6'),
                     ]
                 ),
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
@@ -1470,6 +1500,7 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-5'),
                     ]
                 ),
+                context_window=1000000,
                 price_comments='Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
                 prices=[
                     ConditionalPrice(

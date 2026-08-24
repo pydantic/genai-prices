@@ -658,6 +658,28 @@ def test_litellm_provider_id():
     assert model.id == 'gpt-4o-mini'
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'context_window'),
+    [
+        ('global.anthropic.claude-sonnet-5-v1:0', 'global.anthropic.claude-sonnet-5-v1:0', 1_000_000),
+        ('us.anthropic.claude-sonnet-5-v1:0', 'regional.anthropic.claude-sonnet-5-v1:0', 1_000_000),
+        (
+            'arn:aws:bedrock:us-west-2:726623243771:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0',
+            'regional.anthropic.claude-sonnet-4-20250514-v1:0',
+            200_000,
+        ),
+    ],
+)
+def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: str, context_window: int):
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model(model_ref, None, 'bedrock', None)
+
+    assert provider.id == 'aws'
+    assert model.id == model_id
+    assert model.context_window == context_window
+
+
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 

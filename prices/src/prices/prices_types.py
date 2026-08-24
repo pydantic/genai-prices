@@ -178,6 +178,8 @@ class ModelInfo(_Model):
     """Description of the model"""
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
+    canonical_model: IdField | None = Field(default=None, exclude=True)
+    """Exact `provider/model` reference from which provider-independent metadata can be inherited."""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None

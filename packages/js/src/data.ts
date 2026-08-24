@@ -1112,6 +1112,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-fable-5',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
@@ -1124,6 +1125,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
@@ -1136,6 +1138,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-4-5',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1148,6 +1151,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-4-6',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1160,6 +1164,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-4-7',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1172,6 +1177,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-4-8',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1184,6 +1190,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-opus-5',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1196,6 +1203,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-sonnet-4-20250514',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1208,6 +1216,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1220,6 +1229,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1232,6 +1242,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.anthropic.claude-sonnet-5',
         },
+        context_window: 1000000,
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
         prices: [
@@ -1882,6 +1893,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-5-haiku-20241022',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 0.8,
           cache_write_mtok: 1,
@@ -1894,6 +1906,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-5-sonnet-20240620',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1906,6 +1919,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-5-sonnet-20241022',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1918,6 +1932,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-7-sonnet-20250219',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1930,6 +1945,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-haiku-20240307',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 0.25,
           output_mtok: 1.25,
@@ -1940,6 +1956,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-opus-20240229',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           output_mtok: 75,
@@ -1950,6 +1967,7 @@ export const data: Provider[] = [
         match: {
           contains: 'claude-3-sonnet-20240229',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1981,6 +1999,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
@@ -2018,6 +2037,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_write_mtok: 1.375,
@@ -2055,6 +2075,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
@@ -2092,6 +2113,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
@@ -2129,6 +2151,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -2166,6 +2189,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -2203,6 +2227,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -2234,6 +2259,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -2265,6 +2291,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         price_comments:
           'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
         prices: {
@@ -2304,6 +2331,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -2341,6 +2369,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
@@ -2378,6 +2407,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
@@ -2415,6 +2445,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         price_comments:
           'Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
         prices: [

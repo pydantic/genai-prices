@@ -58,6 +58,7 @@ def build():
     providers.sort(key=attrgetter('id'))
     for provider in providers:
         provider.exclude_removed()
+    inherit_context_windows(providers)
     validate_export_payload(providers, units)
 
     schema_json_path = package_dir / 'providers' / '.schema.json'
@@ -67,6 +68,26 @@ def build():
     for provider in providers:
         provider.exclude_free()
     write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
+
+
+def inherit_context_windows(providers: list[Provider]) -> None:
+    """Fill missing context windows from the model's canonical provider record."""
+    models = {f'{provider.id}/{model.id}': model for provider in providers for model in provider.models}
+
+    for provider in providers:
+        for model in provider.models:
+            if canonical_ref := model.canonical_model:
+                canonical = models.get(canonical_ref)
+                if canonical is None:
+                    raise ValueError(
+                        f'Model `{provider.id}/{model.id}` references unknown canonical model `{canonical_ref}`'
+                    )
+                if canonical.canonical_model is not None:
+                    raise ValueError(f'Canonical model `{canonical_ref}` must not reference another canonical model')
+                if model.context_window is None:
+                    if canonical.context_window is None:
+                        raise ValueError(f'Canonical model `{canonical_ref}` has no context window')
+                    model.context_window = canonical.context_window
 
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
