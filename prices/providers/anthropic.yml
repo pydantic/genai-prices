@@ -327,11 +327,13 @@ models:
         - starts_with: claude-opus-4.6
         - starts_with: claude-4-6-opus
         - starts_with: claude-4.6-opus
-    context_window: 200000
-    prices_checked: 2026-07-29
+    context_window: 1000000
+    prices_checked: 2026-08-24
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
-      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      The 1M context window is generally available.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model
     prices:
       - prices:
           input_mtok:
@@ -471,11 +473,14 @@ models:
       or:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
-    context_window: 1000000
-    prices_checked: 2026-07-29
+    context_window: 200000
+    prices_checked: 2026-08-24
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
-      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      The 1M context beta was retired on 2026-04-30; requests over 200k now error.
+      The >200k tiers describe historical usage from before retirement.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/release-notes/overview
     prices:
       input_mtok:
         base: 3
@@ -565,29 +570,19 @@ models:
         - starts_with: claude-5-sonnet
         - starts_with: claude-5.0-sonnet
     context_window: 1000000
-    prices_checked: 2026-07-29
+    prices_checked: 2026-08-24
     price_comments: >-
-      Flat pricing across full 1M context window (no tiered pricing).
-      Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01.
-      Ref: https://www.anthropic.com/news/claude-sonnet-5
+      Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory
+      $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing
       Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
     prices:
-      - prices:
-          input_mtok: 2
-          cache_read_mtok: 0.20
-          cache_write_mtok: 2.50
-          cache_write_1h_mtok: 4
-          output_mtok: 10
-          web_searches_kcount: 10
-      - constraint:
-          start_date: 2026-09-01
-        prices:
-          input_mtok: 3
-          cache_read_mtok: 0.30
-          cache_write_mtok: 3.75
-          cache_write_1h_mtok: 6
-          output_mtok: 15
-          web_searches_kcount: 10
+      input_mtok: 2
+      cache_read_mtok: 0.20
+      cache_write_mtok: 2.50
+      cache_write_1h_mtok: 4
+      output_mtok: 10
+      web_searches_kcount: 10
 
   - id: claude-v1
     description: Retired, here to match price sources

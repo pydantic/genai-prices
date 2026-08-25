@@ -302,8 +302,8 @@ providers: list[Provider] = [
                 ),
                 name='Claude Opus 4.6',
                 description='Our most intelligent model for building agents and coding',
-                context_window=200000,
-                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                context_window=1000000,
+                price_comments='One-hour cache writes cost 2x the base input price. The 1M context window is generally available. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -439,8 +439,8 @@ providers: list[Provider] = [
                 ),
                 name='Claude Sonnet 4.5',
                 description='Our best combination of speed and intelligence',
-                context_window=1000000,
-                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers describe historical usage from before retirement. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -511,30 +511,15 @@ providers: list[Provider] = [
                 name='Claude Sonnet 5',
                 description='Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5 Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                            cache_write_1h_mtok=Decimal('4'),
-                            web_searches_kcount=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                            cache_write_1h_mtok=Decimal('6'),
-                            web_searches_kcount=Decimal('10'),
-                        ),
-                    ),
-                ],
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
+                    web_searches_kcount=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='claude-v1',
@@ -801,26 +786,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-5'),
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                        ),
-                    ),
-                ],
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='google.gemma-3-12b-it',
@@ -1475,26 +1447,13 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-sonnet-5'),
                     ]
                 ),
-                price_comments='Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2.2'),
-                            cache_write_mtok=Decimal('2.75'),
-                            cache_read_mtok=Decimal('0.22'),
-                            output_mtok=Decimal('11'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3.3'),
-                            cache_write_mtok=Decimal('4.125'),
-                            cache_read_mtok=Decimal('0.33'),
-                            output_mtok=Decimal('16.5'),
-                        ),
-                    ),
-                ],
+                price_comments='Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.2'),
+                    cache_write_mtok=Decimal('2.75'),
+                    cache_read_mtok=Decimal('0.22'),
+                    output_mtok=Decimal('11'),
+                ),
             ),
             ModelInfo(
                 id='writer.palmyra-x4-v1:0',
@@ -1557,6 +1516,48 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root=['response', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'image_tokens'], dest='input_image_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'text_tokens'],
+                        dest='cache_text_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'audio_tokens'],
+                        dest='cache_audio_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'cached_tokens_details', 'image_tokens'],
+                        dest='cache_image_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'text_tokens'], dest='output_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                ],
+                api_flavor='realtime',
                 model_path='model',
             ),
             UsageExtractor(
@@ -6357,10 +6358,38 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='ministral-8b',
-                match=ClauseStartsWith(starts_with='ministral-8b'),
+                match=ClauseOr(or_=[ClauseEquals(equals='ministral-8b'), ClauseEquals(equals='ministral-8b-2410')]),
                 name='Ministral 8B 24.10',
                 description='Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('1')),
+                price_comments='The previous $1 output price was incorrect; Mistral documented $0.10 from launch. Ref: https://github.com/mistralai/platform-docs-public/blob/4422b455194a/src/schema/models/models/ministral-8b-24-1.ts',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='ministral-8b-2512',
+                match=ClauseEquals(equals='ministral-8b-2512'),
+                name='Ministral 3 8B 2512',
+                description='Ministral 3 8B is an efficient text and vision model for edge deployment.',
+                price_comments='Ref: https://mistral.ai/pricing/api',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.15')
+                ),
+            ),
+            ModelInfo(
+                id='ministral-8b-latest',
+                match=ClauseEquals(equals='ministral-8b-latest'),
+                name='Ministral 8B Latest',
+                price_comments='The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 12, 2)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.15')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='mistral-7b',
@@ -6397,11 +6426,61 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='mistral-medium-3',
-                match=ClauseStartsWith(starts_with='mistral-medium'),
-                name='Mistral Medium 3',
+                id='mistral-medium-2312',
+                match=ClauseEquals(equals='mistral-medium-2312'),
+                name='Mistral Medium 1',
+                description="Mistral's first enterprise-grade model, released in December 2023.",
+                price_comments='Retired on 2025-06-16; retained for historical usage records at its original $2.70/$8.10 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-1-0-23-12.ts',
+                prices=ModelPrice(input_mtok=Decimal('2.7'), output_mtok=Decimal('8.1')),
+            ),
+            ModelInfo(
+                id='mistral-medium-3-1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-medium'),
+                        ClauseEquals(equals='mistral-medium-2505'),
+                        ClauseEquals(equals='mistral-medium-2508'),
+                    ]
+                ),
+                name='Mistral Medium 3 and 3.1',
                 description='Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
+                price_comments='Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates. Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts',
+                prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='mistral-medium-3-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-medium-3.5'),
+                        ClauseEquals(equals='mistral-medium-3-5'),
+                        ClauseEquals(equals='mistral-medium-3'),
+                    ]
+                ),
+                name='Mistral Medium 3.5',
+                description='Mistral Medium 3.5 is a frontier-class multimodal model optimized for agentic and coding use cases.',
+                price_comments='Ref: https://mistral.ai/pricing/api',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                ),
+            ),
+            ModelInfo(
+                id='mistral-medium-latest',
+                match=ClauseEquals(equals='mistral-medium-latest'),
+                name='Mistral Medium Latest',
+                price_comments='The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 16)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='mistral-nemo',
@@ -6521,12 +6600,29 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='voxtral-small-24b-2507',
-                match=ClauseEquals(equals='voxtral-small-24b-2507'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='voxtral-small-24b-2507'),
+                        ClauseEquals(equals='voxtral-small-2507'),
+                        ClauseEquals(equals='voxtral-small-latest'),
+                    ]
+                ),
                 name='Voxtral Small 24B 2507',
                 description='Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3')
-                ),
+                price_comments='Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 11)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
+                        ),
+                    ),
+                ],
             ),
         ],
     ),
@@ -7662,7 +7758,12 @@ providers: list[Provider] = [
                 name='GPT-5.5',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+                price_comments='Prompts with >272K input tokens are billed at 2x input and cached input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.5-pro',
@@ -7677,7 +7778,11 @@ providers: list[Provider] = [
                 name='GPT-5.5 Pro',
                 description='Version of GPT-5.5 that produces smarter and more precise responses.',
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                price_comments='Prompts with >272K input tokens are billed at 2x input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
@@ -7740,15 +7845,38 @@ providers: list[Provider] = [
                 name='GPT-5.6 Sol',
                 description='Frontier model for complex professional work.',
                 context_window=1050000,
-                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. Ref: https://developers.openai.com/api/docs/models/gpt-5.6-sol',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.6-terra',
@@ -8655,26 +8783,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                        ),
-                    ),
-                ],
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase. Refs: https://openrouter.ai/anthropic/claude-sonnet-5, https://platform.claude.com/docs/en/about-claude/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='anubis-pro-105b-v1',

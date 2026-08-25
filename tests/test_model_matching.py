@@ -1,9 +1,12 @@
+from dataclasses import replace
 from datetime import datetime, timedelta
 from decimal import Decimal
+from unittest.mock import Mock
 
 import pytest
 from inline_snapshot import snapshot
 
+from genai_prices import Usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, find_provider_by_id
 
@@ -224,7 +227,7 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0')),
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
-    ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3'))),
+    ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
@@ -278,7 +281,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('perplexity', 'sonar-pro', snapshot(('perplexity', 'sonar-pro'))),
     pytest.param('nebius', 'nebius/meta-llama/Llama-3.3-70B-Instruct', None, marks=mark_xfail_todo),
     pytest.param('perplexity', 'perplexity/sonar-pro', None, marks=mark_xfail_todo),
-    ('mistral_ai', 'mistral-medium-2505', snapshot(('mistral', 'mistral-medium-3'))),
+    ('mistral_ai', 'mistral-medium-2505', snapshot(('mistral', 'mistral-medium-3-1'))),
     ('google-gla', 'gemini-2.5-flash-preview-04-17', snapshot(('google', 'gemini-2.5-flash-preview'))),
     ('groq', 'meta-llama/llama-guard-4-12b', snapshot(('groq', 'meta-llama/llama-guard-4-12b'))),
     ('azure', 'o3-mini', snapshot(('azure', 'o3-mini'))),
@@ -663,6 +666,44 @@ def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
 
     with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing/gpt-4o'"):
         snapshot.find_provider_model('missing/gpt-4o', None, 'litellm', None)
+
+
+SHARED_MODEL_REF = 'claude-opus-4-6'
+
+
+def test_provider_specific_extraction_does_not_affect_unqualified_lookup():
+    usage = Usage(input_tokens=1_000_000, output_tokens=1_000_000)
+    baseline_snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    baseline = baseline_snapshot.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    snapshot_after_google_lookup = DataSnapshot(providers=providers, from_auto_update=False)
+    extracted = snapshot_after_google_lookup.extract_usage(
+        {
+            'modelVersion': SHARED_MODEL_REF,
+            'usageMetadata': {'promptTokenCount': 1, 'candidatesTokenCount': 1},
+        },
+        provider_id='google',
+    )
+    assert extracted.provider.id != baseline.provider.id
+
+    after = snapshot_after_google_lookup.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    assert after.provider.id == baseline.provider.id
+    assert after.total_price == baseline.total_price
+
+
+def test_lookup_with_resolved_provider_is_cached(monkeypatch: pytest.MonkeyPatch):
+    stored_google_provider = find_provider_by_id(providers, 'google')
+    assert stored_google_provider is not None
+    google_provider = replace(stored_google_provider)
+    find_model = Mock(wraps=google_provider.find_model)
+    monkeypatch.setattr(google_provider, 'find_model', find_model)
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+
+    find_model.assert_called_once_with(SHARED_MODEL_REF, all_providers=providers)
 
 
 def test_snapshot_active_uses_ttl():
