@@ -277,12 +277,12 @@
           "maxLength": 201,
           "pattern": "^\\S+/\\S+$",
           "type": "string",
-          "description": "Exact `provider/model` record from which metadata valid for this entire offering record can be inherited.",
+          "description": "The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.\n\nThe build copies missing metadata (currently only `context_window`) from that record; an explicit\nvalue on this record wins. Only set this when the value holds for every model this record matches.\nNot included in published data.",
           "title": "Canonical Model"
         },
         "context_window": {
           "type": "integer",
-          "description": "Maximum number of input tokens allowed for this model",
+          "description": "Maximum context window in tokens, as documented by the provider.\n\nThis is the default limit for a single request; opt-in extended windows are not recorded.",
           "title": "Context Window"
         },
         "price_comments": {

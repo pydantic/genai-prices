@@ -69,14 +69,14 @@ def build():
 
 
 def prepare_providers_for_export(providers: list[Provider]) -> None:
-    """Resolve authoring relationships before filtering models from published data."""
+    """Resolve canonical links before dropping removed models, so a removed record can still pass on its metadata."""
     inherit_context_windows(providers)
     for provider in providers:
         provider.exclude_removed()
 
 
 def inherit_context_windows(providers: list[Provider]) -> None:
-    """Fill missing context windows from the model's canonical provider record."""
+    """Fill each model's missing context window from its canonical record."""
     models = {f'{provider.id}/{model.id}': model for provider in providers for model in provider.models}
 
     for provider in providers:

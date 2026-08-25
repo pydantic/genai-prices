@@ -180,9 +180,17 @@ class ModelInfo(_Model):
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     canonical_model: ModelRefField | None = Field(default=None, exclude=True)
-    """Exact `provider/model` record from which metadata valid for this entire offering record can be inherited."""
+    """The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.
+
+    The build copies missing metadata (currently only `context_window`) from that record; an explicit
+    value on this record wins. Only set this when the value holds for every model this record matches.
+    Not included in published data.
+    """
     context_window: int | None = None
-    """Maximum number of input tokens allowed for this model"""
+    """Maximum context window in tokens, as documented by the provider.
+
+    This is the default limit for a single request; opt-in extended windows are not recorded.
+    """
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]

@@ -164,7 +164,7 @@ models:
       equals: mai-ds-r1:free
     prices: {}
 
-  # These reasoning limits are inherited from OpenAI and verified for Azure: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
+  # Azure documents the same limits as OpenAI for these o-series models: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
   - id: o1
     canonical_model: openai/o1
     match:
