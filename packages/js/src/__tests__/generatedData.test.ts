@@ -117,6 +117,45 @@ describe('generated data split', () => {
 
   it.each([
     {
+      cacheReadRate: 0.0165,
+      contextWindow: 1_000_000,
+      inputRate: 0.0805,
+      model: 'deepseek/deepseek-v4-flash',
+      outputRate: 0.161,
+    },
+    { cacheReadRate: 0.10875, contextWindow: 1_000_000, inputRate: 1.305, model: 'deepseek/deepseek-v4-pro', outputRate: 2.61 },
+    {
+      cacheReadRate: 0.0198,
+      contextWindow: 1_000_000,
+      inputRate: 0.594,
+      model: 'deepseek/deepseek-v4-pro-0813',
+      outputRate: 1.782,
+    },
+    { cacheReadRate: 0.012, contextWindow: 163_000, inputRate: 0.23, model: 'deepseek/deepseek-v3.2', outputRate: 0.33 },
+    { cacheReadRate: 0.15, contextWindow: 196_000, inputRate: 0.27, model: 'minimax/minimax-m2.5', outputRate: 1.08 },
+    { cacheReadRate: 0.097, contextWindow: 202_000, inputRate: 0.388, model: 'z-ai/glm-4.7', outputRate: 1.806 },
+    { cacheReadRate: 0.129, contextWindow: 205_000, inputRate: 0.516, model: 'z-ai/glm-5', outputRate: 2.322 },
+    { cacheReadRate: 0.186, contextWindow: 202_000, inputRate: 0.743, model: 'z-ai/glm-5.1', outputRate: 2.971 },
+    { cacheReadRate: 0.124, contextWindow: 1_000_000, inputRate: 0.495, model: 'z-ai/glm-5.2', outputRate: 1.733 },
+    { cacheReadRate: 0.225, contextWindow: 262_000, inputRate: 0.45, model: 'moonshotai/kimi-k2.5', outputRate: 2.2 },
+    { cacheReadRate: 0.16, contextWindow: 262_000, inputRate: 0.95, model: 'moonshotai/kimi-k2.6', outputRate: 4 },
+    { cacheReadRate: 0.05, contextWindow: 1_000_000, inputRate: 0.2, model: 'xiaomi/mimo-v2.5', outputRate: 0.4 },
+    { cacheReadRate: 0.0036, contextWindow: 1_000_000, inputRate: 0.435, model: 'xiaomi/mimo-v2.5-pro', outputRate: 0.87 },
+  ])('prices Avian $model', ({ cacheReadRate, contextWindow, inputRate, model, outputRate }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'avian',
+    })
+
+    expect(result?.provider.id).toBe('avian')
+    expect(result?.model.id).toBe(model)
+    expect(result?.model.context_window).toBe(contextWindow)
+    expect(result?.input_price).toBeCloseTo(inputRate + cacheReadRate, 12)
+    expect(result?.output_price).toBeCloseTo(outputRate, 12)
+    expect(result?.total_price).toBeCloseTo(inputRate + cacheReadRate + outputRate, 12)
+  })
+
+  it.each([
+    {
       expectedPrices: {
         cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
         cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
