@@ -607,6 +607,7 @@ models:
         - equals: gemini-2.5-flash
         - equals: gemini-2.5-flash-latest
         - equals: gemini-2.5-flash-preview-09-2025
+    context_window: 1048576
     prices_checked: 2025-10-31
     prices:
       input_mtok: 0.3

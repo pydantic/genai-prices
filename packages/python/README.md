@@ -51,6 +51,30 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Cached input tokens
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(
+        input_tokens=4740,
+        cache_read_tokens=0,
+        cache_write_tokens=4735,
+        output_tokens=255,
+    ),
+    model_ref='claude-sonnet-4-20250514',
+    provider_id='anthropic',
+)
+print(price_data.total_price)
+```
+
+`input_tokens` is the total number of input tokens. It includes uncached tokens, cache-read tokens, and cache-write
+tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `calc_price` can apply their separate rates.
+
+Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
+cannot exceed `input_tokens`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,
