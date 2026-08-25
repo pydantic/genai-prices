@@ -3170,7 +3170,14 @@ export const data: Provider[] = [
         description:
           'Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
         match: {
-          starts_with: 'command-a',
+          or: [
+            {
+              equals: 'command-a',
+            },
+            {
+              equals: 'command-a-03-2025',
+            },
+          ],
         },
         prices: {
           input_mtok: 2.5,
@@ -5155,6 +5162,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
