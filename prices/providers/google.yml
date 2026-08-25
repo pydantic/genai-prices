@@ -512,13 +512,15 @@ models:
   - id: claude-sonnet-4-5
     canonical_model: anthropic/claude-sonnet-4-5
     match:
-      contains: claude-sonnet-4-5
+      or:
+        - contains: claude-sonnet-4-5
+        - contains: claude-sonnet-4.5
     # Google documents 200K as the GA context and 1M as beta:
     # https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/sonnet-4-5
     context_window: 200000
     prices_checked: 2026-08-25
     price_comments: >-
-      Long-context rates apply at 200K input tokens.
+      Long-context rates apply above 200K input tokens.
       Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models
     prices:
       input_mtok:
@@ -545,7 +547,9 @@ models:
   - id: claude-sonnet-4-6
     canonical_model: anthropic/claude-sonnet-4-6
     match:
-      contains: claude-sonnet-4-6
+      or:
+        - contains: claude-sonnet-4-6
+        - contains: claude-sonnet-4.6
     # Google documents a 1M context window:
     # https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/sonnet-4-6
     prices_checked: 2026-08-25

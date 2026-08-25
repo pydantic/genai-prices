@@ -14996,8 +14996,8 @@
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "1.204404",
-            "output_price": "0.01188",
+            "input_price": "2.408808",
+            "output_price": "0.01782",
             "provider_id": "google"
           },
           {
@@ -15087,8 +15087,8 @@
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "1.483647",
-            "output_price": "0.018675",
+            "input_price": "2.967294",
+            "output_price": "0.0280125",
             "provider_id": "google"
           },
           {

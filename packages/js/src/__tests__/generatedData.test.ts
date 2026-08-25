@@ -104,6 +104,16 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedInputPrice: (200_000 * 3) / 1_000_000, inputTokens: 200_000 },
+    { expectedInputPrice: (200_001 * 6) / 1_000_000, inputTokens: 200_001 },
+  ])('prices Google Claude Sonnet 4.5 at the 200K boundary', ({ expectedInputPrice, inputTokens }) => {
+    const result = calcPrice({ input_tokens: inputTokens }, 'claude-sonnet-4-5@20250929', { providerId: 'google' })
+
+    expect(result?.model.id).toBe('claude-sonnet-4-5')
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it.each([
     {
       expectedPrices: {
         cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },

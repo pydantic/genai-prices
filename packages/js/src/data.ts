@@ -5075,11 +5075,18 @@ export const data: Provider[] = [
       {
         id: 'claude-sonnet-4-5',
         match: {
-          contains: 'claude-sonnet-4-5',
+          or: [
+            {
+              contains: 'claude-sonnet-4-5',
+            },
+            {
+              contains: 'claude-sonnet-4.5',
+            },
+          ],
         },
         context_window: 200000,
         price_comments:
-          'Long-context rates apply at 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+          'Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
         prices: {
           input_mtok: {
             base: 3,
@@ -5122,7 +5129,14 @@ export const data: Provider[] = [
       {
         id: 'claude-sonnet-4-6',
         match: {
-          contains: 'claude-sonnet-4-6',
+          or: [
+            {
+              contains: 'claude-sonnet-4-6',
+            },
+            {
+              contains: 'claude-sonnet-4.6',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:

@@ -3052,9 +3052,11 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-sonnet-4-5',
-                match=ClauseContains(contains='claude-sonnet-4-5'),
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='claude-sonnet-4-5'), ClauseContains(contains='claude-sonnet-4.5')]
+                ),
                 context_window=200000,
-                price_comments='Long-context rates apply at 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+                price_comments='Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -3066,7 +3068,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-sonnet-4-6',
-                match=ClauseContains(contains='claude-sonnet-4-6'),
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='claude-sonnet-4-6'), ClauseContains(contains='claude-sonnet-4.6')]
+                ),
                 context_window=1000000,
                 price_comments='Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
                 prices=ModelPrice(

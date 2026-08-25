@@ -41,6 +41,17 @@ def test_gemini_25_flash_context_window() -> None:
 
 
 @pytest.mark.parametrize(
+    ('input_tokens', 'rate'),
+    [(200_000, '3'), (200_001, '6')],
+)
+def test_google_claude_sonnet_45_long_context_price_boundary(input_tokens: int, rate: str) -> None:
+    price = calc_price(Usage(input_tokens=input_tokens), model_ref='claude-sonnet-4-5@20250929', provider_id='google')
+
+    assert price.model.id == 'claude-sonnet-4-5'
+    assert price.input_price == mtok(rate, input_tokens)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
         ('gemini-2.5-flash-image', '2.5', '30'),

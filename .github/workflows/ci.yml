@@ -168,29 +168,7 @@ jobs:
           failed=0
           for schema in prices/new_data/v2/data.schema.json prices/new_data/v2/data_slim.schema.json; do
             git show "${BASE_SHA}:$schema" > /tmp/base-schema.json
-            if ! python3 - "$schema" /tmp/base-schema.json <<'PY'
-          import json
-          import sys
-
-          def strip_descriptions(node, *, property_map=False):
-              if isinstance(node, dict):
-                  return {
-                      key: strip_descriptions(value, property_map=key == 'properties')
-                      for key, value in node.items()
-                      if property_map or key != 'description'
-                  }
-              if isinstance(node, list):
-                  return [strip_descriptions(item) for item in node]
-              return node
-
-          with open(sys.argv[1]) as f:
-              head = strip_descriptions(json.load(f))
-          with open(sys.argv[2]) as f:
-              base = strip_descriptions(json.load(f))
-          canonical = lambda value: json.dumps(value, sort_keys=True, separators=(',', ':'))
-          sys.exit(0 if canonical(head) == canonical(base) else 1)
-          PY
-            then
+            if ! python3 .github/scripts/compare_v2_schemas.py "$schema" /tmp/base-schema.json; then
               echo "::error file=$schema::The published v2 schema changed. Adding or altering a unit in prices/units.yml widens the v2 contract and requires v3 instead - see specs/data-driven-unit-registry/. If this change is genuinely v2-compatible, remove this job's guard in the same PR and say why."
               git diff "${BASE_SHA}" -- "$schema"
               failed=1
