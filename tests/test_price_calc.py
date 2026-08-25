@@ -416,6 +416,38 @@ def test_openrouter_deepseek_v32_price():
 @pytest.mark.parametrize(
     ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
     [
+        ('deepseek/deepseek-v4-flash', Decimal('0.0805'), Decimal('0.0165'), Decimal('0.161')),
+        ('deepseek/deepseek-v4-pro', Decimal('1.305'), Decimal('0.10875'), Decimal('2.61')),
+        ('deepseek/deepseek-v4-pro-0813', Decimal('0.594'), Decimal('0.0198'), Decimal('1.782')),
+        ('deepseek/deepseek-v3.2', Decimal('0.23'), Decimal('0.012'), Decimal('0.33')),
+        ('minimax/minimax-m2.5', Decimal('0.27'), Decimal('0.15'), Decimal('1.08')),
+        ('z-ai/glm-4.7', Decimal('0.388'), Decimal('0.097'), Decimal('1.806')),
+        ('z-ai/glm-5', Decimal('0.516'), Decimal('0.129'), Decimal('2.322')),
+        ('z-ai/glm-5.1', Decimal('0.743'), Decimal('0.186'), Decimal('2.971')),
+        ('z-ai/glm-5.2', Decimal('0.495'), Decimal('0.124'), Decimal('1.733')),
+        ('moonshotai/kimi-k2.5', Decimal('0.45'), Decimal('0.225'), Decimal('2.2')),
+        ('moonshotai/kimi-k2.6', Decimal('0.95'), Decimal('0.16'), Decimal('4')),
+        ('xiaomi/mimo-v2.5', Decimal('0.2'), Decimal('0.05'), Decimal('0.4')),
+        ('xiaomi/mimo-v2.5-pro', Decimal('0.435'), Decimal('0.0036'), Decimal('0.87')),
+    ],
+)
+def test_avian_prices(model_ref: str, input_rate: Decimal, cache_read_rate: Decimal, output_rate: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='avian',
+    )
+
+    assert price.provider.id == 'avian'
+    assert price.model.id == model_ref
+    assert price.input_price == input_rate + cache_read_rate
+    assert price.output_price == output_rate
+    assert price.total_price == input_rate + cache_read_rate + output_rate
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
+    [
         ('accounts/fireworks/models/deepseek-v4-flash-0731', Decimal('0.14'), Decimal('0.028'), Decimal('0.28')),
         ('accounts/fireworks/models/inkling', Decimal('1'), Decimal('0.17'), Decimal('4.05')),
         ('accounts/fireworks/models/kimi-k3', Decimal('3'), Decimal('0.3'), Decimal('15')),
