@@ -26,6 +26,35 @@ if (result) {
 }
 ```
 
+### Cached input tokens
+
+```ts
+import { calcPrice } from '@pydantic/genai-prices'
+
+const result = calcPrice(
+  {
+    input_tokens: 4740,
+    cache_read_tokens: 0,
+    cache_write_tokens: 4735,
+    output_tokens: 255,
+  },
+  'claude-sonnet-4-20250514',
+  { providerId: 'anthropic' }
+)
+
+if (!result) {
+  throw new Error('No price found for claude-sonnet-4-20250514')
+}
+
+console.log(result.total_price)
+```
+
+`input_tokens` is the total number of input tokens. It includes uncached tokens, cache-read tokens, and cache-write
+tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `calcPrice` can apply their separate rates.
+
+Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
+cannot exceed `input_tokens`.
+
 ### Fractional usage values
 
 Every reportable usage unit accepts finite non-negative numbers, including fractions. This is useful for duration units
