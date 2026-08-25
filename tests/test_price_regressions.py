@@ -22,6 +22,12 @@ def mtok(rate: str, tokens: int) -> Decimal:
     return Decimal(rate) * tokens / MILLION
 
 
+def test_gemini_25_flash_context_window() -> None:
+    price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
+
+    assert price.model.context_window == 1_048_576
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
