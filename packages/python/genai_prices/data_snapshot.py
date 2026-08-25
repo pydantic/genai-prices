@@ -101,16 +101,18 @@ class DataSnapshot:
                 model_ref = actual_model_ref
 
         if provider:
-            if provider_model := self._lookup_cache.get((provider.id, None, model_ref)):
+            cache_key = (provider.id, None, model_ref)
+            if provider_model := self._lookup_cache.get(cache_key):
                 return provider_model
         else:
-            if provider_model := self._lookup_cache.get((provider_id, provider_api_url, model_ref)):
+            cache_key = (provider_id, provider_api_url, model_ref)
+            if provider_model := self._lookup_cache.get(cache_key):
                 return provider_model
 
             provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
         if model := provider.find_model(model_ref, all_providers=self.providers):
-            self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
+            self._lookup_cache[cache_key] = ret = provider, model
             return ret
         else:
             raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')

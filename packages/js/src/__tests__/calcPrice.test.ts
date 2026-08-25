@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelInfo, ModelPrice, TieredPrices, Usage } from '../types'
 
-import { calcPrice as calcPriceForModelRef } from '../api'
 import { calcPrice, collectResolvedModelPrices, getActiveModelPrice } from '../engine'
 import { getActiveRegistry, UnitRegistry } from '../units'
 
@@ -218,25 +217,32 @@ describe('getActiveModelPrice', () => {
 })
 
 describe('start_date constraints', () => {
-  // `claude-sonnet-5` switches from introductory ($2/MTok input) to standard ($3/MTok) pricing on 2026-09-01.
+  const before = { input_mtok: 2 }
+  const after = { input_mtok: 3 }
+  const model: ModelInfo = {
+    id: 'start-date-model',
+    match: { equals: 'start-date-model' },
+    prices: [
+      { prices: before },
+      {
+        constraint: { start_date: '2026-09-01', type: 'start_date' },
+        prices: after,
+      },
+    ],
+  }
+
   // The boundary is UTC midnight, not the caller's local midnight; the Python package pins the same instants.
   it.each([
-    { expected: 2, name: '02:00 at +05:00 on the start date is still the previous UTC day', timestamp: '2026-09-01T02:00:00+05:00' },
-    { expected: 2, name: 'the same instant expressed in UTC', timestamp: '2026-08-31T21:00:00Z' },
+    { expected: before, name: '02:00 at +05:00 on the start date is still the previous UTC day', timestamp: '2026-09-01T02:00:00+05:00' },
+    { expected: before, name: 'the same instant expressed in UTC', timestamp: '2026-08-31T21:00:00Z' },
     {
-      expected: 3,
+      expected: after,
       name: '20:00 at -05:00 the day before the start date is already the start date in UTC',
       timestamp: '2026-08-31T20:00:00-05:00',
     },
-    { expected: 3, name: 'the same instant expressed in UTC', timestamp: '2026-09-01T01:00:00Z' },
-  ])('prices $name as $expected', ({ expected, timestamp }) => {
-    const price = calcPriceForModelRef({ input_tokens: MILLION }, 'claude-sonnet-5', {
-      providerId: 'anthropic',
-      timestamp: new Date(timestamp),
-    })
-
-    expect(price?.model_price.input_mtok).toBe(expected)
-    expect(price?.total_price).toBe(expected)
+    { expected: after, name: 'the same instant expressed in UTC', timestamp: '2026-09-01T01:00:00Z' },
+  ])('prices $name correctly', ({ expected, timestamp }) => {
+    expect(getActiveModelPrice(model, new Date(timestamp))).toBe(expected)
   })
 })
 

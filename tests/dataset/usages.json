@@ -134977,7 +134977,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000028",
-            "output_price": "0.000006",
+            "output_price": "6E-7",
             "provider_id": "mistral"
           },
           {
