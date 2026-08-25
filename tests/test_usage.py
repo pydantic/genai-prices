@@ -288,14 +288,18 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         MappingProxyType({'input_tokens': 100, 'output_tokens': 50}),
     ],
 )
-def test_mapping_usage_is_rejected(raw_usage: object) -> None:
-    with pytest.raises(TypeError, match='Mapping usage inputs are not supported'):
-        Usage.from_raw(raw_usage)
+def test_usage_from_raw_reads_known_mapping_values(raw_usage: object) -> None:
+    usage = Usage.from_raw(raw_usage)
 
-    price = ModelPrice(input_mtok=Decimal('1'))
+    assert usage == Usage(input_tokens=100, output_tokens=50)
 
-    with pytest.raises(TypeError, match='Mapping usage inputs are not supported'):
-        price.calc_price(raw_usage)
+    price = ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
+
+    assert price.calc_price(raw_usage) == {
+        'input_price': Decimal('0.0001'),
+        'output_price': Decimal('0.0001'),
+        'total_price': Decimal('0.0002'),
+    }
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:
