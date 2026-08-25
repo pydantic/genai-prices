@@ -18,7 +18,7 @@ export default defineConfig({
       external: (id) => {
         // Externalize Node.js built-ins and node-fetch
         const nodeModules = [...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
-        const externalModules = ['node-fetch', 'yargs']
+        const externalModules = ['node-fetch']
         return nodeModules.includes(id) || externalModules.includes(id)
       },
       output: {

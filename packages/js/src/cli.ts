@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import yargs from 'yargs'
-import { hideBin } from 'yargs/helpers'
+import { parseArgs } from 'node:util'
 
 import type { Provider } from './types'
 
@@ -9,64 +7,78 @@ import { version } from '../package.json'
 import { data as embeddedData } from './data'
 import { calcPrice } from './index'
 
-interface Argv {
-  $0: string
-  _: (number | string)[]
-  'auto-update'?: boolean
-  autoUpdate?: boolean
-  'cache-audio-read-tokens'?: number
-  'cache-read-tokens'?: number
-  'cache-write-tokens'?: number
-  'input-audio-tokens'?: number
-  'input-tokens'?: number
-  model?: string | string[]
-  'output-audio-tokens'?: number
-  'output-tokens'?: number
-  provider?: string
-  timestamp?: string
+const HELP = `genai-prices <command>
+
+Commands:
+  genai-prices list [provider]  List providers and models
+  genai-prices calc <model...>  Calculate price
+
+Options:
+  --input-tokens <number>
+  --cache-write-tokens <number>
+  --cache-read-tokens <number>
+  --output-tokens <number>
+  --input-audio-tokens <number>
+  --cache-audio-read-tokens <number>
+  --output-audio-tokens <number>
+  --provider <id>
+  --auto-update                 Enable auto-update from GitHub
+  --timestamp <RFC3339>
+  -v, --version                 Show version number
+  -h, --help                    Show help`
+
+const PARSE_ARGS_CONFIG = {
+  allowPositionals: true,
+  options: {
+    'auto-update': { type: 'boolean' },
+    'cache-audio-read-tokens': { type: 'string' },
+    'cache-read-tokens': { type: 'string' },
+    'cache-write-tokens': { type: 'string' },
+    help: { short: 'h', type: 'boolean' },
+    'input-audio-tokens': { type: 'string' },
+    'input-tokens': { type: 'string' },
+    'output-audio-tokens': { type: 'string' },
+    'output-tokens': { type: 'string' },
+    provider: { type: 'string' },
+    timestamp: { type: 'string' },
+    version: { short: 'v', type: 'boolean' },
+  },
+  strict: true,
+} as const
+
+function printHelp(): void {
+  console.log(HELP)
 }
 
-const argv = yargs(hideBin(process.argv))
-  .scriptName('genai-prices')
-  .command('list [provider]', 'List providers and models', (y) =>
-    y.positional('provider', { describe: 'Provider ID to filter', type: 'string' })
-  )
-  .command('calc <model...>', 'Calculate price', (y) =>
-    y
-      .positional('model', { array: true, describe: 'Model(s) (optionally provider:model)', type: 'string' })
-      .option('input-tokens', { type: 'number' })
-      .option('cache-write-tokens', { type: 'number' })
-      .option('cache-read-tokens', { type: 'number' })
-      .option('output-tokens', { type: 'number' })
-      .option('input-audio-tokens', { type: 'number' })
-      .option('cache-audio-read-tokens', { type: 'number' })
-      .option('output-audio-tokens', { type: 'number' })
-      .option('provider', { type: 'string' })
-      .option('auto-update', { default: false, type: 'boolean' })
-      .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
-  )
-  .option('auto-update', { describe: 'Enable auto-update from GitHub', type: 'boolean' })
-  .option('input-tokens', { type: 'number' })
-  .option('cache-write-tokens', { type: 'number' })
-  .option('cache-read-tokens', { type: 'number' })
-  .option('output-tokens', { type: 'number' })
-  .option('input-audio-tokens', { type: 'number' })
-  .option('cache-audio-read-tokens', { type: 'number' })
-  .option('output-audio-tokens', { type: 'number' })
-  .option('provider', { type: 'string' })
-  .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
-  .version(version)
-  .help()
-  .parseSync() as Argv
+function parseCliArgs(): ReturnType<typeof parseArgs<typeof PARSE_ARGS_CONFIG>> {
+  try {
+    return parseArgs(PARSE_ARGS_CONFIG)
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error))
+    printHelp()
+    process.exit(1)
+  }
+}
 
-function main() {
-  // Handle list command
-  if (argv._[0] === 'list') {
+function main(): never {
+  const parsed = parseCliArgs()
+  const { positionals, values } = parsed
+  if (values.version) {
+    console.log(version)
+    process.exit(0)
+  }
+  if (values.help) {
+    printHelp()
+    process.exit(0)
+  }
+
+  if (positionals[0] === 'list') {
     const providers = embeddedData
-    if (argv.provider) {
-      const p = providers.find((p: Provider) => p.id === argv.provider)
+    const providerId = values.provider ?? positionals[1]
+    if (providerId) {
+      const p = providers.find((p: Provider) => p.id === providerId)
       if (!p) {
-        console.error(`Provider ${argv.provider} not found.`)
+        console.error(`Provider ${providerId} not found.`)
         process.exit(1)
       }
       console.log(`${p.name}: (${p.models.length} models)`)
@@ -84,26 +96,24 @@ function main() {
     process.exit(0)
   }
 
-  // Handle calc command or direct model names
-  const isCalcCommand = argv._[0] === 'calc'
-  const models = isCalcCommand ? (Array.isArray(argv.model) ? argv.model : [argv.model]) : argv._.filter((arg) => typeof arg === 'string')
+  const isCalcCommand = positionals[0] === 'calc'
+  const models = isCalcCommand ? positionals.slice(1) : positionals
 
   if (models.length > 0) {
     const usage = {
-      cache_audio_read_tokens: argv['cache-audio-read-tokens'] !== undefined ? Number(argv['cache-audio-read-tokens']) : undefined,
-      cache_read_tokens: argv['cache-read-tokens'] !== undefined ? Number(argv['cache-read-tokens']) : undefined,
-      cache_write_tokens: argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
-      input_audio_tokens: argv['input-audio-tokens'] !== undefined ? Number(argv['input-audio-tokens']) : undefined,
-      input_tokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
-      output_audio_tokens: argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
-      output_tokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
+      cache_audio_read_tokens: values['cache-audio-read-tokens'] === undefined ? undefined : Number(values['cache-audio-read-tokens']),
+      cache_read_tokens: values['cache-read-tokens'] === undefined ? undefined : Number(values['cache-read-tokens']),
+      cache_write_tokens: values['cache-write-tokens'] === undefined ? undefined : Number(values['cache-write-tokens']),
+      input_audio_tokens: values['input-audio-tokens'] === undefined ? undefined : Number(values['input-audio-tokens']),
+      input_tokens: values['input-tokens'] === undefined ? undefined : Number(values['input-tokens']),
+      output_audio_tokens: values['output-audio-tokens'] === undefined ? undefined : Number(values['output-audio-tokens']),
+      output_tokens: values['output-tokens'] === undefined ? undefined : Number(values['output-tokens']),
     }
-    const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined
+    const timestamp = values.timestamp ? new Date(values.timestamp) : undefined
     let hadError = false
     for (const modelArg of models) {
       let providerId: string | undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      let modelId = modelArg!
+      let modelId = modelArg
       if (modelId.includes(':')) {
         ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
       }
@@ -140,8 +150,7 @@ function main() {
     process.exit(hadError ? 1 : 0)
   }
 
-  // If no command matched
-  yargs().showHelp()
+  printHelp()
   process.exit(1)
 }
 
