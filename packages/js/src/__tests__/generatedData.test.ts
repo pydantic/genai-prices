@@ -112,7 +112,7 @@ describe('generated data split', () => {
 
     expect(result?.provider.id).toBe('mistral')
     expect(result?.model.id).toBe(expectedModelId)
-    expect(result?.total_price).toBeCloseTo(expectedTotalPrice)
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
   })
 
   it.each([
