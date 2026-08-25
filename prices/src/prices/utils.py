@@ -81,14 +81,10 @@ def _simplify_json_schema_object(schema: JsonSchema) -> JsonSchema:
             handled_properties[key] = simplify_json_schema(value)
         schema['properties'] = handled_properties
 
-    if (  # pragma: no branch - Pydantic model schemas always declare additionalProperties
-        add_props := schema.get('additionalProperties')
-    ) is not None:
+    if (add_props := schema.get('additionalProperties')) is not None:  # pragma: no branch
         schema['additionalProperties'] = add_props if isinstance(add_props, bool) else simplify_json_schema(add_props)
 
-    if (  # pragma: no cover - published provider schemas never emit patternProperties
-        pat_props := schema.get('patternProperties')
-    ) is not None:
+    if (pat_props := schema.get('patternProperties')) is not None:  # pragma: no cover
         handled_pat_props = {}
         for key, value in pat_props.items():
             handled_pat_props[key] = simplify_json_schema(value)

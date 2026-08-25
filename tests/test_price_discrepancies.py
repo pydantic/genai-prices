@@ -32,9 +32,7 @@ class FakeProviderYaml:
     def add_price(self, model_id: str, price: ModelPrice) -> None:
         self.added_prices.append((model_id, price))
 
-    def add_id_to_model(  # pragma: no cover - the real provider integration covers alias writes
-        self, lookup_id: str, new_model_id: str
-    ) -> None:
+    def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None:  # pragma: no cover
         self.added_ids.append((lookup_id, new_model_id))
 
     def save(self) -> None:
