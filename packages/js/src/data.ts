@@ -11230,7 +11230,7 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'The latest alias moved to OCR 3 on December 17, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+          'The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
         prices: [
           {
             prices: {
@@ -11249,7 +11249,7 @@ export const data: Provider[] = [
           },
           {
             constraint: {
-              start_date: '2025-12-17',
+              start_date: '2025-12-18',
               type: 'start_date',
             },
             prices: {

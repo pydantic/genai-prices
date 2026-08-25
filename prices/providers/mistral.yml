@@ -436,7 +436,7 @@ models:
         - equals: mistral-ocr-latest-completion
     prices_checked: 2026-08-25
     price_comments: >-
-      The latest alias moved to OCR 3 on December 17, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026.
+      The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026.
       OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs
     prices:
       - prices:
@@ -447,7 +447,7 @@ models:
           input_document_kpages: 1
           input_annotated_document_kpages: 3
       - constraint:
-          start_date: 2025-12-17
+          start_date: 2025-12-18
         prices:
           input_document_kpages: 2
           input_annotated_document_kpages: 3

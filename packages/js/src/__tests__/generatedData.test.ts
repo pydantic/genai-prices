@@ -333,7 +333,7 @@ describe('generated data split', () => {
       expectedModelId: 'mistral-ocr-2512',
       expectedPagePrice: 2,
       model: 'mistral-ocr-2512-completion',
-      timestamp: new Date('2025-12-17T00:00:00Z'),
+      timestamp: new Date('2025-12-18T00:00:00Z'),
     },
     {
       expectedAnnotatedPagePrice: 5,
@@ -359,9 +359,16 @@ describe('generated data split', () => {
     {
       expectedAnnotatedPagePrice: 3,
       expectedModelId: 'mistral-ocr-latest',
-      expectedPagePrice: 2,
+      expectedPagePrice: 1,
       model: 'mistral-ocr-latest',
       timestamp: new Date('2025-12-17T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 2,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-12-18T00:00:00Z'),
     },
     {
       expectedAnnotatedPagePrice: 5,

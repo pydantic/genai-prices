@@ -6559,7 +6559,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Mistral OCR Latest',
-                price_comments='The latest alias moved to OCR 3 on December 17, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+                price_comments='The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
                 prices=[
                     ConditionalPrice(constraint=None, prices=ModelPrice(input_document_kpages=Decimal('1'))),
                     ConditionalPrice(
@@ -6569,7 +6569,7 @@ providers: list[Provider] = [
                         ),
                     ),
                     ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2025, 12, 17)),
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 12, 18)),
                         prices=ModelPrice(
                             input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')
                         ),

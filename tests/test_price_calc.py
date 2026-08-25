@@ -1309,7 +1309,7 @@ def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: 
         ),
         (
             'mistral-ocr-2512-completion',
-            datetime(2025, 12, 17, tzinfo=timezone.utc),
+            datetime(2025, 12, 18, tzinfo=timezone.utc),
             'mistral-ocr-2512',
             Decimal('2'),
             Decimal('3'),
@@ -1345,6 +1345,13 @@ def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: 
         (
             'mistral-ocr-latest',
             datetime(2025, 12, 17, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('1'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2025, 12, 18, tzinfo=timezone.utc),
             'mistral-ocr-latest',
             Decimal('2'),
             Decimal('3'),
