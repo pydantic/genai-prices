@@ -1566,6 +1566,24 @@ def test_provider_not_found_model_ref():
         calc_price(Usage(input_tokens=500_000), model_ref='llama2-70b-4096')
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id', 'expected_total_price'),
+    [
+        ('pixtral-12b-latest', 'pixtral-12b', Decimal('0.000165')),
+        ('pixtral-large-2411', 'pixtral-large', Decimal('0.0026')),
+        ('mixtral-8x7b-instruct-v0.1', 'mixtral-8x7b', Decimal('0.00077')),
+    ],
+)
+def test_mistral_models_found_without_provider(
+    model_ref: str, expected_model_id: str, expected_total_price: Decimal
+) -> None:
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model_ref)
+
+    assert price.provider.id == 'mistral'
+    assert price.model.id == expected_model_id
+    assert price.total_price == expected_total_price
+
+
 def test_model_not_found():
     with pytest.raises(LookupError, match="Unable to find model with model_ref='wrong' in google"):
         calc_price(Usage(input_tokens=500_000), model_ref='wrong', provider_id='google')
