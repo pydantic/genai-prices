@@ -642,10 +642,13 @@ def _reported_usage_key_order() -> tuple[str, ...]:
 
 
 def _raw_usage_value(obj: object, key: str) -> UsageValue | None:
-    value = getattr(obj, key, None)
+    if _is_mapping(obj):
+        value = obj.get(key)
+    else:
+        value = getattr(obj, key, None)
     if value is None:
         return None
-    return cast(UsageValue, value)
+    return validate_usage_value(key, value)
 
 
 @dataclass
