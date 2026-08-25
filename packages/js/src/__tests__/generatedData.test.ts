@@ -306,6 +306,73 @@ describe('generated data split', () => {
     expect(result?.total_price).toBe(0.04)
   })
 
+  it.each([
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-2505',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-2505',
+      timestamp: new Date('2025-05-22T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-2512',
+      expectedPagePrice: 2,
+      model: 'mistral-ocr-2512-completion',
+      timestamp: new Date('2025-12-17T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-4-0',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-4-0',
+      timestamp: new Date('2026-06-23T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-4-1',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-4',
+      timestamp: new Date('2026-07-16T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-05-22T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 2,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-12-17T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2026-06-23T00:00:00Z'),
+    },
+  ])(
+    'prices OCR pages for $model at $timestamp',
+    ({ expectedAnnotatedPagePrice, expectedModelId, expectedPagePrice, model, timestamp }) => {
+      const pagePrice = calcPrice({ input_document_pages: 1_000 }, model, { providerId: 'mistral', timestamp })
+      const annotatedPagePrice = calcPrice({ input_annotated_document_pages: 1_000, input_document_pages: 1_000 }, model, {
+        providerId: 'mistral',
+        timestamp,
+      })
+
+      expect(pagePrice?.model.id).toBe(expectedModelId)
+      expect(pagePrice?.input_price).toBe(expectedPagePrice)
+      expect(pagePrice?.total_price).toBe(expectedPagePrice)
+      expect(annotatedPagePrice?.input_price).toBe(expectedAnnotatedPagePrice)
+      expect(annotatedPagePrice?.total_price).toBe(expectedAnnotatedPagePrice)
+    }
+  )
+
   it('infers Mistral for the native Voxtral alias', () => {
     const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
 
