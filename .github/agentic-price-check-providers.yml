@@ -6,8 +6,9 @@ providers:
     sources:
       - https://api-docs.deepseek.com/quick_start/pricing
     notes: >-
-      Compare every published time-based rate. The default YAML record is the off-peak rate and the constrained record is the
-      standard UTC 00:30-16:30 rate.
+      The first two YAML models use a legacy schedule. Do not assume it matches the current policy. DeepSeek has announced daily
+      peak hours at UTC 01:00-04:00 and 06:00-10:00 with 2x pricing, but compare that tier only after the official page publishes
+      an effective date on or before the run date.
 
   - name: xAI
     file: prices/providers/x_ai.yml
@@ -42,8 +43,9 @@ providers:
     sources:
       - https://platform.minimax.io/docs/guides/pricing-paygo
     notes: >-
-      Compare standard rows with normal YAML model IDs and priority rows with the corresponding highspeed IDs. Do not compare
-      subscription token-plan prices.
+      Compare the M2.7-highspeed, M2.5-highspeed, and M2.1-highspeed models only with their same-named official rows. M3 Priority
+      is a separate service tier priced at 1.5x standard and is not represented in the YAML; do not map it to highspeed or compare
+      it. Do not compare subscription token-plan prices.
 
   - name: MoonshotAI
     file: prices/providers/moonshotai.yml
