@@ -12050,7 +12050,7 @@ export const data: Provider[] = [
       ],
     },
     provider_match: {
-      contains: 'openai',
+      equals: 'openai.chat',
     },
     extractors: [
       {
@@ -14349,14 +14349,6 @@ export const data: Provider[] = [
         },
       },
     ],
-  },
-  {
-    id: 'openai-codex',
-    name: 'OpenAI Codex',
-    api_pattern: 'https://chatgpt\\.com/backend-api/codex',
-    description: 'OpenAI Codex requests authenticated with a ChatGPT subscription.',
-    price_comments: 'ChatGPT subscriptions use flat fees and quotas, so these requests have no per-token prices.',
-    models: [],
   },
   {
     id: 'openrouter',

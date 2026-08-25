@@ -7018,7 +7018,7 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
-        provider_match=ClauseContains(contains='openai'),
+        provider_match=ClauseEquals(equals='openai.chat'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -8240,14 +8240,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
         ],
-    ),
-    Provider(
-        id='openai-codex',
-        name='OpenAI Codex',
-        api_pattern='https://chatgpt\\.com/backend-api/codex',
-        description='OpenAI Codex requests authenticated with a ChatGPT subscription.',
-        price_comments='ChatGPT subscriptions use flat fees and quotas, so these requests have no per-token prices.',
-        models=[],
     ),
     Provider(
         id='openrouter',

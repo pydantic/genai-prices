@@ -49,11 +49,10 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
     })
 
-    it('should not price OpenAI Codex subscriptions as OpenAI API usage', () => {
-      const provider = matchProvider(actualProviders, { providerId: 'openai-codex' })
-
-      expect(provider?.id).toBe('openai-codex')
-      expect(provider?.models).toEqual([])
+    it('should match only curated OpenAI provider IDs', () => {
+      expect(matchProvider(actualProviders, { providerId: 'openai.chat' })?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerId: 'openai-codex' })).toBeUndefined()
+      expect(matchProvider(actualProviders, { providerId: 'openai-banana' })).toBeUndefined()
       expect(calcPrice({ input_tokens: 1_000 }, 'gpt-5.4', { providerId: 'openai-codex' })).toBeNull()
     })
 

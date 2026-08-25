@@ -35,11 +35,13 @@ def test_find_providers_by_provider_match_logic():
     assert result.id == 'google'
 
 
-def test_openai_codex_does_not_match_openai():
-    result = find_provider_by_id(providers, 'openai-codex')
+def test_openai_provider_matching_is_curated():
+    result = find_provider_by_id(providers, 'openai.chat')
     assert result is not None
-    assert result.id == 'openai-codex'
-    assert result.models == []
+    assert result.id == 'openai'
+
+    assert find_provider_by_id(providers, 'openai-codex') is None
+    assert find_provider_by_id(providers, 'openai-banana') is None
 
 
 def test_case_insensitive_matching():
