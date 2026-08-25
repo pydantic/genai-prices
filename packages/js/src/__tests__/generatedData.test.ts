@@ -108,6 +108,26 @@ describe('generated data split', () => {
   it.each([
     {
       expectedPrices: {
+        cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
+        cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
+        input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-sol',
+      timestamp: new Date('2026-08-20T23:59:59Z'),
+    },
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 272_000 }] },
+        cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
+        output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-sol',
+      timestamp: new Date('2026-08-21T00:00:00Z'),
+    },
+    {
+      expectedPrices: {
         cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
         cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
         input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
@@ -301,5 +321,158 @@ describe('generated data split', () => {
     const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { provider })
 
     expect(result?.input_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
+  })
+
+  it.each([
+    { expectedInput: 2, model: 'claude-sonnet-5', providerId: 'anthropic' },
+    { expectedInput: 2, model: 'global.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
+    { expectedInput: 2.2, model: 'us.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
+    { expectedInput: 2, model: 'anthropic/claude-sonnet-5', providerId: 'openrouter' },
+  ])('keeps $providerId $model at its launch price', ({ expectedInput, model, providerId }) => {
+    const result = calcPrice({ input_tokens: 1_000_000 }, model, {
+      providerId,
+      timestamp: new Date('2026-09-01T00:00:00Z'),
+    })
+
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.total_price).toBe(expectedInput)
+  })
+
+  it.each([
+    { expectedOutput: 0.3, model: 'voxtral-small-2507', timestamp: new Date('2026-08-10T00:00:00Z') },
+    { expectedOutput: 0.4, model: 'voxtral-small-latest', timestamp: new Date('2026-08-11T00:00:00Z') },
+  ])('preserves Voxtral Small output pricing at $timestamp', ({ expectedOutput, model, timestamp }) => {
+    const result = calcPrice({ output_tokens: 1_000_000 }, model, { providerId: 'mistral', timestamp })
+
+    expect(result?.model.id).toBe('voxtral-small-24b-2507')
+    expect(result?.output_price).toBe(expectedOutput)
+    expect(result?.total_price).toBe(expectedOutput)
+  })
+
+  it.each([
+    {
+      expectedInput: 0.1,
+      expectedModelId: 'ministral-8b',
+      expectedOutput: 0.1,
+      model: 'ministral-8b-2410',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.15,
+      expectedModelId: 'ministral-8b-2512',
+      expectedOutput: 0.15,
+      model: 'ministral-8b-2512',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.1,
+      expectedModelId: 'ministral-8b-latest',
+      expectedOutput: 0.1,
+      model: 'ministral-8b-latest',
+      timestamp: new Date('2025-12-01T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.15,
+      expectedModelId: 'ministral-8b-latest',
+      expectedOutput: 0.15,
+      model: 'ministral-8b-latest',
+      timestamp: new Date('2025-12-02T00:00:00Z'),
+    },
+    {
+      expectedInput: 2.7,
+      expectedModelId: 'mistral-medium-2312',
+      expectedOutput: 8.1,
+      model: 'mistral-medium-2312',
+      timestamp: new Date('2025-06-15T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-3-1',
+      expectedOutput: 2,
+      model: 'mistral-medium-2505',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-3-1',
+      expectedOutput: 2,
+      model: 'mistral-medium-2508',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3.5',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3-5',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-3',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.4,
+      expectedModelId: 'mistral-medium-latest',
+      expectedOutput: 2,
+      model: 'mistral-medium-latest',
+      timestamp: new Date('2026-06-15T00:00:00Z'),
+    },
+    {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-latest',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-latest',
+      timestamp: new Date('2026-06-16T00:00:00Z'),
+    },
+  ])('prices $model at $timestamp', ({ expectedInput, expectedModelId, expectedOutput, model, timestamp }) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'mistral',
+      timestamp,
+    })
+
+    expect(result?.model.id).toBe(expectedModelId)
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.output_price).toBe(expectedOutput)
+    expect(result?.total_price).toBe(expectedInput + expectedOutput)
+  })
+
+  it.each([
+    { model: 'mistral-medium-2508', timestamp: new Date('2026-08-24T00:00:00Z') },
+    { model: 'mistral-medium-latest', timestamp: new Date('2026-06-15T00:00:00Z') },
+  ])('prices cached input for $model at $timestamp', ({ model, timestamp }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }, model, {
+      providerId: 'mistral',
+      timestamp,
+    })
+
+    expect(result?.input_price).toBe(0.04)
+    expect(result?.total_price).toBe(0.04)
+  })
+
+  it('infers Mistral for the native Voxtral alias', () => {
+    const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
+
+    expect(result?.provider.id).toBe('mistral')
+    expect(result?.model.id).toBe('voxtral-small-24b-2507')
+  })
+
+  it('does not infer Mistral for a qualified OpenRouter Voxtral model', () => {
+    const model = 'mistralai/voxtral-small-24b-2507'
+
+    expect(calcPrice({ output_tokens: 1 }, model)).toBeNull()
+
+    const result = calcPrice({ output_tokens: 1 }, model, { providerApiUrl: 'https://openrouter.ai/api/v1' })
+    expect(result?.provider.id).toBe('openrouter')
+    expect(result?.model.id).toBe(model)
   })
 })
