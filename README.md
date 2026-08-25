@@ -30,7 +30,7 @@
 
 The following providers are currently supported:
 
-[comment]: <> (providers-start)
+<!-- providers-start -->
 
 - [Anthropic](prices/providers/anthropic.yml) - 23 models
 - [Avian](prices/providers/avian.yml) - 4 models
@@ -41,7 +41,7 @@ The following providers are currently supported:
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
-- [Google](prices/providers/google.yml) - 47 models
+- [Google](prices/providers/google.yml) - 49 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -55,7 +55,7 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 36 models
+- [Mistral](prices/providers/mistral.yml) - 42 models
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models
@@ -69,7 +69,7 @@ The following providers are currently supported:
 - [Z.AI](prices/providers/zai.yml) - 2 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
-[comment]: <> (providers-end)
+<!-- providers-end -->
 
 ## Usage
 

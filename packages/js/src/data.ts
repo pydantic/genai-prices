@@ -3221,7 +3221,14 @@ export const data: Provider[] = [
         description:
           'Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
         match: {
-          starts_with: 'command-a',
+          or: [
+            {
+              equals: 'command-a',
+            },
+            {
+              equals: 'command-a-03-2025',
+            },
+          ],
         },
         prices: {
           input_mtok: 2.5,
@@ -4890,7 +4897,13 @@ export const data: Provider[] = [
               contains: 'claude-4-sonnet',
             },
             {
-              contains: 'claude-sonnet-4',
+              contains: 'claude-sonnet-4@',
+            },
+            {
+              contains: 'claude-sonnet-4-2025',
+            },
+            {
+              equals: 'claude-sonnet-4',
             },
           ],
         },
@@ -5060,6 +5073,68 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-sonnet-4-5',
+        match: {
+          contains: 'claude-sonnet-4-5',
+        },
+        context_window: 200000,
+        price_comments:
+          'Long-context rates apply at 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'claude-sonnet-4-6',
+        match: {
+          contains: 'claude-sonnet-4-6',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'gemini-1.0-pro-vision-001',
         name: 'gemini 1.0 pro vision',
         description:
@@ -5208,6 +5283,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -10732,6 +10808,35 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'ocr',
+        root: 'usage_info',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'pages_processed',
+            dest: 'input_document_pages',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'ocr_annotated',
+        root: 'usage_info',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'pages_processed',
+            dest: 'input_document_pages',
+            required: true,
+          },
+          {
+            path: 'pages_processed',
+            dest: 'input_annotated_document_pages',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -11128,6 +11233,162 @@ export const data: Provider[] = [
           equals: 'mistral-nemo:free',
         },
         prices: {},
+      },
+      {
+        id: 'mistral-ocr-2503',
+        name: 'Mistral OCR',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2503',
+            },
+            {
+              equals: 'mistral-ocr-2503-completion',
+            },
+          ],
+        },
+        price_comments: 'Mistral launched OCR at 1,000 pages per US dollar: https://mistral.ai/news/mistral-ocr/',
+        prices: {
+          input_document_kpages: 1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'mistral-ocr-2505',
+        name: 'Mistral OCR 2',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2505',
+            },
+            {
+              equals: 'mistral-ocr-2505-completion',
+            },
+          ],
+        },
+        price_comments:
+          'OCR 2 retained the original OCR page price and introduced structured annotations on May 22, 2025: https://docs.mistral.ai/resources/changelogs',
+        prices: {
+          input_document_kpages: 1,
+          input_annotated_document_kpages: 3,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'mistral-ocr-2512',
+        name: 'Mistral OCR 3',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2512',
+            },
+            {
+              equals: 'mistral-ocr-2512-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-3-25-12',
+        prices: {
+          input_document_kpages: 2,
+          input_annotated_document_kpages: 3,
+        },
+      },
+      {
+        id: 'mistral-ocr-4-0',
+        name: 'Mistral OCR 4.0',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-4-0',
+            },
+            {
+              equals: 'mistral-ocr-4-0-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-4-0',
+        prices: {
+          input_document_kpages: 4,
+          input_annotated_document_kpages: 5,
+        },
+      },
+      {
+        id: 'mistral-ocr-4-1',
+        name: 'Mistral OCR 4.1',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-4',
+            },
+            {
+              equals: 'mistral-ocr-4-completion',
+            },
+            {
+              equals: 'mistral-ocr-4-1',
+            },
+            {
+              equals: 'mistral-ocr-4-1-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-4-1',
+        prices: {
+          input_document_kpages: 4,
+          input_annotated_document_kpages: 5,
+        },
+      },
+      {
+        id: 'mistral-ocr-latest',
+        name: 'Mistral OCR Latest',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-latest',
+            },
+            {
+              equals: 'mistral-ocr-latest-completion',
+            },
+          ],
+        },
+        price_comments:
+          'The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+        prices: [
+          {
+            prices: {
+              input_document_kpages: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-05-22',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 1,
+              input_annotated_document_kpages: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-12-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 2,
+              input_annotated_document_kpages: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-06-23',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 4,
+              input_annotated_document_kpages: 5,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-saba',

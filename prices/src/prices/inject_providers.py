@@ -10,7 +10,7 @@ def inject_providers():
     readme_path = root_dir / 'README.md'
     readme_content = readme_path.read_text()
     text, count = re.subn(
-        r'(\[comment\]: +<> +\(providers-start\)).+(\[comment\]: +<> +\(providers-end\))',
+        r'(<!-- providers-start -->).+(<!-- providers-end -->)',
         providers_list,
         readme_content,
         flags=re.DOTALL,

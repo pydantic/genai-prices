@@ -1929,7 +1929,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='command-a',
-                match=ClauseStartsWith(starts_with='command-a'),
+                match=ClauseOr(or_=[ClauseEquals(equals='command-a'), ClauseEquals(equals='command-a-03-2025')]),
                 name='Command A',
                 description='Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
@@ -2946,7 +2946,12 @@ providers: list[Provider] = [
             ModelInfo(
                 id='claude-4-sonnet',
                 match=ClauseOr(
-                    or_=[ClauseContains(contains='claude-4-sonnet'), ClauseContains(contains='claude-sonnet-4')]
+                    or_=[
+                        ClauseContains(contains='claude-4-sonnet'),
+                        ClauseContains(contains='claude-sonnet-4@'),
+                        ClauseContains(contains='claude-sonnet-4-2025'),
+                        ClauseEquals(equals='claude-sonnet-4'),
+                    ]
                 ),
                 context_window=200000,
                 prices=ModelPrice(
@@ -3046,6 +3051,32 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-sonnet-4-5',
+                match=ClauseContains(contains='claude-sonnet-4-5'),
+                context_window=200000,
+                price_comments='Long-context rates apply at 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4-6',
+                match=ClauseContains(contains='claude-sonnet-4-6'),
+                context_window=1000000,
+                price_comments='Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-1.0-pro-vision-001',
                 match=ClauseEquals(equals='gemini-1.0-pro-vision-001'),
                 name='gemini 1.0 pro vision',
@@ -3120,6 +3151,7 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 2.5 Flash',
                 description='Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
+                context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
@@ -6302,7 +6334,22 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage_info',
+                mappings=[UsageExtractorMapping(path='pages_processed', dest='input_document_pages', required=True)],
+                api_flavor='ocr',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage_info',
+                mappings=[
+                    UsageExtractorMapping(path='pages_processed', dest='input_document_pages', required=True),
+                    UsageExtractorMapping(path='pages_processed', dest='input_annotated_document_pages', required=True),
+                ],
+                api_flavor='ocr_annotated',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -6520,6 +6567,90 @@ providers: list[Provider] = [
                 name='Mistral Nemo (free)',
                 description='A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2503',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2503'), ClauseEquals(equals='mistral-ocr-2503-completion')]
+                ),
+                name='Mistral OCR',
+                price_comments='Mistral launched OCR at 1,000 pages per US dollar: https://mistral.ai/news/mistral-ocr/',
+                deprecated=True,
+                prices=ModelPrice(input_document_kpages=Decimal('1')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2505',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2505'), ClauseEquals(equals='mistral-ocr-2505-completion')]
+                ),
+                name='Mistral OCR 2',
+                price_comments='OCR 2 retained the original OCR page price and introduced structured annotations on May 22, 2025: https://docs.mistral.ai/resources/changelogs',
+                deprecated=True,
+                prices=ModelPrice(input_document_kpages=Decimal('1'), input_annotated_document_kpages=Decimal('3')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2512',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2512'), ClauseEquals(equals='mistral-ocr-2512-completion')]
+                ),
+                name='Mistral OCR 3',
+                price_comments='https://docs.mistral.ai/models/ocr-3-25-12',
+                prices=ModelPrice(input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-4-0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-4-0'), ClauseEquals(equals='mistral-ocr-4-0-completion')]
+                ),
+                name='Mistral OCR 4.0',
+                price_comments='https://docs.mistral.ai/models/ocr-4-0',
+                prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-4-1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-ocr-4'),
+                        ClauseEquals(equals='mistral-ocr-4-completion'),
+                        ClauseEquals(equals='mistral-ocr-4-1'),
+                        ClauseEquals(equals='mistral-ocr-4-1-completion'),
+                    ]
+                ),
+                name='Mistral OCR 4.1',
+                price_comments='https://docs.mistral.ai/models/ocr-4-1',
+                prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-latest',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-ocr-latest'),
+                        ClauseEquals(equals='mistral-ocr-latest-completion'),
+                    ]
+                ),
+                name='Mistral OCR Latest',
+                price_comments='The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+                prices=[
+                    ConditionalPrice(constraint=None, prices=ModelPrice(input_document_kpages=Decimal('1'))),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 5, 22)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('1'), input_annotated_document_kpages=Decimal('3')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 12, 18)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 23)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='mistral-saba',

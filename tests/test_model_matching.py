@@ -705,6 +705,9 @@ def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: st
         ('azure', 'o3-mini', 'azure', 'o3-mini', 200_000),
         ('azure', 'o4-mini', 'azure', 'o4-mini', 200_000),
         ('google-vertex', 'claude-3-opus', 'google', 'claude-3-opus', 200_000),
+        ('google-vertex', 'claude-sonnet-4@20250514', 'google', 'claude-4-sonnet', 200_000),
+        ('google-vertex', 'claude-sonnet-4-5@20250929', 'google', 'claude-sonnet-4-5', 200_000),
+        ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
         ('google-vertex', 'claude-opus-4-6', 'google', 'claude-opus-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
         ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
@@ -765,6 +768,50 @@ def test_lookup_with_resolved_provider_is_cached(monkeypatch: pytest.MonkeyPatch
     snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
 
     find_model.assert_called_once_with(SHARED_MODEL_REF, all_providers=providers)
+
+
+def test_find_provider_caches_successful_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = True
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    assert snapshot.find_provider('cached-model', None, None) is provider
+    assert snapshot.find_provider('cached-model', None, None) is provider
+
+    model_match.is_match.assert_called_once_with('cached-model')
+
+
+def test_find_provider_caches_failed_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = False
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    for _ in range(2):
+        with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing-model'"):
+            snapshot.find_provider('missing-model', None, None)
+
+    model_match.is_match.assert_called_once_with('missing-model')
+
+
+def test_find_provider_cache_is_isolated_by_snapshot():
+    missing_match = Mock()
+    missing_match.is_match.return_value = False
+    missing_provider = replace(providers[0], model_match=missing_match)
+    missing_snapshot = DataSnapshot(providers=[missing_provider], from_auto_update=False)
+
+    matching_match = Mock()
+    matching_match.is_match.return_value = True
+    matching_provider = replace(providers[0], model_match=matching_match)
+    matching_snapshot = DataSnapshot(providers=[matching_provider], from_auto_update=False)
+
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'snapshot-model'"):
+        missing_snapshot.find_provider('snapshot-model', None, None)
+
+    assert matching_snapshot.find_provider('snapshot-model', None, None) is matching_provider
+    missing_match.is_match.assert_called_once_with('snapshot-model')
+    matching_match.is_match.assert_called_once_with('snapshot-model')
 
 
 def test_snapshot_active_uses_ttl():
