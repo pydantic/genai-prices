@@ -35,11 +35,15 @@ def test_find_providers_by_provider_match_logic():
     assert result.id == 'google'
 
 
-def test_openai_provider_matching_is_curated():
-    result = find_provider_by_id(providers, 'openai.chat')
+@pytest.mark.parametrize('provider_ref', ['openai.chat', 'openai.embedding', 'openai.image', 'openai.responses'])
+def test_openai_provider_matching_is_curated(provider_ref: str):
+    result = find_provider_by_id(providers, provider_ref)
+
     assert result is not None
     assert result.id == 'openai'
 
+
+def test_openai_provider_matching_rejects_unknown_aliases():
     assert find_provider_by_id(providers, 'openai-codex') is None
     assert find_provider_by_id(providers, 'openai-banana') is None
 

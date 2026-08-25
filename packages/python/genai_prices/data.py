@@ -7117,7 +7117,14 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
-        provider_match=ClauseEquals(equals='openai.chat'),
+        provider_match=ClauseOr(
+            or_=[
+                ClauseEquals(equals='openai.chat'),
+                ClauseEquals(equals='openai.embedding'),
+                ClauseEquals(equals='openai.image'),
+                ClauseEquals(equals='openai.responses'),
+            ]
+        ),
         extractors=[
             UsageExtractor(
                 root='usage',

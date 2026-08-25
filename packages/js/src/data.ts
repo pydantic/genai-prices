@@ -12235,7 +12235,20 @@ export const data: Provider[] = [
       ],
     },
     provider_match: {
-      equals: 'openai.chat',
+      or: [
+        {
+          equals: 'openai.chat',
+        },
+        {
+          equals: 'openai.embedding',
+        },
+        {
+          equals: 'openai.image',
+        },
+        {
+          equals: 'openai.responses',
+        },
+      ],
     },
     extractors: [
       {

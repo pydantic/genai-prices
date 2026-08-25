@@ -50,7 +50,10 @@ describe('Provider Matching', () => {
     })
 
     it('should match only curated OpenAI provider IDs', () => {
-      expect(matchProvider(actualProviders, { providerId: 'openai.chat' })?.id).toBe('openai')
+      for (const providerId of ['openai.chat', 'openai.embedding', 'openai.image', 'openai.responses']) {
+        expect(matchProvider(actualProviders, { providerId })?.id).toBe('openai')
+      }
+
       expect(matchProvider(actualProviders, { providerId: 'openai-codex' })).toBeUndefined()
       expect(matchProvider(actualProviders, { providerId: 'openai-banana' })).toBeUndefined()
       expect(calcPrice({ input_tokens: 1_000 }, 'gpt-5.4', { providerId: 'openai-codex' })).toBeNull()
