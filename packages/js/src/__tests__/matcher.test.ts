@@ -49,6 +49,14 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
     })
 
+    it('should not price OpenAI Codex subscriptions as OpenAI API usage', () => {
+      const provider = matchProvider(actualProviders, { providerId: 'openai-codex' })
+
+      expect(provider?.id).toBe('openai-codex')
+      expect(provider?.models).toEqual([])
+      expect(calcPrice({ input_tokens: 1_000 }, 'gpt-5.4', { providerId: 'openai-codex' })).toBeNull()
+    })
+
     it('should handle case insensitive matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'GOOGLE-GLA' })?.id).toBe('google')
       expect(matchProvider(actualProviders, { providerId: 'ANTHROPIC' })?.id).toBe('anthropic')

@@ -67,6 +67,7 @@ ProviderID = Literal[
     'avian',
     'groq',
     'openai',
+    'openai-codex',
     'novita',
     'fireworks',
     'deepseek',
