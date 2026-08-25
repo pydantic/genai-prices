@@ -11,7 +11,7 @@ providers:
 
   - name: xAI
     file: prices/providers/x_ai.yml
-    scope: Public xAI API models, including text, image, video, and voice models represented by the YAML.
+    scope: Public xAI text-generation models represented by the YAML, including models that accept image input.
     sources:
       - https://docs.x.ai/developers/models
       - https://docs.x.ai/developers/pricing
