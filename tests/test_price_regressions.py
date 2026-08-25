@@ -34,6 +34,12 @@ def test_cohere_command_a_variants_do_not_use_command_a_prices() -> None:
         calc_price(Usage(input_tokens=1), model_ref='command-a-plus-05-2026', provider_id='cohere')
 
 
+def test_gemini_25_flash_context_window() -> None:
+    price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
+
+    assert price.model.context_window == 1_048_576
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
