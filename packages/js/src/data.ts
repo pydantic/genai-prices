@@ -425,7 +425,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'One-hour cache writes cost 2x the base input price. The 1M context window is generally available. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model',
         prices: [
           {
             prices: {
@@ -640,7 +640,7 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         price_comments:
-          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers describe historical usage from before retirement. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
         prices: {
           input_mtok: {
             base: 3,
@@ -2523,6 +2523,68 @@ export const data: Provider[] = [
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'realtime',
+        root: ['response', 'usage'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'image_tokens'],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'text_tokens'],
+            dest: 'cache_text_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'audio_tokens'],
+            dest: 'cache_audio_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'image_tokens'],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
           },
         ],
       },
