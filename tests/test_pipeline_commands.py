@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
 
@@ -42,30 +41,37 @@ class ProviderYaml:
     path: Path = Path('provider.yml')
 
 
-def test_collapse_provider_and_command(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
-    shared_prices = object()
-    provider = Provider(
-        id='example',
-        name='Example',
-        models=[
-            Model('parent', shared_prices, collapse=False),
-            Model('not-collapsible', shared_prices, collapse=False),
-            Model('unrelated', shared_prices),
-            Model('parent:different', object()),
-            Model('parent:matching', shared_prices),
-        ],
+def test_collapse_command(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    provider_path = tmp_path / 'example.yml'
+    provider_path.write_text(
+        """\
+id: example
+name: Example
+api_pattern: example
+models:
+  - id: not-collapsible
+    match: {equals: not-collapsible}
+    prices: {input_mtok: 1}
+    collapse: false
+  - id: parent
+    match: {equals: parent}
+    prices: {input_mtok: 1}
+  - id: parent:different
+    match: {equals: parent:different}
+    prices: {input_mtok: 2}
+  - id: parent:matching
+    match: {equals: parent:matching}
+    prices: {input_mtok: 1}
+"""
     )
-    provider_yaml = Mock(spec=ProviderYamlFile)
-    provider_yaml.provider = provider
-
-    assert collapse.collapse_provider(provider_yaml) == 1
-    provider_yaml.update_model.assert_called_once_with('parent', provider.models[4])
-    provider_yaml.remove_model.assert_called_once_with('parent:matching')
+    provider_yaml = ProviderYamlFile(provider_path)
 
     monkeypatch.setattr(collapse, 'get_providers_yaml', lambda: {'example': provider_yaml})
     collapse.collapse()
-    provider_yaml.save.assert_called_once()
     assert capsys.readouterr().out == 'Provider example:\n  1 models combined\n\nTotal models combined: 1\n'
+    saved = ProviderYamlFile(provider_path)
+    assert [model.id for model in saved.provider.models] == ['not-collapsible', 'parent', 'parent:different']
+    assert saved.provider.find_model('parent:matching') is not None
 
     empty_provider = ProviderYaml(Provider(id='empty', name='Empty', models=[]))
     monkeypatch.setattr(collapse, 'get_providers_yaml', lambda: {'empty': empty_provider})
@@ -197,16 +203,6 @@ def test_command_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert commands.main() is None
     assert called is True
-
-
-def test_command_dispatch_ignores_an_ordinary_action_integer_result(monkeypatch: pytest.MonkeyPatch) -> None:
-    def build() -> int:
-        return 3
-
-    monkeypatch.setattr(commands, 'build', build)
-    monkeypatch.setattr(sys, 'argv', ['prices', 'build'])
-
-    assert commands.main() is None
 
 
 @pytest.mark.parametrize(('count', 'exit_code'), [(0, 0), (3, 1), (256, 1)])

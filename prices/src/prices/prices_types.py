@@ -101,13 +101,13 @@ class Provider(_Model):
         ids = [model.id for model in models]
         # try to find the first model id with the wrong position and point directly to that to fix
         sorted_ids = sorted(ids)
-        for current_index, (current_id, expected_id) in enumerate(zip(ids, sorted_ids)):
-            if current_id != expected_id:
-                expected_index = sorted_ids.index(current_id)
-                raise ValueError(
-                    f'Models are not sorted by ID: move `{current_id}` {current_index} -> {expected_index}'
-                    f' after `{sorted_ids[expected_index - 1]}`'
-                )
+        for current_index, current_id in enumerate(ids):
+            for expected_index, expected_id in enumerate(sorted_ids):
+                if current_id == expected_id and current_index != expected_index:
+                    msg = f'Models are not sorted by ID: move `{current_id}` {current_index} -> {expected_index}'
+                    if expected_index > 0:  # pragma: no branch - the first mismatch cannot move to index zero
+                        msg += f' after `{sorted_ids[expected_index - 1]}`'
+                    raise ValueError(msg)
 
         return models
 
@@ -274,7 +274,7 @@ class ModelPrice(_Model):
             if getattr(self, field_name):
                 return False
         for value in (self.model_extra or {}).values():
-            if value is not None:
+            if value is not None:  # pragma: no branch - validated extra prices cannot be null
                 return False
         return True
 

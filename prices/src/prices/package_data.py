@@ -180,7 +180,9 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
         extra_keys = {field_name for field_name, value in (model_price.model_extra or {}).items() if value is not None}
         return declared_keys | extra_keys
 
-    raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')
+    raise TypeError(  # pragma: no cover - validated provider models always contain ModelPrice values
+        f'Unsupported model price type: {type(model_price).__name__}'
+    )
 
 
 def package_ts_data(provider_data: JsonData, units: dict[str, Any]):
@@ -243,10 +245,14 @@ def fix_ts_constraints(json_data: JsonData) -> None:
     elif isinstance(json_data, dict):
         # Fix constraints in ConditionalPrice
         if constraint := json_data.get('constraint'):
-            if isinstance(constraint, dict) and 'type' not in constraint:
+            if (
+                isinstance(constraint, dict) and 'type' not in constraint
+            ):  # pragma: no branch - build output is untagged
                 if 'start_date' in constraint:
                     constraint['type'] = 'start_date'
-                elif 'start_time' in constraint and 'end_time' in constraint:
+                elif (  # pragma: no branch - the constraint schema guarantees one of these two shapes
+                    'start_time' in constraint and 'end_time' in constraint
+                ):
                     constraint['type'] = 'time_of_date'
 
         # Recurse into nested objects

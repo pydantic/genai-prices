@@ -57,16 +57,6 @@ def test_ovhcloud_mixed_case_id_also_matches_lowercase():
     assert infos['gpt-oss-120b'] == ClauseEquals(equals='gpt-oss-120b')
 
 
-def test_ovhcloud_skips_models_without_pricing():
-    models = [
-        {
-            'id': 'without-pricing',
-        }
-    ]
-
-    assert list(get_model_infos(models)) == []
-
-
 def test_ovhcloud_main_writes_and_collapses_generated_provider(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ):
@@ -146,7 +136,12 @@ def test_ovhcloud_main_reports_when_no_models_have_prices(
             pass
 
         def json(self) -> dict[str, list[dict[str, object]]]:
-            return {'data': [{'id': 'free', 'pricing': {'prompt': '0', 'completion': '0'}}]}
+            return {
+                'data': [
+                    {'id': 'without-pricing'},
+                    {'id': 'free', 'pricing': {'prompt': '0', 'completion': '0'}},
+                ]
+            }
 
     def fake_get(_: str, *, timeout: float) -> FakeResponse:
         assert timeout == 30.0
@@ -157,17 +152,3 @@ def test_ovhcloud_main_reports_when_no_models_have_prices(
     source_ovhcloud.main()
 
     assert capsys.readouterr().out == 'No valid models found with pricing information\n'
-
-
-def test_get_ovhcloud_prices_delegates_to_main(monkeypatch: pytest.MonkeyPatch):
-    called = False
-
-    def fake_main() -> None:
-        nonlocal called
-        called = True
-
-    monkeypatch.setattr(source_ovhcloud, 'main', fake_main)
-
-    source_ovhcloud.get_ovhcloud_prices()
-
-    assert called

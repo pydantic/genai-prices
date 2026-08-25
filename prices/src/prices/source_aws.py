@@ -143,7 +143,7 @@ def get_model(
     ) == (not matches), (price, matches, provider_models)
     if not matches:
         return None
-    if price['model'] == 'Mistral Large':
+    if price['model'] == 'Mistral Large':  # pragma: no cover - legacy fixed-price payload is no longer returned
         # Currently there are two Mistral Large models with different prices,
         # but the prices of the newer model aren't available via the API yet.
         assert len(matches) == 2

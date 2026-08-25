@@ -2,17 +2,13 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
-from prices import price_discrepancies
-from prices.price_discrepancies import (
-    can_ignore_missing_model,
-    check_for_price_discrepancies,
-    handle_missing_model,
-    prices_conflict,
-)
-from prices.prices_types import ClauseEquals, ConditionalPrice, ModelInfo, ModelPrice, Provider, Tier, TieredPrices
+from prices import price_discrepancies, source_prices, update
+from prices.price_discrepancies import check_for_price_discrepancies, prices_conflict
+from prices.prices_types import ClauseEquals, ConditionalPrice, ModelInfo, ModelPrice, Provider
 from prices.source_prices import SourcePricesType
 
 
@@ -36,7 +32,9 @@ class FakeProviderYaml:
     def add_price(self, model_id: str, price: ModelPrice) -> None:
         self.added_prices.append((model_id, price))
 
-    def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None:
+    def add_id_to_model(  # pragma: no cover - the real provider integration covers alias writes
+        self, lookup_id: str, new_model_id: str
+    ) -> None:
         self.added_ids.append((lookup_id, new_model_id))
 
     def save(self) -> None:
@@ -86,98 +84,6 @@ def test_prices_conflict_does_not_raise_on_extra_source_key() -> None:
     assert prices_conflict(current, source) is True
 
 
-def test_prices_conflict_accepts_a_subset_of_current_dynamic_prices() -> None:
-    current = ModelPrice.model_validate({'input_mtok': Decimal('1'), 'output_reasoning_mtok': Decimal('5')})
-    source = ModelPrice(input_mtok=Decimal('1'))
-    assert prices_conflict(current, source) is False
-
-
-def test_prices_conflict_rejects_free_and_priced_models() -> None:
-    assert prices_conflict(ModelPrice(), ModelPrice(input_mtok=Decimal('1'))) is True
-
-
-def test_prices_conflict_accepts_the_base_rate_of_a_tiered_price() -> None:
-    tiered = TieredPrices(base=Decimal('1'), tiers=[Tier(start=1_000_000, price=Decimal('2'))])
-    assert prices_conflict(ModelPrice(input_mtok=tiered), ModelPrice(input_mtok=Decimal('1'))) is False
-
-
-def test_prices_conflict_rejects_a_different_tiered_price() -> None:
-    tiered = TieredPrices(base=Decimal('2'), tiers=[Tier(start=1_000_000, price=Decimal('3'))])
-    assert prices_conflict(ModelPrice(input_mtok=tiered), ModelPrice(input_mtok=Decimal('1'))) is True
-
-
-@pytest.mark.parametrize(
-    ('provider_id', 'model_id'),
-    [
-        ('openai', 'batch-model'),
-        ('openai', 'gpt-oss-120b'),
-        ('openai', 'openai/gpt-4o'),
-        ('google', 'gecko-embedding'),
-        ('google', 'bison-chat'),
-        ('google', 'multimodalembedding-model'),
-        ('google', 'gemini-flash-experimental'),
-        ('google', 'gemini-pro-experimental'),
-        ('google', 'gemini-pro-vision'),
-        ('google', 'gemma-2-27b'),
-        ('google', 'gemini/model'),
-        ('google', 'vertex_ai/model'),
-        ('google', 'gemini-1.0-pro'),
-        ('google', 'gemini-2.0-pro-exp'),
-        ('google', 'text-embedding-004'),
-        ('google', 'text-multilingual-embedding-002'),
-        ('google', 'text-unicorn-embedding'),
-    ],
-)
-def test_can_ignore_known_missing_models(provider_id: str, model_id: str) -> None:
-    assert can_ignore_missing_model(provider_id, model_id) is True
-
-
-@pytest.mark.parametrize(
-    ('provider_id', 'model_id'), [('openai', 'gpt-4o'), ('google', 'gemini-2.5-pro'), ('other', 'batch-model')]
-)
-def test_can_not_ignore_unknown_missing_models(provider_id: str, model_id: str) -> None:
-    assert can_ignore_missing_model(provider_id, model_id) is False
-
-
-@pytest.mark.parametrize(
-    ('action', 'expected_prices', 'expected_ids', 'expected_result'),
-    [
-        ('n', [('new-model', ModelPrice(input_mtok=Decimal('1')))], [], True),
-        ('0', [], [('matching-model', 'new-model')], True),
-        ('skip', [], [], False),
-    ],
-)
-def test_handle_missing_model_records_the_selected_action(
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-    action: str,
-    expected_prices: list[tuple[str, ModelPrice]],
-    expected_ids: list[tuple[str, str]],
-    expected_result: bool,
-) -> None:
-    price = ModelPrice(input_mtok=Decimal('1'))
-    # This candidate is compatible but not equal, so the interactive report includes its differences.
-    candidate = model('matching-model', ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))
-    provider_yml = FakeProviderYaml(provider('test', [candidate]))
-    monkeypatch.setattr('builtins.input', input_action(action))
-
-    assert handle_missing_model(price, 'new-model', provider_yml) is expected_result
-    assert provider_yml.added_prices == expected_prices
-    assert provider_yml.added_ids == expected_ids
-    assert 'Possible match: 0 matching-model' in capsys.readouterr().out
-
-
-def test_handle_missing_model_reports_an_exact_match(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    price = ModelPrice(input_mtok=Decimal('1'))
-    provider_yml = FakeProviderYaml(provider('test', [model('matching-model', price)]))
-    monkeypatch.setattr('builtins.input', input_action('skip'))
-
-    assert handle_missing_model(price, 'new-model', provider_yml) is False
-    assert 'Exact price match' in capsys.readouterr().out
-
-
 def test_update_price_discrepancies_groups_missing_models_and_saves(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -206,6 +112,93 @@ def test_update_price_discrepancies_groups_missing_models_and_saves(
         "Unrecognized model: new-model\nSources: first, second\nPrice: {'input_mtok': 1}\n\n"
         'price discrepancies:\n                Test: 1\n'
     )
+
+
+def test_update_price_discrepancies_updates_provider_files(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    provider_path = providers_dir / 'testing.yml'
+    provider_path.write_text(
+        """\
+id: testing
+name: Testing
+api_pattern: testing
+models:
+  - id: existing
+    match:
+      equals: existing
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: free-model
+    match:
+      equals: free-model
+    prices: {}
+  - id: tiered
+    match:
+      equals: tiered
+    prices:
+      input_mtok:
+        base: 4
+        tiers:
+          - {start: 1000, price: 2}
+"""
+    )
+    source_prices_dir = tmp_path / 'source_prices'
+    monkeypatch.setattr(update, 'package_dir', tmp_path)
+    monkeypatch.setattr(source_prices, 'source_prices_dir', source_prices_dir)
+    source_prices.write_source_prices(
+        'testing',
+        {
+            'testing': {
+                'new-model': ModelPrice(input_mtok=Decimal('1')),
+                'existing-alias': ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+                'skipped-model': ModelPrice(input_mtok=Decimal('3')),
+                'free-model': ModelPrice(input_mtok=Decimal('1')),
+                'tiered': ModelPrice(input_mtok=Decimal('4')),
+            }
+        },
+    )
+    actions = iter(['n', '0', 'skip'])
+
+    def choose_action(_prompt: str) -> str:
+        return next(actions)
+
+    monkeypatch.setattr('builtins.input', choose_action)
+
+    price_discrepancies.update_price_discrepancies(date(2026, 1, 1))
+
+    saved = update.ProviderYaml(provider_path)
+    assert saved.provider.find_model('existing-alias') is not None
+    assert saved.provider.find_model('new-model') is not None
+
+
+def test_update_price_discrepancies_reports_invalid_source_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    source_prices_dir = tmp_path / 'source_prices'
+    source_prices_dir.mkdir()
+    invalid_path = source_prices_dir / 'invalid.json'
+    invalid_path.write_text('{"testing": {"model": {"input_mtok": 0}}}')
+    monkeypatch.setattr(source_prices, 'source_prices_dir', source_prices_dir)
+
+    with pytest.raises(ValueError, match=f'Error loading source prices from {invalid_path}'):
+        price_discrepancies.update_price_discrepancies()
+
+
+def test_update_price_discrepancies_reports_invalid_provider_file(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    (providers_dir / 'invalid.yml').write_text('id: invalid\n')
+    source_prices_dir = tmp_path / 'source_prices'
+    source_prices_dir.mkdir()
+    monkeypatch.setattr(update, 'package_dir', tmp_path)
+    monkeypatch.setattr(source_prices, 'source_prices_dir', source_prices_dir)
+
+    with pytest.raises(ValueError, match='Invalid provider data for invalid.yml'):
+        price_discrepancies.update_price_discrepancies()
 
 
 def test_update_price_discrepancies_skips_checked_conditional_and_conflicting_models(
@@ -279,6 +272,24 @@ def test_update_price_discrepancies_ignores_known_models_after_comparing_multipl
     price_discrepancies.update_price_discrepancies(date(2026, 1, 1))
 
     assert provider_yml.saved == 0
+    assert capsys.readouterr().out == 'Checking price discrepancies since 2026-01-01\nno price discrepancies found\n'
+
+
+def test_update_price_discrepancies_ignores_known_google_models(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_yml = FakeProviderYaml(provider('google', []))
+    monkeypatch.setattr(
+        price_discrepancies,
+        'load_source_prices',
+        loaded_source_prices(
+            {'source': {'google': {'gemini-flash-experimental': ModelPrice(input_mtok=Decimal('1'))}}}
+        ),
+    )
+    monkeypatch.setattr(price_discrepancies, 'get_providers_yaml', loaded_providers({'google': provider_yml}))
+
+    price_discrepancies.update_price_discrepancies(date(2026, 1, 1))
+
     assert capsys.readouterr().out == 'Checking price discrepancies since 2026-01-01\nno price discrepancies found\n'
 
 

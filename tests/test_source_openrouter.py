@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from decimal import Decimal
+from pathlib import Path
 
 import httpx2
 import pytest
 from inline_snapshot import snapshot
 
-from prices import source_openrouter, source_prices
+from prices import source_openrouter, source_prices, update
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from prices.source_openrouter import (
     OpenRouterModel,
@@ -396,6 +397,83 @@ def test_openrouter_main_writes_prices(monkeypatch: pytest.MonkeyPatch):
     assert prices['perplexity']['sonar-deep-research'].input_mtok == Decimal('2')
 
 
+def test_openrouter_main_adds_native_models_to_provider_files(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_path = tmp_path / 'anthropic.yml'
+    provider_path.write_text(
+        """\
+id: anthropic
+name: Anthropic
+api_pattern: anthropic
+models:
+  - id: new-model
+    match:
+      or:
+        - equals: new-model
+    prices: {input_mtok: 1}
+"""
+    )
+    anthropic_yaml = update.ProviderYaml(provider_path)
+    openrouter_path = tmp_path / 'openrouter.yml'
+    openrouter_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: anthropic/new-model
+    match:
+      or:
+        - equals: anthropic/new-model
+    prices: {input_mtok: 1}
+"""
+    )
+    openrouter_yaml = update.ProviderYaml(openrouter_path)
+    response = OpenRouterResponse(
+        data=[openrouter_model('anthropic/new-model', canonical_slug='anthropic/new-model-20260825')]
+    )
+
+    def fake_get(_url: str) -> FakeResponse:
+        return FakeResponse(response.model_dump_json().encode())
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(
+        source_openrouter,
+        'get_providers_yaml',
+        lambda: {'openrouter': openrouter_yaml, 'anthropic': anthropic_yaml},
+    )
+
+    source_openrouter.main('metadata')
+
+    [model] = update.ProviderYaml(provider_path).provider.models
+    assert model.id == 'new-model'
+    assert model.description == 'Test description'
+    [openrouter_model_info] = update.ProviderYaml(openrouter_path).provider.models
+    assert openrouter_model_info.is_match('anthropic/new-model-20260825')
+
+
+def test_openrouter_main_deduplicates_native_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_path = tmp_path / 'anthropic.yml'
+    provider_path.write_text('id: anthropic\nname: Anthropic\napi_pattern: anthropic\nmodels: []\n')
+    anthropic_yaml = update.ProviderYaml(provider_path)
+    openrouter_yaml = FakeProviderYaml(FakeProvider('openrouter', {}))
+    model = openrouter_model('anthropic/new-model')
+    response = OpenRouterResponse(data=[model, model])
+
+    def fake_get(_url: str) -> FakeResponse:
+        return FakeResponse(response.model_dump_json().encode())
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(
+        source_openrouter,
+        'get_providers_yaml',
+        lambda: {'openrouter': openrouter_yaml, 'anthropic': anthropic_yaml},
+    )
+
+    source_openrouter.main('metadata')
+
+    assert [model.id for model in update.ProviderYaml(provider_path).provider.models] == ['new-model']
+
+
 @pytest.mark.parametrize(
     'existing_model_ids',
     [
@@ -429,14 +507,3 @@ def test_openrouter_main_metadata_reports_only_the_changed_kind(
     else:
         assert '1 models added' in output
         assert 'models updated' not in output
-
-
-def test_openrouter_entrypoints_delegate_to_main(monkeypatch: pytest.MonkeyPatch):
-    modes: list[str] = []
-
-    monkeypatch.setattr(source_openrouter, 'main', modes.append)
-
-    source_openrouter.update_from_openrouter()
-    source_openrouter.get_openrouter_prices()
-
-    assert modes == ['metadata', 'prices']

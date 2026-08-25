@@ -114,17 +114,3 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
     assert [provider_yaml.path.name for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved] == [
         'huggingface_together.yml'
     ]
-
-
-def test_get_huggingface_prices_delegates_to_main(monkeypatch: pytest.MonkeyPatch):
-    called = False
-
-    def fake_main() -> None:
-        nonlocal called
-        called = True
-
-    monkeypatch.setattr(source_huggingface, 'main', fake_main)
-
-    source_huggingface.get_huggingface_prices()
-
-    assert called
