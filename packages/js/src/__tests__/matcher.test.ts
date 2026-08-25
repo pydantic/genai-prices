@@ -68,6 +68,14 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'claude' })).toBeUndefined()
       expect(matchProvider(actualProviders, { providerId: 'gpt' })).toBeUndefined()
     })
+
+    it('prices only known Command A model IDs', () => {
+      const usage = { input_tokens: 1 }
+
+      expect(calcPrice(usage, 'command-a', { providerId: 'cohere' })?.model.id).toBe('command-a')
+      expect(calcPrice(usage, 'command-a-03-2025', { providerId: 'cohere' })?.model.id).toBe('command-a')
+      expect(calcPrice(usage, 'command-a-plus-05-2026', { providerId: 'cohere' })).toBeNull()
+    })
   })
 
   describe('matchProvider with providerApiUrl', () => {

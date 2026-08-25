@@ -22,6 +22,18 @@ def mtok(rate: str, tokens: int) -> Decimal:
     return Decimal(rate) * tokens / MILLION
 
 
+@pytest.mark.parametrize('model_ref', ['command-a', 'command-a-03-2025'])
+def test_cohere_command_a_known_ids(model_ref: str) -> None:
+    price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='cohere')
+
+    assert price.model.id == 'command-a'
+
+
+def test_cohere_command_a_variants_do_not_use_command_a_prices() -> None:
+    with pytest.raises(LookupError, match="Unable to find model with model_ref='command-a-plus-05-2026' in cohere"):
+        calc_price(Usage(input_tokens=1), model_ref='command-a-plus-05-2026', provider_id='cohere')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [

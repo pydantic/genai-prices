@@ -63,7 +63,9 @@ models:
       Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware
       costs, excelling on business-critical agentic and multilingual tasks.
     match:
-      starts_with: command-a
+      or:
+        - equals: command-a
+        - equals: command-a-03-2025
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5
