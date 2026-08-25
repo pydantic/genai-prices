@@ -51,6 +51,14 @@ def test_google_claude_sonnet_45_long_context_price_boundary(input_tokens: int, 
     assert price.input_price == mtok(rate, input_tokens)
 
 
+@pytest.mark.parametrize('model_ref', ['claude-sonnet-4-0', 'anthropic/claude-sonnet-4'])
+def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref: str) -> None:
+    price = calc_price(Usage(web_searches=1), model_ref=model_ref, provider_id='google')
+
+    assert price.model.id == 'claude-4-sonnet'
+    assert price.total_price == 0
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [

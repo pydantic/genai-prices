@@ -2948,9 +2948,11 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseContains(contains='claude-4-sonnet'),
+                        ClauseContains(contains='claude-sonnet-4-0'),
                         ClauseContains(contains='claude-sonnet-4@'),
                         ClauseContains(contains='claude-sonnet-4-2025'),
                         ClauseEquals(equals='claude-sonnet-4'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4'),
                     ]
                 ),
                 context_window=200000,

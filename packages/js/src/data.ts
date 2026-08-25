@@ -4897,6 +4897,9 @@ export const data: Provider[] = [
               contains: 'claude-4-sonnet',
             },
             {
+              contains: 'claude-sonnet-4-0',
+            },
+            {
               contains: 'claude-sonnet-4@',
             },
             {
@@ -4904,6 +4907,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'claude-sonnet-4',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4',
             },
           ],
         },

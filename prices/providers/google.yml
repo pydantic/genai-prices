@@ -393,9 +393,11 @@ models:
     match:
       or:
         - contains: claude-4-sonnet
+        - contains: claude-sonnet-4-0
         - contains: claude-sonnet-4@
         - contains: claude-sonnet-4-2025
         - equals: claude-sonnet-4
+        - equals: anthropic/claude-sonnet-4
     context_window: 200000
     prices_checked: 2025-07-05
     prices:
