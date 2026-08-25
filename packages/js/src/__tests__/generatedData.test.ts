@@ -308,11 +308,25 @@ describe('generated data split', () => {
 
   it.each([
     {
+      expectedAnnotatedPagePrice: 1,
+      expectedModelId: 'mistral-ocr-2503',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-2503-completion',
+      timestamp: new Date('2025-03-06T00:00:00Z'),
+    },
+    {
       expectedAnnotatedPagePrice: 3,
       expectedModelId: 'mistral-ocr-2505',
       expectedPagePrice: 1,
       model: 'mistral-ocr-2505',
       timestamp: new Date('2025-05-22T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 1,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-03-06T00:00:00Z'),
     },
     {
       expectedAnnotatedPagePrice: 3,
