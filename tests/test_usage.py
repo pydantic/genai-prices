@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+from collections import UserDict
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from decimal import Decimal, localcontext
 from numbers import Integral
-from types import SimpleNamespace
+from types import MappingProxyType, SimpleNamespace
 from typing import Any, cast
 from unittest.mock import patch
 
@@ -279,16 +280,22 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_rejects_dict() -> None:
-    with pytest.raises(TypeError, match='Dictionary usage inputs are not supported'):
-        Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
+@pytest.mark.parametrize(
+    'raw_usage',
+    [
+        {'input_tokens': 100, 'output_tokens': 50},
+        UserDict({'input_tokens': 100, 'output_tokens': 50}),
+        MappingProxyType({'input_tokens': 100, 'output_tokens': 50}),
+    ],
+)
+def test_mapping_usage_is_rejected(raw_usage: object) -> None:
+    with pytest.raises(TypeError, match='Mapping usage inputs are not supported'):
+        Usage.from_raw(raw_usage)
 
-
-def test_model_price_rejects_dict_usage() -> None:
     price = ModelPrice(input_mtok=Decimal('1'))
 
-    with pytest.raises(TypeError, match='Dictionary usage inputs are not supported'):
-        price.calc_price({'input_tokens': 1_000_000})
+    with pytest.raises(TypeError, match='Mapping usage inputs are not supported'):
+        price.calc_price(raw_usage)
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:

@@ -218,9 +218,9 @@ class Usage:
             obj._reported_values()
             return obj
 
-        if isinstance(obj, dict):
+        if isinstance(obj, Mapping):
             raise TypeError(
-                'Dictionary usage inputs are not supported; pass a Usage instance or an object with attributes'
+                'Mapping usage inputs are not supported; pass a Usage instance or an object with attributes'
             )
 
         values: dict[str, UsageValue] = {}
