@@ -104,6 +104,18 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedModelId: 'pixtral-12b', expectedTotalPrice: 0.000165, model: 'pixtral-12b-latest' },
+    { expectedModelId: 'pixtral-large', expectedTotalPrice: 0.0026, model: 'pixtral-large-2411' },
+    { expectedModelId: 'mixtral-8x7b', expectedTotalPrice: 0.00077, model: 'mixtral-8x7b-instruct-v0.1' },
+  ])('prices $model without a provider ID', ({ expectedModelId, expectedTotalPrice, model }) => {
+    const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, model)
+
+    expect(result?.provider.id).toBe('mistral')
+    expect(result?.model.id).toBe(expectedModelId)
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice)
+  })
+
+  it.each([
     {
       expectedPrices: {
         cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
