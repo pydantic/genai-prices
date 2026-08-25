@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 import pytest
 
-from genai_prices.types import Usage
+from genai_prices.types import ModelPrice, Usage
 from genai_prices.units import UnitRegistry
 
 
@@ -279,10 +279,16 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_ignores_mapping_keys() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
+def test_usage_from_raw_rejects_dict() -> None:
+    with pytest.raises(TypeError, match='Dictionary usage inputs are not supported'):
+        Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
 
-    assert usage == Usage()
+
+def test_model_price_rejects_dict_usage() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'))
+
+    with pytest.raises(TypeError, match='Dictionary usage inputs are not supported'):
+        price.calc_price({'input_tokens': 1_000_000})
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:

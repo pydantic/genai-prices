@@ -218,6 +218,11 @@ class Usage:
             obj._reported_values()
             return obj
 
+        if isinstance(obj, dict):
+            raise TypeError(
+                'Dictionary usage inputs are not supported; pass a Usage instance or an object with attributes'
+            )
+
         values: dict[str, UsageValue] = {}
         for key in _reported_usage_keys():
             value = _raw_usage_value(obj, key)
