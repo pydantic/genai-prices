@@ -881,6 +881,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v3.2',
         },
+        context_window: 163000,
         prices: {
           input_mtok: 0.23,
           cache_read_mtok: 0.012,
@@ -893,6 +894,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-flash',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.0805,
           cache_read_mtok: 0.0165,
@@ -905,6 +907,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-pro',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 1.305,
           cache_read_mtok: 0.10875,
@@ -917,6 +920,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-pro-0813',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.594,
           cache_read_mtok: 0.0198,
@@ -929,6 +933,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-m2.5',
         },
+        context_window: 196000,
         prices: {
           input_mtok: 0.27,
           cache_read_mtok: 0.15,
@@ -941,6 +946,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2.5',
         },
+        context_window: 262000,
         prices: {
           input_mtok: 0.45,
           cache_read_mtok: 0.225,
@@ -953,6 +959,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2.6',
         },
+        context_window: 262000,
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -965,6 +972,7 @@ export const data: Provider[] = [
         match: {
           equals: 'xiaomi/mimo-v2.5',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
@@ -977,6 +985,7 @@ export const data: Provider[] = [
         match: {
           equals: 'xiaomi/mimo-v2.5-pro',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.0036,
@@ -989,6 +998,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.7',
         },
+        context_window: 202000,
         prices: {
           input_mtok: 0.388,
           cache_read_mtok: 0.097,
@@ -1001,6 +1011,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-5',
         },
+        context_window: 205000,
         prices: {
           input_mtok: 0.516,
           cache_read_mtok: 0.129,
@@ -1013,6 +1024,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-5.1',
         },
+        context_window: 202000,
         prices: {
           input_mtok: 0.743,
           cache_read_mtok: 0.186,
@@ -1025,6 +1037,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-5.2',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.495,
           cache_read_mtok: 0.124,
