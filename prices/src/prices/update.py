@@ -104,16 +104,6 @@ class ProviderYaml:
         model = model.model_copy(update=dict(match=ClauseEquals(equals=new_model_id)))
         self.update_model(lookup_id, model)
 
-    def set_price_discrepency(  # pragma: no cover - discrepancy writes are deliberately disabled in the command
-        self, lookup_id: str, source: str, price: ModelPrice
-    ) -> None:
-        yaml_model = self._get_model(lookup_id)
-        data = price.model_dump(by_alias=True, mode='json', exclude_none=True)
-        if disc := yaml_model.get('price_discrepancies'):  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
-            disc[source] = data
-        else:
-            yaml_model['price_discrepancies'] = {source: data}
-
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self._extra_prices if m.id == model.id), None):
             return 0
