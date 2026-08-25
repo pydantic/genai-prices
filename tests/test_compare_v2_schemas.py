@@ -44,3 +44,11 @@ def test_property_named_description_keeps_its_contract() -> None:
 
     assert schemas_match(docs_only, base)
     assert not schemas_match(contract_change, base)
+
+
+@pytest.mark.parametrize('keyword', ['const', 'default', 'enum', 'examples'])
+def test_description_keys_in_instance_values_are_contract_data(keyword: str) -> None:
+    base = {'properties': {'value': {keyword: {'description': 'old'}}}}
+    head = {'properties': {'value': {keyword: {'description': 'new'}}}}
+
+    assert not schemas_match(head, base)

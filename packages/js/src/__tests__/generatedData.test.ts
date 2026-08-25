@@ -113,6 +113,27 @@ describe('generated data split', () => {
     expect(result?.input_price).toBe(expectedInputPrice)
   })
 
+  it('prices Google Claude Sonnet 4.5 long-context cache usage', () => {
+    const result = calcPrice(
+      { cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: 300_001 },
+      'claude-sonnet-4-5@20250929',
+      { providerId: 'google' }
+    )
+
+    const expectedInputPrice = (150_001 * 6 + 100_000 * 0.6 + 50_000 * 7.5) / 1_000_000
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it.each([
+    { contextWindow: 200_000, model: 'anthropic/claude-sonnet-4.5', modelId: 'claude-sonnet-4-5' },
+    { contextWindow: 1_000_000, model: 'anthropic/claude-sonnet-4.6', modelId: 'claude-sonnet-4-6' },
+  ])('matches the direct Google offering for $model', ({ contextWindow, model, modelId }) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.model.id).toBe(modelId)
+    expect(result?.model.context_window).toBe(contextWindow)
+  })
+
   it.each([
     {
       expectedPrices: {
