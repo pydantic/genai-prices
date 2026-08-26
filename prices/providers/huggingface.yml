@@ -3,6 +3,8 @@
 # Covers server-side auto-routed requests (router.huggingface.co/v1) for usage extraction only: the serving
 # provider is unknown, so it carries no per-model prices and price calculation always fails (models: []).
 # fallback_model_providers is omitted deliberately: with auto routing the actual provider (and price) is ambiguous.
+# Optional usage details follow the nested OpenAI-compatible shape. Provider-specific top-level additions are not
+# mapped here because combining both shapes would be additive and could double-count the same tokens.
 id: huggingface
 name: HuggingFace
 pricing_urls:
