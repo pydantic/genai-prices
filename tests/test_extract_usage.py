@@ -501,8 +501,8 @@ def test_huggingface_generic_extracts_openai_compatible_details():
         },
     }
 
-    assert provider.extract_usage(response_data) == (
-        'openai/gpt-oss-120b',
+    expected = (
+        None,
         Usage(
             input_tokens=69,
             cache_read_tokens=11,
@@ -513,6 +513,12 @@ def test_huggingface_generic_extracts_openai_compatible_details():
             output_reasoning_tokens=47,
         ),
     )
+    assert provider.extract_usage(response_data) == expected
+    assert provider.extract_usage(response_data, api_flavor='chat') == expected
+
+    extracted_usage = extract_usage(response_data, provider_id='huggingface')
+    assert extracted_usage.usage == expected[1]
+    assert extracted_usage.model is None
 
 
 def test_huggingface_generic_ignores_missing_optional_details():
@@ -529,7 +535,7 @@ def test_huggingface_generic_ignores_missing_optional_details():
     }
 
     assert provider.extract_usage(response_data) == (
-        'Qwen/Qwen2.5-VL-72B-Instruct',
+        None,
         Usage(input_tokens=448, output_tokens=38),
     )
 

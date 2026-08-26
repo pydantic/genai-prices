@@ -482,7 +482,7 @@ class UsageExtractor:
     api_flavor: str = 'default'
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     model_path: ExtractPath = 'model'
-    """Path to the model name in the response."""
+    """Path to the model name in the response; an empty path disables model extraction."""
     _registry: InitVar[UnitRegistry | None] = None
     _reported_usage_keys: frozenset[str] = field(init=False, repr=False, compare=False)
 
@@ -513,7 +513,7 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        model_name = _extract_path(self.model_path, response_data, str, False, [])
+        model_name = _extract_path(self.model_path, response_data, str, False, []) if self.model_path else None
 
         root = self.root
         if isinstance(root, str):

@@ -6619,7 +6619,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'default',
         root: 'usage',
-        model_path: 'model',
+        model_path: [],
         mappings: [
           {
             path: 'prompt_tokens',
@@ -6661,7 +6661,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'chat',
         root: 'usage',
-        model_path: 'model',
+        model_path: [],
         mappings: [
           {
             path: 'prompt_tokens',

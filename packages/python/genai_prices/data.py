@@ -3968,7 +3968,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
-                model_path='model',
+                model_path=[],
             ),
             UsageExtractor(
                 root='usage',
@@ -3994,7 +3994,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='chat',
-                model_path='model',
+                model_path=[],
             ),
         ],
         models=[],

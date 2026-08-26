@@ -206,6 +206,22 @@ extractors:
         ),
         (
             PROVIDER_YAML.replace(
+                'api_pattern: testing\n',
+                """\
+api_pattern: testing
+extractors:
+  - root: usage
+    model_path:
+      - type: array-match
+        field: choices
+        match: {equals: choice}
+    mappings: []
+""",
+            ),
+            'ModelExtractPath should not end',
+        ),
+        (
+            PROVIDER_YAML.replace(
                 'match:\n      equals: model',
                 'match:\n      or: [{equals: model}, {equals: model}]',
             ),

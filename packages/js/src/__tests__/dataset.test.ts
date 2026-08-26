@@ -83,9 +83,9 @@ describe('dataset', () => {
         for (const extractor of extracted.extractors) {
           const provider = findProvider({ providerId: extractor.provider_id })!
           const { model, usage: extractedUsage } = extractUsage(provider, usage.body, extractor.api_flavor)
-          if (!model) {
-            expect(usage.model).toBeUndefined()
-          } else {
+          // A usage-only extractor can deliberately omit model extraction even when another extractor for the same
+          // recorded body supplies the row's shared model reference.
+          if (model) {
             expect(model).toBe(usage.model)
             // Must match the instant used by tests/dataset/extract_usages.py
             // (datetime(2025, 11, 6, 12, 0, 0, tzinfo=utc)) which generates the expected prices.

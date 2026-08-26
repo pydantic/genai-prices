@@ -145,7 +145,7 @@ class UsageExtractor(_Model):
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     root: ExtractPath
     """Path to the root of the usage information in the response, generally `usage`."""
-    model_path: ExtractPath = 'model'
+    model_path: ModelExtractPath = 'model'
     """Path to the model name in the response.
 
     Almost all APIs return this in the 'model' field, hence the default value.
@@ -438,6 +438,16 @@ def doesnt_end_with_find_item(path: str | list[str | ArrayMatch]) -> str | list[
 
 
 ExtractPath = Annotated[str | list[str | ArrayMatch], AfterValidator(doesnt_end_with_find_item)]
+
+
+def valid_model_path(path: str | list[str | ArrayMatch]) -> str | list[str | ArrayMatch]:
+    # Unlike usage roots and mappings, an empty model path explicitly disables model extraction.
+    if isinstance(path, list) and path and isinstance(path[-1], ArrayMatch):
+        raise ValueError('ModelExtractPath should not end with an `ArrayMatch` object')
+    return path
+
+
+ModelExtractPath = Annotated[str | list[str | ArrayMatch], AfterValidator(valid_model_path)]
 
 providers_schema = TypeAdapter(list[Provider])
 

@@ -28,7 +28,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`Expected response data to be a mapping object, got ${typeName(responseData)}`)
   }
 
-  const model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
+  const model = asArray(extractor.model_path).length ? extractPath(extractor.model_path, responseData, stringCheck, false, []) : null
 
   const root = asArray(extractor.root)
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])

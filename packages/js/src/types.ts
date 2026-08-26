@@ -77,6 +77,7 @@ export interface UnitDef {
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
+  /** Empty path disables model extraction. */
   model_path: ExtractPath
   root: ExtractPath
 }

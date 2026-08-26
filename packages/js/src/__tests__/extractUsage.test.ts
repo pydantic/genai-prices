@@ -348,8 +348,8 @@ describe('extractUsage', () => {
         },
       }
 
-      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
-        model: 'openai/gpt-oss-120b',
+      const expected = {
+        model: null,
         usage: {
           cache_read_tokens: 11,
           cache_write_tokens: 3,
@@ -359,7 +359,10 @@ describe('extractUsage', () => {
           output_reasoning_tokens: 47,
           output_tokens: 59,
         },
-      })
+      }
+
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual(expected)
+      expect(extractUsage(huggingfaceProvider, responseData, 'chat')).toEqual(expected)
     })
 
     it('should ignore missing optional detail objects', () => {
@@ -375,7 +378,7 @@ describe('extractUsage', () => {
       }
 
       expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
-        model: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        model: null,
         usage: { input_tokens: 448, output_tokens: 38 },
       })
     })

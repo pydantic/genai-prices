@@ -14,7 +14,7 @@ provider_match:
   equals: huggingface
 extractors:
   - root: usage
-    model_path: model
+    model_path: []
     mappings:
       - path: prompt_tokens
         dest: input_tokens
@@ -49,7 +49,7 @@ extractors:
         required: true
   - api_flavor: chat
     root: usage
-    model_path: model
+    model_path: []
     mappings:
       - path: prompt_tokens
         dest: input_tokens

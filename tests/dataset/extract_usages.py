@@ -29,7 +29,7 @@ extractors = [
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
     keys = set[str]()
     for path in [extractor.model_path, extractor.root]:
-        if path:  # pragma: no branch - published extractors always use nonempty paths
+        if path:  # Usage-only extractors can deliberately use an empty model path.
             if isinstance(path, list):
                 path = path[0]
             assert isinstance(path, str)
