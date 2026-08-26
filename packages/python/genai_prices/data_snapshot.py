@@ -64,17 +64,10 @@ class DataSnapshot:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, None, provider_id, provider_api_url)
-        price_provider = provider
-        if provider.fallback_model_providers:
-            for fallback_provider_id in provider.fallback_model_providers:
-                fallback_provider = find_provider_by_id(self.providers, fallback_provider_id)
-                if fallback_provider and any(candidate is model for candidate in fallback_provider.models):
-                    price_provider = fallback_provider
-                    break
         return model.calc_price(
             usage,
             provider,
-            price_provider=price_provider,
+            price_provider=self._find_price_provider(provider, model),
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
         )
@@ -90,9 +83,17 @@ class DataSnapshot:
         model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
         if model_ref is not None:
             _, model = self.find_provider_model(model_ref, provider, None, None)
+            price_provider = self._find_price_provider(provider, model)
         else:
             model = None
-        return types.ExtractedUsage(usage, model, provider, self.timestamp if self.from_auto_update else None)
+            price_provider = None
+        return types.ExtractedUsage(
+            usage,
+            model,
+            provider,
+            self.timestamp if self.from_auto_update else None,
+            price_provider,
+        )
 
     def find_provider_model(
         self,
@@ -165,6 +166,14 @@ class DataSnapshot:
 
         self._provider_misses.add(cache_key)
         raise _provider_lookup_error(model_ref, provider_id, provider_api_url)
+
+    def _find_price_provider(self, provider: types.Provider, model: types.ModelInfo) -> types.Provider:
+        if provider.fallback_model_providers:
+            for fallback_provider_id in provider.fallback_model_providers:
+                fallback_provider = find_provider_by_id(self.providers, fallback_provider_id)
+                if fallback_provider and any(candidate is model for candidate in fallback_provider.models):
+                    return fallback_provider
+        return provider
 
 
 def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> types.Provider | None:

@@ -25,8 +25,10 @@ class CustomModelPrice(types.ModelPrice):
         super().__init__(**prices)
         self.sausage_price = sausage_price
 
-    def calc_price(self, usage: types.AbstractUsage, *, inclusive_tier_boundary: bool = False) -> types.CalcPrice:
-        price = super().calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
+    def calc_price(  # pyright: ignore[reportIncompatibleMethodOverride]
+        self, usage: types.AbstractUsage
+    ) -> types.CalcPrice:
+        price = super().calc_price(usage)
         assert isinstance(usage, CustomUsage)
         assert self.sausage_price is not None
         price['total_price'] += self.sausage_price * usage.sausages

@@ -11,6 +11,7 @@ from genai_prices.types import (
     ArrayMatch,
     ClauseEquals,
     ExtractedUsage,
+    ModelInfo,
     ModelPrice,
     Provider,
     UsageExtractor,
@@ -152,6 +153,23 @@ def test_openai():
 
     with pytest.raises(ValueError, match=re.escape("Unknown api_flavor 'default', allowed values: chat, responses")):
         provider.extract_usage(response_data)
+
+
+def test_azure_extracted_usage_uses_openai_fallback_tier_boundary() -> None:
+    response_data = {
+        'model': 'gpt-5.4',
+        'usage': {
+            'prompt_tokens': 272_000,
+            'completion_tokens': 0,
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='azure', api_flavor='chat')
+    price = extracted_usage.calc_price()
+
+    assert price.provider.id == 'azure'
+    assert price.model.id == 'gpt-5.4'
+    assert price.input_price == Decimal('1.36')
 
 
 @pytest.mark.parametrize(
@@ -555,6 +573,13 @@ def test_extracted_usage_calc_price_requires_model():
 
     with pytest.raises(ValueError, match='No model reference found in response data and model not provided'):
         extracted_usage.calc_price()
+
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals('test-model'),
+        prices=ModelPrice(input_mtok=Decimal('1')),
+    )
+    assert extracted_usage.calc_price(model=model).input_price == Decimal('0.000001')
 
 
 @pytest.mark.parametrize(

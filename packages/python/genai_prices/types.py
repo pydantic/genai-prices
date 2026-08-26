@@ -1,12 +1,14 @@
 from __future__ import annotations as _annotations
 
 import dataclasses
+import inspect
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
+from functools import cache
 from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
@@ -128,6 +130,7 @@ class ExtractedUsage:
     model: ModelInfo | None = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
+    price_provider: Provider | None = dataclasses.field(default=None, repr=False)
 
     def calc_price(
         self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
@@ -142,10 +145,12 @@ class ExtractedUsage:
         model = model or self.model
         if model is None:
             raise ValueError('No model reference found in response data and model not provided')
+        price_provider = self.price_provider if self.model is not None and model.id == self.model.id else None
 
         return model.calc_price(
             self.usage,
             self.provider,
+            price_provider=price_provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
         )
@@ -185,6 +190,7 @@ class ExtractedUsage:
         return ExtractedUsage(
             model=self.model,
             provider=self.provider,
+            price_provider=self.price_provider,
             auto_update_timestamp=self.auto_update_timestamp,
             usage=self.usage + other.usage,
         )
@@ -707,10 +713,11 @@ class ModelInfo:
         model_price = self.get_prices(genai_request_timestamp)
         price_provider = price_provider or provider
         # OpenAI and xAI apply the higher tier when input reaches the threshold.
-        price = model_price.calc_price(
-            usage,
-            inclusive_tier_boundary=price_provider.id in {'openai', 'x-ai'},
-        )
+        inclusive_tier_boundary = price_provider.id in {'openai', 'x-ai'}
+        if _supports_inclusive_tier_boundary(type(model_price)):
+            price = model_price.calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
+        else:
+            price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -823,6 +830,15 @@ class ModelPrice:
             return None
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
+
+@cache
+def _supports_inclusive_tier_boundary(model_price_type: type[ModelPrice]) -> bool:
+    parameters = inspect.signature(model_price_type.calc_price).parameters.values()
+    return any(
+        parameter.name == 'inclusive_tier_boundary' or parameter.kind is inspect.Parameter.VAR_KEYWORD
+        for parameter in parameters
+    )
 
 
 def _is_registered_price_key(name: str) -> bool:
