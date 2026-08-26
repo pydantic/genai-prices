@@ -5385,7 +5385,14 @@ export const data: Provider[] = [
               equals: 'gemini-2.5-flash-lite',
             },
             {
-              regex: '^gemini-2\\.5-flash-lite-preview(?!-tts(?:$|-))',
+              and: [
+                {
+                  starts_with: 'gemini-2.5-flash-lite-preview',
+                },
+                {
+                  regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+                },
+              ],
             },
           ],
         },
@@ -5446,7 +5453,14 @@ export const data: Provider[] = [
         id: 'gemini-2.5-flash-tts',
         name: 'Gemini 2.5 Flash TTS',
         match: {
-          equals: 'gemini-2.5-flash-tts',
+          or: [
+            {
+              equals: 'gemini-2.5-flash-tts',
+            },
+            {
+              equals: 'gemini-2.5-flash-preview-tts',
+            },
+          ],
         },
         context_window: 8192,
         price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
@@ -5461,7 +5475,14 @@ export const data: Provider[] = [
         description:
           'Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
         match: {
-          regex: '^gemini-2\\.5-pro(?!-tts(?:$|-))',
+          and: [
+            {
+              starts_with: 'gemini-2.5-pro',
+            },
+            {
+              regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+            },
+          ],
         },
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
         prices: {
@@ -5498,7 +5519,14 @@ export const data: Provider[] = [
         id: 'gemini-2.5-pro-tts',
         name: 'Gemini 2.5 Pro TTS',
         match: {
-          equals: 'gemini-2.5-pro-tts',
+          or: [
+            {
+              equals: 'gemini-2.5-pro-tts',
+            },
+            {
+              equals: 'gemini-2.5-pro-preview-tts',
+            },
+          ],
         },
         context_window: 8192,
         price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
