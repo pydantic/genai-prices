@@ -1836,6 +1836,25 @@ def test_complex_usage():
     )
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_mtok', 'output_mtok'),
+    [
+        ('gemini-2.5-flash-lite-preview-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-flash-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-pro-tts', Decimal('1'), Decimal('20')),
+    ],
+)
+def test_gemini_tts_prices(model_ref: str, input_mtok: Decimal, output_mtok: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000, output_audio_tokens=1_000_000),
+        model_ref,
+        provider_id='google',
+    )
+
+    assert price.input_price == input_mtok
+    assert price.output_price == output_mtok
+
+
 def test_output_audio_usage():
     mil = 1_000_000
 

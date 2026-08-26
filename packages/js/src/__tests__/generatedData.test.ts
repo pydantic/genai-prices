@@ -116,6 +116,19 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-lite-preview-tts' },
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-tts' },
+    { expectedInput: 1, expectedOutput: 20, model: 'gemini-2.5-pro-tts' },
+  ])('prices Gemini TTS model $model', ({ expectedInput, expectedOutput, model }) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_audio_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'google',
+    })
+
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.output_price).toBe(expectedOutput)
+  })
+
+  it.each([
     {
       cacheReadRate: 0.0165,
       contextWindow: 1_000_000,
