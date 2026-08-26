@@ -33,7 +33,7 @@ The following providers are currently supported:
 [comment]: <> (providers-start)
 
 - [Anthropic](prices/providers/anthropic.yml) - 23 models
-- [Avian](prices/providers/avian.yml) - 4 models
+- [Avian](prices/providers/avian.yml) - 17 models
 - [AWS Bedrock](prices/providers/aws.yml) - 86 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
@@ -55,7 +55,7 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 36 models
+- [Mistral](prices/providers/mistral.yml) - 42 models
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models

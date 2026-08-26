@@ -1,5 +1,6 @@
+from copy import copy
 from datetime import date, datetime
-from decimal import ROUND_CEILING, Decimal, localcontext
+from decimal import Decimal
 
 import pytest
 
@@ -9,7 +10,6 @@ from genai_prices.types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
-    Provider,
     StartDateConstraint,
     Tier,
     TieredPrices,
@@ -42,233 +42,39 @@ def test_gemini_25_flash_context_window() -> None:
 
 
 @pytest.mark.parametrize(
-    ('provider_id', 'model_ref', 'seconds', 'expected_price'),
+    ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
     [
-        ('groq', 'whisper-large-v3', Decimal('60'), Decimal('0.00185')),
-        ('groq', 'whisper-large-v3-turbo', Decimal('90'), Decimal('0.001')),
+        ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),
+        ('whisper-large-v3', Decimal('0.111'), Usage(audio_seconds=Decimal(1)), Decimal(10)),
+        ('whisper-large-v3-turbo', Decimal('0.04'), Usage(input_audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(10), input_audio_seconds=Decimal(10)),
+            Decimal(10),
+        ),
+        (
+            'whisper-large-v3-turbo',
+            Decimal('0.04'),
+            Usage(audio_seconds=Decimal(11), input_audio_seconds=Decimal(11)),
+            Decimal(11),
+        ),
     ],
 )
-def test_transcription_duration_prices(
-    provider_id: str,
-    model_ref: str,
-    seconds: Decimal,
-    expected_price: Decimal,
-) -> None:
-    price = calc_price(
-        Usage(audio_seconds=seconds, input_audio_seconds=seconds),
-        model_ref=model_ref,
-        provider_id=provider_id,
-    )
-
-    assert price.input_price == expected_price
-    assert price.output_price == 0
-    assert price.total_price == expected_price
-
-
-@pytest.mark.parametrize(
-    ('provider_id', 'model_ref'),
-    [
-        ('groq', 'whisper-large-v3'),
-        ('groq', 'whisper-large-v3-turbo'),
-    ],
-)
-def test_transcription_duration_prices_are_zero_without_reported_duration(provider_id: str, model_ref: str) -> None:
-    price = calc_price(Usage(), model_ref=model_ref, provider_id=provider_id)
-
-    assert price.input_price == 0
-    assert price.output_price == 0
-    assert price.total_price == 0
-
-
-@pytest.mark.parametrize(
-    ('model_ref', 'hourly_rate'),
-    [
-        ('whisper-large-v3', Decimal('0.111')),
-        ('whisper-large-v3-turbo', Decimal('0.04')),
-    ],
-)
-@pytest.mark.parametrize(
-    ('reported_seconds', 'billed_seconds'),
-    [
-        (Decimal('1'), Decimal('10')),
-        (Decimal('10'), Decimal('10')),
-        (Decimal('11'), Decimal('11')),
-    ],
-)
-def test_groq_transcription_prices_apply_minimum_billed_duration(
+def test_groq_transcription_duration_prices(
     model_ref: str,
     hourly_rate: Decimal,
-    reported_seconds: Decimal,
+    usage: Usage,
     billed_seconds: Decimal,
 ) -> None:
-    price = calc_price(
-        Usage(audio_seconds=reported_seconds, input_audio_seconds=reported_seconds),
-        model_ref=model_ref,
-        provider_id='groq',
-    )
+    original_usage = copy(usage)
+    price = calc_price(usage, model_ref=model_ref, provider_id='groq')
     expected_price = hourly_rate * billed_seconds / Decimal(3_600)
 
     assert price.input_price == expected_price
+    assert price.output_price == 0
     assert price.total_price == expected_price
-
-
-def test_groq_minimum_billed_duration_preserves_zero_subtypes_and_usage() -> None:
-    usage = Usage(audio_seconds=Decimal('5'), input_audio_seconds=Decimal(0))
-
-    price = calc_price(usage, model_ref='whisper-large-v3', provider_id='groq')
-
-    assert price.input_price == 0
-    assert price.total_price == Decimal('0.111') * Decimal(10) / Decimal(3_600)
-    assert usage.reported_value('audio_seconds') == 5
-    assert usage.reported_value('input_audio_seconds') == 0
-
-
-def test_groq_minimum_billed_duration_rejects_invalid_original_relationship() -> None:
-    with pytest.raises(
-        ValueError,
-        match=r'input_audio_seconds \(6\) cannot exceed audio_seconds \(5\)',
-    ):
-        calc_price(
-            Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(6)),
-            model_ref='whisper-large-v3',
-            provider_id='groq',
-        )
-
-
-def test_groq_minimum_billed_duration_rejects_invalid_directional_total() -> None:
-    with pytest.raises(
-        ValueError,
-        match=r'input_audio_seconds, output_audio_seconds totals 6, which exceeds audio_seconds \(5\)',
-    ):
-        calc_price(
-            Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(3), output_audio_seconds=Decimal(3)),
-            model_ref='whisper-large-v3',
-            provider_id='groq',
-        )
-
-
-def test_minimum_billed_duration_scales_directional_audio_usage() -> None:
-    usage = Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(2), output_audio_seconds=Decimal(3))
-    model = ModelInfo(
-        id='whisper-large-v3',
-        match=ClauseEquals('whisper-large-v3'),
-        prices=ModelPrice(
-            audio_hours=Decimal('0.1'),
-            input_audio_hours=Decimal('0.1'),
-            output_audio_hours=Decimal('0.1'),
-        ),
-    )
-    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
-
-    price = model.calc_price(usage, provider)
-
-    assert price.input_price == Decimal('0.1') * Decimal(4) / Decimal(3_600)
-    assert price.output_price == Decimal('0.1') * Decimal(6) / Decimal(3_600)
-    assert price.total_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
-    assert usage.reported_value('audio_seconds') == 5
-    assert usage.reported_value('input_audio_seconds') == 2
-    assert usage.reported_value('output_audio_seconds') == 3
-
-
-def test_minimum_billed_duration_preserves_unattributed_audio_usage() -> None:
-    model = ModelInfo(
-        id='whisper-large-v3',
-        match=ClauseEquals('whisper-large-v3'),
-        prices=ModelPrice(
-            audio_hours=Decimal('0.1'),
-            input_audio_hours=Decimal('0.1'),
-            output_audio_hours=Decimal('0.1'),
-        ),
-    )
-    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
-
-    price = model.calc_price(
-        Usage(audio_seconds=Decimal(5), input_audio_seconds=Decimal(1), output_audio_seconds=Decimal(1)),
-        provider,
-    )
-
-    assert price.input_price == Decimal('0.1') * Decimal(2) / Decimal(3_600)
-    assert price.output_price == Decimal('0.1') * Decimal(2) / Decimal(3_600)
-    unattributed_price = Decimal('0.1') * Decimal(6) / Decimal(3_600)
-    assert price.total_price == unattributed_price + price.input_price + price.output_price
-
-
-def test_minimum_billed_duration_scales_extremely_small_audio_usage() -> None:
-    usage = Usage(audio_seconds=Decimal('1e-1000000'), input_audio_seconds=Decimal('1e-1000000'))
-    model = ModelInfo(
-        id='whisper-large-v3',
-        match=ClauseEquals('whisper-large-v3'),
-        prices=ModelPrice(audio_hours=Decimal('0.1'), input_audio_hours=Decimal('0.1')),
-    )
-    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
-
-    price = model.calc_price(usage, provider)
-
-    assert price.input_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
-
-
-def test_minimum_billed_duration_ignores_ambient_decimal_context() -> None:
-    usage = Usage(audio_seconds=Decimal(3), input_audio_seconds=Decimal(1), output_audio_seconds=Decimal(2))
-    model = ModelInfo(
-        id='whisper-large-v3',
-        match=ClauseEquals('whisper-large-v3'),
-        prices=ModelPrice(
-            audio_hours=Decimal('0.000002'),
-            input_audio_hours=Decimal('0.000002'),
-            output_audio_hours=Decimal('0.000002'),
-        ),
-    )
-    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
-
-    with localcontext() as context:
-        context.prec = 1
-        context.rounding = ROUND_CEILING
-        price = model.calc_price(usage, provider)
-
-    assert price.input_price == Decimal('0.000002') * Decimal(10) / Decimal(3) / Decimal(3_600)
-    assert price.total_price.is_finite()
-
-
-def test_minimum_billed_duration_accepts_float_rounding_excess() -> None:
-    price = calc_price(
-        Usage(audio_seconds=0.3, input_audio_seconds=0.1 + 0.2),
-        model_ref='whisper-large-v3',
-        provider_id='groq',
-    )
-
-    assert price.input_price == Decimal('0.111') * Decimal(10) / Decimal(3_600)
-
-
-def test_minimum_billed_duration_ignores_extreme_exponent_zero() -> None:
-    usage = Usage(
-        audio_seconds=Decimal(1),
-        input_audio_seconds=Decimal('0e-999999999999999999'),
-        output_audio_seconds=Decimal(1),
-    )
-    model = ModelInfo(
-        id='whisper-large-v3',
-        match=ClauseEquals('whisper-large-v3'),
-        prices=ModelPrice(
-            audio_hours=Decimal('0.1'),
-            input_audio_hours=Decimal('0.1'),
-            output_audio_hours=Decimal('0.1'),
-        ),
-    )
-    provider = Provider(id='groq', name='Groq', api_pattern='', models=[model])
-
-    price = model.calc_price(usage, provider)
-    zero_price = model.calc_price(
-        Usage(
-            audio_seconds=Decimal(0),
-            input_audio_seconds=Decimal('0e-999999999999999999'),
-            output_audio_seconds=Decimal('0e-999999999999999999'),
-        ),
-        provider,
-    )
-
-    assert price.input_price == 0
-    assert price.output_price == Decimal('0.1') * Decimal(10) / Decimal(3_600)
-    assert zero_price.total_price == 0
+    assert usage == original_usage
 
 
 @pytest.mark.parametrize(

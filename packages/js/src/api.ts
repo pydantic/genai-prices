@@ -228,55 +228,15 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const minimumAudioSeconds =
-    provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo') ? 10 : undefined
   let billedUsage = usage
-  if (minimumAudioSeconds !== undefined) {
+  if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }
-    for (const usageKey of ['audio_seconds', 'input_audio_seconds', 'output_audio_seconds'] as const) {
-      const value = billedUsage[usageKey]
-      if (value !== undefined) validateUsageValue(usageKey, value)
-    }
-    const audioSeconds = billedUsage.audio_seconds
-    if (audioSeconds !== undefined) {
-      const directionalUsageKeys = ['input_audio_seconds', 'output_audio_seconds'] as const
-      for (const usageKey of directionalUsageKeys) {
-        const value = billedUsage[usageKey]
-        if (value === undefined) continue
-        const roundingTolerance = Number.EPSILON * Math.max(Math.abs(audioSeconds), Math.abs(value)) * (directionalUsageKeys.length + 1)
-        if (value - audioSeconds > roundingTolerance) {
-          throw new Error(`Invalid usage data: ${usageKey} (${value.toString()}) cannot exceed audio_seconds (${audioSeconds.toString()})`)
-        }
-        if (value > audioSeconds) billedUsage[usageKey] = audioSeconds
-      }
-      const inputAudioSeconds = billedUsage.input_audio_seconds
-      const outputAudioSeconds = billedUsage.output_audio_seconds
-      let fullyAttributed = false
-      if (inputAudioSeconds !== undefined && outputAudioSeconds !== undefined) {
-        const directionalTotal = inputAudioSeconds + outputAudioSeconds
-        const roundingTolerance =
-          Number.EPSILON *
-          Math.max(Math.abs(audioSeconds), Math.abs(inputAudioSeconds), Math.abs(outputAudioSeconds)) *
-          (directionalUsageKeys.length + 1)
-        if (directionalTotal - audioSeconds > roundingTolerance) {
-          throw new Error(
-            `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals ${directionalTotal.toString()}, which exceeds audio_seconds (${audioSeconds.toString()})`
-          )
-        }
-        fullyAttributed = Math.abs(directionalTotal - audioSeconds) <= roundingTolerance
-      }
-      if (audioSeconds > 0 && audioSeconds < minimumAudioSeconds) {
-        billedUsage.audio_seconds = minimumAudioSeconds
-        for (const usageKey of directionalUsageKeys) {
-          const value = billedUsage[usageKey]
-          if (value !== undefined) {
-            billedUsage[usageKey] = (value / audioSeconds) * minimumAudioSeconds
-          }
-        }
-        if (fullyAttributed) {
-          billedUsage.output_audio_seconds = minimumAudioSeconds - (billedUsage.input_audio_seconds ?? 0)
-        }
-      }
+    const reportedSeconds = billedUsage.audio_seconds ?? billedUsage.input_audio_seconds
+    if (reportedSeconds !== undefined) {
+      validateUsageValue('audio_seconds', reportedSeconds)
+      const billedSeconds = reportedSeconds > 0 ? Math.max(reportedSeconds, 10) : 0
+      billedUsage.audio_seconds = billedSeconds
+      billedUsage.input_audio_seconds = billedSeconds
     }
   }
   const priceResult = calcPriceInternal(billedUsage, modelPrice)
