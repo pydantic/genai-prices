@@ -22818,6 +22818,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'z-ai/glm-5.3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'z-ai/glm-5.3-flash',
+        },
+        context_window: 1310720,
+        price_comments:
+          "OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: '~anthropic/claude-fable-latest',
         name: 'Claude Fable Latest',
         match: {
@@ -25178,6 +25193,30 @@ export const data: Provider[] = [
           output_mtok: 4.4,
         },
       },
+      {
+        id: 'GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        description:
+          'Z.AI native multimodal model with a 1,000,000 token context window, context caching, function calling, and always-on reasoning.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.3-Flash',
+            },
+            {
+              equals: 'glm-5.3-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.25,
+        },
+      },
     ],
   },
   {
@@ -25514,6 +25553,54 @@ export const data: Provider[] = [
           input_mtok: 1.103,
           cache_read_mtok: 0.276,
           output_mtok: 3.862,
+        },
+      },
+      {
+        id: 'GLM-5.3',
+        name: 'GLM-5.3',
+        description:
+          'Zhipu AI flagship model supporting 1,000,000 token context, long-horizon coding tasks, structured output, function calling, and context caching.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.3',
+            },
+            {
+              equals: 'glm-5.3',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Standard API rates are 8 CNY input, 2 CNY cached input, and 28 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY.',
+        prices: {
+          input_mtok: 1.103,
+          cache_read_mtok: 0.276,
+          output_mtok: 3.862,
+        },
+      },
+      {
+        id: 'GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        description:
+          "Zhipu AI's native multimodal GLM-5.3 model with a 1,000,000 token context window, function calling, always-on reasoning, and context caching.",
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.3-Flash',
+            },
+            {
+              equals: 'glm-5.3-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY. The pricing page marks this as a two-week 50% discount; list prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.',
+        prices: {
+          input_mtok: 0.055,
+          cache_read_mtok: 0.016,
+          output_mtok: 0.193,
         },
       },
     ],
