@@ -5467,11 +5467,27 @@ models:
       or:
         - equals: z-ai/glm-5.3
         - equals: z-ai/glm-5.3-20260816
+    prices_checked: 2026-08-26
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
     context_window: 1048576
+
+  - id: z-ai/glm-5.3-flash
+    name: GLM 5.3 Flash
+    match:
+      equals: z-ai/glm-5.3-flash
+    prices_checked: 2026-08-26
+    price_comments: >-
+      OpenRouter's model page and models API show a 50% promotion through
+      September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached
+      input, and $0.50 output per million tokens.
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.015
+      output_mtok: 0.25
+    context_window: 1310720
 
   - id: ~anthropic/claude-fable-latest
     name: Claude Fable Latest

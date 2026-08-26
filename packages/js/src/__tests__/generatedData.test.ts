@@ -139,6 +139,54 @@ describe('generated data split', () => {
     expect(result?.model.id).toBe(expectedModel)
   })
 
+  it('prices a bare GLM-5.3 model with Zhipu AI', () => {
+    const result = calcPrice({ input_tokens: 1_000, output_tokens: 100 }, 'glm-5.3')
+
+    expect(result?.provider.id).toBe('zhipuai')
+    expect(result?.model.id).toBe('GLM-5.3')
+    expect(result?.input_price).toBe(0.001103)
+    expect(result?.output_price).toBe(0.0003862)
+    expect(result?.total_price).toBe(0.0014892)
+  })
+
+  it.each([
+    {
+      expectedInput: 0.0000316,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.0000193,
+      expectedProvider: 'zhipuai',
+      model: 'GLM-5.3-Flash',
+      options: { providerId: 'zhipuai' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'zai',
+      model: 'glm-5.3-flash',
+      options: { providerApiUrl: 'https://api.z.ai/api/paas/v4' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'z-ai/glm-5.3-flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'openrouter',
+      model: 'z-ai/glm-5.3-flash',
+      options: { providerApiUrl: 'https://openrouter.ai/api/v1' },
+    },
+  ])(
+    'prices GLM-5.3 Flash with $expectedProvider',
+    ({ expectedInput, expectedModel, expectedOutput, expectedProvider, model, options }) => {
+      const result = calcPrice({ cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }, model, options)
+
+      expect(result?.provider.id).toBe(expectedProvider)
+      expect(result?.model.id).toBe(expectedModel)
+      expect(result?.input_price).toBeCloseTo(expectedInput, 12)
+      expect(result?.output_price).toBeCloseTo(expectedOutput, 12)
+      expect(result?.total_price).toBeCloseTo(expectedInput + expectedOutput, 12)
+    }
+  )
+
   it.each([
     {
       cacheReadRate: 0.0165,
