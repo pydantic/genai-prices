@@ -115,10 +115,17 @@ function main(): never {
       let providerId: string | undefined
       let modelId = modelArg
       if (modelId.includes(':')) {
-        ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
+        const [parsedProviderId, parsedModelId] = modelId.split(':', 2)
+        if (parsedProviderId !== undefined && parsedModelId !== undefined) {
+          providerId = parsedProviderId
+          modelId = parsedModelId
+        }
       }
       try {
-        const result = calcPrice(usage, modelId, { providerId, timestamp })
+        const result = calcPrice(usage, modelId, {
+          ...(providerId === undefined ? {} : { providerId }),
+          ...(timestamp === undefined ? {} : { timestamp }),
+        })
         if (!result) {
           hadError = true
           console.error(`No price found for model ${modelArg}`)

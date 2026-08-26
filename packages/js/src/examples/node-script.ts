@@ -1,14 +1,23 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { calcPrice, Provider, updatePrices, waitForUpdate } from '../index'
+import type { StorageFactoryParams } from '../types'
+
+import { calcPrice, updatePrices, waitForUpdate } from '../index'
+import { parseProviderData } from '../providerData'
 
 // You can bump this to a longer TTL if you want to cache the data for longer
 const PRICE_TTL = 1000 ///* 60 // * 60 * 60 * 24 // 24 hours
 
 const GENAI_DATA_FILE = path.join(process.cwd(), '.genai-prices-cache.json')
 
-updatePrices(async ({ remoteDataUrl, setProviderData }) => {
+updatePrices((options) => {
+  refreshProviderData(options).catch((error: unknown) => {
+    console.error('Failed to refresh provider data:', error)
+  })
+})
+
+async function refreshProviderData({ remoteDataUrl, setProviderData }: StorageFactoryParams): Promise<void> {
   try {
     const stats = fs.statSync(GENAI_DATA_FILE)
     const fileModTime = stats.mtime.getTime()
@@ -17,7 +26,7 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
       console.log('cached file data is fresh')
       setProviderData(
         fs.promises.readFile(GENAI_DATA_FILE, 'utf-8').then((dataStr) => {
-          return JSON.parse(dataStr) as Provider[]
+          return parseProviderData(JSON.parse(dataStr))
         })
       )
       return
@@ -31,7 +40,7 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
   try {
     console.log('fetching fresh genai-prices data')
     const dataPromise = fetch(remoteDataUrl, { cache: 'no-store' }).then(async (response) => {
-      return (await response.json()) as Provider[]
+      return parseProviderData(await response.json())
     })
     setProviderData(dataPromise)
     try {
@@ -42,7 +51,7 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
   } catch (error) {
     console.error('Failed to fetch remote genai-prices data:', error)
   }
-})
+}
 
 await waitForUpdate()
 const result1 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {

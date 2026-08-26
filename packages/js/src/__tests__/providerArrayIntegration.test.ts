@@ -3,9 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelInfo, Provider } from '../types'
 
-import { calcPrice, updatePrices, waitForUpdate } from '../api'
+import { activateProviderData, calcPrice, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { getActiveModelPrice } from '../engine'
+import { parseProviderData } from '../providerData'
 
 afterEach(() => {
   updatePrices(({ setProviderData }) => {
@@ -42,8 +43,9 @@ describe('provider array integration', () => {
     ['start-date', { start_date: '2025-01-01' }, '2025-01-02T00:00:00Z'],
     ['time-of-day', { end_time: '16:00:00Z', start_time: '08:00:00Z' }, '2025-01-01T12:00:00Z'],
   ])('calculates prices from downloaded %s constraints', async (_name, constraint, timestamp) => {
+    const downloadedData: Promise<unknown> = Promise.resolve(downloadedConditionalProviderArray(constraint))
     updatePrices(({ setProviderData }) => {
-      setProviderData(downloadedConditionalProviderArray(constraint))
+      setProviderData(downloadedData.then(parseProviderData))
     })
     await waitForUpdate()
 
@@ -72,11 +74,9 @@ describe('provider array integration', () => {
       setProviderData(stableProviders)
     })
 
-    expect(() => {
-      updatePrices(({ setProviderData }) => {
-        setProviderData(downloadedConditionalProviderArray(constraint as Record<string, string>))
-      })
-    }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'")
+    expect(() => activateProviderData(downloadedConditionalProviderArray(constraint))).toThrow(
+      "Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
+    )
     expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
   })
 
@@ -88,8 +88,9 @@ describe('provider array integration', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     try {
+      const malformedData: Promise<unknown> = Promise.resolve(downloadedConditionalProviderArray({}))
       updatePrices(({ setProviderData }) => {
-        setProviderData(Promise.resolve(downloadedConditionalProviderArray({})))
+        setProviderData(malformedData.then(parseProviderData))
       })
       await expect(waitForUpdate()).rejects.toThrow('Expected a start-date or time-of-day price constraint')
 
@@ -100,8 +101,8 @@ describe('provider array integration', () => {
     }
   })
 
-  it('normalizes wire-format constraints on a caller-supplied provider', () => {
-    const [provider] = downloadedConditionalProviderArray({ start_date: '2025-01-01' })
+  it('normalizes wire-format constraints at activation', () => {
+    const [provider] = activateProviderData(downloadedConditionalProviderArray({ start_date: '2025-01-01' }))
     if (provider === undefined) throw new Error('Expected a provider')
 
     expect(
@@ -112,12 +113,15 @@ describe('provider array integration', () => {
     ).toBe(2)
   })
 
-  it('rejects malformed wire-format constraints on a caller-supplied provider', () => {
-    const [provider] = downloadedConditionalProviderArray({ start_date: 'not-a-date' })
-    if (provider === undefined) throw new Error('Expected a provider')
-
-    expect(() => calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', { provider })).toThrow(
+  it('rejects malformed wire-format constraints at activation', () => {
+    expect(() => activateProviderData(downloadedConditionalProviderArray({ start_date: 'not-a-date' }))).toThrow(
       "Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
+    )
+  })
+
+  it('rejects nested malformed provider data', () => {
+    expect(() => parseProviderData([{ api_pattern: 'testing', id: 'testing', models: null, name: 'Testing' }])).toThrow(
+      'providers[0].models must be an array'
     )
   })
 
@@ -128,27 +132,9 @@ describe('provider array integration', () => {
     await expect(waitForUpdate()).resolves.toEqual(data)
   })
 
-  it('fails with a diagnosable error when an unnormalized constraint reaches the engine', () => {
-    // Bypasses activation on purpose to simulate a representation leak.
-    const model = {
-      id: 'leaky-model',
-      match: { equals: 'leaky-model' },
-      prices: [{ constraint: { start_date: '2025-01-01' }, prices: { input_mtok: 1 } }],
-    } as unknown as ModelInfo
-
-    expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).toThrow(
-      `Unknown price constraint for model 'leaky-model': {"start_date":"2025-01-01"}`
-    )
-  })
-
-  it('activates every conditional price in the published v2 data', async () => {
-    const v2Data = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8')) as Provider[]
-    updatePrices(({ setProviderData }) => {
-      setProviderData(v2Data)
-    })
-
-    const activeData = await waitForUpdate()
-    if (activeData === null) throw new Error('Expected v2 provider data to be active')
+  it('activates every conditional price in the published v2 data', () => {
+    const v2Data: unknown = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8'))
+    const activeData = activateProviderData(v2Data)
     const conditionalModels: ModelInfo[] = []
     for (const provider of activeData) {
       for (const model of provider.models) {
@@ -187,7 +173,7 @@ function providerArray(): Provider[] {
   ]
 }
 
-function downloadedConditionalProviderArray(constraint: Record<string, string>): Provider[] {
+function downloadedConditionalProviderArray(constraint: unknown) {
   return [
     {
       api_pattern: 'testing',
@@ -207,7 +193,5 @@ function downloadedConditionalProviderArray(constraint: Record<string, string>):
       ],
       name: 'Testing',
     },
-    // Deliberately wire-shaped data (constraints without the internal `type`
-    // discriminator), which the internal Provider type does not admit.
-  ] as unknown as Provider[]
+  ]
 }

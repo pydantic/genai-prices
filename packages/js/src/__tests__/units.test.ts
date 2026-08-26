@@ -168,7 +168,7 @@ describe('UnitRegistry', () => {
     expect(inputAudio).toBeDefined()
     if (!inputAudio) throw new Error('Expected input_audio_tokens')
 
-    expect(inputAudio.dimensions.family).toBe('tokens')
+    expect(inputAudio.dimensions['family']).toBe('tokens')
     expect(inputAudio.per).toBe(1_000_000)
     expect(registry.findJoin(inputAudio, inputAudio)).toBe(inputAudio)
   })
@@ -266,7 +266,7 @@ describe('UnitRegistry', () => {
     expect(Object.isFrozen(inputUnit)).toBe(true)
     expect(Object.isFrozen(inputUnit.dimensions)).toBe(true)
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
-    expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
+    expect(registry.getUnit('input_tokens')?.dimensions['family']).toBe('tokens')
   })
 })
 

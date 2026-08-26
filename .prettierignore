@@ -13,3 +13,6 @@
 /.github/workflows/*.lock.yml
 /.github/workflows/agentics-maintenance.yml
 /.github/aw/
+
+# API Extractor owns the formatting of its committed compatibility report.
+/packages/js/api-report/

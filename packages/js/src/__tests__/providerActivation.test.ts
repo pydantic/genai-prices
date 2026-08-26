@@ -2,8 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider, ProviderDataValue } from '../types'
 
-import { findProvider, updatePrices, waitForUpdate } from '../api'
+import { activateProviderData, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { parseProviderData } from '../providerData'
 import { getActiveRegistry } from '../units'
 
 afterEach(() => {
@@ -50,26 +51,29 @@ describe('provider activation', () => {
       setProviderData([stableProvider])
     })
 
-    expect(() => {
-      updatePrices(({ setProviderData }) => {
-        setProviderData('garbage' as unknown as ProviderDataValue)
-      })
-    }).toThrow('Expected null or Provider[]')
+    expect(() => activateProviderData('garbage')).toThrow('Expected provider data to be an array')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
   })
 
   it('rejects invalid asynchronous provider data without changing active providers', async () => {
     const stableProvider = providerFixture('stable-provider')
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     updatePrices(({ setProviderData }) => {
       setProviderData([stableProvider])
     })
 
-    updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve('garbage' as unknown as ProviderDataValue))
-    })
+    try {
+      const invalidData: Promise<unknown> = Promise.resolve('garbage')
+      updatePrices(({ setProviderData }) => {
+        setProviderData(invalidData.then(parseProviderData))
+      })
 
-    await expect(waitForUpdate()).rejects.toThrow('Expected null or Provider[]')
-    expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+      await expect(waitForUpdate()).rejects.toThrow('Expected provider data to be an array')
+      expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('keeping previously active data'))
+    } finally {
+      warn.mockRestore()
+    }
   })
 
   it('keeps active providers when an asynchronous update returns null', async () => {
