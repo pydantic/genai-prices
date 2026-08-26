@@ -246,6 +246,24 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { billedSeconds: 0, hourlyRate: 0.111, model: 'whisper-large-v3', usage: {} },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 0, input_audio_seconds: 5 } },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { input_audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 10, input_audio_seconds: 10 } },
+    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
+  ])('prices $model transcription duration', ({ billedSeconds, hourlyRate, model, usage }) => {
+    const originalUsage = { ...usage }
+    const result = calcPrice(usage, model, { providerId: 'groq' })
+    const expectedPrice = (hourlyRate * billedSeconds) / 3_600
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+    expect(usage).toEqual(originalUsage)
+  })
+
+  it.each([
     { expectedInput: 2, model: 'claude-sonnet-5', providerId: 'anthropic' },
     { expectedInput: 2, model: 'global.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
     { expectedInput: 2.2, model: 'us.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },

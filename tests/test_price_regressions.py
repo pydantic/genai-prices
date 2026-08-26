@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import date, datetime
 from decimal import Decimal
 
@@ -38,6 +39,48 @@ def test_gemini_25_flash_context_window() -> None:
     price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
 
     assert price.model.context_window == 1_048_576
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
+    [
+        ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),
+        ('whisper-large-v3', Decimal('0.111'), Usage(audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(0), input_audio_seconds=Decimal(5)),
+            Decimal(10),
+        ),
+        ('whisper-large-v3-turbo', Decimal('0.04'), Usage(input_audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(10), input_audio_seconds=Decimal(10)),
+            Decimal(10),
+        ),
+        (
+            'whisper-large-v3-turbo',
+            Decimal('0.04'),
+            Usage(audio_seconds=Decimal(11), input_audio_seconds=Decimal(11)),
+            Decimal(11),
+        ),
+    ],
+)
+def test_groq_transcription_duration_prices(
+    model_ref: str,
+    hourly_rate: Decimal,
+    usage: Usage,
+    billed_seconds: Decimal,
+) -> None:
+    original_usage = copy(usage)
+    price = calc_price(usage, model_ref=model_ref, provider_id='groq')
+    expected_price = hourly_rate * billed_seconds / Decimal(3_600)
+
+    assert price.input_price == expected_price
+    assert price.output_price == 0
+    assert price.total_price == expected_price
+    assert usage == original_usage
 
 
 @pytest.mark.parametrize(

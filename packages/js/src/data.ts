@@ -6513,6 +6513,30 @@ export const data: Provider[] = [
           output_mtok: 0.59,
         },
       },
+      {
+        id: 'whisper-large-v3',
+        name: 'Whisper Large V3',
+        match: {
+          equals: 'whisper-large-v3',
+        },
+        price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3.',
+        prices: {
+          audio_hours: 0.111,
+          input_audio_hours: 0.111,
+        },
+      },
+      {
+        id: 'whisper-large-v3-turbo',
+        name: 'Whisper Large V3 Turbo',
+        match: {
+          equals: 'whisper-large-v3-turbo',
+        },
+        price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
+        prices: {
+          audio_hours: 0.04,
+          input_audio_hours: 0.04,
+        },
+      },
     ],
   },
   {
