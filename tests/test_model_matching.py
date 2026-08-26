@@ -463,6 +463,38 @@ def test_fallback_tries_all_providers():
     assert model.id == 'claude-sonnet-4-0'
 
 
+def test_exact_fallback_match_precedes_normalized_fallback_match():
+    """An exact compact ID is safer than a normalized alias in an earlier fallback provider."""
+    from genai_prices.types import ClauseEquals, ModelInfo, Provider
+
+    normalized_provider = Provider(
+        id='normalized-provider',
+        name='Normalized Provider',
+        api_pattern='normalized.example.com',
+        models=[ModelInfo(id='normalized-model', match=ClauseEquals(equals='model-2025-02-28'))],
+    )
+    exact_provider = Provider(
+        id='exact-provider',
+        name='Exact Provider',
+        api_pattern='exact.example.com',
+        models=[ModelInfo(id='exact-model', match=ClauseEquals(equals='model-20250228'))],
+    )
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['normalized-provider', 'exact-provider'],
+        models=[],
+    )
+
+    model = main_provider.find_model(
+        'model-20250228', all_providers=[main_provider, normalized_provider, exact_provider]
+    )
+
+    assert model is not None
+    assert model.id == 'exact-model'
+
+
 def test_find_model_directly_in_provider():
     """Test that models can be found directly in a provider that has fallback configured."""
     azure = find_provider_by_id(providers, 'azure')
