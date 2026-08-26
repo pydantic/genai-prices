@@ -227,6 +227,14 @@ describe('generated data split', () => {
     expect(result?.input_price).toBe(1.36)
   })
 
+  it('uses the OpenAI boundary convention through Azure fallback', () => {
+    const result = calcPrice({ input_tokens: 272_000 }, 'gpt-5.4', { providerId: 'azure' })
+
+    expect(result?.provider.id).toBe('azure')
+    expect(result?.model.id).toBe('gpt-5.4')
+    expect(result?.input_price).toBe(1.36)
+  })
+
   it('uses the inclusive xAI tier boundary', () => {
     const xai = providerDataModule.data.find((provider) => provider.id === 'x-ai')
     if (xai === undefined) {

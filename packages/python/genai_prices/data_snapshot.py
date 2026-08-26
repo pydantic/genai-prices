@@ -64,9 +64,17 @@ class DataSnapshot:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, None, provider_id, provider_api_url)
+        price_provider = provider
+        if provider.fallback_model_providers:
+            for fallback_provider_id in provider.fallback_model_providers:
+                fallback_provider = find_provider_by_id(self.providers, fallback_provider_id)
+                if fallback_provider and any(candidate is model for candidate in fallback_provider.models):
+                    price_provider = fallback_provider
+                    break
         return model.calc_price(
             usage,
             provider,
+            price_provider=price_provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
         )

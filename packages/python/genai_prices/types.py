@@ -697,6 +697,7 @@ class ModelInfo:
         usage: AbstractUsage,
         provider: Provider,
         *,
+        price_provider: Provider | None = None,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
     ) -> PriceCalculation:
@@ -704,14 +705,12 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
-        if type(model_price).calc_price is ModelPrice.calc_price:
-            # OpenAI and xAI apply the higher tier when input reaches the threshold.
-            price = model_price._calc_price(  # pyright: ignore[reportPrivateUsage]
-                usage,
-                inclusive_tier_boundary=provider.id in {'openai', 'x-ai'},
-            )
-        else:
-            price = model_price.calc_price(usage)
+        price_provider = price_provider or provider
+        # OpenAI and xAI apply the higher tier when input reaches the threshold.
+        price = model_price.calc_price(
+            usage,
+            inclusive_tier_boundary=price_provider.id in {'openai', 'x-ai'},
+        )
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -756,9 +755,9 @@ class ModelPrice:
     def _comparable_values(self) -> dict[str, object]:
         return {key: value for key, value in self.__dict__.items() if not key.startswith('_') and value is not None}
 
-    def calc_price(self, usage: AbstractUsage) -> CalcPrice:
+    def calc_price(self, usage: AbstractUsage, *, inclusive_tier_boundary: bool = False) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
-        return self._calc_price(usage, inclusive_tier_boundary=False)
+        return self._calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
 
     def _calc_price(self, usage: AbstractUsage, *, inclusive_tier_boundary: bool) -> CalcPrice:
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]

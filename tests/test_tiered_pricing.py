@@ -236,12 +236,24 @@ def test_openai_gpt_5_4_tiered_pricing_at_threshold() -> None:
     assert price.total_price == Decimal('1.36')
 
 
+def test_azure_openai_fallback_uses_inclusive_tier_boundary() -> None:
+    price = calc_price(Usage(input_tokens=272_000), model_ref='gpt-5.4', provider_id='azure')
+
+    assert price.provider.id == 'azure'
+    assert price.model.id == 'gpt-5.4'
+    assert price.input_price == Decimal('1.36')
+
+
 def test_xai_tiered_pricing_at_threshold() -> None:
+    class DelegatingModelPrice(types.ModelPrice):
+        def calc_price(self, usage: types.AbstractUsage, *, inclusive_tier_boundary: bool = False) -> types.CalcPrice:
+            return super().calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
+
     provider = types.Provider(id='x-ai', name='X AI', api_pattern='', models=[])
     model = types.ModelInfo(
         id='grok-tiered',
         match=types.ClauseEquals('grok-tiered'),
-        prices=types.ModelPrice(
+        prices=DelegatingModelPrice(
             input_mtok=types.TieredPrices(
                 base=Decimal('1'),
                 tiers=[types.Tier(start=200_000, price=Decimal('2'))],

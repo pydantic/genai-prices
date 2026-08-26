@@ -25,8 +25,8 @@ class CustomModelPrice(types.ModelPrice):
         super().__init__(**prices)
         self.sausage_price = sausage_price
 
-    def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
-        price = super().calc_price(usage)
+    def calc_price(self, usage: types.AbstractUsage, *, inclusive_tier_boundary: bool = False) -> types.CalcPrice:
+        price = super().calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
         assert isinstance(usage, CustomUsage)
         assert self.sausage_price is not None
         price['total_price'] += self.sausage_price * usage.sausages
@@ -192,8 +192,8 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
             super().__init__(**prices)
             self.bonus_price = bonus_price
 
-        def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
-            price = super().calc_price(usage)
+        def calc_price(self, usage: types.AbstractUsage, *, inclusive_tier_boundary: bool = False) -> types.CalcPrice:
+            price = super().calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
             if isinstance(usage, BonusUsage) and self.bonus_price is not None:
                 price['total_price'] += self.bonus_price * usage.bonus_units
             return price

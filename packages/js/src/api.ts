@@ -10,7 +10,7 @@ import type {
 } from './types'
 
 import { data as embeddedData } from './data'
-import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { calcPrice as calcPriceInternal, getActiveModelPrice, matchProvider, resolveModelWithFallback } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
@@ -223,12 +223,13 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     ? normalizeProvider(options.provider)
     : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
-  const model = matchModelWithFallback(provider, lowerModelId, providerData)
-  if (!model) return null
+  const resolvedModel = resolveModelWithFallback(provider, lowerModelId, providerData)
+  if (!resolvedModel) return null
+  const { model, priceProvider } = resolvedModel
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
   // OpenAI and xAI apply the higher tier when input reaches the threshold.
-  const priceResult = calcPriceInternal(usage, modelPrice, undefined, provider.id === 'openai' || provider.id === 'x-ai')
+  const priceResult = calcPriceInternal(usage, modelPrice, undefined, priceProvider.id === 'openai' || priceProvider.id === 'x-ai')
   return {
     auto_update_timestamp: undefined,
     model,
