@@ -46,6 +46,12 @@ def test_gemini_25_flash_context_window() -> None:
     [
         ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),
         ('whisper-large-v3', Decimal('0.111'), Usage(audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(0), input_audio_seconds=Decimal(5)),
+            Decimal(10),
+        ),
         ('whisper-large-v3-turbo', Decimal('0.04'), Usage(input_audio_seconds=Decimal(1)), Decimal(10)),
         (
             'whisper-large-v3',

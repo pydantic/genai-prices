@@ -224,6 +224,7 @@ describe('generated data split', () => {
   it.each([
     { billedSeconds: 0, hourlyRate: 0.111, model: 'whisper-large-v3', usage: {} },
     { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 0, input_audio_seconds: 5 } },
     { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { input_audio_seconds: 1 } },
     { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 10, input_audio_seconds: 10 } },
     { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },

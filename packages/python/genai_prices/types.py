@@ -707,7 +707,7 @@ class ModelInfo:
         model_price = self.get_prices(genai_request_timestamp)
         if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
             usage = copy(Usage.from_raw(usage))
-            reported_seconds = usage.__dict__.get('audio_seconds', usage.__dict__.get('input_audio_seconds'))
+            reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')
             if reported_seconds is not None:
                 billed_seconds = max(reported_seconds, 10) if reported_seconds > 0 else 0
                 usage.audio_seconds = billed_seconds
