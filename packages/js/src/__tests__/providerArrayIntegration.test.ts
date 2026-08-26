@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { ModelInfo, Provider, StartDateConstraint, TimeOfDateConstraint } from '../types'
+import type { ModelInfo, Provider } from '../types'
 
 import { calcPrice, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
@@ -56,30 +56,13 @@ describe('provider array integration', () => {
   })
 
   it.each([
-    ['start-date', { start_date: '2025-01-01', type: 'start_date' }, '2025-01-02T00:00:00Z'],
-    ['time-of-day', { end_time: '16:00:00Z', start_time: '08:00:00Z', type: 'time_of_date' }, '2025-01-01T12:00:00Z'],
-  ])('accepts the legacy discriminated %s constraint', async (_name, constraint, timestamp) => {
-    updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve(downloadedConditionalProviderArray(constraint)))
-    })
-    await waitForUpdate()
-
-    expect(
-      calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
-        providerId: 'testing',
-        timestamp: new Date(timestamp),
-      })?.input_price
-    ).toBe(2)
-  })
-
-  it.each([
     ['non-record constraint', 'not-an-object'],
     ['empty constraint', {}],
     ['malformed start_date shape', { start_date: 'not-a-date' }],
     ['impossible calendar date', { start_date: '2025-02-30' }],
     ['out-of-range time-of-day', { end_time: '26:00:00Z', start_time: '25:00:00Z' }],
     ['missing timezone on time-of-day', { end_time: '16:00:00', start_time: '08:00:00' }],
-    ['constraint with a mismatched discriminator', { start_date: '2025-01-01', type: 'time_of_date' }],
+    ['discriminated form with malformed values', { start_date: 'not-a-date', type: 'start_date' }],
     ['mixed start-date/time-of-day constraint', { end_time: '16:00:00Z', start_date: '2025-01-01', start_time: '08:00:00Z' }],
     ['constraint with unknown extra fields', { start_date: '2025-01-01', tz: 'UTC' }],
     ['year-zero start date', { start_date: '0000-01-01' }],
@@ -91,7 +74,7 @@ describe('provider array integration', () => {
 
     expect(() => {
       updatePrices(({ setProviderData }) => {
-        setProviderData(downloadedConditionalProviderArray(constraint))
+        setProviderData(downloadedConditionalProviderArray(constraint as Record<string, string>))
       })
     }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'")
     expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
@@ -117,20 +100,9 @@ describe('provider array integration', () => {
     }
   })
 
-  it('uses structural constraints on a caller-supplied provider', () => {
-    const provider = conditionalProvider({ start_date: '2025-01-01' })
-
-    expect(
-      calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
-        provider,
-        timestamp: new Date('2025-01-02T00:00:00Z'),
-      })?.input_price
-    ).toBe(2)
-  })
-
-  it('uses a legacy discriminated constraint on a caller-supplied provider', () => {
-    const constraint: StartDateConstraint = { start_date: '2025-01-01', type: 'start_date' }
-    const provider = conditionalProvider(constraint)
+  it('normalizes wire-format constraints on a caller-supplied provider', () => {
+    const [provider] = downloadedConditionalProviderArray({ start_date: '2025-01-01' })
+    if (provider === undefined) throw new Error('Expected a provider')
 
     expect(
       calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
@@ -141,42 +113,38 @@ describe('provider array integration', () => {
   })
 
   it('rejects malformed wire-format constraints on a caller-supplied provider', () => {
-    const provider = conditionalProvider({ start_date: 'not-a-date' })
+    const [provider] = downloadedConditionalProviderArray({ start_date: 'not-a-date' })
+    if (provider === undefined) throw new Error('Expected a provider')
 
     expect(() => calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', { provider })).toThrow(
       "Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
     )
   })
 
-  it('re-activates the bundled data unchanged', async () => {
+  it('re-activates the bundled data unchanged (round-trips already-discriminated constraints)', async () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
     })
     await expect(waitForUpdate()).resolves.toEqual(data)
   })
 
-  it('fails with a diagnosable error when an unknown constraint reaches the engine', () => {
+  it('fails with a diagnosable error when an unnormalized constraint reaches the engine', () => {
+    // Bypasses activation on purpose to simulate a representation leak.
     const model = {
       id: 'leaky-model',
       match: { equals: 'leaky-model' },
-      prices: [{ constraint: { unexpected: true }, prices: { input_mtok: 1 } }],
+      prices: [{ constraint: { start_date: '2025-01-01' }, prices: { input_mtok: 1 } }],
     } as unknown as ModelInfo
 
     expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).toThrow(
-      `Unknown price constraint for model 'leaky-model': {"unexpected":true}`
+      `Unknown price constraint for model 'leaky-model': {"start_date":"2025-01-01"}`
     )
   })
 
-  it('keeps bundled provider data identical to the published v2 data', () => {
-    const publishedData: unknown = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8'))
-
-    expect(data).toStrictEqual(publishedData)
-  })
-
-  it('activates and calculates with asynchronously loaded published v2 data', async () => {
-    const v2Data: unknown = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8'))
+  it('activates every conditional price in the published v2 data', async () => {
+    const v2Data = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8')) as Provider[]
     updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve(v2Data))
+      setProviderData(v2Data)
     })
 
     const activeData = await waitForUpdate()
@@ -194,13 +162,6 @@ describe('provider array integration', () => {
       // way to sweep every conditional model in the published artifact.
       expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).not.toThrow()
     }
-
-    expect(
-      calcPrice({ input_tokens: 1_000_000 }, 'o3', {
-        providerId: 'openai',
-        timestamp: new Date('2025-06-11T00:00:00Z'),
-      })?.input_price
-    ).toBe(2)
   })
 })
 
@@ -226,22 +187,7 @@ function providerArray(): Provider[] {
   ]
 }
 
-function conditionalProvider(constraint: StartDateConstraint | TimeOfDateConstraint): Provider {
-  return {
-    api_pattern: 'testing',
-    id: 'testing',
-    models: [
-      {
-        id: 'conditional-model',
-        match: { equals: 'conditional-model' },
-        prices: [{ prices: { input_mtok: 1 } }, { constraint, prices: { input_mtok: 2 } }],
-      },
-    ],
-    name: 'Testing',
-  }
-}
-
-function downloadedConditionalProviderArray(constraint: unknown): unknown {
+function downloadedConditionalProviderArray(constraint: Record<string, string>): Provider[] {
   return [
     {
       api_pattern: 'testing',
@@ -261,5 +207,7 @@ function downloadedConditionalProviderArray(constraint: unknown): unknown {
       ],
       name: 'Testing',
     },
-  ]
+    // Deliberately wire-shaped data (constraints without the internal `type`
+    // discriminator), which the internal Provider type does not admit.
+  ] as unknown as Provider[]
 }

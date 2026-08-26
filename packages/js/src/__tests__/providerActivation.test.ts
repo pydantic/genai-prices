@@ -52,7 +52,7 @@ describe('provider activation', () => {
 
     expect(() => {
       updatePrices(({ setProviderData }) => {
-        setProviderData('garbage')
+        setProviderData('garbage' as unknown as ProviderDataValue)
       })
     }).toThrow('Expected null or Provider[]')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
@@ -65,7 +65,7 @@ describe('provider activation', () => {
     })
 
     updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve('garbage'))
+      setProviderData(Promise.resolve('garbage' as unknown as ProviderDataValue))
     })
 
     await expect(waitForUpdate()).rejects.toThrow('Expected null or Provider[]')
