@@ -25,13 +25,11 @@ export interface ConditionalPrice {
 
 export interface StartDateConstraint {
   start_date: string // ISO date string
-  type: 'start_date'
 }
 
 export interface TimeOfDateConstraint {
   end_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
   start_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
-  type: 'time_of_date'
 }
 
 export type MatchLogic =
@@ -134,7 +132,7 @@ export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
-  setProviderData: (data: ProviderDataPayload) => void
+  setProviderData: (data: unknown) => void
 }
 
 export interface ProviderFindOptions {

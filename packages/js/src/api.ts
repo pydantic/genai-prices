@@ -1,13 +1,4 @@
-import type {
-  ConditionalPrice,
-  PriceCalculationResult,
-  PriceOptions,
-  Provider,
-  ProviderDataPayload,
-  ProviderFindOptions,
-  StorageFactoryParams,
-  Usage,
-} from './types'
+import type { PriceCalculationResult, PriceOptions, Provider, ProviderFindOptions, StorageFactoryParams, Usage } from './types'
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
@@ -20,13 +11,13 @@ let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
 let autoUpdateCb: (() => void) | null = null
 
-function setProviderData(data: ProviderDataPayload) {
+function setProviderData(data: unknown) {
   // null means the update failed; keep existing data
   if (data === null) {
     return
   }
-  if (typeof data === 'object' && 'then' in data) {
-    const updatePromise = data
+  if (isPromiseLike(data)) {
+    const updatePromise = Promise.resolve(data)
       .then((data) => {
         if (data === null || providerDataPromise !== updatePromise) {
           return providerData
@@ -54,88 +45,62 @@ function setProviderData(data: ProviderDataPayload) {
   }
 }
 
-function activateProviderData(data: Provider[]): Provider[] {
+function activateProviderData(data: unknown): Provider[] {
   if (!Array.isArray(data)) {
     throw new Error('Expected null or Provider[]')
   }
 
-  const normalizedData = data.map(normalizeProvider)
-  warnUnsupportedExtractorDestinations(normalizedData)
-  providerData = normalizedData
-  return normalizedData
+  const providers = data.map(validateProvider)
+  warnUnsupportedExtractorDestinations(providers)
+  providerData = providers
+  return providers
 }
 
-function normalizeProvider(provider: Provider): Provider {
-  return {
-    ...provider,
-    models: provider.models.map((model) => ({
-      ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
-    })),
+function validateProvider(provider: unknown): Provider {
+  if (
+    !isRecord(provider) ||
+    typeof provider.api_pattern !== 'string' ||
+    typeof provider.id !== 'string' ||
+    !Array.isArray(provider.models) ||
+    typeof provider.name !== 'string'
+  ) {
+    throw new Error('Expected null or Provider[]')
   }
+
+  for (const model of provider.models) {
+    if (!isRecord(model) || typeof model.id !== 'string' || !('prices' in model)) {
+      throw new Error('Expected null or Provider[]')
+    }
+    if (Array.isArray(model.prices)) {
+      for (const conditionalPrice of model.prices) {
+        validateConditionalPrice(conditionalPrice, provider.id, model.id)
+      }
+    }
+  }
+
+  return provider as unknown as Provider
 }
 
-/**
- * Convert a wire-format conditional price into the internal discriminated
- * representation `engine.ts` relies on.
- *
- * The wire format (the published v2 feed) identifies a constraint structurally
- * (`start_date`, or `start_time`/`end_time`) rather than with the `type`
- * discriminator the internal `ConditionalPrice` uses, so the input's
- * constraint is typed as `unknown` here rather than as the internal union.
- *
- * Already-discriminated constraints (bundled data re-activated at runtime) are
- * validated and passed through unchanged. This is the runtime half of the
- * wire-to-internal translation; the code generator producing the bundled
- * `data.ts` is the build-time half, and the two must stay in agreement.
- * See `normalizeProvider` for the traversal that applies this per model.
- */
-function normalizeConditionalPrice(
-  conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
-  providerId: string,
-  modelId: string
-): ConditionalPrice {
+function validateConditionalPrice(conditionalPrice: unknown, providerId: string, modelId: string): void {
+  if (!isRecord(conditionalPrice) || !isRecord(conditionalPrice.prices)) {
+    throw new Error('Expected null or Provider[]')
+  }
   const constraint: unknown = conditionalPrice.constraint
   if (constraint === undefined) {
-    return { prices: conditionalPrice.prices }
+    return
   }
   if (!isRecord(constraint)) {
     throw invalidConstraintError(constraint, providerId, modelId)
   }
-  if (constraint.type !== undefined) {
-    // Already in the internal discriminated form; validate rather than rebuild.
-    if (
-      (constraint.type === 'start_date' && hasExactKeys(constraint, ['start_date', 'type']) && isValidStartDate(constraint.start_date)) ||
-      (constraint.type === 'time_of_date' &&
-        hasExactKeys(constraint, ['end_time', 'start_time', 'type']) &&
-        isValidTimeOfDay(constraint.start_time) &&
-        isValidTimeOfDay(constraint.end_time))
-    ) {
-      return conditionalPrice as ConditionalPrice
-    }
-    throw invalidConstraintError(constraint, providerId, modelId)
-  }
   if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
-    return {
-      constraint: { start_date: constraint.start_date, type: 'start_date' },
-      prices: conditionalPrice.prices,
-    }
+    return
   }
   if (
     hasExactKeys(constraint, ['end_time', 'start_time']) &&
     isValidTimeOfDay(constraint.start_time) &&
     isValidTimeOfDay(constraint.end_time)
   ) {
-    return {
-      constraint: {
-        end_time: constraint.end_time,
-        start_time: constraint.start_time,
-        type: 'time_of_date',
-      },
-      prices: conditionalPrice.prices,
-    }
+    return
   }
   throw invalidConstraintError(constraint, providerId, modelId)
 }
@@ -165,8 +130,7 @@ function hasExactKeys(value: Record<string, unknown>, keys: string[]): boolean {
   return actual.length === keys.length && actual.every((key) => keys.includes(key))
 }
 
-// Reuse the engine's parser so normalization accepts exactly what price
-// calculation can later evaluate.
+// Reuse the engine's parser so activation accepts exactly what price calculation can later evaluate.
 function isValidTimeOfDay(value: unknown): value is string {
   if (typeof value !== 'string') {
     return false
@@ -181,6 +145,10 @@ function isValidTimeOfDay(value: unknown): value is string {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+  return isRecord(value) && typeof value.then === 'function'
 }
 
 function onCalc(cb: () => void) {
@@ -217,10 +185,8 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     }
   }
 
-  // Caller-supplied providers bypass activation, so normalize them here to
-  // give them the same constraint handling as downloaded/bundled data.
   const provider = options?.provider
-    ? normalizeProvider(options.provider)
+    ? validateProvider(options.provider)
     : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
