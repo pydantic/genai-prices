@@ -3237,7 +3237,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gemini-2.5-flash-lite'),
-                        ClauseRegex(regex='^gemini-2\\.5-flash-lite-preview-(?!tts(?:$|-))'),
+                        ClauseRegex(regex='^gemini-2\\.5-flash-lite-preview(?!-tts(?:$|-))'),
                     ]
                 ),
                 name='Gemini 2.5 Flash Lite',

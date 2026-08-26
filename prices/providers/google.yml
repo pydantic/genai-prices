@@ -646,7 +646,7 @@ models:
     match:
       or:
         - equals: gemini-2.5-flash-lite
-        - regex: '^gemini-2\.5-flash-lite-preview-(?!tts(?:$|-))'
+        - regex: '^gemini-2\.5-flash-lite-preview(?!-tts(?:$|-))'
     context_window: 1000000
     prices_checked: 2025-10-31
     prices:

@@ -117,6 +117,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('anthropic', 'claude-3-5-haiku-20241022', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('google-gla', 'gemini-2.5-flash-lite-preview-06-17', snapshot(('google', 'gemini-2.5-flash-lite'))),
+    ('google-gla', 'gemini-2.5-flash-lite-preview', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param(
         'bedrock',
         'us.anthropic.claude-3-5-haiku-20241022-v1:0',

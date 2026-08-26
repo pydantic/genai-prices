@@ -5385,7 +5385,7 @@ export const data: Provider[] = [
               equals: 'gemini-2.5-flash-lite',
             },
             {
-              regex: '^gemini-2\\.5-flash-lite-preview-(?!tts(?:$|-))',
+              regex: '^gemini-2\\.5-flash-lite-preview(?!-tts(?:$|-))',
             },
           ],
         },
