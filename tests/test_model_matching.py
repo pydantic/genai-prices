@@ -424,6 +424,9 @@ test_cases: list[tuple[str, str, str]] = [
     ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
+    ('openai', 'gpt-5.2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('openai', 'gpt-5-2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('azure', 'gpt-4.1-20250414', snapshot(('azure', 'gpt-4.1'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
     pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
     pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
@@ -458,6 +461,38 @@ def test_fallback_tries_all_providers():
     model = azure.find_model('claude-sonnet-4-20250514', all_providers=providers)
     assert model is not None, 'Fallback should have found claude-sonnet via anthropic'
     assert model.id == 'claude-sonnet-4-0'
+
+
+def test_exact_fallback_match_precedes_normalized_fallback_match():
+    """An exact compact ID is safer than a normalized alias in an earlier fallback provider."""
+    from genai_prices.types import ClauseEquals, ModelInfo, Provider
+
+    normalized_provider = Provider(
+        id='normalized-provider',
+        name='Normalized Provider',
+        api_pattern='normalized.example.com',
+        models=[ModelInfo(id='normalized-model', match=ClauseEquals(equals='model-2025-02-28'))],
+    )
+    exact_provider = Provider(
+        id='exact-provider',
+        name='Exact Provider',
+        api_pattern='exact.example.com',
+        models=[ModelInfo(id='exact-model', match=ClauseEquals(equals='model-20250228'))],
+    )
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['normalized-provider', 'exact-provider'],
+        models=[],
+    )
+
+    model = main_provider.find_model(
+        'model-20250228', all_providers=[main_provider, normalized_provider, exact_provider]
+    )
+
+    assert model is not None
+    assert model.id == 'exact-model'
 
 
 def test_find_model_directly_in_provider():
@@ -660,6 +695,34 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_compact_dated_model_ref_normalized():
+    """Compact dated refs from LiteLLM/OpenRouter (e.g. `gpt-5.2-20251211`) fall back to the dashed alias."""
+    from genai_prices.types import _normalize_compact_dated_ref
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert (provider.id, model.id) == ('openai', 'gpt-5.2')
+
+    # a ref that already matches is unaffected by the normalization fallback
+    openai = find_provider_by_id(providers, 'openai')
+    assert openai is not None
+    assert openai.find_model('gpt-5.2-2025-12-11', all_providers=providers) is not None
+
+    # a model that matches on the compact date form (Bedrock `contains`) is returned as-is, not normalized away
+    aws = find_provider_by_id(providers, 'aws')
+    assert aws is not None
+    haiku = aws.find_model('claude-3-5-haiku-20241022', all_providers=providers)
+    assert haiku is not None and haiku.id == 'regional.anthropic.claude-3-5-haiku-20241022-v1:0'
+
+    assert _normalize_compact_dated_ref('gpt-5.2-20251211') == 'gpt-5.2-2025-12-11'
+    assert _normalize_compact_dated_ref('claude-3-5-haiku-20241022') == 'claude-3-5-haiku-2024-10-22'
+    assert _normalize_compact_dated_ref('model-20240229') == 'model-2024-02-29'
+    # suffixes that aren't valid calendar dates are left untouched
+    assert _normalize_compact_dated_ref('gpt-4o-12345678') == 'gpt-4o-12345678'
+    assert _normalize_compact_dated_ref('gpt-4o-20251301') == 'gpt-4o-20251301'
+    assert _normalize_compact_dated_ref('gpt-4o-20250230') == 'gpt-4o-20250230'
 
 
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():

@@ -716,5 +716,27 @@ describe('Comprehensive API Tests', () => {
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
     })
+
+    it('should price compact dated OpenRouter model refs', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const modelRef = 'openai/gpt-5.2-20251211'
+      const result = calcPrice(usage, modelRef, { providerId: 'litellm' })
+
+      expect(result).toMatchObject({
+        input_price: 0.00175,
+        model: { id: 'gpt-5.2' },
+        output_price: 0.0014,
+        provider: { id: 'openai' },
+        total_price: 0.00315,
+      })
+
+      expect(calcPrice(usage, modelRef, { providerApiUrl: 'https://openrouter.ai/api/v1' })).toMatchObject({
+        input_price: 0.00175,
+        model: { id: 'openai/gpt-5.2' },
+        output_price: 0.0014,
+        provider: { id: 'openrouter' },
+        total_price: 0.00315,
+      })
+    })
   })
 })
