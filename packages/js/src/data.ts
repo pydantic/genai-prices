@@ -20344,6 +20344,9 @@ export const data: Provider[] = [
               equals: 'openai/gpt-5.2',
             },
             {
+              equals: 'openai/gpt-5.2-20251211',
+            },
+            {
               equals: 'openai/gpt-5.2-chat',
             },
             {
@@ -20361,7 +20364,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-5.2-pro',
         name: 'GPT-5.2 Pro',
         match: {
-          equals: 'openai/gpt-5.2-pro',
+          or: [
+            {
+              equals: 'openai/gpt-5.2-pro',
+            },
+            {
+              equals: 'openai/gpt-5.2-pro-20251211',
+            },
+          ],
         },
         prices: {
           input_mtok: 21,
