@@ -43,6 +43,7 @@ The following providers are currently supported:
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [Google](prices/providers/google.yml) - 50 models
 - [Groq](prices/providers/groq.yml) - 31 models
+- [HuggingFace](prices/providers/huggingface.yml) - 0 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models

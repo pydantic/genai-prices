@@ -7,6 +7,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
+from genai_prices.data_snapshot import find_provider_by_id, get_snapshot
 from genai_prices.types import (
     ArrayMatch,
     ClauseEquals,
@@ -459,6 +460,95 @@ def test_openrouter_chat_cache_write_tokens():
         response_data, provider_api_url='https://openrouter.ai/api/v1', api_flavor='chat'
     )
     assert extracted_usage_by_url.usage == extracted_usage.usage
+
+
+huggingface_together_response_data = {
+    'model': 'deepseek-ai/DeepSeek-R1',
+    'usage': {
+        'cached_tokens': 0,
+        'completion_tokens': 197,
+        'prompt_tokens': 4,
+        'total_tokens': 201,
+    },
+}
+
+
+def test_huggingface_together_extract_usage_default_and_chat():
+    provider = next(provider for provider in providers if provider.id == 'huggingface_together')
+    assert provider.name == 'HuggingFace (together)'
+
+    expected = ('deepseek-ai/DeepSeek-R1', Usage(input_tokens=4, output_tokens=197))
+    assert provider.extract_usage(huggingface_together_response_data) == expected
+    assert provider.extract_usage(huggingface_together_response_data, api_flavor='chat') == expected
+
+    extracted_usage = extract_usage(huggingface_together_response_data, provider_id='huggingface_together')
+    assert extracted_usage.usage == Usage(input_tokens=4, output_tokens=197)
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'deepseek-ai/DeepSeek-R1'
+    assert extracted_usage.calc_price().total_price == Decimal('0.001391')
+
+
+def test_huggingface_generic_extracts_openai_compatible_details():
+    provider = next(provider for provider in providers if provider.id == 'huggingface')
+    response_data = {
+        'model': 'openai/gpt-oss-120b',
+        'usage': {
+            'completion_tokens': 59,
+            'completion_tokens_details': {'audio_tokens': 5, 'reasoning_tokens': 47},
+            'prompt_tokens': 69,
+            'prompt_tokens_details': {'audio_tokens': 7, 'cached_tokens': 11, 'cache_write_tokens': 3},
+            'total_tokens': 128,
+        },
+    }
+
+    assert provider.extract_usage(response_data) == (
+        'openai/gpt-oss-120b',
+        Usage(
+            input_tokens=69,
+            cache_read_tokens=11,
+            cache_write_tokens=3,
+            output_tokens=59,
+            input_audio_tokens=7,
+            output_audio_tokens=5,
+            output_reasoning_tokens=47,
+        ),
+    )
+
+
+def test_huggingface_generic_ignores_missing_optional_details():
+    provider = next(provider for provider in providers if provider.id == 'huggingface')
+    response_data = {
+        'model': 'Qwen/Qwen2.5-VL-72B-Instruct',
+        'usage': {
+            'completion_tokens': 38,
+            'completion_tokens_details': None,
+            'prompt_tokens': 448,
+            'prompt_tokens_details': None,
+            'total_tokens': 486,
+        },
+    }
+
+    assert provider.extract_usage(response_data) == (
+        'Qwen/Qwen2.5-VL-72B-Instruct',
+        Usage(input_tokens=448, output_tokens=38),
+    )
+
+
+def test_huggingface_provider_resolution():
+    snapshot_data = get_snapshot()
+
+    provider = find_provider_by_id(providers, 'huggingface')
+    assert provider is not None
+    assert provider.id == 'huggingface'
+
+    routed_provider = find_provider_by_id(providers, 'huggingface_together')
+    assert routed_provider is not None
+    assert routed_provider.id == 'huggingface_together'
+
+    assert (
+        snapshot_data.find_provider(None, None, 'https://router.huggingface.co/together').id == 'huggingface_together'
+    )
+    assert snapshot_data.find_provider(None, None, 'https://router.huggingface.co/v1').id == 'huggingface'
 
 
 cohere_chat_response_data = {

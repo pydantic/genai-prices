@@ -63,6 +63,10 @@ simonw-prices-get: ## get simonw-prices
 huggingface-get: ## get huggingface prices
 	uv run -m prices get_huggingface_prices
 
+.PHONY: huggingface-extractors
+huggingface-extractors: ## update generated huggingface extractors without refreshing models or prices
+	uv run -m prices update_huggingface_extractors
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices

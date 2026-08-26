@@ -78,6 +78,7 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
             self.provider = SimpleNamespace(
                 extractors=[UsageExtractor(api_flavor='chat', root='usage', mappings=[])],
             )
+            self.data: dict[str, object] = {'id': path.stem, 'models': []}
             self.saved = False
             self.instances.append(self)
 
@@ -88,6 +89,7 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
     source_file.parent.mkdir(parents=True)
     providers_dir = tmp_path / 'providers'
     providers_dir.mkdir()
+    (providers_dir / 'huggingface_inactive.yml').write_text('stale generated provider')
 
     def fake_path(_: str) -> Path:
         return source_file
@@ -108,9 +110,26 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
 
     assert {path.name for path in providers_dir.iterdir()} == {
         'huggingface_fireworks-ai.yml',
+        'huggingface_inactive.yml',
         'huggingface_together.yml',
     }
-    assert 'moonshotai/Kimi-K3' in (providers_dir / 'huggingface_together.yml').read_text()
+    together_yaml = (providers_dir / 'huggingface_together.yml').read_text()
+    assert 'moonshotai/Kimi-K3' in together_yaml
+    assert together_yaml.count('root: usage') == 2
+    assert together_yaml.count('api_flavor: chat') == 1
+    assert 'api_flavor: default' not in together_yaml
     assert [provider_yaml.path.name for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved] == [
-        'huggingface_together.yml'
+        'huggingface_inactive.yml',
+        'huggingface_together.yml',
+    ]
+
+    [inactive_provider] = [
+        provider_yaml
+        for provider_yaml in FakeProviderYaml.instances
+        if provider_yaml.path.name == 'huggingface_inactive.yml'
+    ]
+    extractors = inactive_provider.data['extractors']
+    assert extractors == [
+        {'root': 'usage', 'mappings': [], 'model_path': 'model'},
+        {'api_flavor': 'chat', 'root': 'usage', 'mappings': [], 'model_path': 'model'},
     ]

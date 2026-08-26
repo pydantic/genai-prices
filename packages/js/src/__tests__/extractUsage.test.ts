@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { calcPrice, extractUsage } from '../index'
+import { calcPrice, extractUsage, findProvider } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 const fractionalProvider: Provider = {
@@ -310,6 +310,81 @@ describe('extractUsage', () => {
         output_audio_tokens: 23,
         output_tokens: 1906,
       })
+    })
+  })
+
+  describe('HuggingFace providers', () => {
+    const huggingfaceProvider: Provider = data.find((provider) => provider.id === 'huggingface')!
+    const huggingfaceTogetherProvider: Provider = data.find((provider) => provider.id === 'huggingface_together')!
+    const togetherResponseData = {
+      model: 'deepseek-ai/DeepSeek-R1',
+      usage: {
+        cached_tokens: 0,
+        completion_tokens: 197,
+        prompt_tokens: 4,
+        total_tokens: 201,
+      },
+    }
+
+    it('should extract recorded Together usage with default and chat apiFlavor', () => {
+      const expected = {
+        model: 'deepseek-ai/DeepSeek-R1',
+        usage: { input_tokens: 4, output_tokens: 197 },
+      }
+
+      expect(extractUsage(huggingfaceTogetherProvider, togetherResponseData)).toEqual(expected)
+      expect(extractUsage(huggingfaceTogetherProvider, togetherResponseData, 'chat')).toEqual(expected)
+    })
+
+    it('should extract OpenAI-compatible details for the generic provider', () => {
+      const responseData = {
+        model: 'openai/gpt-oss-120b',
+        usage: {
+          completion_tokens: 59,
+          completion_tokens_details: { audio_tokens: 5, reasoning_tokens: 47 },
+          prompt_tokens: 69,
+          prompt_tokens_details: { audio_tokens: 7, cache_write_tokens: 3, cached_tokens: 11 },
+          total_tokens: 128,
+        },
+      }
+
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
+        model: 'openai/gpt-oss-120b',
+        usage: {
+          cache_read_tokens: 11,
+          cache_write_tokens: 3,
+          input_audio_tokens: 7,
+          input_tokens: 69,
+          output_audio_tokens: 5,
+          output_reasoning_tokens: 47,
+          output_tokens: 59,
+        },
+      })
+    })
+
+    it('should ignore missing optional detail objects', () => {
+      const responseData = {
+        model: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        usage: {
+          completion_tokens: 38,
+          completion_tokens_details: null,
+          prompt_tokens: 448,
+          prompt_tokens_details: null,
+          total_tokens: 486,
+        },
+      }
+
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
+        model: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        usage: { input_tokens: 448, output_tokens: 38 },
+      })
+    })
+
+    it('should resolve routed and generic providers without shadowing', () => {
+      expect(findProvider({ providerId: 'huggingface' })?.id).toBe('huggingface')
+      expect(findProvider({ providerId: 'huggingface_together' })?.id).toBe('huggingface_together')
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe('huggingface_together')
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/v1' })?.id).toBe('huggingface')
     })
   })
 
