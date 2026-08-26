@@ -5,6 +5,7 @@ import type { Provider } from '../types'
 
 import { data } from '../data'
 import { matchLogic, matchModel, matchModelWithFallback, matchProvider } from '../engine'
+import { calcPrice } from '../index'
 
 const actualProviders = data
 
@@ -23,6 +24,21 @@ describe('Match Logic', () => {
 })
 
 describe('Provider Matching', () => {
+  describe('matchProvider with modelId', () => {
+    it('prefers Fireworks for its fully-qualified DeepSeek model IDs', () => {
+      const provider = matchProvider(actualProviders, { modelId: 'accounts/fireworks/models/deepseek-v4-flash-0731' })
+
+      expect(provider?.id).toBe('fireworks')
+    })
+
+    it('preserves Mistral aliases without claiming qualified OpenRouter model IDs', () => {
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-nemo' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mixtral-8x7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'mistralai/voxtral-small-24b-2507' })).toBeUndefined()
+    })
+  })
+
   describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
       expect(matchProvider(actualProviders, { providerId: 'google' })?.id).toBe('google')
@@ -58,6 +74,30 @@ describe('Provider Matching', () => {
     it('should not match model names as providers', () => {
       expect(matchProvider(actualProviders, { providerId: 'claude' })).toBeUndefined()
       expect(matchProvider(actualProviders, { providerId: 'gpt' })).toBeUndefined()
+    })
+
+    it('prices only known Command A model IDs', () => {
+      const usage = { input_tokens: 1 }
+
+      expect(calcPrice(usage, 'command-a', { providerId: 'cohere' })?.model.id).toBe('command-a')
+      expect(calcPrice(usage, 'command-a-03-2025', { providerId: 'cohere' })?.model.id).toBe('command-a')
+      expect(calcPrice(usage, 'command-a-plus-05-2026', { providerId: 'cohere' })).toBeNull()
+    })
+  })
+
+  describe('matchProvider with providerApiUrl', () => {
+    // Every `api_pattern` is unanchored, so matching must be anchored at the start of the URL — as
+    // Python's `re.match` is. Otherwise a proxy URL carrying a provider host resolves to that provider
+    // in JS while raising `LookupError` in Python.
+    const proxiedOpenaiApiUrl = 'http://localhost:8080/proxy?u=https://api.openai.com/v1'
+
+    it('should match a provider at the start of the URL', () => {
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.openai.com/v1/chat/completions' })?.id).toBe('openai')
+    })
+
+    it('should not match a provider embedded later in the URL', () => {
+      expect(matchProvider(actualProviders, { providerApiUrl: proxiedOpenaiApiUrl })).toBeUndefined()
+      expect(calcPrice({ input_tokens: 1_000 }, 'gpt-4o', { providerApiUrl: proxiedOpenaiApiUrl })).toBeNull()
     })
   })
 })

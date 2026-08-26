@@ -25,6 +25,9 @@ extractors:
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
 
@@ -428,6 +431,37 @@ models:
       cache_read_mtok: 1
       output_mtok: 50
 
+  - id: anthropic/claude-opus-5
+    match:
+      or:
+        - equals: anthropic/claude-opus-5
+        - equals: anthropic/claude-opus-5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      output_mtok: 25
+    prices_checked: 2026-07-25
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
+  - id: anthropic/claude-opus-5-fast
+    name: Claude Opus 5 (Fast)
+    match:
+      equals: anthropic/claude-opus-5-fast
+    context_window: 1000000
+    prices:
+      input_mtok: 10
+      cache_write_mtok: 12.5
+      cache_read_mtok: 1
+      output_mtok: 50
+    prices_checked: 2026-07-25
+    price_comments: >-
+      Fast mode premium pricing, applies across the full context window.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+
   - id: anthropic/claude-sonnet-4
     name: Claude Sonnet 4
     match:
@@ -502,24 +536,16 @@ models:
         - equals: anthropic/claude-sonnet-5:beta
     context_window: 1000000
     prices:
-      - prices:
-          input_mtok: 2
-          cache_read_mtok: 0.2
-          cache_write_mtok: 2.5
-          output_mtok: 10
-      - constraint:
-          start_date: 2026-09-01
-        prices:
-          input_mtok: 3
-          cache_read_mtok: 0.3
-          cache_write_mtok: 3.75
-          output_mtok: 15
-    prices_checked: 2026-06-30
+      input_mtok: 2
+      cache_read_mtok: 0.2
+      cache_write_mtok: 2.5
+      output_mtok: 10
+    prices_checked: 2026-08-24
     price_comments: >-
-      Flat pricing across full 1M context window (no tiered pricing).
-      Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01.
-      OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30.
-      Ref: https://openrouter.ai/anthropic/claude-sonnet-5
+      Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the
+      introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase.
+      Refs: https://openrouter.ai/anthropic/claude-sonnet-5,
+      https://platform.claude.com/docs/en/about-claude/pricing
     collapse: false
 
   - id: anubis-pro-105b-v1
@@ -627,7 +653,6 @@ models:
       equals: bytedance/ui-tars-1.5-7b
     prices:
       input_mtok: 0.1
-      cache_read_mtok: 0.1
       output_mtok: 0.2
 
   - id: caller-large
@@ -1919,7 +1944,6 @@ models:
       equals: ibm-granite/granite-4.1-8b
     prices:
       input_mtok: 0.05
-      cache_read_mtok: 0.05
       output_mtok: 0.1
 
   - id: inception/mercury-2
@@ -2561,7 +2585,6 @@ models:
       equals: microsoft/phi-4-mini-instruct
     prices:
       input_mtok: 0.08
-      cache_read_mtok: 0.08
       output_mtok: 0.35
 
   - id: microsoft/phi-4-multimodal-instruct
@@ -3143,6 +3166,20 @@ models:
       input_mtok: 0.75
       cache_read_mtok: 0.16
       output_mtok: 3.50
+
+  - id: moonshotai/kimi-k3
+    name: Kimi K3
+    match:
+      or:
+        - equals: moonshotai/kimi-k3
+        - equals: moonshotai/kimi-k3-20260715
+    context_window: 1048576
+    prices_checked: "2026-07-16"
+    price_comments: "Ref: https://openrouter.ai/api/v1/models"
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
 
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
@@ -3998,9 +4035,14 @@ models:
   - id: perplexity/sonar-deep-research
     match:
       equals: perplexity/sonar-deep-research
+    prices_checked: 2026-07-29
+    price_comments: >-
+      OpenRouter reports internal reasoning as a distinct $3 per million-token charge.
+      Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing
     prices:
       input_mtok: 2
       output_mtok: 8
+      output_reasoning_mtok: 3
 
   - id: perplexity/sonar-pro
     match:
@@ -4365,7 +4407,6 @@ models:
       equals: qwen/qwen3-235b-a22b-thinking-2507
     prices:
       input_mtok: 0.1
-      cache_read_mtok: 0.1
       output_mtok: 0.1
 
   - id: qwen/qwen3-30b-a3b
@@ -4390,7 +4431,6 @@ models:
       equals: qwen/qwen3-30b-a3b-thinking-2507
     prices:
       input_mtok: 0.08
-      cache_read_mtok: 0.08
       output_mtok: 0.4
 
   - id: qwen/qwen3-32b
@@ -5417,6 +5457,34 @@ models:
       cache_read_mtok: 0.26
       output_mtok: 4.4
     context_window: 1048576
+
+  - id: z-ai/glm-5.3
+    name: GLM 5.3
+    match:
+      or:
+        - equals: z-ai/glm-5.3
+        - equals: z-ai/glm-5.3-20260816
+    prices_checked: 2026-08-26
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    context_window: 1048576
+
+  - id: z-ai/glm-5.3-flash
+    name: GLM 5.3 Flash
+    match:
+      equals: z-ai/glm-5.3-flash
+    prices_checked: 2026-08-26
+    price_comments: >-
+      OpenRouter's model page and models API show a 50% promotion through
+      September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached
+      input, and $0.50 output per million tokens.
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.015
+      output_mtok: 0.25
+    context_window: 1310720
 
   - id: ~anthropic/claude-fable-latest
     name: Claude Fable Latest

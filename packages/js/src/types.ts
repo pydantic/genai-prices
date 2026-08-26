@@ -1,12 +1,4 @@
-export interface Usage {
-  cache_audio_read_tokens?: number
-  cache_read_tokens?: number
-  cache_write_tokens?: number
-  input_audio_tokens?: number
-  input_tokens?: number
-  output_audio_tokens?: number
-  output_tokens?: number
-}
+export type Usage = Record<string, number | undefined>
 
 export interface Tier {
   price: number
@@ -24,16 +16,7 @@ export class TieredPrices {
   }
 }
 
-export interface ModelPrice {
-  cache_audio_read_mtok?: number | TieredPrices
-  cache_read_mtok?: number | TieredPrices
-  cache_write_mtok?: number | TieredPrices
-  input_audio_mtok?: number | TieredPrices
-  input_mtok?: number | TieredPrices
-  output_audio_mtok?: number | TieredPrices
-  output_mtok?: number | TieredPrices
-  requests_kcount?: number
-}
+export type ModelPrice = Record<string, number | TieredPrices | undefined>
 
 export interface ConditionalPrice {
   constraint?: StartDateConstraint | TimeOfDateConstraint
@@ -42,13 +25,15 @@ export interface ConditionalPrice {
 
 export interface StartDateConstraint {
   start_date: string // ISO date string
-  type: 'start_date'
+  /** @deprecated The published provider-data format identifies constraints structurally. */
+  type?: 'start_date'
 }
 
 export interface TimeOfDateConstraint {
-  end_time: string // HH:MM:SS
-  start_time: string // HH:MM:SS
-  type: 'time_of_date'
+  end_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
+  start_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
+  /** @deprecated The published provider-data format identifies constraints structurally. */
+  type?: 'time_of_date'
 }
 
 export type MatchLogic =
@@ -69,17 +54,26 @@ export interface ArrayMatch {
 export type ExtractPath = (ArrayMatch | string)[] | string
 
 export interface UsageExtractorMapping {
-  dest:
-    | 'cache_audio_read_tokens'
-    | 'cache_read_tokens'
-    | 'cache_write_tokens'
-    | 'input_audio_tokens'
-    | 'input_tokens'
-    | 'output_audio_tokens'
-    | 'output_tokens'
+  dest: string
   path: ExtractPath
   required: boolean
 }
+
+export interface RawUnitData {
+  dimensions: Record<string, string>
+  per: number
+  price_key?: string
+}
+
+export type RawUnitsDict = Record<string, RawUnitData>
+
+export interface UnitDef {
+  readonly dimensions: Readonly<Record<string, string>>
+  readonly per: number
+  readonly priceKey: string
+  readonly usageKey: string
+}
+
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
@@ -136,13 +130,13 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
-type OptionalProviders = null | Provider[]
-export type ProviderDataPayload = OptionalProviders | Promise<OptionalProviders>
+export type ProviderDataValue = null | Provider[]
+export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 
 export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
-  setProviderData: (data: ProviderDataPayload) => void
+  setProviderData: (data: unknown) => void
 }
 
 export interface ProviderFindOptions {

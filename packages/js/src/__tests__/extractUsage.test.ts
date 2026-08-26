@@ -1,12 +1,33 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { extractUsage, findProvider } from '../index'
+import { calcPrice, extractUsage, findProvider } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const fractionalProvider: Provider = {
+  api_pattern: 'fractional',
+  extractors: [
+    {
+      api_flavor: 'default',
+      mappings: [
+        { dest: 'audio_seconds', path: 'first_seconds', required: false },
+        { dest: 'audio_seconds', path: 'second_seconds', required: true },
+      ],
+      model_path: 'model',
+      root: 'usage',
+    },
+  ],
+  id: 'fractional',
+  models: [],
+  name: 'Fractional',
+}
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
@@ -19,6 +40,10 @@ describe('extractUsage', () => {
         stop_sequence: null,
         type: 'message',
         usage: {
+          cache_creation: {
+            ephemeral_1h_input_tokens: 23,
+            ephemeral_5m_input_tokens: 100,
+          },
           cache_creation_input_tokens: 123,
           cache_read_input_tokens: 0,
           input_tokens: 504,
@@ -30,12 +55,21 @@ describe('extractUsage', () => {
       const { model, usage } = extractUsage(anthropicProvider, responseData)
 
       expect(model).toBe('claude-sonnet-4-20250514')
+      if (!model) throw new Error('Expected extracted model')
       expect(usage).toEqual({
         cache_read_tokens: 0,
+        cache_write_1h_tokens: 23,
+        cache_write_5m_tokens: 100,
         cache_write_tokens: 123,
         input_tokens: 627,
         output_tokens: 97,
       })
+
+      const price = calcPrice(usage, model, { providerId: 'anthropic' })
+      if (!price) throw new Error('Expected matched Anthropic price')
+      expect(price.input_price).toBeCloseTo(0.002025)
+      expect(price.output_price).toBeCloseTo(0.001455)
+      expect(price.total_price).toBeCloseTo(0.00348)
     })
 
     it('should extract basic usage without cache tokens', () => {
@@ -55,6 +89,24 @@ describe('extractUsage', () => {
         input_tokens: 504,
         output_tokens: 97,
       })
+    })
+
+    it('should preserve and accumulate fractional values', () => {
+      const { usage } = extractUsage(fractionalProvider, {
+        model: 'fractional-model',
+        usage: { first_seconds: 0.1, second_seconds: 0.2 },
+      })
+
+      expect(usage.audio_seconds).toBeCloseTo(0.3, 15)
+    })
+
+    it('should preserve optional structural probing for non-number leaves', () => {
+      expect(
+        extractUsage(fractionalProvider, {
+          model: 'fractional-model',
+          usage: { first_seconds: 'unknown', second_seconds: 0.25 },
+        }).usage
+      ).toEqual({ audio_seconds: 0.25 })
     })
   })
 
@@ -118,6 +170,81 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract cache write tokens with chat apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          completion_tokens: 300,
+          prompt_tokens: 2006,
+          prompt_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'chat')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
+    it('should extract cache write tokens with responses apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          input_tokens: 2006,
+          input_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+          output_tokens: 300,
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
+    it.each(['openai', 'azure'])('should extract realtime cached audio usage for %s', (providerId) => {
+      const provider: Provider = data.find((candidate) => candidate.id === providerId)!
+      const responseData = {
+        response: {
+          usage: {
+            input_token_details: {
+              audio_tokens: 250,
+              cached_tokens: 400,
+              cached_tokens_details: { audio_tokens: 100, image_tokens: 50, text_tokens: 250 },
+              image_tokens: 150,
+              text_tokens: 600,
+            },
+            input_tokens: 1000,
+            output_token_details: { audio_tokens: 300, text_tokens: 200 },
+            output_tokens: 500,
+          },
+        },
+        type: 'response.done',
+      }
+
+      expect(extractUsage(provider, responseData, 'realtime').usage).toEqual({
+        cache_audio_read_tokens: 100,
+        cache_image_read_tokens: 50,
+        cache_read_tokens: 400,
+        cache_text_read_tokens: 250,
+        input_audio_tokens: 250,
+        input_image_tokens: 150,
+        input_text_tokens: 600,
+        input_tokens: 1000,
+        output_audio_tokens: 300,
+        output_text_tokens: 200,
+        output_tokens: 500,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
@@ -125,6 +252,29 @@ describe('extractUsage', () => {
       }
 
       expect(() => extractUsage(openaiProvider, responseData)).toThrow("Unknown apiFlavor 'default', allowed values: chat, responses")
+    })
+  })
+
+  describe('Mistral provider', () => {
+    const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
+    const responseData = {
+      model: 'mistral-ocr-4-1-completion',
+      usage_info: { doc_size_bytes: 108_451_500, pages_processed: 29 },
+    }
+
+    it('extracts and prices OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr')
+
+      expect(model).toBe('mistral-ocr-4-1-completion')
+      expect(usage).toEqual({ input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.116)
+    })
+
+    it('extracts and prices annotated OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr_annotated')
+
+      expect(usage).toEqual({ input_annotated_document_pages: 29, input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.145)
     })
   })
 
@@ -166,47 +316,187 @@ describe('extractUsage', () => {
   describe('HuggingFace providers', () => {
     const huggingfaceProvider: Provider = data.find((provider) => provider.id === 'huggingface')!
     const huggingfaceTogetherProvider: Provider = data.find((provider) => provider.id === 'huggingface_together')!
+    const togetherResponseData = {
+      model: 'deepseek-ai/DeepSeek-R1',
+      usage: {
+        cached_tokens: 0,
+        completion_tokens: 197,
+        prompt_tokens: 4,
+        total_tokens: 201,
+      },
+    }
 
-    it('should extract routed provider usage with default and chat apiFlavor', () => {
-      const responseData = {
-        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-        usage: { completion_tokens: 197, prompt_tokens: 4, total_tokens: 201 },
+    it('should extract recorded Together usage with default and chat apiFlavor', () => {
+      const expected = {
+        model: 'deepseek-ai/DeepSeek-R1',
+        usage: { input_tokens: 4, output_tokens: 197 },
       }
 
-      expect(extractUsage(huggingfaceTogetherProvider, responseData)).toEqual({
-        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-        usage: { input_tokens: 4, output_tokens: 197 },
-      })
-      expect(extractUsage(huggingfaceTogetherProvider, responseData, 'chat')).toEqual({
-        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
-        usage: { input_tokens: 4, output_tokens: 197 },
-      })
+      expect(extractUsage(huggingfaceTogetherProvider, togetherResponseData)).toEqual(expected)
+      expect(extractUsage(huggingfaceTogetherProvider, togetherResponseData, 'chat')).toEqual(expected)
     })
 
-    it('should extract generic provider usage with default apiFlavor and cache read tokens', () => {
+    it('should extract OpenAI-compatible details for the generic provider', () => {
       const responseData = {
-        model: 'server-side-routed-model',
+        model: 'openai/gpt-oss-120b',
         usage: {
-          completion_tokens: 197,
-          prompt_tokens: 4,
-          prompt_tokens_details: { cached_tokens: 2 },
-          total_tokens: 201,
+          completion_tokens: 59,
+          completion_tokens_details: { audio_tokens: 5, reasoning_tokens: 47 },
+          prompt_tokens: 69,
+          prompt_tokens_details: { audio_tokens: 7, cache_write_tokens: 3, cached_tokens: 11 },
+          total_tokens: 128,
         },
       }
 
-      expect(huggingfaceProvider.models).toEqual([])
       expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
-        model: 'server-side-routed-model',
-        usage: { cache_read_tokens: 2, input_tokens: 4, output_tokens: 197 },
+        model: 'openai/gpt-oss-120b',
+        usage: {
+          cache_read_tokens: 11,
+          cache_write_tokens: 3,
+          input_audio_tokens: 7,
+          input_tokens: 69,
+          output_audio_tokens: 5,
+          output_reasoning_tokens: 47,
+          output_tokens: 59,
+        },
+      })
+    })
+
+    it('should ignore missing optional detail objects', () => {
+      const responseData = {
+        model: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        usage: {
+          completion_tokens: 38,
+          completion_tokens_details: null,
+          prompt_tokens: 448,
+          prompt_tokens_details: null,
+          total_tokens: 486,
+        },
+      }
+
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
+        model: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        usage: { input_tokens: 448, output_tokens: 38 },
       })
     })
 
     it('should resolve routed and generic providers without shadowing', () => {
-      // JS matches api_pattern with unanchored RegExp.test, so pin resolution precedence here too.
       expect(findProvider({ providerId: 'huggingface' })?.id).toBe('huggingface')
       expect(findProvider({ providerId: 'huggingface_together' })?.id).toBe('huggingface_together')
       expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe('huggingface_together')
       expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/v1' })?.id).toBe('huggingface')
+    })
+  })
+
+  describe('xAI provider', () => {
+    const xaiProvider: Provider = data.find((provider) => provider.id === 'x-ai')!
+
+    it('should add native reasoning tokens to aggregate output', () => {
+      const responseData = {
+        model: 'grok-4-fast-reasoning',
+        usage: {
+          cached_prompt_text_tokens: 162,
+          completion_tokens: 27,
+          prompt_tokens: 181,
+          reasoning_tokens: 19,
+          total_tokens: 227,
+        },
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData)
+
+      expect(model).toBe('grok-4-fast-reasoning')
+      expect(usage).toEqual({
+        cache_read_tokens: 162,
+        input_tokens: 181,
+        output_reasoning_tokens: 19,
+        output_tokens: 46,
+      })
+
+      const price = calcPrice(usage, model!, { provider: xaiProvider })
+      expect(price).not.toBeNull()
+      expect(price!.total_price).toBeCloseTo(0.0000349, 12)
+    })
+
+    it('should add chat reasoning tokens to aggregate output', () => {
+      const responseData = {
+        model: 'grok-4-fast-reasoning',
+        usage: {
+          completion_tokens: 8,
+          completion_tokens_details: { reasoning_tokens: 6 },
+          prompt_tokens: 10,
+          total_tokens: 24,
+        },
+      }
+
+      const { usage } = extractUsage(xaiProvider, responseData, 'chat')
+
+      expect(usage).toEqual({
+        input_tokens: 10,
+        output_reasoning_tokens: 6,
+        output_tokens: 14,
+      })
+    })
+  })
+
+  describe('Perplexity provider', () => {
+    const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
+
+    it('should add separately reported output categories to aggregate output', () => {
+      const responseData = {
+        model: 'sonar-deep-research',
+        usage: {
+          citation_tokens: 19028,
+          completion_tokens: 11395,
+          num_search_queries: 21,
+          prompt_tokens: 33,
+          reasoning_tokens: 193947,
+          total_tokens: 11428,
+        },
+      }
+
+      const { model, usage } = extractUsage(perplexityProvider, responseData)
+
+      expect(model).toBe('sonar-deep-research')
+      expect(usage).toEqual({
+        input_tokens: 33,
+        output_citation_tokens: 19028,
+        output_reasoning_tokens: 193947,
+        output_tokens: 224370,
+        web_searches: 21,
+      })
+
+      const price = calcPrice(usage, model!, { provider: perplexityProvider })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.000066, 12)
+      expect(price!.output_price).toBeCloseTo(0.711057, 12)
+      expect(price!.total_price).toBeCloseTo(0.816123, 12)
+    })
+  })
+
+  describe('Cohere provider', () => {
+    const cohereProvider: Provider = data.find((provider) => provider.id === 'cohere')!
+
+    it('should extract raw token usage with tokens apiFlavor', () => {
+      const responseData = {
+        id: 'chatcmpl-00000000-0000-0000-0000-000000000000',
+        message: { content: [{ text: 'Done.', type: 'text' }], role: 'assistant' },
+        model: 'command-r-plus',
+        usage: {
+          billed_units: { input_tokens: 13, output_tokens: 8 },
+          cached_tokens: 0,
+          tokens: { input_tokens: 542, output_tokens: 8 },
+        },
+      }
+
+      const { model, usage } = extractUsage(cohereProvider, responseData, 'tokens')
+
+      expect(model).toBe('command-r-plus')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        input_tokens: 542,
+        output_tokens: 8,
+      })
     })
   })
 
@@ -220,6 +510,17 @@ describe('extractUsage', () => {
       [{ model: 'x', usage: { input_tokens: [] } }, 'Expected `usage.input_tokens` value to be a number, got array'],
     ])('should throw error for invalid data: %j', (responseData, expectedError) => {
       expect(() => extractUsage(anthropicProvider, responseData)).toThrow(expectedError)
+    })
+
+    it.each([
+      ['negative optional component', { first_seconds: -1, second_seconds: 2 }],
+      ['NaN optional component', { first_seconds: Number.NaN, second_seconds: 2 }],
+      ['infinite optional component', { first_seconds: Number.POSITIVE_INFINITY, second_seconds: 2 }],
+      ['negative required component', { first_seconds: 2, second_seconds: -1 }],
+    ])('should reject invalid numeric components before accumulation: %s', (_name, usage) => {
+      expect(() => extractUsage(fractionalProvider, { model: 'fractional-model', usage })).toThrow(
+        'Invalid usage value for audio_seconds: expected a finite non-negative number'
+      )
     })
 
     it('should throw when a required nested path has the wrong intermediate shape', () => {
@@ -241,6 +542,35 @@ describe('extractUsage', () => {
       expect(() => extractUsage(provider, { model: 'test-model', usage: { totals: 1 } })).toThrow(
         'Expected `usage.totals` value to be a mapping, got number'
       )
+    })
+
+    it('should warn and skip an unsupported destination before reading its required path', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'future_tokens', path: 'missing_tokens', required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
+      expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+      expect(warn).toHaveBeenCalledTimes(1)
     })
 
     it('should skip optional nested paths with the wrong intermediate shape', () => {
@@ -336,7 +666,11 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
+        input_text_tokens: 75,
         input_tokens: 100,
+        input_tool_tokens: 25,
+        output_reasoning_tokens: 144,
+        output_text_tokens: 18,
         output_tokens: 162,
       })
     })
@@ -368,9 +702,52 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12239,
+        cache_text_read_tokens: 12110,
         input_audio_tokens: 150,
+        input_text_tokens: 14002,
         input_tokens: 14152,
+        output_reasoning_tokens: 69,
+        output_text_tokens: 50,
         output_tokens: 119,
+      })
+    })
+
+    it('should use tool-use prompt modality details for input modalities', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          candidatesTokenCount: 3,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          promptTokenCount: 10,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          thoughtsTokenCount: 4,
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 10 },
+            { modality: 'AUDIO', tokenCount: 5 },
+            { modality: 'IMAGE', tokenCount: 7 },
+            { modality: 'DOCUMENT', tokenCount: 2 },
+            { modality: 'VIDEO', tokenCount: 3 },
+          ],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_audio_tokens: 5,
+        input_audio_tool_tokens: 5,
+        input_image_tokens: 9,
+        input_image_tool_tokens: 9,
+        input_text_tokens: 20,
+        input_text_tool_tokens: 10,
+        input_tokens: 35,
+        input_tool_tokens: 25,
+        input_video_tokens: 3,
+        input_video_tool_tokens: 3,
+        output_reasoning_tokens: 4,
+        output_text_tokens: 3,
+        output_tokens: 7,
       })
     })
   })
@@ -442,6 +819,26 @@ describe('extractUsage', () => {
 
       expect(model).toBeNull()
       expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
+    })
+
+    it('should extract Converse usage with cache write tokens (real observed body)', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 0, cacheWriteInputTokens: 11207, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 11207, input_tokens: 11216, output_tokens: 5 })
+    })
+
+    it('should extract Converse usage with cache read tokens', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 11207, cacheWriteInputTokens: 0, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 11207, cache_write_tokens: 0, input_tokens: 11216, output_tokens: 5 })
     })
   })
 })

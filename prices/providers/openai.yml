@@ -2,6 +2,8 @@
 name: OpenAI
 id: openai
 pricing_urls:
+  - https://developers.openai.com/api/docs/pricing
+  - https://developers.openai.com/api/docs/guides/prompt-caching
   - https://platform.openai.com/docs/pricing
   - https://openai.com/api/pricing/
   - https://platform.openai.com/docs/models
@@ -10,11 +12,12 @@ api_pattern: 'https://api\.openai\.com'
 model_match:
   or:
     - starts_with: "gpt-"
+    - equals: whisper-1
     - regex: "^o[134]"
 provider_match:
   contains: openai
 extractors:
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/completion_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/completion_usage.py
   - api_flavor: chat
     root: usage
     mappings:
@@ -23,15 +26,21 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
       - path: [prompt_tokens_details, audio_tokens]
         dest: input_audio_tokens
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/responses/response_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/responses/response_usage.py
   - api_flavor: responses
     root: usage
     mappings:
@@ -40,15 +49,75 @@ extractors:
       - path: [input_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: output_tokens
         dest: output_tokens
+  # https://platform.openai.com/docs/api-reference/realtime-server-events/response/done
+  - api_flavor: realtime
+    root: [response, usage]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [input_token_details, image_tokens]
+        dest: input_image_tokens
+        required: false
+      - path: [input_token_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, text_tokens]
+        dest: cache_text_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, audio_tokens]
+        dest: cache_audio_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, image_tokens]
+        dest: cache_image_read_tokens
+        required: false
+      - path: [output_token_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_token_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
+  # https://developers.openai.com/api/reference/resources/images#imagesresponse
+  - api_flavor: images
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, text_tokens]
+        dest: input_text_tokens
+      - path: [input_tokens_details, image_tokens]
+        dest: input_image_tokens
+      - path: output_tokens
+        dest: output_tokens
+      - path: [output_tokens_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_tokens_details, image_tokens]
+        dest: output_image_tokens
+        required: false
   # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
   - api_flavor: embeddings
     root: usage
     mappings:
       - path: prompt_tokens
         dest: input_tokens
-
 models:
   - id: ada
     match:
@@ -371,10 +440,9 @@ models:
     context_window: 128000
     prices_checked: 2025-07-22
     prices:
-      # prompt_tokens includes audio_tokens; this catch-all prices the
-      # non-audio remainder since OpenAI lists no separate text-input rate.
+      # prompt_tokens includes audio_tokens; OpenAI lists the same price for
+      # text and audio input, so the catch-all covers both.
       input_mtok: 2.5
-      input_audio_mtok: 2.5
       output_mtok: 10
 
   - id: gpt-4o-mini
@@ -412,10 +480,9 @@ models:
       starts_with: gpt-4o-mini-audio
     prices_checked: 2025-07-22
     prices:
-      # prompt_tokens includes audio_tokens; this catch-all prices the
-      # non-audio remainder since OpenAI lists no separate text-input rate.
+      # prompt_tokens includes audio_tokens; OpenAI lists the same price for
+      # text and audio input, so the catch-all covers both.
       input_mtok: 0.15
-      input_audio_mtok: 0.15
       output_mtok: 0.6
 
   - id: gpt-4o-mini-realtime-preview
@@ -443,10 +510,9 @@ models:
       equals: gpt-4o-mini-tts
     prices:
       input_mtok: 0.6
-      # completion_tokens includes audio_tokens; this catch-all prices the
-      # non-audio remainder since OpenAI lists no separate text-output rate.
+      # completion_tokens includes audio_tokens; OpenAI lists the same price
+      # for text and audio output, so the catch-all covers both.
       output_mtok: 12
-      output_audio_mtok: 12
 
   - id: gpt-4o-realtime-preview
     match:
@@ -478,6 +544,8 @@ models:
       or:
         - equals: gpt-4o-transcribe
         - equals: gpt-4o-transcribe-diarize
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.
     prices:
       input_mtok: 2.5
       input_audio_mtok: 6
@@ -805,11 +873,26 @@ models:
         - equals: gpt-5.5-codex
         - equals: gpt-5-5-codex
     context_window: 1000000
-    prices_checked: 2026-04-24
+    prices_checked: 2026-08-24
+    price_comments: >-
+      Prompts with >272K input tokens are billed at 2x input and cached input and 1.5x output for the full request.
+      Ref: https://developers.openai.com/api/docs/models/gpt-5.5
     prices:
-      input_mtok: 5
-      cache_read_mtok: 0.5
-      output_mtok: 30
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
 
   - id: gpt-5.5-pro
     name: GPT-5.5 Pro
@@ -821,10 +904,214 @@ models:
         - equals: gpt-5-5-pro
         - equals: gpt-5-5-pro-2026-04-23
     context_window: 1000000
-    prices_checked: 2026-04-24
+    prices_checked: 2026-08-24
+    price_comments: >-
+      Prompts with >272K input tokens are billed at 2x input and 1.5x output for the full request.
+      Ref: https://developers.openai.com/api/docs/pricing
     prices:
-      input_mtok: 30
-      output_mtok: 180
+      input_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 60
+      output_mtok:
+        base: 180
+        tiers:
+          - start: 272000
+            price: 270
+
+  - id: gpt-5.6-luna
+    name: GPT-5.6 Luna
+    description: GPT-5.6 model optimized for cost-sensitive workloads.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-luna
+        - equals: gpt-5-6-luna
+        - regex: ^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-luna-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-08-02
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Luna prices
+      by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.1
+            tiers:
+              - start: 272000
+                price: 0.2
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 272000
+                price: 9
+      - constraint:
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          cache_read_mtok:
+            base: 0.02
+            tiers:
+              - start: 272000
+                price: 0.04
+          output_mtok:
+            base: 1.2
+            tiers:
+              - start: 272000
+                price: 1.8
+
+  - id: gpt-5.6-sol
+    name: GPT-5.6 Sol
+    description: Frontier model for complex professional work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-sol
+        - equals: gpt-5-6-sol
+        - equals: gpt-5.6
+        - equals: gpt-5-6
+        - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-08-24
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Sol input prices
+      by 20% and output prices by 33% on 2026-08-21. Refs:
+      https://developers.openai.com/api/docs/models/gpt-5.6-sol,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 272000
+                price: 12.5
+          cache_read_mtok:
+            base: 0.5
+            tiers:
+              - start: 272000
+                price: 1
+          output_mtok:
+            base: 30
+            tiers:
+              - start: 272000
+                price: 45
+      - constraint:
+          # https://developers.openai.com/api/docs/changelog
+          start_date: 2026-08-21
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_read_mtok:
+            base: 0.4
+            tiers:
+              - start: 272000
+                price: 0.8
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+
+  - id: gpt-5.6-terra
+    name: GPT-5.6 Terra
+    description: GPT-5.6 model that balances intelligence and cost.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-terra
+        - equals: gpt-5-6-terra
+        - regex: ^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-terra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-08-02
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Terra prices
+      by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_write_mtok:
+            base: 3.125
+            tiers:
+              - start: 272000
+                price: 6.25
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 22.5
+      - constraint:
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 272000
+                price: 4
+          cache_write_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 272000
+                price: 18
 
   - id: gpt-audio
     name: GPT Audio
@@ -875,6 +1162,22 @@ models:
       cache_read_mtok: 0.5
       output_mtok: 30
 
+  - id: gpt-image-1
+    name: GPT Image 1
+    description: OpenAI's previous image generation model.
+    match:
+      equals: gpt-image-1
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 10
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2.5
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 40
+
   - id: gpt-image-1-mini
     name: GPT Image 1 Mini
     description: >-
@@ -882,10 +1185,16 @@ models:
     match:
       or:
         - equals: gpt-image-1-mini
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1-mini.
     prices:
       input_mtok: 2
+      input_image_mtok: 2.5
       cache_read_mtok: 0.2
+      cache_image_read_mtok: 0.25
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 8
 
   - id: gpt-image-1.5
     name: GPT Image 1.5
@@ -895,11 +1204,15 @@ models:
       or:
         - equals: gpt-image-1.5
         - equals: gpt-image-1.5-2025-12-16
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1.5.
     prices:
       input_mtok: 5
+      input_image_mtok: 8
       cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
       output_mtok: 10
+      output_image_mtok: 32
 
   - id: gpt-image-2
     name: GPT Image 2
@@ -909,10 +1222,16 @@ models:
       or:
         - equals: gpt-image-2
         - equals: gpt-image-2-2026-04-21
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.
     prices:
       input_mtok: 5
+      input_image_mtok: 8
       cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -963,12 +1282,15 @@ models:
         - equals: gpt-realtime
         - equals: gpt-realtime-2025-08-28
         - equals: gpt-realtime-1.5
-    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime.
     prices:
       input_mtok: 4
       cache_read_mtok: 0.4
       input_audio_mtok: 32
       cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
       output_mtok: 16
       output_audio_mtok: 64
 
@@ -976,30 +1298,46 @@ models:
     match:
       or:
         - equals: gpt-realtime-2
-    price_comments: Missing image token prices which we don't support yet
-    prices_checked: 2026-06-26
+        - equals: gpt-realtime-2.1
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.
+    prices_checked: 2026-07-22
     prices:
       input_mtok: 4
       cache_read_mtok: 0.4
       output_mtok: 24
       input_audio_mtok: 32
       cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
       output_audio_mtok: 64
 
   - id: gpt-realtime-mini
     match:
       or:
         - equals: gpt-realtime-mini
+        - equals: gpt-realtime-2.1-mini
         - equals: gpt-realtime-mini-2025-12-15
         - equals: gpt-realtime-mini-2025-10-06
-    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini.
     prices:
       input_mtok: 0.6
       cache_read_mtok: 0.06
       input_audio_mtok: 10
       cache_audio_read_mtok: 0.3
+      input_image_mtok: 0.8
+      cache_image_read_mtok: 0.08
       output_mtok: 2.4
       output_audio_mtok: 20
+
+  - id: gpt-transcribe
+    match:
+      equals: gpt-transcribe
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-transcribe.
+    prices:
+      audio_hours: 0.27
+      input_audio_hours: 0.27
 
   - id: moderation
     description: All OpenAI moderation models and endpoints are free of charge
@@ -1186,3 +1524,12 @@ models:
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
+
+  - id: whisper-1
+    match:
+      equals: whisper-1
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/whisper-1.
+    prices:
+      audio_hours: 0.36
+      input_audio_hours: 0.36

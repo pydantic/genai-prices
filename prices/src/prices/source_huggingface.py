@@ -6,7 +6,16 @@ import httpx2
 from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
-from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
+from prices.prices_types import (
+    ClauseAnd,
+    ClauseContains,
+    ClauseEquals,
+    ClauseOr,
+    ModelInfo,
+    ModelPrice,
+    Provider,
+    UsageExtractor,
+)
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
 
 
@@ -40,15 +49,36 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
         )
 
 
+def get_huggingface_extractors(providers_dir: Path) -> list[UsageExtractor]:
+    openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
+    assert openai_extractors
+    [chat_extractor_template] = [e for e in openai_extractors if e.api_flavor == 'chat']
+    return [
+        chat_extractor_template.model_copy(update={'api_flavor': 'default'}, deep=True),
+        chat_extractor_template.model_copy(deep=True),
+    ]
+
+
+def update_huggingface_extractors():
+    """Update every generated provider without refreshing its models or prices."""
+    providers_dir = Path(__file__).parent / '../../providers'
+    extractors = get_huggingface_extractors(providers_dir)
+    extractor_data = [extractor.model_dump(mode='json', exclude_none=True, by_alias=True) for extractor in extractors]
+    del extractor_data[0]['api_flavor']
+
+    for path in providers_dir.glob('huggingface_*.yml'):
+        provider_yaml = ProviderYaml(path)
+        provider_yaml.data['extractors'] = extractor_data  # pyright: ignore[reportGeneralTypeIssues]
+        provider_yaml.save()
+
+
 def main():
+    update_huggingface_extractors()
     models = httpx2.get('https://router.huggingface.co/v1/models').json()['data']
 
     providers = {p['provider'] for model in models for p in model['providers']}
     providers_dir = Path(__file__).parent / '../../providers'
-
-    openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
-    assert openai_extractors
-    [chat_extractor_template] = [e for e in openai_extractors if e.api_flavor == 'chat']
+    default_extractor, chat_extractor = get_huggingface_extractors(providers_dir)
 
     for provider in providers:
         provider_id = f'huggingface_{provider}'
@@ -62,8 +92,6 @@ def main():
                 ClauseContains(contains=provider),
             ],
         )
-        default_extractor = chat_extractor_template.model_copy(update={'api_flavor': 'default'}, deep=True)
-        chat_extractor = chat_extractor_template.model_copy(deep=True)
         provider_info = Provider(
             id=provider_id,
             name=f'HuggingFace ({provider})',
@@ -76,7 +104,7 @@ def main():
             extractors=[default_extractor, chat_extractor],
             provider_match=provider_match,
         )
-        yaml_data = provider_info.model_dump(mode='json', exclude_none=True, by_alias=True)
+        yaml_data = provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
         for extractor in cast(list[dict[str, Any]], yaml_data.get('extractors', [])):
             if extractor.get('api_flavor') == 'default':
                 del extractor['api_flavor']
@@ -95,7 +123,7 @@ def main():
             provider_yaml.save()
 
 
-def get_huggingface_prices():
+def get_huggingface_prices():  # pragma: no cover - thin CLI alias for main
     """Download and update HuggingFace provider prices."""
     main()
 

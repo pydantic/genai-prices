@@ -1,9 +1,12 @@
+from dataclasses import replace
 from datetime import datetime, timedelta
 from decimal import Decimal
+from unittest.mock import Mock
 
 import pytest
 from inline_snapshot import snapshot
 
+from genai_prices import Usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, find_provider_by_id
 
@@ -13,6 +16,9 @@ mark_xfail_todo = pytest.mark.xfail(reason='todo')
 test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-4o-mini', snapshot(('openai', 'gpt-4o-mini'))),
     ('openai', 'gpt-4.1', snapshot(('openai', 'gpt-4.1'))),
+    ('google', 'gemini-3.1-flash-lite', snapshot(('google', 'gemini-3.1-flash-lite'))),
+    ('google', 'gemini-3.1-flash-lite-preview', snapshot(('google', 'gemini-3.1-flash-lite'))),
+    ('google', 'gemini-3.1-flash-lite-image', snapshot(('google', 'gemini-3.1-flash-lite-image'))),
     ('openai', 'gpt-4o-mini-2024-07-18', snapshot(('openai', 'gpt-4o-mini'))),
     ('openai', 'gpt-4.1-mini', snapshot(('openai', 'gpt-4.1-mini'))),
     ('openai', 'gpt-4.1-mini-2025-04-14', snapshot(('openai', 'gpt-4.1-mini'))),
@@ -111,6 +117,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('anthropic', 'claude-3-5-haiku-20241022', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('google-gla', 'gemini-2.5-flash-lite-preview-06-17', snapshot(('google', 'gemini-2.5-flash-lite'))),
+    ('google-gla', 'gemini-2.5-flash-lite-preview', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param(
         'bedrock',
         'us.anthropic.claude-3-5-haiku-20241022-v1:0',
@@ -221,7 +228,7 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0')),
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
-    ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3'))),
+    ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
@@ -275,7 +282,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('perplexity', 'sonar-pro', snapshot(('perplexity', 'sonar-pro'))),
     pytest.param('nebius', 'nebius/meta-llama/Llama-3.3-70B-Instruct', None, marks=mark_xfail_todo),
     pytest.param('perplexity', 'perplexity/sonar-pro', None, marks=mark_xfail_todo),
-    ('mistral_ai', 'mistral-medium-2505', snapshot(('mistral', 'mistral-medium-3'))),
+    ('mistral_ai', 'mistral-medium-2505', snapshot(('mistral', 'mistral-medium-3-1'))),
     ('google-gla', 'gemini-2.5-flash-preview-04-17', snapshot(('google', 'gemini-2.5-flash-preview'))),
     ('groq', 'meta-llama/llama-guard-4-12b', snapshot(('groq', 'meta-llama/llama-guard-4-12b'))),
     ('azure', 'o3-mini', snapshot(('azure', 'o3-mini'))),
@@ -406,10 +413,22 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openai', 'gpt-5.6', snapshot(('openai', 'gpt-5.6-sol'))),
+    ('openai', 'gpt-5-6', snapshot(('openai', 'gpt-5.6-sol'))),
+    ('openai', 'gpt-5.6-sol', snapshot(('openai', 'gpt-5.6-sol'))),
+    ('openai', 'gpt-5-6-sol', snapshot(('openai', 'gpt-5.6-sol'))),
+    ('openai', 'gpt-5.6-terra', snapshot(('openai', 'gpt-5.6-terra'))),
+    ('openai', 'gpt-5-6-terra', snapshot(('openai', 'gpt-5.6-terra'))),
+    ('openai', 'gpt-5.6-luna', snapshot(('openai', 'gpt-5.6-luna'))),
+    ('openai', 'gpt-5-6-luna', snapshot(('openai', 'gpt-5.6-luna'))),
     ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
+    pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
+    pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
+    pytest.param('bedrock', 'writer.palmyra-x5-v1:0', snapshot(('aws', 'writer.palmyra-x5-v1:0'))),
+    pytest.param('bedrock', 'us.writer.palmyra-x5-v1:0', snapshot(('aws', 'writer.palmyra-x5-v1:0'))),
 ]
 
 
@@ -648,6 +667,88 @@ def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
 
     with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing/gpt-4o'"):
         snapshot.find_provider_model('missing/gpt-4o', None, 'litellm', None)
+
+
+SHARED_MODEL_REF = 'claude-opus-4-6'
+
+
+def test_provider_specific_extraction_does_not_affect_unqualified_lookup():
+    usage = Usage(input_tokens=1_000_000, output_tokens=1_000_000)
+    baseline_snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    baseline = baseline_snapshot.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    snapshot_after_google_lookup = DataSnapshot(providers=providers, from_auto_update=False)
+    extracted = snapshot_after_google_lookup.extract_usage(
+        {
+            'modelVersion': SHARED_MODEL_REF,
+            'usageMetadata': {'promptTokenCount': 1, 'candidatesTokenCount': 1},
+        },
+        provider_id='google',
+    )
+    assert extracted.provider.id != baseline.provider.id
+
+    after = snapshot_after_google_lookup.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    assert after.provider.id == baseline.provider.id
+    assert after.total_price == baseline.total_price
+
+
+def test_lookup_with_resolved_provider_is_cached(monkeypatch: pytest.MonkeyPatch):
+    stored_google_provider = find_provider_by_id(providers, 'google')
+    assert stored_google_provider is not None
+    google_provider = replace(stored_google_provider)
+    find_model = Mock(wraps=google_provider.find_model)
+    monkeypatch.setattr(google_provider, 'find_model', find_model)
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+
+    find_model.assert_called_once_with(SHARED_MODEL_REF, all_providers=providers)
+
+
+def test_find_provider_caches_successful_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = True
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    assert snapshot.find_provider('cached-model', None, None) is provider
+    assert snapshot.find_provider('cached-model', None, None) is provider
+
+    model_match.is_match.assert_called_once_with('cached-model')
+
+
+def test_find_provider_caches_failed_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = False
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    for _ in range(2):
+        with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing-model'"):
+            snapshot.find_provider('missing-model', None, None)
+
+    model_match.is_match.assert_called_once_with('missing-model')
+
+
+def test_find_provider_cache_is_isolated_by_snapshot():
+    missing_match = Mock()
+    missing_match.is_match.return_value = False
+    missing_provider = replace(providers[0], model_match=missing_match)
+    missing_snapshot = DataSnapshot(providers=[missing_provider], from_auto_update=False)
+
+    matching_match = Mock()
+    matching_match.is_match.return_value = True
+    matching_provider = replace(providers[0], model_match=matching_match)
+    matching_snapshot = DataSnapshot(providers=[matching_provider], from_auto_update=False)
+
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'snapshot-model'"):
+        missing_snapshot.find_provider('snapshot-model', None, None)
+
+    assert matching_snapshot.find_provider('snapshot-model', None, None) is matching_provider
+    missing_match.is_match.assert_called_once_with('snapshot-model')
+    matching_match.is_match.assert_called_once_with('snapshot-model')
 
 
 def test_snapshot_active_uses_ttl():
