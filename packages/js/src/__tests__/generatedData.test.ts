@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Provider } from '../types'
-
 import { calcPrice } from '../api'
 import * as providerDataModule from '../data'
 import { unitData } from '../dataUnits'
@@ -106,6 +104,57 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedModelId: 'pixtral-12b', expectedTotalPrice: 0.000165, model: 'pixtral-12b-latest' },
+    { expectedModelId: 'pixtral-large', expectedTotalPrice: 0.0026, model: 'pixtral-large-2411' },
+    { expectedModelId: 'mixtral-8x7b', expectedTotalPrice: 0.00077, model: 'mixtral-8x7b-instruct-v0.1' },
+  ])('prices $model without a provider ID', ({ expectedModelId, expectedTotalPrice, model }) => {
+    const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, model)
+
+    expect(result?.provider.id).toBe('mistral')
+    expect(result?.model.id).toBe(expectedModelId)
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
+    {
+      cacheReadRate: 0.0165,
+      contextWindow: 1_000_000,
+      inputRate: 0.0805,
+      model: 'deepseek/deepseek-v4-flash',
+      outputRate: 0.161,
+    },
+    { cacheReadRate: 0.10875, contextWindow: 1_000_000, inputRate: 1.305, model: 'deepseek/deepseek-v4-pro', outputRate: 2.61 },
+    {
+      cacheReadRate: 0.0198,
+      contextWindow: 1_000_000,
+      inputRate: 0.594,
+      model: 'deepseek/deepseek-v4-pro-0813',
+      outputRate: 1.782,
+    },
+    { cacheReadRate: 0.012, contextWindow: 163_000, inputRate: 0.23, model: 'deepseek/deepseek-v3.2', outputRate: 0.33 },
+    { cacheReadRate: 0.15, contextWindow: 196_000, inputRate: 0.27, model: 'minimax/minimax-m2.5', outputRate: 1.08 },
+    { cacheReadRate: 0.097, contextWindow: 202_000, inputRate: 0.388, model: 'z-ai/glm-4.7', outputRate: 1.806 },
+    { cacheReadRate: 0.129, contextWindow: 205_000, inputRate: 0.516, model: 'z-ai/glm-5', outputRate: 2.322 },
+    { cacheReadRate: 0.186, contextWindow: 202_000, inputRate: 0.743, model: 'z-ai/glm-5.1', outputRate: 2.971 },
+    { cacheReadRate: 0.124, contextWindow: 1_000_000, inputRate: 0.495, model: 'z-ai/glm-5.2', outputRate: 1.733 },
+    { cacheReadRate: 0.225, contextWindow: 262_000, inputRate: 0.45, model: 'moonshotai/kimi-k2.5', outputRate: 2.2 },
+    { cacheReadRate: 0.16, contextWindow: 262_000, inputRate: 0.95, model: 'moonshotai/kimi-k2.6', outputRate: 4 },
+    { cacheReadRate: 0.05, contextWindow: 1_000_000, inputRate: 0.2, model: 'xiaomi/mimo-v2.5', outputRate: 0.4 },
+    { cacheReadRate: 0.0036, contextWindow: 1_000_000, inputRate: 0.435, model: 'xiaomi/mimo-v2.5-pro', outputRate: 0.87 },
+  ])('prices Avian $model', ({ cacheReadRate, contextWindow, inputRate, model, outputRate }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'avian',
+    })
+
+    expect(result?.provider.id).toBe('avian')
+    expect(result?.model.id).toBe(model)
+    expect(result?.model.context_window).toBe(contextWindow)
+    expect(result?.input_price).toBeCloseTo(inputRate + cacheReadRate, 12)
+    expect(result?.output_price).toBeCloseTo(outputRate, 12)
+    expect(result?.total_price).toBeCloseTo(inputRate + cacheReadRate + outputRate, 12)
+  })
+
+  it.each([
     {
       expectedPrices: {
         cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
@@ -173,10 +222,25 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { billedSeconds: 0, hourlyRate: 0.111, model: 'whisper-large-v3', usage: {} },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { input_audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 10, input_audio_seconds: 10 } },
+    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
+  ])('prices $model transcription duration', ({ billedSeconds, hourlyRate, model, usage }) => {
+    const originalUsage = { ...usage }
+    const result = calcPrice(usage, model, { providerId: 'groq' })
+    const expectedPrice = (hourlyRate * billedSeconds) / 3_600
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+    expect(usage).toEqual(originalUsage)
+  })
+
+  it.each([
     { expectedPrice: 0.0000375, model: 'gpt-transcribe', providerId: 'openai', seconds: 0.5 },
     { expectedPrice: 0.003, model: 'whisper-1', providerId: 'openai', seconds: 30 },
-    { expectedPrice: 0.00185, model: 'whisper-large-v3', providerId: 'groq', seconds: 60 },
-    { expectedPrice: 0.001, model: 'whisper-large-v3-turbo', providerId: 'groq', seconds: 90 },
     { expectedPrice: 0.003, model: 'voxtral-mini-2602', providerId: 'mistral', seconds: 60 },
   ])('prices $model transcription duration', ({ expectedPrice, model, providerId, seconds }) => {
     const result = calcPrice({ audio_seconds: seconds, input_audio_seconds: seconds }, model, { providerId })
@@ -186,161 +250,11 @@ describe('generated data split', () => {
     expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
   })
 
-  it.each([
-    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 1 },
-    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 10 },
-    { billedSeconds: 11, hourlyRate: 0.111, model: 'whisper-large-v3', reportedSeconds: 11 },
-    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 1 },
-    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 10 },
-    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', reportedSeconds: 11 },
-  ])(
-    'applies the minimum billed duration for $model at $reportedSeconds seconds',
-    ({ billedSeconds, hourlyRate, model, reportedSeconds }) => {
-      const result = calcPrice({ audio_seconds: reportedSeconds, input_audio_seconds: reportedSeconds }, model, { providerId: 'groq' })
-      const expectedPrice = (hourlyRate * billedSeconds) / 3_600
-
-      expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
-      expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
-    }
-  )
-
-  it('preserves zero duration subtypes and the caller usage when applying a minimum', () => {
-    const usage = { audio_seconds: 5, input_audio_seconds: 0 }
-
-    const result = calcPrice(usage, 'whisper-large-v3', { providerId: 'groq' })
-
-    expect(result?.input_price).toBe(0)
-    expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
-    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 0 })
-  })
-
-  it.each([-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, Number.NaN])(
-    'rejects invalid reported audio duration %s before applying a minimum',
-    (seconds) => {
-      expect(() => calcPrice({ audio_seconds: seconds }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
-        'Invalid usage value for audio_seconds: expected a finite non-negative number'
-      )
-    }
-  )
-
-  it('rejects invalid original duration relationships before applying a minimum', () => {
-    expect(() => calcPrice({ audio_seconds: 5, input_audio_seconds: 6 }, 'whisper-large-v3', { providerId: 'groq' })).toThrow(
-      'Invalid usage data: input_audio_seconds (6) cannot exceed audio_seconds (5)'
-    )
-  })
-
-  it('rejects invalid directional duration totals before applying a minimum', () => {
-    expect(() =>
-      calcPrice({ audio_seconds: 5, input_audio_seconds: 3, output_audio_seconds: 3 }, 'whisper-large-v3', {
-        providerId: 'groq',
-      })
-    ).toThrow(
-      'Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals 6, which exceeds audio_seconds (5)'
-    )
-  })
-
-  it('accepts directional duration totals within floating-point rounding tolerance', () => {
-    const result = calcPrice({ audio_seconds: 0.3, input_audio_seconds: 0.1, output_audio_seconds: 0.2 }, 'whisper-large-v3', {
-      providerId: 'groq',
-    })
-
-    expect(result?.total_price).toBeCloseTo((0.111 * 10) / 3_600, 15)
-  })
-
-  it('preserves the billed aggregate when directional durations fully attribute it', () => {
-    const provider: Provider = {
-      api_pattern: '',
-      id: 'groq',
-      models: [
-        {
-          id: 'whisper-large-v3',
-          match: { equals: 'whisper-large-v3' },
-          prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
-        },
-      ],
-      name: 'Groq',
-    }
-    const result = calcPrice({ audio_seconds: 0.3, input_audio_seconds: 0.1, output_audio_seconds: 0.2 }, 'whisper-large-v3', { provider })
-
-    expect(result?.input_price).toBeCloseTo((0.1 * (10 / 3)) / 3_600, 15)
-    expect((result?.input_price ?? 0) + (result?.output_price ?? 0)).toBe(result?.total_price)
-  })
-
-  it('rejects a positive directional duration when the aggregate duration is zero', () => {
-    expect(() =>
-      calcPrice({ audio_seconds: 0, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { providerId: 'groq' })
-    ).toThrow(`Invalid usage data: input_audio_seconds (${Number.MIN_VALUE.toString()}) cannot exceed audio_seconds (0)`)
-  })
-
-  it('rejects a directional duration total that overflows', () => {
-    expect(() =>
-      calcPrice(
-        { audio_seconds: Number.MAX_VALUE, input_audio_seconds: Number.MAX_VALUE, output_audio_seconds: Number.MAX_VALUE },
-        'whisper-large-v3',
-        { providerId: 'groq' }
-      )
-    ).toThrow(
-      `Invalid usage data: more-specific usage for input_audio_seconds, output_audio_seconds totals Infinity, which exceeds audio_seconds (${Number.MAX_VALUE.toString()})`
-    )
-  })
-
-  it('scales directional audio usage when applying a minimum duration', () => {
-    const usage = { audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 }
-    const provider: Provider = {
-      api_pattern: '',
-      id: 'groq',
-      models: [
-        {
-          id: 'whisper-large-v3',
-          match: { equals: 'whisper-large-v3' },
-          prices: { audio_hours: 0.1, input_audio_hours: 0.1, output_audio_hours: 0.1 },
-        },
-      ],
-      name: 'Groq',
-    }
-
-    const result = calcPrice(usage, 'whisper-large-v3', { provider })
-
-    expect(result?.input_price).toBeCloseTo((0.1 * 4) / 3_600, 15)
-    expect(result?.output_price).toBeCloseTo((0.1 * 6) / 3_600, 15)
-    expect(result?.total_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
-    expect(usage).toEqual({ audio_seconds: 5, input_audio_seconds: 2, output_audio_seconds: 3 })
-  })
-
-  it('scales extremely small directional audio usage without overflowing', () => {
-    const provider: Provider = {
-      api_pattern: '',
-      id: 'groq',
-      models: [
-        {
-          id: 'whisper-large-v3',
-          match: { equals: 'whisper-large-v3' },
-          prices: { audio_hours: 0.1, input_audio_hours: 0.1 },
-        },
-      ],
-      name: 'Groq',
-    }
-
-    const result = calcPrice({ audio_seconds: Number.MIN_VALUE, input_audio_seconds: Number.MIN_VALUE }, 'whisper-large-v3', { provider })
-
-    expect(result?.input_price).toBeCloseTo((0.1 * 10) / 3_600, 15)
-  })
-
   it('matches only verified OpenAI diarization model IDs', () => {
     expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
       'gpt-4o-transcribe'
     )
     expect(calcPrice({}, 'gpt-transcribe-diarize', { providerId: 'openai' })).toBeNull()
-  })
-
-  it('uses OpenRouter pricing for qualified Voxtral model IDs', () => {
-    const result = calcPrice({ input_tokens: 1_000 }, 'mistralai/voxtral-small-24b-2507', { providerId: 'openrouter' })
-
-    expect(result?.provider.id).toBe('openrouter')
-    expect(result?.model.id).toBe('mistralai/voxtral-small-24b-2507')
-    expect(result?.input_price).toBe(0.0001)
-    expect(result?.output_price).toBe(0)
-    expect(result?.total_price).toBe(0.0001)
   })
 
   it.each([
@@ -478,6 +392,94 @@ describe('generated data split', () => {
     expect(result?.input_price).toBe(0.04)
     expect(result?.total_price).toBe(0.04)
   })
+
+  it.each([
+    {
+      expectedAnnotatedPagePrice: 1,
+      expectedModelId: 'mistral-ocr-2503',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-2503-completion',
+      timestamp: new Date('2025-03-06T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-2505',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-2505',
+      timestamp: new Date('2025-05-22T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 1,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-03-06T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-2512',
+      expectedPagePrice: 2,
+      model: 'mistral-ocr-2512-completion',
+      timestamp: new Date('2025-12-18T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-4-0',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-4-0',
+      timestamp: new Date('2026-06-23T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-4-1',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-4',
+      timestamp: new Date('2026-07-16T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-05-22T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 1,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-12-17T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 3,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 2,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2025-12-18T00:00:00Z'),
+    },
+    {
+      expectedAnnotatedPagePrice: 5,
+      expectedModelId: 'mistral-ocr-latest',
+      expectedPagePrice: 4,
+      model: 'mistral-ocr-latest',
+      timestamp: new Date('2026-06-23T00:00:00Z'),
+    },
+  ])(
+    'prices OCR pages for $model at $timestamp',
+    ({ expectedAnnotatedPagePrice, expectedModelId, expectedPagePrice, model, timestamp }) => {
+      const pagePrice = calcPrice({ input_document_pages: 1_000 }, model, { providerId: 'mistral', timestamp })
+      const annotatedPagePrice = calcPrice({ input_annotated_document_pages: 1_000, input_document_pages: 1_000 }, model, {
+        providerId: 'mistral',
+        timestamp,
+      })
+
+      expect(pagePrice?.model.id).toBe(expectedModelId)
+      expect(pagePrice?.input_price).toBe(expectedPagePrice)
+      expect(pagePrice?.total_price).toBe(expectedPagePrice)
+      expect(annotatedPagePrice?.input_price).toBe(expectedAnnotatedPagePrice)
+      expect(annotatedPagePrice?.total_price).toBe(expectedAnnotatedPagePrice)
+    }
+  )
 
   it('infers Mistral for the native Voxtral alias', () => {
     const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')

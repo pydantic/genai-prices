@@ -1,18 +1,19 @@
 from __future__ import annotations
 
 import json
+from collections import UserDict
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from decimal import Decimal, localcontext
 from numbers import Integral
-from types import SimpleNamespace
+from types import MappingProxyType, SimpleNamespace
 from typing import Any, cast
 from unittest.mock import patch
 
 import pytest
 
-from genai_prices.types import Usage
+from genai_prices.types import ModelPrice, Usage
 from genai_prices.units import UnitRegistry
 
 
@@ -279,10 +280,26 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_ignores_mapping_keys() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
+@pytest.mark.parametrize(
+    'raw_usage',
+    [
+        {'input_tokens': 100, 'output_tokens': 50},
+        UserDict({'input_tokens': 100, 'output_tokens': 50}),
+        MappingProxyType({'input_tokens': 100, 'output_tokens': 50}),
+    ],
+)
+def test_usage_from_raw_reads_known_mapping_values(raw_usage: object) -> None:
+    usage = Usage.from_raw(raw_usage)
 
-    assert usage == Usage()
+    assert usage == Usage(input_tokens=100, output_tokens=50)
+
+    price = ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
+
+    assert price.calc_price(raw_usage) == {
+        'input_price': Decimal('0.0001'),
+        'output_price': Decimal('0.0001'),
+        'total_price': Decimal('0.0002'),
+    }
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:

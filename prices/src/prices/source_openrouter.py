@@ -249,11 +249,11 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
         source_prices.write_source_prices('openrouter', prices)
 
 
-def update_from_openrouter():
+def update_from_openrouter():  # pragma: no cover - thin CLI alias for main
     """Update metadata and add new models based on OpenRouter API."""
     main('metadata')
 
 
-def get_openrouter_prices():
+def get_openrouter_prices():  # pragma: no cover - thin CLI alias for main
     """Get prices from OpenRouter API."""
     main('prices')

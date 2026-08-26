@@ -325,6 +325,29 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('Mistral provider', () => {
+    const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
+    const responseData = {
+      model: 'mistral-ocr-4-1-completion',
+      usage_info: { doc_size_bytes: 108_451_500, pages_processed: 29 },
+    }
+
+    it('extracts and prices OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr')
+
+      expect(model).toBe('mistral-ocr-4-1-completion')
+      expect(usage).toEqual({ input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.116)
+    })
+
+    it('extracts and prices annotated OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr_annotated')
+
+      expect(usage).toEqual({ input_annotated_document_pages: 29, input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.145)
+    })
+  })
+
   describe('OpenRouter provider', () => {
     const openrouterProvider: Provider = data.find((provider) => provider.id === 'openrouter')!
 

@@ -412,6 +412,23 @@ def test_mistral():
     )
 
 
+def test_mistral_ocr():
+    response_data = {
+        'model': 'mistral-ocr-4-1-completion',
+        'usage_info': {'pages_processed': 29, 'doc_size_bytes': 108_451_500},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='mistral', api_flavor='ocr')
+    assert extracted_usage.usage == Usage(input_document_pages=29)
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'mistral-ocr-4-1'
+    assert extracted_usage.calc_price().total_price == Decimal('0.116')
+
+    annotated_usage = extract_usage(response_data, provider_id='mistral', api_flavor='ocr_annotated')
+    assert annotated_usage.usage == Usage(input_document_pages=29, input_annotated_document_pages=29)
+    assert annotated_usage.calc_price().total_price == Decimal('0.145')
+
+
 def test_groq_cached_tokens():
     provider = next(provider for provider in providers if provider.id == 'groq')
     response_data = {
