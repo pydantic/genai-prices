@@ -125,6 +125,47 @@ describe('provider array integration', () => {
     )
   })
 
+  it('rejects invalid regular expressions before provider activation', () => {
+    expect(() => parseProviderData(downloadedProviderArray({ input_mtok: 1 }, { regex: '(' }))).toThrow(
+      'providers[0].models[0].match.regex must be a valid regular expression'
+    )
+  })
+
+  it.each([
+    ['negative flat price', -1, 'prices.input_mtok must be a finite non-negative number'],
+    ['non-finite flat price', Number.POSITIVE_INFINITY, 'prices.input_mtok must be a finite non-negative number'],
+    ['negative tier base', { base: -1, tiers: [] }, 'prices.input_mtok.base must be a finite non-negative number'],
+    [
+      'negative tier price',
+      { base: 1, tiers: [{ price: -1, start: 1 }] },
+      'prices.input_mtok.tiers[0].price must be a finite non-negative number',
+    ],
+    [
+      'negative tier start',
+      { base: 1, tiers: [{ price: 1, start: -1 }] },
+      'prices.input_mtok.tiers[0].start must be a non-negative safe integer',
+    ],
+    [
+      'fractional tier start',
+      { base: 1, tiers: [{ price: 1, start: 0.5 }] },
+      'prices.input_mtok.tiers[0].start must be a non-negative safe integer',
+    ],
+  ])('rejects %s before provider activation', (_name, price, message) => {
+    expect(() => parseProviderData(downloadedProviderArray({ input_mtok: price }))).toThrow(message)
+  })
+
+  it.each([
+    ['provider', Array<unknown>(1), 'providers[0] must not be empty'],
+    [
+      'model',
+      [{ api_pattern: 'testing', id: 'testing', models: Array<unknown>(1), name: 'Testing' }],
+      'providers[0].models[0] must not be empty',
+    ],
+    ['conditional price', downloadedProviderArray(Array<unknown>(1)), 'providers[0].models[0].prices[0] must not be empty'],
+  ])('rejects a sparse %s array before provider activation', (_name, providerData, message) => {
+    expect(() => parseProviderData(providerData)).toThrow(message)
+  })
+
   it('re-activates the bundled data unchanged (round-trips already-discriminated constraints)', async () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
@@ -189,6 +230,23 @@ function downloadedConditionalProviderArray(constraint: unknown) {
               prices: { input_mtok: 2 },
             },
           ],
+        },
+      ],
+      name: 'Testing',
+    },
+  ]
+}
+
+function downloadedProviderArray(prices: unknown, match: unknown = { equals: 'downloaded-model' }) {
+  return [
+    {
+      api_pattern: 'testing',
+      id: 'testing',
+      models: [
+        {
+          id: 'downloaded-model',
+          match,
+          prices,
         },
       ],
       name: 'Testing',

@@ -17,7 +17,7 @@ export function parseProviderData(value: unknown): Provider[] {
   if (!Array.isArray(value)) {
     throw invalidProviderData('Expected provider data to be an array')
   }
-  return value.map((provider, index) => parseProvider(provider, `providers[${String(index)}]`))
+  return requireDenseArray(value, 'providers').map((provider, index) => parseProvider(provider, `providers[${String(index)}]`))
 }
 
 function parseProvider(value: unknown, path: string): Provider {
@@ -67,7 +67,9 @@ function parseModel(value: unknown, path: string, providerId: string): ModelInfo
     ...(name === undefined ? {} : { name }),
     ...(priceComments === undefined ? {} : { price_comments: priceComments }),
     prices: Array.isArray(pricesValue)
-      ? pricesValue.map((price, index) => parseConditionalPrice(price, `${path}.prices[${String(index)}]`, providerId, id))
+      ? requireDenseArray(pricesValue, `${path}.prices`).map((price, index) =>
+          parseConditionalPrice(price, `${path}.prices[${String(index)}]`, providerId, id)
+        )
       : parseModelPrice(pricesValue, `${path}.prices`),
   }
 }
@@ -110,20 +112,28 @@ function parseModelPrice(value: unknown, path: string): ModelPrice {
   const record = requireRecord(value, path)
   const prices: ModelPrice = {}
   for (const [key, price] of Object.entries(record)) {
-    prices[key] = price === undefined || typeof price === 'number' ? price : parseTieredPrices(price, `${path}.${key}`)
+    prices[key] =
+      price === undefined
+        ? undefined
+        : typeof price === 'number'
+          ? parsePriceNumber(price, `${path}.${key}`)
+          : parseTieredPrices(price, `${path}.${key}`)
   }
   return prices
 }
 
 function parseTieredPrices(value: unknown, path: string): TieredPrices {
   const record = requireRecord(value, path)
-  const base = requireNumber(record, 'base', path)
+  const base = parsePriceNumber(requireNumber(record, 'base', path), `${path}.base`)
   const tierValues = requireArray(record, 'tiers', path)
   const tiers: Tier[] = tierValues.map((tier, index) => {
     const tierRecord = requireRecord(tier, `${path}.tiers[${String(index)}]`)
     return {
-      price: requireNumber(tierRecord, 'price', `${path}.tiers[${String(index)}]`),
-      start: requireNumber(tierRecord, 'start', `${path}.tiers[${String(index)}]`),
+      price: parsePriceNumber(
+        requireNumber(tierRecord, 'price', `${path}.tiers[${String(index)}]`),
+        `${path}.tiers[${String(index)}].price`
+      ),
+      start: parseTierStart(requireNumber(tierRecord, 'start', `${path}.tiers[${String(index)}]`), `${path}.tiers[${String(index)}].start`),
     }
   })
   return new TieredPrices({ base, tiers })
@@ -138,7 +148,9 @@ function parseMatchLogic(value: unknown, path: string): MatchLogic {
   const operand = record[key]
   if (key === 'and' || key === 'or') {
     if (!Array.isArray(operand)) throw invalidProviderData(`${path}.${key} must be an array`)
-    const clauses = operand.map((clause, index) => parseMatchLogic(clause, `${path}.${key}[${String(index)}]`))
+    const clauses = requireDenseArray(operand, `${path}.${key}`).map((clause, index) =>
+      parseMatchLogic(clause, `${path}.${key}[${String(index)}]`)
+    )
     return key === 'and' ? { and: clauses } : { or: clauses }
   }
   if (key === 'contains') {
@@ -155,6 +167,11 @@ function parseMatchLogic(value: unknown, path: string): MatchLogic {
   }
   if (key === 'regex') {
     if (typeof operand !== 'string') throw invalidProviderData(`${path}.${key} must be a string`)
+    try {
+      RegExp(operand)
+    } catch {
+      throw invalidProviderData(`${path}.${key} must be a valid regular expression`)
+    }
     return { regex: operand }
   }
   if (key === 'starts_with') {
@@ -166,7 +183,9 @@ function parseMatchLogic(value: unknown, path: string): MatchLogic {
 
 function parseExtractors(value: unknown, path: string): UsageExtractor[] {
   if (!Array.isArray(value)) throw invalidProviderData(`${path}.extractors must be an array`)
-  return value.map((extractor, index) => parseExtractor(extractor, `${path}.extractors[${String(index)}]`))
+  return requireDenseArray(value, `${path}.extractors`).map((extractor, index) =>
+    parseExtractor(extractor, `${path}.extractors[${String(index)}]`)
+  )
 }
 
 function parseExtractor(value: unknown, path: string): UsageExtractor {
@@ -194,7 +213,9 @@ function parseMapping(value: unknown, path: string): UsageExtractorMapping {
 function parseExtractPath(value: unknown, path: string): ExtractPath {
   if (typeof value === 'string') return value
   if (!Array.isArray(value)) throw invalidProviderData(`${path} must be a string or array`)
-  return value.map((step, index) => (typeof step === 'string' ? step : parseArrayMatch(step, `${path}[${String(index)}]`)))
+  return requireDenseArray(value, path).map((step, index) =>
+    typeof step === 'string' ? step : parseArrayMatch(step, `${path}[${String(index)}]`)
+  )
 }
 
 function parseArrayMatch(value: unknown, path: string): ArrayMatch {
@@ -222,10 +243,14 @@ function optionalMatchLogic(record: Record<string, unknown>, key: string, path: 
 function optionalStringArray(record: Record<string, unknown>, key: string, path: string): string[] | undefined {
   const value = optionalProperty(record, key, path)
   if (value === undefined) return undefined
-  if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
+  if (!Array.isArray(value)) {
     throw invalidProviderData(`${path}.${key} must be an array of strings`)
   }
-  return value
+  const items = requireDenseArray(value, `${path}.${key}`)
+  if (!items.every((item): item is string => typeof item === 'string')) {
+    throw invalidProviderData(`${path}.${key} must be an array of strings`)
+  }
+  return items
 }
 
 function optionalString(record: Record<string, unknown>, key: string, path: string): string | undefined {
@@ -270,6 +295,29 @@ function requireBoolean(record: Record<string, unknown>, key: string, path: stri
 function requireArray(record: Record<string, unknown>, key: string, path: string): unknown[] {
   const value = requireProperty(record, key, path)
   if (!Array.isArray(value)) throw invalidProviderData(`${path}.${key} must be an array`)
+  return requireDenseArray(value, `${path}.${key}`)
+}
+
+function requireDenseArray(value: unknown[], path: string): unknown[] {
+  const values: unknown[] = []
+  for (let index = 0; index < value.length; index += 1) {
+    if (!(index in value)) throw invalidProviderData(`${path}[${String(index)}] must not be empty`)
+    values.push(value[index])
+  }
+  return values
+}
+
+function parsePriceNumber(value: number, path: string): number {
+  if (!Number.isFinite(value) || value < 0) {
+    throw invalidProviderData(`${path} must be a finite non-negative number`)
+  }
+  return value
+}
+
+function parseTierStart(value: number, path: string): number {
+  if (!Number.isSafeInteger(value) || value < 0) {
+    throw invalidProviderData(`${path} must be a non-negative safe integer`)
+  }
   return value
 }
 
