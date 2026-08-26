@@ -13,3 +13,7 @@
 /.github/workflows/*.lock.yml
 /.github/workflows/agentics-maintenance.yml
 /.github/aw/
+
+# Vendored gh-aw engine definitions, copied verbatim from their upstream source
+# so they can be diffed against it — must stay byte-exact, never reformat.
+/.github/workflows/shared/
