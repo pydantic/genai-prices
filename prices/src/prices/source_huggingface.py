@@ -92,7 +92,7 @@ def main():
             provider_yaml.save()
 
 
-def get_huggingface_prices():
+def get_huggingface_prices():  # pragma: no cover - thin CLI alias for main
     """Download and update HuggingFace provider prices."""
     main()
 
