@@ -171,12 +171,17 @@ describe('provider array integration', () => {
     [
       'fully constrained',
       [{ constraint: { start_date: '2025-01-01' }, prices: { input_mtok: 1 } }],
-      'prices must contain exactly one unconstrained price',
+      'prices must contain exactly one unconstrained price at index 0',
     ],
     [
       'multiply unconstrained',
       [{ prices: { input_mtok: 1 } }, { prices: { input_mtok: 2 } }],
-      'prices must contain exactly one unconstrained price',
+      'prices must contain exactly one unconstrained price at index 0',
+    ],
+    [
+      'baseline-last',
+      [{ constraint: { start_date: '2025-01-01' }, prices: { input_mtok: 2 } }, { prices: { input_mtok: 1 } }],
+      'prices must contain exactly one unconstrained price at index 0',
     ],
   ])('rejects %s conditional prices before provider activation', (_name, prices, message) => {
     expect(() => parseProviderData(downloadedProviderArray(prices))).toThrow(message)

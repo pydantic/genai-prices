@@ -77,8 +77,8 @@ function parseConditionalPrices(value: unknown[], path: string, providerId: stri
     parseConditionalPrice(price, `${path}[${String(index)}]`, providerId, modelId)
   )
   if (prices.length === 0) throw invalidProviderData(`${path} must not be empty`)
-  if (prices.filter((price) => price.constraint === undefined).length !== 1) {
-    throw invalidProviderData(`${path} must contain exactly one unconstrained price`)
+  if (prices.filter((price) => price.constraint === undefined).length !== 1 || prices[0]?.constraint !== undefined) {
+    throw invalidProviderData(`${path} must contain exactly one unconstrained price at index 0`)
   }
   return prices
 }
