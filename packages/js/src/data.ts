@@ -824,45 +824,224 @@ export const data: Provider[] = [
     name: 'Avian',
     pricing_urls: ['https://avian.io/pricing/'],
     api_pattern: 'https://api\\.avian\\.io',
+    price_comments:
+      "Prices and model IDs checked against https://avian.io/docs/ on 2026-08-25. Cache prices use Avian's documented cache-read rates. The previously listed Meta Llama models are no longer in Avian's catalog and are deprecated.",
     models: [
       {
         id: 'Meta-Llama-3.1-405B-Instruct',
         match: {
           equals: 'Meta-Llama-3.1-405B-Instruct',
         },
+        price_comments: "No longer listed in Avian's model catalog as of 2026-08-25.",
         prices: {
           input_mtok: 1.5,
           output_mtok: 1.5,
         },
+        deprecated: true,
       },
       {
         id: 'Meta-Llama-3.1-70B-Instruct',
         match: {
           equals: 'Meta-Llama-3.1-70B-Instruct',
         },
+        price_comments: "No longer listed in Avian's model catalog as of 2026-08-25.",
         prices: {
           input_mtok: 0.45,
           output_mtok: 0.45,
         },
+        deprecated: true,
       },
       {
         id: 'Meta-Llama-3.1-8B-Instruct',
         match: {
           equals: 'Meta-Llama-3.1-8B-Instruct',
         },
+        price_comments: "No longer listed in Avian's model catalog as of 2026-08-25.",
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
         },
+        deprecated: true,
       },
       {
         id: 'Meta-Llama-3.3-70B-Instruct',
         match: {
           equals: 'Meta-Llama-3.3-70B-Instruct',
         },
+        price_comments: "No longer listed in Avian's model catalog as of 2026-08-25.",
         prices: {
           input_mtok: 0.45,
           output_mtok: 0.45,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'deepseek/deepseek-v3.2',
+        name: 'DeepSeek V3.2 (Legacy)',
+        match: {
+          equals: 'deepseek/deepseek-v3.2',
+        },
+        context_window: 163000,
+        prices: {
+          input_mtok: 0.23,
+          cache_read_mtok: 0.012,
+          output_mtok: 0.33,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.0805,
+          cache_read_mtok: 0.0165,
+          output_mtok: 0.161,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.305,
+          cache_read_mtok: 0.10875,
+          output_mtok: 2.61,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro-0813',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.594,
+          cache_read_mtok: 0.0198,
+          output_mtok: 1.782,
+        },
+      },
+      {
+        id: 'minimax/minimax-m2.5',
+        name: 'MiniMax M2.5',
+        match: {
+          equals: 'minimax/minimax-m2.5',
+        },
+        context_window: 196000,
+        prices: {
+          input_mtok: 0.27,
+          cache_read_mtok: 0.15,
+          output_mtok: 1.08,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.5',
+        name: 'Kimi K2.5',
+        match: {
+          equals: 'moonshotai/kimi-k2.5',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.225,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'moonshotai/kimi-k2.6',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.5',
+        name: 'MiMo-V2.5 Small',
+        match: {
+          equals: 'xiaomi/mimo-v2.5',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.5-pro',
+        name: 'MiMo-V2.5 Pro',
+        match: {
+          equals: 'xiaomi/mimo-v2.5-pro',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
+      },
+      {
+        id: 'z-ai/glm-4.7',
+        name: 'GLM-4.7',
+        match: {
+          equals: 'z-ai/glm-4.7',
+        },
+        context_window: 202000,
+        prices: {
+          input_mtok: 0.388,
+          cache_read_mtok: 0.097,
+          output_mtok: 1.806,
+        },
+      },
+      {
+        id: 'z-ai/glm-5',
+        name: 'GLM-5',
+        match: {
+          equals: 'z-ai/glm-5',
+        },
+        context_window: 205000,
+        prices: {
+          input_mtok: 0.516,
+          cache_read_mtok: 0.129,
+          output_mtok: 2.322,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.1',
+        name: 'GLM-5.1',
+        match: {
+          equals: 'z-ai/glm-5.1',
+        },
+        context_window: 202000,
+        prices: {
+          input_mtok: 0.743,
+          cache_read_mtok: 0.186,
+          output_mtok: 2.971,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.2',
+        name: 'GLM-5.2',
+        match: {
+          equals: 'z-ai/glm-5.2',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.495,
+          cache_read_mtok: 0.124,
+          output_mtok: 1.733,
         },
       },
     ],
@@ -10678,7 +10857,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|voxtral|open-(?:mistral|mixtral))',
+      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -10707,6 +10886,35 @@ export const data: Provider[] = [
           {
             path: 'completion_tokens',
             dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'ocr',
+        root: 'usage_info',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'pages_processed',
+            dest: 'input_document_pages',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'ocr_annotated',
+        root: 'usage_info',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'pages_processed',
+            dest: 'input_document_pages',
+            required: true,
+          },
+          {
+            path: 'pages_processed',
+            dest: 'input_annotated_document_pages',
             required: true,
           },
         ],
@@ -11107,6 +11315,162 @@ export const data: Provider[] = [
           equals: 'mistral-nemo:free',
         },
         prices: {},
+      },
+      {
+        id: 'mistral-ocr-2503',
+        name: 'Mistral OCR',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2503',
+            },
+            {
+              equals: 'mistral-ocr-2503-completion',
+            },
+          ],
+        },
+        price_comments: 'Mistral launched OCR at 1,000 pages per US dollar: https://mistral.ai/news/mistral-ocr/',
+        prices: {
+          input_document_kpages: 1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'mistral-ocr-2505',
+        name: 'Mistral OCR 2',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2505',
+            },
+            {
+              equals: 'mistral-ocr-2505-completion',
+            },
+          ],
+        },
+        price_comments:
+          'OCR 2 retained the original OCR page price and introduced structured annotations on May 22, 2025: https://docs.mistral.ai/resources/changelogs',
+        prices: {
+          input_document_kpages: 1,
+          input_annotated_document_kpages: 3,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'mistral-ocr-2512',
+        name: 'Mistral OCR 3',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-2512',
+            },
+            {
+              equals: 'mistral-ocr-2512-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-3-25-12',
+        prices: {
+          input_document_kpages: 2,
+          input_annotated_document_kpages: 3,
+        },
+      },
+      {
+        id: 'mistral-ocr-4-0',
+        name: 'Mistral OCR 4.0',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-4-0',
+            },
+            {
+              equals: 'mistral-ocr-4-0-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-4-0',
+        prices: {
+          input_document_kpages: 4,
+          input_annotated_document_kpages: 5,
+        },
+      },
+      {
+        id: 'mistral-ocr-4-1',
+        name: 'Mistral OCR 4.1',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-4',
+            },
+            {
+              equals: 'mistral-ocr-4-completion',
+            },
+            {
+              equals: 'mistral-ocr-4-1',
+            },
+            {
+              equals: 'mistral-ocr-4-1-completion',
+            },
+          ],
+        },
+        price_comments: 'https://docs.mistral.ai/models/ocr-4-1',
+        prices: {
+          input_document_kpages: 4,
+          input_annotated_document_kpages: 5,
+        },
+      },
+      {
+        id: 'mistral-ocr-latest',
+        name: 'Mistral OCR Latest',
+        match: {
+          or: [
+            {
+              equals: 'mistral-ocr-latest',
+            },
+            {
+              equals: 'mistral-ocr-latest-completion',
+            },
+          ],
+        },
+        price_comments:
+          'The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+        prices: [
+          {
+            prices: {
+              input_document_kpages: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-05-22',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 1,
+              input_annotated_document_kpages: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2025-12-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 2,
+              input_annotated_document_kpages: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-06-23',
+              type: 'start_date',
+            },
+            prices: {
+              input_document_kpages: 4,
+              input_annotated_document_kpages: 5,
+            },
+          },
+        ],
       },
       {
         id: 'mistral-saba',

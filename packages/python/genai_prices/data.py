@@ -534,26 +534,152 @@ providers: list[Provider] = [
         name='Avian',
         api_pattern='https://api\\.avian\\.io',
         pricing_urls=['https://avian.io/pricing/'],
+        price_comments="Prices and model IDs checked against https://avian.io/docs/ on 2026-08-25. Cache prices use Avian's documented cache-read rates. The previously listed Meta Llama models are no longer in Avian's catalog and are deprecated.",
         models=[
             ModelInfo(
                 id='Meta-Llama-3.1-405B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-405B-Instruct'),
+                price_comments="No longer listed in Avian's model catalog as of 2026-08-25.",
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('1.5')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.1-70B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-70B-Instruct'),
+                price_comments="No longer listed in Avian's model catalog as of 2026-08-25.",
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.1-8B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-8B-Instruct'),
+                price_comments="No longer listed in Avian's model catalog as of 2026-08-25.",
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.3-70B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.3-70B-Instruct'),
+                price_comments="No longer listed in Avian's model catalog as of 2026-08-25.",
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.2',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.2'),
+                name='DeepSeek V3.2 (Legacy)',
+                context_window=163000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.23'), cache_read_mtok=Decimal('0.012'), output_mtok=Decimal('0.33')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash'),
+                name='DeepSeek V4 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0805'), cache_read_mtok=Decimal('0.0165'), output_mtok=Decimal('0.161')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
+                name='DeepSeek V4 Pro',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.305'), cache_read_mtok=Decimal('0.10875'), output_mtok=Decimal('2.61')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.594'), cache_read_mtok=Decimal('0.0198'), output_mtok=Decimal('1.782')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m2.5',
+                match=ClauseEquals(equals='minimax/minimax-m2.5'),
+                name='MiniMax M2.5',
+                context_window=196000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('1.08')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.5',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.5'),
+                name='Kimi K2.5',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.225'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.6',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.6'),
+                name='Kimi K2.6',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.5',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.5'),
+                name='MiMo-V2.5 Small',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.5-pro',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.5-pro'),
+                name='MiMo-V2.5 Pro',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.7',
+                match=ClauseEquals(equals='z-ai/glm-4.7'),
+                name='GLM-4.7',
+                context_window=202000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.388'), cache_read_mtok=Decimal('0.097'), output_mtok=Decimal('1.806')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5',
+                match=ClauseEquals(equals='z-ai/glm-5'),
+                name='GLM-5',
+                context_window=205000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.516'), cache_read_mtok=Decimal('0.129'), output_mtok=Decimal('2.322')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.1',
+                match=ClauseEquals(equals='z-ai/glm-5.1'),
+                name='GLM-5.1',
+                context_window=202000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.743'), cache_read_mtok=Decimal('0.186'), output_mtok=Decimal('2.971')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.2',
+                match=ClauseEquals(equals='z-ai/glm-5.2'),
+                name='GLM-5.2',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.495'), cache_read_mtok=Decimal('0.124'), output_mtok=Decimal('1.733')
+                ),
             ),
         ],
     ),
@@ -6259,7 +6385,9 @@ providers: list[Provider] = [
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
-        model_match=ClauseRegex(regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|voxtral|open-(?:mistral|mixtral))'),
+        model_match=ClauseRegex(
+            regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
+        ),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
             UsageExtractor(
@@ -6278,7 +6406,22 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage_info',
+                mappings=[UsageExtractorMapping(path='pages_processed', dest='input_document_pages', required=True)],
+                api_flavor='ocr',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage_info',
+                mappings=[
+                    UsageExtractorMapping(path='pages_processed', dest='input_document_pages', required=True),
+                    UsageExtractorMapping(path='pages_processed', dest='input_annotated_document_pages', required=True),
+                ],
+                api_flavor='ocr_annotated',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -6496,6 +6639,90 @@ providers: list[Provider] = [
                 name='Mistral Nemo (free)',
                 description='A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2503',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2503'), ClauseEquals(equals='mistral-ocr-2503-completion')]
+                ),
+                name='Mistral OCR',
+                price_comments='Mistral launched OCR at 1,000 pages per US dollar: https://mistral.ai/news/mistral-ocr/',
+                deprecated=True,
+                prices=ModelPrice(input_document_kpages=Decimal('1')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2505',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2505'), ClauseEquals(equals='mistral-ocr-2505-completion')]
+                ),
+                name='Mistral OCR 2',
+                price_comments='OCR 2 retained the original OCR page price and introduced structured annotations on May 22, 2025: https://docs.mistral.ai/resources/changelogs',
+                deprecated=True,
+                prices=ModelPrice(input_document_kpages=Decimal('1'), input_annotated_document_kpages=Decimal('3')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-2512',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-2512'), ClauseEquals(equals='mistral-ocr-2512-completion')]
+                ),
+                name='Mistral OCR 3',
+                price_comments='https://docs.mistral.ai/models/ocr-3-25-12',
+                prices=ModelPrice(input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-4-0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='mistral-ocr-4-0'), ClauseEquals(equals='mistral-ocr-4-0-completion')]
+                ),
+                name='Mistral OCR 4.0',
+                price_comments='https://docs.mistral.ai/models/ocr-4-0',
+                prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-4-1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-ocr-4'),
+                        ClauseEquals(equals='mistral-ocr-4-completion'),
+                        ClauseEquals(equals='mistral-ocr-4-1'),
+                        ClauseEquals(equals='mistral-ocr-4-1-completion'),
+                    ]
+                ),
+                name='Mistral OCR 4.1',
+                price_comments='https://docs.mistral.ai/models/ocr-4-1',
+                prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
+            ),
+            ModelInfo(
+                id='mistral-ocr-latest',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-ocr-latest'),
+                        ClauseEquals(equals='mistral-ocr-latest-completion'),
+                    ]
+                ),
+                name='Mistral OCR Latest',
+                price_comments='The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
+                prices=[
+                    ConditionalPrice(constraint=None, prices=ModelPrice(input_document_kpages=Decimal('1'))),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 5, 22)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('1'), input_annotated_document_kpages=Decimal('3')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 12, 18)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 23)),
+                        prices=ModelPrice(
+                            input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='mistral-saba',

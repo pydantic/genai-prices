@@ -414,6 +414,41 @@ def test_openrouter_deepseek_v32_price():
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'context_window', 'input_rate', 'cache_read_rate', 'output_rate'),
+    [
+        ('deepseek/deepseek-v4-flash', 1_000_000, Decimal('0.0805'), Decimal('0.0165'), Decimal('0.161')),
+        ('deepseek/deepseek-v4-pro', 1_000_000, Decimal('1.305'), Decimal('0.10875'), Decimal('2.61')),
+        ('deepseek/deepseek-v4-pro-0813', 1_000_000, Decimal('0.594'), Decimal('0.0198'), Decimal('1.782')),
+        ('deepseek/deepseek-v3.2', 163_000, Decimal('0.23'), Decimal('0.012'), Decimal('0.33')),
+        ('minimax/minimax-m2.5', 196_000, Decimal('0.27'), Decimal('0.15'), Decimal('1.08')),
+        ('z-ai/glm-4.7', 202_000, Decimal('0.388'), Decimal('0.097'), Decimal('1.806')),
+        ('z-ai/glm-5', 205_000, Decimal('0.516'), Decimal('0.129'), Decimal('2.322')),
+        ('z-ai/glm-5.1', 202_000, Decimal('0.743'), Decimal('0.186'), Decimal('2.971')),
+        ('z-ai/glm-5.2', 1_000_000, Decimal('0.495'), Decimal('0.124'), Decimal('1.733')),
+        ('moonshotai/kimi-k2.5', 262_000, Decimal('0.45'), Decimal('0.225'), Decimal('2.2')),
+        ('moonshotai/kimi-k2.6', 262_000, Decimal('0.95'), Decimal('0.16'), Decimal('4')),
+        ('xiaomi/mimo-v2.5', 1_000_000, Decimal('0.2'), Decimal('0.05'), Decimal('0.4')),
+        ('xiaomi/mimo-v2.5-pro', 1_000_000, Decimal('0.435'), Decimal('0.0036'), Decimal('0.87')),
+    ],
+)
+def test_avian_prices(
+    model_ref: str, context_window: int, input_rate: Decimal, cache_read_rate: Decimal, output_rate: Decimal
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='avian',
+    )
+
+    assert price.provider.id == 'avian'
+    assert price.model.id == model_ref
+    assert price.model.context_window == context_window
+    assert price.input_price == input_rate + cache_read_rate
+    assert price.output_price == output_rate
+    assert price.total_price == input_rate + cache_read_rate + output_rate
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
     [
         ('accounts/fireworks/models/deepseek-v4-flash-0731', Decimal('0.14'), Decimal('0.028'), Decimal('0.28')),
@@ -1290,6 +1325,108 @@ def test_mistral_medium_3_cached_input_price(model_ref: str, request_timestamp: 
     assert price.total_price == Decimal('0.04')
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'expected_model_id', 'expected_page_price', 'expected_annotated_page_price'),
+    [
+        (
+            'mistral-ocr-2503-completion',
+            datetime(2025, 3, 6, tzinfo=timezone.utc),
+            'mistral-ocr-2503',
+            Decimal('1'),
+            Decimal('1'),
+        ),
+        (
+            'mistral-ocr-2505',
+            datetime(2025, 5, 22, tzinfo=timezone.utc),
+            'mistral-ocr-2505',
+            Decimal('1'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-2512-completion',
+            datetime(2025, 12, 18, tzinfo=timezone.utc),
+            'mistral-ocr-2512',
+            Decimal('2'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-4-0',
+            datetime(2026, 6, 23, tzinfo=timezone.utc),
+            'mistral-ocr-4-0',
+            Decimal('4'),
+            Decimal('5'),
+        ),
+        (
+            'mistral-ocr-4',
+            datetime(2026, 7, 16, tzinfo=timezone.utc),
+            'mistral-ocr-4-1',
+            Decimal('4'),
+            Decimal('5'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2025, 3, 6, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('1'),
+            Decimal('1'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2025, 5, 22, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('1'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2025, 12, 17, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('1'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2025, 12, 18, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('2'),
+            Decimal('3'),
+        ),
+        (
+            'mistral-ocr-latest',
+            datetime(2026, 6, 23, tzinfo=timezone.utc),
+            'mistral-ocr-latest',
+            Decimal('4'),
+            Decimal('5'),
+        ),
+    ],
+)
+def test_mistral_ocr_prices(
+    model_ref: str,
+    request_timestamp: datetime,
+    expected_model_id: str,
+    expected_page_price: Decimal,
+    expected_annotated_page_price: Decimal,
+) -> None:
+    page_price = calc_price(
+        Usage(input_document_pages=1_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+    annotated_page_price = calc_price(
+        Usage(input_document_pages=1_000, input_annotated_document_pages=1_000),
+        model_ref=model_ref,
+        provider_id='mistral',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert page_price.model.id == expected_model_id
+    assert page_price.input_price == expected_page_price
+    assert page_price.total_price == expected_page_price
+    assert annotated_page_price.input_price == expected_annotated_page_price
+    assert annotated_page_price.total_price == expected_annotated_page_price
+
+
 def test_voxtral_provider_inference() -> None:
     price = calc_price(Usage(output_tokens=1), model_ref='voxtral-small-latest')
 
@@ -1462,6 +1599,24 @@ def test_provider_not_found_url():
 def test_provider_not_found_model_ref():
     with pytest.raises(LookupError, match="Unable to find provider with model matching 'llama2-70b-4096'"):
         calc_price(Usage(input_tokens=500_000), model_ref='llama2-70b-4096')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id', 'expected_total_price'),
+    [
+        ('pixtral-12b-latest', 'pixtral-12b', Decimal('0.000165')),
+        ('pixtral-large-2411', 'pixtral-large', Decimal('0.0026')),
+        ('mixtral-8x7b-instruct-v0.1', 'mixtral-8x7b', Decimal('0.00077')),
+    ],
+)
+def test_mistral_models_found_without_provider(
+    model_ref: str, expected_model_id: str, expected_total_price: Decimal
+) -> None:
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model_ref)
+
+    assert price.provider.id == 'mistral'
+    assert price.model.id == expected_model_id
+    assert price.total_price == expected_total_price
 
 
 def test_model_not_found():
