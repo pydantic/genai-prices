@@ -836,7 +836,8 @@ class ModelPrice:
 def _supports_inclusive_tier_boundary(model_price_type: type[ModelPrice]) -> bool:
     parameters = inspect.signature(model_price_type.calc_price).parameters.values()
     return any(
-        parameter.name == 'inclusive_tier_boundary' or parameter.kind is inspect.Parameter.VAR_KEYWORD
+        (parameter.name == 'inclusive_tier_boundary' and parameter.kind is not inspect.Parameter.POSITIONAL_ONLY)
+        or parameter.kind is inspect.Parameter.VAR_KEYWORD
         for parameter in parameters
     )
 

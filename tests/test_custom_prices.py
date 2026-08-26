@@ -222,6 +222,28 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert fractional_price.total_price == Decimal('6.0000005')
 
 
+def test_custom_price_positional_only_boundary_parameter_remains_compatible() -> None:
+    class PositionalBoundaryModelPrice(types.ModelPrice):
+        def calc_price(  # pyright: ignore[reportIncompatibleMethodOverride]
+            self,
+            usage: types.AbstractUsage,
+            inclusive_tier_boundary: bool = False,
+            /,
+        ) -> types.CalcPrice:
+            return super().calc_price(usage, inclusive_tier_boundary=inclusive_tier_boundary)
+
+    provider = types.Provider(id='testing', name='Testing', api_pattern='testing', models=[])
+    model = types.ModelInfo(
+        id='positional-boundary',
+        match=types.ClauseEquals('positional-boundary'),
+        prices=PositionalBoundaryModelPrice(input_mtok=Decimal('1')),
+    )
+
+    price = model.calc_price(types.Usage(input_tokens=1_000_000), provider)
+
+    assert price.input_price == Decimal('1')
+
+
 def test_base_model_price_accepts_registry_price_kwargs() -> None:
     price = types.ModelPrice(
         input_mtok=Decimal('1'),
