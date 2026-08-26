@@ -69,6 +69,9 @@ Usage remains a plain JSON-serializable object. JavaScript uses ordinary `number
 results with an appropriate numerical tolerance. The package guards decomposition against insignificant floating-point
 residuals, but it cannot recover decimal precision that was already lost before a value was supplied.
 
+For Groq's Whisper models, report the transcription duration as `audio_seconds` or `input_audio_seconds`. These models
+apply Groq's documented 10-second minimum. A missing or zero duration costs zero.
+
 ### `updatePrices`
 
 You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.

@@ -2169,9 +2169,38 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Flash',
                 description='DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.22'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('0.66')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek-v4-pro',
@@ -2179,9 +2208,40 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Pro',
                 description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.435'),
+                            cache_read_mtok=Decimal('0.003625'),
+                            output_mtok=Decimal('0.87'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.66'), cache_read_mtok=Decimal('0.022'), output_mtok=Decimal('1.98')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                ],
             ),
         ],
     ),
@@ -3237,7 +3297,12 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gemini-2.5-flash-lite'),
-                        ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                        ClauseAnd(
+                            and_=[
+                                ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                                ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                            ]
+                        ),
                     ]
                 ),
                 name='Gemini 2.5 Flash Lite',
@@ -3250,6 +3315,14 @@ providers: list[Provider] = [
                     input_audio_mtok=Decimal('0.3'),
                     cache_audio_read_mtok=Decimal('0.03'),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-flash-lite-preview-tts',
+                match=ClauseEquals(equals='gemini-2.5-flash-lite-preview-tts'),
+                name='Gemini 2.5 Flash-Lite Preview TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-preview',
@@ -3269,8 +3342,26 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
+                id='gemini-2.5-flash-tts',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-2.5-flash-tts'),
+                        ClauseEquals(equals='gemini-2.5-flash-preview-tts'),
+                    ]
+                ),
+                name='Gemini 2.5 Flash TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='gemini-2.5-pro',
-                match=ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                match=ClauseAnd(
+                    and_=[
+                        ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                        ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                    ]
+                ),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
@@ -3281,6 +3372,16 @@ providers: list[Provider] = [
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-pro-tts',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-2.5-pro-tts'), ClauseEquals(equals='gemini-2.5-pro-preview-tts')]
+                ),
+                name='Gemini 2.5 Pro TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='gemini-3-flash-preview',
@@ -3819,6 +3920,20 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen3-32b'),
                 name='Qwen3 32B 131k',
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3',
+                match=ClauseEquals(equals='whisper-large-v3'),
+                name='Whisper Large V3',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3.',
+                prices=ModelPrice(audio_hours=Decimal('0.111'), input_audio_hours=Decimal('0.111')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3-turbo',
+                match=ClauseEquals(equals='whisper-large-v3-turbo'),
+                name='Whisper Large V3 Turbo',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
+                prices=ModelPrice(audio_hours=Decimal('0.04'), input_audio_hours=Decimal('0.04')),
             ),
         ],
     ),
@@ -6804,6 +6919,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='voxtral-mini-2602',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='voxtral-mini-latest'), ClauseEquals(equals='voxtral-mini-2602')]
+                ),
+                name='Voxtral Mini Transcribe 2',
+                price_comments='See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+                prices=ModelPrice(audio_hours=Decimal('0.18'), input_audio_hours=Decimal('0.18')),
+            ),
+            ModelInfo(
                 id='voxtral-small-24b-2507',
                 match=ClauseOr(
                     or_=[
@@ -7244,7 +7368,9 @@ providers: list[Provider] = [
             'https://platform.openai.com/docs/models',
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
-        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        model_match=ClauseOr(
+            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+        ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
             UsageExtractor(
@@ -7687,6 +7813,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
@@ -8316,6 +8443,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-transcribe',
+                match=ClauseEquals(equals='gpt-transcribe'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+                prices=ModelPrice(audio_hours=Decimal('0.27'), input_audio_hours=Decimal('0.27')),
+            ),
+            ModelInfo(
                 id='moderation',
                 match=ClauseContains(contains='moderation'),
                 description='All OpenAI moderation models and endpoints are free of charge',
@@ -8465,6 +8598,12 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='whisper-1',
+                match=ClauseEquals(equals='whisper-1'),
+                price_comments='See https://developers.openai.com/api/docs/models/whisper-1.',
+                prices=ModelPrice(audio_hours=Decimal('0.36'), input_audio_hours=Decimal('0.36')),
             ),
         ],
     ),
@@ -14249,8 +14388,11 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20'),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -14274,8 +14416,11 @@ providers: list[Provider] = [
                 name='Grok 4.3',
                 description='Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
                 context_window=1000000,
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -14293,14 +14438,45 @@ providers: list[Provider] = [
                 name='Grok 4.5',
                 description="xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6\'s. Ref: https://docs.x.ai/docs/models/grok-4.5',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=199999, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.6'),
+                        ClauseRegex(regex='^grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.6'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.6-latest'),
+                    ]
+                ),
+                name='Grok 4.6',
+                description="xAI's latest flagship model, released 2026-08-12. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning, over a 500k-token context window.",
+                context_window=500000,
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=199999, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-build-0.1',
                 match=ClauseEquals(equals='grok-build-0.1'),
                 name='Grok Build 0.1',
                 description="Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding.",
-                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=199999, price=Decimal('2'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-code-fast-1',

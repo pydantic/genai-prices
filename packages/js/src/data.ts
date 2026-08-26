@@ -3609,11 +3609,52 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.14,
-          cache_read_mtok: 0.0028,
-          output_mtok: 0.28,
-        },
+        price_comments:
+          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.0028,
+              output_mtok: 0.28,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-17',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.22,
+              cache_read_mtok: 0.007,
+              output_mtok: 0.66,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4-pro',
@@ -3628,11 +3669,52 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.003625,
-          output_mtok: 0.87,
-        },
+        price_comments:
+          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.003625,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-17',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.66,
+              cache_read_mtok: 0.022,
+              output_mtok: 1.98,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 1.32,
+              cache_read_mtok: 0.044,
+              output_mtok: 3.96,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 1.32,
+              cache_read_mtok: 0.044,
+              output_mtok: 3.96,
+            },
+          },
+        ],
       },
     ],
   },
@@ -5379,7 +5461,14 @@ export const data: Provider[] = [
               equals: 'gemini-2.5-flash-lite',
             },
             {
-              starts_with: 'gemini-2.5-flash-lite-preview',
+              and: [
+                {
+                  starts_with: 'gemini-2.5-flash-lite-preview',
+                },
+                {
+                  regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+                },
+              ],
             },
           ],
         },
@@ -5390,6 +5479,19 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.3,
           cache_audio_read_mtok: 0.03,
+        },
+      },
+      {
+        id: 'gemini-2.5-flash-lite-preview-tts',
+        name: 'Gemini 2.5 Flash-Lite Preview TTS',
+        match: {
+          equals: 'gemini-2.5-flash-lite-preview-tts',
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 10,
         },
       },
       {
@@ -5424,12 +5526,39 @@ export const data: Provider[] = [
         deprecated: true,
       },
       {
+        id: 'gemini-2.5-flash-tts',
+        name: 'Gemini 2.5 Flash TTS',
+        match: {
+          or: [
+            {
+              equals: 'gemini-2.5-flash-tts',
+            },
+            {
+              equals: 'gemini-2.5-flash-preview-tts',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'gemini-2.5-pro',
         name: 'Gemini 2.5 Pro',
         description:
           'Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
         match: {
-          starts_with: 'gemini-2.5-pro',
+          and: [
+            {
+              starts_with: 'gemini-2.5-pro',
+            },
+            {
+              regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+            },
+          ],
         },
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
         prices: {
@@ -5460,6 +5589,26 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-2.5-pro-tts',
+        name: 'Gemini 2.5 Pro TTS',
+        match: {
+          or: [
+            {
+              equals: 'gemini-2.5-pro-tts',
+            },
+            {
+              equals: 'gemini-2.5-pro-preview-tts',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 1,
+          output_mtok: 20,
         },
       },
       {
@@ -6436,6 +6585,30 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'whisper-large-v3',
+        name: 'Whisper Large V3',
+        match: {
+          equals: 'whisper-large-v3',
+        },
+        price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3.',
+        prices: {
+          audio_hours: 0.111,
+          input_audio_hours: 0.111,
+        },
+      },
+      {
+        id: 'whisper-large-v3-turbo',
+        name: 'Whisper Large V3 Turbo',
+        match: {
+          equals: 'whisper-large-v3-turbo',
+        },
+        price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
+        prices: {
+          audio_hours: 0.04,
+          input_audio_hours: 0.04,
         },
       },
     ],
@@ -11618,6 +11791,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voxtral-mini-2602',
+        name: 'Voxtral Mini Transcribe 2',
+        match: {
+          or: [
+            {
+              equals: 'voxtral-mini-latest',
+            },
+            {
+              equals: 'voxtral-mini-2602',
+            },
+          ],
+        },
+        price_comments: 'See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+        prices: {
+          audio_hours: 0.18,
+          input_audio_hours: 0.18,
+        },
+      },
+      {
         id: 'voxtral-small-24b-2507',
         name: 'Voxtral Small 24B 2507',
         description:
@@ -12393,6 +12585,9 @@ export const data: Provider[] = [
       or: [
         {
           starts_with: 'gpt-',
+        },
+        {
+          equals: 'whisper-1',
         },
         {
           regex: '^o[134]',
@@ -13195,6 +13390,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -14415,6 +14611,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-transcribe',
+        match: {
+          equals: 'gpt-transcribe',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+        prices: {
+          audio_hours: 0.27,
+          input_audio_hours: 0.27,
+        },
+      },
+      {
         id: 'moderation',
         description: 'All OpenAI moderation models and endpoints are free of charge',
         match: {
@@ -14692,6 +14899,17 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'whisper-1',
+        match: {
+          equals: 'whisper-1',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/whisper-1.',
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
         },
       },
     ],
@@ -24600,10 +24818,36 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-4.20',
         },
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 199999,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 199999,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 199999,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24645,10 +24889,36 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 199999,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 199999,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 199999,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {
@@ -24679,10 +24949,93 @@ export const data: Provider[] = [
           ],
         },
         context_window: 500000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6\'s. Ref: https://docs.x.ai/docs/models/grok-4.5',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 199999,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 199999,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 199999,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.6',
+        name: 'Grok 4.6',
+        description:
+          "xAI's latest flagship model, released 2026-08-12. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning, over a 500k-token context window.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.6',
+            },
+            {
+              regex: '^grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.6',
+            },
+            {
+              regex: '^x-ai/grok-4\\.6-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.6-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 199999,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 199999,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 199999,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -24693,10 +25046,36 @@ export const data: Provider[] = [
         match: {
           equals: 'grok-build-0.1',
         },
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
         prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.2,
-          output_mtok: 2,
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 199999,
+                price: 2,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 199999,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 199999,
+                price: 4,
+              },
+            ],
+          },
         },
       },
       {

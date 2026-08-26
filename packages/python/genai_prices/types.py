@@ -4,6 +4,7 @@ import dataclasses
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
+from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -704,6 +705,13 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
+        if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
+            usage = copy(Usage.from_raw(usage))
+            reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')
+            if reported_seconds is not None:
+                billed_seconds = max(reported_seconds, 10) if reported_seconds > 0 else 0
+                usage.audio_seconds = billed_seconds
+                usage.input_audio_seconds = billed_seconds
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],

@@ -1586,6 +1586,112 @@ def test_provider_api_url_matches_at_the_start_of_the_url():
     assert price.provider.id == 'openai'
 
 
+@pytest.mark.parametrize(
+    'model_ref,model_name,off_peak,peak',
+    [
+        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('44.00')),
+        ('deepseek-v4-pro', 'DeepSeek V4 Pro', Decimal('66.00'), Decimal('132.00')),
+    ],
+)
+@pytest.mark.parametrize(
+    'hour,is_peak',
+    [
+        (0, False),
+        (1, True),
+        (4, False),
+        (5, False),
+        (6, True),
+        (9, True),
+        (10, False),
+        (23, False),
+    ],
+)
+def test_price_constraint_two_time_of_date_windows(
+    model_ref: str,
+    model_name: str,
+    off_peak: Decimal,
+    peak: Decimal,
+    hour: int,
+    is_peak: bool,
+):
+    """Deepseek V4 charges peak rates in two disjoint daily windows, so it has two constrained prices."""
+    price = calc_price(
+        Usage(input_tokens=100_000_000),
+        model_ref=model_ref,
+        genai_request_timestamp=datetime(2026, 8, 20, hour, tzinfo=timezone.utc),
+    )
+    assert price.input_price == (peak if is_peak else off_peak)
+    assert price.model.name == model_name
+    assert price.provider.name == 'Deepseek'
+
+
+@pytest.mark.parametrize(
+    'model_ref,historic,peak',
+    [
+        ('deepseek-v4-flash', Decimal('14.00'), Decimal('44.00')),
+        ('deepseek-v4-pro', Decimal('43.50'), Decimal('132.00')),
+    ],
+)
+@pytest.mark.parametrize(
+    'hour,in_peak_window',
+    [
+        (0, False),
+        (2, True),
+        (12, False),
+        (23, False),
+    ],
+)
+def test_price_deepseek_v4_before_repricing(
+    model_ref: str,
+    historic: Decimal,
+    peak: Decimal,
+    hour: int,
+    in_peak_window: bool,
+):
+    """Before 2026-08-17 the V4 models were billed at a single flat rate.
+
+    That rate is the unconstrained first price, so it is preserved for the 17 hours a day that fall
+    outside the two peak windows. `constraint` is a union, so the peak entries cannot also be gated
+    on a start date, and during those windows a pre-repricing request still resolves to the peak
+    rate - see https://github.com/pydantic/genai-prices/issues/582.
+    """
+    price = calc_price(
+        Usage(input_tokens=100_000_000),
+        model_ref=model_ref,
+        genai_request_timestamp=datetime(2026, 5, 1, hour, tzinfo=timezone.utc),
+    )
+    assert price.input_price == (peak if in_peak_window else historic)
+
+
+@pytest.mark.parametrize(
+    'model_ref,first_long_token,base_input,long_input',
+    [
+        ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
+        ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
+        ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
+        ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
+        ('gpt-5.5', 272_001, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_001, Decimal('30'), Decimal('60')),
+    ],
+)
+def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):
+    """xAI and OpenAI bill long-context requests as a cliff, not a marginal tier."""
+    under = calc_price(Usage(input_tokens=first_long_token - 1), model_ref=model_ref)
+    assert under.input_price == (first_long_token - 1) * base_input / 1_000_000
+
+    over = calc_price(Usage(input_tokens=first_long_token), model_ref=model_ref)
+    assert over.input_price == first_long_token * long_input / 1_000_000
+    assert over.input_price > under.input_price * Decimal('1.99')
+
+
+def test_price_long_context_cliff_is_not_marginal():
+    """Pin the cliff against the marginal reading on a request well past the threshold."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref='gpt-5.5')
+    assert price.input_price == Decimal('10')
+    marginal = Decimal('272000') * Decimal('5') / 1_000_000 + Decimal('728000') * Decimal('10') / 1_000_000
+    assert price.input_price != marginal
+
+
 def test_provider_not_found_id():
     with pytest.raises(LookupError, match="Unable to find provider provider_id='foobar'"):
         calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')
@@ -1836,6 +1942,40 @@ def test_complex_usage():
     )
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_mtok', 'output_mtok'),
+    [
+        ('gemini-2.5-flash-lite-preview-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-flash-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-flash-preview-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-pro-tts', Decimal('1'), Decimal('20')),
+        ('gemini-2.5-pro-preview-tts', Decimal('1'), Decimal('20')),
+    ],
+)
+def test_gemini_tts_prices(model_ref: str, input_mtok: Decimal, output_mtok: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000, output_audio_tokens=1_000_000),
+        model_ref,
+        provider_id='google',
+    )
+
+    assert price.input_price == input_mtok
+    assert price.output_price == output_mtok
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id'),
+    [
+        ('GEMINI-2.5-FLASH-LITE-PREVIEW-06-17', 'gemini-2.5-flash-lite'),
+        ('GEMINI-2.5-PRO', 'gemini-2.5-pro'),
+    ],
+)
+def test_gemini_tts_matching_preserves_case_insensitive_generic_models(model_ref: str, expected_model_id: str) -> None:
+    price = calc_price(Usage(input_tokens=1), model_ref, provider_id='google')
+
+    assert price.model.id == expected_model_id
+
+
 def test_output_audio_usage():
     mil = 1_000_000
 
@@ -1861,3 +2001,34 @@ def test_output_audio_usage():
         == snapshot(Decimal('80020.0'))
         == Decimal('20') * output_text_tokens / mil + Decimal('80') * output_audio_tokens / mil
     )
+
+
+def test_grok_4_6_long_context_cliff():
+    """Grok 4.6 bills the whole request at the long-context rate, not just the tokens past 200k.
+
+    Ref: https://docs.x.ai/docs/models/grok-4.6 - "billed at the higher rate for all tokens in
+    the request". Pinning both sides of the threshold: reading it as a marginal tier would put
+    a 500k-token prompt at $1.40 instead of $2.00.
+    """
+    # The boundary is inclusive on xAI's side (">= 200k prompt tokens") but a tier here
+    # fires on `tokens > start`, so the threshold is pinned from both directions: one
+    # token below stays on the base rate, exactly 200k is already on the higher one.
+    under = calc_price(Usage(input_tokens=199_999), 'grok-4.6', provider_id='x-ai')
+    assert under.input_price == snapshot(Decimal('0.399998'))
+
+    at = calc_price(Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai')
+    assert at.input_price == snapshot(Decimal('0.8'))
+
+    # One more token roughly doubles the bill; under marginal pricing it would barely move.
+    assert at.input_price > under.input_price * 2 - Decimal('0.0001')
+
+    full = calc_price(Usage(input_tokens=500_000), 'grok-4.6', provider_id='x-ai')
+    assert full.input_price == snapshot(Decimal('2.0'))
+    assert full.input_price != Decimal('200000') * 2 / 1_000_000 + Decimal('300000') * 4 / 1_000_000
+
+    mixed = calc_price(
+        Usage(input_tokens=300_000, cache_read_tokens=10_000, output_tokens=1_000),
+        'grok-4.6',
+        provider_id='x-ai',
+    )
+    assert mixed.total_price == snapshot(Decimal('1.182'))

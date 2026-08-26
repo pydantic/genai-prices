@@ -646,7 +646,9 @@ models:
     match:
       or:
         - equals: gemini-2.5-flash-lite
-        - starts_with: gemini-2.5-flash-lite-preview
+        - and:
+            - starts_with: gemini-2.5-flash-lite-preview
+            - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     context_window: 1000000
     prices_checked: 2025-10-31
     prices:
@@ -655,6 +657,17 @@ models:
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
+
+  - id: gemini-2.5-flash-lite-preview-tts
+    name: Gemini 2.5 Flash-Lite Preview TTS
+    match:
+      equals: gemini-2.5-flash-lite-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
 
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
@@ -676,6 +689,19 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
+  - id: gemini-2.5-flash-tts
+    name: Gemini 2.5 Flash TTS
+    match:
+      or:
+        - equals: gemini-2.5-flash-tts
+        - equals: gemini-2.5-flash-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
+
   - id: gemini-2.5-pro
     name: Gemini 2.5 Pro
     description: >-
@@ -685,7 +711,9 @@ models:
       including first-place positioning on the LMArena leaderboard, reflecting superior
       human-preference alignment and complex problem-solving abilities.
     match:
-      starts_with: gemini-2.5-pro
+      and:
+        - starts_with: gemini-2.5-pro
+        - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
     prices_checked: 2025-10-31
     prices:
@@ -704,6 +732,19 @@ models:
         tiers:
           - start: 200000
             price: 15
+
+  - id: gemini-2.5-pro-tts
+    name: Gemini 2.5 Pro TTS
+    match:
+      or:
+        - equals: gemini-2.5-pro-tts
+        - equals: gemini-2.5-pro-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 1
+      output_mtok: 20
 
   - id: gemini-3-flash-preview
     name: Gemini 3 Flash Preview
