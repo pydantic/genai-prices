@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { calcPrice, updatePrices, waitForUpdate } from '../index'
+import { calcPrice, Provider, updatePrices, waitForUpdate } from '../index'
 
 // You can bump this to a longer TTL if you want to cache the data for longer
 const PRICE_TTL = 1000 ///* 60 // * 60 * 60 * 24 // 24 hours
@@ -17,7 +17,7 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
       console.log('cached file data is fresh')
       setProviderData(
         fs.promises.readFile(GENAI_DATA_FILE, 'utf-8').then((dataStr) => {
-          return JSON.parse(dataStr) as unknown
+          return JSON.parse(dataStr) as Provider[]
         })
       )
       return
@@ -31,7 +31,7 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
   try {
     console.log('fetching fresh genai-prices data')
     const dataPromise = fetch(remoteDataUrl, { cache: 'no-store' }).then(async (response) => {
-      return (await response.json()) as unknown
+      return (await response.json()) as Provider[]
     })
     setProviderData(dataPromise)
     try {
