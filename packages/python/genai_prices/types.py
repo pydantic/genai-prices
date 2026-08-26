@@ -704,7 +704,14 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
-        price = model_price.calc_price(usage)
+        if type(model_price).calc_price is ModelPrice.calc_price:
+            # OpenAI and xAI apply the higher tier when input reaches the threshold.
+            price = model_price._calc_price(  # pyright: ignore[reportPrivateUsage]
+                usage,
+                inclusive_tier_boundary=provider.id in {'openai', 'x-ai'},
+            )
+        else:
+            price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -751,6 +758,9 @@ class ModelPrice:
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
+        return self._calc_price(usage, inclusive_tier_boundary=False)
+
+    def _calc_price(self, usage: AbstractUsage, *, inclusive_tier_boundary: bool) -> CalcPrice:
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
         from genai_prices.validation import validate_priced_units
 
@@ -776,6 +786,7 @@ class ModelPrice:
                 priced_counts[unit.usage_key],
                 total_input_tokens,
                 unit.per,
+                inclusive_tier_boundary=inclusive_tier_boundary,
             )
             total_price += unit_price
 
@@ -827,7 +838,12 @@ def _is_registered_price_key(name: str) -> bool:
 
 
 def calc_unit_price(
-    price: Decimal | TieredPrices | None, count: UsageValue | None, total_input_tokens: UsageValue, per: int
+    price: Decimal | TieredPrices | None,
+    count: UsageValue | None,
+    total_input_tokens: UsageValue,
+    per: int,
+    *,
+    inclusive_tier_boundary: bool = False,
 ) -> Decimal:
     """Calculate the price for a unit count normalized by the unit's ``per`` value."""
     if price is None or count is None:
@@ -840,7 +856,7 @@ def calc_unit_price(
         # When total_input_tokens is 0, no tier condition is met, so base rate is used
         applicable_price = price.base
         for tier in reversed(price.tiers):
-            if total_input_tokens > tier.start or (tier.inclusive and total_input_tokens == tier.start):
+            if total_input_tokens > tier.start or (inclusive_tier_boundary and total_input_tokens == tier.start):
                 applicable_price = tier.price
                 break
         unit_price = applicable_price * decimal_count
@@ -888,7 +904,6 @@ def _validate_model_price_value(price_key: str, value: object) -> Decimal | Tier
                 or tier.start < 0
                 or tier.start < previous_start
                 or not _is_valid_price_decimal(tier.price)
-                or type(tier.inclusive) is not bool
             ):
                 break
             previous_start = tier.start
@@ -950,7 +965,6 @@ class TieredPrices:
 
     Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
     This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
-    A tier is exclusive at its start threshold unless ``inclusive`` is true.
 
     Example: For a tier starting at 200K tokens:
     - Using 199,999 tokens: all tokens pay base rate
@@ -990,8 +1004,6 @@ class Tier:
     """Start of the tier"""
     price: Decimal
     """Price for this tier"""
-    inclusive: bool = False
-    """Whether the tier applies at exactly the start threshold"""
 
 
 @dataclass

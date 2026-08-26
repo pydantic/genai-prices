@@ -7873,15 +7873,11 @@ providers: list[Provider] = [
                 context_window=1050000,
                 price_comments='The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Ref: https://developers.openai.com/api/docs/pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(
-                        base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'), inclusive=True)]
-                    ),
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(
-                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'), inclusive=True)]
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                     ),
-                    output_mtok=TieredPrices(
-                        base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'), inclusive=True)]
-                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -7941,12 +7937,8 @@ providers: list[Provider] = [
                 context_window=1050000,
                 price_comments='The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Ref: https://developers.openai.com/api/docs/pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(
-                        base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'), inclusive=True)]
-                    ),
-                    output_mtok=TieredPrices(
-                        base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'), inclusive=True)]
-                    ),
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
                 ),
             ),
             ModelInfo(
@@ -7972,15 +7964,9 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Long-context requests are billed at 2x input and cached input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(
-                        base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'), inclusive=True)]
-                    ),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'), inclusive=True)]
-                    ),
-                    output_mtok=TieredPrices(
-                        base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'), inclusive=True)]
-                    ),
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
                 ),
             ),
             ModelInfo(
@@ -7998,12 +7984,8 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Long-context requests are billed at 2x input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(
-                        base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'), inclusive=True)]
-                    ),
-                    output_mtok=TieredPrices(
-                        base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'), inclusive=True)]
-                    ),
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
                 ),
             ),
             ModelInfo(
@@ -8023,34 +8005,30 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'), inclusive=True)]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'), inclusive=True)]
+                                base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'), inclusive=True)]
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
                             ),
-                            output_mtok=TieredPrices(
-                                base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'), inclusive=True)]
-                            ),
+                            output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
                         prices=ModelPrice(
                             input_mtok=TieredPrices(
-                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'), inclusive=True)]
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
                             ),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'), inclusive=True)]
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'), inclusive=True)]
+                                base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'), inclusive=True)]
+                                base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]
                             ),
                         ),
                     ),
@@ -8075,34 +8053,30 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'), inclusive=True)]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'), inclusive=True)]
+                                base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'), inclusive=True)]
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'), inclusive=True)]
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
                             ),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'), inclusive=True)]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'), inclusive=True)]
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'), inclusive=True)]
+                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'), inclusive=True)]
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
                             ),
                         ),
                     ),
@@ -8126,33 +8100,31 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         prices=ModelPrice(
                             input_mtok=TieredPrices(
-                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'), inclusive=True)]
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
                             ),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('3.125'), tiers=[Tier(start=272000, price=Decimal('6.25'), inclusive=True)]
+                                base=Decimal('3.125'), tiers=[Tier(start=272000, price=Decimal('6.25'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'), inclusive=True)]
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'), inclusive=True)]
+                                base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]
                             ),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'), inclusive=True)]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
                             cache_write_mtok=TieredPrices(
-                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'), inclusive=True)]
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'), inclusive=True)]
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'), inclusive=True)]
+                                base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]
                             ),
                         ),
                     ),

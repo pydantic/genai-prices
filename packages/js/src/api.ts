@@ -227,7 +227,8 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  // OpenAI and xAI apply the higher tier when input reaches the threshold.
+  const priceResult = calcPriceInternal(usage, modelPrice, undefined, provider.id === 'openai' || provider.id === 'x-ai')
   return {
     auto_update_timestamp: undefined,
     model,

@@ -236,6 +236,24 @@ def test_openai_gpt_5_4_tiered_pricing_at_threshold() -> None:
     assert price.total_price == Decimal('1.36')
 
 
+def test_xai_tiered_pricing_at_threshold() -> None:
+    provider = types.Provider(id='x-ai', name='X AI', api_pattern='', models=[])
+    model = types.ModelInfo(
+        id='grok-tiered',
+        match=types.ClauseEquals('grok-tiered'),
+        prices=types.ModelPrice(
+            input_mtok=types.TieredPrices(
+                base=Decimal('1'),
+                tiers=[types.Tier(start=200_000, price=Decimal('2'))],
+            )
+        ),
+    )
+
+    price = model.calc_price(Usage(input_tokens=200_000), provider)
+
+    assert price.input_price == Decimal('0.4')
+
+
 def test_openai_gpt_5_4_tiered_pricing_with_output():
     """Test GPT-5.4 with input above threshold and output tokens.
 

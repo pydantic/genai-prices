@@ -1194,12 +1194,6 @@
           "description": "Price for this tier",
           "title": "Price",
           "type": "number"
-        },
-        "inclusive": {
-          "default": false,
-          "description": "Whether the tier applies at exactly the start threshold",
-          "title": "Inclusive",
-          "type": "boolean"
         }
       },
       "required": [
@@ -1211,7 +1205,7 @@
     },
     "TieredPrices": {
       "additionalProperties": false,
-      "description": "Pricing model when the amount paid varies by number of tokens.\n\nUses threshold-based pricing where *input tokens* crossing a tier applies that rate to ALL tokens of this type.\nThis is the industry standard \"cliff\" model used by most providers (Anthropic, Google, OpenAI, etc.).\nA tier is exclusive at its start threshold unless ``inclusive`` is true.\n\nExample: For a tier starting at 200K tokens:\n- Using 199,999 tokens: all tokens pay base rate\n- Using 200,001 tokens: all tokens pay tier rate (not just the tokens above 200K)",
+      "description": "Pricing model when the amount paid varies by number of tokens.\n\nUses threshold-based pricing where *input tokens* crossing a tier applies that rate to ALL tokens of this type.\nThis is the industry standard \"cliff\" model used by most providers (Anthropic, Google, OpenAI, etc.).\n\nExample: For a tier starting at 200K tokens:\n- Using 199,999 tokens: all tokens pay base rate\n- Using 200,001 tokens: all tokens pay tier rate (not just the tokens above 200K)",
       "properties": {
         "base": {
           "description": "Base price in USD per million tokens, e.g. price until the first tier.",

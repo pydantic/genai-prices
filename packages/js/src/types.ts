@@ -1,7 +1,6 @@
 export type Usage = Record<string, number | undefined>
 
 export interface Tier {
-  inclusive?: boolean
   price: number
   start: number
 }

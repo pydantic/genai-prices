@@ -771,19 +771,16 @@ models:
         base: 2.5
         tiers:
           - start: 272000
-            inclusive: true
             price: 5
       cache_read_mtok:
         base: 0.25
         tiers:
           - start: 272000
-            inclusive: true
             price: 0.5
       output_mtok:
         base: 15
         tiers:
           - start: 272000
-            inclusive: true
             price: 22.5
 
   - id: gpt-5.4-image-2
@@ -854,13 +851,11 @@ models:
         base: 30
         tiers:
           - start: 272000
-            inclusive: true
             price: 60
       output_mtok:
         base: 180
         tiers:
           - start: 272000
-            inclusive: true
             price: 270
 
   - id: gpt-5.5
@@ -892,19 +887,16 @@ models:
         base: 5
         tiers:
           - start: 272000
-            inclusive: true
             price: 10
       cache_read_mtok:
         base: 0.5
         tiers:
           - start: 272000
-            inclusive: true
             price: 1
       output_mtok:
         base: 30
         tiers:
           - start: 272000
-            inclusive: true
             price: 45
 
   - id: gpt-5.5-pro
@@ -927,13 +919,11 @@ models:
         base: 30
         tiers:
           - start: 272000
-            inclusive: true
             price: 60
       output_mtok:
         base: 180
         tiers:
           - start: 272000
-            inclusive: true
             price: 270
 
   - id: gpt-5.6-luna
@@ -959,25 +949,21 @@ models:
             base: 1
             tiers:
               - start: 272000
-                inclusive: true
                 price: 2
           cache_write_mtok:
             base: 1.25
             tiers:
               - start: 272000
-                inclusive: true
                 price: 2.5
           cache_read_mtok:
             base: 0.1
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.2
           output_mtok:
             base: 6
             tiers:
               - start: 272000
-                inclusive: true
                 price: 9
       - constraint:
           start_date: 2026-07-30
@@ -986,25 +972,21 @@ models:
             base: 0.2
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.4
           cache_write_mtok:
             base: 0.25
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.5
           cache_read_mtok:
             base: 0.02
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.04
           output_mtok:
             base: 1.2
             tiers:
               - start: 272000
-                inclusive: true
                 price: 1.8
 
   - id: gpt-5.6-sol
@@ -1033,25 +1015,21 @@ models:
             base: 5
             tiers:
               - start: 272000
-                inclusive: true
                 price: 10
           cache_write_mtok:
             base: 6.25
             tiers:
               - start: 272000
-                inclusive: true
                 price: 12.5
           cache_read_mtok:
             base: 0.5
             tiers:
               - start: 272000
-                inclusive: true
                 price: 1
           output_mtok:
             base: 30
             tiers:
               - start: 272000
-                inclusive: true
                 price: 45
       - constraint:
           # https://developers.openai.com/api/docs/changelog
@@ -1061,25 +1039,21 @@ models:
             base: 4
             tiers:
               - start: 272000
-                inclusive: true
                 price: 8
           cache_write_mtok:
             base: 5
             tiers:
               - start: 272000
-                inclusive: true
                 price: 10
           cache_read_mtok:
             base: 0.4
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.8
           output_mtok:
             base: 20
             tiers:
               - start: 272000
-                inclusive: true
                 price: 30
 
   - id: gpt-5.6-terra
@@ -1105,25 +1079,21 @@ models:
             base: 2.5
             tiers:
               - start: 272000
-                inclusive: true
                 price: 5
           cache_write_mtok:
             base: 3.125
             tiers:
               - start: 272000
-                inclusive: true
                 price: 6.25
           cache_read_mtok:
             base: 0.25
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.5
           output_mtok:
             base: 15
             tiers:
               - start: 272000
-                inclusive: true
                 price: 22.5
       - constraint:
           start_date: 2026-07-30
@@ -1132,25 +1102,21 @@ models:
             base: 2
             tiers:
               - start: 272000
-                inclusive: true
                 price: 4
           cache_write_mtok:
             base: 2.5
             tiers:
               - start: 272000
-                inclusive: true
                 price: 5
           cache_read_mtok:
             base: 0.2
             tiers:
               - start: 272000
-                inclusive: true
                 price: 0.4
           output_mtok:
             base: 12
             tiers:
               - start: 272000
-                inclusive: true
                 price: 18
 
   - id: gpt-audio

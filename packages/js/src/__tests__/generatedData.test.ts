@@ -157,60 +157,60 @@ describe('generated data split', () => {
   it.each([
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.5, tiers: [{ inclusive: true, price: 1, start: 272_000 }] },
-        cache_write_mtok: { base: 6.25, tiers: [{ inclusive: true, price: 12.5, start: 272_000 }] },
-        input_mtok: { base: 5, tiers: [{ inclusive: true, price: 10, start: 272_000 }] },
-        output_mtok: { base: 30, tiers: [{ inclusive: true, price: 45, start: 272_000 }] },
+        cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
+        cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
+        input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-20T23:59:59Z'),
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.4, tiers: [{ inclusive: true, price: 0.8, start: 272_000 }] },
-        cache_write_mtok: { base: 5, tiers: [{ inclusive: true, price: 10, start: 272_000 }] },
-        input_mtok: { base: 4, tiers: [{ inclusive: true, price: 8, start: 272_000 }] },
-        output_mtok: { base: 20, tiers: [{ inclusive: true, price: 30, start: 272_000 }] },
+        cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 272_000 }] },
+        cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
+        output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-21T00:00:00Z'),
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.1, tiers: [{ inclusive: true, price: 0.2, start: 272_000 }] },
-        cache_write_mtok: { base: 1.25, tiers: [{ inclusive: true, price: 2.5, start: 272_000 }] },
-        input_mtok: { base: 1, tiers: [{ inclusive: true, price: 2, start: 272_000 }] },
-        output_mtok: { base: 6, tiers: [{ inclusive: true, price: 9, start: 272_000 }] },
+        cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
+        cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
+        input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
+        output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-29T23:59:59Z'),
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.02, tiers: [{ inclusive: true, price: 0.04, start: 272_000 }] },
-        cache_write_mtok: { base: 0.25, tiers: [{ inclusive: true, price: 0.5, start: 272_000 }] },
-        input_mtok: { base: 0.2, tiers: [{ inclusive: true, price: 0.4, start: 272_000 }] },
-        output_mtok: { base: 1.2, tiers: [{ inclusive: true, price: 1.8, start: 272_000 }] },
+        cache_read_mtok: { base: 0.02, tiers: [{ price: 0.04, start: 272_000 }] },
+        cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-30T00:00:00Z'),
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.25, tiers: [{ inclusive: true, price: 0.5, start: 272_000 }] },
-        cache_write_mtok: { base: 3.125, tiers: [{ inclusive: true, price: 6.25, start: 272_000 }] },
-        input_mtok: { base: 2.5, tiers: [{ inclusive: true, price: 5, start: 272_000 }] },
-        output_mtok: { base: 15, tiers: [{ inclusive: true, price: 22.5, start: 272_000 }] },
+        cache_read_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
+        input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-29T23:59:59Z'),
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.2, tiers: [{ inclusive: true, price: 0.4, start: 272_000 }] },
-        cache_write_mtok: { base: 2.5, tiers: [{ inclusive: true, price: 5, start: 272_000 }] },
-        input_mtok: { base: 2, tiers: [{ inclusive: true, price: 4, start: 272_000 }] },
-        output_mtok: { base: 12, tiers: [{ inclusive: true, price: 18, start: 272_000 }] },
+        cache_read_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
+        output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-30T00:00:00Z'),
@@ -225,6 +225,22 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 272_000 }, 'gpt-5.4', { providerId: 'openai' })
 
     expect(result?.input_price).toBe(1.36)
+  })
+
+  it('uses the inclusive xAI tier boundary', () => {
+    const xai = providerDataModule.data.find((provider) => provider.id === 'x-ai')
+    if (xai === undefined) {
+      throw new Error('xAI provider data is missing')
+    }
+    const model = {
+      ...xai.models[0],
+      id: 'grok-tiered',
+      match: { equals: 'grok-tiered' },
+      prices: { input_mtok: { base: 1, tiers: [{ price: 2, start: 200_000 }] } },
+    }
+    const result = calcPrice({ input_tokens: 200_000 }, model.id, { provider: { ...xai, models: [model] } })
+
+    expect(result?.input_price).toBe(0.4)
   })
 
   it.each([

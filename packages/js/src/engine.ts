@@ -50,17 +50,11 @@ function validatePriceValue(priceKey: string, price: unknown): number | TieredPr
   const tiers: Tier[] = []
   for (const tier of price.tiers) {
     if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
-    const { inclusive, price: tierPrice, start } = tier
-    if (
-      typeof start !== 'number' ||
-      !Number.isSafeInteger(start) ||
-      start < 0 ||
-      !isValidPriceNumber(tierPrice) ||
-      (inclusive !== undefined && typeof inclusive !== 'boolean')
-    ) {
+    const { price: tierPrice, start } = tier
+    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || !isValidPriceNumber(tierPrice)) {
       throw invalidPriceValueError(priceKey)
     }
-    tiers.push(inclusive === undefined ? { price: tierPrice, start } : { inclusive, price: tierPrice, start })
+    tiers.push({ price: tierPrice, start })
   }
 
   return new TieredPrices({ base: price.base, tiers })
@@ -83,7 +77,6 @@ function isValidPriceNumber(value: unknown): value is number {
  *
  * When token count crosses a tier threshold, ALL tokens are charged at that tier's rate.
  * This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
- * A tier is exclusive at its start threshold unless `inclusive` is true.
  *
  * Example with base=$3/MTok and tier at 200K=$6/MTok:
  * - 199,999 tokens: all at $3/MTok = $0.599997
@@ -92,15 +85,16 @@ function isValidPriceNumber(value: unknown): value is number {
  * @param tiered - Tiered pricing structure
  * @param tokens - Number of tokens of this specific type to price
  * @param totalInputTokens - Total input tokens for tier determination
+ * @param inclusiveTierBoundary - Whether the tier applies at exactly its start threshold
  */
-function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens: number): number {
+function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens: number, inclusiveTierBoundary: boolean): number {
   if (tokens <= 0) return 0
 
   // Threshold-based pricing: tier is determined by totalInputTokens
   // When totalInputTokens is 0, no tier condition is met, so base rate is used
   let applicablePrice = tiered.base
   for (const tier of tiered.tiers) {
-    if (totalInputTokens > tier.start || (tier.inclusive === true && totalInputTokens === tier.start)) {
+    if (totalInputTokens > tier.start || (inclusiveTierBoundary && totalInputTokens === tier.start)) {
       applicablePrice = tier.price
     }
   }
@@ -109,15 +103,26 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens:
   return (applicablePrice * tokens) / 1_000_000
 }
 
-function calcUnitPrice(price: number | TieredPrices | undefined, count: number | undefined, totalInputTokens: number, per: number): number {
+function calcUnitPrice(
+  price: number | TieredPrices | undefined,
+  count: number | undefined,
+  totalInputTokens: number,
+  per: number,
+  inclusiveTierBoundary: boolean
+): number {
   if (price === undefined || count === undefined) return 0
   if (typeof price === 'number') {
     return (price * count) / per
   }
-  return (calcTieredPrice(price, count, totalInputTokens) * 1_000_000) / per
+  return (calcTieredPrice(price, count, totalInputTokens, inclusiveTierBoundary) * 1_000_000) / per
 }
 
-export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRegistry = getActiveRegistry()): ModelPriceCalculationResult {
+export function calcPrice(
+  usage: Usage,
+  modelPrice: ModelPrice,
+  registry: UnitRegistry = getActiveRegistry(),
+  inclusiveTierBoundary = false
+): ModelPriceCalculationResult {
   warnUnsupportedUsageKeys(usage, registry)
   const resolvedPrices = collectResolvedModelPrices(modelPrice, registry)
   validatePricedUnits(
@@ -138,7 +143,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRe
   }
 
   for (const { price, unit } of resolvedPrices) {
-    const unitPrice = calcUnitPrice(price, leafValues[unit.usageKey] ?? 0, totalInputTokens, unit.per)
+    const unitPrice = calcUnitPrice(price, leafValues[unit.usageKey] ?? 0, totalInputTokens, unit.per, inclusiveTierBoundary)
     if (unit.dimensions.direction === 'input') {
       inputPrice += unitPrice
     } else if (unit.dimensions.direction === 'output') {

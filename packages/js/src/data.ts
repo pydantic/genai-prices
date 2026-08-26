@@ -13570,7 +13570,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 5,
-                inclusive: true,
               },
             ],
           },
@@ -13580,7 +13579,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.5,
-                inclusive: true,
               },
             ],
           },
@@ -13590,7 +13588,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 22.5,
-                inclusive: true,
               },
             ],
           },
@@ -13695,7 +13692,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 60,
-                inclusive: true,
               },
             ],
           },
@@ -13705,7 +13701,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 270,
-                inclusive: true,
               },
             ],
           },
@@ -13765,7 +13760,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 10,
-                inclusive: true,
               },
             ],
           },
@@ -13775,7 +13769,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 1,
-                inclusive: true,
               },
             ],
           },
@@ -13785,7 +13778,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 45,
-                inclusive: true,
               },
             ],
           },
@@ -13821,7 +13813,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 60,
-                inclusive: true,
               },
             ],
           },
@@ -13831,7 +13822,6 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 270,
-                inclusive: true,
               },
             ],
           },
@@ -13869,7 +13859,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 2,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13879,7 +13868,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 2.5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13889,7 +13877,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.2,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13899,7 +13886,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 9,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13917,7 +13903,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.4,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13927,7 +13912,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13937,7 +13921,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.04,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13947,7 +13930,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 1.8,
-                    inclusive: true,
                   },
                 ],
               },
@@ -13993,7 +13975,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 10,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14003,7 +13984,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 12.5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14013,7 +13993,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 1,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14023,7 +14002,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 45,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14041,7 +14019,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 8,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14051,7 +14028,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 10,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14061,7 +14037,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.8,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14071,7 +14046,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 30,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14111,7 +14085,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14121,7 +14094,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 6.25,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14131,7 +14103,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14141,7 +14112,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 22.5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14159,7 +14129,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 4,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14169,7 +14138,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 5,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14179,7 +14147,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.4,
-                    inclusive: true,
                   },
                 ],
               },
@@ -14189,7 +14156,6 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 18,
-                    inclusive: true,
                   },
                 ],
               },

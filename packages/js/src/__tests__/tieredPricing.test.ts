@@ -43,7 +43,7 @@ describe('Threshold-based Tiered Pricing', () => {
     })
 
     it('should charge tier rate at an inclusive threshold', () => {
-      const result = calcPrice({ input_tokens: 200000 }, { input_mtok: { base: 3, tiers: [{ inclusive: true, price: 6, start: 200000 }] } })
+      const result = calcPrice({ input_tokens: 200000 }, { input_mtok: { base: 3, tiers: [{ price: 6, start: 200000 }] } }, undefined, true)
 
       expect(result.input_price).toBe(1.2)
       expect(result.total_price).toBe(1.2)
