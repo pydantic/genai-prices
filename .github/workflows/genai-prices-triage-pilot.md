@@ -7,6 +7,7 @@ on:
   roles: all
 permissions:
   contents: read
+  issues: read
   copilot-requests: write
 model: copilot/claude-sonnet-4-5
 engine:
