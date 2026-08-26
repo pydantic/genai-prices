@@ -557,6 +557,19 @@ def test_huggingface_provider_resolution():
     assert snapshot_data.find_provider(None, None, 'https://router.huggingface.co/v1').id == 'huggingface'
 
 
+def test_usage_extractor_treats_empty_string_model_path_as_response_key():
+    extractor = UsageExtractor(
+        root='usage',
+        model_path='',
+        mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens')],
+    )
+
+    assert extractor.extract({'': 'empty-key-model', 'usage': {'input_tokens': 1}}) == (
+        'empty-key-model',
+        Usage(input_tokens=1),
+    )
+
+
 cohere_chat_response_data = {
     'id': 'chatcmpl-00000000-0000-0000-0000-000000000000',
     'message': {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Done.'}]},

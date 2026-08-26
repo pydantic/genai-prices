@@ -391,6 +391,28 @@ describe('extractUsage', () => {
     })
   })
 
+  it('should treat an empty string model path as a response key', () => {
+    const provider: Provider = {
+      api_pattern: 'test',
+      extractors: [
+        {
+          api_flavor: 'default',
+          mappings: [{ dest: 'input_tokens', path: 'input_tokens', required: true }],
+          model_path: '',
+          root: 'usage',
+        },
+      ],
+      id: 'test',
+      models: [],
+      name: 'Test',
+    }
+
+    expect(extractUsage(provider, { '': 'empty-key-model', usage: { input_tokens: 1 } })).toEqual({
+      model: 'empty-key-model',
+      usage: { input_tokens: 1 },
+    })
+  })
+
   describe('xAI provider', () => {
     const xaiProvider: Provider = data.find((provider) => provider.id === 'x-ai')!
 

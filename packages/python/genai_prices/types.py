@@ -513,7 +513,11 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        model_name = _extract_path(self.model_path, response_data, str, False, []) if self.model_path else None
+        model_name = (
+            None
+            if isinstance(self.model_path, list) and not self.model_path
+            else _extract_path(self.model_path, response_data, str, False, [])
+        )
 
         root = self.root
         if isinstance(root, str):
