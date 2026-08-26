@@ -5385,7 +5385,14 @@ export const data: Provider[] = [
               equals: 'gemini-2.5-flash-lite',
             },
             {
-              starts_with: 'gemini-2.5-flash-lite-preview',
+              and: [
+                {
+                  starts_with: 'gemini-2.5-flash-lite-preview',
+                },
+                {
+                  regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+                },
+              ],
             },
           ],
         },
@@ -5396,6 +5403,19 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.3,
           cache_audio_read_mtok: 0.03,
+        },
+      },
+      {
+        id: 'gemini-2.5-flash-lite-preview-tts',
+        name: 'Gemini 2.5 Flash-Lite Preview TTS',
+        match: {
+          equals: 'gemini-2.5-flash-lite-preview-tts',
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 10,
         },
       },
       {
@@ -5430,12 +5450,39 @@ export const data: Provider[] = [
         deprecated: true,
       },
       {
+        id: 'gemini-2.5-flash-tts',
+        name: 'Gemini 2.5 Flash TTS',
+        match: {
+          or: [
+            {
+              equals: 'gemini-2.5-flash-tts',
+            },
+            {
+              equals: 'gemini-2.5-flash-preview-tts',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'gemini-2.5-pro',
         name: 'Gemini 2.5 Pro',
         description:
           'Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
         match: {
-          starts_with: 'gemini-2.5-pro',
+          and: [
+            {
+              starts_with: 'gemini-2.5-pro',
+            },
+            {
+              regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+            },
+          ],
         },
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
         prices: {
@@ -5466,6 +5513,26 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-2.5-pro-tts',
+        name: 'Gemini 2.5 Pro TTS',
+        match: {
+          or: [
+            {
+              equals: 'gemini-2.5-pro-tts',
+            },
+            {
+              equals: 'gemini-2.5-pro-preview-tts',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: 'See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 1,
+          output_mtok: 20,
         },
       },
       {
