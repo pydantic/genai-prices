@@ -3622,7 +3622,6 @@ export const data: Provider[] = [
           {
             constraint: {
               start_date: '2026-08-17',
-              type: 'start_date',
             },
             prices: {
               input_mtok: 0.22,
@@ -3634,7 +3633,6 @@ export const data: Provider[] = [
             constraint: {
               start_time: '01:00:00Z',
               end_time: '04:00:00Z',
-              type: 'time_of_date',
             },
             prices: {
               input_mtok: 0.44,
@@ -3646,7 +3644,6 @@ export const data: Provider[] = [
             constraint: {
               start_time: '06:00:00Z',
               end_time: '10:00:00Z',
-              type: 'time_of_date',
             },
             prices: {
               input_mtok: 0.44,
@@ -3682,7 +3679,6 @@ export const data: Provider[] = [
           {
             constraint: {
               start_date: '2026-08-17',
-              type: 'start_date',
             },
             prices: {
               input_mtok: 0.66,
@@ -3694,7 +3690,6 @@ export const data: Provider[] = [
             constraint: {
               start_time: '01:00:00Z',
               end_time: '04:00:00Z',
-              type: 'time_of_date',
             },
             prices: {
               input_mtok: 1.32,
@@ -3706,7 +3701,6 @@ export const data: Provider[] = [
             constraint: {
               start_time: '06:00:00Z',
               end_time: '10:00:00Z',
-              type: 'time_of_date',
             },
             prices: {
               input_mtok: 1.32,
