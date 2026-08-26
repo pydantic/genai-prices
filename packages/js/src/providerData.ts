@@ -67,11 +67,20 @@ function parseModel(value: unknown, path: string, providerId: string): ModelInfo
     ...(name === undefined ? {} : { name }),
     ...(priceComments === undefined ? {} : { price_comments: priceComments }),
     prices: Array.isArray(pricesValue)
-      ? requireDenseArray(pricesValue, `${path}.prices`).map((price, index) =>
-          parseConditionalPrice(price, `${path}.prices[${String(index)}]`, providerId, id)
-        )
+      ? parseConditionalPrices(pricesValue, `${path}.prices`, providerId, id)
       : parseModelPrice(pricesValue, `${path}.prices`),
   }
+}
+
+function parseConditionalPrices(value: unknown[], path: string, providerId: string, modelId: string): ConditionalPrice[] {
+  const prices = requireDenseArray(value, path).map((price, index) =>
+    parseConditionalPrice(price, `${path}[${String(index)}]`, providerId, modelId)
+  )
+  if (prices.length === 0) throw invalidProviderData(`${path} must not be empty`)
+  if (prices.filter((price) => price.constraint === undefined).length !== 1) {
+    throw invalidProviderData(`${path} must contain exactly one unconstrained price`)
+  }
+  return prices
 }
 
 function parseConditionalPrice(value: unknown, path: string, providerId: string, modelId: string): ConditionalPrice {

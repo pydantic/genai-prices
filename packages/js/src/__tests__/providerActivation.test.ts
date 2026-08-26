@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider, ProviderDataValue } from '../types'
 
-import { activateProviderData, findProvider, updatePrices, waitForUpdate } from '../api'
+import { findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { parseProviderData } from '../providerData'
 import { getActiveRegistry } from '../units'
@@ -45,13 +45,25 @@ describe('provider activation', () => {
     expect(getActiveRegistry()).toBe(registry)
   })
 
-  it('rejects invalid synchronous provider data without changing active providers', () => {
+  it('rejects invalid synchronous provider data through the public setter without changing active providers', () => {
     const stableProvider = providerFixture('stable-provider')
     updatePrices(({ setProviderData }) => {
       setProviderData([stableProvider])
     })
+    const invalidProvider = providerFixture('invalid-provider')
+    invalidProvider.models = [
+      {
+        id: 'invalid-model',
+        match: { regex: '(' },
+        prices: { input_mtok: 1 },
+      },
+    ]
 
-    expect(() => activateProviderData('garbage')).toThrow('Expected provider data to be an array')
+    expect(() => {
+      updatePrices(({ setProviderData }) => {
+        setProviderData([invalidProvider])
+      })
+    }).toThrow('providers[0].models[0].match.regex must be a valid regular expression')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
   })
 

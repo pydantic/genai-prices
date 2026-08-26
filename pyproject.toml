@@ -84,7 +84,7 @@ source = [
     "tests",
     ".github/scripts",
 ]
-# Both run only in a subprocess, so the tracer never sees them. `source` reports unimported files
+# These run only in a subprocess, so the tracer never sees them. `source` reports unimported files
 # (unlike `include`, which silently omits them), so they have to be named here.
 omit = [
     "packages/python/genai_prices/__main__.py",
