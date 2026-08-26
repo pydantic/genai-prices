@@ -116,6 +116,30 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-lite-preview-tts' },
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-tts' },
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-preview-tts' },
+    { expectedInput: 1, expectedOutput: 20, model: 'gemini-2.5-pro-tts' },
+    { expectedInput: 1, expectedOutput: 20, model: 'gemini-2.5-pro-preview-tts' },
+  ])('prices Gemini TTS model $model', ({ expectedInput, expectedOutput, model }) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_audio_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'google',
+    })
+
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.output_price).toBe(expectedOutput)
+  })
+
+  it.each([
+    { expectedModel: 'gemini-2.5-flash-lite', model: 'GEMINI-2.5-FLASH-LITE-PREVIEW-06-17' },
+    { expectedModel: 'gemini-2.5-pro', model: 'GEMINI-2.5-PRO' },
+  ])('preserves case-insensitive matching for $model', ({ expectedModel, model }) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.model.id).toBe(expectedModel)
+  })
+
+  it.each([
     {
       cacheReadRate: 0.0165,
       contextWindow: 1_000_000,
@@ -224,6 +248,7 @@ describe('generated data split', () => {
   it.each([
     { billedSeconds: 0, hourlyRate: 0.111, model: 'whisper-large-v3', usage: {} },
     { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 0, input_audio_seconds: 5 } },
     { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { input_audio_seconds: 1 } },
     { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 10, input_audio_seconds: 10 } },
     { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
