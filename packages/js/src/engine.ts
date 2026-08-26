@@ -276,7 +276,13 @@ const COMPACT_DATE_RE = /(-)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?=-|:|
 // aliases in the price data. Only used as a fallback, so models that match on the compact date form
 // are left untouched.
 export function normalizeCompactDatedRef(modelId: string): string {
-  return modelId.replace(COMPACT_DATE_RE, '$1$2-$3-$4')
+  return modelId.replace(COMPACT_DATE_RE, (match, prefix: string, year: string, month: string, day: string) => {
+    const parsed = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
+    if (parsed.getUTCFullYear() !== Number(year) || parsed.getUTCMonth() !== Number(month) - 1 || parsed.getUTCDate() !== Number(day)) {
+      return match
+    }
+    return `${prefix}${year}-${month}-${day}`
+  })
 }
 
 export function matchModelWithFallback(provider: Provider, modelId: string, allProviders?: Provider[]): ModelInfo | undefined {

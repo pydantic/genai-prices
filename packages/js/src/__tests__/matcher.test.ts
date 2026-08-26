@@ -150,9 +150,11 @@ describe('Model Matching with Fallback', () => {
     it('should only normalize valid compact dates', () => {
       expect(normalizeCompactDatedRef('gpt-5.2-20251211')).toBe('gpt-5.2-2025-12-11')
       expect(normalizeCompactDatedRef('claude-3-5-haiku-20241022')).toBe('claude-3-5-haiku-2024-10-22')
-      // suffixes that aren't a valid date are left untouched: bad year, then bad month
+      expect(normalizeCompactDatedRef('model-20240229')).toBe('model-2024-02-29')
+      // suffixes that aren't valid calendar dates are left untouched
       expect(normalizeCompactDatedRef('gpt-4o-12345678')).toBe('gpt-4o-12345678')
       expect(normalizeCompactDatedRef('gpt-4o-20251301')).toBe('gpt-4o-20251301')
+      expect(normalizeCompactDatedRef('gpt-4o-20250230')).toBe('gpt-4o-20250230')
     })
 
     it('should fallback to other providers when model not found directly', () => {
@@ -236,6 +238,31 @@ describe('Model Matching with Fallback', () => {
       const model = matchModelWithFallback(mainProvider, 'shared-model', allProviders)
       expect(model).toBeDefined()
       expect(model?.id).toBe('shared-model-main')
+    })
+
+    it('should prioritize an exact fallback match over a normalized fallback match', () => {
+      const normalizedProvider: Provider = {
+        api_pattern: 'normalized.example.com',
+        id: 'normalized-provider',
+        models: [{ id: 'normalized-model', match: { equals: 'model-2025-02-28' }, prices: {} }],
+        name: 'Normalized Provider',
+      }
+      const exactProvider: Provider = {
+        api_pattern: 'exact.example.com',
+        id: 'exact-provider',
+        models: [{ id: 'exact-model', match: { equals: 'model-20250228' }, prices: {} }],
+        name: 'Exact Provider',
+      }
+      const mainProvider: Provider = {
+        api_pattern: 'main.example.com',
+        fallback_model_providers: ['normalized-provider', 'exact-provider'],
+        id: 'main-provider',
+        models: [],
+        name: 'Main Provider',
+      }
+
+      const model = matchModelWithFallback(mainProvider, 'model-20250228', [mainProvider, normalizedProvider, exactProvider])
+      expect(model?.id).toBe('exact-model')
     })
 
     it('should support chained fallbacks', () => {

@@ -361,7 +361,16 @@ def _normalize_compact_dated_ref(model_ref: str) -> str:
     match the dashed aliases used in the price data. This is only applied as a fallback when a ref
     doesn't otherwise match, so models that match on the compact date form are left untouched.
     """
-    return _COMPACT_DATE_RE.sub(r'\1\2-\3-\4', model_ref)
+
+    def replace(match: re.Match[str]) -> str:
+        year, month, day = (int(match.group(index)) for index in range(2, 5))
+        try:
+            date(year, month, day)
+        except ValueError:
+            return match.group(0)
+        return f'{match.group(1)}{year:04d}-{month:02d}-{day:02d}'
+
+    return _COMPACT_DATE_RE.sub(replace, model_ref)
 
 
 @dataclass

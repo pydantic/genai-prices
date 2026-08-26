@@ -686,9 +686,11 @@ def test_compact_dated_model_ref_normalized():
 
     assert _normalize_compact_dated_ref('gpt-5.2-20251211') == 'gpt-5.2-2025-12-11'
     assert _normalize_compact_dated_ref('claude-3-5-haiku-20241022') == 'claude-3-5-haiku-2024-10-22'
-    # suffixes that aren't a valid date are left untouched: bad year, then bad month
+    assert _normalize_compact_dated_ref('model-20240229') == 'model-2024-02-29'
+    # suffixes that aren't valid calendar dates are left untouched
     assert _normalize_compact_dated_ref('gpt-4o-12345678') == 'gpt-4o-12345678'
     assert _normalize_compact_dated_ref('gpt-4o-20251301') == 'gpt-4o-20251301'
+    assert _normalize_compact_dated_ref('gpt-4o-20250230') == 'gpt-4o-20250230'
 
 
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
