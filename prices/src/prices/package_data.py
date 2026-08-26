@@ -180,7 +180,7 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
         extra_keys = {field_name for field_name, value in (model_price.model_extra or {}).items() if value is not None}
         return declared_keys | extra_keys
 
-    raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')
+    raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')  # pragma: no cover
 
 
 def package_ts_data(provider_data: JsonData, units: dict[str, Any]):
