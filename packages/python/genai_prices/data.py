@@ -6859,6 +6859,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='voxtral-mini-2602',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='voxtral-mini-latest'), ClauseEquals(equals='voxtral-mini-2602')]
+                ),
+                name='Voxtral Mini Transcribe 2',
+                price_comments='See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+                prices=ModelPrice(audio_hours=Decimal('0.18'), input_audio_hours=Decimal('0.18')),
+            ),
+            ModelInfo(
                 id='voxtral-small-24b-2507',
                 match=ClauseOr(
                     or_=[
@@ -7299,7 +7308,9 @@ providers: list[Provider] = [
             'https://platform.openai.com/docs/models',
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
-        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        model_match=ClauseOr(
+            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+        ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
             UsageExtractor(
@@ -7742,6 +7753,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
@@ -8371,6 +8383,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-transcribe',
+                match=ClauseEquals(equals='gpt-transcribe'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+                prices=ModelPrice(audio_hours=Decimal('0.27'), input_audio_hours=Decimal('0.27')),
+            ),
+            ModelInfo(
                 id='moderation',
                 match=ClauseContains(contains='moderation'),
                 description='All OpenAI moderation models and endpoints are free of charge',
@@ -8520,6 +8538,12 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='whisper-1',
+                match=ClauseEquals(equals='whisper-1'),
+                price_comments='See https://developers.openai.com/api/docs/models/whisper-1.',
+                prices=ModelPrice(audio_hours=Decimal('0.36'), input_audio_hours=Decimal('0.36')),
             ),
         ],
     ),

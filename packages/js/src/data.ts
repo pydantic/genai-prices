@@ -11722,6 +11722,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voxtral-mini-2602',
+        name: 'Voxtral Mini Transcribe 2',
+        match: {
+          or: [
+            {
+              equals: 'voxtral-mini-latest',
+            },
+            {
+              equals: 'voxtral-mini-2602',
+            },
+          ],
+        },
+        price_comments: 'See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+        prices: {
+          audio_hours: 0.18,
+          input_audio_hours: 0.18,
+        },
+      },
+      {
         id: 'voxtral-small-24b-2507',
         name: 'Voxtral Small 24B 2507',
         description:
@@ -12498,6 +12517,9 @@ export const data: Provider[] = [
       or: [
         {
           starts_with: 'gpt-',
+        },
+        {
+          equals: 'whisper-1',
         },
         {
           regex: '^o[134]',
@@ -13300,6 +13322,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -14523,6 +14546,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-transcribe',
+        match: {
+          equals: 'gpt-transcribe',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+        prices: {
+          audio_hours: 0.27,
+          input_audio_hours: 0.27,
+        },
+      },
+      {
         id: 'moderation',
         description: 'All OpenAI moderation models and endpoints are free of charge',
         match: {
@@ -14801,6 +14835,17 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'whisper-1',
+        match: {
+          equals: 'whisper-1',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/whisper-1.',
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
         },
       },
     ],

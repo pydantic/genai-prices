@@ -84,6 +84,43 @@ def test_groq_transcription_duration_prices(
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'seconds', 'expected_price'),
+    [
+        ('openai', 'gpt-transcribe', Decimal('0.5'), Decimal('0.0000375')),
+        ('openai', 'whisper-1', Decimal(30), Decimal('0.003')),
+        ('mistral', 'voxtral-mini-2602', Decimal(60), Decimal('0.003')),
+    ],
+)
+def test_transcription_duration_prices(
+    provider_id: str,
+    model_ref: str,
+    seconds: Decimal,
+    expected_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(audio_seconds=seconds, input_audio_seconds=seconds),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.input_price == expected_price
+    assert price.output_price == 0
+    assert price.total_price == expected_price
+
+
+def test_openai_transcription_model_ids_fail_closed() -> None:
+    price = calc_price(
+        Usage(input_tokens=1, input_audio_tokens=1),
+        model_ref='gpt-4o-transcribe-diarize',
+        provider_id='openai',
+    )
+
+    assert price.model.id == 'gpt-4o-transcribe'
+    with pytest.raises(LookupError, match="model_ref='gpt-transcribe-diarize'"):
+        calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'text_rate', 'image_rate'),
     [
         ('gemini-2.5-flash-image', '2.5', '30'),

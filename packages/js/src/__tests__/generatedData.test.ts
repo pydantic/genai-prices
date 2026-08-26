@@ -264,6 +264,25 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedPrice: 0.0000375, model: 'gpt-transcribe', providerId: 'openai', seconds: 0.5 },
+    { expectedPrice: 0.003, model: 'whisper-1', providerId: 'openai', seconds: 30 },
+    { expectedPrice: 0.003, model: 'voxtral-mini-2602', providerId: 'mistral', seconds: 60 },
+  ])('prices $model transcription duration', ({ expectedPrice, model, providerId, seconds }) => {
+    const result = calcPrice({ audio_seconds: seconds, input_audio_seconds: seconds }, model, { providerId })
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+  })
+
+  it('matches only verified OpenAI diarization model IDs', () => {
+    expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
+      'gpt-4o-transcribe'
+    )
+    expect(calcPrice({}, 'gpt-transcribe-diarize', { providerId: 'openai' })).toBeNull()
+  })
+
+  it.each([
     { expectedInput: 2, model: 'claude-sonnet-5', providerId: 'anthropic' },
     { expectedInput: 2, model: 'global.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },
     { expectedInput: 2.2, model: 'us.anthropic.claude-sonnet-5-v1:0', providerId: 'aws' },

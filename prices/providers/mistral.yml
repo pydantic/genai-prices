@@ -612,6 +612,18 @@ models:
       input_mtok: 2
       output_mtok: 6
 
+  - id: voxtral-mini-2602
+    name: Voxtral Mini Transcribe 2
+    match:
+      or:
+        - equals: voxtral-mini-latest
+        - equals: voxtral-mini-2602
+    prices_checked: 2026-08-24
+    price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
+    prices:
+      audio_hours: 0.18
+      input_audio_hours: 0.18
+
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
     description: >-
