@@ -145,6 +145,7 @@ describe('getActiveModelPrice', () => {
           constraint: {
             end_time: '16:30:00Z',
             start_time: '01:30:00+01:00',
+            type: 'time_of_date',
           },
           prices: standard,
         },
@@ -167,6 +168,7 @@ describe('getActiveModelPrice', () => {
           constraint: {
             end_time: '16:30:00Z',
             start_time: '25:00:00Z',
+            type: 'time_of_date',
           },
           prices: { input_mtok: 2 },
         },
@@ -199,6 +201,7 @@ describe('getActiveModelPrice', () => {
           constraint: {
             end_time: '06:00:00Z',
             start_time: '22:00:00Z',
+            type: 'time_of_date',
           },
           prices: offPeak,
         },
@@ -222,7 +225,7 @@ describe('start_date constraints', () => {
     prices: [
       { prices: before },
       {
-        constraint: { start_date: '2026-09-01' },
+        constraint: { start_date: '2026-09-01', type: 'start_date' },
         prices: after,
       },
     ],
