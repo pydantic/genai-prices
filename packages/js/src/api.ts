@@ -50,13 +50,17 @@ function activateProviderData(data: unknown): Provider[] {
     throw new Error('Expected null or Provider[]')
   }
 
-  const providers = data.map(validateProvider)
+  const providers: Provider[] = []
+  for (const provider of data) {
+    validateProvider(provider)
+    providers.push(provider)
+  }
   warnUnsupportedExtractorDestinations(providers)
   providerData = providers
   return providers
 }
 
-function validateProvider(provider: unknown): Provider {
+function validateProvider(provider: unknown): asserts provider is Provider {
   if (
     !isRecord(provider) ||
     typeof provider.api_pattern !== 'string' ||
@@ -77,8 +81,6 @@ function validateProvider(provider: unknown): Provider {
       }
     }
   }
-
-  return provider as unknown as Provider
 }
 
 function validateConditionalPrice(conditionalPrice: unknown, providerId: string, modelId: string): void {
@@ -92,11 +94,15 @@ function validateConditionalPrice(conditionalPrice: unknown, providerId: string,
   if (!isRecord(constraint)) {
     throw invalidConstraintError(constraint, providerId, modelId)
   }
-  if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
+  if (
+    (hasExactKeys(constraint, ['start_date']) || (constraint.type === 'start_date' && hasExactKeys(constraint, ['start_date', 'type']))) &&
+    isValidStartDate(constraint.start_date)
+  ) {
     return
   }
   if (
-    hasExactKeys(constraint, ['end_time', 'start_time']) &&
+    (hasExactKeys(constraint, ['end_time', 'start_time']) ||
+      (constraint.type === 'time_of_date' && hasExactKeys(constraint, ['end_time', 'start_time', 'type']))) &&
     isValidTimeOfDay(constraint.start_time) &&
     isValidTimeOfDay(constraint.end_time)
   ) {
@@ -185,9 +191,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     }
   }
 
-  const provider = options?.provider
-    ? validateProvider(options.provider)
-    : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
+  if (options?.provider) validateProvider(options.provider)
+  const provider =
+    options?.provider ?? matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null

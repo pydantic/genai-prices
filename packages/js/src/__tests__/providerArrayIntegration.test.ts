@@ -56,13 +56,30 @@ describe('provider array integration', () => {
   })
 
   it.each([
+    ['start-date', { start_date: '2025-01-01', type: 'start_date' }, '2025-01-02T00:00:00Z'],
+    ['time-of-day', { end_time: '16:00:00Z', start_time: '08:00:00Z', type: 'time_of_date' }, '2025-01-01T12:00:00Z'],
+  ])('accepts the legacy discriminated %s constraint', async (_name, constraint, timestamp) => {
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.resolve(downloadedConditionalProviderArray(constraint)))
+    })
+    await waitForUpdate()
+
+    expect(
+      calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
+        providerId: 'testing',
+        timestamp: new Date(timestamp),
+      })?.input_price
+    ).toBe(2)
+  })
+
+  it.each([
     ['non-record constraint', 'not-an-object'],
     ['empty constraint', {}],
     ['malformed start_date shape', { start_date: 'not-a-date' }],
     ['impossible calendar date', { start_date: '2025-02-30' }],
     ['out-of-range time-of-day', { end_time: '26:00:00Z', start_time: '25:00:00Z' }],
     ['missing timezone on time-of-day', { end_time: '16:00:00', start_time: '08:00:00' }],
-    ['constraint with a discriminator', { start_date: '2025-01-01', type: 'start_date' }],
+    ['constraint with a mismatched discriminator', { start_date: '2025-01-01', type: 'time_of_date' }],
     ['mixed start-date/time-of-day constraint', { end_time: '16:00:00Z', start_date: '2025-01-01', start_time: '08:00:00Z' }],
     ['constraint with unknown extra fields', { start_date: '2025-01-01', tz: 'UTC' }],
     ['year-zero start date', { start_date: '0000-01-01' }],
@@ -111,6 +128,18 @@ describe('provider array integration', () => {
     ).toBe(2)
   })
 
+  it('uses a legacy discriminated constraint on a caller-supplied provider', () => {
+    const constraint: StartDateConstraint = { start_date: '2025-01-01', type: 'start_date' }
+    const provider = conditionalProvider(constraint)
+
+    expect(
+      calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
+        provider,
+        timestamp: new Date('2025-01-02T00:00:00Z'),
+      })?.input_price
+    ).toBe(2)
+  })
+
   it('rejects malformed wire-format constraints on a caller-supplied provider', () => {
     const provider = conditionalProvider({ start_date: 'not-a-date' })
 
@@ -144,10 +173,10 @@ describe('provider array integration', () => {
     expect(data).toStrictEqual(publishedData)
   })
 
-  it('activates every conditional price in the published v2 data', async () => {
+  it('activates and calculates with asynchronously loaded published v2 data', async () => {
     const v2Data: unknown = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8'))
     updatePrices(({ setProviderData }) => {
-      setProviderData(v2Data)
+      setProviderData(Promise.resolve(v2Data))
     })
 
     const activeData = await waitForUpdate()
@@ -165,6 +194,13 @@ describe('provider array integration', () => {
       // way to sweep every conditional model in the published artifact.
       expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).not.toThrow()
     }
+
+    expect(
+      calcPrice({ input_tokens: 1_000_000 }, 'o3', {
+        providerId: 'openai',
+        timestamp: new Date('2025-06-11T00:00:00Z'),
+      })?.input_price
+    ).toBe(2)
   })
 })
 

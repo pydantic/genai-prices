@@ -25,11 +25,15 @@ export interface ConditionalPrice {
 
 export interface StartDateConstraint {
   start_date: string // ISO date string
+  /** @deprecated The published provider-data format identifies constraints structurally. */
+  type?: 'start_date'
 }
 
 export interface TimeOfDateConstraint {
   end_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
   start_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
+  /** @deprecated The published provider-data format identifies constraints structurally. */
+  type?: 'time_of_date'
 }
 
 export type MatchLogic =
