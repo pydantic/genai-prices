@@ -3237,7 +3237,12 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gemini-2.5-flash-lite'),
-                        ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                        ClauseAnd(
+                            and_=[
+                                ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                                ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                            ]
+                        ),
                     ]
                 ),
                 name='Gemini 2.5 Flash Lite',
@@ -3250,6 +3255,14 @@ providers: list[Provider] = [
                     input_audio_mtok=Decimal('0.3'),
                     cache_audio_read_mtok=Decimal('0.03'),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-flash-lite-preview-tts',
+                match=ClauseEquals(equals='gemini-2.5-flash-lite-preview-tts'),
+                name='Gemini 2.5 Flash-Lite Preview TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-preview',
@@ -3269,8 +3282,26 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
+                id='gemini-2.5-flash-tts',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-2.5-flash-tts'),
+                        ClauseEquals(equals='gemini-2.5-flash-preview-tts'),
+                    ]
+                ),
+                name='Gemini 2.5 Flash TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='gemini-2.5-pro',
-                match=ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                match=ClauseAnd(
+                    and_=[
+                        ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                        ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                    ]
+                ),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
@@ -3281,6 +3312,16 @@ providers: list[Provider] = [
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-pro-tts',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-2.5-pro-tts'), ClauseEquals(equals='gemini-2.5-pro-preview-tts')]
+                ),
+                name='Gemini 2.5 Pro TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='gemini-3-flash-preview',
