@@ -50,11 +50,17 @@ function validatePriceValue(priceKey: string, price: unknown): number | TieredPr
   const tiers: Tier[] = []
   for (const tier of price.tiers) {
     if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
-    const { price: tierPrice, start } = tier
-    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || !isValidPriceNumber(tierPrice)) {
+    const { inclusive, price: tierPrice, start } = tier
+    if (
+      typeof start !== 'number' ||
+      !Number.isSafeInteger(start) ||
+      start < 0 ||
+      !isValidPriceNumber(tierPrice) ||
+      (inclusive !== undefined && typeof inclusive !== 'boolean')
+    ) {
       throw invalidPriceValueError(priceKey)
     }
-    tiers.push({ price: tierPrice, start })
+    tiers.push(inclusive === undefined ? { price: tierPrice, start } : { inclusive, price: tierPrice, start })
   }
 
   return new TieredPrices({ base: price.base, tiers })
@@ -77,6 +83,7 @@ function isValidPriceNumber(value: unknown): value is number {
  *
  * When token count crosses a tier threshold, ALL tokens are charged at that tier's rate.
  * This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
+ * A tier is exclusive at its start threshold unless `inclusive` is true.
  *
  * Example with base=$3/MTok and tier at 200K=$6/MTok:
  * - 199,999 tokens: all at $3/MTok = $0.599997
@@ -93,7 +100,7 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens:
   // When totalInputTokens is 0, no tier condition is met, so base rate is used
   let applicablePrice = tiered.base
   for (const tier of tiered.tiers) {
-    if (totalInputTokens > tier.start) {
+    if (totalInputTokens > tier.start || (tier.inclusive === true && totalInputTokens === tier.start)) {
       applicablePrice = tier.price
     }
   }

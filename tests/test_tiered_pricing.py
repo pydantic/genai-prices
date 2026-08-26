@@ -229,6 +229,13 @@ def test_openai_gpt_5_4_tiered_pricing_above_threshold():
     assert price.provider.id == snapshot('openai')
 
 
+def test_openai_gpt_5_4_tiered_pricing_at_threshold() -> None:
+    price = calc_price(Usage(input_tokens=272_000), model_ref='gpt-5.4', provider_id='openai')
+
+    assert price.input_price == Decimal('1.36')
+    assert price.total_price == Decimal('1.36')
+
+
 def test_openai_gpt_5_4_tiered_pricing_with_output():
     """Test GPT-5.4 with input above threshold and output tokens.
 

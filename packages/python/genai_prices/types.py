@@ -840,7 +840,7 @@ def calc_unit_price(
         # When total_input_tokens is 0, no tier condition is met, so base rate is used
         applicable_price = price.base
         for tier in reversed(price.tiers):
-            if total_input_tokens > tier.start:
+            if total_input_tokens > tier.start or (tier.inclusive and total_input_tokens == tier.start):
                 applicable_price = tier.price
                 break
         unit_price = applicable_price * decimal_count
@@ -888,6 +888,7 @@ def _validate_model_price_value(price_key: str, value: object) -> Decimal | Tier
                 or tier.start < 0
                 or tier.start < previous_start
                 or not _is_valid_price_decimal(tier.price)
+                or type(tier.inclusive) is not bool
             ):
                 break
             previous_start = tier.start
@@ -949,6 +950,7 @@ class TieredPrices:
 
     Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
     This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
+    A tier is exclusive at its start threshold unless ``inclusive`` is true.
 
     Example: For a tier starting at 200K tokens:
     - Using 199,999 tokens: all tokens pay base rate
@@ -988,6 +990,8 @@ class Tier:
     """Start of the tier"""
     price: Decimal
     """Price for this tier"""
+    inclusive: bool = False
+    """Whether the tier applies at exactly the start threshold"""
 
 
 @dataclass

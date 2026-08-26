@@ -762,22 +762,28 @@ models:
         - equals: gpt-5-4
         - equals: gpt-5-4-2026-03-05
     context_window: 1050000
-    prices_checked: 2026-03-06
+    prices_checked: 2026-08-26
+    price_comments: >-
+      The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K.
+      Ref: https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 2.5
         tiers:
           - start: 272000
+            inclusive: true
             price: 5
       cache_read_mtok:
         base: 0.25
         tiers:
           - start: 272000
+            inclusive: true
             price: 0.5
       output_mtok:
         base: 15
         tiers:
           - start: 272000
+            inclusive: true
             price: 22.5
 
   - id: gpt-5.4-image-2
@@ -839,17 +845,22 @@ models:
         - equals: gpt-5-4-pro
         - equals: gpt-5-4-pro-2026-03-05
     context_window: 1050000
-    prices_checked: 2026-03-06
+    prices_checked: 2026-08-26
+    price_comments: >-
+      The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K.
+      Ref: https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 30
         tiers:
           - start: 272000
+            inclusive: true
             price: 60
       output_mtok:
         base: 180
         tiers:
           - start: 272000
+            inclusive: true
             price: 270
 
   - id: gpt-5.5
@@ -871,25 +882,29 @@ models:
         - equals: gpt-5.5-codex
         - equals: gpt-5-5-codex
     context_window: 1000000
-    prices_checked: 2026-08-24
+    prices_checked: 2026-08-26
     price_comments: >-
-      Prompts with >272K input tokens are billed at 2x input and cached input and 1.5x output for the full request.
-      Ref: https://developers.openai.com/api/docs/models/gpt-5.5
+      The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K.
+      Long-context requests are billed at 2x input and cached input and 1.5x output for the full request.
+      Ref: https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 5
         tiers:
           - start: 272000
+            inclusive: true
             price: 10
       cache_read_mtok:
         base: 0.5
         tiers:
           - start: 272000
+            inclusive: true
             price: 1
       output_mtok:
         base: 30
         tiers:
           - start: 272000
+            inclusive: true
             price: 45
 
   - id: gpt-5.5-pro
@@ -902,20 +917,23 @@ models:
         - equals: gpt-5-5-pro
         - equals: gpt-5-5-pro-2026-04-23
     context_window: 1000000
-    prices_checked: 2026-08-24
+    prices_checked: 2026-08-26
     price_comments: >-
-      Prompts with >272K input tokens are billed at 2x input and 1.5x output for the full request.
+      The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K.
+      Long-context requests are billed at 2x input and 1.5x output for the full request.
       Ref: https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 30
         tiers:
           - start: 272000
+            inclusive: true
             price: 60
       output_mtok:
         base: 180
         tiers:
           - start: 272000
+            inclusive: true
             price: 270
 
   - id: gpt-5.6-luna
@@ -929,10 +947,10 @@ models:
         - regex: ^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-luna-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-08-02
+    prices_checked: 2026-08-26
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
-      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Luna prices
+      Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K,
+      so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Luna prices
       by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna,
       https://developers.openai.com/api/docs/changelog
     prices:
@@ -941,21 +959,25 @@ models:
             base: 1
             tiers:
               - start: 272000
+                inclusive: true
                 price: 2
           cache_write_mtok:
             base: 1.25
             tiers:
               - start: 272000
+                inclusive: true
                 price: 2.5
           cache_read_mtok:
             base: 0.1
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.2
           output_mtok:
             base: 6
             tiers:
               - start: 272000
+                inclusive: true
                 price: 9
       - constraint:
           start_date: 2026-07-30
@@ -964,21 +986,25 @@ models:
             base: 0.2
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.4
           cache_write_mtok:
             base: 0.25
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.5
           cache_read_mtok:
             base: 0.02
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.04
           output_mtok:
             base: 1.2
             tiers:
               - start: 272000
+                inclusive: true
                 price: 1.8
 
   - id: gpt-5.6-sol
@@ -994,10 +1020,10 @@ models:
         - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-08-24
+    prices_checked: 2026-08-26
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
-      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Sol input prices
+      Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K,
+      so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Sol input prices
       by 20% and output prices by 33% on 2026-08-21. Refs:
       https://developers.openai.com/api/docs/models/gpt-5.6-sol,
       https://developers.openai.com/api/docs/changelog
@@ -1007,21 +1033,25 @@ models:
             base: 5
             tiers:
               - start: 272000
+                inclusive: true
                 price: 10
           cache_write_mtok:
             base: 6.25
             tiers:
               - start: 272000
+                inclusive: true
                 price: 12.5
           cache_read_mtok:
             base: 0.5
             tiers:
               - start: 272000
+                inclusive: true
                 price: 1
           output_mtok:
             base: 30
             tiers:
               - start: 272000
+                inclusive: true
                 price: 45
       - constraint:
           # https://developers.openai.com/api/docs/changelog
@@ -1031,21 +1061,25 @@ models:
             base: 4
             tiers:
               - start: 272000
+                inclusive: true
                 price: 8
           cache_write_mtok:
             base: 5
             tiers:
               - start: 272000
+                inclusive: true
                 price: 10
           cache_read_mtok:
             base: 0.4
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.8
           output_mtok:
             base: 20
             tiers:
               - start: 272000
+                inclusive: true
                 price: 30
 
   - id: gpt-5.6-terra
@@ -1059,10 +1093,10 @@ models:
         - regex: ^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-terra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-08-02
+    prices_checked: 2026-08-26
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
-      (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Terra prices
+      Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K,
+      so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Terra prices
       by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra,
       https://developers.openai.com/api/docs/changelog
     prices:
@@ -1071,21 +1105,25 @@ models:
             base: 2.5
             tiers:
               - start: 272000
+                inclusive: true
                 price: 5
           cache_write_mtok:
             base: 3.125
             tiers:
               - start: 272000
+                inclusive: true
                 price: 6.25
           cache_read_mtok:
             base: 0.25
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.5
           output_mtok:
             base: 15
             tiers:
               - start: 272000
+                inclusive: true
                 price: 22.5
       - constraint:
           start_date: 2026-07-30
@@ -1094,21 +1132,25 @@ models:
             base: 2
             tiers:
               - start: 272000
+                inclusive: true
                 price: 4
           cache_write_mtok:
             base: 2.5
             tiers:
               - start: 272000
+                inclusive: true
                 price: 5
           cache_read_mtok:
             base: 0.2
             tiers:
               - start: 272000
+                inclusive: true
                 price: 0.4
           output_mtok:
             base: 12
             tiers:
               - start: 272000
+                inclusive: true
                 price: 18
 
   - id: gpt-audio

@@ -33,6 +33,10 @@ from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 pytestmark = pytest.mark.anyio
 
 
+def _openai_long_context_tier(price: str) -> Tier:
+    return Tier(start=272_000, price=Decimal(price), inclusive=True)
+
+
 def test_sync_success_with_provider():
     price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
 
@@ -77,7 +81,11 @@ def test_gpt_5_6_cache_write_price_context_boundary(
     short_write_rate: Decimal,
     long_write_rate: Decimal,
 ):
-    for tokens, rate in ((272_000, short_write_rate), (272_001, long_write_rate)):
+    for tokens, rate in (
+        (271_999, short_write_rate),
+        (272_000, long_write_rate),
+        (272_001, long_write_rate),
+    ):
         price = calc_price(
             Usage(input_tokens=tokens, cache_write_tokens=tokens),
             model_ref=model_ref,
@@ -160,62 +168,60 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-sol',
             datetime(2026, 8, 20, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=272_000, price=Decimal('12.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272_000, price=Decimal('1'))]),
-                output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272_000, price=Decimal('45'))]),
+                input_mtok=TieredPrices(base=Decimal('5'), tiers=[_openai_long_context_tier('10')]),
+                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[_openai_long_context_tier('12.5')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[_openai_long_context_tier('1')]),
+                output_mtok=TieredPrices(base=Decimal('30'), tiers=[_openai_long_context_tier('45')]),
             ),
         ),
         (
             'gpt-5.6-sol',
             datetime(2026, 8, 21, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272_000, price=Decimal('8'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272_000, price=Decimal('0.8'))]),
-                output_mtok=TieredPrices(base=Decimal('20'), tiers=[Tier(start=272_000, price=Decimal('30'))]),
+                input_mtok=TieredPrices(base=Decimal('4'), tiers=[_openai_long_context_tier('8')]),
+                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[_openai_long_context_tier('10')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[_openai_long_context_tier('0.8')]),
+                output_mtok=TieredPrices(base=Decimal('20'), tiers=[_openai_long_context_tier('30')]),
             ),
         ),
         (
             'gpt-5.6-luna',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
-                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272_000, price=Decimal('9'))]),
+                input_mtok=TieredPrices(base=Decimal('1'), tiers=[_openai_long_context_tier('2')]),
+                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[_openai_long_context_tier('2.5')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[_openai_long_context_tier('0.2')]),
+                output_mtok=TieredPrices(base=Decimal('6'), tiers=[_openai_long_context_tier('9')]),
             ),
         ),
         (
             'gpt-5.6-luna',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
-                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272_000, price=Decimal('1.8'))]),
+                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[_openai_long_context_tier('0.4')]),
+                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[_openai_long_context_tier('0.5')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[_openai_long_context_tier('0.04')]),
+                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[_openai_long_context_tier('1.8')]),
             ),
         ),
         (
             'gpt-5.6-terra',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
-                cache_write_mtok=TieredPrices(
-                    base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
-                ),
-                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
-                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272_000, price=Decimal('22.5'))]),
+                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[_openai_long_context_tier('5')]),
+                cache_write_mtok=TieredPrices(base=Decimal('3.125'), tiers=[_openai_long_context_tier('6.25')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[_openai_long_context_tier('0.5')]),
+                output_mtok=TieredPrices(base=Decimal('15'), tiers=[_openai_long_context_tier('22.5')]),
             ),
         ),
         (
             'gpt-5.6-terra',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
-                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272_000, price=Decimal('18'))]),
+                input_mtok=TieredPrices(base=Decimal('2'), tiers=[_openai_long_context_tier('4')]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[_openai_long_context_tier('5')]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[_openai_long_context_tier('0.4')]),
+                output_mtok=TieredPrices(base=Decimal('12'), tiers=[_openai_long_context_tier('18')]),
             ),
         ),
     ],
@@ -804,6 +810,7 @@ def test_calc_price_rejects_invalid_recognized_flat_price(price: Decimal) -> Non
         TieredPrices(base=Decimal('1'), tiers=[Tier(start=-1, price=Decimal('2'))]),
         TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('-2'))]),
         TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('Infinity'))]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'), inclusive='yes')]),  # type: ignore[arg-type]
     ],
 )
 def test_calc_price_rejects_invalid_recognized_tiered_price(price: TieredPrices) -> None:
@@ -938,6 +945,13 @@ def test_calc_unit_price_handles_tiered_prices() -> None:
 
     assert calc_unit_price(price, 10, total_input_tokens=100, per=1_000) == Decimal('0.01')
     assert calc_unit_price(price, 10, total_input_tokens=101, per=1_000) == Decimal('0.02')
+
+
+def test_calc_unit_price_handles_inclusive_tier_boundary() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'), inclusive=True)])
+
+    assert calc_unit_price(price, 10, total_input_tokens=99, per=1_000) == Decimal('0.01')
+    assert calc_unit_price(price, 10, total_input_tokens=100, per=1_000) == Decimal('0.02')
 
 
 def test_calc_unit_price_uses_non_million_normalization_factor() -> None:

@@ -284,6 +284,7 @@ class TieredPrices(_Model):
 
     Uses threshold-based pricing where *input tokens* crossing a tier applies that rate to ALL tokens of this type.
     This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
+    A tier is exclusive at its start threshold unless ``inclusive`` is true.
 
     Example: For a tier starting at 200K tokens:
     - Using 199,999 tokens: all tokens pay base rate
@@ -310,6 +311,8 @@ class Tier(_Model):
     """Start of the tier"""
     price: DollarPrice
     """Price for this tier"""
+    inclusive: bool = Field(default=False, exclude_if=lambda value: not value)
+    """Whether the tier applies at exactly the start threshold"""
 
 
 class ConditionalPrice(_Model):

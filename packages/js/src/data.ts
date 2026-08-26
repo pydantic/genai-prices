@@ -13561,6 +13561,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        price_comments:
+          'The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 2.5,
@@ -13568,6 +13570,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 5,
+                inclusive: true,
               },
             ],
           },
@@ -13577,6 +13580,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.5,
+                inclusive: true,
               },
             ],
           },
@@ -13586,6 +13590,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 22.5,
+                inclusive: true,
               },
             ],
           },
@@ -13681,6 +13686,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        price_comments:
+          'The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
@@ -13688,6 +13695,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 60,
+                inclusive: true,
               },
             ],
           },
@@ -13697,6 +13705,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 270,
+                inclusive: true,
               },
             ],
           },
@@ -13748,7 +13757,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts with >272K input tokens are billed at 2x input and cached input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+          'The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Long-context requests are billed at 2x input and cached input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 5,
@@ -13756,6 +13765,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 10,
+                inclusive: true,
               },
             ],
           },
@@ -13765,6 +13775,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 1,
+                inclusive: true,
               },
             ],
           },
@@ -13774,6 +13785,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 45,
+                inclusive: true,
               },
             ],
           },
@@ -13801,7 +13813,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts with >272K input tokens are billed at 2x input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
+          'The pricing table labels the short-context rate <272K, so the long-context tier starts at 272K. Long-context requests are billed at 2x input and 1.5x output for the full request. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
@@ -13809,6 +13821,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 60,
+                inclusive: true,
               },
             ],
           },
@@ -13818,6 +13831,7 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 270,
+                inclusive: true,
               },
             ],
           },
@@ -13845,7 +13859,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K, so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -13855,6 +13869,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 2,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13864,6 +13879,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 2.5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13873,6 +13889,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.2,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13882,6 +13899,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 9,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13899,6 +13917,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.4,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13908,6 +13927,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13917,6 +13937,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.04,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13926,6 +13947,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 1.8,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13961,7 +13983,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K, so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -13971,6 +13993,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 10,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13980,6 +14003,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 12.5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13989,6 +14013,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 1,
+                    inclusive: true,
                   },
                 ],
               },
@@ -13998,6 +14023,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 45,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14015,6 +14041,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 8,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14024,6 +14051,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 10,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14033,6 +14061,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.8,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14042,6 +14071,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 30,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14071,7 +14101,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K input tokens) is 2x input and 1.5x output. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The pricing table labels short-context rates <272K, so the long-context tier starts at 272K and is 2x input and 1.5x output. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -14081,6 +14111,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14090,6 +14121,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 6.25,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14099,6 +14131,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14108,6 +14141,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 22.5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14125,6 +14159,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 4,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14134,6 +14169,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 5,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14143,6 +14179,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 0.4,
+                    inclusive: true,
                   },
                 ],
               },
@@ -14152,6 +14189,7 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 18,
+                    inclusive: true,
                   },
                 ],
               },
