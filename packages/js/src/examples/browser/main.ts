@@ -1,4 +1,4 @@
-import { calcPrice, Provider, updatePrices } from '../..'
+import { calcPrice, updatePrices } from '../..'
 
 const PRICE_TTL = 1000 * 60 // * 60 * 60 * 24 // 24 hours
 
@@ -19,7 +19,7 @@ updatePrices(({ onCalc, remoteDataUrl, setProviderData }) => {
 
       const dataStr = localStorage.getItem(GENAI_DATA_KEY)
       if (dataStr !== null) {
-        setProviderData(JSON.parse(dataStr) as Provider[])
+        setProviderData(JSON.parse(dataStr) as unknown)
       }
 
       if (Date.now() - parseInt(localStorageDataTimestamp, 10) < PRICE_TTL) {
@@ -40,7 +40,7 @@ updatePrices(({ onCalc, remoteDataUrl, setProviderData }) => {
   // we will use the current data (either the embedded one or the stale local storage one) as a temp fallback.
   setProviderData(
     fetch(remoteDataUrl, { cache: 'no-store' }).then(async (response) => {
-      const freshData = (await response.json()) as Provider[]
+      const freshData = (await response.json()) as unknown
       console.log('updated genai-prices data')
       try {
         localStorage.setItem(GENAI_DATA_TIMESTAMP_KEY, Date.now().toString())
