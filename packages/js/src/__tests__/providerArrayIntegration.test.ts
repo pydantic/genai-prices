@@ -166,6 +166,13 @@ describe('provider array integration', () => {
     expect(() => parseProviderData(providerData)).toThrow(message)
   })
 
+  it('rejects a sparse provider array whose missing index is inherited', () => {
+    const providerData = Array<unknown>(1)
+    Reflect.setPrototypeOf(providerData, { 0: downloadedProviderArray({ input_mtok: 1 })[0] })
+
+    expect(() => parseProviderData(providerData)).toThrow('providers[0] must not be empty')
+  })
+
   it.each([
     ['empty', [], 'prices must not be empty'],
     [

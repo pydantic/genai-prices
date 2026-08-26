@@ -310,7 +310,7 @@ function requireArray(record: Record<string, unknown>, key: string, path: string
 function requireDenseArray(value: unknown[], path: string): unknown[] {
   const values: unknown[] = []
   for (let index = 0; index < value.length; index += 1) {
-    if (!(index in value)) throw invalidProviderData(`${path}[${String(index)}] must not be empty`)
+    if (!Object.hasOwn(value, index)) throw invalidProviderData(`${path}[${String(index)}] must not be empty`)
     values.push(value[index])
   }
   return values
