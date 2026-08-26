@@ -5,6 +5,7 @@ on:
     types: [opened, reopened]
   workflow_dispatch:
   roles: all
+if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 permissions:
   contents: read
   issues: read
