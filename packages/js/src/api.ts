@@ -231,9 +231,12 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }
-    const reportedSeconds = billedUsage.audio_seconds ?? billedUsage.input_audio_seconds
+    const audioSeconds = billedUsage.audio_seconds
+    const inputAudioSeconds = billedUsage.input_audio_seconds
+    if (audioSeconds !== undefined) validateUsageValue('audio_seconds', audioSeconds)
+    if (inputAudioSeconds !== undefined) validateUsageValue('input_audio_seconds', inputAudioSeconds)
+    const reportedSeconds = audioSeconds === 0 ? inputAudioSeconds : (audioSeconds ?? inputAudioSeconds)
     if (reportedSeconds !== undefined) {
-      validateUsageValue('audio_seconds', reportedSeconds)
       const billedSeconds = reportedSeconds > 0 ? Math.max(reportedSeconds, 10) : 0
       billedUsage.audio_seconds = billedSeconds
       billedUsage.input_audio_seconds = billedSeconds

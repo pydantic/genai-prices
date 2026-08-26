@@ -1836,6 +1836,40 @@ def test_complex_usage():
     )
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_mtok', 'output_mtok'),
+    [
+        ('gemini-2.5-flash-lite-preview-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-flash-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-flash-preview-tts', Decimal('0.5'), Decimal('10')),
+        ('gemini-2.5-pro-tts', Decimal('1'), Decimal('20')),
+        ('gemini-2.5-pro-preview-tts', Decimal('1'), Decimal('20')),
+    ],
+)
+def test_gemini_tts_prices(model_ref: str, input_mtok: Decimal, output_mtok: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000, output_audio_tokens=1_000_000),
+        model_ref,
+        provider_id='google',
+    )
+
+    assert price.input_price == input_mtok
+    assert price.output_price == output_mtok
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id'),
+    [
+        ('GEMINI-2.5-FLASH-LITE-PREVIEW-06-17', 'gemini-2.5-flash-lite'),
+        ('GEMINI-2.5-PRO', 'gemini-2.5-pro'),
+    ],
+)
+def test_gemini_tts_matching_preserves_case_insensitive_generic_models(model_ref: str, expected_model_id: str) -> None:
+    price = calc_price(Usage(input_tokens=1), model_ref, provider_id='google')
+
+    assert price.model.id == expected_model_id
+
+
 def test_output_audio_usage():
     mil = 1_000_000
 
