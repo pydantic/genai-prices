@@ -83,9 +83,13 @@ describe('dataset', () => {
         for (const extractor of extracted.extractors) {
           const provider = findProvider({ providerId: extractor.provider_id })!
           const { model, usage: extractedUsage } = extractUsage(provider, usage.body, extractor.api_flavor)
-          // A usage-only extractor can deliberately omit model extraction even when another extractor for the same
-          // recorded body supplies the row's shared model reference.
-          if (model) {
+          const extractorConfig = provider.extractors?.find((item) => item.api_flavor === extractor.api_flavor)
+          const isUsageOnly = Array.isArray(extractorConfig?.model_path) && extractorConfig.model_path.length === 0
+          if (!model) {
+            // A usage-only extractor can deliberately omit model extraction even when another extractor for the same
+            // recorded body supplies the row's shared model reference. Preserve the invariant for every other extractor.
+            if (!isUsageOnly) expect(usage.model).toBeUndefined()
+          } else {
             expect(model).toBe(usage.model)
             // Must match the instant used by tests/dataset/extract_usages.py
             // (datetime(2025, 11, 6, 12, 0, 0, tzinfo=utc)) which generates the expected prices.
