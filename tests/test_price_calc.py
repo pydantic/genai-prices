@@ -680,10 +680,77 @@ def test_zai_does_not_shadow_zhipuai_model_matching(model_ref: str, model_id: st
     assert price.model.id == model_id
 
 
-def test_bare_glm_53_ref_is_claimed_by_zhipuai():
-    """zhipuai claims every `glm-*` ref, so GLM-5.3 needs an explicit provider until Zhipu publishes its CNY rates."""
-    with pytest.raises(LookupError, match="Unable to find model with model_ref='glm-5.3' in zhipuai"):
-        calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref='glm-5.3')
+def test_bare_glm_53_ref_prices_with_zhipuai():
+    price = calc_price(Usage(input_tokens=1_000, output_tokens=100), model_ref='glm-5.3')
+
+    assert price.provider.id == 'zhipuai'
+    assert price.model.id == 'GLM-5.3'
+    assert price.input_price == Decimal('0.001103')
+    assert price.output_price == Decimal('0.0003862')
+    assert price.total_price == Decimal('0.0014892')
+
+
+def assert_glm_53_flash_price(
+    price: PriceCalculation,
+    *,
+    expected_provider: str,
+    expected_model: str,
+    input_price: Decimal,
+    output_price: Decimal,
+) -> None:
+    assert price.provider.id == expected_provider
+    assert price.model.id == expected_model
+    assert price.input_price == input_price
+    assert price.output_price == output_price
+    assert price.total_price == input_price + output_price
+
+
+def test_zhipuai_glm_53_flash_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='GLM-5.3-Flash',
+        provider_id='zhipuai',
+    )
+
+    assert_glm_53_flash_price(
+        price,
+        expected_provider='zhipuai',
+        expected_model='GLM-5.3-Flash',
+        input_price=Decimal('0.0000316'),
+        output_price=Decimal('0.0000193'),
+    )
+
+
+def test_zai_glm_53_flash_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='glm-5.3-flash',
+        provider_api_url='https://api.z.ai/api/paas/v4',
+    )
+
+    assert_glm_53_flash_price(
+        price,
+        expected_provider='zai',
+        expected_model='GLM-5.3-Flash',
+        input_price=Decimal('0.000039'),
+        output_price=Decimal('0.000025'),
+    )
+
+
+def test_openrouter_glm_53_flash_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref='z-ai/glm-5.3-flash',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert_glm_53_flash_price(
+        price,
+        expected_provider='openrouter',
+        expected_model='z-ai/glm-5.3-flash',
+        input_price=Decimal('0.000039'),
+        output_price=Decimal('0.000025'),
+    )
 
 
 def test_openrouter_modern_dated_aliases_price():
