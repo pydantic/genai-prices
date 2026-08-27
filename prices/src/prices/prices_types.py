@@ -106,7 +106,7 @@ class Provider(_Model):
             for expected_index, expected_id in enumerate(sorted_ids):
                 if current_id == expected_id and current_index != expected_index:
                     msg = f'Models are not sorted by ID: move `{current_id}` {current_index} -> {expected_index}'
-                    if expected_index > 0:
+                    if expected_index > 0:  # pragma: no branch - the first mismatch cannot move to index zero
                         msg += f' after `{sorted_ids[expected_index - 1]}`'
                     raise ValueError(msg)
 
@@ -285,7 +285,7 @@ class ModelPrice(_Model):
             if getattr(self, field_name):
                 return False
         for value in (self.model_extra or {}).values():
-            if value is not None:
+            if value is not None:  # pragma: no branch - validated extra prices cannot be null
                 return False
         return True
 

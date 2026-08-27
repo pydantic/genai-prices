@@ -10965,6 +10965,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000925",
+            "output_price": "0.000184",
             "provider_id": "openrouter"
           },
           {
@@ -27451,10 +27453,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "provider_id": "azure"
           },
@@ -27482,6 +27480,10 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -27613,12 +27615,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0201",
-            "output_price": "0.00015",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0201",
             "output_price": "0.00015",
@@ -27648,6 +27644,12 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.025115",
+            "output_price": "0.00015",
+            "provider_id": "azure"
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -27782,12 +27784,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0201",
-            "output_price": "0.00012",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -27847,28 +27843,11 @@
       {
         "extractors": [
           {
-            "api_flavor": "embeddings",
-            "input_price": "0.0201",
-            "output_price": "0",
+            "api_flavor": "chat",
+            "input_price": "0.025115",
+            "output_price": "0.00012",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "input_price": "0.0201",
-            "output_price": "0",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 4020
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -27940,6 +27919,29 @@
           "cache_write_tokens": 4012,
           "input_tokens": 4020,
           "output_tokens": 4
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0201",
+            "output_price": "0",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0201",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 4020
         }
       }
     ],
@@ -74161,10 +74163,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "provider_id": "azure"
           },
@@ -74192,6 +74190,10 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -74241,10 +74243,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "provider_id": "azure"
           },
@@ -74272,6 +74270,10 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -74351,16 +74353,7 @@
           {
             "api_flavor": "responses",
             "provider_id": "azure"
-          }
-        ],
-        "usage": {
-          "input_tokens": 142,
-          "output_reasoning_tokens": 11,
-          "output_tokens": 33
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -74411,10 +74404,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "provider_id": "azure"
           },
@@ -74442,6 +74431,10 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -94892,19 +94885,10 @@
         "extractors": [
           {
             "api_flavor": "responses",
-            "input_price": "0.04288",
+            "input_price": "0.0484025",
             "output_price": "0.00156",
             "provider_id": "azure"
-          }
-        ],
-        "usage": {
-          "input_tokens": 8576,
-          "output_reasoning_tokens": 32,
-          "output_tokens": 52
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "responses",
             "provider_id": "modal"
@@ -105391,10 +105375,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -105454,24 +105434,9 @@
       {
         "extractors": [
           {
-            "api_flavor": "embeddings",
+            "api_flavor": "chat",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3214
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -105544,6 +105509,25 @@
           "input_tokens": 3214,
           "output_tokens": 100
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 3214
+        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -105607,74 +105591,6 @@
             "api_flavor": "chat",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 3211,
-          "input_tokens": 3329,
-          "output_tokens": 53
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3329
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -105745,6 +105661,74 @@
         "usage": {
           "cache_read_tokens": 3211,
           "cache_write_tokens": 115,
+          "input_tokens": 3329,
+          "output_tokens": 53
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 3329
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 3211,
           "input_tokens": 3329,
           "output_tokens": 53
         }
@@ -106802,6 +106786,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001825",
+            "output_price": "0.000324",
             "provider_id": "openrouter"
           },
           {
@@ -108210,10 +108196,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -108273,24 +108255,9 @@
       {
         "extractors": [
           {
-            "api_flavor": "embeddings",
+            "api_flavor": "chat",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2572
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -108363,6 +108330,25 @@
           "input_tokens": 2572,
           "output_tokens": 63
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2572
+        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -108426,74 +108412,6 @@
             "api_flavor": "chat",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 2569,
-          "input_tokens": 2649,
-          "output_tokens": 100
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2649
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -108567,6 +108485,74 @@
           "input_tokens": 2649,
           "output_tokens": 100
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2649
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 2569,
+          "input_tokens": 2649,
+          "output_tokens": 100
+        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -108630,74 +108616,6 @@
             "api_flavor": "chat",
             "provider_id": "azure"
           },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 2240,
-          "input_tokens": 2572,
-          "output_tokens": 100
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2572
-        }
-      },
-      {
-        "extractors": [
           {
             "api_flavor": "chat",
             "provider_id": "doubleword"
@@ -108768,6 +108686,74 @@
         "usage": {
           "cache_read_tokens": 2240,
           "cache_write_tokens": 329,
+          "input_tokens": 2572,
+          "output_tokens": 100
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2572
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 2240,
           "input_tokens": 2572,
           "output_tokens": 100
         }

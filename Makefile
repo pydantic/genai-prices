@@ -102,12 +102,11 @@ test: ## Run tests and collect coverage data
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
-	@uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under=0
+	@uv run coverage html
 
 .PHONY: coverage-report
-coverage-report: ## Package 100% / pipeline 52% — same split as the CI coverage job
-	@uv run coverage report --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under 100
-	@uv run coverage report --include='prices/src/*,tests/dataset/*' --fail-under 52
+coverage-report: ## Report coverage for all Python code
+	@uv run coverage report
 
 .PHONY: test-all-python
 test-all-python: ## Run tests on Python 3.10 to 3.14

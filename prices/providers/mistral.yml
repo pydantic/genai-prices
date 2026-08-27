@@ -7,7 +7,7 @@ api_pattern: 'https://api\.mistral\.ai'
 provider_match:
   starts_with: mistral
 model_match:
-  regex: "^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|voxtral|open-(?:mistral|mixtral))"
+  regex: "^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))"
 
 # https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
 extractors:
@@ -611,6 +611,18 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
+
+  - id: voxtral-mini-2602
+    name: Voxtral Mini Transcribe 2
+    match:
+      or:
+        - equals: voxtral-mini-latest
+        - equals: voxtral-mini-2602
+    prices_checked: 2026-08-24
+    price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
+    prices:
+      audio_hours: 0.18
+      input_audio_hours: 0.18
 
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
