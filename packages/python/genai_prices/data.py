@@ -6569,7 +6569,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing/api'],
         model_match=ClauseRegex(
-            regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
+            regex='^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
         ),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
@@ -6632,10 +6632,20 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='devstral-small',
-                match=ClauseEquals(equals='devstral-small'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='devstral-small'),
+                        ClauseEquals(equals='devstral-small-2505'),
+                        ClauseEquals(equals='devstral-small-2507'),
+                        ClauseEquals(equals='devstral-small-latest'),
+                        ClauseEquals(equals='labs-devstral-small-2512'),
+                    ]
+                ),
                 name='Devstral Small',
                 description='Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.12')),
+                price_comments="The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30. Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)",
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='devstral-small:free',
@@ -7826,7 +7836,6 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gpt-4o'),
-                        ClauseEquals(equals='gpt-4o-2024-05-13'),
                         ClauseEquals(equals='gpt-4o-2024-08-06'),
                         ClauseEquals(equals='gpt-4o-2024-11-20'),
                     ]
@@ -7838,6 +7847,20 @@ providers: list[Provider] = [
                     input_mtok=Decimal('2.5'),
                     cache_read_mtok=Decimal('1.25'),
                     output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-4o-2024-05-13',
+                match=ClauseEquals(equals='gpt-4o-2024-05-13'),
+                name='gpt 4o (2024-05-13)',
+                description='Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have no cached-input discount.',
+                context_window=128000,
+                price_comments='Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    output_mtok=Decimal('15'),
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),

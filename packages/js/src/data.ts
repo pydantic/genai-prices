@@ -11142,7 +11142,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing/api'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
+      regex: '^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -11260,12 +11260,31 @@ export const data: Provider[] = [
         description:
           'Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
         match: {
-          equals: 'devstral-small',
+          or: [
+            {
+              equals: 'devstral-small',
+            },
+            {
+              equals: 'devstral-small-2505',
+            },
+            {
+              equals: 'devstral-small-2507',
+            },
+            {
+              equals: 'devstral-small-latest',
+            },
+            {
+              equals: 'labs-devstral-small-2512',
+            },
+          ],
         },
+        price_comments:
+          "The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30. Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)",
         prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.12,
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
+        deprecated: true,
       },
       {
         id: 'devstral-small:free',
@@ -13411,9 +13430,6 @@ export const data: Provider[] = [
               equals: 'gpt-4o',
             },
             {
-              equals: 'gpt-4o-2024-05-13',
-            },
-            {
               equals: 'gpt-4o-2024-08-06',
             },
             {
@@ -13426,6 +13442,24 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-4o-2024-05-13',
+        name: 'gpt 4o (2024-05-13)',
+        description:
+          'Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have no cached-input discount.',
+        match: {
+          equals: 'gpt-4o-2024-05-13',
+        },
+        context_window: 128000,
+        price_comments:
+          'Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
+        prices: {
+          input_mtok: 5,
+          output_mtok: 15,
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
