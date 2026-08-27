@@ -104,7 +104,6 @@ const tokenPriceKeys = [
 const nonTokenReportableUnits = {
   audio_seconds: 'audio_hours',
   code_executions: 'code_executions_kcount',
-  file_searches: 'file_searches_kcount',
   input_annotated_document_pages: 'input_annotated_document_kpages',
   input_audio_seconds: 'input_audio_hours',
   input_characters: 'input_mchars',

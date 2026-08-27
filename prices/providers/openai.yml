@@ -365,7 +365,7 @@ models:
       cache_read_mtok: 0.5
       output_mtok: 8
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-4.1-mini
     name: gpt 4.1 mini
@@ -384,7 +384,7 @@ models:
       cache_read_mtok: 0.1
       output_mtok: 1.6
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-4.1-nano
     name: gpt 4.1 nano
@@ -436,7 +436,7 @@ models:
       cache_read_mtok: 1.25
       output_mtok: 10
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview
@@ -471,7 +471,7 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 0.6
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
@@ -588,7 +588,7 @@ models:
       cache_read_mtok: 0.125
       output_mtok: 10
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5-image
     match:
@@ -623,7 +623,7 @@ models:
       cache_read_mtok: 0.025
       output_mtok: 2
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5-nano
     name: GPT-5 nano
@@ -641,7 +641,7 @@ models:
       cache_read_mtok: 0.005
       output_mtok: 0.4
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5-pro
     match:
@@ -654,7 +654,7 @@ models:
       input_mtok: 15
       output_mtok: 120
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.1
     name: GPT-5.1
@@ -682,7 +682,7 @@ models:
       cache_read_mtok: 0.125
       output_mtok: 10
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.1-codex-mini
     name: GPT-5.1 Codex Mini
@@ -724,7 +724,7 @@ models:
       cache_read_mtok: 0.175
       output_mtok: 14
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.2-pro
     description: Version of GPT-5.2 that produces smarter and more precise responses.
@@ -739,7 +739,7 @@ models:
       input_mtok: 21
       output_mtok: 168
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.3
     name: GPT-5.3 Chat
@@ -804,7 +804,7 @@ models:
           - start: 272000
             price: 22.5
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.4-image-2
     name: GPT-5.4 Image 2
@@ -838,7 +838,7 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 4.5
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.4-nano
     name: GPT-5.4 nano
@@ -857,7 +857,7 @@ models:
       cache_read_mtok: 0.02
       output_mtok: 1.25
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.4-pro
     name: GPT-5.4 Pro
@@ -882,7 +882,7 @@ models:
           - start: 272000
             price: 270
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.5
     name: GPT-5.5
@@ -924,7 +924,7 @@ models:
           - start: 272000
             price: 45
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.5-pro
     name: GPT-5.5 Pro
@@ -952,7 +952,7 @@ models:
           - start: 272000
             price: 270
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: gpt-5.6-luna
     name: GPT-5.6 Luna
@@ -994,7 +994,7 @@ models:
               - start: 272000
                 price: 9
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
       - constraint:
           start_date: 2026-07-30
         prices:
@@ -1019,7 +1019,7 @@ models:
               - start: 272000
                 price: 1.8
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
 
   - id: gpt-5.6-sol
     name: GPT-5.6 Sol
@@ -1064,7 +1064,7 @@ models:
               - start: 272000
                 price: 45
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
       - constraint:
           # https://developers.openai.com/api/docs/changelog
           start_date: 2026-08-21
@@ -1090,7 +1090,7 @@ models:
               - start: 272000
                 price: 30
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
 
   - id: gpt-5.6-terra
     name: GPT-5.6 Terra
@@ -1132,7 +1132,7 @@ models:
               - start: 272000
                 price: 22.5
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
       - constraint:
           start_date: 2026-07-30
         prices:
@@ -1157,7 +1157,7 @@ models:
               - start: 272000
                 price: 18
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
 
   - id: gpt-audio
     name: GPT Audio
@@ -1453,7 +1453,7 @@ models:
           cache_read_mtok: 0.5
           output_mtok: 40
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
       - constraint:
           # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
           start_date: 2025-06-10
@@ -1462,7 +1462,7 @@ models:
           cache_read_mtok: 0.5
           output_mtok: 8
           web_searches_kcount: 10
-          file_searches_kcount: 2.5
+          storage_searches_kcount: 2.5
 
   - id: o3-deep-research
     match:
@@ -1518,7 +1518,7 @@ models:
       cache_read_mtok: 0.275
       output_mtok: 4.4
       web_searches_kcount: 10
-      file_searches_kcount: 2.5
+      storage_searches_kcount: 2.5
 
   - id: o4-mini-deep-research
     match:

@@ -146,7 +146,7 @@ def test_calc(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: gpt 4o
-  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/input cache read MTok, $10/web searches K, $2.5/file searches K
+  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/input cache read MTok, $10/web searches K, $2.5/storage searches K
 Context Window: 128,000
    Input Price: $0.0025
   Output Price: $0.001
@@ -229,7 +229,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $2/input MTok, $8/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/file searches K
+  Model Prices: $2/input MTok, $8/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/storage searches K
    Input Price: $0.02
   Output Price: $0
    Total Price: $0.02
@@ -242,7 +242,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $10/input MTok, $40/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/file searches K
+  Model Prices: $10/input MTok, $40/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/storage searches K
    Input Price: $0.1
   Output Price: $0
    Total Price: $0.1
@@ -512,7 +512,6 @@ def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('rerank_searches_kcount') == 'Rerank Searches/K'
     assert _price_field_label('web_searches_kcount') == 'Web Searches/K'
     assert _price_field_label('social_searches_kcount') == 'Social Searches/K'
-    assert _price_field_label('file_searches_kcount') == 'File Searches/K'
     assert _price_field_label('code_executions_kcount') == 'Code Executions/K'
     assert _price_field_label('requests_kcount') == 'Requests/K'
 

@@ -329,11 +329,6 @@ unit_data: dict[str, Any] = {
         'price_key': 'social_searches_kcount',
         'dimensions': {'family': 'tool_calls', 'tool_type': 'social_search'},
     },
-    'file_searches': {
-        'per': 1000,
-        'price_key': 'file_searches_kcount',
-        'dimensions': {'family': 'tool_calls', 'tool_type': 'file_search'},
-    },
     'storage_searches': {
         'per': 1000,
         'price_key': 'storage_searches_kcount',

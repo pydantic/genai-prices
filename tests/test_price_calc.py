@@ -161,7 +161,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 8, 20, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=272_000, price=Decimal('12.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272_000, price=Decimal('1'))]),
@@ -173,7 +173,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 8, 21, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272_000, price=Decimal('8'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272_000, price=Decimal('0.8'))]),
@@ -185,7 +185,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
@@ -197,7 +197,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
@@ -209,7 +209,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
                 cache_write_mtok=TieredPrices(
                     base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
@@ -223,7 +223,7 @@ def test_gpt_5_5_long_context_price(
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
-                file_searches_kcount=Decimal('2.5'),
+                storage_searches_kcount=Decimal('2.5'),
                 input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
@@ -1012,7 +1012,7 @@ def test_openai_gpt_56_sol_web_search_price():
 
 def test_openai_file_search_price():
     price = calc_price(
-        Usage(input_tokens=1_000, output_tokens=100, file_searches=4), model_ref='gpt-4.1', provider_id='openai'
+        Usage(input_tokens=1_000, output_tokens=100, storage_searches=4), model_ref='gpt-4.1', provider_id='openai'
     )
 
     assert price.input_price == Decimal('0.002')
@@ -1022,7 +1022,7 @@ def test_openai_file_search_price():
 
 def test_openai_gpt_56_sol_file_search_price():
     price = calc_price(
-        Usage(file_searches=2),
+        Usage(storage_searches=2),
         model_ref='gpt-5.6',
         provider_id='openai',
         genai_request_timestamp=datetime(2026, 8, 25, tzinfo=timezone.utc),
@@ -1201,7 +1201,6 @@ def test_non_directional_units_inventory() -> None:
     assert NON_DIRECTIONAL_USAGE_KEYS == [
         'audio_seconds',
         'code_executions',
-        'file_searches',
         'requests',
         'rerank_searches',
         'social_searches',
