@@ -49,6 +49,8 @@ def main():
     openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
     assert openai_extractors
     [chat_extractor] = [e for e in openai_extractors if e.api_flavor == 'chat']
+    # Only the chat completions API is served, so it is also the `default` flavor (#324).
+    extractors = [chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor]
 
     for provider in providers:
         provider_id = f'huggingface_{provider}'
@@ -71,7 +73,7 @@ def main():
                 HttpUrl('https://router.huggingface.co/v1/models'),
                 HttpUrl('https://huggingface.co/inference/models'),
             ],
-            extractors=[chat_extractor],
+            extractors=extractors,
             provider_match=provider_match,
         )
         yaml_data = cast(

@@ -74,6 +74,8 @@ def main():
     openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
     assert openai_extractors
     [chat_extractor] = [e for e in openai_extractors if e.api_flavor == 'chat']
+    # Only the chat completions API is served, so it is also the `default` flavor (#324).
+    extractors = [chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor]
 
     # Extract and sort model information
     model_infos = sorted(get_model_infos(models), key=attrgetter('id'))
@@ -93,7 +95,7 @@ def main():
         pricing_urls=[
             HttpUrl('https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'),
         ],
-        extractors=[chat_extractor],
+        extractors=extractors,
     )
 
     # Convert to YAML format
