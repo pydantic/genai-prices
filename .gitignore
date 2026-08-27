@@ -10,7 +10,10 @@ wheels/
 .venv
 /scratch/
 /prices/source_prices/
-.claude/
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/add-price-model/
 .coverage
 TODO.md
 node_modules/
@@ -22,3 +25,4 @@ packages/js/.genai-prices-cache.json
 
 # Local dev files and secrets
 .env
+/packages/js/coverage/

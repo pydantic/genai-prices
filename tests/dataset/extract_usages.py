@@ -29,7 +29,7 @@ extractors = [
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
     keys = set[str]()
     for path in [extractor.model_path, extractor.root]:
-        if path:
+        if path:  # pragma: no branch - published extractors always use nonempty paths
             if isinstance(path, list):
                 path = path[0]
             assert isinstance(path, str)
@@ -42,21 +42,29 @@ assert 'file' not in body_keys
 body_keys.add('file')
 
 
-def main():
+def rebuild_usages() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Recompute the dataset from the recorded bodies. Returns `(current, rebuilt)`; writes nothing."""
     usages_file = this_dir / 'usages.json'
-    current_result = json.loads(usages_file.read_text())
-    if raw_bodies_path.exists():
+    current_result: list[dict[str, Any]] = json.loads(usages_file.read_text())
+    if raw_bodies_path.exists():  # pragma: no cover - raw recordings are not committed with the golden dataset
         bodies = json.loads(raw_bodies_path.read_text())
         result = get_usages(bodies)
     else:
         result = current_result
-    simplified_bodies = [r['body'] for r in result]
-    result = get_usages(simplified_bodies)
-    dumped = json.dumps(result, indent=2, sort_keys=True)
-    usages_file.write_text(dumped + '\n')
-    if result != current_result:
-        raise AssertionError('usages.json updated!!!')
-    print('usages.json is up to date.')
+    return current_result, get_usages([r['body'] for r in result])
+
+
+def main(*, write: bool = True):
+    # Compare before writing. This used to write first and compare after, so a failing run left the
+    # file rewritten and the *second* run always passed - which reads as "I fixed it" when nothing was.
+    current_result, result = rebuild_usages()
+    if result == current_result:
+        print('usages.json is up to date.')
+        return
+    if not write:
+        raise AssertionError('usages.json is out of date - run `python tests/dataset/extract_usages.py` and commit it.')
+    (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    raise AssertionError('usages.json updated!!!')
 
 
 def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -68,7 +76,7 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
         cases: list[Case] = [
             e for provider, extractor in extractors if (e := extract_and_check(body, extractor, provider))
         ]
-        if cases:
+        if cases:  # pragma: no branch - the golden dataset retains only extractable response bodies
             this_result: dict[str, Any] = {'body': body, 'extracted': []}
             result.append(this_result)
             models: set[str] = {case.model_ref for case in cases if case.model_ref}
@@ -94,6 +102,18 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     in [
                         # https://github.com/pydantic/genai-prices/issues/232
                         'groq/compound',
+                        # new models with no prices yet
+                        'glm-4.6v',
+                        'gpt-oss:20b',
+                        'models/gemini-2.5-pro',
+                        'openai.gpt-5.6-luna',
+                        'openai.gpt-oss-120b',
+                        'openai.gpt-oss-safeguard-20b',
+                        'openai/gpt-5-mini-2025-08-07',
+                        'openai/gpt-5.6-sol',
+                        'qwen3:0.6b',
+                        'x-ai/grok-4',
+                        'zai-glm-4.7',
                     ]
                     # google-gla sometimes adding 'models/' prefix
                     or model.startswith('models/')
@@ -116,10 +136,14 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
             )
         except LookupError:
             pass
+        except Exception as e:  # pragma: no cover - the checked-in golden corpus has no calculation errors
+            message = f'Error calculating price for {case.provider_id}:{case.model_ref} with usage {case.usage_dict} and file {this_result["body"]["file"]}'
+            raise AssertionError(message) from e
         else:
-            assert price.input_price + price.output_price == price.total_price
             extractor_dict['input_price'] = str(price.input_price)
             extractor_dict['output_price'] = str(price.output_price)
+            if price.total_price != price.input_price + price.output_price:
+                extractor_dict['total_price'] = str(price.total_price)
     for other in this_result['extracted']:
         if case.usage_dict == other['usage']:
             other['extractors'].append(extractor_dict)
@@ -129,7 +153,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
     return extractor_dict
 
 
-def check_cases_usages_match(cases: list[Case]):
+def check_cases_usages_match(cases: list[Case]):  # pragma: no cover - its call site is intentionally disabled above
     for case1, case2 in combinations(cases, 2):
         for k, v in case1.usage_dict.items():
             if k in case2.usage_dict:
@@ -147,8 +171,9 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
         extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
         assert extracted.model and extracted.model.is_match(model_ref)
         assert usage == extracted.usage
-    usage_dict = {k: v for k, v in dataclasses.asdict(usage).items() if v}
+    usage_dict = {k: v for k, v in usage.__dict__.items() if v}
     return Case(provider.id, flavor, model_ref, usage_dict)
 
 
-main()
+if __name__ == '__main__':
+    main()

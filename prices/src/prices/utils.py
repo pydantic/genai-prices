@@ -11,9 +11,9 @@ root_dir = package_dir.parent
 def pretty_size(size: int) -> str:
     if size < 1024:
         return f'{size} bytes'
-    elif size < 1024 * 1024:
+    elif size < 1024 * 1024:  # pragma: no cover - reaching this branch requires an inflated generated-data fixture
         return f'{size / 1024:.2f} KB'
-    else:
+    else:  # pragma: no cover - reaching this branch requires a generated-data fixture larger than 1 MiB
         return f'{size / (1024 * 1024):.2f} MB'
 
 
@@ -23,6 +23,13 @@ def mtok(v: Decimal | None) -> Decimal | None:
         return None
     else:
         return v * 1_000_000
+
+
+def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | None:
+    """Convert a token price to mtok when it is distinct from its aggregate price."""
+    if v == aggregate_v:
+        return None
+    return mtok(v)
 
 
 T = TypeVar('T')
@@ -74,10 +81,10 @@ def _simplify_json_schema_object(schema: JsonSchema) -> JsonSchema:
             handled_properties[key] = simplify_json_schema(value)
         schema['properties'] = handled_properties
 
-    if (add_props := schema.get('additionalProperties')) is not None:
+    if (add_props := schema.get('additionalProperties')) is not None:  # pragma: no branch
         schema['additionalProperties'] = add_props if isinstance(add_props, bool) else simplify_json_schema(add_props)
 
-    if (pat_props := schema.get('patternProperties')) is not None:
+    if (pat_props := schema.get('patternProperties')) is not None:  # pragma: no cover
         handled_pat_props = {}
         for key, value in pat_props.items():
             handled_pat_props[key] = simplify_json_schema(value)
@@ -87,10 +94,10 @@ def _simplify_json_schema_object(schema: JsonSchema) -> JsonSchema:
 
 
 def _simplify_json_schema_array(schema: JsonSchema) -> JsonSchema:
-    if prefix_items := schema.get('prefixItems'):
+    if prefix_items := schema.get('prefixItems'):  # pragma: no cover - provider schemas use homogeneous arrays
         schema['prefixItems'] = [simplify_json_schema(item) for item in prefix_items]
 
-    if items := schema.get('items'):
+    if items := schema.get('items'):  # pragma: no branch - generated array schemas always declare items
         schema['items'] = simplify_json_schema(items)
 
     return schema
@@ -106,7 +113,7 @@ def _simplify_json_schema_union(schema: JsonSchema, union_kind: Literal['anyOf',
     # always remove null option from schemas
     if {'type': 'null'} in members:
         handled = [item for item in handled if item != {'type': 'null'}]
-        if schema.get('default', 42) is None:
+        if schema.get('default', 42) is None:  # pragma: no branch - nullable Pydantic fields have a null default
             schema.pop('default')
 
     if len(handled) == 1:

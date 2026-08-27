@@ -1,5 +1,8 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
+import { getActiveRegistry } from './units'
+import { normalizeUsage, validateUsageValue } from './usage'
+import { warnUnsupportedExtractorDestinations } from './validation'
 
 interface ExtractedUsage {
   model: null | string
@@ -8,10 +11,12 @@ interface ExtractedUsage {
 
 export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): ExtractedUsage {
   apiFlavor = apiFlavor ?? 'default'
+  const registry = getActiveRegistry()
 
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
+  warnUnsupportedExtractorDestinations([provider], registry)
 
   const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
   if (!extractor) {
@@ -29,20 +34,24 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])
 
   const usage: Usage = {}
+  let supportedMappings = 0
 
   for (const mapping of extractor.mappings) {
+    if (!registry.isReportedUsageKey(mapping.dest)) continue
+    supportedMappings += 1
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
     if (value !== null) {
+      const validatedValue = validateUsageValue(mapping.dest, value)
       const currentValue = usage[mapping.dest] ?? 0
-      usage[mapping.dest] = currentValue + value
+      usage[mapping.dest] = currentValue + validatedValue
     }
   }
 
-  if (!Object.keys(usage).length) {
+  if (supportedMappings && !Object.keys(usage).length) {
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return { model, usage }
+  return { model, usage: normalizeUsage(usage, registry) }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T

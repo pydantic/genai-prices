@@ -1,10 +1,16 @@
 # Pricing data for `genai-prices`
 
-## DO NOT MOVE `data.json` OR `data_slim.json`!
+## DO NOT MOVE PUBLISHED DATA ARTIFACTS!
 
-Or associated `.schema.json` files.
+The legacy v1 artifacts remain directly under `prices/`. New contracts live under versioned directories such as
+`prices/new_data/v2/`; later contracts should use a new `prices/new_data/v<version>/` directory rather than adding
+version-suffixed files to the flat `prices/` directory.
 
 These files are downloaded by packages to auto-update prices, so their URLs must not change.
+
+**v1 is frozen.** `prices/data.json` and `prices/data_slim.json` are compatibility snapshots for clients released
+before v2. No build step writes them, and they receive no provider, model or price updates. `prices/new_data/v2/`
+is the live feed.
 
 ## Contributing
 
@@ -22,11 +28,14 @@ When you edit the prices of a model, remember to:
 - if relevant, add or update `price_comments` on the provider or model explaining the change and providing a link as a reference,
   if those fields don't make sense, you can also add a comment next to your change
 - have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
-  which will update the `data*.json` files when prices change. You can also run `make build` to update these files manually.
+  which will update the v2 and package data when prices change. You can also run `make build` to update these files manually.
 
 Please do not:
 
-- edit any JSON file directly - they're all built with `make build` and are compact by design
+- edit generated JSON files directly — edit the provider YAML and use `make build` instead
+- modify the frozen v1 compatibility artifacts at all
+- add a unit to `units.yml` to make a model fit — that widens the published v2 schema and is a v3 change,
+  see the header comment in that file
 - add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
 - try to change the schema of providers or models without creating an issue to discuss the changes first
 - add new providers without creating an issue to discuss the changes first, adding models is fine

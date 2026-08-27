@@ -51,6 +51,30 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Cached input tokens
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(
+        input_tokens=4740,
+        cache_read_tokens=0,
+        cache_write_tokens=4735,
+        output_tokens=255,
+    ),
+    model_ref='claude-sonnet-4-20250514',
+    provider_id='anthropic',
+)
+print(price_data.total_price)
+```
+
+`input_tokens` is the total number of input tokens. It includes uncached tokens, cache-read tokens, and cache-write
+tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `calc_price` can apply their separate rates.
+
+Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
+cannot exceed `input_tokens`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,
@@ -94,10 +118,10 @@ print(price.total_price)
 Please note:
 
 - this functionality is explicitly opt-in
-- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
+- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file
-downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
+At the time of writing, the v2 `data.json` file downloaded by `UpdatePrices` is around 51KB when compressed, so is
+generally very quick to download.
 
 By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
 
@@ -178,3 +202,33 @@ CLI output notes:
 We do not yet build API documentation for this package, but the source code is relatively simple and well documented.
 
 If you need further information on the API, we encourage you to read the source code.
+
+## Fractional usage values
+
+Every reportable usage unit accepts finite non-negative integers or fractional values. For example, duration usage can
+include fractions of a second:
+
+```python
+from decimal import Decimal
+
+from genai_prices import Usage
+
+duration = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+exact_duration = Usage(audio_seconds=Decimal('0.1')) + Usage(audio_seconds=0.2)
+
+assert duration.audio_seconds == 0.3
+assert type(duration.audio_seconds) is float
+assert exact_duration.audio_seconds == Decimal('0.3')
+assert type(Usage(audio_seconds=3.0).audio_seconds) is float
+```
+
+Python preserves supplied `int`, `float`, and `Decimal` values, including `3.0` as a float. Other accepted non-boolean
+integer implementations normalize to built-in `int`. Arithmetic interprets floats through their shortest round-trippable
+decimal spellings: a result is Decimal if any operand was Decimal, otherwise float if any operand was float, otherwise
+int. This cannot recover decimal precision that was already lost before a float reached `Usage`.
+
+Standard JSON decoding normally supplies `int` and `float`, while callers may request Decimal parsing before extraction.
+Decimal-bearing usage is not serializable by Python's standard JSON encoder without a custom conversion.
+
+For Groq's Whisper models, report the transcription duration as `audio_seconds` or `input_audio_seconds`. These models
+apply Groq's documented 10-second minimum. A missing or zero duration costs zero.
