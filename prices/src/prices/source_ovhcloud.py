@@ -97,7 +97,9 @@ def main():
     )
 
     # Convert to YAML format
-    yaml_data = cast(ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True))
+    yaml_data = cast(
+        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
+    )
 
     yaml_string = (
         '# yaml-language-server: $schema=.schema.json\n'
@@ -118,7 +120,7 @@ def main():
         print(f'Collapsed and saved {path}')
 
 
-def get_ovhcloud_prices():
+def get_ovhcloud_prices():  # pragma: no cover - thin CLI alias for main
     """Download and update OVHcloud AI Endpoints provider prices."""
     main()
 

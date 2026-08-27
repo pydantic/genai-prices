@@ -28,7 +28,13 @@ dev = [
     "boto3-stubs[bedrock,pricing]>=1.40.75",
     "boto3>=1.40.75",
     "packaging>=25.0",
+    "jsonschema>=4.26.0",
+    "types-jsonschema>=4.26.0.20260518",
 ]
+
+[tool.uv]
+exclude-newer = "1 week"
+required-version = ">=0.12.1"
 
 [tool.uv.workspace]
 members = ["prices", "packages/python"]
@@ -36,7 +42,12 @@ members = ["prices", "packages/python"]
 [tool.ruff]
 line-length = 120
 target-version = "py310"
-include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py", ".github/scripts/**/*.py"]
+include = [
+    "prices/src/**/*.py",
+    "packages/python/**/*.py",
+    "benchmarks/**/*.py",
+    "tests/**/*.py",
+]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
@@ -65,10 +76,16 @@ markers = [
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
-include = [
-    # "prices/src/prices/**/*.py",
-    "packages/python/**/*.py",
-    "tests/**/*.py",
+source = [
+    "prices/src/prices",
+    "packages/python",
+    "tests",
+]
+# Both run only in a subprocess, so the tracer never sees them. `source` reports unimported files
+# (unlike `include`, which silently omits them), so they have to be named here.
+omit = [
+    "packages/python/genai_prices/__main__.py",
+    "tests/cli_missing_dependency_import.py",
 ]
 branch = true
 
@@ -103,13 +120,16 @@ reportIgnoreCommentWithoutRule = true
 reportUnusedParameter = true
 reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
-include = ["prices/src", "packages/python", "tests", ".github/scripts"]
+include = ["prices/src", "packages/python", "benchmarks", "tests"]
 venv = ".venv"
-executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
+venvPath = "."
+# `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
+# directory on the path.
+executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = ["tests/dataset"] }]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json,package-lock.json"
+skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"

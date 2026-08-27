@@ -3,7 +3,7 @@ name: Microsoft Azure
 id: azure
 pricing_urls:
   - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing
-api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
+api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com|services\.ai\.azure\.com)
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.
   Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models
@@ -17,11 +17,17 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
       - path: [prompt_tokens_details, audio_tokens]
         dest: input_audio_tokens
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens
@@ -34,8 +40,51 @@ extractors:
       - path: [input_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: output_tokens
         dest: output_tokens
+  # https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/realtime-audio-websockets
+  - api_flavor: realtime
+    root: [response, usage]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [input_token_details, image_tokens]
+        dest: input_image_tokens
+        required: false
+      - path: [input_token_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, text_tokens]
+        dest: cache_text_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, audio_tokens]
+        dest: cache_audio_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, image_tokens]
+        dest: cache_image_read_tokens
+        required: false
+      - path: [output_token_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_token_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
   # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
   - api_flavor: embeddings
     root: usage
@@ -237,7 +286,6 @@ models:
     price_comments: Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.
     prices:
       input_mtok: 0.08
-      cache_read_mtok: 0.08
       output_mtok: 0.35
 
   - id: phi-4-multimodal-instruct

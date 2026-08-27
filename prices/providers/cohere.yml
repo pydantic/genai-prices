@@ -51,7 +51,7 @@ models:
     match:
       contains: aya-expanse-32b
     context_window: 128000
-    prices_checked: 2026-07-20
+    prices_checked: 2026-08-27
     price_comments: >-
       https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
       for input and $1.50/1M tokens for output.
@@ -68,7 +68,7 @@ models:
       contains: aya-expanse-8b
     context_window: 8192
     deprecated: true
-    prices_checked: 2026-07-20
+    prices_checked: 2026-08-27
     price_comments: >-
       Retired 2026-04-04 per https://docs.cohere.com/docs/models; last published price kept for historical usage.
       https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
@@ -97,7 +97,9 @@ models:
       Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware
       costs, excelling on business-critical agentic and multilingual tasks.
     match:
-      starts_with: command-a
+      or:
+        - equals: command-a
+        - equals: command-a-03-2025
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5
@@ -111,7 +113,7 @@ models:
       starts_with: command-light
     context_window: 4096
     deprecated: true
-    prices_checked: 2026-07-20
+    prices_checked: 2026-08-27
     price_comments: >-
       Deprecated 2025-09-15 per https://docs.cohere.com/docs/models; still billable for existing customers.
       https://cohere.com/pricing FAQ: Command-light pricing is $0.30/1M tokens for input and $0.60/1M tokens for output.
