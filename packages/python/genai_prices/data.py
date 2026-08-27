@@ -7226,6 +7226,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='kimi-k2.7-code-highspeed',
+                match=ClauseEquals(equals='kimi-k2.7-code-highspeed'),
+                name='Kimi K2.7 Code HighSpeed',
+                description='High-speed version of Kimi K2.7 Code, with output speed of approximately 180 tokens/sec and up to 260 tokens/sec in short context scenarios.',
+                context_window=262144,
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+                prices=ModelPrice(input_mtok=Decimal('1.9'), cache_read_mtok=Decimal('0.38'), output_mtok=Decimal('8')),
+            ),
+            ModelInfo(
                 id='kimi-k3',
                 match=ClauseEquals(equals='kimi-k3'),
                 name='Kimi K3',
