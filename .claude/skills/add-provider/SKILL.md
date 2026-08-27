@@ -48,12 +48,13 @@ Keep models sorted by ID. Use names and context windows from official documentat
 Inspect recorded or documented response bodies for every supported API flavor. Do not assume that an OpenAI-compatible endpoint
 has the same response as the provider's native endpoint.
 
-Add provider extractors for flavors that return enough information to identify the model and usage. Map cached tokens separately.
-Any extractor that maps `completion_tokens` must also map the provider's reasoning-token breakdown to
+Add provider extractors for flavors that report usage. Extract the model when the response includes it. When the response omits
+the model, return the usage with a nullable model so callers can provide the request model during price calculation. Map cached
+tokens separately. Any extractor that maps `completion_tokens` must also map the provider's reasoning-token breakdown to
 `output_reasoning_tokens`. Test each flavor through the public Python and JavaScript extraction APIs.
 
-If an API response does not report its model or usage, leave that flavor unsupported and document the limitation instead of
-inventing a mapping.
+If an API response does not report usage, leave that flavor unsupported and document the limitation instead of inventing a
+mapping.
 
 ## Add deterministic updates when possible
 

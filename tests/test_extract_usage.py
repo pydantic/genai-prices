@@ -216,6 +216,29 @@ def test_cloudflare_chat_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('1.774')
 
 
+def test_cloudflare_native_rest_usage() -> None:
+    response_data: dict[str, object] = {
+        'result': {
+            'response': 'Hello',
+            'usage': {'prompt_tokens': 2_000_000, 'completion_tokens': 1_000_000, 'total_tokens': 3_000_000},
+        },
+        'success': True,
+        'errors': [],
+        'messages': [],
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/meta/llama-3.2-1b-instruct',
+    )
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is None
+    assert extracted_usage.usage == Usage(input_tokens=2_000_000, output_tokens=1_000_000)
+    model = next(model for model in extracted_usage.provider.models if model.id == '@cf/meta/llama-3.2-1b-instruct')
+    assert extracted_usage.calc_price(model=model).total_price == Decimal('0.255')
+
+
 def test_cloudflare_embeddings_usage() -> None:
     response_data = {
         'model': '@cf/baai/bge-m3',

@@ -17,6 +17,18 @@ price_comments: >-
 # Cloudflare supports OpenAI-compatible chat completions, responses, and embeddings endpoints.
 # https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/
 extractors:
+  - api_flavor: default
+    root: [result, usage]
+    model_path: [result, model]
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
   - api_flavor: chat
     root: usage
     mappings:

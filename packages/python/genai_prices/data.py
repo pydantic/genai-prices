@@ -1987,6 +1987,20 @@ providers: list[Provider] = [
         provider_match=ClauseContains(contains='cloudflare'),
         extractors=[
             UsageExtractor(
+                root=['result', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path=['result', 'model'],
+            ),
+            UsageExtractor(
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),

@@ -3283,6 +3283,28 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: ['result', 'usage'],
+        model_path: ['result', 'model'],
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',

@@ -292,6 +292,26 @@ describe('extractUsage', () => {
       expect(price?.provider.id).toBe('cloudflare')
       expect(price?.total_price).toBeCloseTo(0.5)
     })
+
+    it('should extract and price native REST usage', () => {
+      const { model, usage } = extractUsage(cloudflareProvider, {
+        errors: [],
+        messages: [],
+        result: {
+          response: 'Hello',
+          usage: {
+            completion_tokens: 1_000_000,
+            prompt_tokens: 2_000_000,
+            total_tokens: 3_000_000,
+          },
+        },
+        success: true,
+      })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({ input_tokens: 2_000_000, output_tokens: 1_000_000 })
+      expect(calcPrice(usage, '@cf/meta/llama-3.2-1b-instruct', { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.255)
+    })
   })
 
   describe('Mistral provider', () => {
