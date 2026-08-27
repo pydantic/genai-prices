@@ -87,3 +87,13 @@ providers:
       - https://docs.voyageai.com/docs/pricing
     notes: >-
       Compare the standard per-million-token price with input_mtok. Do not apply the Batch API discount or free-token allowance.
+
+  - name: Cloudflare Workers AI
+    file: prices/providers/cloudflare.yml
+    scope: Models with token-based prices represented by the YAML. Exclude image and audio models.
+    sources:
+      - https://developers.cloudflare.com/workers-ai/platform/pricing/index.md
+    notes: >-
+      Compare per-million input, cached-input, and output token prices with input_mtok, cache_read_mtok, and output_mtok. Ignore
+      the account-wide free Neuron allocation. Models billed by image, tile, step, character, or audio-minute units are outside
+      this YAML's scope because those units are not representable by the published v2 unit registry.

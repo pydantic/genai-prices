@@ -63,12 +63,16 @@ simonw-prices-get: ## get simonw-prices
 huggingface-get: ## get huggingface prices
 	uv run -m prices get_huggingface_prices
 
+.PHONY: cloudflare-get
+cloudflare-get: ## get cloudflare workers ai prices
+	uv run -m prices get_cloudflare_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get ovhcloud-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get cloudflare-get ovhcloud-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

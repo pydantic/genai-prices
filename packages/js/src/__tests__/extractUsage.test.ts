@@ -255,6 +255,45 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('Cloudflare provider', () => {
+    const cloudflareProvider: Provider = data.find((provider) => provider.id === 'cloudflare')!
+
+    it('should extract and price OpenAI-compatible chat usage', () => {
+      const { model, usage } = extractUsage(
+        cloudflareProvider,
+        {
+          model: '@cf/deepseek-ai/deepseek-v4-flash-0731',
+          usage: {
+            completion_tokens: 1_000_000,
+            completion_tokens_details: { reasoning_tokens: 500_000 },
+            prompt_tokens: 2_000_000,
+            prompt_tokens_details: { cached_tokens: 1_000_000 },
+          },
+        },
+        'chat'
+      )
+
+      expect(model).toBe('@cf/deepseek-ai/deepseek-v4-flash-0731')
+      expect(usage).toEqual({
+        cache_read_tokens: 1_000_000,
+        input_tokens: 2_000_000,
+        output_reasoning_tokens: 500_000,
+        output_tokens: 1_000_000,
+      })
+      if (!model) throw new Error('Expected extracted Cloudflare model')
+      expect(calcPrice(usage, model, { providerId: 'cloudflare' })?.total_price).toBeCloseTo(1.774)
+    })
+
+    it('should match the Cloudflare Workers AI endpoint', () => {
+      const price = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, '@cf/openai/gpt-oss-20b', {
+        providerApiUrl: 'https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+      })
+
+      expect(price?.provider.id).toBe('cloudflare')
+      expect(price?.total_price).toBeCloseTo(0.5)
+    })
+  })
+
   describe('Mistral provider', () => {
     const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
     const responseData = {

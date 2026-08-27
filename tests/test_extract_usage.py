@@ -191,6 +191,43 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_cloudflare_chat_usage() -> None:
+    response_data = {
+        'model': '@cf/deepseek-ai/deepseek-v4-flash-0731',
+        'usage': {
+            'prompt_tokens': 2_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000},
+            'completion_tokens': 1_000_000,
+            'completion_tokens_details': {'reasoning_tokens': 500_000},
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare-workers-ai', api_flavor='chat')
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/deepseek-ai/deepseek-v4-flash-0731'
+    assert extracted_usage.usage == Usage(
+        input_tokens=2_000_000,
+        cache_read_tokens=1_000_000,
+        output_tokens=1_000_000,
+        output_reasoning_tokens=500_000,
+    )
+    assert extracted_usage.calc_price().total_price == Decimal('1.774')
+
+
+def test_cloudflare_embeddings_usage() -> None:
+    response_data = {
+        'model': '@cf/baai/bge-m3',
+        'usage': {'prompt_tokens': 1_000_000, 'total_tokens': 1_000_000},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare', api_flavor='embeddings')
+
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000)
+    assert extracted_usage.calc_price().total_price == Decimal('0.012')
+
+
 def test_modal_responses_usage() -> None:
     response_data = {
         'model': 'moonshotai/Kimi-K3',
