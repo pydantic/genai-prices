@@ -3696,7 +3696,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemma-4-26b-a4b-it',
-                match=ClauseEquals(equals='gemma-4-26b-a4b-it'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemma-4-26b-a4b-it'), ClauseEquals(equals='gemma-4-26b-a4b-it-maas')]
+                ),
                 name='Gemma 4 26B A4B',
                 description='Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference.',
                 context_window=262144,

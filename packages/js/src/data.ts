@@ -6193,7 +6193,14 @@ export const data: Provider[] = [
         description:
           'Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference.',
         match: {
-          equals: 'gemma-4-26b-a4b-it',
+          or: [
+            {
+              equals: 'gemma-4-26b-a4b-it',
+            },
+            {
+              equals: 'gemma-4-26b-a4b-it-maas',
+            },
+          ],
         },
         context_window: 262144,
         price_comments:
