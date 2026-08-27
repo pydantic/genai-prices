@@ -112,9 +112,15 @@ extractors:
       - path: output_tokens
         dest: output_tokens
 
+# Azure AI Foundry also serves third-party "marketplace" models (DeepSeek, xAI Grok, Moonshot Kimi, ...)
+# from the same endpoints. Azure does not publish machine-readable prices for them, so a model that is
+# not listed above is priced through the origin provider - see #455.
 fallback_model_providers:
   - openai
   - anthropic
+  - deepseek
+  - x-ai
+  - moonshotai
 
 models:
   - id: ada
