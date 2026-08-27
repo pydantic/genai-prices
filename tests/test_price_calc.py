@@ -2131,3 +2131,17 @@ def test_grok_4_6_long_context_cliff():
         provider_id='x-ai',
     )
     assert mixed.total_price == snapshot(Decimal('1.182'))
+
+
+def test_gemma_4_31b_prices():
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=500_000, output_tokens=1_000_000)
+
+    google = calc_price(usage, model_ref='gemma-4-31b-it', provider_id='google')
+    assert google.model.id == snapshot('gemma-4-31b-it')
+    assert google.total_price == snapshot(Decimal('0'))
+
+    openrouter = calc_price(usage, model_ref='google/gemma-4-31b-it', provider_id='openrouter')
+    assert openrouter.model.id == snapshot('google/gemma-4-31b-it')
+    assert openrouter.input_price == snapshot(Decimal('0.070'))
+    assert openrouter.output_price == snapshot(Decimal('0.34'))
+    assert openrouter.total_price == snapshot(Decimal('0.410'))

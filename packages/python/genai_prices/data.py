@@ -3705,12 +3705,11 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gemma-4-31b-it',
                 match=ClauseEquals(equals='gemma-4-31b-it'),
-                name='Gemma 4 31B',
+                name='Gemma 4 31B (free)',
                 description="Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output. It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.",
-                price_comments='Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
-                ),
+                context_window=262144,
+                price_comments='Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Vertex AI lists no per-token price for Gemma 4 31B (only for Gemma 4 26B), see https://cloud.google.com/vertex-ai/generative-ai/pricing. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
             ),
         ],
     ),
@@ -10213,8 +10212,10 @@ providers: list[Provider] = [
                 id='google/gemma-4-31b-it',
                 match=ClauseEquals(equals='google/gemma-4-31b-it'),
                 name='Gemma 4 31B',
+                context_window=262144,
+                price_comments='OpenRouter reports the cheapest active endpoint for this model (DeepInfra as of 2026-08-27). Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
+                    input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.34')
                 ),
             ),
             ModelInfo(

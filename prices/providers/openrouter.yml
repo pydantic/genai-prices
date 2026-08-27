@@ -1777,10 +1777,15 @@ models:
     name: Gemma 4 31B
     match:
       equals: google/gemma-4-31b-it
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      OpenRouter reports the cheapest active endpoint for this model (DeepInfra as of 2026-08-27).
+      Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints
     prices:
-      input_mtok: 0.12
-      cache_read_mtok: 0.09
-      output_mtok: 0.36
+      input_mtok: 0.09
+      cache_read_mtok: 0.05
+      output_mtok: 0.34
 
   - id: google/gemma-4-31b-it:free
     name: Gemma 4 31B (free)
