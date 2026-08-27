@@ -2,7 +2,12 @@
 name: MoonshotAi
 id: moonshotai
 pricing_urls:
-  - https://platform.moonshot.ai/docs/pricing/chat#product-pricing
+  - https://platform.kimi.ai/docs/models.md
+  - https://platform.kimi.ai/docs/pricing/chat-k3.md
+  - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+  - https://platform.kimi.ai/docs/pricing/chat-k26.md
+  - https://platform.kimi.ai/docs/pricing/chat-k25.md
+  - https://platform.kimi.ai/docs/pricing/chat-v1.md
 api_pattern: 'https://api\.moonshot\.'
 model_match:
   or:
@@ -33,6 +38,9 @@ models:
       total parameters with 32 billion active per forward pass.
     match:
       equals: kimi-k2
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.57
@@ -46,6 +54,9 @@ models:
     match:
       equals: kimi-k2-0711-preview
     context_window: 131072
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -61,6 +72,9 @@ models:
     match:
       equals: kimi-k2-0905-preview
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -74,6 +88,9 @@ models:
     match:
       equals: kimi-k2-thinking
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -88,6 +105,9 @@ models:
     match:
       equals: kimi-k2-thinking-turbo
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 1.15
@@ -102,6 +122,9 @@ models:
     match:
       starts_with: kimi-k2-turbo
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 1.15

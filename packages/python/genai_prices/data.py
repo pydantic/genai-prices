@@ -3800,7 +3800,7 @@ providers: list[Provider] = [
         id='groq',
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
-        pricing_urls=['https://groq.com/pricing/'],
+        pricing_urls=['https://console.groq.com/docs/models'],
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -6567,7 +6567,7 @@ providers: list[Provider] = [
         id='mistral',
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
-        pricing_urls=['https://mistral.ai/pricing#api-pricing'],
+        pricing_urls=['https://mistral.ai/pricing/api'],
         model_match=ClauseRegex(
             regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
         ),
@@ -7105,7 +7105,14 @@ providers: list[Provider] = [
         id='moonshotai',
         name='MoonshotAi',
         api_pattern='https://api\\.moonshot\\.',
-        pricing_urls=['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+        pricing_urls=[
+            'https://platform.kimi.ai/docs/models.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k3.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k26.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k25.md',
+            'https://platform.kimi.ai/docs/pricing/chat-v1.md',
+        ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='kimi'), ClauseStartsWith(starts_with='moonshot')]),
         provider_match=ClauseContains(contains='moonshot'),
         extractors=[
@@ -7133,6 +7140,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='kimi-k2'),
                 name='Kimi K2 0711',
                 description='Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.57'), output_mtok=Decimal('2.3')),
             ),
             ModelInfo(
@@ -7141,6 +7149,7 @@ providers: list[Provider] = [
                 name='Kimi K2 0711 Preview',
                 description='MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
                 context_window=131072,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7151,6 +7160,7 @@ providers: list[Provider] = [
                 name='Kimi K2 0905 Preview',
                 description='Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7161,6 +7171,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Thinking',
                 description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7171,6 +7182,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Thinking Turbo',
                 description='High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
@@ -7181,6 +7193,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Turbo Preview',
                 description='High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
