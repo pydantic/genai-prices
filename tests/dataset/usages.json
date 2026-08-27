@@ -10965,6 +10965,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000925",
+            "output_price": "0.000184",
             "provider_id": "openrouter"
           },
           {
@@ -106784,6 +106786,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001825",
+            "output_price": "0.000324",
             "provider_id": "openrouter"
           },
           {

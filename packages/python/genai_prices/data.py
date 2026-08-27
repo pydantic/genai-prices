@@ -11697,7 +11697,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-4.1-mini',
-                match=ClauseEquals(equals='openai/gpt-4.1-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-4.1-mini'),
+                        ClauseEquals(equals='openai/gpt-4.1-mini-2025-04-14'),
+                    ]
+                ),
                 name='GPT-4.1 Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.6')
@@ -11769,6 +11774,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='openai/gpt-5'),
+                        ClauseEquals(equals='openai/gpt-5-2025-08-07'),
                         ClauseEquals(equals='openai/gpt-5-chat'),
                         ClauseEquals(equals='openai/gpt-5-codex'),
                         ClauseEquals(equals='openai/gpt-5.1-codex-max'),
@@ -11793,7 +11799,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5-mini',
-                match=ClauseEquals(equals='openai/gpt-5-mini'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5-mini'), ClauseEquals(equals='openai/gpt-5-mini-2025-08-07')]
+                ),
                 name='GPT-5 Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
@@ -11829,7 +11837,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.1-codex-mini',
-                match=ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
+                        ClauseEquals(equals='openai/gpt-5.1-codex-mini-20251113'),
+                    ]
+                ),
                 name='GPT-5.1-Codex-Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
@@ -11868,7 +11881,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.3-codex',
-                match=ClauseEquals(equals='openai/gpt-5.3-codex'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.3-codex'),
+                        ClauseEquals(equals='openai/gpt-5.3-codex-20260224'),
+                    ]
+                ),
                 name='GPT-5.3-Codex',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
@@ -11876,10 +11894,18 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.4',
-                match=ClauseEquals(equals='openai/gpt-5.4'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.4'), ClauseEquals(equals='openai/gpt-5.4-20260305')]
+                ),
                 name='GPT-5.4',
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('15')
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -11908,19 +11934,90 @@ providers: list[Provider] = [
                 id='openai/gpt-5.4-pro',
                 match=ClauseEquals(equals='openai/gpt-5.4-pro'),
                 name='GPT-5.4 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-5.5',
                 match=ClauseEquals(equals='openai/gpt-5.5'),
                 name='GPT-5.5',
-                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-5.5-pro',
                 match=ClauseEquals(equals='openai/gpt-5.5-pro'),
                 name='GPT-5.5 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-luna',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.6-luna'),
+                        ClauseRegex(regex='^openai/gpt-5\\.6-luna-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-5.6 Luna',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-sol',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.6-sol'), ClauseRegex(regex='^openai/gpt-5\\.6-sol-\\d{8}$')]
+                ),
+                name='GPT-5.6 Sol',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.6-terra'),
+                        ClauseRegex(regex='^openai/gpt-5\\.6-terra-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-5.6 Terra',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-audio',

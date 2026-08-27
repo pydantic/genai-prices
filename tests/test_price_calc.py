@@ -2131,3 +2131,57 @@ def test_grok_4_6_long_context_cliff():
         provider_id='x-ai',
     )
     assert mixed.total_price == snapshot(Decimal('1.182'))
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id'),
+    [
+        ('openai/gpt-4.1-mini-2025-04-14', 'openai/gpt-4.1-mini'),
+        ('openai/gpt-5-2025-08-07', 'openai/gpt-5'),
+        ('openai/gpt-5-mini-2025-08-07', 'openai/gpt-5-mini'),
+        ('openai/gpt-5.1-codex-mini-20251113', 'openai/gpt-5.1-codex-mini'),
+        ('openai/gpt-5.3-codex-20260224', 'openai/gpt-5.3-codex'),
+        ('openai/gpt-5.4-20260305', 'openai/gpt-5.4'),
+        ('openai/gpt-5.6-sol-20260901', 'openai/gpt-5.6-sol'),
+    ],
+)
+def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
+    """OpenRouter resolves OpenAI's date-suffixed ids (both `YYYY-MM-DD` and `YYYYMMDD` forms)."""
+    price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='openrouter')
+
+    assert price.model.id == expected_model_id
+
+
+@pytest.mark.parametrize(
+    ('input_tokens', 'expected_input_price', 'expected_output_price'),
+    [
+        # at the boundary the whole request is still billed at the base rate
+        (272_000, Decimal('0.68'), Decimal('0.015')),
+        # one token over and the whole request moves to the long-context tier (2x input, 1.5x output)
+        (272_001, Decimal('1.360005'), Decimal('0.0225')),
+    ],
+)
+def test_openrouter_gpt_54_long_context_tier(
+    input_tokens: int, expected_input_price: Decimal, expected_output_price: Decimal
+):
+    price = calc_price(
+        Usage(input_tokens=input_tokens, output_tokens=1_000),
+        model_ref='openai/gpt-5.4',
+        provider_id='openrouter',
+    )
+
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+
+
+def test_openrouter_gpt_56_sol_cache_write_price():
+    price = calc_price(
+        Usage(input_tokens=10_000, cache_write_tokens=8_000, cache_read_tokens=1_000, output_tokens=1_000),
+        model_ref='openai/gpt-5.6-sol',
+        provider_id='openrouter',
+    )
+
+    # 1,000 uncached @ $2 + 8,000 cache writes @ $2.5 + 1,000 cache reads @ $0.2 (per Mtok)
+    assert price.input_price == Decimal('0.0222')
+    assert price.output_price == Decimal('0.01')
+    assert price.total_price == Decimal('0.0322')
