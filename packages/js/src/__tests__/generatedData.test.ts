@@ -116,6 +116,78 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-lite-preview-tts' },
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-tts' },
+    { expectedInput: 0.5, expectedOutput: 10, model: 'gemini-2.5-flash-preview-tts' },
+    { expectedInput: 1, expectedOutput: 20, model: 'gemini-2.5-pro-tts' },
+    { expectedInput: 1, expectedOutput: 20, model: 'gemini-2.5-pro-preview-tts' },
+  ])('prices Gemini TTS model $model', ({ expectedInput, expectedOutput, model }) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_audio_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'google',
+    })
+
+    expect(result?.input_price).toBe(expectedInput)
+    expect(result?.output_price).toBe(expectedOutput)
+  })
+
+  it.each([
+    { expectedModel: 'gemini-2.5-flash-lite', model: 'GEMINI-2.5-FLASH-LITE-PREVIEW-06-17' },
+    { expectedModel: 'gemini-2.5-pro', model: 'GEMINI-2.5-PRO' },
+  ])('preserves case-insensitive matching for $model', ({ expectedModel, model }) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.model.id).toBe(expectedModel)
+  })
+
+  it('prices a bare GLM-5.3 model with Zhipu AI', () => {
+    const result = calcPrice({ input_tokens: 1_000, output_tokens: 100 }, 'glm-5.3')
+
+    expect(result?.provider.id).toBe('zhipuai')
+    expect(result?.model.id).toBe('GLM-5.3')
+    expect(result?.input_price).toBe(0.001103)
+    expect(result?.output_price).toBe(0.0003862)
+    expect(result?.total_price).toBe(0.0014892)
+  })
+
+  it.each([
+    {
+      expectedInput: 0.0000316,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.0000193,
+      expectedProvider: 'zhipuai',
+      model: 'GLM-5.3-Flash',
+      options: { providerId: 'zhipuai' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'zai',
+      model: 'glm-5.3-flash',
+      options: { providerApiUrl: 'https://api.z.ai/api/paas/v4' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'z-ai/glm-5.3-flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'openrouter',
+      model: 'z-ai/glm-5.3-flash',
+      options: { providerApiUrl: 'https://openrouter.ai/api/v1' },
+    },
+  ])(
+    'prices GLM-5.3 Flash with $expectedProvider',
+    ({ expectedInput, expectedModel, expectedOutput, expectedProvider, model, options }) => {
+      const result = calcPrice({ cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }, model, options)
+
+      expect(result?.provider.id).toBe(expectedProvider)
+      expect(result?.model.id).toBe(expectedModel)
+      expect(result?.input_price).toBeCloseTo(expectedInput, 12)
+      expect(result?.output_price).toBeCloseTo(expectedOutput, 12)
+      expect(result?.total_price).toBeCloseTo(expectedInput + expectedOutput, 12)
+    }
+  )
+
+  it.each([
     {
       cacheReadRate: 0.0165,
       contextWindow: 1_000_000,
@@ -161,6 +233,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
         input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
         output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-20T23:59:59Z'),
@@ -171,6 +245,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
         input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
         output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-21T00:00:00Z'),
@@ -181,6 +257,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
         input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
         output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-29T23:59:59Z'),
@@ -191,6 +269,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
         input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
         output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-30T00:00:00Z'),
@@ -201,6 +281,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
         input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
         output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-29T23:59:59Z'),
@@ -211,6 +293,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
         input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
         output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-30T00:00:00Z'),
@@ -219,6 +303,43 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
 
     expect(result?.model_price).toEqual(expectedPrices)
+  })
+
+  it.each([
+    { billedSeconds: 0, hourlyRate: 0.111, model: 'whisper-large-v3', usage: {} },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 0, input_audio_seconds: 5 } },
+    { billedSeconds: 10, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { input_audio_seconds: 1 } },
+    { billedSeconds: 10, hourlyRate: 0.111, model: 'whisper-large-v3', usage: { audio_seconds: 10, input_audio_seconds: 10 } },
+    { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
+  ])('prices $model transcription duration', ({ billedSeconds, hourlyRate, model, usage }) => {
+    const originalUsage = { ...usage }
+    const result = calcPrice(usage, model, { providerId: 'groq' })
+    const expectedPrice = (hourlyRate * billedSeconds) / 3_600
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+    expect(usage).toEqual(originalUsage)
+  })
+
+  it.each([
+    { expectedPrice: 0.0000375, model: 'gpt-transcribe', providerId: 'openai', seconds: 0.5 },
+    { expectedPrice: 0.003, model: 'whisper-1', providerId: 'openai', seconds: 30 },
+    { expectedPrice: 0.003, model: 'voxtral-mini-2602', providerId: 'mistral', seconds: 60 },
+  ])('prices $model transcription duration', ({ expectedPrice, model, providerId, seconds }) => {
+    const result = calcPrice({ audio_seconds: seconds, input_audio_seconds: seconds }, model, { providerId })
+
+    expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
+    expect(result?.output_price).toBe(0)
+    expect(result?.total_price).toBeCloseTo(expectedPrice, 15)
+  })
+
+  it('matches only verified OpenAI diarization model IDs', () => {
+    expect(calcPrice({ input_audio_tokens: 1, input_tokens: 1 }, 'gpt-4o-transcribe-diarize', { providerId: 'openai' })?.model.id).toBe(
+      'gpt-4o-transcribe'
+    )
+    expect(calcPrice({}, 'gpt-transcribe-diarize', { providerId: 'openai' })).toBeNull()
   })
 
   it.each([

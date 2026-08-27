@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { matchLogic, matchModel, matchModelWithFallback, matchProvider } from '../engine'
+import { matchLogic, matchModel, matchModelWithFallback, matchProvider, normalizeCompactDatedRef } from '../engine'
 import { calcPrice } from '../index'
 
 const actualProviders = data
@@ -29,6 +29,13 @@ describe('Provider Matching', () => {
       const provider = matchProvider(actualProviders, { modelId: 'accounts/fireworks/models/deepseek-v4-flash-0731' })
 
       expect(provider?.id).toBe('fireworks')
+    })
+
+    it('preserves Mistral aliases without claiming qualified OpenRouter model IDs', () => {
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mistral-nemo' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'open-mixtral-8x7b' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { modelId: 'mistralai/voxtral-small-24b-2507' })).toBeUndefined()
     })
   })
 
@@ -121,6 +128,35 @@ describe('Model Matching with Fallback', () => {
       expect(model?.id).toBe('gpt-4.1')
     })
 
+    it('should resolve compact dated refs to the dashed alias', () => {
+      const openai = matchProvider(actualProviders, { providerId: 'openai' })
+      expect(openai).toBeDefined()
+
+      // LiteLLM/OpenRouter emit `gpt-5.2-20251211`, only the dashed form is aliased
+      const compact = matchModelWithFallback(openai!, 'gpt-5.2-20251211', actualProviders)
+      expect(compact?.id).toBe('gpt-5.2')
+      const dashed = matchModelWithFallback(openai!, 'gpt-5.2-2025-12-11', actualProviders)
+      expect(dashed?.id).toBe('gpt-5.2')
+    })
+
+    it('should not normalize refs that match on the compact date form', () => {
+      // Bedrock models match the compact date via `contains`, so they must be returned as-is
+      const aws = matchProvider(actualProviders, { providerId: 'aws' })
+      expect(aws).toBeDefined()
+      const model = matchModelWithFallback(aws!, 'claude-3-5-haiku-20241022', actualProviders)
+      expect(model?.id).toBe('regional.anthropic.claude-3-5-haiku-20241022-v1:0')
+    })
+
+    it('should only normalize valid compact dates', () => {
+      expect(normalizeCompactDatedRef('gpt-5.2-20251211')).toBe('gpt-5.2-2025-12-11')
+      expect(normalizeCompactDatedRef('claude-3-5-haiku-20241022')).toBe('claude-3-5-haiku-2024-10-22')
+      expect(normalizeCompactDatedRef('model-20240229')).toBe('model-2024-02-29')
+      // suffixes that aren't valid calendar dates are left untouched
+      expect(normalizeCompactDatedRef('gpt-4o-12345678')).toBe('gpt-4o-12345678')
+      expect(normalizeCompactDatedRef('gpt-4o-20251301')).toBe('gpt-4o-20251301')
+      expect(normalizeCompactDatedRef('gpt-4o-20250230')).toBe('gpt-4o-20250230')
+    })
+
     it('should fallback to other providers when model not found directly', () => {
       // Create mock providers to test fallback
       const fallbackProvider: Provider = {
@@ -204,6 +240,31 @@ describe('Model Matching with Fallback', () => {
       expect(model?.id).toBe('shared-model-main')
     })
 
+    it('should prioritize an exact fallback match over a normalized fallback match', () => {
+      const normalizedProvider: Provider = {
+        api_pattern: 'normalized.example.com',
+        id: 'normalized-provider',
+        models: [{ id: 'normalized-model', match: { equals: 'model-2025-02-28' }, prices: {} }],
+        name: 'Normalized Provider',
+      }
+      const exactProvider: Provider = {
+        api_pattern: 'exact.example.com',
+        id: 'exact-provider',
+        models: [{ id: 'exact-model', match: { equals: 'model-20250228' }, prices: {} }],
+        name: 'Exact Provider',
+      }
+      const mainProvider: Provider = {
+        api_pattern: 'main.example.com',
+        fallback_model_providers: ['normalized-provider', 'exact-provider'],
+        id: 'main-provider',
+        models: [],
+        name: 'Main Provider',
+      }
+
+      const model = matchModelWithFallback(mainProvider, 'model-20250228', [mainProvider, normalizedProvider, exactProvider])
+      expect(model?.id).toBe('exact-model')
+    })
+
     it('should support chained fallbacks', () => {
       const secondProvider: Provider = {
         api_pattern: 'second.example.com',
@@ -253,6 +314,22 @@ describe('Model Matching with Fallback', () => {
       const fallbackMatch = matchModelWithFallback(azure, 'gpt-4o-mini', actualProviders)
       expect(fallbackMatch).toBeDefined()
       expect(fallbackMatch?.id).toBe(openaiModel?.id)
+    })
+
+    it('should work with real data - Azure AI Foundry marketplace models fall back to the origin provider', () => {
+      const azure = matchProvider(actualProviders, { providerId: 'azure' })
+      expect(azure).toBeDefined()
+      if (!azure) return
+      expect(azure.fallback_model_providers).toEqual(['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai'])
+
+      for (const [modelRef, expectedId] of [
+        ['Kimi-K2.6-1', 'kimi-k2.6'],
+        ['grok-4.3', 'grok-4.3'],
+        ['DeepSeek-V4-Pro', 'deepseek-v4-pro'],
+      ] as const) {
+        expect(matchModel(azure.models, modelRef)).not.toBeDefined()
+        expect(matchModelWithFallback(azure, modelRef, actualProviders)?.id).toBe(expectedId)
+      }
     })
   })
 })

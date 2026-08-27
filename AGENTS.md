@@ -84,6 +84,7 @@ make litellm-get                       # Get LiteLLM prices
 make simonw-prices-get                 # Get Simon Willison's prices
 make huggingface-get                   # Get HuggingFace prices
 make ovhcloud-get                      # Get OVHcloud AI Endpoints prices
+make quicksilverpro-get                # Get QuickSilver Pro prices
 make get-update-price-discrepancies    # Download and update price discrepancies
 make check-for-price-discrepancies     # Check for price discrepancies
 make detect-deprecated                 # Detect models that may be deprecated or removed
@@ -192,6 +193,13 @@ it does not catch constraint-resolution, matching, warning or error-shape diverg
 - Code formatted with ruff (single quotes, 120 char line length)
 - Type checking with basedpyright in strict mode
 - Follow existing patterns in the codebase
+
+## Releasing
+
+Create a GitHub release with a `vX.Y.Z` tag; CI publishes both packages from it. The version lives
+only in the tag - `packages/python/pyproject.toml` is `dynamic` (uv-dynamic-versioning) and the
+`0.0.0` in `packages/js/package.json` is a placeholder the release job overwrites. Never add a
+version bump to a PR. See `RELEASE.md`.
 
 ## Pull Requests
 

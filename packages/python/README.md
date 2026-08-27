@@ -229,3 +229,6 @@ int. This cannot recover decimal precision that was already lost before a float 
 
 Standard JSON decoding normally supplies `int` and `float`, while callers may request Decimal parsing before extraction.
 Decimal-bearing usage is not serializable by Python's standard JSON encoder without a custom conversion.
+
+For Groq's Whisper models, report the transcription duration as `audio_seconds` or `input_audio_seconds`. These models
+apply Groq's documented 10-second minimum. A missing or zero duration costs zero.

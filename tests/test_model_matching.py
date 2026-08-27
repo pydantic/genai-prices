@@ -117,6 +117,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('anthropic', 'claude-3-5-haiku-20241022', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('google-gla', 'gemini-2.5-flash-lite-preview-06-17', snapshot(('google', 'gemini-2.5-flash-lite'))),
+    ('google-gla', 'gemini-2.5-flash-lite-preview', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param(
         'bedrock',
         'us.anthropic.claude-3-5-haiku-20241022-v1:0',
@@ -131,7 +132,8 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-sonnet-4-20250514-v1:0')),
     ),
     pytest.param('bedrock', 'us.meta.llama3-2-90b-instruct-v1:0', snapshot(('aws', 'meta.llama3-2-90b-instruct-v1:0'))),
-    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o'))),
+    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o-2024-05-13'))),
+    ('openai', 'gpt-4o-2024-08-06', snapshot(('openai', 'gpt-4o'))),
     ('google-gla', 'gemini-1.5-flash', snapshot(('google', 'gemini-1.5-flash'))),
     (
         'groq',
@@ -228,6 +230,8 @@ test_cases: list[tuple[str, str, str]] = [
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
     ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
+    ('mistral_ai', 'devstral-small-2507', snapshot(('mistral', 'devstral-small'))),
+    ('mistral_ai', 'labs-devstral-small-2512', snapshot(('mistral', 'devstral-small'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
@@ -297,7 +301,11 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('openrouter', 'openai/gpt-oss-120b', None, marks=mark_xfail_todo),
     ('google-gla', 'gemini-2.0-flash-exp', snapshot(('google', 'gemini-2.0-flash'))),
     ('deepseek', 'deepseek-chat', snapshot(('deepseek', 'deepseek-chat'))),
-    pytest.param('azure', 'DeepSeek-R1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-R1-0528', snapshot(('azure', 'deepseek-reasoner'))),
+    # Azure AI Foundry marketplace models priced through the origin provider (#455)
+    ('azure', 'Kimi-K2.6-1', snapshot(('azure', 'kimi-k2.6'))),
+    ('azure', 'grok-4.3', snapshot(('azure', 'grok-4.3'))),
+    ('azure', 'DeepSeek-V4-Pro', snapshot(('azure', 'deepseek-v4-pro'))),
     pytest.param('bedrock', 'us.amazon.nova-lite-v1:0', snapshot(('aws', 'amazon.nova-lite-v1:0'))),
     ('mistral_ai', 'magistral-small-2507', snapshot(('mistral', 'magistral-small'))),
     pytest.param(
@@ -321,12 +329,12 @@ test_cases: list[tuple[str, str, str]] = [
     ('anthropic', 'claude-4-sonnet-latest', snapshot(('anthropic', 'claude-sonnet-4-0'))),
     ('vertex_ai', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('openai', 'gpt-4o-realtime', snapshot(('openai', 'gpt-4o-realtime-preview'))),
-    pytest.param('azure', 'DeepSeek-r1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-r1-0528', snapshot(('azure', 'deepseek-reasoner'))),
     ('google-vertex', 'gemini-1.5-pro-002', snapshot(('google', 'gemini-1.5-pro'))),
     ('gemini', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('mistral_ai', 'mistral-7b', snapshot(('mistral', 'mistral-7b'))),
     ('mistral_ai', 'mistral-large', snapshot(('mistral', 'mistral-large'))),
-    pytest.param('azure', 'deepseek-r1', None, marks=mark_xfail_todo),
+    ('azure', 'deepseek-r1', snapshot(('azure', 'deepseek-reasoner'))),
     pytest.param('deepinfra', 'deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('deepinfra', 'deepinfra/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('perplexity', 'perplexity/sonar-deep-research', None, marks=mark_xfail_todo),
@@ -338,6 +346,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('mistral_ai', 'magistral-medium', snapshot(('mistral', 'magistral-medium'))),
     ('gcp.vertex.agent', 'gemini-2.0-flash', snapshot(('google', 'gemini-2.0-flash'))),
     ('google-gla', 'gemma-3n-e4b-it', snapshot(('google', 'gemma-3n'))),
+    ('google-gla', 'gemma-4-31b-it', snapshot(('google', 'gemma-4-31b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it', snapshot(('google', 'gemma-4-26b-a4b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it-maas', snapshot(('google', 'gemma-4-26b-a4b-it-maas'))),
+    ('openrouter', 'google/gemma-4-31b-it', snapshot(('openrouter', 'google/gemma-4-31b-it'))),
     ('google-gla', 'gemini-2.5-flash-latest', snapshot(('google', 'gemini-2.5-flash'))),
     pytest.param(
         'bedrock',
@@ -423,6 +435,9 @@ test_cases: list[tuple[str, str, str]] = [
     ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
+    ('openai', 'gpt-5.2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('openai', 'gpt-5-2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('azure', 'gpt-4.1-20250414', snapshot(('azure', 'gpt-4.1'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
     pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
     pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
@@ -445,18 +460,50 @@ def test_fallback_tries_all_providers():
     """Test that fallback iterates through all providers until finding a match.
 
     This tests the case where the first fallback provider doesn't have the model,
-    but a subsequent fallback provider does. Azure has fallback_model_providers=['openai', 'anthropic'],
+    but a subsequent fallback provider does. Azure's fallback_model_providers starts with ['openai', 'anthropic'],
     so for a Claude model, it should skip openai and find it via anthropic.
     """
     azure = find_provider_by_id(providers, 'azure')
     assert azure is not None
-    assert azure.fallback_model_providers == ['openai', 'anthropic']
+    assert azure.fallback_model_providers == ['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai']
 
     # Azure doesn't have claude-sonnet-4 directly, openai doesn't have it either,
     # but anthropic does - so fallback should find it
     model = azure.find_model('claude-sonnet-4-20250514', all_providers=providers)
     assert model is not None, 'Fallback should have found claude-sonnet via anthropic'
     assert model.id == 'claude-sonnet-4-0'
+
+
+def test_exact_fallback_match_precedes_normalized_fallback_match():
+    """An exact compact ID is safer than a normalized alias in an earlier fallback provider."""
+    from genai_prices.types import ClauseEquals, ModelInfo, Provider
+
+    normalized_provider = Provider(
+        id='normalized-provider',
+        name='Normalized Provider',
+        api_pattern='normalized.example.com',
+        models=[ModelInfo(id='normalized-model', match=ClauseEquals(equals='model-2025-02-28'))],
+    )
+    exact_provider = Provider(
+        id='exact-provider',
+        name='Exact Provider',
+        api_pattern='exact.example.com',
+        models=[ModelInfo(id='exact-model', match=ClauseEquals(equals='model-20250228'))],
+    )
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['normalized-provider', 'exact-provider'],
+        models=[],
+    )
+
+    model = main_provider.find_model(
+        'model-20250228', all_providers=[main_provider, normalized_provider, exact_provider]
+    )
+
+    assert model is not None
+    assert model.id == 'exact-model'
 
 
 def test_find_model_directly_in_provider():
@@ -659,6 +706,34 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_compact_dated_model_ref_normalized():
+    """Compact dated refs from LiteLLM/OpenRouter (e.g. `gpt-5.2-20251211`) fall back to the dashed alias."""
+    from genai_prices.types import _normalize_compact_dated_ref
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert (provider.id, model.id) == ('openai', 'gpt-5.2')
+
+    # a ref that already matches is unaffected by the normalization fallback
+    openai = find_provider_by_id(providers, 'openai')
+    assert openai is not None
+    assert openai.find_model('gpt-5.2-2025-12-11', all_providers=providers) is not None
+
+    # a model that matches on the compact date form (Bedrock `contains`) is returned as-is, not normalized away
+    aws = find_provider_by_id(providers, 'aws')
+    assert aws is not None
+    haiku = aws.find_model('claude-3-5-haiku-20241022', all_providers=providers)
+    assert haiku is not None and haiku.id == 'regional.anthropic.claude-3-5-haiku-20241022-v1:0'
+
+    assert _normalize_compact_dated_ref('gpt-5.2-20251211') == 'gpt-5.2-2025-12-11'
+    assert _normalize_compact_dated_ref('claude-3-5-haiku-20241022') == 'claude-3-5-haiku-2024-10-22'
+    assert _normalize_compact_dated_ref('model-20240229') == 'model-2024-02-29'
+    # suffixes that aren't valid calendar dates are left untouched
+    assert _normalize_compact_dated_ref('gpt-4o-12345678') == 'gpt-4o-12345678'
+    assert _normalize_compact_dated_ref('gpt-4o-20251301') == 'gpt-4o-20251301'
+    assert _normalize_compact_dated_ref('gpt-4o-20250230') == 'gpt-4o-20250230'
 
 
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():

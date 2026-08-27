@@ -1600,7 +1600,7 @@ providers: list[Provider] = [
     Provider(
         id='azure',
         name='Microsoft Azure',
-        api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
+        api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com|services\\.ai\\.azure\\.com)',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
         price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
         extractors=[
@@ -1610,6 +1610,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -1633,6 +1636,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['output_tokens_details', 'reasoning_tokens'],
@@ -1708,7 +1714,7 @@ providers: list[Provider] = [
                 model_path='model',
             ),
         ],
-        fallback_model_providers=['openai', 'anthropic'],
+        fallback_model_providers=['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai'],
         models=[
             ModelInfo(
                 id='ada',
@@ -1885,6 +1891,8 @@ providers: list[Provider] = [
         pricing_urls=[
             'https://www.cerebras.ai/pricing#pricing',
             'https://inference-docs.cerebras.ai/models/openai-oss',
+            'https://inference-docs.cerebras.ai/models/gemma-4-31b',
+            'https://inference-docs.cerebras.ai/support/change-log',
         ],
         model_match=ClauseContains(contains='cerebras'),
         provider_match=ClauseContains(contains='cerebras'),
@@ -1905,6 +1913,21 @@ providers: list[Provider] = [
             )
         ],
         models=[
+            ModelInfo(
+                id='gemma-4-31b',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemma-4-31b'),
+                        ClauseStartsWith(starts_with='cerebras/gemma-4-31b'),
+                        ClauseStartsWith(starts_with='cerebras:gemma-4-31b'),
+                    ]
+                ),
+                name='Gemma 4 31B',
+                description="Google's Gemma 4 31B open model for chat, instruction following, and multilingual tasks, served with fast inference on Cerebras hardware (~1,850 tokens/second).",
+                context_window=131072,
+                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                prices=ModelPrice(input_mtok=Decimal('0.99'), output_mtok=Decimal('1.49')),
+            ),
             ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseOr(
@@ -1932,7 +1955,8 @@ providers: list[Provider] = [
                 name='Llama 3.3 70B',
                 description="Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
                 context_window=128000,
-                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
+                price_comments='No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.85'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
@@ -1947,7 +1971,8 @@ providers: list[Provider] = [
                 name='Llama 3.1 8B',
                 description="Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
                 context_window=32768,
-                price_comments='Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
+                price_comments='No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -1962,7 +1987,8 @@ providers: list[Provider] = [
                 name='Qwen 3 32B',
                 description="Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
                 context_window=131072,
-                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                price_comments='No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
@@ -1971,6 +1997,22 @@ providers: list[Provider] = [
                 name='qwen-3-coder-480b',
                 price_comments='Seems to be no longer available on cerebras, here to help with tests',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='zai-glm-4.7',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='zai-glm-4.7'),
+                        ClauseStartsWith(starts_with='cerebras/zai-glm-4.7'),
+                        ClauseStartsWith(starts_with='cerebras:zai-glm-4.7'),
+                    ]
+                ),
+                name='Z.ai GLM 4.7',
+                description="Z.ai's GLM 4.7, a 355 billion parameter model with reasoning enabled by default, served with fast inference on Cerebras hardware (~1,000 tokens/second).",
+                context_window=131072,
+                price_comments='Deprecated by Cerebras on 2026-08-17 (see https://inference-docs.cerebras.ai/support/change-log) and no longer in the model catalog; last published developer tier rates kept for historical usage.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('2.25'), output_mtok=Decimal('2.75')),
             ),
         ],
     ),
@@ -2394,6 +2436,25 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='c4ai-aya-expanse-32b',
+                match=ClauseContains(contains='aya-expanse-32b'),
+                name='Aya Expanse 32B',
+                description='Aya Expanse is a highly performant 32B multilingual model, designed to rival monolingual performance through innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.',
+                context_window=128000,
+                price_comments='https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens for input and $1.50/1M tokens for output.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='c4ai-aya-expanse-8b',
+                match=ClauseContains(contains='aya-expanse-8b'),
+                name='Aya Expanse 8B',
+                description='Aya Expanse is a highly performant 8B multilingual model, designed to rival monolingual performance through innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.',
+                context_window=8192,
+                price_comments='Retired 2026-04-04 per https://docs.cohere.com/docs/models; last published price kept for historical usage. https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens for input and $1.50/1M tokens for output.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
                 id='command',
                 match=ClauseEquals(equals='command'),
                 name='Command',
@@ -2406,6 +2467,16 @@ providers: list[Provider] = [
                 name='Command A',
                 description='Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='command-light',
+                match=ClauseStartsWith(starts_with='command-light'),
+                name='Command Light',
+                description='A smaller, faster version of Command. Almost as capable, but a lot faster.',
+                context_window=4096,
+                price_comments='Deprecated 2025-09-15 per https://docs.cohere.com/docs/models; still billable for existing customers. https://cohere.com/pricing FAQ: Command-light pricing is $0.30/1M tokens for input and $0.60/1M tokens for output.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='command-r',
@@ -2553,9 +2624,38 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Flash',
                 description='DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.22'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('0.66')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek-v4-pro',
@@ -2563,9 +2663,40 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Pro',
                 description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
-                ),
+                price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.435'),
+                            cache_read_mtok=Decimal('0.003625'),
+                            output_mtok=Decimal('0.87'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 17)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.66'), cache_read_mtok=Decimal('0.022'), output_mtok=Decimal('1.98')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                        ),
+                    ),
+                ],
             ),
         ],
     ),
@@ -3621,7 +3752,12 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gemini-2.5-flash-lite'),
-                        ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                        ClauseAnd(
+                            and_=[
+                                ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                                ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                            ]
+                        ),
                     ]
                 ),
                 name='Gemini 2.5 Flash Lite',
@@ -3634,6 +3770,14 @@ providers: list[Provider] = [
                     input_audio_mtok=Decimal('0.3'),
                     cache_audio_read_mtok=Decimal('0.03'),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-flash-lite-preview-tts',
+                match=ClauseEquals(equals='gemini-2.5-flash-lite-preview-tts'),
+                name='Gemini 2.5 Flash-Lite Preview TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-preview',
@@ -3653,8 +3797,26 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
+                id='gemini-2.5-flash-tts',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-2.5-flash-tts'),
+                        ClauseEquals(equals='gemini-2.5-flash-preview-tts'),
+                    ]
+                ),
+                name='Gemini 2.5 Flash TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='gemini-2.5-pro',
-                match=ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                match=ClauseAnd(
+                    and_=[
+                        ClauseStartsWith(starts_with='gemini-2.5-pro'),
+                        ClauseRegex(regex='^(?!.*-[tT][tT][sS](?:$|-))'),
+                    ]
+                ),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
@@ -3665,6 +3827,16 @@ providers: list[Provider] = [
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-2.5-pro-tts',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-2.5-pro-tts'), ClauseEquals(equals='gemini-2.5-pro-preview-tts')]
+                ),
+                name='Gemini 2.5 Pro TTS',
+                context_window=8192,
+                price_comments='See https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='gemini-3-flash-preview',
@@ -3982,18 +4154,29 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemma-4-26b-a4b-it'),
                 name='Gemma 4 26B A4B',
                 description='Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference.',
-                price_comments='Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.33')),
+                context_window=262144,
+                price_comments='Gemini API model ID. Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='gemma-4-26b-a4b-it-maas',
+                match=ClauseEquals(equals='gemma-4-26b-a4b-it-maas'),
+                name='Gemma 4 26B A4B (Vertex AI MaaS)',
+                description='Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.',
+                context_window=262144,
+                price_comments='Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                ),
             ),
             ModelInfo(
                 id='gemma-4-31b-it',
                 match=ClauseEquals(equals='gemma-4-31b-it'),
                 name='Gemma 4 31B',
                 description="Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output. It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.",
-                price_comments='Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
-                ),
+                context_window=262144,
+                price_comments='Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
             ),
         ],
     ),
@@ -4001,7 +4184,7 @@ providers: list[Provider] = [
         id='groq',
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
-        pricing_urls=['https://groq.com/pricing/'],
+        pricing_urls=['https://console.groq.com/docs/models'],
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -4203,6 +4386,20 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen3-32b'),
                 name='Qwen3 32B 131k',
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3',
+                match=ClauseEquals(equals='whisper-large-v3'),
+                name='Whisper Large V3',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3.',
+                prices=ModelPrice(audio_hours=Decimal('0.111'), input_audio_hours=Decimal('0.111')),
+            ),
+            ModelInfo(
+                id='whisper-large-v3-turbo',
+                match=ClauseEquals(equals='whisper-large-v3-turbo'),
+                name='Whisper Large V3 Turbo',
+                price_comments='See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
+                prices=ModelPrice(audio_hours=Decimal('0.04'), input_audio_hours=Decimal('0.04')),
             ),
         ],
     ),
@@ -6754,9 +6951,9 @@ providers: list[Provider] = [
         id='mistral',
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
-        pricing_urls=['https://mistral.ai/pricing#api-pricing'],
+        pricing_urls=['https://mistral.ai/pricing/api'],
         model_match=ClauseRegex(
-            regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
+            regex='^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
         ),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
@@ -6819,10 +7016,20 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='devstral-small',
-                match=ClauseEquals(equals='devstral-small'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='devstral-small'),
+                        ClauseEquals(equals='devstral-small-2505'),
+                        ClauseEquals(equals='devstral-small-2507'),
+                        ClauseEquals(equals='devstral-small-latest'),
+                        ClauseEquals(equals='labs-devstral-small-2512'),
+                    ]
+                ),
                 name='Devstral Small',
                 description='Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.12')),
+                price_comments="The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30. Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)",
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='devstral-small:free',
@@ -7188,6 +7395,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='voxtral-mini-2602',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='voxtral-mini-latest'), ClauseEquals(equals='voxtral-mini-2602')]
+                ),
+                name='Voxtral Mini Transcribe 2',
+                price_comments='See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
+                prices=ModelPrice(audio_hours=Decimal('0.18'), input_audio_hours=Decimal('0.18')),
+            ),
+            ModelInfo(
                 id='voxtral-small-24b-2507',
                 match=ClauseOr(
                     or_=[
@@ -7283,7 +7499,14 @@ providers: list[Provider] = [
         id='moonshotai',
         name='MoonshotAi',
         api_pattern='https://api\\.moonshot\\.',
-        pricing_urls=['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+        pricing_urls=[
+            'https://platform.kimi.ai/docs/models.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k3.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k26.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k25.md',
+            'https://platform.kimi.ai/docs/pricing/chat-v1.md',
+        ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='kimi'), ClauseStartsWith(starts_with='moonshot')]),
         provider_match=ClauseContains(contains='moonshot'),
         extractors=[
@@ -7311,6 +7534,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='kimi-k2'),
                 name='Kimi K2 0711',
                 description='Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.57'), output_mtok=Decimal('2.3')),
             ),
             ModelInfo(
@@ -7319,6 +7543,7 @@ providers: list[Provider] = [
                 name='Kimi K2 0711 Preview',
                 description='MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
                 context_window=131072,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7329,6 +7554,7 @@ providers: list[Provider] = [
                 name='Kimi K2 0905 Preview',
                 description='Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7339,6 +7565,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Thinking',
                 description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -7349,6 +7576,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Thinking Turbo',
                 description='High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
@@ -7359,6 +7587,7 @@ providers: list[Provider] = [
                 name='Kimi K2 Turbo Preview',
                 description='High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
                 context_window=262144,
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
@@ -7391,6 +7620,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
                 ),
+            ),
+            ModelInfo(
+                id='kimi-k2.7-code-highspeed',
+                match=ClauseEquals(equals='kimi-k2.7-code-highspeed'),
+                name='Kimi K2.7 Code HighSpeed',
+                description='High-speed version of Kimi K2.7 Code, with output speed of approximately 180 tokens/sec and up to 260 tokens/sec in short context scenarios.',
+                context_window=262144,
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+                prices=ModelPrice(input_mtok=Decimal('1.9'), cache_read_mtok=Decimal('0.38'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='kimi-k3',
@@ -7628,7 +7866,9 @@ providers: list[Provider] = [
             'https://platform.openai.com/docs/models',
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
-        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        model_match=ClauseOr(
+            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+        ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
             UsageExtractor(
@@ -7930,7 +8170,13 @@ providers: list[Provider] = [
                 name='gpt 4.1',
                 description="GPT-4.1 is OpenAI's latest flagship model, offering major improvements in coding, instruction following, and long context understanding with up to 1 million tokens of context.",
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('8'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='gpt-4.1-mini',
@@ -7941,7 +8187,11 @@ providers: list[Provider] = [
                 description='GPT-4.1 Mini is a significant leap in small model performance, matching or exceeding GPT-4o in many benchmarks while reducing latency by nearly half and cost by 83%.',
                 context_window=1000000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.6')
+                    input_mtok=Decimal('0.4'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('1.6'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -7970,7 +8220,6 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gpt-4o'),
-                        ClauseEquals(equals='gpt-4o-2024-05-13'),
                         ClauseEquals(equals='gpt-4o-2024-08-06'),
                         ClauseEquals(equals='gpt-4o-2024-11-20'),
                     ]
@@ -7979,7 +8228,25 @@ providers: list[Provider] = [
                 description='GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning, creativity, and technical tasks while maintaining consistent output quality.',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-4o-2024-05-13',
+                match=ClauseEquals(equals='gpt-4o-2024-05-13'),
+                name='gpt 4o (2024-05-13)',
+                description='Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have no cached-input discount.',
+                context_window=128000,
+                price_comments='Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8004,7 +8271,11 @@ providers: list[Provider] = [
                 description='GPT-4o Mini is a cost-optimized variant of GPT-4o, designed for high-efficiency processing while maintaining strong performance. It excels in rapid inference and resource-efficient operations, making it ideal for production deployments requiring a balance of cost and capability.',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('0.6')
+                    input_mtok=Decimal('0.15'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('0.6'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8071,6 +8342,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
@@ -8095,7 +8367,11 @@ providers: list[Provider] = [
                 description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.125'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8117,7 +8393,11 @@ providers: list[Provider] = [
                 description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                    input_mtok=Decimal('0.25'),
+                    cache_read_mtok=Decimal('0.025'),
+                    output_mtok=Decimal('2'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8127,14 +8407,23 @@ providers: list[Provider] = [
                 description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
+                    input_mtok=Decimal('0.05'),
+                    cache_read_mtok=Decimal('0.005'),
+                    output_mtok=Decimal('0.4'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
                 id='gpt-5-pro',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-pro'), ClauseEquals(equals='gpt-5-pro-2025-10-06')]),
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('15'),
+                    output_mtok=Decimal('120'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.1',
@@ -8158,7 +8447,11 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.125'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8197,7 +8490,11 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                    input_mtok=Decimal('1.75'),
+                    cache_read_mtok=Decimal('0.175'),
+                    output_mtok=Decimal('14'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8211,7 +8508,12 @@ providers: list[Provider] = [
                 ),
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('21'),
+                    output_mtok=Decimal('168'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.3',
@@ -8261,6 +8563,8 @@ providers: list[Provider] = [
                         base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8285,7 +8589,11 @@ providers: list[Provider] = [
                 description='Our strongest mini model yet for coding, computer use, and subagents.',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                    input_mtok=Decimal('0.75'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('4.5'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8302,7 +8610,11 @@ providers: list[Provider] = [
                 description='Our cheapest GPT-5.4-class model for simple high-volume tasks.',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
+                    input_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.02'),
+                    output_mtok=Decimal('1.25'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8321,6 +8633,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8349,6 +8663,8 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
                     output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8368,6 +8684,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8395,6 +8713,8 @@ providers: list[Provider] = [
                                 base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
                             ),
                             output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         )
                     ),
                     ConditionalPrice(
@@ -8412,6 +8732,8 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         ),
                     ),
                 ],
@@ -8445,6 +8767,8 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         )
                     ),
                     ConditionalPrice(
@@ -8460,6 +8784,8 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         ),
                     ),
                 ],
@@ -8493,6 +8819,8 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         )
                     ),
                     ConditionalPrice(
@@ -8508,6 +8836,8 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         ),
                     ),
                 ],
@@ -8700,6 +9030,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-transcribe',
+                match=ClauseEquals(equals='gpt-transcribe'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-transcribe.',
+                prices=ModelPrice(audio_hours=Decimal('0.27'), input_audio_hours=Decimal('0.27')),
+            ),
+            ModelInfo(
                 id='moderation',
                 match=ClauseContains(contains='moderation'),
                 description='All OpenAI moderation models and endpoints are free of charge',
@@ -8745,13 +9081,21 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
+                            input_mtok=Decimal('10'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('40'),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('8'),
+                            web_searches_kcount=Decimal('10'),
+                            storage_searches_kcount=Decimal('2.5'),
                         ),
                     ),
                 ],
@@ -8797,7 +9141,11 @@ providers: list[Provider] = [
                 name='o4 Mini High',
                 description='OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('4.4')
+                    input_mtok=Decimal('1.1'),
+                    cache_read_mtok=Decimal('0.275'),
+                    output_mtok=Decimal('4.4'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
                 ),
             ),
             ModelInfo(
@@ -8849,6 +9197,12 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='whisper-1',
+                match=ClauseEquals(equals='whisper-1'),
+                price_comments='See https://developers.openai.com/api/docs/models/whisper-1.',
+                prices=ModelPrice(audio_hours=Decimal('0.36'), input_audio_hours=Decimal('0.36')),
             ),
         ],
     ),
@@ -10458,9 +10812,21 @@ providers: list[Provider] = [
                 id='google/gemma-4-31b-it',
                 match=ClauseEquals(equals='google/gemma-4-31b-it'),
                 name='Gemma 4 31B',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
-                ),
+                context_window=262144,
+                price_comments='OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 27)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.34')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='google/gemma-4-31b-it:free',
@@ -11936,7 +12302,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-4.1-mini',
-                match=ClauseEquals(equals='openai/gpt-4.1-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-4.1-mini'),
+                        ClauseEquals(equals='openai/gpt-4.1-mini-2025-04-14'),
+                    ]
+                ),
                 name='GPT-4.1 Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.6')
@@ -12008,6 +12379,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='openai/gpt-5'),
+                        ClauseEquals(equals='openai/gpt-5-2025-08-07'),
                         ClauseEquals(equals='openai/gpt-5-chat'),
                         ClauseEquals(equals='openai/gpt-5-codex'),
                         ClauseEquals(equals='openai/gpt-5.1-codex-max'),
@@ -12032,7 +12404,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5-mini',
-                match=ClauseEquals(equals='openai/gpt-5-mini'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5-mini'), ClauseEquals(equals='openai/gpt-5-mini-2025-08-07')]
+                ),
                 name='GPT-5 Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
@@ -12068,7 +12442,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.1-codex-mini',
-                match=ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
+                        ClauseEquals(equals='openai/gpt-5.1-codex-mini-20251113'),
+                    ]
+                ),
                 name='GPT-5.1-Codex-Mini',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
@@ -12079,6 +12458,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='openai/gpt-5.2'),
+                        ClauseEquals(equals='openai/gpt-5.2-20251211'),
                         ClauseEquals(equals='openai/gpt-5.2-chat'),
                         ClauseEquals(equals='openai/gpt-5.2-codex'),
                     ]
@@ -12090,7 +12470,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.2-pro',
-                match=ClauseEquals(equals='openai/gpt-5.2-pro'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.2-pro'), ClauseEquals(equals='openai/gpt-5.2-pro-20251211')]
+                ),
                 name='GPT-5.2 Pro',
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),
@@ -12104,7 +12486,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.3-codex',
-                match=ClauseEquals(equals='openai/gpt-5.3-codex'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.3-codex'),
+                        ClauseEquals(equals='openai/gpt-5.3-codex-20260224'),
+                    ]
+                ),
                 name='GPT-5.3-Codex',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
@@ -12112,10 +12499,18 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.4',
-                match=ClauseEquals(equals='openai/gpt-5.4'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.4'), ClauseEquals(equals='openai/gpt-5.4-20260305')]
+                ),
                 name='GPT-5.4',
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('15')
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -12144,19 +12539,90 @@ providers: list[Provider] = [
                 id='openai/gpt-5.4-pro',
                 match=ClauseEquals(equals='openai/gpt-5.4-pro'),
                 name='GPT-5.4 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-5.5',
                 match=ClauseEquals(equals='openai/gpt-5.5'),
                 name='GPT-5.5',
-                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-5.5-pro',
                 match=ClauseEquals(equals='openai/gpt-5.5-pro'),
                 name='GPT-5.5 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+                context_window=1050000,
+                price_comments='Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-luna',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.6-luna'),
+                        ClauseRegex(regex='^openai/gpt-5\\.6-luna-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-5.6 Luna',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-sol',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.6-sol'), ClauseRegex(regex='^openai/gpt-5\\.6-sol-\\d{8}$')]
+                ),
+                name='GPT-5.6 Sol',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5.6-terra'),
+                        ClauseRegex(regex='^openai/gpt-5\\.6-terra-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-5.6 Terra',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]),
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-audio',
@@ -13511,6 +13977,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='z-ai/glm-5.3-flash',
+                match=ClauseEquals(equals='z-ai/glm-5.3-flash'),
+                name='GLM 5.3 Flash',
+                context_window=1310720,
+                price_comments="OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.25')
+                ),
+            ),
+            ModelInfo(
                 id='~anthropic/claude-fable-latest',
                 match=ClauseEquals(equals='~anthropic/claude-fable-latest'),
                 name='Claude Fable Latest',
@@ -13873,6 +14349,434 @@ providers: list[Provider] = [
                 name='Sonar Reasoning Pro',
                 description='Sonar Pro pricing includes Perplexity search pricing.',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8'), requests_kcount=Decimal('14')),
+            ),
+        ],
+    ),
+    Provider(
+        id='quicksilverpro',
+        name='QuickSilver Pro',
+        api_pattern='https://api\\.quicksilverpro\\.io',
+        pricing_urls=['https://quicksilverpro.io/#pricing', 'https://quicksilverpro.io/pricing.json'],
+        description='OpenAI-compatible inference gateway serving frontier and open models via one endpoint.',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='claude-fable-5',
+                match=ClauseEquals(equals='claude-fable-5'),
+                name='Claude Fable 5',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('40')),
+            ),
+            ModelInfo(
+                id='claude-haiku-4-5',
+                match=ClauseEquals(equals='claude-haiku-4-5'),
+                name='Claude Haiku 4.5',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('4')),
+            ),
+            ModelInfo(
+                id='claude-opus-4-6',
+                match=ClauseEquals(equals='claude-opus-4-6'),
+                name='Claude Opus 4.6',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
+                id='claude-opus-4-8',
+                match=ClauseEquals(equals='claude-opus-4-8'),
+                name='Claude Opus 4.8',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
+                id='claude-opus-5',
+                match=ClauseEquals(equals='claude-opus-5'),
+                name='Claude Opus 5',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4-6',
+                match=ClauseEquals(equals='claude-sonnet-4-6'),
+                name='Claude Sonnet 4.6',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('2.4'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
+                id='claude-sonnet-5',
+                match=ClauseEquals(equals='claude-sonnet-5'),
+                name='Claude Sonnet 5',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='deepseek-v4-flash',
+                match=ClauseEquals(equals='deepseek-v4-flash'),
+                name='DeepSeek V4 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.112'), cache_read_mtok=Decimal('0.0144'), output_mtok=Decimal('0.224')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4-pro',
+                match=ClauseEquals(equals='deepseek-v4-pro'),
+                name='DeepSeek V4 Pro',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3-flash-preview',
+                match=ClauseEquals(equals='gemini-3-flash-preview'),
+                name='Gemini 3 Flash Preview',
+                context_window=1048576,
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.425'), output_mtok=Decimal('2.55')),
+            ),
+            ModelInfo(
+                id='gemini-3-pro-image',
+                match=ClauseEquals(equals='gemini-3-pro-image'),
+                name='Gemini 3 Pro Image',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.7'), output_mtok=Decimal('10.2'), output_image_mtok=Decimal('102')
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3.1-flash-lite',
+                match=ClauseEquals(equals='gemini-3.1-flash-lite'),
+                name='Gemini 3.1 Flash Lite',
+                context_window=1048576,
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.2125'), output_mtok=Decimal('1.275')),
+            ),
+            ModelInfo(
+                id='gemini-3.1-pro-preview',
+                match=ClauseEquals(equals='gemini-3.1-pro-preview'),
+                name='Gemini 3.1 Pro Preview',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.7'), output_mtok=Decimal('10.2')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-flash',
+                match=ClauseEquals(equals='gemini-3.5-flash'),
+                name='Gemini 3.5 Flash',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.275'), output_mtok=Decimal('7.65')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-flash-lite',
+                match=ClauseEquals(equals='gemini-3.5-flash-lite'),
+                name='Gemini 3.5 Flash-Lite',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.255'), output_mtok=Decimal('2.125')),
+            ),
+            ModelInfo(
+                id='gemini-3.6-flash',
+                match=ClauseEquals(equals='gemini-3.6-flash'),
+                name='Gemini 3.6 Flash',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.275'), output_mtok=Decimal('6.375')),
+            ),
+            ModelInfo(
+                id='gemini-3.7-flash',
+                match=ClauseEquals(equals='gemini-3.7-flash'),
+                name='Gemini 3.7 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6375'), cache_read_mtok=Decimal('0.06375'), output_mtok=Decimal('3.1875')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.2',
+                match=ClauseEquals(equals='glm-5.2'),
+                name='GLM 5.2',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.12'), cache_read_mtok=Decimal('0.208'), output_mtok=Decimal('3.52')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.3',
+                match=ClauseEquals(equals='glm-5.3'),
+                name='GLM 5.3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.12'), cache_read_mtok=Decimal('0.208'), output_mtok=Decimal('3.52')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.3-flash',
+                match=ClauseEquals(equals='glm-5.3-flash'),
+                name='GLM 5.3 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.06'), cache_read_mtok=Decimal('0.012'), output_mtok=Decimal('0.2')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.6-luna',
+                match=ClauseEquals(equals='gpt-5.6-luna'),
+                name='GPT-5.6 Luna',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.08'),
+                    cache_write_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.008'),
+                    output_mtok=Decimal('0.48'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.6-sol',
+                match=ClauseEquals(equals='gpt-5.6-sol'),
+                name='GPT-5.6 Sol',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_write_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('0.4'),
+                    output_mtok=Decimal('24'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.6-terra',
+                match=ClauseEquals(equals='gpt-5.6-terra'),
+                name='GPT-5.6 Terra',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.8'),
+                    cache_write_mtok=Decimal('1'),
+                    cache_read_mtok=Decimal('0.08'),
+                    output_mtok=Decimal('4.8'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-oss-120b',
+                match=ClauseEquals(equals='gpt-oss-120b'),
+                name='GPT-OSS 120B',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('0.48')
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.5',
+                match=ClauseEquals(equals='grok-4.5'),
+                name='Grok 4.5',
+                context_window=500000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.6'), cache_read_mtok=Decimal('0.4'), output_mtok=Decimal('4.8')
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.6',
+                match=ClauseEquals(equals='grok-4.6'),
+                name='Grok 4.6',
+                context_window=500000,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='hy3',
+                match=ClauseEquals(equals='hy3'),
+                name='Hy3',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1056'), cache_read_mtok=Decimal('0.0264'), output_mtok=Decimal('0.4224')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2.6',
+                match=ClauseEquals(equals='kimi-k2.6'),
+                name='Kimi K2.6',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5472'), cache_read_mtok=Decimal('0.292'), output_mtok=Decimal('2.728')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2.7-code',
+                match=ClauseEquals(equals='kimi-k2.7-code'),
+                name='Kimi K2.7 Code',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.584'), cache_read_mtok=Decimal('0.1278'), output_mtok=Decimal('2.8')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3',
+                match=ClauseEquals(equals='kimi-k3'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.4'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('12')
+                ),
+            ),
+            ModelInfo(
+                id='mimo-v2.5',
+                match=ClauseEquals(equals='mimo-v2.5'),
+                name='MiMo-V2.5',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.112'), cache_read_mtok=Decimal('0.00224'), output_mtok=Decimal('0.224')
+                ),
+            ),
+            ModelInfo(
+                id='minimax-m3',
+                match=ClauseEquals(equals='minimax-m3'),
+                name='MiniMax M3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.24'), cache_read_mtok=Decimal('0.048'), output_mtok=Decimal('0.96')
+                ),
+            ),
+            ModelInfo(
+                id='muse-glimmer-30b',
+                match=ClauseEquals(equals='muse-glimmer-30b'),
+                name='Muse Glimmer 30B',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.28'), cache_read_mtok=Decimal('0.032'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='muse-spark-1.2',
+                match=ClauseEquals(equals='muse-spark-1.2'),
+                name='Muse Spark 1.2',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('3.4')),
+            ),
+            ModelInfo(
+                id='nemotron-3.5-lightning',
+                match=ClauseEquals(equals='nemotron-3.5-lightning'),
+                name='Nemotron 3.5 Lightning',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.08'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.2')
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.6-35b',
+                match=ClauseEquals(equals='qwen3.6-35b'),
+                name='Qwen3.6-35B-A3B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.112'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.8')
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.6-plus',
+                match=ClauseEquals(equals='qwen3.6-plus'),
+                name='Qwen3.6 Plus',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.26'), cache_write_mtok=Decimal('0.325'), output_mtok=Decimal('1.56')
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.7-flash',
+                match=ClauseEquals(equals='qwen3.7-flash'),
+                name='Qwen3.7 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.024'), cache_read_mtok=Decimal('0.0048'), output_mtok=Decimal('0.104')
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.7-max',
+                match=ClauseEquals(equals='qwen3.7-max'),
+                name='Qwen3.7 Max',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_write_mtok=Decimal('1.5625'),
+                    cache_read_mtok=Decimal('0.25'),
+                    output_mtok=Decimal('3.75'),
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.7-plus',
+                match=ClauseEquals(equals='qwen3.7-plus'),
+                name='Qwen3.7 Plus',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.256'),
+                    cache_write_mtok=Decimal('0.32'),
+                    cache_read_mtok=Decimal('0.0512'),
+                    output_mtok=Decimal('1.024'),
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.8-27b',
+                match=ClauseEquals(equals='qwen3.8-27b'),
+                name='Qwen3.8 27B',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.34'),
+                    cache_write_mtok=Decimal('0.425'),
+                    cache_read_mtok=Decimal('0.068'),
+                    output_mtok=Decimal('2.04'),
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.8-max',
+                match=ClauseEquals(equals='qwen3.8-max'),
+                name='Qwen3.8 Max',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.25'),
+                    output_mtok=Decimal('6'),
+                ),
             ),
         ],
     ),
@@ -14633,8 +15537,11 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20'),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -14658,8 +15565,11 @@ providers: list[Provider] = [
                 name='Grok 4.3',
                 description='Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
                 context_window=1000000,
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
                 ),
             ),
             ModelInfo(
@@ -14677,14 +15587,45 @@ providers: list[Provider] = [
                 name='Grok 4.5',
                 description="xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6\'s. Ref: https://docs.x.ai/docs/models/grok-4.5',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=199999, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.6'),
+                        ClauseRegex(regex='^grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.6'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.6-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.6-latest'),
+                    ]
+                ),
+                name='Grok 4.6',
+                description="xAI's latest flagship model, released 2026-08-12. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning, over a 500k-token context window.",
+                context_window=500000,
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=199999, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-build-0.1',
                 match=ClauseEquals(equals='grok-build-0.1'),
                 name='Grok Build 0.1',
                 description="Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding.",
-                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=199999, price=Decimal('2'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-code-fast-1',
@@ -14748,6 +15689,17 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.3-Flash',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3-Flash'), ClauseEquals(equals='glm-5.3-flash')]),
+                name='GLM-5.3-Flash',
+                description='Z.AI native multimodal model with a 1,000,000 token context window, context caching, function calling, and always-on reasoning.',
+                context_window=1000000,
+                price_comments='Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.25')
                 ),
             ),
         ],
@@ -14912,6 +15864,28 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.103'), cache_read_mtok=Decimal('0.276'), output_mtok=Decimal('3.862')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.3',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3'), ClauseEquals(equals='glm-5.3')]),
+                name='GLM-5.3',
+                description='Zhipu AI flagship model supporting 1,000,000 token context, long-horizon coding tasks, structured output, function calling, and context caching.',
+                context_window=1000000,
+                price_comments='Standard API rates are 8 CNY input, 2 CNY cached input, and 28 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.103'), cache_read_mtok=Decimal('0.276'), output_mtok=Decimal('3.862')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.3-Flash',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3-Flash'), ClauseEquals(equals='glm-5.3-flash')]),
+                name='GLM-5.3-Flash',
+                description="Zhipu AI's native multimodal GLM-5.3 model with a 1,000,000 token context window, function calling, always-on reasoning, and context caching.",
+                context_window=1000000,
+                price_comments='The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY. The pricing page marks this as a two-week 50% discount; list prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.055'), cache_read_mtok=Decimal('0.016'), output_mtok=Decimal('0.193')
                 ),
             ),
         ],

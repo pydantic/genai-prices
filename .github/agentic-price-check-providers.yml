@@ -51,9 +51,15 @@ providers:
     file: prices/providers/moonshotai.yml
     scope: Public Moonshot platform chat models.
     sources:
-      - https://platform.moonshot.ai/docs/pricing/chat#product-pricing
+      - https://platform.kimi.ai/docs/models.md
+      - https://platform.kimi.ai/docs/pricing/chat-k3.md
+      - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+      - https://platform.kimi.ai/docs/pricing/chat-k26.md
+      - https://platform.kimi.ai/docs/pricing/chat-k25.md
+      - https://platform.kimi.ai/docs/pricing/chat-v1.md
     notes: >-
-      Match exact API model IDs. Compare cache-hit, input, and output columns separately when the page publishes them.
+      models.md is the catalog and lists discontinued models; the other sources are plain-markdown pricing pages, one per
+      model family (index: https://platform.kimi.ai/docs/llms.txt). The pricing/chat overview page has no per-model prices. Match exact API model IDs. Compare cache-hit, input, and output columns separately when the page publishes them.
 
   - name: Avian
     file: prices/providers/avian.yml

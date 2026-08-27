@@ -71,8 +71,12 @@ cloudflare-get: ## get cloudflare workers ai prices
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
 
+.PHONY: quicksilverpro-get
+quicksilverpro-get: ## get quicksilver pro prices
+	uv run -m prices get_quicksilverpro_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get cloudflare-get ovhcloud-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get cloudflare-get ovhcloud-get quicksilverpro-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

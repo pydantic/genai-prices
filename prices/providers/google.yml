@@ -646,7 +646,9 @@ models:
     match:
       or:
         - equals: gemini-2.5-flash-lite
-        - starts_with: gemini-2.5-flash-lite-preview
+        - and:
+            - starts_with: gemini-2.5-flash-lite-preview
+            - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     context_window: 1000000
     prices_checked: 2025-10-31
     prices:
@@ -655,6 +657,17 @@ models:
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
+
+  - id: gemini-2.5-flash-lite-preview-tts
+    name: Gemini 2.5 Flash-Lite Preview TTS
+    match:
+      equals: gemini-2.5-flash-lite-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
 
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
@@ -676,6 +689,19 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
+  - id: gemini-2.5-flash-tts
+    name: Gemini 2.5 Flash TTS
+    match:
+      or:
+        - equals: gemini-2.5-flash-tts
+        - equals: gemini-2.5-flash-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
+
   - id: gemini-2.5-pro
     name: Gemini 2.5 Pro
     description: >-
@@ -685,7 +711,9 @@ models:
       including first-place positioning on the LMArena leaderboard, reflecting superior
       human-preference alignment and complex problem-solving abilities.
     match:
-      starts_with: gemini-2.5-pro
+      and:
+        - starts_with: gemini-2.5-pro
+        - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
     prices_checked: 2025-10-31
     prices:
@@ -704,6 +732,19 @@ models:
         tiers:
           - start: 200000
             price: 15
+
+  - id: gemini-2.5-pro-tts
+    name: Gemini 2.5 Pro TTS
+    match:
+      or:
+        - equals: gemini-2.5-pro-tts
+        - equals: gemini-2.5-pro-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 1
+      output_mtok: 20
 
   - id: gemini-3-flash-preview
     name: Gemini 3 Flash Preview
@@ -1143,11 +1184,29 @@ models:
       parameters, only 3.8B activate per token during inference.
     match:
       equals: gemma-4-26b-a4b-it
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Gemini API model ID. Free of charge on the Gemini API with no paid tier, see
+      https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the
+      gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.
+    prices: {}
+
+  - id: gemma-4-26b-a4b-it-maas
+    name: Gemma 4 26B A4B (Vertex AI MaaS)
+    description: >-
+      Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.
+    match:
+      equals: gemma-4-26b-a4b-it-maas
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from
+      https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.33
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.6
 
   - id: gemma-4-31b-it
     name: Gemma 4 31B
@@ -1156,9 +1215,10 @@ models:
       It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.
     match:
       equals: gemma-4-31b-it
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
-    prices:
-      input_mtok: 0.12
-      cache_read_mtok: 0.09
-      output_mtok: 0.36
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered
+      as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as
+      endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.
+    prices: {}

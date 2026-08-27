@@ -3,7 +3,7 @@ name: Microsoft Azure
 id: azure
 pricing_urls:
   - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing
-api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
+api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com|services\.ai\.azure\.com)
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.
   Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models
@@ -16,6 +16,9 @@ extractors:
         dest: input_tokens
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: [prompt_tokens_details, audio_tokens]
         dest: input_audio_tokens
@@ -36,6 +39,9 @@ extractors:
         dest: input_tokens
       - path: [input_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: [output_tokens_details, reasoning_tokens]
         dest: output_reasoning_tokens
@@ -106,9 +112,15 @@ extractors:
       - path: output_tokens
         dest: output_tokens
 
+# Azure AI Foundry also serves third-party "marketplace" models (DeepSeek, xAI Grok, Moonshot Kimi, ...)
+# from the same endpoints. Azure does not publish machine-readable prices for them, so a model that is
+# not listed above is priced through the origin provider - see #455.
 fallback_model_providers:
   - openai
   - anthropic
+  - deepseek
+  - x-ai
+  - moonshotai
 
 models:
   - id: ada
