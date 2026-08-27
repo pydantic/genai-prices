@@ -10213,10 +10213,20 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='google/gemma-4-31b-it'),
                 name='Gemma 4 31B',
                 context_window=262144,
-                price_comments='OpenRouter reports the cheapest active endpoint for this model (DeepInfra as of 2026-08-27). Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.34')
-                ),
+                price_comments='OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 27)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.34')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='google/gemma-4-31b-it:free',

@@ -2140,8 +2140,24 @@ def test_gemma_4_31b_prices():
     assert google.model.id == snapshot('gemma-4-31b-it')
     assert google.total_price == snapshot(Decimal('0'))
 
-    openrouter = calc_price(usage, model_ref='google/gemma-4-31b-it', provider_id='openrouter')
-    assert openrouter.model.id == snapshot('google/gemma-4-31b-it')
-    assert openrouter.input_price == snapshot(Decimal('0.070'))
-    assert openrouter.output_price == snapshot(Decimal('0.34'))
-    assert openrouter.total_price == snapshot(Decimal('0.410'))
+    # OpenRouter's cheapest endpoint moved on 2026-08-27; requests before that keep the old rate.
+    before = calc_price(
+        usage,
+        model_ref='google/gemma-4-31b-it',
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 8, 26, tzinfo=timezone.utc),
+    )
+    assert before.model.id == snapshot('google/gemma-4-31b-it')
+    assert before.input_price == snapshot(Decimal('0.105'))
+    assert before.output_price == snapshot(Decimal('0.36'))
+    assert before.total_price == snapshot(Decimal('0.465'))
+
+    after = calc_price(
+        usage,
+        model_ref='google/gemma-4-31b-it',
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 8, 27, tzinfo=timezone.utc),
+    )
+    assert after.input_price == snapshot(Decimal('0.070'))
+    assert after.output_price == snapshot(Decimal('0.34'))
+    assert after.total_price == snapshot(Decimal('0.410'))

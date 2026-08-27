@@ -17540,12 +17540,27 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         price_comments:
-          'OpenRouter reports the cheapest active endpoint for this model (DeepInfra as of 2026-08-27). Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
-        prices: {
-          input_mtok: 0.09,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.34,
-        },
+          'OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.12,
+              cache_read_mtok: 0.09,
+              output_mtok: 0.36,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-27',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.34,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-4-31b-it:free',
