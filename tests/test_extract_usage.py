@@ -233,10 +233,26 @@ def test_cloudflare_native_rest_usage() -> None:
     )
 
     assert extracted_usage.provider.id == 'cloudflare'
-    assert extracted_usage.model is None
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/meta/llama-3.2-1b-instruct'
     assert extracted_usage.usage == Usage(input_tokens=2_000_000, output_tokens=1_000_000)
-    model = next(model for model in extracted_usage.provider.models if model.id == '@cf/meta/llama-3.2-1b-instruct')
-    assert extracted_usage.calc_price(model=model).total_price == Decimal('0.255')
+    assert extracted_usage.calc_price().total_price == Decimal('0.255')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/example/unknown-model',
+        'https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+    ],
+)
+def test_cloudflare_native_rest_usage_without_known_url_model(provider_api_url: str) -> None:
+    response_data = {'result': {'usage': {'prompt_tokens': 2, 'completion_tokens': 1}}}
+
+    extracted_usage = extract_usage(response_data, provider_api_url=provider_api_url)
+
+    assert extracted_usage.model is None
+    assert extracted_usage.usage == Usage(input_tokens=2, output_tokens=1)
 
 
 def test_cloudflare_embeddings_usage() -> None:
