@@ -7776,7 +7776,12 @@ providers: list[Provider] = [
                 name='gpt 4.1',
                 description="GPT-4.1 is OpenAI's latest flagship model, offering major improvements in coding, instruction following, and long context understanding with up to 1 million tokens of context.",
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('8'),
+                    web_searches_kcount=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='gpt-4.1-mini',
@@ -7787,7 +7792,10 @@ providers: list[Provider] = [
                 description='GPT-4.1 Mini is a significant leap in small model performance, matching or exceeding GPT-4o in many benchmarks while reducing latency by nearly half and cost by 83%.',
                 context_window=1000000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.6')
+                    input_mtok=Decimal('0.4'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('1.6'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -7825,7 +7833,10 @@ providers: list[Provider] = [
                 description='GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning, creativity, and technical tasks while maintaining consistent output quality.',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -7850,7 +7861,10 @@ providers: list[Provider] = [
                 description='GPT-4o Mini is a cost-optimized variant of GPT-4o, designed for high-efficiency processing while maintaining strong performance. It excels in rapid inference and resource-efficient operations, making it ideal for production deployments requiring a balance of cost and capability.',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('0.6')
+                    input_mtok=Decimal('0.15'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('0.6'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -7942,7 +7956,10 @@ providers: list[Provider] = [
                 description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.125'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -7964,7 +7981,10 @@ providers: list[Provider] = [
                 description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                    input_mtok=Decimal('0.25'),
+                    cache_read_mtok=Decimal('0.025'),
+                    output_mtok=Decimal('2'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -7974,14 +7994,19 @@ providers: list[Provider] = [
                 description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
+                    input_mtok=Decimal('0.05'),
+                    cache_read_mtok=Decimal('0.005'),
+                    output_mtok=Decimal('0.4'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
                 id='gpt-5-pro',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-pro'), ClauseEquals(equals='gpt-5-pro-2025-10-06')]),
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('15'), output_mtok=Decimal('120'), web_searches_kcount=Decimal('10')
+                ),
             ),
             ModelInfo(
                 id='gpt-5.1',
@@ -8005,7 +8030,10 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.125'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8044,7 +8072,10 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                    input_mtok=Decimal('1.75'),
+                    cache_read_mtok=Decimal('0.175'),
+                    output_mtok=Decimal('14'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8058,7 +8089,9 @@ providers: list[Provider] = [
                 ),
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('21'), output_mtok=Decimal('168'), web_searches_kcount=Decimal('10')
+                ),
             ),
             ModelInfo(
                 id='gpt-5.3',
@@ -8108,6 +8141,7 @@ providers: list[Provider] = [
                         base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8132,7 +8166,10 @@ providers: list[Provider] = [
                 description='Our strongest mini model yet for coding, computer use, and subagents.',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                    input_mtok=Decimal('0.75'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('4.5'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8149,7 +8186,10 @@ providers: list[Provider] = [
                 description='Our cheapest GPT-5.4-class model for simple high-volume tasks.',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
+                    input_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.02'),
+                    output_mtok=Decimal('1.25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8168,6 +8208,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8196,6 +8237,7 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
                     output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8215,6 +8257,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8242,6 +8285,7 @@ providers: list[Provider] = [
                                 base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
                             ),
                             output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -8259,6 +8303,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -8292,6 +8337,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -8307,6 +8353,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -8340,6 +8387,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -8355,6 +8403,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -8598,13 +8647,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
+                            input_mtok=Decimal('10'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('40'),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('8'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -8650,7 +8705,10 @@ providers: list[Provider] = [
                 name='o4 Mini High',
                 description='OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('4.4')
+                    input_mtok=Decimal('1.1'),
+                    cache_read_mtok=Decimal('0.275'),
+                    output_mtok=Decimal('4.4'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
