@@ -13,14 +13,18 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
   pull-requests: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_sha }}
   cancel-in-progress: false
-if: ${{ needs.eligibility.outputs.eligible == 'true' }}
+if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' && needs.eligibility.outputs.eligible == 'true' }}
 engine:
   id: pydantic-ai
 model: copilot/claude-sonnet-4-5
+sandbox:
+  agent:
+    id: awf
 safe-outputs:
   needs: [eligibility]
   footer: false
@@ -41,7 +45,7 @@ safe-outputs:
     footer: always
     supersede-older-reviews: true
 imports:
-  - github/gh-aw/.github/workflows/shared/pydantic.md@db25fdfdb4ad50c5b0d10de9977b709401760378
+  - shared/pydantic.md
 jobs:
   eligibility:
     runs-on: ubuntu-latest
