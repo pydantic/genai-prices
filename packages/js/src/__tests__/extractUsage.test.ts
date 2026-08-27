@@ -327,6 +327,16 @@ describe('extractUsage', () => {
         ).model
       ).toBeNull()
       expect(extractUsage(cloudflareProvider, responseData).model).toBeNull()
+      for (const suffix of ['?next=/ai/run/@cf/meta/llama-3.2-1b-instruct', '#/ai/run/@cf/meta/llama-3.2-1b-instruct']) {
+        expect(
+          extractUsage(
+            cloudflareProvider,
+            responseData,
+            'default',
+            `https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1${suffix}`
+          ).model
+        ).toBeNull()
+      }
     })
   })
 

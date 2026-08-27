@@ -30,7 +30,8 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   let model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
   if (model === null && provider.id === 'cloudflare' && providerApiUrl !== undefined) {
-    const modelRef = providerApiUrl.split('/ai/run/', 2)[1]?.split(/[?#]/, 1)[0]
+    const requestUrl = providerApiUrl.split(/[?#]/, 1)[0]
+    const modelRef = requestUrl?.split('/ai/run/', 2)[1]
     if (modelRef && provider.models.some((candidate) => matchLogic(candidate.match, modelRef))) {
       model = modelRef
     }
