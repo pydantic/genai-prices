@@ -2024,7 +2024,7 @@ providers: list[Provider] = [
             'https://developers.cloudflare.com/workers-ai/platform/pricing/',
             'https://developers.cloudflare.com/workers-ai/models/',
         ],
-        price_comments="Paid Workers plan rates, expressed using Cloudflare's token-equivalent prices. Calculations do not apply the account-wide free allocation of 10,000 Neurons per day. Image and audio models are omitted because their billing units are not representable by the published v2 unit registry.",
+        price_comments="Paid Workers plan rates, expressed using Cloudflare's token-equivalent prices. Calculations do not apply the account-wide free allocation of 10,000 Neurons per day. This provider entry deliberately covers only models with token-equivalent prices. Image and audio models are omitted.",
         model_match=ClauseStartsWith(starts_with='@cf/'),
         provider_match=ClauseContains(contains='cloudflare'),
         extractors=[

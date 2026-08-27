@@ -67,7 +67,7 @@ def update_cloudflare_provider(provider_yaml: ProviderYaml, models: list[ModelIn
         if matching_model is None:
             models_added += provider_yaml.add_model(model)
         else:
-            provider_yaml.update_model(matching_model.id, model, set_prices=True)
+            provider_yaml.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
             models_updated += 1
     provider_yaml.save()
     return models_added, models_updated

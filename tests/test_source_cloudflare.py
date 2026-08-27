@@ -8,7 +8,7 @@ from shutil import copyfile
 import pytest
 
 from prices import source_cloudflare
-from prices.prices_types import ModelPrice
+from prices.prices_types import ModelPrice, StartDateConstraint
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
@@ -79,7 +79,10 @@ models:
     match: {equals: '@cf/example/first'}
     deprecated: true
     price_discrepancies: {source: old}
-    prices: {input_mtok: 9}
+    prices:
+      - prices: {input_mtok: 8}
+      - constraint: {start_date: 2025-01-01}
+        prices: {input_mtok: 9}
 """
     )
     monkeypatch.setattr(source_cloudflare, 'MIN_MODEL_COUNT', 3)
@@ -100,11 +103,25 @@ models:
     assert first.deprecated is True
     assert first.price_discrepancies is None
     assert first.prices_checked == date.today()
-    assert isinstance(first.prices, ModelPrice)
-    assert first.prices.input_mtok == Decimal('0.100')
+    assert isinstance(first.prices, list)
+    assert first.prices[0].constraint is None
+    assert first.prices[0].prices.input_mtok == Decimal('8')
+    assert first.prices[1].prices.input_mtok == Decimal('9')
+    constraint = first.prices[2].constraint
+    assert isinstance(constraint, StartDateConstraint)
+    assert constraint.start_date == date.today()
+    assert first.prices[2].prices.input_mtok == Decimal('0.100')
     classifier = provider.find_model('@cf/example/classifier')
     assert classifier is not None
     assert classifier.prices_checked == date.today()
+
+    source_cloudflare.update_cloudflare_provider(
+        ProviderYaml(provider_path), source_cloudflare.parse_pricing_markdown(PRICING_MARKDOWN)
+    )
+    first = ProviderYaml(provider_path).provider.find_model('@cf/example/first')
+    assert first is not None
+    assert isinstance(first.prices, list)
+    assert len(first.prices) == 3
 
 
 @pytest.mark.vcr()

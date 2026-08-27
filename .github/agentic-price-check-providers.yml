@@ -101,5 +101,5 @@ providers:
       - https://developers.cloudflare.com/workers-ai/platform/pricing/index.md
     notes: >-
       Compare per-million input, cached-input, and output token prices with input_mtok, cache_read_mtok, and output_mtok. Ignore
-      the account-wide free Neuron allocation. Models billed by image, tile, step, character, or audio-minute units are outside
-      this YAML's scope because those units are not representable by the published v2 unit registry.
+      the account-wide free Neuron allocation. This YAML deliberately covers only token-priced models. Do not add image, tile,
+      step, character, or audio-minute prices during this check.

@@ -62,7 +62,8 @@ When the official source is public and structured, add `prices/src/prices/source
 
 - fetch with `httpx2`
 - parse prices as `Decimal`
-- update prices and `prices_checked` while preserving curated names, aliases, context windows, and lifecycle flags
+- update `prices_checked` while preserving curated names, aliases, context windows, and lifecycle flags
+- append changed rates as dated conditional prices instead of overwriting pricing history
 - add newly discovered in-scope models
 - refuse empty or suspiciously small results before writing
 - fail loudly when the source is unreadable or changes shape

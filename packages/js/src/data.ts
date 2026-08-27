@@ -3348,7 +3348,7 @@ export const data: Provider[] = [
     ],
     api_pattern: 'https://api\\.cloudflare\\.com/client/v4/accounts/[^/]+/ai(?:/|$)',
     price_comments:
-      "Paid Workers plan rates, expressed using Cloudflare's token-equivalent prices. Calculations do not apply the account-wide free allocation of 10,000 Neurons per day. Image and audio models are omitted because their billing units are not representable by the published v2 unit registry.",
+      "Paid Workers plan rates, expressed using Cloudflare's token-equivalent prices. Calculations do not apply the account-wide free allocation of 10,000 Neurons per day. This provider entry deliberately covers only models with token-equivalent prices. Image and audio models are omitted.",
     model_match: {
       starts_with: '@cf/',
     },
