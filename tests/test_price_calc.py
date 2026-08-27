@@ -2131,3 +2131,45 @@ def test_grok_4_6_long_context_cliff():
         provider_id='x-ai',
     )
     assert mixed.total_price == snapshot(Decimal('1.182'))
+
+
+def test_gemma_4_31b_prices():
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=500_000, output_tokens=1_000_000)
+
+    # Gemini API is free; Vertex AI has no per-token price for the self-deployed 31B.
+    google = calc_price(usage, model_ref='gemma-4-31b-it', provider_id='google')
+    assert google.model.id == snapshot('gemma-4-31b-it')
+    assert google.total_price == snapshot(Decimal('0'))
+
+    # The Gemini API ID for the 26B is free too; only the Vertex MaaS ID is paid.
+    gemini_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it', provider_id='google')
+    assert gemini_26b.model.id == snapshot('gemma-4-26b-a4b-it')
+    assert gemini_26b.total_price == snapshot(Decimal('0'))
+
+    vertex_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it-maas', provider_id='google')
+    assert vertex_26b.model.id == snapshot('gemma-4-26b-a4b-it-maas')
+    assert vertex_26b.input_price == snapshot(Decimal('0.0825'))
+    assert vertex_26b.output_price == snapshot(Decimal('0.6'))
+    assert vertex_26b.total_price == snapshot(Decimal('0.6825'))
+
+    # OpenRouter's cheapest endpoint moved on 2026-08-27; requests before that keep the old rate.
+    before = calc_price(
+        usage,
+        model_ref='google/gemma-4-31b-it',
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 8, 26, tzinfo=timezone.utc),
+    )
+    assert before.model.id == snapshot('google/gemma-4-31b-it')
+    assert before.input_price == snapshot(Decimal('0.105'))
+    assert before.output_price == snapshot(Decimal('0.36'))
+    assert before.total_price == snapshot(Decimal('0.465'))
+
+    after = calc_price(
+        usage,
+        model_ref='google/gemma-4-31b-it',
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 8, 27, tzinfo=timezone.utc),
+    )
+    assert after.input_price == snapshot(Decimal('0.070'))
+    assert after.output_price == snapshot(Decimal('0.34'))
+    assert after.total_price == snapshot(Decimal('0.410'))

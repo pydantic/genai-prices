@@ -3705,18 +3705,29 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemma-4-26b-a4b-it'),
                 name='Gemma 4 26B A4B',
                 description='Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference.',
-                price_comments='Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.33')),
+                context_window=262144,
+                price_comments='Gemini API model ID. Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='gemma-4-26b-a4b-it-maas',
+                match=ClauseEquals(equals='gemma-4-26b-a4b-it-maas'),
+                name='Gemma 4 26B A4B (Vertex AI MaaS)',
+                description='Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.',
+                context_window=262144,
+                price_comments='Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                ),
             ),
             ModelInfo(
                 id='gemma-4-31b-it',
                 match=ClauseEquals(equals='gemma-4-31b-it'),
                 name='Gemma 4 31B',
                 description="Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output. It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.",
-                price_comments='Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
-                ),
+                context_window=262144,
+                price_comments='Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
             ),
         ],
     ),
@@ -10219,9 +10230,21 @@ providers: list[Provider] = [
                 id='google/gemma-4-31b-it',
                 match=ClauseEquals(equals='google/gemma-4-31b-it'),
                 name='Gemma 4 31B',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
-                ),
+                context_window=262144,
+                price_comments='OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.12'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('0.36')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 27)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.34')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='google/gemma-4-31b-it:free',

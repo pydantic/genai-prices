@@ -6205,10 +6205,25 @@ export const data: Provider[] = [
         match: {
           equals: 'gemma-4-26b-a4b-it',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
+        context_window: 262144,
+        price_comments:
+          'Gemini API model ID. Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.',
+        prices: {},
+      },
+      {
+        id: 'gemma-4-26b-a4b-it-maas',
+        name: 'Gemma 4 26B A4B (Vertex AI MaaS)',
+        description: 'Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.',
+        match: {
+          equals: 'gemma-4-26b-a4b-it-maas',
+        },
+        context_window: 262144,
+        price_comments:
+          'Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.',
         prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.33,
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
         },
       },
       {
@@ -6219,12 +6234,10 @@ export const data: Provider[] = [
         match: {
           equals: 'gemma-4-31b-it',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.',
-        prices: {
-          input_mtok: 0.12,
-          cache_read_mtok: 0.09,
-          output_mtok: 0.36,
-        },
+        context_window: 262144,
+        price_comments:
+          'Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.',
+        prices: {},
       },
     ],
   },
@@ -17550,11 +17563,29 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-31b-it',
         },
-        prices: {
-          input_mtok: 0.12,
-          cache_read_mtok: 0.09,
-          output_mtok: 0.36,
-        },
+        context_window: 262144,
+        price_comments:
+          'OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.12,
+              cache_read_mtok: 0.09,
+              output_mtok: 0.36,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-27',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.34,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-4-31b-it:free',

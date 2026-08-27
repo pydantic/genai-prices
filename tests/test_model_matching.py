@@ -339,6 +339,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('mistral_ai', 'magistral-medium', snapshot(('mistral', 'magistral-medium'))),
     ('gcp.vertex.agent', 'gemini-2.0-flash', snapshot(('google', 'gemini-2.0-flash'))),
     ('google-gla', 'gemma-3n-e4b-it', snapshot(('google', 'gemma-3n'))),
+    ('google-gla', 'gemma-4-31b-it', snapshot(('google', 'gemma-4-31b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it', snapshot(('google', 'gemma-4-26b-a4b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it-maas', snapshot(('google', 'gemma-4-26b-a4b-it-maas'))),
+    ('openrouter', 'google/gemma-4-31b-it', snapshot(('openrouter', 'google/gemma-4-31b-it'))),
     ('google-gla', 'gemini-2.5-flash-latest', snapshot(('google', 'gemini-2.5-flash'))),
     pytest.param(
         'bedrock',
