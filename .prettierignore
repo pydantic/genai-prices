@@ -17,3 +17,5 @@
 # Vendored gh-aw engine definitions, copied verbatim from their upstream source
 # so they can be diffed against it — must stay byte-exact, never reformat.
 /.github/workflows/shared/
+# Plain glob patterns, not Markdown prose.
+/.macroscope/ignore.md
