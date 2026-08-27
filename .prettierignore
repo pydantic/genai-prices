@@ -16,3 +16,5 @@
 
 # API Extractor owns the formatting of its committed compatibility report.
 /packages/js/api-report/
+# Plain glob patterns, not Markdown prose.
+/.macroscope/ignore.md
