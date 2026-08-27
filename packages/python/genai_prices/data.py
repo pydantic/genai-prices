@@ -3800,7 +3800,7 @@ providers: list[Provider] = [
         id='groq',
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
-        pricing_urls=['https://groq.com/pricing/'],
+        pricing_urls=['https://console.groq.com/docs/models'],
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -6567,7 +6567,7 @@ providers: list[Provider] = [
         id='mistral',
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
-        pricing_urls=['https://mistral.ai/pricing#api-pricing'],
+        pricing_urls=['https://mistral.ai/pricing/api'],
         model_match=ClauseRegex(
             regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
         ),
@@ -7105,7 +7105,13 @@ providers: list[Provider] = [
         id='moonshotai',
         name='MoonshotAi',
         api_pattern='https://api\\.moonshot\\.',
-        pricing_urls=['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+        pricing_urls=[
+            'https://platform.kimi.ai/docs/pricing/chat-k3.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k26.md',
+            'https://platform.kimi.ai/docs/pricing/chat-k25.md',
+            'https://platform.kimi.ai/docs/pricing/chat-v1.md',
+        ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='kimi'), ClauseStartsWith(starts_with='moonshot')]),
         provider_match=ClauseContains(contains='moonshot'),
         extractors=[

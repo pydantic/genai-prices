@@ -70,6 +70,7 @@ network:
     - api.cerebras.ai
     - platform.minimax.io
     - platform.moonshot.ai
+    - platform.kimi.ai
     - avian.io
     - docs.perplexity.ai
     - cohere.com

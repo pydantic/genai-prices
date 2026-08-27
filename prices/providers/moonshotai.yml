@@ -2,7 +2,11 @@
 name: MoonshotAi
 id: moonshotai
 pricing_urls:
-  - https://platform.moonshot.ai/docs/pricing/chat#product-pricing
+  - https://platform.kimi.ai/docs/pricing/chat-k3.md
+  - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+  - https://platform.kimi.ai/docs/pricing/chat-k26.md
+  - https://platform.kimi.ai/docs/pricing/chat-k25.md
+  - https://platform.kimi.ai/docs/pricing/chat-v1.md
 api_pattern: 'https://api\.moonshot\.'
 model_match:
   or:

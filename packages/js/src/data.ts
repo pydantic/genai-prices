@@ -6356,7 +6356,7 @@ export const data: Provider[] = [
   {
     id: 'groq',
     name: 'Groq',
-    pricing_urls: ['https://groq.com/pricing/'],
+    pricing_urls: ['https://console.groq.com/docs/models'],
     api_pattern: 'https://api\\.groq\\.com',
     extractors: [
       {
@@ -11139,7 +11139,7 @@ export const data: Provider[] = [
   {
     id: 'mistral',
     name: 'Mistral',
-    pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
+    pricing_urls: ['https://mistral.ai/pricing/api'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
       regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
@@ -12111,7 +12111,13 @@ export const data: Provider[] = [
   {
     id: 'moonshotai',
     name: 'MoonshotAi',
-    pricing_urls: ['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+    pricing_urls: [
+      'https://platform.kimi.ai/docs/pricing/chat-k3.md',
+      'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+      'https://platform.kimi.ai/docs/pricing/chat-k26.md',
+      'https://platform.kimi.ai/docs/pricing/chat-k25.md',
+      'https://platform.kimi.ai/docs/pricing/chat-v1.md',
+    ],
     api_pattern: 'https://api\\.moonshot\\.',
     model_match: {
       or: [
