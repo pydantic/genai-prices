@@ -193,6 +193,13 @@ it does not catch constraint-resolution, matching, warning or error-shape diverg
 - Type checking with basedpyright in strict mode
 - Follow existing patterns in the codebase
 
+## Releasing
+
+Create a GitHub release with a `vX.Y.Z` tag; CI publishes both packages from it. The version lives
+only in the tag - `packages/python/pyproject.toml` is `dynamic` (uv-dynamic-versioning) and the
+`0.0.0` in `packages/js/package.json` is a placeholder the release job overwrites. Never add a
+version bump to a PR. See `RELEASE.md`.
+
 ## Pull Requests
 
 After opening or updating a PR, don't go idle until it's genuinely in its desired end state. After
