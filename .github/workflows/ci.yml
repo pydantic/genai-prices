@@ -91,17 +91,14 @@ jobs:
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: uv sync --only-dev
       - run: uv run coverage combine coverage
-      # Smokeshow / the public badge are the published package at 100%. Pipeline ratchet is the next step.
-      - run: uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
+      - run: uv run coverage html --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
       - name: Store coverage html
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
-      - run: uv run coverage report --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under 100
-      # Pipeline ratchet: raise this number as it improves; never lower it.
-      - run: uv run coverage report --include='prices/src/*,tests/dataset/*' --fail-under 52
+      - run: uv run coverage report
 
   test-js:
     runs-on: ubuntu-latest

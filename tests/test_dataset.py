@@ -9,6 +9,7 @@ largest regression corpus in the repo.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -19,8 +20,6 @@ DATASET_DIR = Path(__file__).parent / 'dataset'
 
 @pytest.fixture(scope='module')
 def extract_usages_module():
-    # The dataset scripts import their sibling `utils` by bare name, so the directory has to be on the
-    # path before importing.
     sys.path.insert(0, str(DATASET_DIR))
     try:
         import extract_usages
@@ -36,3 +35,43 @@ def test_usages_dataset_is_up_to_date(extract_usages_module: object) -> None:
         'usages.json is stale. Run `python tests/dataset/extract_usages.py` to regenerate it, check the '
         'diff, and commit it - the JS suite asserts against this file.'
     )
+
+
+def test_main_reports_current_dataset(
+    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    current: list[dict[str, object]] = [{'body': {'file': 'recorded.json'}}]
+    monkeypatch.setattr(extract_usages_module, 'rebuild_usages', lambda: (current, current))
+
+    assert extract_usages_module.main() is None  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+    assert capsys.readouterr().out == 'usages.json is up to date.\n'
+
+
+def test_main_rejects_stale_dataset_without_writing(
+    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    current: list[dict[str, object]] = []
+    rebuilt: list[dict[str, object]] = [{'body': {'file': 'recorded.json'}}]
+    usages_file = tmp_path / 'usages.json'
+    usages_file.write_text('unchanged')
+    monkeypatch.setattr(extract_usages_module, 'this_dir', tmp_path)
+    monkeypatch.setattr(extract_usages_module, 'rebuild_usages', lambda: (current, rebuilt))
+
+    with pytest.raises(AssertionError, match='usages.json is out of date'):
+        extract_usages_module.main(write=False)  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+
+    assert usages_file.read_text() == 'unchanged'
+
+
+def test_main_writes_a_stale_dataset(
+    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    current: list[dict[str, object]] = []
+    rebuilt: list[dict[str, object]] = [{'body': {'file': 'recorded.json'}}]
+    monkeypatch.setattr(extract_usages_module, 'this_dir', tmp_path)
+    monkeypatch.setattr(extract_usages_module, 'rebuild_usages', lambda: (current, rebuilt))
+
+    with pytest.raises(AssertionError, match='usages.json updated'):
+        extract_usages_module.main()  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+
+    assert json.loads((tmp_path / 'usages.json').read_text()) == rebuilt
