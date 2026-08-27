@@ -116,21 +116,18 @@ def test_ovhcloud_main_writes_and_collapses_generated_provider(
     assert len([provider_yaml for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved]) == 1
 
 
-def test_ovhcloud_main_reports_request_errors(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+def test_ovhcloud_main_exits_nonzero_on_request_errors(monkeypatch: pytest.MonkeyPatch):
     def fake_get(_: str, *, timeout: float) -> None:
         assert timeout == 30.0
         raise RuntimeError('not available')
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
-    source_ovhcloud.main()
+    with pytest.raises(SystemExit, match='Error fetching OVHcloud AI Endpoints models: not available'):
+        source_ovhcloud.main()
 
-    assert capsys.readouterr().out == 'Error fetching OVHcloud AI Endpoints models: not available\n'
 
-
-def test_ovhcloud_main_reports_when_no_models_have_prices(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-):
+def test_ovhcloud_main_exits_nonzero_when_no_models_have_prices(monkeypatch: pytest.MonkeyPatch):
     class FakeResponse:
         def raise_for_status(self) -> None:
             pass
@@ -149,6 +146,5 @@ def test_ovhcloud_main_reports_when_no_models_have_prices(
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
-    source_ovhcloud.main()
-
-    assert capsys.readouterr().out == 'No valid models found with pricing information\n'
+    with pytest.raises(SystemExit, match='No valid models found with pricing information'):
+        source_ovhcloud.main()

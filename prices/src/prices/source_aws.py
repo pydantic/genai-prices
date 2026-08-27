@@ -254,6 +254,8 @@ def main():
     pricing_client = boto3.client('pricing', region_name='us-east-1')  # pyright: ignore[reportUnknownMemberType]
     bedrock_client = boto3.client('bedrock', region_name=target_region)  # pyright: ignore[reportUnknownMemberType]
     model_infos = get_model_infos(pricing_client, bedrock_client)
+    if not model_infos:
+        raise SystemExit('Bedrock returned no priced models; nothing written')
     providers_yaml = get_providers_yaml()
 
     provider_yaml = providers_yaml['aws']
@@ -268,12 +270,11 @@ def main():
         else:
             models_updated += 1
 
-    if models_added or models_updated:
-        if models_added:
-            print(f'  {models_added} models added')
-        if models_updated:
-            print(f'  {models_updated} models updated')
-        provider_yaml.save()
+    if models_added:
+        print(f'  {models_added} models added')
+    if models_updated:
+        print(f'  {models_updated} models updated')
+    provider_yaml.save()
 
 
 if __name__ == '__main__':

@@ -114,3 +114,17 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
     assert [provider_yaml.path.name for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved] == [
         'huggingface_together.yml'
     ]
+
+
+def test_huggingface_main_exits_nonzero_on_empty_payload(monkeypatch: pytest.MonkeyPatch):
+    class FakeResponse:
+        def json(self) -> dict[str, list[dict[str, object]]]:
+            return {'data': []}
+
+    def fake_get(_url: str) -> FakeResponse:
+        return FakeResponse()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+
+    with pytest.raises(SystemExit, match='HuggingFace router returned no models'):
+        source_huggingface.main()
