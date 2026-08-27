@@ -6569,7 +6569,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing/api'],
         model_match=ClauseRegex(
-            regex='^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
+            regex='^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))'
         ),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[

@@ -1033,6 +1033,12 @@ def test_devstral_small_price():
     assert price.output_price == Decimal('0.0003')
     assert price.total_price == Decimal('0.0013')
 
+    inferred = calc_price(Usage(input_tokens=10_000), model_ref='labs-devstral-small-2512')
+
+    assert inferred.provider.id == 'mistral'
+    assert inferred.model.id == 'devstral-small'
+    assert inferred.input_price == Decimal('0.001')
+
 
 def test_openai_file_search_price():
     price = calc_price(
