@@ -495,6 +495,19 @@ def test_moonshotai_kimi_k27_code_price():
     assert price.total_price == Decimal('0.001274')
 
 
+def test_moonshotai_kimi_k27_code_highspeed_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
+        model_ref='kimi-k2.7-code-highspeed',
+        provider_id='moonshotai',
+    )
+
+    assert price.model.id == 'kimi-k2.7-code-highspeed'
+    assert price.input_price == Decimal('0.001748')
+    assert price.output_price == Decimal('0.0008')
+    assert price.total_price == Decimal('0.002548')
+
+
 def test_openrouter_kimi_k27_code_price():
     price = calc_price(
         Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
