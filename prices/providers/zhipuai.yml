@@ -27,6 +27,9 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
 
@@ -240,3 +243,43 @@ models:
       input_mtok: 1.103
       cache_read_mtok: 0.276
       output_mtok: 3.862
+
+  - id: GLM-5.3
+    name: GLM-5.3
+    description: >-
+      Zhipu AI flagship model supporting 1,000,000 token context, long-horizon
+      coding tasks, structured output, function calling, and context caching.
+    match:
+      or:
+        - equals: GLM-5.3
+        - equals: glm-5.3
+    context_window: 1000000
+    prices_checked: "2026-08-26"
+    price_comments: >-
+      Standard API rates are 8 CNY input, 2 CNY cached input, and 28 CNY output
+      per million tokens, converted to USD at 1 USD = 7.25 CNY.
+    prices:
+      input_mtok: 1.103
+      cache_read_mtok: 0.276
+      output_mtok: 3.862
+
+  - id: GLM-5.3-Flash
+    name: GLM-5.3-Flash
+    description: >-
+      Zhipu AI's native multimodal GLM-5.3 model with a 1,000,000 token context
+      window, function calling, always-on reasoning, and context caching.
+    match:
+      or:
+        - equals: GLM-5.3-Flash
+        - equals: glm-5.3-flash
+    context_window: 1000000
+    prices_checked: "2026-08-26"
+    price_comments: >-
+      The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input,
+      and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY.
+      The pricing page marks this as a two-week 50% discount; list prices are
+      0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.
+    prices:
+      input_mtok: 0.055
+      cache_read_mtok: 0.016
+      output_mtok: 0.193

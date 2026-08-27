@@ -256,7 +256,8 @@ export function matchProvider(providers: Provider[], { modelId, providerApiUrl, 
   }
 
   if (providerApiUrl) {
-    return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
+    // Start-anchored, matching Python's `re.match`. The patterns themselves are unanchored.
+    return providers.find((p) => new RegExp(`^(?:${p.api_pattern})`).test(providerApiUrl))
   }
 
   if (modelId) {
@@ -268,7 +269,34 @@ export function matchModel(models: ModelInfo[], modelId: string): ModelInfo | un
   return models.find((m) => matchLogic(m.match, modelId))
 }
 
+const COMPACT_DATE_RE = /(-)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?=-|:|$)/g
+
+// Rewrite a compact date suffix like `-20251211` to the canonical `-2025-12-11` form. LiteLLM and
+// OpenRouter emit compact dated model refs (e.g. `gpt-5.2-20251211`) that don't match the dashed
+// aliases in the price data. Only used as a fallback, so models that match on the compact date form
+// are left untouched.
+export function normalizeCompactDatedRef(modelId: string): string {
+  return modelId.replace(COMPACT_DATE_RE, (match, prefix: string, year: string, month: string, day: string) => {
+    const parsed = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
+    if (parsed.getUTCFullYear() !== Number(year) || parsed.getUTCMonth() !== Number(month) - 1 || parsed.getUTCDate() !== Number(day)) {
+      return match
+    }
+    return `${prefix}${year}-${month}-${day}`
+  })
+}
+
 export function matchModelWithFallback(provider: Provider, modelId: string, allProviders?: Provider[]): ModelInfo | undefined {
+  const model = matchModelDirect(provider, modelId, allProviders)
+  if (model) return model
+
+  // LiteLLM/OpenRouter emit compact dated refs like `gpt-5.2-20251211`; retry with the canonical
+  // dashed form if the ref didn't match as-is.
+  const normalized = normalizeCompactDatedRef(modelId)
+  if (normalized !== modelId) return matchModelDirect(provider, normalized, allProviders)
+  return undefined
+}
+
+function matchModelDirect(provider: Provider, modelId: string, allProviders?: Provider[]): ModelInfo | undefined {
   const model = matchModel(provider.models, modelId)
   if (model) return model
 
@@ -277,7 +305,7 @@ export function matchModelWithFallback(provider: Provider, modelId: string, allP
       const fallbackProvider = allProviders.find((p) => p.id === fallbackProviderId)
       if (fallbackProvider) {
         // don't pass allProviders when falling back, so we can only have one step of fallback
-        const fallbackModel = matchModelWithFallback(fallbackProvider, modelId)
+        const fallbackModel = matchModelDirect(fallbackProvider, modelId)
         if (fallbackModel) return fallbackModel
       }
     }

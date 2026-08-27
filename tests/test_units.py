@@ -303,10 +303,16 @@ def test_repo_prices_omit_redundant_equal_rate_descendants() -> None:
                         continue
 
                     closest_depth = max(len(ancestor.dimensions) for ancestor, _ in ancestor_prices)
-                    if not any(
-                        ancestor_price == price_value
+                    equal_rate_ancestors = [
+                        ancestor
                         for ancestor, ancestor_price in ancestor_prices
-                        if len(ancestor.dimensions) == closest_depth
+                        if len(ancestor.dimensions) == closest_depth and ancestor_price == price_value
+                    ]
+                    if not equal_rate_ancestors:
+                        continue
+                    if any(
+                        ancestor.dimensions.get('direction') != unit.dimensions.get('direction')
+                        for ancestor in equal_rate_ancestors
                     ):
                         continue
 
@@ -1008,3 +1014,33 @@ def test_package_data_accepts_current_provider_extractor_destinations() -> None:
     registry = UnitRegistry(load_units())
 
     package_data.validate_provider_extractor_destinations(data.providers, registry)
+
+
+def test_package_data_accepts_current_provider_extractor_reasoning_coverage() -> None:
+    package_data.validate_provider_extractor_reasoning_coverage(data.providers)
+
+
+def test_package_data_extractor_validation_rejects_unmapped_reasoning_tokens() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+        extractors=[
+            build_types.UsageExtractor.model_construct(
+                root='usage',
+                mappings=[
+                    _build_extractor_mapping('prompt_tokens', 'input_tokens'),
+                    _build_extractor_mapping('completion_tokens', 'output_tokens'),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid extractor for testing/chat: Missing output_reasoning_tokens mapping: '
+            'extractors reading completion_tokens must also map reasoning tokens'
+        ),
+    ):
+        package_data.validate_provider_extractor_reasoning_coverage([provider])

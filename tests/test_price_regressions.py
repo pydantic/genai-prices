@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import date, datetime
 from decimal import Decimal
 
@@ -20,6 +21,103 @@ THOUSAND = Decimal(1_000)
 
 def mtok(rate: str, tokens: int) -> Decimal:
     return Decimal(rate) * tokens / MILLION
+
+
+@pytest.mark.parametrize('model_ref', ['command-a', 'command-a-03-2025'])
+def test_cohere_command_a_known_ids(model_ref: str) -> None:
+    price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='cohere')
+
+    assert price.model.id == 'command-a'
+
+
+def test_cohere_command_a_variants_do_not_use_command_a_prices() -> None:
+    with pytest.raises(LookupError, match="Unable to find model with model_ref='command-a-plus-05-2026' in cohere"):
+        calc_price(Usage(input_tokens=1), model_ref='command-a-plus-05-2026', provider_id='cohere')
+
+
+def test_gemini_25_flash_context_window() -> None:
+    price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
+
+    assert price.model.context_window == 1_048_576
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
+    [
+        ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),
+        ('whisper-large-v3', Decimal('0.111'), Usage(audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(0), input_audio_seconds=Decimal(5)),
+            Decimal(10),
+        ),
+        ('whisper-large-v3-turbo', Decimal('0.04'), Usage(input_audio_seconds=Decimal(1)), Decimal(10)),
+        (
+            'whisper-large-v3',
+            Decimal('0.111'),
+            Usage(audio_seconds=Decimal(10), input_audio_seconds=Decimal(10)),
+            Decimal(10),
+        ),
+        (
+            'whisper-large-v3-turbo',
+            Decimal('0.04'),
+            Usage(audio_seconds=Decimal(11), input_audio_seconds=Decimal(11)),
+            Decimal(11),
+        ),
+    ],
+)
+def test_groq_transcription_duration_prices(
+    model_ref: str,
+    hourly_rate: Decimal,
+    usage: Usage,
+    billed_seconds: Decimal,
+) -> None:
+    original_usage = copy(usage)
+    price = calc_price(usage, model_ref=model_ref, provider_id='groq')
+    expected_price = hourly_rate * billed_seconds / Decimal(3_600)
+
+    assert price.input_price == expected_price
+    assert price.output_price == 0
+    assert price.total_price == expected_price
+    assert usage == original_usage
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'seconds', 'expected_price'),
+    [
+        ('openai', 'gpt-transcribe', Decimal('0.5'), Decimal('0.0000375')),
+        ('openai', 'whisper-1', Decimal(30), Decimal('0.003')),
+        ('mistral', 'voxtral-mini-2602', Decimal(60), Decimal('0.003')),
+    ],
+)
+def test_transcription_duration_prices(
+    provider_id: str,
+    model_ref: str,
+    seconds: Decimal,
+    expected_price: Decimal,
+) -> None:
+    price = calc_price(
+        Usage(audio_seconds=seconds, input_audio_seconds=seconds),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.input_price == expected_price
+    assert price.output_price == 0
+    assert price.total_price == expected_price
+
+
+def test_openai_transcription_model_ids_fail_closed() -> None:
+    price = calc_price(
+        Usage(input_tokens=1, input_audio_tokens=1),
+        model_ref='gpt-4o-transcribe-diarize',
+        provider_id='openai',
+    )
+
+    assert price.model.id == 'gpt-4o-transcribe'
+    with pytest.raises(LookupError, match="model_ref='gpt-transcribe-diarize'"):
+        calc_price(Usage(), model_ref='gpt-transcribe-diarize', provider_id='openai')
 
 
 @pytest.mark.parametrize(
@@ -292,6 +390,18 @@ def test_model_price_decomposition_handles_audio_cache_overlap() -> None:
         'input_price': expected_input,
         'output_price': Decimal('0'),
         'total_price': expected_input,
+    }
+
+
+def test_model_price_decomposition_handles_fractional_usage() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')).calc_price(
+        Usage(input_tokens=0.3, cache_read_tokens=0.1)
+    )
+
+    assert price == {
+        'input_price': Decimal('0.0000004'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.0000004'),
     }
 
 

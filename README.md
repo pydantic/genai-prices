@@ -33,16 +33,16 @@ The following providers are currently supported:
 [comment]: <> (providers-start)
 
 - [Anthropic](prices/providers/anthropic.yml) - 23 models
-- [Avian](prices/providers/avian.yml) - 4 models
-- [AWS Bedrock](prices/providers/aws.yml) - 83 models
+- [Avian](prices/providers/avian.yml) - 17 models
+- [AWS Bedrock](prices/providers/aws.yml) - 86 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
-- [Google](prices/providers/google.yml) - 46 models
-- [Groq](prices/providers/groq.yml) - 29 models
+- [Google](prices/providers/google.yml) - 51 models
+- [Groq](prices/providers/groq.yml) - 31 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models
@@ -55,18 +55,19 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 31 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
+- [Mistral](prices/providers/mistral.yml) - 43 models
+- [Modal](prices/providers/modal.yml) - 2 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 86 models
-- [OpenRouter](prices/providers/openrouter.yml) - 690 models
+- [OpenAI](prices/providers/openai.yml) - 88 models
+- [OpenRouter](prices/providers/openrouter.yml) - 695 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
-- [X AI](prices/providers/x_ai.yml) - 17 models
-- [Z.AI](prices/providers/zai.yml) - 1 models
-- [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
+- [X AI](prices/providers/x_ai.yml) - 18 models
+- [Z.AI](prices/providers/zai.yml) - 3 models
+- [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
 
 [comment]: <> (providers-end)
 

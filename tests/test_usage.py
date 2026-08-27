@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import json
+from collections import UserDict
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
-from types import SimpleNamespace
-from typing import Any
+from decimal import Decimal, localcontext
+from numbers import Integral
+from types import MappingProxyType, SimpleNamespace
+from typing import Any, cast
 from unittest.mock import patch
 
 import pytest
 
-from genai_prices.types import Usage
+from genai_prices.types import ModelPrice, Usage
 from genai_prices.units import UnitRegistry
 
 
@@ -28,10 +32,43 @@ def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
     assert usage.output_tokens == 0
 
 
-@pytest.mark.parametrize('value', [-1, 1.5, float('NaN'), float('Infinity'), True])
+@pytest.mark.parametrize(
+    'value',
+    [
+        -1,
+        -0.1,
+        float('NaN'),
+        float('Infinity'),
+        Decimal('-0.1'),
+        Decimal('NaN'),
+        Decimal('Infinity'),
+        True,
+        1 + 2j,
+    ],
+)
 def test_usage_direct_construction_rejects_invalid_reported_values(value: Any) -> None:
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int, float, or Decimal'
+    ):
         Usage(input_tokens=value)
+
+
+def test_usage_direct_construction_preserves_float_values() -> None:
+    usage = Usage(audio_seconds=0.125, input_tokens=3.0)
+
+    assert usage.__dict__ == {'audio_seconds': 0.125, 'input_tokens': 3.0}
+    assert type(usage.audio_seconds) is float
+    assert type(usage.input_tokens) is float
+    assert json.loads(json.dumps(usage.__dict__)) == usage.__dict__
+
+
+def test_usage_direct_construction_preserves_decimal_values() -> None:
+    value = Decimal('3.00')
+
+    usage = Usage(audio_seconds=value)
+
+    assert usage.audio_seconds is value
+    assert usage.__dict__ == {'audio_seconds': Decimal('3.00')}
 
 
 def test_usage_direct_construction_normalizes_integer_subclasses() -> None:
@@ -39,6 +76,25 @@ def test_usage_direct_construction_normalizes_integer_subclasses() -> None:
         pass
 
     usage = Usage(input_tokens=TokenCount(100))
+
+    assert usage.input_tokens == 100
+    assert type(usage.input_tokens) is int
+
+
+def test_usage_direct_construction_normalizes_integral_implementations() -> None:
+    class TokenCount:
+        def __init__(self, value: int) -> None:
+            self.value = value
+
+        def __int__(self) -> int:
+            return self.value
+
+        def __lt__(self, other: int) -> bool:
+            return self.value < other
+
+    Integral.register(TokenCount)
+
+    usage = Usage(input_tokens=cast(Any, TokenCount(100)))
 
     assert usage.input_tokens == 100
     assert type(usage.input_tokens) is int
@@ -89,7 +145,9 @@ def test_usage_assignment_updates_registered_reported_values() -> None:
 def test_usage_assignment_rejects_invalid_reported_values() -> None:
     usage = Usage()
 
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int, float, or Decimal'
+    ):
         usage.input_tokens = -1
 
 
@@ -101,10 +159,63 @@ def test_usage_missing_registered_reads_return_zero() -> None:
 
 
 def test_usage_addition_operates_on_reported_values() -> None:
-    assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=5) == Usage(
+    usage = Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=5)
+
+    assert usage == Usage(
         input_tokens=10,
         output_tokens=15,
     )
+    assert type(usage.input_tokens) is int
+    assert type(usage.output_tokens) is int
+
+
+def test_usage_addition_uses_shortest_decimal_float_values() -> None:
+    usage = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+
+    assert usage.audio_seconds == 0.3
+    assert type(usage.audio_seconds) is float
+
+
+def test_usage_addition_preserves_float_result_for_mixed_values() -> None:
+    usage = Usage(audio_seconds=1) + Usage(audio_seconds=0.25) + Usage(audio_seconds=2)
+
+    assert usage.audio_seconds == 3.25
+    assert type(usage.audio_seconds) is float
+
+
+def test_usage_addition_preserves_decimal_result() -> None:
+    usage = Usage(audio_seconds=Decimal('0.1')) + Usage(audio_seconds=Decimal('0.2'))
+
+    assert usage.audio_seconds == Decimal('0.3')
+    assert isinstance(usage.audio_seconds, Decimal)
+
+
+def test_usage_addition_promotes_mixed_decimal_float_and_integer_values() -> None:
+    usage = Usage(audio_seconds=Decimal('0.1')) + Usage(audio_seconds=0.2) + Usage(audio_seconds=1)
+
+    assert usage.audio_seconds == Decimal('1.3')
+    assert isinstance(usage.audio_seconds, Decimal)
+
+
+def test_usage_addition_ignores_ambient_decimal_context() -> None:
+    with localcontext() as context:
+        context.prec = 1
+        usage = Usage(audio_seconds=0.15) + Usage(audio_seconds=0.16)
+
+    assert usage.audio_seconds == 0.31
+
+
+def test_usage_decimal_addition_ignores_ambient_decimal_context() -> None:
+    with localcontext() as context:
+        context.prec = 1
+        usage = Usage(audio_seconds=Decimal('0.15')) + Usage(audio_seconds=Decimal('0.16'))
+
+    assert usage.audio_seconds == Decimal('0.31')
+
+
+def test_usage_addition_rejects_non_finite_float_result() -> None:
+    with pytest.raises(ValueError, match='Usage arithmetic produced a non-finite float'):
+        _ = Usage(audio_seconds=10**400) + Usage(audio_seconds=0.1)
 
 
 def test_usage_equality_operates_on_reported_values() -> None:
@@ -169,28 +280,49 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_ignores_mapping_keys() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
-
-    assert usage == Usage()
-
-
-def test_usage_from_raw_reads_known_object_attributes() -> None:
-    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50))
+@pytest.mark.parametrize(
+    'raw_usage',
+    [
+        {'input_tokens': 100, 'output_tokens': 50},
+        UserDict({'input_tokens': 100, 'output_tokens': 50}),
+        MappingProxyType({'input_tokens': 100, 'output_tokens': 50}),
+    ],
+)
+def test_usage_from_raw_reads_known_mapping_values(raw_usage: object) -> None:
+    usage = Usage.from_raw(raw_usage)
 
     assert usage == Usage(input_tokens=100, output_tokens=50)
 
+    price = ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
 
-def test_usage_from_raw_rejects_invalid_known_object_attributes() -> None:
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
-        Usage.from_raw(SimpleNamespace(input_tokens=1.5))
+    assert price.calc_price(raw_usage) == {
+        'input_price': Decimal('0.0001'),
+        'output_price': Decimal('0.0001'),
+        'total_price': Decimal('0.0002'),
+    }
+
+
+def test_usage_from_raw_reads_known_object_attributes() -> None:
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50, audio_seconds=0.125))
+
+    assert usage == Usage(input_tokens=100, output_tokens=50, audio_seconds=0.125)
+
+
+def test_usage_from_raw_preserves_decimal_known_object_attributes() -> None:
+    value = Decimal('1.5')
+
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=value))
+
+    assert usage.input_tokens is value
 
 
 def test_usage_from_raw_revalidates_existing_usage_storage() -> None:
     usage = Usage()
-    usage.__dict__['input_tokens'] = 1.5
+    usage.__dict__['input_tokens'] = Decimal('NaN')
 
-    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+    with pytest.raises(
+        ValueError, match='Invalid usage value for input_tokens: expected a finite non-negative int, float, or Decimal'
+    ):
         Usage.from_raw(usage)
 
 

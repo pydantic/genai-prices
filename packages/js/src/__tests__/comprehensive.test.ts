@@ -196,6 +196,103 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
+  describe('calcPrice - Deepseek V4 peak windows', () => {
+    // Deepseek V4 charges peak rates in two disjoint daily windows, so it has two constrained prices.
+    const hours: [hour: number, isPeak: boolean][] = [
+      [0, false], // before the first peak window
+      [1, true], // start of the first peak window, inclusive
+      [4, false], // end of the first peak window, exclusive
+      [5, false], // the gap between the two peak windows
+      [6, true], // start of the second peak window, inclusive
+      [9, true],
+      [10, false], // end of the second peak window, exclusive
+      [23, false],
+    ]
+    const models: [modelRef: string, offPeak: number, peak: number][] = [
+      ['deepseek-v4-flash', 22, 44],
+      ['deepseek-v4-pro', 66, 132],
+    ]
+    const cases = models.flatMap(([modelRef, offPeak, peak]) =>
+      hours.map(([hour, isPeak]): [string, number, number] => [modelRef, hour, isPeak ? peak : offPeak])
+    )
+
+    it.each(cases)('should charge %s the right rate at %i:00 UTC', (modelRef, hour, expected) => {
+      const usage: Usage = { input_tokens: 100_000_000 }
+      const result = calcPrice(usage, modelRef, {
+        providerId: 'deepseek',
+        timestamp: new Date(Date.UTC(2026, 7, 20, hour)),
+      })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+  })
+
+  describe('calcPrice - Deepseek V4 before the 2026-08-17 repricing', () => {
+    // The pre-repricing flat rate is the unconstrained first price, so it is preserved for the 17
+    // hours a day outside the two peak windows. `constraint` is a union, so the peak entries cannot
+    // also be gated on a start date, and inside those windows a pre-repricing request still
+    // resolves to the peak rate - see https://github.com/pydantic/genai-prices/issues/582.
+    const hours: [hour: number, inPeakWindow: boolean][] = [
+      [0, false],
+      [2, true], // inside a post-2026-08-17 peak window, so the old flat rate is shadowed
+      [12, false],
+      [23, false],
+    ]
+    const models: [modelRef: string, historic: number, peak: number][] = [
+      ['deepseek-v4-flash', 14, 44],
+      ['deepseek-v4-pro', 43.5, 132],
+    ]
+    const cases = models.flatMap(([modelRef, historic, peak]) =>
+      hours.map(([hour, inPeakWindow]): [string, number, number] => [modelRef, hour, inPeakWindow ? peak : historic])
+    )
+
+    it.each(cases)('should charge %s the right rate at %i:00 UTC on 2026-05-01', (modelRef, hour, expected) => {
+      const usage: Usage = { input_tokens: 100_000_000 }
+      const result = calcPrice(usage, modelRef, {
+        providerId: 'deepseek',
+        timestamp: new Date(Date.UTC(2026, 4, 1, hour)),
+      })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+  })
+
+  describe('calcPrice - long-context cliff', () => {
+    const cases: [string, string, number, number, number][] = [
+      ['x-ai', 'grok-4.5', 200_000, 2, 4],
+      ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
+      ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
+      ['x-ai', 'grok-build-0.1', 200_000, 1, 2],
+      ['openai', 'gpt-5.5', 272_001, 5, 10],
+      ['openai', 'gpt-5.5-pro', 272_001, 30, 60],
+    ]
+
+    it.each(cases)(
+      '%s/%s bills the whole request at the long-context rate from %i tokens',
+      (providerId, modelRef, firstLongToken, baseInput, longInput) => {
+        const under = calcPrice({ input_tokens: firstLongToken - 1 }, modelRef, { providerId })
+        expect(under).not.toBeNull()
+        expect(under!.input_price).toBeCloseTo(((firstLongToken - 1) * baseInput) / 1_000_000, 6)
+
+        const over = calcPrice({ input_tokens: firstLongToken }, modelRef, { providerId })
+        expect(over).not.toBeNull()
+        expect(over!.input_price).toBeCloseTo((firstLongToken * longInput) / 1_000_000, 6)
+
+        expect(over!.input_price).toBeGreaterThan(under!.input_price * 1.99)
+      }
+    )
+
+    it('is not marginal pricing well past the threshold', () => {
+      const result = calcPrice({ input_tokens: 1_000_000 }, 'gpt-5.5', { providerId: 'openai' })
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(10, 6)
+      const marginal = (272_000 * 5) / 1_000_000 + (728_000 * 10) / 1_000_000
+      expect(result!.input_price).not.toBeCloseTo(marginal, 6)
+    })
+  })
+
   describe('calcPrice - GPT-5.6 tiered cache pricing', () => {
     it('should apply long-context rates to every token bucket', () => {
       const usage: Usage = {
@@ -208,9 +305,33 @@ describe('Comprehensive API Tests', () => {
       const result = calcPrice(usage, 'gpt-5.6-sol', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
-      expect(result!.input_price).toBeCloseTo(2.8)
-      expect(result!.output_price).toBeCloseTo(0.45)
-      expect(result!.total_price).toBeCloseTo(3.25)
+      expect(result!.input_price).toBeCloseTo(2.24)
+      expect(result!.output_price).toBeCloseTo(0.3)
+      expect(result!.total_price).toBeCloseTo(2.54)
+    })
+  })
+
+  describe('calcPrice - GPT-5.5 long-context pricing', () => {
+    it.each([
+      {
+        expectedInput: 1.82001,
+        expectedOutput: 0.045,
+        model: 'gpt-5.5',
+        usage: { cache_read_tokens: 100_000, input_tokens: 272_001, output_tokens: 1_000 },
+      },
+      {
+        expectedInput: 16.32006,
+        expectedOutput: 0.27,
+        model: 'gpt-5.5-pro',
+        usage: { input_tokens: 272_001, output_tokens: 1_000 },
+      },
+    ])('should apply long-context rates to $model', ({ expectedInput, expectedOutput, model, usage }) => {
+      const result = calcPrice(usage, model, { providerId: 'openai' })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expectedInput)
+      expect(result!.output_price).toBeCloseTo(expectedOutput)
+      expect(result!.total_price).toBeCloseTo(expectedInput + expectedOutput)
     })
   })
 
@@ -594,6 +715,28 @@ describe('Comprehensive API Tests', () => {
         total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should price compact dated OpenRouter model refs', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const modelRef = 'openai/gpt-5.2-20251211'
+      const result = calcPrice(usage, modelRef, { providerId: 'litellm' })
+
+      expect(result).toMatchObject({
+        input_price: 0.00175,
+        model: { id: 'gpt-5.2' },
+        output_price: 0.0014,
+        provider: { id: 'openai' },
+        total_price: 0.00315,
+      })
+
+      expect(calcPrice(usage, modelRef, { providerApiUrl: 'https://openrouter.ai/api/v1' })).toMatchObject({
+        input_price: 0.00175,
+        model: { id: 'openai/gpt-5.2' },
+        output_price: 0.0014,
+        provider: { id: 'openrouter' },
+        total_price: 0.00315,
+      })
     })
   })
 })

@@ -187,9 +187,74 @@ describe('getActiveModelPrice', () => {
 
     expect(() => getActiveModelPrice(model, new Date(Number.NaN))).toThrow(new RangeError('Invalid time value'))
   })
+
+  it('handles daily constraints that span midnight', () => {
+    // No shipped model has a wrapping window; the Python package pins the same synthetic one.
+    const offPeak = { input_mtok: 0.5 }
+    const standard = { input_mtok: 1 }
+    const model: ModelInfo = {
+      id: 'wrapping-window',
+      match: { equals: 'wrapping-window' },
+      prices: [
+        { prices: standard },
+        {
+          constraint: {
+            end_time: '06:00:00Z',
+            start_time: '22:00:00Z',
+            type: 'time_of_date',
+          },
+          prices: offPeak,
+        },
+      ],
+    }
+
+    expect(getActiveModelPrice(model, new Date('2026-07-30T23:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T03:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T22:00:00Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T06:00:00Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2026-07-30T12:00:00Z'))).toBe(standard)
+  })
+})
+
+describe('start_date constraints', () => {
+  const before = { input_mtok: 2 }
+  const after = { input_mtok: 3 }
+  const model: ModelInfo = {
+    id: 'start-date-model',
+    match: { equals: 'start-date-model' },
+    prices: [
+      { prices: before },
+      {
+        constraint: { start_date: '2026-09-01', type: 'start_date' },
+        prices: after,
+      },
+    ],
+  }
+
+  // The boundary is UTC midnight, not the caller's local midnight; the Python package pins the same instants.
+  it.each([
+    { expected: before, name: '02:00 at +05:00 on the start date is still the previous UTC day', timestamp: '2026-09-01T02:00:00+05:00' },
+    { expected: before, name: 'the same instant expressed in UTC', timestamp: '2026-08-31T21:00:00Z' },
+    {
+      expected: after,
+      name: '20:00 at -05:00 the day before the start date is already the start date in UTC',
+      timestamp: '2026-08-31T20:00:00-05:00',
+    },
+    { expected: after, name: 'the same instant expressed in UTC', timestamp: '2026-09-01T01:00:00Z' },
+  ])('prices $name correctly', ({ expected, timestamp }) => {
+    expect(getActiveModelPrice(model, new Date(timestamp))).toBe(expected)
+  })
 })
 
 describe('Core Price Calculation Function', () => {
+  it('prices fractional duration usage', () => {
+    const result = calcPrice({ audio_seconds: 0.1 }, { audio_hours: 3.6 })
+
+    expect(result.input_price).toBe(0)
+    expect(result.output_price).toBe(0)
+    expect(result.total_price).toBeCloseTo(0.0001, 15)
+  })
+
   it('warns and ignores unsupported usage and price keys', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 

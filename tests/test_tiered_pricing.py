@@ -310,6 +310,21 @@ def test_tiered_price_uses_zero_threshold_for_safely_missing_input_tokens() -> N
     }
 
 
+def test_tiered_price_compares_fractional_usage_with_integer_threshold() -> None:
+    model_price = types.ModelPrice(
+        input_mtok=types.TieredPrices(
+            base=Decimal('1'),
+            tiers=[types.Tier(start=100, price=Decimal('2'))],
+        )
+    )
+
+    at_threshold = model_price.calc_price(Usage(input_tokens=100.0))
+    above_threshold = model_price.calc_price(Usage(input_tokens=100.5))
+
+    assert at_threshold['input_price'] == Decimal('0.0001')
+    assert above_threshold['input_price'] == Decimal('0.000201')
+
+
 def test_non_tiered_price_does_not_read_unneeded_input_token_threshold() -> None:
     price = types.ModelPrice(output_mtok=Decimal('1')).calc_price(
         Usage(input_audio_tokens=200_000, cache_read_tokens=50_000, output_tokens=10_000)

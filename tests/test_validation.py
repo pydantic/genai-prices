@@ -8,6 +8,7 @@ from genai_prices.units import UnitRegistry
 from genai_prices.validation import (
     validate_ancestor_coverage,
     validate_extractor_destinations,
+    validate_extractor_reasoning_coverage,
     validate_join_coverage,
     validate_model_price,
     validate_price_keys,
@@ -270,3 +271,56 @@ def test_validate_extractor_destinations_rejects_pricing_only_requests() -> None
 
     with pytest.raises(ValueError, match='Invalid extractor destination: requests'):
         validate_extractor_destinations({'requests'}, registry._reported_usage_keys)
+
+
+_MISSING_REASONING_MAPPING = (
+    'Missing output_reasoning_tokens mapping: extractors reading completion_tokens must also map reasoning tokens'
+)
+
+
+def test_validate_extractor_reasoning_coverage_accepts_mapped_reasoning_tokens() -> None:
+    validate_extractor_reasoning_coverage(
+        ['prompt_tokens', ['completion_tokens_details', 'reasoning_tokens'], 'completion_tokens'],
+        {'input_tokens', 'output_reasoning_tokens', 'output_tokens'},
+    )
+
+
+def test_validate_extractor_reasoning_coverage_accepts_extractor_without_completion_tokens() -> None:
+    validate_extractor_reasoning_coverage(
+        ['input_tokens', 'output_tokens'],
+        {'input_tokens', 'output_tokens'},
+    )
+
+
+def test_validate_extractor_reasoning_coverage_ignores_nested_completion_tokens() -> None:
+    validate_extractor_reasoning_coverage(
+        [['usage', 'completion_tokens']],
+        {'output_tokens'},
+    )
+
+
+@pytest.mark.parametrize('completion_tokens_path', ['completion_tokens', ['completion_tokens']])
+def test_validate_extractor_reasoning_coverage_rejects_unmapped_reasoning_tokens(
+    completion_tokens_path: str | list[str],
+) -> None:
+    with pytest.raises(ValueError, match=_MISSING_REASONING_MAPPING):
+        validate_extractor_reasoning_coverage(
+            ['prompt_tokens', completion_tokens_path],
+            {'input_tokens', 'output_tokens'},
+        )
+
+
+def test_bundled_provider_extractors_map_reasoning_tokens() -> None:
+    failures: list[str] = []
+
+    for provider in data.providers:
+        for extractor in provider.extractors or ():
+            try:
+                validate_extractor_reasoning_coverage(
+                    [mapping.path for mapping in extractor.mappings],
+                    {mapping.dest for mapping in extractor.mappings},
+                )
+            except ValueError as exc:  # pragma: no cover
+                failures.append(f'{provider.id}/{extractor.api_flavor}: {exc}')
+
+    assert failures == []

@@ -120,7 +120,7 @@ def main():
         print(f'Collapsed and saved {path}')
 
 
-def get_ovhcloud_prices():
+def get_ovhcloud_prices():  # pragma: no cover - thin CLI alias for main
     """Download and update OVHcloud AI Endpoints provider prices."""
     main()
 

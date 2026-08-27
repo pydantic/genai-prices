@@ -258,26 +258,19 @@ models:
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-5-v1:0
-    prices_checked: 2026-06-30
+    prices_checked: 2026-08-24
     match:
       contains: global.anthropic.claude-sonnet-5
     price_comments: >-
-      Flat pricing across full 1M context window (no tiered pricing).
-      Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01.
-      Ref: https://aws.amazon.com/bedrock/pricing/
+      Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok
+      launch rates are now permanent, with no 2026-09-01 increase.
+      Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://platform.claude.com/docs/en/about-claude/pricing
     prices:
-      - prices:
-          input_mtok: 2
-          cache_write_mtok: 2.5
-          cache_read_mtok: 0.2
-          output_mtok: 10
-      - constraint:
-          start_date: 2026-09-01
-        prices:
-          input_mtok: 3
-          cache_write_mtok: 3.75
-          cache_read_mtok: 0.3
-          output_mtok: 15
+      input_mtok: 2
+      cache_write_mtok: 2.5
+      cache_read_mtok: 0.2
+      output_mtok: 10
 
   - id: google.gemma-3-12b-it
     name: Gemma 3 12B IT
@@ -552,6 +545,132 @@ models:
       input_mtok: 5.5
       cache_read_mtok: 0.55
       output_mtok: 33
+
+  - id: openai.gpt-5.6-luna
+    name: GPT-5.6 Luna
+    match:
+      equals: openai.gpt-5.6-luna
+    context_window: 1000000
+    prices_checked: 2026-08-10
+    price_comments: >-
+      Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Luna prices by
+      80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates,
+      derived from the announced cut applied to the current published rates. The long-context
+      tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context
+      window on 2026-08-03; the launch entry stays flat because >272K requests were not
+      possible before then. Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok: 1.1
+          cache_write_mtok: 1.375
+          cache_read_mtok: 0.11
+          output_mtok: 6.6
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 0.22
+            tiers:
+              - start: 272000
+                price: 0.44
+          cache_write_mtok:
+            base: 0.275
+            tiers:
+              - start: 272000
+                price: 0.55
+          cache_read_mtok:
+            base: 0.022
+            tiers:
+              - start: 272000
+                price: 0.044
+          output_mtok:
+            base: 1.32
+            tiers:
+              - start: 272000
+                price: 1.98
+
+  - id: openai.gpt-5.6-sol
+    name: GPT-5.6 Sol
+    match:
+      equals: openai.gpt-5.6-sol
+    context_window: 1000000
+    prices_checked: 2026-08-10
+    price_comments: >-
+      Cache writes (30m TTL) are billed at 1.25x the input rate. Sol pricing is unchanged
+      since Bedrock GA (2026-07-13). The long-context tier (>272K input tokens: 2x
+      input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; >272K
+      requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      input_mtok:
+        base: 5.5
+        tiers:
+          - start: 272000
+            price: 11
+      cache_write_mtok:
+        base: 6.875
+        tiers:
+          - start: 272000
+            price: 13.75
+      cache_read_mtok:
+        base: 0.55
+        tiers:
+          - start: 272000
+            price: 1.1
+      output_mtok:
+        base: 33
+        tiers:
+          - start: 272000
+            price: 49.5
+
+  - id: openai.gpt-5.6-terra
+    name: GPT-5.6 Terra
+    match:
+      equals: openai.gpt-5.6-terra
+    context_window: 1000000
+    prices_checked: 2026-08-10
+    price_comments: >-
+      Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Terra prices by
+      20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates,
+      derived from the announced cut applied to the current published rates. The long-context
+      tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context
+      window on 2026-08-03; the launch entry stays flat because >272K requests were not
+      possible before then. Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok: 2.75
+          cache_write_mtok: 3.4375
+          cache_read_mtok: 0.275
+          output_mtok: 16.5
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 2.2
+            tiers:
+              - start: 272000
+                price: 4.4
+          cache_write_mtok:
+            base: 2.75
+            tiers:
+              - start: 272000
+                price: 5.5
+          cache_read_mtok:
+            base: 0.22
+            tiers:
+              - start: 272000
+                price: 0.44
+          output_mtok:
+            base: 13.2
+            tiers:
+              - start: 272000
+                price: 19.8
 
   - id: openai.gpt-oss-120b-1:0
     name: gpt-oss-120b
@@ -887,7 +1006,7 @@ models:
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-5-v1:0
-    prices_checked: 2026-06-30
+    prices_checked: 2026-08-24
     match:
       or:
         - starts_with: anthropic.claude-sonnet-5
@@ -899,23 +1018,15 @@ models:
         - contains: us-gov.anthropic.claude-sonnet-5
         - contains: jp.anthropic.claude-sonnet-5
     price_comments: >-
-      Regional/cross-region endpoints carry a 10% premium over global (AWS published only the
-      global promo rate; regional computed as global +10%, per the documented regional premium).
-      Promotional launch pricing through 2026-08-31; standard from 2026-09-01.
-      Ref: https://aws.amazon.com/bedrock/pricing/
+      Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now
+      permanent, with no 2026-09-01 increase.
+      Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://platform.claude.com/docs/en/about-claude/pricing
     prices:
-      - prices:
-          input_mtok: 2.2
-          cache_write_mtok: 2.75
-          cache_read_mtok: 0.22
-          output_mtok: 11
-      - constraint:
-          start_date: 2026-09-01
-        prices:
-          input_mtok: 3.3
-          cache_write_mtok: 4.125
-          cache_read_mtok: 0.33
-          output_mtok: 16.5
+      input_mtok: 2.2
+      cache_write_mtok: 2.75
+      cache_read_mtok: 0.22
+      output_mtok: 11
 
   - id: writer.palmyra-x4-v1:0
     name: Palmyra X4

@@ -1,10 +1,20 @@
 [build-system]
-requires = ["uv_build>=0.8.10,<0.12"]
-build-backend = "uv_build"
+requires = ["hatchling", "uv-dynamic-versioning>=0.7.0"]
+build-backend = "hatchling.build"
+
+# The version is derived from the git tag (`vX.Y.Z`) at build time, so a release is just a GitHub
+# release; nothing in the repo is bumped. Between tags, builds get `X.Y.(Z+1).devN+g<sha>`.
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
 
 [project]
 name = "genai-prices"
-version = "0.1.1"
+dynamic = ["version"]
 description = "Calculate prices for calling LLM inference APIs."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
@@ -52,6 +62,5 @@ Homepage = "https://github.com/pydantic/genai-prices"
 Source = "https://github.com/pydantic/genai-prices"
 Changelog = "https://github.com/pydantic/genai-prices/releases"
 
-[tool.uv.build-backend]
-module-name = "genai_prices"
-module-root = ""
+[tool.hatch.build.targets.wheel]
+packages = ["genai_prices"]
