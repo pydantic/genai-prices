@@ -294,7 +294,7 @@ describe('extractUsage', () => {
     })
 
     it('should extract and price native REST usage', () => {
-      const { model, usage } = extractUsage(cloudflareProvider, {
+      const responseData = {
         errors: [],
         messages: [],
         result: {
@@ -306,11 +306,27 @@ describe('extractUsage', () => {
           },
         },
         success: true,
-      })
+      }
+      const { model, usage } = extractUsage(
+        cloudflareProvider,
+        responseData,
+        'default',
+        'https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/meta/llama-3.2-1b-instruct'
+      )
 
-      expect(model).toBeNull()
+      expect(model).toBe('@cf/meta/llama-3.2-1b-instruct')
       expect(usage).toEqual({ input_tokens: 2_000_000, output_tokens: 1_000_000 })
-      expect(calcPrice(usage, '@cf/meta/llama-3.2-1b-instruct', { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.255)
+      if (!model) throw new Error('Expected extracted Cloudflare model')
+      expect(calcPrice(usage, model, { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.255)
+      expect(
+        extractUsage(
+          cloudflareProvider,
+          responseData,
+          'default',
+          'https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/example/unknown-model'
+        ).model
+      ).toBeNull()
+      expect(extractUsage(cloudflareProvider, responseData).model).toBeNull()
     })
   })
 
