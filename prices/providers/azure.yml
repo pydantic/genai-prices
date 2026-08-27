@@ -170,7 +170,9 @@ models:
       equals: mai-ds-r1:free
     prices: {}
 
-  # Azure documents the same limits as OpenAI for these o-series models: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
+  # Azure documents the same limits as OpenAI for these o-series models.
+  # Keep o1 and o1-preview separate: the table lists 200,000 vs 128,000 input token limits.
+  # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
   - id: o1
     canonical_model: openai/o1
     match:
@@ -197,6 +199,7 @@ models:
 
   - id: o1-preview
     canonical_model: openai/o1-preview
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
     collapse: false
     match:
       or:

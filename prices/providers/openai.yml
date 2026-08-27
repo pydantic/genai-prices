@@ -1368,6 +1368,10 @@ models:
       contains: moderation
     prices: {}
 
+  # Keep o1 and o1-preview separate even though their prices match: OpenAI documents different context windows
+  # (200,000 vs 128,000 tokens):
+  # https://developers.openai.com/api/docs/models/o1
+  # https://developers.openai.com/api/docs/models/o1-preview
   - id: o1
     name: o1
     description: O1 is a model that offers a balance between cost and performance.
@@ -1401,6 +1405,7 @@ models:
   - id: o1-preview
     name: o1 preview
     description: Preview release of OpenAI's first reasoning model.
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
     collapse: false
     match:
       or:
