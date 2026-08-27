@@ -3696,13 +3696,20 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemma-4-26b-a4b-it',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='gemma-4-26b-a4b-it'), ClauseEquals(equals='gemma-4-26b-a4b-it-maas')]
-                ),
+                match=ClauseEquals(equals='gemma-4-26b-a4b-it'),
                 name='Gemma 4 26B A4B',
                 description='Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total parameters, only 3.8B activate per token during inference.',
                 context_window=262144,
-                price_comments='Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The previous rates were imported from OpenRouter, not Google.',
+                price_comments='Gemini API model ID. Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='gemma-4-26b-a4b-it-maas',
+                match=ClauseEquals(equals='gemma-4-26b-a4b-it-maas'),
+                name='Gemma 4 26B A4B (Vertex AI MaaS)',
+                description='Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.',
+                context_window=262144,
+                price_comments='Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
                 ),

@@ -1183,16 +1183,26 @@ models:
       Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total
       parameters, only 3.8B activate per token during inference.
     match:
-      or:
-        - equals: gemma-4-26b-a4b-it
-        # Vertex AI Model-as-a-Service model ID, see https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models
-        - equals: gemma-4-26b-a4b-it-maas
+      equals: gemma-4-26b-a4b-it
     context_window: 262144
     prices_checked: 2026-08-27
     price_comments: >-
-      Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Free of charge
-      on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. The previous rates were
-      imported from OpenRouter, not Google.
+      Gemini API model ID. Free of charge on the Gemini API with no paid tier, see
+      https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the
+      gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.
+    prices: {}
+
+  - id: gemma-4-26b-a4b-it-maas
+    name: Gemma 4 26B A4B (Vertex AI MaaS)
+    description: >-
+      Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.
+    match:
+      equals: gemma-4-26b-a4b-it-maas
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from
+      https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.015

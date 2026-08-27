@@ -2141,9 +2141,13 @@ def test_gemma_4_31b_prices():
     assert google.model.id == snapshot('gemma-4-31b-it')
     assert google.total_price == snapshot(Decimal('0'))
 
-    # Vertex AI Model-as-a-Service rates for the 26B.
-    vertex_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it', provider_id='google')
-    assert vertex_26b.model.id == snapshot('gemma-4-26b-a4b-it')
+    # The Gemini API ID for the 26B is free too; only the Vertex MaaS ID is paid.
+    gemini_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it', provider_id='google')
+    assert gemini_26b.model.id == snapshot('gemma-4-26b-a4b-it')
+    assert gemini_26b.total_price == snapshot(Decimal('0'))
+
+    vertex_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it-maas', provider_id='google')
+    assert vertex_26b.model.id == snapshot('gemma-4-26b-a4b-it-maas')
     assert vertex_26b.input_price == snapshot(Decimal('0.0825'))
     assert vertex_26b.output_price == snapshot(Decimal('0.6'))
     assert vertex_26b.total_price == snapshot(Decimal('0.6825'))
