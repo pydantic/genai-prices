@@ -13117,6 +13117,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003825",
+            "output_price": "0.00114125",
             "provider_id": "cerebras"
           },
           {
@@ -13308,6 +13310,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00007875",
+            "output_price": "0.0002915",
             "provider_id": "cerebras"
           },
           {
@@ -13499,6 +13503,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002925",
+            "output_price": "0.00001925",
             "provider_id": "cerebras"
           },
           {
@@ -114829,6 +114835,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000405",
+            "output_price": "0.0000055",
             "provider_id": "cerebras"
           },
           {
