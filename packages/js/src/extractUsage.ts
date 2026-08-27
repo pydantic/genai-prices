@@ -9,7 +9,7 @@ interface ExtractedUsage {
   usage: Usage
 }
 
-export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string, providerApiUrl?: string): ExtractedUsage {
+export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): ExtractedUsage {
   apiFlavor = apiFlavor ?? 'default'
   const registry = getActiveRegistry()
 
@@ -28,14 +28,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`Expected response data to be a mapping object, got ${typeName(responseData)}`)
   }
 
-  let model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
-  if (model === null && provider.id === 'cloudflare' && providerApiUrl !== undefined) {
-    const requestUrl = providerApiUrl.split(/[?#]/, 1)[0]
-    const modelRef = requestUrl?.split('/ai/run/', 2)[1]
-    if (modelRef && provider.models.some((candidate) => matchLogic(candidate.match, modelRef))) {
-      model = modelRef
-    }
-  }
+  const model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
 
   const root = asArray(extractor.root)
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])
