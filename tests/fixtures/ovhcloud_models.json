@@ -1,0 +1,90 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "whisper-large-v3-turbo",
+      "created": 1754992184,
+      "object": "model",
+      "owned_by": "OpenAi",
+      "pricing": {
+        "currency_unit": "USD",
+        "completion": "0",
+        "image": "0",
+        "prompt": "0",
+        "request": "0",
+        "input_cache_reads": "0",
+        "input_cache_writes": "0"
+      },
+      "context_length": 0,
+      "max_completion_tokens": 0
+    },
+    {
+      "id": "bge-m3",
+      "created": 1731944050,
+      "object": "model",
+      "owned_by": "BAAI",
+      "pricing": {
+        "currency_unit": "USD",
+        "completion": "0",
+        "image": "0",
+        "prompt": "0.00000001",
+        "request": "0",
+        "input_cache_reads": "0",
+        "input_cache_writes": "0"
+      },
+      "context_length": 8192,
+      "max_completion_tokens": 0
+    },
+    {
+      "id": "gpt-oss-120b",
+      "created": 1756386145,
+      "object": "model",
+      "owned_by": "OpenAI",
+      "pricing": {
+        "currency_unit": "USD",
+        "completion": "0.00000047",
+        "image": "0",
+        "prompt": "0.00000009",
+        "request": "0",
+        "input_cache_reads": "0",
+        "input_cache_writes": "0"
+      },
+      "context_length": 131072,
+      "max_completion_tokens": 131072
+    },
+    {
+      "id": "Qwen3-32B",
+      "created": 1752655628,
+      "object": "model",
+      "owned_by": "Qwen",
+      "pricing": {
+        "currency_unit": "USD",
+        "completion": "0.00000025",
+        "image": "0",
+        "prompt": "0.00000009",
+        "request": "0",
+        "input_cache_reads": "0",
+        "input_cache_writes": "0"
+      },
+      "context_length": 32768,
+      "max_completion_tokens": 32768
+    },
+    {
+      "id": "Qwen3Guard-Gen-8B",
+      "created": 1769078773,
+      "object": "model",
+      "owned_by": "qwen3guard",
+      "pricing": {
+        "currency_unit": "USD",
+        "completion": "0",
+        "image": "0",
+        "prompt": "0",
+        "request": "0",
+        "input_cache_reads": "0",
+        "input_cache_writes": "0"
+      },
+      "context_length": 32768,
+      "max_completion_tokens": 16384
+    }
+  ]
+}

@@ -13,6 +13,26 @@ extractors:
         dest: input_tokens
       - path: completion_tokens
         dest: output_tokens
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
 
 models:
   - id: deepseek-r1-distill-llama-70b
@@ -260,3 +280,23 @@ models:
     prices:
       input_mtok: 0.29
       output_mtok: 0.59
+
+  - id: whisper-large-v3
+    name: Whisper Large V3
+    match:
+      equals: whisper-large-v3
+    prices_checked: 2026-08-24
+    price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
+    prices:
+      audio_hours: 0.111
+      input_audio_hours: 0.111
+
+  - id: whisper-large-v3-turbo
+    name: Whisper Large V3 Turbo
+    match:
+      equals: whisper-large-v3-turbo
+    prices_checked: 2026-08-24
+    price_comments: See https://console.groq.com/docs/model/whisper-large-v3-turbo.
+    prices:
+      audio_hours: 0.04
+      input_audio_hours: 0.04

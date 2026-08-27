@@ -28,15 +28,15 @@ lint: ## Lint the code
 	uv run ruff check
 
 .PHONY: build-prices
-build-prices: ## Build JSON Schema for data and validate and write data to prices/data.json
+build-prices: ## Validate providers and build the authoring schema and v2 price data
 	uv run -m prices build
 
 .PHONY: package-data
-package-data: ## Prepare data for packages
+package-data: ## Build static unit registries and v2 provider data for packages
 	uv run -m prices package_data
 
 .PHONY: build
-build: build-prices package-data inject-providers ## Build prices and package data
+build: build-prices package-data inject-providers ## Build v2 prices, package data, and the provider inventory
 
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models
@@ -97,24 +97,33 @@ typecheck:
 test: ## Run tests and collect coverage data
 	uv run coverage run -m pytest
 	uv run python tests/dataset/extract_usages.py
-	@uv run coverage report
+	@$(MAKE) coverage-report
 
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
 	@uv run coverage html
 
+.PHONY: coverage-report
+coverage-report: ## Report coverage for all Python code
+	@uv run coverage report
+
 .PHONY: test-all-python
-test-all-python: ## Run tests on Python 3.10 to 3.13
+test-all-python: ## Run tests on Python 3.10 to 3.14
 	UV_PROJECT_ENVIRONMENT=.venv310 uv run --python 3.10 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv311 uv run --python 3.11 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv312 uv run --python 3.12 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv314 uv run --python 3.14 --all-extras --all-packages coverage run -p -m pytest
 	@uv run coverage combine
-	@uv run coverage report
+	@$(MAKE) coverage-report
+
+.PHONY: test-js
+test-js: ## Build, typecheck, lint and test the JS package with coverage
+	npm run ci
 
 .PHONY: all
-all: build package-data format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
+all: build package-data format lint typecheck testcov test-js ## Run code formatting, linting, static type checks, and both test suites with coverage
 
 .PHONY: help
 help: ## Show this help (usage: make help)

@@ -1,0 +1,153 @@
+{
+  "data": [
+    {
+      "id": "moonshotai/Kimi-K3",
+      "object": "model",
+      "created": 1781332977,
+      "owned_by": "moonshotai",
+      "architecture": {
+        "input_modalities": ["text", "image"],
+        "output_modalities": ["text"]
+      },
+      "providers": [
+        {
+          "provider": "together",
+          "status": "live",
+          "context_length": 1000000,
+          "pricing": {
+            "input": 3,
+            "output": 15
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": true,
+          "first_token_latency_ms": 1836.2,
+          "throughput": 18.374051383950203,
+          "is_model_author": false
+        },
+        {
+          "provider": "fireworks-ai",
+          "status": "live",
+          "context_length": 1048576,
+          "pricing": {
+            "input": 3,
+            "output": 15
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": false,
+          "first_token_latency_ms": 2119,
+          "throughput": 48.33260928233352,
+          "is_model_author": false
+        }
+      ]
+    },
+    {
+      "id": "zai-org/GLM-5.2",
+      "object": "model",
+      "created": 1781595560,
+      "owned_by": "zai-org",
+      "architecture": {
+        "input_modalities": ["text"],
+        "output_modalities": ["text"]
+      },
+      "providers": [
+        {
+          "provider": "together",
+          "status": "live",
+          "context_length": 512000,
+          "pricing": {
+            "input": 1.4,
+            "output": 4.4
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": true,
+          "first_token_latency_ms": 446,
+          "throughput": 98.21311056523166,
+          "is_model_author": false
+        },
+        {
+          "provider": "fireworks-ai",
+          "status": "live",
+          "context_length": 1048576,
+          "pricing": {
+            "input": 1.4,
+            "output": 4.4
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": false,
+          "first_token_latency_ms": 1152.6,
+          "throughput": 28.380523286953427,
+          "is_model_author": false
+        }
+      ]
+    },
+    {
+      "id": "thinkingmachines/Inkling",
+      "object": "model",
+      "created": 1784035394,
+      "owned_by": "thinkingmachines",
+      "architecture": {
+        "input_modalities": ["text", "image"],
+        "output_modalities": ["text"]
+      },
+      "providers": [
+        {
+          "provider": "together",
+          "status": "live",
+          "context_length": 524288,
+          "pricing": {
+            "input": 1,
+            "output": 4.05
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": true,
+          "first_token_latency_ms": 197.2,
+          "throughput": 69.5148130968848,
+          "is_model_author": false
+        },
+        {
+          "provider": "fireworks-ai",
+          "status": "live",
+          "context_length": 1048576,
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": true,
+          "first_token_latency_ms": 414.2,
+          "throughput": 80.78104703105933,
+          "is_model_author": false
+        }
+      ]
+    },
+    {
+      "id": "prism-ml/Ternary-Bonsai-27B-gguf",
+      "object": "model",
+      "created": 1783124641,
+      "owned_by": "prism-ml",
+      "architecture": {
+        "input_modalities": ["text"],
+        "output_modalities": ["text"]
+      },
+      "providers": [
+        {
+          "provider": "together",
+          "status": "live",
+          "context_length": 262144,
+          "pricing": {
+            "input": 0,
+            "output": 0
+          },
+          "is_free": false,
+          "supports_tools": true,
+          "supports_structured_output": false,
+          "first_token_latency_ms": 346.6,
+          "throughput": 83.96023799450518,
+          "is_model_author": false
+        }
+      ]
+    }
+  ]
+}

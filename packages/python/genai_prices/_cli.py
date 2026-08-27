@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import difflib
 import hashlib
 import sys
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from typing import Any, cast
 
@@ -13,12 +12,26 @@ from pydantic import AliasChoices, Field
 from pydantic.fields import FieldInfo
 
 from . import Usage, __version__, calc_price, update_prices
-from .types import ModelPrice, PriceCalculation, Provider, TieredPrices
+from .types import (
+    ModelPrice,
+    PriceCalculation,
+    Provider,
+    TieredPrices,
+    _format_model_price_line,  # pyright: ignore[reportPrivateUsage]
+    _iter_model_price_attr_items,  # pyright: ignore[reportPrivateUsage]
+    _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
+)
+from .units import (
+    UnitDef,
+    _unit_display_name,  # pyright: ignore[reportPrivateUsage]
+    _unit_per_label,  # pyright: ignore[reportPrivateUsage]
+)
 
 try:
     from pydantic_settings import (
         BaseSettings,
         CliApp,
+        CliExplicitFlag,
         CliPositionalArg,
         CliSettingsSource,
         CliSubCommand,
@@ -33,7 +46,7 @@ try:
     from rich.table import Table
     from rich.text import Text
     from rich_argparse import RichHelpFormatter
-except ModuleNotFoundError as exc:
+except ModuleNotFoundError as exc:  # pragma: no cover
     package = (exc.name or '').split('.')[0]
     if package in {'pydantic_settings', 'rich', 'rich_argparse'}:
         print(
@@ -118,7 +131,7 @@ class _ToggleCliSettingsSource(CliSettingsSource[Any]):
     def _convert_bool_flag(self, kwargs: dict[str, Any], field_info: FieldInfo, model_default: Any) -> None:
         if kwargs.get('metavar') == 'bool' and self.cli_implicit_flags:
             del kwargs['metavar']
-            if kwargs.get('required'):
+            if kwargs.get('required'):  # pragma: no cover
                 kwargs['action'] = argparse.BooleanOptionalAction
             else:
                 kwargs['action'] = 'store_false' if model_default is True else 'store_true'
@@ -146,7 +159,8 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('T', 'table'),
         description='Whether to use wide table output with one row per model.',
     )
-    no_color: bool = Field(
+    # CliExplicitFlag avoids BooleanOptionalAction, whose `--no-`-prefixed names argparse rejects on Python 3.14.
+    no_color: CliExplicitFlag[bool] = Field(
         False,
         validation_alias=AliasChoices('n', 'no-color'),
         description='Whether to disable colors in calc output.',
@@ -273,8 +287,8 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
     if isinstance(sub, ListCLI):
         return list_models(sub, plain=cli.plain)
 
-    _build_root_parser().print_help()
-    return 1
+    _build_root_parser().print_help()  # pragma: no cover
+    return 1  # pragma: no cover
 
 
 def _parse_cli(args_list: Sequence[str] | None) -> CLIRoot:
@@ -351,7 +365,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
         output: list[tuple[str, str | None]] = [
             ('Provider', price_calc.provider.name),
             ('Model', price_calc.model.name or price_calc.model.id),
-            ('Model Prices', str(price_calc.model_price)),
+            ('Model Prices', _format_model_prices(price_calc.model_price, split_lines=False, use_color=False).plain),
             ('Context Window', f'{w:,d}' if w is not None else None),
             ('Input Price', f'${price_calc.input_price}'),
             ('Output Price', f'${price_calc.output_price}'),
@@ -552,12 +566,28 @@ def _format_calc_label(key: str, *, use_color: bool) -> Text:
 
 
 def _collect_model_price_fields(results: Sequence[PriceCalculation]) -> list[str]:
-    ordered_fields = [field.name for field in dataclasses.fields(ModelPrice)]
-    present_fields: list[str] = []
-    for field_name in ordered_fields:
-        if any(getattr(result.model_price, field_name) is not None for result in results):
-            present_fields.append(field_name)
-    return present_fields
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    present_fields: set[str] = set()
+    for result in results:
+        for unit in registry.units.values():
+            if getattr(result.model_price, unit.price_key) is not None:
+                present_fields.add(unit.price_key)
+
+    ordered_fields = [unit.price_key for unit in registry.units.values() if unit.price_key in present_fields]
+    for result in results:
+        for field_name, value in _iter_extra_model_price_items(result.model_price):
+            if value is not None and field_name not in present_fields:
+                ordered_fields.append(field_name)
+                present_fields.add(field_name)
+    return ordered_fields
+
+
+def _iter_extra_model_price_items(model_price: ModelPrice) -> Iterable[tuple[str, object]]:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    return _iter_model_price_attr_items(model_price, _get_registry())
 
 
 def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -> bool:
@@ -578,17 +608,14 @@ def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -
 
 
 def _price_field_label(field_name: str) -> str:
-    labels = {
-        'input_mtok': 'Input/MTok',
-        'cache_write_mtok': 'Cache Write/MTok',
-        'cache_read_mtok': 'Cache Read/MTok',
-        'output_mtok': 'Output/MTok',
-        'input_audio_mtok': 'Input Audio/MTok',
-        'cache_audio_read_mtok': 'Cache Audio Read/MTok',
-        'output_audio_mtok': 'Output Audio/MTok',
-        'requests_kcount': 'Requests/K',
-    }
-    return labels.get(field_name, field_name.replace('_mtok', '').replace('_', ' ').title())
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        unit = _get_registry().unit_for_price_key(field_name)
+    except KeyError:
+        return field_name.replace('_mtok', '').replace('_', ' ').title()
+
+    return f'{_unit_display_name(unit)}/{_unit_per_label(unit)}'
 
 
 def _price_field_header_style(field_name: str) -> str:
@@ -597,12 +624,11 @@ def _price_field_header_style(field_name: str) -> str:
 
 
 def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_color: bool) -> Text:
-    value = getattr(model_price, field_name)
+    unit = _unit_for_price_key(field_name)
+    value = getattr(model_price, unit.price_key if unit is not None else field_name, None)
     style = _PRICE_STYLES.get(field_name) if use_color else None
     if value is None:
         return Text('')
-    if field_name == 'requests_kcount':
-        return Text(f'${value}', style=style) if style else Text(f'${value}')
     if isinstance(value, TieredPrices):
         return Text(f'${value.base} (+tiers)', style=style) if style else Text(f'${value.base} (+tiers)')
     return Text(f'${value}', style=style) if style else Text(f'${value}')
@@ -610,31 +636,56 @@ def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_c
 
 def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_color: bool) -> Text:
     parts = Text()
-    for field in dataclasses.fields(model_price):
-        value = getattr(model_price, field.name)
-        if value is None:
+    priced_units = _iter_model_price_units(model_price)
+    for unit in priced_units:
+        value = getattr(model_price, unit.price_key)
+        if parts:
+            parts.append('\n' if split_lines else ', ')
+
+        style = _PRICE_STYLES.get(unit.price_key) if use_color else None
+        text = _format_model_price_line(value, unit)
+        if style:
+            parts.append(text, style=style)
+        else:
+            parts.append(text)
+
+    registered_price_keys = {unit.price_key for unit in priced_units}
+    for price_key, value in _iter_extra_model_price_items(model_price):
+        if value is None or price_key in registered_price_keys:
             continue
         if parts:
             parts.append('\n' if split_lines else ', ')
 
-        style = _PRICE_STYLES.get(field.name) if use_color else None
-        if field.name == 'requests_kcount':
-            if style:
-                parts.append(f'${value} / K requests', style=style)
-            else:
-                parts.append(f'${value} / K requests')
-            continue
-
-        name = field.name.replace('_mtok', '').replace('_', ' ')
-        if isinstance(value, TieredPrices):
-            text = f'${value.base}/{name} MTok (+tiers)'
-        else:
-            text = f'${value}/{name} MTok'
+        style = _PRICE_STYLES.get(price_key) if use_color else None
+        text = _format_unregistered_model_price_line(value, price_key)
         if style:
             parts.append(text, style=style)
         else:
             parts.append(text)
     return parts
+
+
+def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    return list(_iter_priced_registered_units(model_price, registry))
+
+
+def _format_unregistered_model_price_line(value: object, price_key: str) -> str:
+    base_value = value.base if isinstance(value, TieredPrices) else value
+    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
+    name = price_key.replace('_mtok', '').replace('_', ' ')
+    return f'${base_value}/{name} MTok{suffix}'
+
+
+def _unit_for_price_key(price_key: str) -> UnitDef | None:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        return _get_registry().unit_for_price_key(price_key)
+    except KeyError:
+        return None
 
 
 def _render_calc_error(
@@ -732,4 +783,4 @@ def _format_model_suggestion(suggestion: str) -> Text:
         text = Text(provider_id, style=_provider_style(provider_id))
         text.append(f':{model_id}')
         return text
-    return Text(suggestion)
+    return Text(suggestion)  # pragma: no cover

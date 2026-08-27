@@ -74,7 +74,9 @@ def main():
             extractors=[chat_extractor],
             provider_match=provider_match,
         )
-        yaml_data = cast(ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True))
+        yaml_data = cast(
+            ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
+        )
 
         yaml_string = (
             '# yaml-language-server: $schema=.schema.json\n'
@@ -90,7 +92,7 @@ def main():
             provider_yaml.save()
 
 
-def get_huggingface_prices():
+def get_huggingface_prices():  # pragma: no cover - thin CLI alias for main
     """Download and update HuggingFace provider prices."""
     main()
 

@@ -17,6 +17,38 @@ model_match:
     - equals: "M2-her"
     - equals: "m2-her"
 extractors:
+  # Anthropic-compatible endpoint (api.minimax.io/anthropic/v1/messages): Anthropic
+  # accounting — input_tokens excludes cache, so add cache back to get total input.
+  - root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  # OpenAI Responses-compatible endpoint (api.minimax.io/v1/responses): OpenAI
+  # accounting — input_tokens already includes cached tokens (a subset).
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
   - api_flavor: chat
     root: usage
     mappings:
@@ -24,6 +56,9 @@ extractors:
         dest: input_tokens
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens
@@ -164,9 +199,25 @@ models:
       a 1M-token context window, and long-horizon agentic work.
     match:
       equals: minimax-m3
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    context_window: 1000000
+    prices_checked: 2026-07-01
+    price_comments: >-
+      Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo,
+      2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens
+      bill at 2x per MiniMax's length-based tiering.
     prices:
-      input_mtok: 0.3
-      cache_read_mtok: 0.06
-      output_mtok: 1.2
+      input_mtok:
+        base: 0.3
+        tiers:
+          - start: 512000
+            price: 0.6
+      cache_read_mtok:
+        base: 0.06
+        tiers:
+          - start: 512000
+            price: 0.12
+      output_mtok:
+        base: 1.2
+        tiers:
+          - start: 512000
+            price: 2.4
