@@ -3132,7 +3132,12 @@ export const data: Provider[] = [
   {
     id: 'cerebras',
     name: 'Cerebras',
-    pricing_urls: ['https://www.cerebras.ai/pricing#pricing', 'https://inference-docs.cerebras.ai/models/openai-oss'],
+    pricing_urls: [
+      'https://www.cerebras.ai/pricing#pricing',
+      'https://inference-docs.cerebras.ai/models/openai-oss',
+      'https://inference-docs.cerebras.ai/models/gemma-4-31b',
+      'https://inference-docs.cerebras.ai/support/change-log',
+    ],
     api_pattern: 'https://api\\.cerebras\\.ai',
     model_match: {
       contains: 'cerebras',
@@ -3165,6 +3170,31 @@ export const data: Provider[] = [
       },
     ],
     models: [
+      {
+        id: 'gemma-4-31b',
+        name: 'Gemma 4 31B',
+        description:
+          "Google's Gemma 4 31B open model for chat, instruction following, and multilingual tasks, served with fast inference on Cerebras hardware (~1,850 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'gemma-4-31b',
+            },
+            {
+              starts_with: 'cerebras/gemma-4-31b',
+            },
+            {
+              starts_with: 'cerebras:gemma-4-31b',
+            },
+          ],
+        },
+        context_window: 131072,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        prices: {
+          input_mtok: 0.99,
+          output_mtok: 1.49,
+        },
+      },
       {
         id: 'gpt-oss-120b',
         name: 'GPT-OSS 120B',
@@ -3209,11 +3239,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
-        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
+        price_comments:
+          'No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
         prices: {
           input_mtok: 0.85,
           output_mtok: 1.2,
         },
+        deprecated: true,
       },
       {
         id: 'llama3.1-8b',
@@ -3234,11 +3266,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 32768,
-        price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
+        price_comments:
+          'No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
         },
+        deprecated: true,
       },
       {
         id: 'qwen-3-32b',
@@ -3259,11 +3293,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 131072,
-        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        price_comments:
+          'No longer listed in the Cerebras Inference docs (checked 2026-07-17 and 2026-08-27); last known rates kept for historical usage.',
         prices: {
           input_mtok: 0.4,
           output_mtok: 0.8,
         },
+        deprecated: true,
       },
       {
         id: 'qwen-3-coder-480b',
@@ -3273,6 +3309,33 @@ export const data: Provider[] = [
         },
         price_comments: 'Seems to be no longer available on cerebras, here to help with tests',
         prices: {},
+      },
+      {
+        id: 'zai-glm-4.7',
+        name: 'Z.ai GLM 4.7',
+        description:
+          "Z.ai's GLM 4.7, a 355 billion parameter model with reasoning enabled by default, served with fast inference on Cerebras hardware (~1,000 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'zai-glm-4.7',
+            },
+            {
+              starts_with: 'cerebras/zai-glm-4.7',
+            },
+            {
+              starts_with: 'cerebras:zai-glm-4.7',
+            },
+          ],
+        },
+        context_window: 131072,
+        price_comments:
+          'Deprecated by Cerebras on 2026-08-17 (see https://inference-docs.cerebras.ai/support/change-log) and no longer in the model catalog; last published developer tier rates kept for historical usage.',
+        prices: {
+          input_mtok: 2.25,
+          output_mtok: 2.75,
+        },
+        deprecated: true,
       },
     ],
   },
