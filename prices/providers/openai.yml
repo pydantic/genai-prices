@@ -364,6 +364,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+      web_searches_kcount: 10
 
   - id: gpt-4.1-mini
     name: gpt 4.1 mini
@@ -381,6 +382,7 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.1
       output_mtok: 1.6
+      web_searches_kcount: 10
 
   - id: gpt-4.1-nano
     name: gpt 4.1 nano
@@ -431,6 +433,7 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
+      web_searches_kcount: 10
 
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview
@@ -464,6 +467,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
+      web_searches_kcount: 10
 
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
@@ -579,6 +583,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
+      web_searches_kcount: 10
 
   - id: gpt-5-image
     match:
@@ -612,6 +617,7 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
+      web_searches_kcount: 10
 
   - id: gpt-5-nano
     name: GPT-5 nano
@@ -628,6 +634,7 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.005
       output_mtok: 0.4
+      web_searches_kcount: 10
 
   - id: gpt-5-pro
     match:
@@ -639,6 +646,7 @@ models:
     prices:
       input_mtok: 15
       output_mtok: 120
+      web_searches_kcount: 10
 
   - id: gpt-5.1
     name: GPT-5.1
@@ -665,6 +673,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
+      web_searches_kcount: 10
 
   - id: gpt-5.1-codex-mini
     name: GPT-5.1 Codex Mini
@@ -705,6 +714,7 @@ models:
       input_mtok: 1.75
       cache_read_mtok: 0.175
       output_mtok: 14
+      web_searches_kcount: 10
 
   - id: gpt-5.2-pro
     description: Version of GPT-5.2 that produces smarter and more precise responses.
@@ -718,6 +728,7 @@ models:
     prices:
       input_mtok: 21
       output_mtok: 168
+      web_searches_kcount: 10
 
   - id: gpt-5.3
     name: GPT-5.3 Chat
@@ -781,6 +792,7 @@ models:
         tiers:
           - start: 272000
             price: 22.5
+      web_searches_kcount: 10
 
   - id: gpt-5.4-image-2
     name: GPT-5.4 Image 2
@@ -813,6 +825,7 @@ models:
       input_mtok: 0.75
       cache_read_mtok: 0.075
       output_mtok: 4.5
+      web_searches_kcount: 10
 
   - id: gpt-5.4-nano
     name: GPT-5.4 nano
@@ -830,6 +843,7 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 1.25
+      web_searches_kcount: 10
 
   - id: gpt-5.4-pro
     name: GPT-5.4 Pro
@@ -853,6 +867,7 @@ models:
         tiers:
           - start: 272000
             price: 270
+      web_searches_kcount: 10
 
   - id: gpt-5.5
     name: GPT-5.5
@@ -893,6 +908,7 @@ models:
         tiers:
           - start: 272000
             price: 45
+      web_searches_kcount: 10
 
   - id: gpt-5.5-pro
     name: GPT-5.5 Pro
@@ -919,6 +935,7 @@ models:
         tiers:
           - start: 272000
             price: 270
+      web_searches_kcount: 10
 
   - id: gpt-5.6-luna
     name: GPT-5.6 Luna
@@ -959,6 +976,7 @@ models:
             tiers:
               - start: 272000
                 price: 9
+          web_searches_kcount: 10
       - constraint:
           start_date: 2026-07-30
         prices:
@@ -982,6 +1000,7 @@ models:
             tiers:
               - start: 272000
                 price: 1.8
+          web_searches_kcount: 10
 
   - id: gpt-5.6-sol
     name: GPT-5.6 Sol
@@ -1025,6 +1044,7 @@ models:
             tiers:
               - start: 272000
                 price: 45
+          web_searches_kcount: 10
       - constraint:
           # https://developers.openai.com/api/docs/changelog
           start_date: 2026-08-21
@@ -1049,6 +1069,7 @@ models:
             tiers:
               - start: 272000
                 price: 30
+          web_searches_kcount: 10
 
   - id: gpt-5.6-terra
     name: GPT-5.6 Terra
@@ -1089,6 +1110,7 @@ models:
             tiers:
               - start: 272000
                 price: 22.5
+          web_searches_kcount: 10
       - constraint:
           start_date: 2026-07-30
         prices:
@@ -1112,6 +1134,7 @@ models:
             tiers:
               - start: 272000
                 price: 18
+          web_searches_kcount: 10
 
   - id: gpt-audio
     name: GPT Audio
@@ -1424,6 +1447,7 @@ models:
           input_mtok: 10
           cache_read_mtok: 0.5
           output_mtok: 40
+          web_searches_kcount: 10
       - constraint:
           # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
           start_date: 2025-06-10
@@ -1431,6 +1455,7 @@ models:
           input_mtok: 2
           cache_read_mtok: 0.5
           output_mtok: 8
+          web_searches_kcount: 10
 
   - id: o3-deep-research
     match:
@@ -1489,6 +1514,7 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.275
       output_mtok: 4.4
+      web_searches_kcount: 10
 
   - id: o4-mini-deep-research
     match:
