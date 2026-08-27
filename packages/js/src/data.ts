@@ -12112,6 +12112,7 @@ export const data: Provider[] = [
     id: 'moonshotai',
     name: 'MoonshotAi',
     pricing_urls: [
+      'https://platform.kimi.ai/docs/models.md',
       'https://platform.kimi.ai/docs/pricing/chat-k3.md',
       'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
       'https://platform.kimi.ai/docs/pricing/chat-k26.md',
@@ -12174,6 +12175,7 @@ export const data: Provider[] = [
           input_mtok: 0.57,
           output_mtok: 2.3,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2-0711-preview',
@@ -12189,6 +12191,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 2.5,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2-0905-preview',
@@ -12204,6 +12207,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 2.5,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2-thinking',
@@ -12218,6 +12222,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 2.5,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2-thinking-turbo',
@@ -12233,6 +12238,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 8,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2-turbo-preview',
@@ -12248,6 +12254,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.15,
           output_mtok: 8,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2.5',
