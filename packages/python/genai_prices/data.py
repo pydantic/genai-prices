@@ -1745,7 +1745,7 @@ providers: list[Provider] = [
                 model_path='model',
             ),
         ],
-        fallback_model_providers=['openai', 'anthropic'],
+        fallback_model_providers=['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai'],
         models=[
             ModelInfo(
                 id='ada',

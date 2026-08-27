@@ -2828,7 +2828,7 @@ export const data: Provider[] = [
         ],
       },
     ],
-    fallback_model_providers: ['openai', 'anthropic'],
+    fallback_model_providers: ['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai'],
     models: [
       {
         id: 'ada',
