@@ -65,6 +65,7 @@ const nonTokenUsageKeys = [
   'rerank_searches',
   'web_searches',
   'social_searches',
+  'file_searches',
   'storage_searches',
   'code_executions',
 ]
@@ -84,6 +85,8 @@ describe('generated data split', () => {
     expect(unitData.web_searches?.dimensions.family).toBe('tool_calls')
     expect(unitData.web_searches?.dimensions.tool_type).toBe('web_search')
     expect(unitData.web_searches?.price_key).toBe('web_searches_kcount')
+    expect(unitData.file_searches?.dimensions.tool_type).toBe('file_search')
+    expect(unitData.file_searches?.price_key).toBe('file_searches_kcount')
     expect(unitData.audio_seconds?.price_key).toBe('audio_hours')
     expect(unitData.input_audio_seconds?.price_key).toBe('input_audio_hours')
     expect(unitData.input_text_messages?.price_key).toBe('input_text_messages_kcount')
@@ -231,6 +234,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
         cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
         output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
         web_searches_kcount: 10,
@@ -242,6 +246,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 272_000 }] },
         cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
         output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
         web_searches_kcount: 10,
@@ -253,6 +258,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
         cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
         output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
         web_searches_kcount: 10,
@@ -264,6 +270,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.02, tiers: [{ price: 0.04, start: 272_000 }] },
         cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
         output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
         web_searches_kcount: 10,
@@ -275,6 +282,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
         cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
         output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
         web_searches_kcount: 10,
@@ -286,6 +294,7 @@ describe('generated data split', () => {
       expectedPrices: {
         cache_read_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
         cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        file_searches_kcount: 2.5,
         input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
         output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
         web_searches_kcount: 10,

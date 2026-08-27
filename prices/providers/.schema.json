@@ -1027,6 +1027,18 @@
           "title": "Social Searches Kcount",
           "description": "price in USD per thousand social searches"
         },
+        "file_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "File Searches Kcount",
+          "description": "price in USD per thousand file searches"
+        },
         "storage_searches_kcount": {
           "anyOf": [
             {
@@ -1267,6 +1279,7 @@
             "cache_write_5m_tokens",
             "cache_write_tokens",
             "code_executions",
+            "file_searches",
             "input_annotated_document_pages",
             "input_audio_seconds",
             "input_audio_tokens",

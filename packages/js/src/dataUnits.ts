@@ -223,6 +223,14 @@ export const unitData: RawUnitsDict = {
     per: 1000,
     price_key: 'code_executions_kcount',
   },
+  file_searches: {
+    dimensions: {
+      family: 'tool_calls',
+      tool_type: 'file_search',
+    },
+    per: 1000,
+    price_key: 'file_searches_kcount',
+  },
   input_annotated_document_pages: {
     dimensions: {
       direction: 'input',

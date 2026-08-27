@@ -173,6 +173,11 @@ NON_TOKEN_REPORTABLE_UNITS: dict[str, dict[str, Any]] = {
         'price_key': 'social_searches_kcount',
         'dimensions': {'family': 'tool_calls', 'tool_type': 'social_search'},
     },
+    'file_searches': {
+        'per': 1_000,
+        'price_key': 'file_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'file_search'},
+    },
     'storage_searches': {
         'per': 1_000,
         'price_key': 'storage_searches_kcount',
@@ -398,6 +403,7 @@ def test_bundled_non_token_unit_relationships() -> None:
     assert registry.ancestor_usage_keys('web_searches') == frozenset()
     assert not registry.units['input_audio_seconds'].is_compatible_with(registry.units['output_audio_seconds'])
     assert not registry.units['web_searches'].is_compatible_with(registry.units['social_searches'])
+    assert not registry.units['web_searches'].is_compatible_with(registry.units['file_searches'])
     assert not registry.units['storage_searches'].is_compatible_with(registry.units['code_executions'])
 
 
