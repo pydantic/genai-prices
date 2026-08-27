@@ -96,7 +96,7 @@ providers:
 
   - name: Cloudflare Workers AI
     file: prices/providers/cloudflare.yml
-    scope: Models with token-based prices represented by the YAML. Exclude image and audio models.
+    scope: Token-priced models in Cloudflare's public catalog. Exclude image and audio models.
     sources:
       - https://developers.cloudflare.com/workers-ai/platform/pricing/index.md
     notes: >-
