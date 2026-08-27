@@ -139,23 +139,18 @@ def test_quicksilverpro_main_writes_and_collapses_generated_provider(
     assert len([provider_yaml for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved]) == 1
 
 
-def test_quicksilverpro_main_reports_request_errors(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-):
+def test_quicksilverpro_main_exits_nonzero_on_request_errors(monkeypatch: pytest.MonkeyPatch):
     def fake_get(_: str, *, timeout: float) -> None:
         assert timeout == 30.0
         raise RuntimeError('not available')
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
-    source_quicksilverpro.main()
+    with pytest.raises(SystemExit, match='Error fetching QuickSilver Pro catalog: not available'):
+        source_quicksilverpro.main()
 
-    assert capsys.readouterr().out == 'Error fetching QuickSilver Pro catalog: not available\n'
 
-
-def test_quicksilverpro_main_reports_when_no_models_have_prices(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-):
+def test_quicksilverpro_main_exits_nonzero_when_no_models_have_prices(monkeypatch: pytest.MonkeyPatch):
     class FakeResponse:
         def raise_for_status(self) -> None:
             pass
@@ -174,6 +169,5 @@ def test_quicksilverpro_main_reports_when_no_models_have_prices(
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
-    source_quicksilverpro.main()
-
-    assert capsys.readouterr().out == 'No valid models found with pricing information\n'
+    with pytest.raises(SystemExit, match='No valid models found with pricing information'):
+        source_quicksilverpro.main()

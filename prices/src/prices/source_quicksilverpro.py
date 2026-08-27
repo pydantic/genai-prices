@@ -56,8 +56,8 @@ def main():
         response.raise_for_status()
         models = response.json().get('models', [])
     except Exception as e:
-        print(f'Error fetching QuickSilver Pro catalog: {e}')
-        return
+        # Exit non-zero so a scheduled or scripted refresh can't report success on stale data.
+        raise SystemExit(f'Error fetching QuickSilver Pro catalog: {e}') from e
 
     providers_dir = Path(__file__).parent / '../../providers'
 
@@ -68,8 +68,7 @@ def main():
 
     model_infos = sorted(get_model_infos(models), key=attrgetter('id'))
     if not model_infos:
-        print('No valid models found with pricing information')
-        return
+        raise SystemExit('No valid models found with pricing information')
 
     provider_id = 'quicksilverpro'
     provider_info = Provider(
