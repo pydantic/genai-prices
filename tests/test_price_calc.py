@@ -1010,6 +1010,30 @@ def test_openai_gpt_56_sol_web_search_price():
     assert price.total_price == Decimal('0.03')
 
 
+def test_gpt_4o_original_snapshot_price():
+    usage = Usage(input_tokens=1_000, cache_read_tokens=500, output_tokens=100)
+    original = calc_price(usage, model_ref='gpt-4o-2024-05-13', provider_id='openai')
+    later = calc_price(usage, model_ref='gpt-4o-2024-08-06', provider_id='openai')
+
+    assert original.model.id == 'gpt-4o-2024-05-13'
+    assert original.input_price == Decimal('0.005')
+    assert original.output_price == Decimal('0.0015')
+    assert later.model.id == 'gpt-4o'
+    assert later.input_price == Decimal('0.001875')
+    assert later.output_price == Decimal('0.001')
+
+
+def test_devstral_small_price():
+    price = calc_price(
+        Usage(input_tokens=10_000, output_tokens=1_000), model_ref='devstral-small-2507', provider_id='mistral'
+    )
+
+    assert price.model.id == 'devstral-small'
+    assert price.input_price == Decimal('0.001')
+    assert price.output_price == Decimal('0.0003')
+    assert price.total_price == Decimal('0.0013')
+
+
 def test_openai_file_search_price():
     price = calc_price(
         Usage(input_tokens=1_000, output_tokens=100, storage_searches=4), model_ref='gpt-4.1', provider_id='openai'

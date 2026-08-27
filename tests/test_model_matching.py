@@ -132,7 +132,8 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-sonnet-4-20250514-v1:0')),
     ),
     pytest.param('bedrock', 'us.meta.llama3-2-90b-instruct-v1:0', snapshot(('aws', 'meta.llama3-2-90b-instruct-v1:0'))),
-    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o'))),
+    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o-2024-05-13'))),
+    ('openai', 'gpt-4o-2024-08-06', snapshot(('openai', 'gpt-4o'))),
     ('google-gla', 'gemini-1.5-flash', snapshot(('google', 'gemini-1.5-flash'))),
     (
         'groq',
@@ -229,6 +230,8 @@ test_cases: list[tuple[str, str, str]] = [
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
     ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
+    ('mistral_ai', 'devstral-small-2507', snapshot(('mistral', 'devstral-small'))),
+    ('mistral_ai', 'labs-devstral-small-2512', snapshot(('mistral', 'devstral-small'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
