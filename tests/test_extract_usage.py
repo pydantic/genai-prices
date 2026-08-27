@@ -282,8 +282,12 @@ def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
 def test_azure_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
     """Azure's OpenAI-compatible v1 API returns the same usage shape as direct OpenAI
     (see test_openai_cache_write_tokens); this mirrors it for the `azure` provider,
-    whose extractors were missing the `cache_write_tokens` mapping."""
-    response_data = {'model': 'o1', 'usage': usage_data}
+    whose extractors were missing the `cache_write_tokens` mapping.
+
+    `gpt-5.6-sol` resolves through Azure's `fallback_model_providers: [openai]`, so the price
+    asserts the cache-write premium is actually applied, not just that the tokens were extracted.
+    """
+    response_data = {'model': 'gpt-5.6-sol', 'usage': usage_data}
     extracted_usage = extract_usage(response_data, provider_id='azure', api_flavor=api_flavor)
 
     assert extracted_usage.usage == Usage(
@@ -292,7 +296,7 @@ def test_azure_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
         cache_read_tokens=0,
         output_tokens=300,
     )
-    assert extracted_usage.calc_price().total_price == Decimal('0.04809')
+    assert extracted_usage.calc_price().total_price == Decimal('0.015944')
 
 
 @pytest.mark.parametrize('provider_id', ['openai', 'azure'])
