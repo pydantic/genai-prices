@@ -114,6 +114,16 @@ models:
       input_mtok: 0.25
       output_mtok: 2.00
 
+  - id: Qwen/Qwen3.8-27B-FP8
+    name: Qwen3.8 27B
+    match:
+      equals: Qwen/Qwen3.8-27B-FP8
+    prices_checked: 2026-08-26
+    prices:
+      input_mtok: 0.45
+      cache_read_mtok: 0.04
+      output_mtok: 3.00
+
   # DeepSeek models
   - id: deepseek-ai/DeepSeek-V4-Flash
     name: DeepSeek V4 Flash
@@ -123,6 +133,16 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.28
+
+  - id: deepseek-ai/DeepSeek-V4-Flash-0731
+    name: DeepSeek V4 Flash 0731
+    match:
+      equals: deepseek-ai/DeepSeek-V4-Flash-0731
+    prices_checked: 2026-08-26
+    prices:
+      input_mtok: 0.09
+      cache_read_mtok: 0.02
+      output_mtok: 0.18
 
   - id: deepseek-ai/DeepSeek-V4-Pro
     name: DeepSeek V4 Pro
@@ -163,6 +183,16 @@ models:
       input_mtok: 0.95
       output_mtok: 4.00
 
+  - id: moonshotai/kimi-k3
+    name: Kimi K3
+    match:
+      equals: moonshotai/kimi-k3
+    prices_checked: 2026-08-26
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
+
   # Nvidia models
   - id: nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4
     name: Nemotron 3 Super 120B A12B
@@ -192,3 +222,13 @@ models:
     prices:
       input_mtok: 1.40
       output_mtok: 4.40
+
+  - id: zai-org/GLM-5.2-FP8
+    name: GLM 5.2
+    match:
+      equals: zai-org/GLM-5.2-FP8
+    prices_checked: 2026-08-26
+    prices:
+      input_mtok: 0.93
+      cache_read_mtok: 0.19
+      output_mtok: 3.00
