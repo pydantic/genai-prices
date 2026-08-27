@@ -233,10 +233,10 @@ def test_cloudflare_native_rest_usage() -> None:
     )
 
     assert extracted_usage.provider.id == 'cloudflare'
-    assert extracted_usage.model is None
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/meta/llama-3.2-1b-instruct'
     assert extracted_usage.usage == Usage(input_tokens=2_000_000, output_tokens=1_000_000)
-    model = next(model for model in extracted_usage.provider.models if model.id == '@cf/meta/llama-3.2-1b-instruct')
-    assert extracted_usage.calc_price(model=model).total_price == Decimal('0.255')
+    assert extracted_usage.calc_price().total_price == Decimal('0.255')
 
 
 def test_cloudflare_embeddings_usage() -> None:

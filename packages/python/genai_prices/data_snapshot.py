@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import cache
 from typing import Any
+from urllib.parse import urlsplit
 
 from . import types
 
@@ -80,6 +81,8 @@ class DataSnapshot:
     ) -> types.ExtractedUsage:
         provider = self.find_provider(None, provider_id, provider_api_url)
         model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
+        if model_ref is None and provider.id == 'cloudflare' and provider_api_url is not None:
+            model_ref = urlsplit(provider_api_url).path.partition('/ai/run/')[2] or None
         if model_ref is not None:
             _, model = self.find_provider_model(model_ref, provider, None, None)
         else:
