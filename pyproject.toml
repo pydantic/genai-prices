@@ -47,7 +47,6 @@ include = [
     "packages/python/**/*.py",
     "benchmarks/**/*.py",
     "tests/**/*.py",
-    ".github/scripts/**/*.py",
 ]
 
 [tool.ruff.lint]
@@ -121,7 +120,7 @@ reportIgnoreCommentWithoutRule = true
 reportUnusedParameter = true
 reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
-include = ["prices/src", "packages/python", "benchmarks", "tests", ".github/scripts"]
+include = ["prices/src", "packages/python", "benchmarks", "tests"]
 venv = ".venv"
 venvPath = "."
 # `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
