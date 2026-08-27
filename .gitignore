@@ -14,7 +14,6 @@ wheels/
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/add-price-model/
-!.claude/skills/add-provider/
 .coverage
 TODO.md
 node_modules/
