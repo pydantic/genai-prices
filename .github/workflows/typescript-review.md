@@ -47,6 +47,18 @@ safe-outputs:
 imports:
   - shared/pydantic.md
 jobs:
+  detection:
+    setup-steps:
+      - name: Set up Python for threat detection
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+    pre-steps:
+      - name: Preinstall Pydantic AI for threat detection
+        run: |
+          python3 -m pip install --quiet --user --disable-pip-version-check "pydantic-ai-harness[cli]==0.21.0" "pydantic-ai-slim[openai,mcp]"
+          "$HOME/.local/bin/pai" --version
+          python3 -c "from pydantic_ai_harness import Coder"
   eligibility:
     runs-on: ubuntu-latest
     timeout-minutes: 5
