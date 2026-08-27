@@ -2136,9 +2136,17 @@ def test_grok_4_6_long_context_cliff():
 def test_gemma_4_31b_prices():
     usage = Usage(input_tokens=1_000_000, cache_read_tokens=500_000, output_tokens=1_000_000)
 
+    # Gemini API is free; Vertex AI has no per-token price for the self-deployed 31B.
     google = calc_price(usage, model_ref='gemma-4-31b-it', provider_id='google')
     assert google.model.id == snapshot('gemma-4-31b-it')
     assert google.total_price == snapshot(Decimal('0'))
+
+    # Vertex AI Model-as-a-Service rates for the 26B.
+    vertex_26b = calc_price(usage, model_ref='gemma-4-26b-a4b-it', provider_id='google')
+    assert vertex_26b.model.id == snapshot('gemma-4-26b-a4b-it')
+    assert vertex_26b.input_price == snapshot(Decimal('0.0825'))
+    assert vertex_26b.output_price == snapshot(Decimal('0.6'))
+    assert vertex_26b.total_price == snapshot(Decimal('0.6825'))
 
     # OpenRouter's cheapest endpoint moved on 2026-08-27; requests before that keep the old rate.
     before = calc_price(
