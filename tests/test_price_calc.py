@@ -160,6 +160,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-sol',
             datetime(2026, 8, 20, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=272_000, price=Decimal('12.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272_000, price=Decimal('1'))]),
@@ -170,6 +171,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-sol',
             datetime(2026, 8, 21, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272_000, price=Decimal('8'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272_000, price=Decimal('0.8'))]),
@@ -180,6 +182,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-luna',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
@@ -190,6 +193,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-luna',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
@@ -200,6 +204,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-terra',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
                 cache_write_mtok=TieredPrices(
                     base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
@@ -212,6 +217,7 @@ def test_gpt_5_5_long_context_price(
             'gpt-5.6-terra',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
+                web_searches_kcount=Decimal('10'),
                 input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
                 cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
                 cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
@@ -975,6 +981,27 @@ def test_claude_opus_5_web_search_price():
     assert price.input_price == Decimal('0')
     assert price.output_price == Decimal('0')
     assert price.total_price == Decimal('0.02')
+
+
+def test_openai_web_search_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100, web_searches=5), model_ref='gpt-4.1', provider_id='openai'
+    )
+
+    assert price.input_price == Decimal('0.002')
+    assert price.output_price == Decimal('0.0008')
+    assert price.total_price == Decimal('0.0528')
+
+
+def test_openai_gpt_56_sol_web_search_price():
+    price = calc_price(
+        Usage(web_searches=3),
+        model_ref='gpt-5.6',
+        provider_id='openai',
+        genai_request_timestamp=datetime(2026, 8, 25, tzinfo=timezone.utc),
+    )
+
+    assert price.total_price == Decimal('0.03')
 
 
 def test_claude_opus_5_one_hour_cache_write_price():
