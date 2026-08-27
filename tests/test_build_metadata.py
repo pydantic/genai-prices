@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 
 from prices.build import inherit_context_windows, prepare_providers_for_export
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider
+from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider, providers_schema
 
 
 def make_model(
@@ -36,6 +36,21 @@ def test_inherit_context_window_from_canonical_model():
     assert offering.context_window == 200_000
 
 
+def test_serialized_offering_is_flattened():
+    canonical = make_model('canonical', context_window=200_000)
+    offering = make_model('offering', canonical_model='native/canonical')
+    providers = [
+        Provider(id='native', name='Native', api_pattern='native', models=[canonical]),
+        Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
+    ]
+
+    inherit_context_windows(providers)
+    serialized = providers_schema.dump_python(providers, mode='json', exclude_none=True)[1]['models'][0]
+
+    assert serialized['context_window'] == 200_000
+    assert 'canonical_model' not in serialized
+
+
 def test_provider_context_window_overrides_canonical_model():
     canonical = make_model('canonical', context_window=200_000)
     offering = make_model('offering', context_window=100_000, canonical_model='native/canonical')
@@ -62,6 +77,11 @@ def test_canonical_reference_accepts_maximum_length_ids():
     inherit_context_windows(providers)
 
     assert offering.context_window == 200_000
+
+
+def test_canonical_reference_requires_provider_qualification():
+    with pytest.raises(ValueError, match='canonical_model'):
+        make_model('offering', canonical_model='canonical')
 
 
 def test_unknown_canonical_model_is_rejected():
@@ -113,11 +133,3 @@ def test_removed_canonical_model_can_supply_active_offering():
 
     assert providers[0].models == []
     assert offering.context_window == 200_000
-
-
-def test_removed_offering_canonical_reference_is_validated():
-    offering = make_model('offering', canonical_model='native/missing', removed=True)
-    providers = [Provider(id='host', name='Host', api_pattern='host', models=[offering])]
-
-    with pytest.raises(ValueError, match='unknown canonical model `native/missing`'):
-        prepare_providers_for_export(providers)

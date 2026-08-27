@@ -134,6 +134,13 @@ describe('generated data split', () => {
     expect(result?.model.context_window).toBe(contextWindow)
   })
 
+  it.each(['claude-sonnet-4-0', 'anthropic/claude-sonnet-4'])('keeps the Google Claude Sonnet 4 alias $model on Google', (model) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.provider.id).toBe('google')
+    expect(result?.model.id).toBe('claude-4-sonnet')
+  })
+
   it.each([
     { expectedModelId: 'pixtral-12b', expectedTotalPrice: 0.000165, model: 'pixtral-12b-latest' },
     { expectedModelId: 'pixtral-large', expectedTotalPrice: 0.0026, model: 'pixtral-large-2411' },

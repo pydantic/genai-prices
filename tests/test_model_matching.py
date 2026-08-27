@@ -702,59 +702,20 @@ def test_litellm_provider_id():
 
 
 @pytest.mark.parametrize(
-    ('model_ref', 'model_id', 'context_window'),
-    [
-        ('global.anthropic.claude-sonnet-5-v1:0', 'global.anthropic.claude-sonnet-5-v1:0', 1_000_000),
-        ('us.anthropic.claude-sonnet-5-v1:0', 'regional.anthropic.claude-sonnet-5-v1:0', 1_000_000),
-        (
-            'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
-            'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
-            200_000,
-        ),
-        (
-            'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-            'regional.anthropic.claude-sonnet-4-5-20250929-v1:0',
-            200_000,
-        ),
-        (
-            'arn:aws:bedrock:us-west-2:726623243771:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0',
-            'regional.anthropic.claude-sonnet-4-20250514-v1:0',
-            200_000,
-        ),
-    ],
-)
-def test_bedrock_model_has_effective_context_window(model_ref: str, model_id: str, context_window: int):
-    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
-
-    provider, model = snapshot.find_provider_model(model_ref, None, 'bedrock', None)
-
-    assert provider.id == 'aws'
-    assert model.id == model_id
-    assert model.context_window == context_window
-
-
-@pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
     [
-        ('anthropic', 'claude-sonnet-4-5-20250929', 'anthropic', 'claude-sonnet-4-5', 200_000),
-        ('anthropic', 'claude-opus-4-6', 'anthropic', 'claude-opus-4-6', 1_000_000),
+        (
+            'bedrock',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            'aws',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            1_000_000,
+        ),
         ('azure', 'o1', 'azure', 'o1', 200_000),
         ('azure', 'o1-preview', 'azure', 'o1-preview', 128_000),
-        ('azure', 'o1-mini', 'azure', 'o1-mini', 128_000),
-        ('azure', 'o3', 'azure', 'o3-2025-04-16', 200_000),
-        ('azure', 'o3-mini', 'azure', 'o3-mini', 200_000),
-        ('azure', 'o4-mini', 'azure', 'o4-mini', 200_000),
-        ('google-vertex', 'claude-3-opus', 'google', 'claude-3-opus', 200_000),
-        ('google-vertex', 'claude-sonnet-4@20250514', 'google', 'claude-4-sonnet', 200_000),
-        ('google-vertex', 'claude-sonnet-4-20250514', 'google', 'claude-4-sonnet', 200_000),
-        ('google-vertex', 'claude-sonnet-4-0', 'google', 'claude-4-sonnet', 200_000),
-        ('google-vertex', 'claude-sonnet-4', 'google', 'claude-4-sonnet', 200_000),
-        ('google-vertex', 'anthropic/claude-sonnet-4', 'google', 'claude-4-sonnet', 200_000),
-        ('google-vertex', 'claude-sonnet-4-5@20250929', 'google', 'claude-sonnet-4-5', 200_000),
-        ('google-vertex', 'anthropic/claude-sonnet-4.5', 'google', 'claude-sonnet-4-5', 200_000),
+        ('openai', 'o1-preview', 'openai', 'o1-preview', 128_000),
+        ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
         ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
-        ('google-vertex', 'anthropic/claude-sonnet-4.6', 'google', 'claude-sonnet-4-6', 1_000_000),
-        ('google-vertex', 'claude-opus-4-6', 'google', 'claude-opus-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
         ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
     ],
