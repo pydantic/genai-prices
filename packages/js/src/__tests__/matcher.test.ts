@@ -315,5 +315,21 @@ describe('Model Matching with Fallback', () => {
       expect(fallbackMatch).toBeDefined()
       expect(fallbackMatch?.id).toBe(openaiModel?.id)
     })
+
+    it('should work with real data - Azure AI Foundry marketplace models fall back to the origin provider', () => {
+      const azure = matchProvider(actualProviders, { providerId: 'azure' })
+      expect(azure).toBeDefined()
+      if (!azure) return
+      expect(azure.fallback_model_providers).toEqual(['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai'])
+
+      for (const [modelRef, expectedId] of [
+        ['Kimi-K2.6-1', 'kimi-k2.6'],
+        ['grok-4.3', 'grok-4.3'],
+        ['DeepSeek-V4-Pro', 'deepseek-v4-pro'],
+      ] as const) {
+        expect(matchModel(azure.models, modelRef)).not.toBeDefined()
+        expect(matchModelWithFallback(azure, modelRef, actualProviders)?.id).toBe(expectedId)
+      }
+    })
   })
 })

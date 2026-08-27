@@ -298,7 +298,11 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('openrouter', 'openai/gpt-oss-120b', None, marks=mark_xfail_todo),
     ('google-gla', 'gemini-2.0-flash-exp', snapshot(('google', 'gemini-2.0-flash'))),
     ('deepseek', 'deepseek-chat', snapshot(('deepseek', 'deepseek-chat'))),
-    pytest.param('azure', 'DeepSeek-R1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-R1-0528', snapshot(('azure', 'deepseek-reasoner'))),
+    # Azure AI Foundry marketplace models priced through the origin provider (#455)
+    ('azure', 'Kimi-K2.6-1', snapshot(('azure', 'kimi-k2.6'))),
+    ('azure', 'grok-4.3', snapshot(('azure', 'grok-4.3'))),
+    ('azure', 'DeepSeek-V4-Pro', snapshot(('azure', 'deepseek-v4-pro'))),
     pytest.param('bedrock', 'us.amazon.nova-lite-v1:0', snapshot(('aws', 'amazon.nova-lite-v1:0'))),
     ('mistral_ai', 'magistral-small-2507', snapshot(('mistral', 'magistral-small'))),
     pytest.param(
@@ -322,12 +326,12 @@ test_cases: list[tuple[str, str, str]] = [
     ('anthropic', 'claude-4-sonnet-latest', snapshot(('anthropic', 'claude-sonnet-4-0'))),
     ('vertex_ai', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('openai', 'gpt-4o-realtime', snapshot(('openai', 'gpt-4o-realtime-preview'))),
-    pytest.param('azure', 'DeepSeek-r1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-r1-0528', snapshot(('azure', 'deepseek-reasoner'))),
     ('google-vertex', 'gemini-1.5-pro-002', snapshot(('google', 'gemini-1.5-pro'))),
     ('gemini', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('mistral_ai', 'mistral-7b', snapshot(('mistral', 'mistral-7b'))),
     ('mistral_ai', 'mistral-large', snapshot(('mistral', 'mistral-large'))),
-    pytest.param('azure', 'deepseek-r1', None, marks=mark_xfail_todo),
+    ('azure', 'deepseek-r1', snapshot(('azure', 'deepseek-reasoner'))),
     pytest.param('deepinfra', 'deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('deepinfra', 'deepinfra/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('perplexity', 'perplexity/sonar-deep-research', None, marks=mark_xfail_todo),
@@ -453,12 +457,12 @@ def test_fallback_tries_all_providers():
     """Test that fallback iterates through all providers until finding a match.
 
     This tests the case where the first fallback provider doesn't have the model,
-    but a subsequent fallback provider does. Azure has fallback_model_providers=['openai', 'anthropic'],
+    but a subsequent fallback provider does. Azure's fallback_model_providers starts with ['openai', 'anthropic'],
     so for a Claude model, it should skip openai and find it via anthropic.
     """
     azure = find_provider_by_id(providers, 'azure')
     assert azure is not None
-    assert azure.fallback_model_providers == ['openai', 'anthropic']
+    assert azure.fallback_model_providers == ['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai']
 
     # Azure doesn't have claude-sonnet-4 directly, openai doesn't have it either,
     # but anthropic does - so fallback should find it
