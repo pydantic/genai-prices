@@ -126,12 +126,10 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: compare the v2 schemas against the base branch
-        # description strings are docs, not contract, so they are ignored here
         run: |
           failed=0
           for schema in prices/new_data/v2/data.schema.json prices/new_data/v2/data_slim.schema.json; do
-            git show "${BASE_SHA}:$schema" > /tmp/base-schema.json
-            if ! python3 .github/scripts/compare_v2_schemas.py "$schema" /tmp/base-schema.json; then
+            if ! git diff --quiet "${BASE_SHA}" -- "$schema"; then
               echo "::error file=$schema::The published v2 schema changed. Adding or altering a unit in prices/units.yml widens the v2 contract and requires v3 instead - see specs/data-driven-unit-registry/. If this change is genuinely v2-compatible, remove this job's guard in the same PR and say why."
               git diff "${BASE_SHA}" -- "$schema"
               failed=1

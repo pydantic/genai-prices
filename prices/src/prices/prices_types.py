@@ -187,10 +187,7 @@ class ModelInfo(_Model):
     Not included in published data.
     """
     context_window: int | None = None
-    """Maximum context window in tokens, as documented by the provider.
-
-    This is the default limit for a single request; opt-in extended windows are not recorded.
-    """
+    """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]

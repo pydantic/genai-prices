@@ -2,7 +2,7 @@
 name: Groq
 id: groq
 pricing_urls:
-  - https://groq.com/pricing/
+  - https://console.groq.com/docs/models
 api_pattern: 'https://api\.groq\.com'
 
 # https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py

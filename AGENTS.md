@@ -84,6 +84,7 @@ make litellm-get                       # Get LiteLLM prices
 make simonw-prices-get                 # Get Simon Willison's prices
 make huggingface-get                   # Get HuggingFace prices
 make ovhcloud-get                      # Get OVHcloud AI Endpoints prices
+make quicksilverpro-get                # Get QuickSilver Pro prices
 make get-update-price-discrepancies    # Download and update price discrepancies
 make check-for-price-discrepancies     # Check for price discrepancies
 make detect-deprecated                 # Detect models that may be deprecated or removed
