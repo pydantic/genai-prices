@@ -118,6 +118,7 @@ models:
       input_mtok: 0.8
       cache_read_mtok: 0.2
       output_mtok: 1.6
+    context_window: 131072
 
   - id: aion-labs/aion-rp-llama-3.1-8b
     match:
@@ -125,6 +126,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+    context_window: 32768
 
   - id: alfredpros/codellama-7b-instruct-solidity
     match:
@@ -152,6 +154,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.5
+    context_window: 65536
 
   - id: alpindale/goliath-120b
     match:
@@ -174,6 +177,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 2.5
+    context_window: 1000000
 
   - id: amazon/nova-lite-v1
     match:
@@ -181,6 +185,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.24
+    context_window: 300000
 
   - id: amazon/nova-micro-v1
     match:
@@ -188,6 +193,7 @@ models:
     prices:
       input_mtok: 0.035
       output_mtok: 0.14
+    context_window: 128000
 
   - id: amazon/nova-premier-v1
     name: Nova Premier 1.0
@@ -197,6 +203,7 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 0.625
       output_mtok: 12.5
+    context_window: 1000000
 
   - id: amazon/nova-pro-v1
     match:
@@ -204,6 +211,7 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 3.2
+    context_window: 300000
 
   - id: anthracite-org/magnum-v2-72b
     match:
@@ -218,6 +226,7 @@ models:
     prices:
       input_mtok: 1.5
       output_mtok: 2.25
+    context_window: 32768
 
   - id: anthropic/claude-2
     match:
@@ -240,6 +249,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 1.25
+    context_window: 200000
 
   - id: anthropic/claude-3-opus
     match:
@@ -321,6 +331,7 @@ models:
       cache_read_mtok: 0.1
       cache_write_mtok: 1.25
       output_mtok: 5
+    context_window: 200000
 
   - id: anthropic/claude-opus-4
     name: Claude Opus 4
@@ -333,6 +344,7 @@ models:
       cache_write_mtok: 18.75
       cache_read_mtok: 1.5
       output_mtok: 75
+    context_window: 200000
 
   - id: anthropic/claude-opus-4.5
     match:
@@ -348,6 +360,7 @@ models:
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
+    context_window: 200000
 
   - id: anthropic/claude-opus-4.6
     match:
@@ -404,6 +417,7 @@ models:
       cache_write_mtok: 37.5
       cache_read_mtok: 3
       output_mtok: 150
+    context_window: 1000000
 
   - id: anthropic/claude-opus-4.8
     match:
@@ -430,6 +444,7 @@ models:
       cache_write_mtok: 12.5
       cache_read_mtok: 1
       output_mtok: 50
+    context_window: 1000000
 
   - id: anthropic/claude-opus-5
     match:
@@ -463,6 +478,7 @@ models:
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
 
   - id: anthropic/claude-sonnet-4
+    # No context_window: endpoints range from 200,000 to 1,000,000: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-4/endpoints
     name: Claude Sonnet 4
     match:
       equals: anthropic/claude-sonnet-4
@@ -572,6 +588,7 @@ models:
       input_mtok: 0.22
       cache_read_mtok: 0.06
       output_mtok: 0.85
+    context_window: 262144
 
   - id: arcee-ai/trinity-mini
     name: Trinity Mini
@@ -588,6 +605,7 @@ models:
     prices:
       input_mtok: 0.75
       output_mtok: 1.2
+    context_window: 131072
 
   - id: arcee-blitz
     name: Arcee Blitz
@@ -609,6 +627,7 @@ models:
     prices:
       input_mtok: 0.42
       output_mtok: 1.25
+    context_window: 123000
 
   - id: "bytedance-research/ui-tars-72b:free"
     match:
@@ -622,6 +641,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 2
+    context_window: 262144
 
   - id: bytedance-seed/seed-1.6-flash
     name: Seed 1.6 Flash
@@ -630,6 +650,7 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
+    context_window: 262144
 
   - id: bytedance-seed/seed-2.0-lite
     name: Seed-2.0-Lite
@@ -638,6 +659,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 2
+    context_window: 262144
 
   - id: bytedance-seed/seed-2.0-mini
     name: Seed-2.0-Mini
@@ -646,6 +668,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.4
+    context_window: 262144
 
   - id: bytedance/ui-tars-1.5-7b
     name: UI-TARS 7B
@@ -654,6 +677,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
+    context_window: 128000
 
   - id: caller-large
     name: Caller Large
@@ -804,6 +828,7 @@ models:
     prices:
       input_mtok: 2.5
       output_mtok: 10
+    context_window: 256000
 
   - id: cohere/command-r
     match:
@@ -820,6 +845,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+    context_window: 128000
 
   - id: cohere/command-r-plus
     match:
@@ -836,6 +862,7 @@ models:
     prices:
       input_mtok: 2.5
       output_mtok: 10
+    context_window: 128000
 
   - id: cohere/command-r7b-12-2024
     match:
@@ -843,6 +870,7 @@ models:
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
+    context_window: 128000
 
   - id: command
     name: Command
@@ -1001,6 +1029,7 @@ models:
     prices: {}
 
   - id: deepseek/deepseek-chat
+    # No context_window: endpoints range from 64,000 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-chat/endpoints
     name: DeepSeek V3
     match:
       equals: deepseek/deepseek-chat
@@ -1015,6 +1044,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 0.88
+    context_window: 163840
 
   - id: "deepseek/deepseek-chat-v3-0324:free"
     match:
@@ -1022,6 +1052,7 @@ models:
     prices: {}
 
   - id: deepseek/deepseek-chat-v3.1
+    # No context_window: endpoints range from 131,072 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-chat-v3.1/endpoints
     name: DeepSeek V3.1
     match:
       equals: deepseek/deepseek-chat-v3.1
@@ -1042,8 +1073,10 @@ models:
     prices:
       input_mtok: 0.45
       output_mtok: 2.15
+    context_window: 64000
 
   - id: deepseek/deepseek-r1-0528
+    # No context_window: endpoints range from 128,000 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-r1-0528/endpoints
     name: R1 0528
     match:
       equals: deepseek/deepseek-r1-0528
@@ -1058,6 +1091,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.4
+    context_window: 8192
 
   - id: "deepseek/deepseek-r1-distill-llama-70b:free"
     match:
@@ -1129,6 +1163,7 @@ models:
     prices_checked: 2025-10-30
 
   - id: deepseek/deepseek-v3.2
+    # No context_window: endpoints range from 32,768 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-v3.2/endpoints
     name: DeepSeek V3.2
     match:
       equals: deepseek/deepseek-v3.2
@@ -1143,8 +1178,10 @@ models:
     prices:
       input_mtok: 0.27
       output_mtok: 0.41
+    context_window: 163840
 
   - id: deepseek/deepseek-v4-flash
+    # No context_window: endpoints range from 384,000 to 1,048,576: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash/endpoints
     name: DeepSeek V4 Flash
     match:
       equals: deepseek/deepseek-v4-flash
@@ -1154,6 +1191,7 @@ models:
       output_mtok: 0.1966
 
   - id: deepseek/deepseek-v4-pro
+    # No context_window: endpoints range from 1,000,000 to 1,048,576: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints
     name: DeepSeek V4 Pro
     match:
       equals: deepseek/deepseek-v4-pro
@@ -1510,6 +1548,7 @@ models:
       cache_write_mtok: 0.3833
       cache_read_mtok: 0.075
       output_mtok: 2.5
+    context_window: 1048576
 
   - id: google/gemini-2.5-flash-image
     name: Nano Banana (Gemini 2.5 Flash Image)
@@ -1520,6 +1559,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.03
       output_mtok: 2.5
+    context_window: 32768
 
   - id: google/gemini-2.5-flash-lite
     name: Gemini 2.5 Flash Lite
@@ -1530,6 +1570,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.01
       output_mtok: 0.4
+    context_window: 1048576
 
   - id: google/gemini-2.5-flash-lite-preview-09-2025
     name: Gemini 2.5 Flash Lite Preview 09-2025
@@ -1575,6 +1616,7 @@ models:
       cache_write_mtok: 1.625
       cache_read_mtok: 0.31
       output_mtok: 10
+    context_window: 1048576
 
   - id: "google/gemini-2.5-pro-exp-03-25:free"
     match:
@@ -1597,6 +1639,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.05
       output_mtok: 3
+    context_window: 1048576
 
   - id: google/gemini-3-pro-image-preview
     name: Nano Banana Pro (Gemini 3 Pro Image Preview)
@@ -1607,6 +1650,7 @@ models:
       cache_write_mtok: 0.375
       cache_read_mtok: 0.2
       output_mtok: 12
+    context_window: 65536
 
   - id: google/gemini-3.1-flash-image-preview
     name: Nano Banana 2 (Gemini 3.1 Flash Image Preview)
@@ -1615,6 +1659,7 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 3
+    context_window: 65536
 
   - id: google/gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
@@ -1627,6 +1672,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.025
       output_mtok: 1.5
+    context_window: 1048576
 
   - id: google/gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -1639,6 +1685,7 @@ models:
       cache_write_mtok: 0.375
       cache_read_mtok: 0.2
       output_mtok: 12
+    context_window: 1048576
 
   - id: google/gemini-3.5-flash
     name: Gemini 3.5 Flash
@@ -1651,6 +1698,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.15
       output_mtok: 9
+    context_window: 1048576
 
   - id: google/gemini-flash-1.5
     match:
@@ -1694,6 +1742,7 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 0.8
+    context_window: 8192
 
   - id: google/gemma-2-9b-it
     match:
@@ -1714,6 +1763,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
+    context_window: 131072
 
   - id: "google/gemma-3-12b-it:free"
     match:
@@ -1726,6 +1776,7 @@ models:
     prices: {}
 
   - id: google/gemma-3-27b-it
+    # No context_window: endpoints range from 98,304 to 262,144: https://openrouter.ai/api/v1/models/google/gemma-3-27b-it/endpoints
     name: Gemma 3 27B
     match:
       equals: google/gemma-3-27b-it
@@ -1745,6 +1796,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.04
+    context_window: 131072
 
   - id: "google/gemma-3-4b-it:free"
     match:
@@ -1760,6 +1812,7 @@ models:
       output_mtok: 0.12
 
   - id: google/gemma-4-26b-a4b-it
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/google/gemma-4-26b-a4b-it/endpoints
     name: Gemma 4 26B A4B
     match:
       equals: google/gemma-4-26b-a4b-it
@@ -1772,6 +1825,7 @@ models:
     match:
       equals: google/gemma-4-26b-a4b-it:free
     prices: {}
+    context_window: 262144
 
   - id: google/gemma-4-31b-it
     name: Gemma 4 31B
@@ -1802,6 +1856,7 @@ models:
     match:
       equals: google/gemma-4-31b-it:free
     prices: {}
+    context_window: 262144
 
   - id: "google/learnlm-1.5-pro-experimental:free"
     match:
@@ -1813,12 +1868,14 @@ models:
     match:
       equals: google/lyria-3-clip-preview
     prices: {}
+    context_window: 1048576
 
   - id: google/lyria-3-pro-preview
     name: Lyria 3 Pro Preview
     match:
       equals: google/lyria-3-pro-preview
     prices: {}
+    context_window: 1048576
 
   - id: google/palm-2-chat-bison
     match:
@@ -1926,6 +1983,7 @@ models:
       output_mtok: 15
 
   - id: gryphe/mythomax-l2-13b
+    # No context_window: endpoints range from 4,096 to 8,192: https://openrouter.ai/api/v1/models/gryphe/mythomax-l2-13b/endpoints
     match:
       equals: gryphe/mythomax-l2-13b
     prices:
@@ -1952,6 +2010,7 @@ models:
     prices:
       input_mtok: 0.017
       output_mtok: 0.112
+    context_window: 131000
 
   - id: ibm-granite/granite-4.1-8b
     name: Granite 4.1 8B
@@ -1960,6 +2019,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
+    context_window: 131072
 
   - id: inception/mercury-2
     name: Mercury 2
@@ -1969,6 +2029,7 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 0.75
+    context_window: 128000
 
   - id: inclusionai/ling-2.6-1t
     name: Ling-2.6-1T
@@ -2068,6 +2129,7 @@ models:
     prices: {}
 
   - id: kwaipilot/kat-coder-pro-v2
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/kwaipilot/kat-coder-pro-v2/endpoints
     name: KAT-Coder-Pro V2
     match:
       equals: kwaipilot/kat-coder-pro-v2
@@ -2378,6 +2440,7 @@ models:
     prices:
       input_mtok: 1.125
       output_mtok: 1.125
+    context_window: 8000
 
   - id: mercury-coder-small-beta
     name: Mercury Coder Small Beta
@@ -2443,8 +2506,10 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.28
+    context_window: 131072
 
   - id: meta-llama/llama-3.1-8b-instruct
+    # No context_window: endpoints range from 16,384 to 131,072: https://openrouter.ai/api/v1/models/meta-llama/llama-3.1-8b-instruct/endpoints
     match:
       equals: meta-llama/llama-3.1-8b-instruct
     prices:
@@ -2476,6 +2541,7 @@ models:
     prices:
       input_mtok: 0.005
       output_mtok: 0.01
+    context_window: 60000
 
   - id: "meta-llama/llama-3.2-1b-instruct:free"
     match:
@@ -2483,6 +2549,7 @@ models:
     prices: {}
 
   - id: meta-llama/llama-3.2-3b-instruct
+    # No context_window: endpoints range from 80,000 to 131,072: https://openrouter.ai/api/v1/models/meta-llama/llama-3.2-3b-instruct/endpoints
     name: Llama 3.2 3B Instruct
     match:
       equals: meta-llama/llama-3.2-3b-instruct
@@ -2504,6 +2571,7 @@ models:
       output_mtok: 0.9
 
   - id: meta-llama/llama-3.3-70b-instruct
+    # No context_window: endpoints range from 12,288 to 131,072: https://openrouter.ai/api/v1/models/meta-llama/llama-3.3-70b-instruct/endpoints
     name: Llama 3.3 70B Instruct
     match:
       equals: meta-llama/llama-3.3-70b-instruct
@@ -2518,6 +2586,7 @@ models:
     prices: {}
 
   - id: meta-llama/llama-4-maverick
+    # No context_window: endpoints range from 128,000 to 1,048,576: https://openrouter.ai/api/v1/models/meta-llama/llama-4-maverick/endpoints
     name: Llama 4 Maverick
     match:
       equals: meta-llama/llama-4-maverick
@@ -2531,6 +2600,7 @@ models:
     prices: {}
 
   - id: meta-llama/llama-4-scout
+    # No context_window: endpoints range from 131,072 to 1,310,720: https://openrouter.ai/api/v1/models/meta-llama/llama-4-scout/endpoints
     name: Llama 4 Scout
     match:
       equals: meta-llama/llama-4-scout
@@ -2565,6 +2635,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
+    context_window: 163840
 
   - id: microsoft/phi-3-medium-128k-instruct
     match:
@@ -2593,6 +2664,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.14
+    context_window: 16384
 
   - id: microsoft/phi-4-mini-instruct
     name: Phi 4 Mini Instruct
@@ -2622,6 +2694,7 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 0.5
+    context_window: 65535
 
   - id: midnight-rose-70b
     name: Midnight Rose 70B
@@ -2646,6 +2719,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 1.1
+    context_window: 1000192
 
   - id: minimax/minimax-m1
     name: MiniMax M1
@@ -2654,8 +2728,10 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.65
+    context_window: 1000000
 
   - id: minimax/minimax-m2
+    # No context_window: endpoints range from 196,608 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2/endpoints
     name: MiniMax M2
     match:
       equals: minimax/minimax-m2
@@ -2674,6 +2750,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.2
+    context_window: 65536
 
   - id: minimax/minimax-m2.1
     name: MiniMax M2.1
@@ -2683,8 +2760,10 @@ models:
       input_mtok: 0.29
       cache_read_mtok: 0.03
       output_mtok: 0.95
+    context_window: 204800
 
   - id: minimax/minimax-m2.5
+    # No context_window: endpoints range from 65,536 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2.5/endpoints
     name: MiniMax M2.5
     match:
       or:
@@ -2696,6 +2775,7 @@ models:
       output_mtok: 0.9
 
   - id: minimax/minimax-m2.7
+    # No context_window: endpoints range from 196,608 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2.7/endpoints
     name: MiniMax M2.7
     match:
       or:
@@ -2707,6 +2787,7 @@ models:
       output_mtok: 1.08
 
   - id: minimax/minimax-m3
+    # No context_window: endpoints range from 262,144 to 1,048,576: https://openrouter.ai/api/v1/models/minimax/minimax-m3/endpoints
     name: MiniMax M3
     match:
       or:
@@ -2835,6 +2916,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 0.9
+    context_window: 256000
 
   - id: mistralai/codestral-mamba
     match:
@@ -2851,6 +2933,7 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.04
       output_mtok: 2
+    context_window: 262144
 
   - id: mistralai/ministral-14b-2512
     name: Ministral 3 14B 2512
@@ -2860,6 +2943,7 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 0.2
+    context_window: 262144
 
   - id: mistralai/ministral-3b
     match:
@@ -2876,6 +2960,7 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.01
       output_mtok: 0.1
+    context_window: 131072
 
   - id: mistralai/ministral-8b
     match:
@@ -2892,6 +2977,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.15
+    context_window: 262144
 
   - id: mistralai/mistral-7b-instruct
     match:
@@ -2931,6 +3017,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
+    context_window: 128000
 
   - id: mistralai/mistral-large-2512
     name: Mistral Large 3 2512
@@ -2940,6 +3027,7 @@ models:
       input_mtok: 0.5
       cache_read_mtok: 0.05
       output_mtok: 1.5
+    context_window: 262144
 
   - id: mistralai/mistral-medium
     match:
@@ -2955,6 +3043,7 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 2
+    context_window: 131072
 
   - id: mistralai/mistral-medium-3-5
     name: Mistral Medium 3.5
@@ -2963,6 +3052,7 @@ models:
     prices:
       input_mtok: 1.5
       output_mtok: 7.5
+    context_window: 262144
 
   - id: mistralai/mistral-medium-3.1
     name: Mistral Medium 3.1
@@ -2972,8 +3062,10 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.04
       output_mtok: 2
+    context_window: 131072
 
   - id: mistralai/mistral-nemo
+    # No context_window: endpoints range from 60,288 to 131,072: https://openrouter.ai/api/v1/models/mistralai/mistral-nemo/endpoints
     name: Mistral Nemo
     match:
       equals: mistralai/mistral-nemo
@@ -2993,6 +3085,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
+    context_window: 32768
 
   - id: mistralai/mistral-small
     match:
@@ -3008,6 +3101,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.09
+    context_window: 32768
 
   - id: "mistralai/mistral-small-24b-instruct-2501:free"
     match:
@@ -3015,6 +3109,7 @@ models:
     prices: {}
 
   - id: mistralai/mistral-small-2603
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/mistralai/mistral-small-2603/endpoints
     name: Mistral Small 4
     match:
       equals: mistralai/mistral-small-2603
@@ -3030,6 +3125,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.15
+    context_window: 128000
 
   - id: "mistralai/mistral-small-3.1-24b-instruct:free"
     match:
@@ -3037,6 +3133,7 @@ models:
     prices: {}
 
   - id: mistralai/mistral-small-3.2-24b-instruct
+    # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/mistralai/mistral-small-3.2-24b-instruct/endpoints
     name: Mistral Small 3.2 24B
     match:
       equals: mistralai/mistral-small-3.2-24b-instruct
@@ -3057,6 +3154,7 @@ models:
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
+    context_window: 65536
 
   - id: mistralai/mixtral-8x7b-instruct
     match:
@@ -3087,6 +3185,7 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.01
       output_mtok: 0.3
+    context_window: 32000
 
   - id: mixtral-8x7b-instruct
     name: Mixtral 8x7B Instruct
@@ -3127,6 +3226,7 @@ models:
     prices:
       input_mtok: 0.57
       output_mtok: 2.3
+    context_window: 131072
 
   - id: moonshotai/kimi-k2-0905
     name: Kimi K2 0905
@@ -3135,6 +3235,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.5
+    context_window: 262144
 
   - id: moonshotai/kimi-k2-thinking
     name: Kimi K2 Thinking
@@ -3143,8 +3244,10 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.5
+    context_window: 262144
 
   - id: moonshotai/kimi-k2.5
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/moonshotai/kimi-k2.5/endpoints
     name: Kimi K2.5
     match:
       equals: moonshotai/kimi-k2.5
@@ -3154,6 +3257,7 @@ models:
       output_mtok: 1.9
 
   - id: moonshotai/kimi-k2.6
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/moonshotai/kimi-k2.6/endpoints
     name: Kimi K2.6
     match:
       equals: moonshotai/kimi-k2.6
@@ -3213,6 +3317,7 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+    context_window: 81920
 
   - id: morph/morph-v3-large
     name: Morph V3 Large
@@ -3221,6 +3326,7 @@ models:
     prices:
       input_mtok: 0.9
       output_mtok: 1.9
+    context_window: 262144
 
   - id: mythalion-13b
     name: Mythalion 13B
@@ -3315,6 +3421,7 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 0.8
+    context_window: 131072
 
   - id: nousresearch/hermes-3-llama-3.1-405b:free
     name: Hermes 3 405B Instruct (free)
@@ -3329,6 +3436,7 @@ models:
     prices:
       input_mtok: 0.12
       output_mtok: 0.3
+    context_window: 131072
 
   - id: nousresearch/hermes-4-405b
     name: Hermes 4 405B
@@ -3337,6 +3445,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 3
+    context_window: 131072
 
   - id: nousresearch/hermes-4-70b
     name: Hermes 4 70B
@@ -3345,6 +3454,7 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.4
+    context_window: 131072
 
   - id: nousresearch/nous-hermes-2-mixtral-8x7b-dpo
     match:
@@ -3402,6 +3512,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.2
+    context_window: 262144
 
   - id: nvidia/nemotron-3-nano-30b-a3b:free
     name: Nemotron 3 Nano 30B A3B (free)
@@ -3414,8 +3525,10 @@ models:
     match:
       equals: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
     prices: {}
+    context_window: 256000
 
   - id: nvidia/nemotron-3-super-120b-a12b
+    # No context_window: endpoints range from 262,144 to 1,000,000: https://openrouter.ai/api/v1/models/nvidia/nemotron-3-super-120b-a12b/endpoints
     name: Nemotron 3 Super
     match:
       equals: nvidia/nemotron-3-super-120b-a12b
@@ -3428,8 +3541,10 @@ models:
     match:
       equals: nvidia/nemotron-3-super-120b-a12b:free
     prices: {}
+    context_window: 262144
 
   - id: nvidia/nemotron-3-ultra-550b-a55b
+    # No context_window: endpoints range from 202,800 to 262,144: https://openrouter.ai/api/v1/models/nvidia/nemotron-3-ultra-550b-a55b/endpoints
     name: Nemotron 3 Ultra
     match:
       equals: nvidia/nemotron-3-ultra-550b-a55b
@@ -3443,12 +3558,14 @@ models:
     match:
       equals: nvidia/nemotron-3-ultra-550b-a55b:free
     prices: {}
+    context_window: 1000000
 
   - id: nvidia/nemotron-3.5-content-safety:free
     name: Nemotron 3.5 Content Safety (free)
     match:
       equals: nvidia/nemotron-3.5-content-safety:free
     prices: {}
+    context_window: 128000
 
   - id: nvidia/nemotron-nano-12b-v2-vl:free
     name: Nemotron Nano 12B 2 VL (free)
@@ -3516,6 +3633,7 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
+    context_window: 16385
 
   - id: openai/gpt-3.5-turbo-0613
     name: GPT-3.5 Turbo (older v0613)
@@ -3524,6 +3642,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 2
+    context_window: 4095
 
   - id: openai/gpt-3.5-turbo-1106
     match:
@@ -3539,6 +3658,7 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 4
+    context_window: 16385
 
   - id: openai/gpt-3.5-turbo-instruct
     name: GPT-3.5 Turbo Instruct
@@ -3547,6 +3667,7 @@ models:
     prices:
       input_mtok: 1.5
       output_mtok: 2
+    context_window: 4095
 
   - id: openai/gpt-4
     name: GPT-4
@@ -3557,6 +3678,7 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 60
+    context_window: 8191
 
   - id: openai/gpt-4-1106-preview
     match:
@@ -3583,6 +3705,7 @@ models:
     prices:
       input_mtok: 10
       output_mtok: 30
+    context_window: 128000
 
   - id: openai/gpt-4.1
     name: GPT-4.1
@@ -3592,6 +3715,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+    context_window: 1047576
 
   - id: openai/gpt-4.1-mini
     name: GPT-4.1 Mini
@@ -3603,6 +3727,7 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.1
       output_mtok: 1.6
+    context_window: 1047576
 
   - id: openai/gpt-4.1-nano
     name: GPT-4.1 Nano
@@ -3612,6 +3737,7 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
+    context_window: 1047576
 
   - id: openai/gpt-4.5-preview
     match:
@@ -3630,6 +3756,7 @@ models:
     prices:
       input_mtok: 2.5
       output_mtok: 10
+    context_window: 128000
 
   - id: openai/gpt-4o-2024-05-13
     name: GPT-4o (2024-05-13)
@@ -3638,6 +3765,7 @@ models:
     prices:
       input_mtok: 5
       output_mtok: 15
+    context_window: 128000
 
   - id: openai/gpt-4o-mini
     name: GPT-4o-mini
@@ -3649,6 +3777,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
+    context_window: 128000
 
   - id: openai/gpt-4o-mini-search-preview
     name: GPT-4o-mini Search Preview
@@ -3687,6 +3816,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
+    context_window: 400000
 
   - id: openai/gpt-5-image
     name: GPT-5 Image
@@ -3696,6 +3826,7 @@ models:
       input_mtok: 10
       cache_read_mtok: 1.25
       output_mtok: 10
+    context_window: 400000
 
   - id: openai/gpt-5-image-mini
     name: GPT-5 Image Mini
@@ -3705,6 +3836,7 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 0.25
       output_mtok: 2
+    context_window: 400000
 
   - id: openai/gpt-5-mini
     name: GPT-5 Mini
@@ -3716,6 +3848,7 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
+    context_window: 400000
 
   - id: openai/gpt-5-nano
     name: GPT-5 Nano
@@ -3725,6 +3858,7 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.01
       output_mtok: 0.4
+    context_window: 400000
 
   - id: openai/gpt-5-pro
     name: GPT-5 Pro
@@ -3733,6 +3867,7 @@ models:
     prices:
       input_mtok: 15
       output_mtok: 120
+    context_window: 400000
 
   - id: openai/gpt-5.1
     name: GPT-5.1
@@ -3745,6 +3880,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.13
       output_mtok: 10
+    context_window: 400000
 
   - id: openai/gpt-5.1-codex-mini
     name: GPT-5.1-Codex-Mini
@@ -3756,6 +3892,7 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
+    context_window: 400000
 
   - id: openai/gpt-5.2
     name: GPT-5.2
@@ -3769,6 +3906,7 @@ models:
       input_mtok: 1.75
       cache_read_mtok: 0.175
       output_mtok: 14
+    context_window: 400000
 
   - id: openai/gpt-5.2-pro
     name: GPT-5.2 Pro
@@ -3779,6 +3917,7 @@ models:
     prices:
       input_mtok: 21
       output_mtok: 168
+    context_window: 400000
 
   - id: openai/gpt-5.3-chat
     name: GPT-5.3 Chat
@@ -3799,6 +3938,7 @@ models:
       input_mtok: 1.75
       cache_read_mtok: 0.175
       output_mtok: 14
+    context_window: 400000
 
   - id: openai/gpt-5.4
     name: GPT-5.4
@@ -3836,6 +3976,7 @@ models:
       input_mtok: 8
       cache_read_mtok: 2
       output_mtok: 15
+    context_window: 272000
 
   - id: openai/gpt-5.4-mini
     name: GPT-5.4 Mini
@@ -3845,6 +3986,7 @@ models:
       input_mtok: 0.75
       cache_read_mtok: 0.075
       output_mtok: 4.5
+    context_window: 400000
   - id: openai/gpt-5.4-nano
     name: GPT-5.4 Nano
     match:
@@ -3853,6 +3995,7 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 1.25
+    context_window: 400000
 
   - id: openai/gpt-5.4-pro
     name: GPT-5.4 Pro
@@ -4031,6 +4174,7 @@ models:
     prices:
       input_mtok: 2.5
       output_mtok: 10
+    context_window: 128000
 
   - id: openai/gpt-audio-mini
     name: GPT Audio Mini
@@ -4039,6 +4183,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.4
+    context_window: 128000
 
   - id: openai/gpt-chat-latest
     name: GPT Chat Latest
@@ -4048,8 +4193,10 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
+    context_window: 400000
 
   - id: openai/gpt-oss-120b
+    # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints
     name: gpt-oss-120b
     match:
       equals: openai/gpt-oss-120b
@@ -4070,6 +4217,7 @@ models:
     prices:
       input_mtok: 0.029
       output_mtok: 0.14
+    context_window: 131072
 
   - id: openai/gpt-oss-20b:free
     name: gpt-oss-20b (free)
@@ -4085,8 +4233,11 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.037
       output_mtok: 0.3
+    context_window: 131072
 
   - id: openai/o1
+    # No context_window: this record also matches the retired o1-preview aliases, whose window
+    # was 128,000 vs o1's 200,000 — no single value is true until the aliases get their own record
     name: o1
     match:
       or:
@@ -4114,6 +4265,7 @@ models:
     prices:
       input_mtok: 150
       output_mtok: 600
+    context_window: 200000
 
   - id: openai/o3
     name: o3
@@ -4123,6 +4275,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+    context_window: 200000
 
   - id: openai/o3-deep-research
     name: o3 Deep Research
@@ -4143,6 +4296,7 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
+    context_window: 200000
 
   - id: openai/o3-pro
     name: o3 Pro
@@ -4151,6 +4305,7 @@ models:
     prices:
       input_mtok: 20
       output_mtok: 80
+    context_window: 200000
 
   - id: openai/o4-mini
     name: o4 Mini
@@ -4162,6 +4317,7 @@ models:
       input_mtok: 1.1
       cache_read_mtok: 0.275
       output_mtok: 4.4
+    context_window: 200000
 
   - id: openai/o4-mini-deep-research
     name: o4 Mini Deep Research
@@ -4194,6 +4350,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 1.5
+    context_window: 32768
 
   - id: perplexity/llama-3.1-sonar-large-128k-online
     match:
@@ -4222,6 +4379,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 1
+    context_window: 127072
 
   - id: perplexity/sonar-deep-research
     match:
@@ -4230,6 +4388,7 @@ models:
     price_comments: >-
       OpenRouter reports internal reasoning as a distinct $3 per million-token charge.
       Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing
+    context_window: 128000
     prices:
       input_mtok: 2
       output_mtok: 8
@@ -4241,6 +4400,7 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 15
+    context_window: 200000
 
   - id: perplexity/sonar-reasoning
     match:
@@ -4255,6 +4415,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 8
+    context_window: 128000
 
   - id: phi-3-medium-128k-instruct
     name: Phi-3 Medium 128K Instruct
@@ -4421,6 +4582,7 @@ models:
       output_mtok: 0.9
 
   - id: qwen/qwen-2.5-72b-instruct
+    # No context_window: endpoints range from 32,000 to 32,768: https://openrouter.ai/api/v1/models/qwen/qwen-2.5-72b-instruct/endpoints
     name: Qwen2.5 72B Instruct
     match:
       equals: qwen/qwen-2.5-72b-instruct
@@ -4440,6 +4602,7 @@ models:
     prices:
       input_mtok: 0.04
       output_mtok: 0.1
+    context_window: 32768
 
   - id: "qwen/qwen-2.5-7b-instruct:free"
     match:
@@ -4453,6 +4616,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.15
+    context_window: 32768
 
   - id: "qwen/qwen-2.5-coder-32b-instruct:free"
     match:
@@ -4493,6 +4657,7 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.16
       output_mtok: 1.2
+    context_window: 1000000
 
   - id: qwen/qwen-plus-2025-07-28
     name: Qwen Plus 0728
@@ -4501,6 +4666,7 @@ models:
     prices:
       input_mtok: 0.26
       output_mtok: 0.78
+    context_window: 1000000
 
   - id: qwen/qwen-plus-2025-07-28:thinking
     name: Qwen Plus 0728 (thinking)
@@ -4557,6 +4723,7 @@ models:
     prices: {}
 
   - id: qwen/qwen2.5-vl-72b-instruct
+    # No context_window: endpoints range from 32,000 to 128,000: https://openrouter.ai/api/v1/models/qwen/qwen2.5-vl-72b-instruct/endpoints
     match:
       equals: qwen/qwen2.5-vl-72b-instruct
     prices:
@@ -4569,6 +4736,7 @@ models:
     prices: {}
 
   - id: qwen/qwen3-14b
+    # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-14b/endpoints
     name: Qwen3 14B
     match:
       equals: qwen/qwen3-14b
@@ -4583,8 +4751,10 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.6
+    context_window: 131072
 
   - id: qwen/qwen3-235b-a22b-2507
+    # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-235b-a22b-2507/endpoints
     name: Qwen3 235B A22B Instruct 2507
     match:
       equals: qwen/qwen3-235b-a22b-2507
@@ -4593,6 +4763,7 @@ models:
       output_mtok: 0.1
 
   - id: qwen/qwen3-235b-a22b-thinking-2507
+    # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-235b-a22b-thinking-2507/endpoints
     name: Qwen3 235B A22B Thinking 2507
     match:
       equals: qwen/qwen3-235b-a22b-thinking-2507
@@ -4601,6 +4772,7 @@ models:
       output_mtok: 0.1
 
   - id: qwen/qwen3-30b-a3b
+    # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-30b-a3b/endpoints
     name: Qwen3 30B A3B
     match:
       equals: qwen/qwen3-30b-a3b
@@ -4609,6 +4781,7 @@ models:
       output_mtok: 0.29
 
   - id: qwen/qwen3-30b-a3b-instruct-2507
+    # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-30b-a3b-instruct-2507/endpoints
     name: Qwen3 30B A3B Instruct 2507
     match:
       equals: qwen/qwen3-30b-a3b-instruct-2507
@@ -4623,8 +4796,10 @@ models:
     prices:
       input_mtok: 0.08
       output_mtok: 0.4
+    context_window: 81920
 
   - id: qwen/qwen3-32b
+    # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-32b/endpoints
     name: Qwen3 32B
     match:
       equals: qwen/qwen3-32b
@@ -4639,8 +4814,10 @@ models:
     prices:
       input_mtok: 0.035
       output_mtok: 0.138
+    context_window: 131072
 
   - id: qwen/qwen3-coder
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-coder/endpoints
     name: Qwen3 Coder 480B A35B
     match:
       or:
@@ -4651,6 +4828,7 @@ models:
       output_mtok: 1.8
 
   - id: qwen/qwen3-coder-30b-a3b-instruct
+    # No context_window: endpoints range from 160,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-coder-30b-a3b-instruct/endpoints
     name: Qwen3 Coder 30B A3B Instruct
     match:
       equals: qwen/qwen3-coder-30b-a3b-instruct
@@ -4667,8 +4845,10 @@ models:
       cache_write_mtok: 0.24375
       cache_read_mtok: 0.039
       output_mtok: 0.975
+    context_window: 1000000
 
   - id: qwen/qwen3-coder-next
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-coder-next/endpoints
     name: Qwen3 Coder Next
     match:
       or:
@@ -4688,6 +4868,7 @@ models:
       cache_write_mtok: 0.8125
       cache_read_mtok: 0.13
       output_mtok: 3.25
+    context_window: 1000000
 
   - id: qwen/qwen3-coder:free
     name: Qwen3 Coder 480B A35B (free)
@@ -4702,6 +4883,7 @@ models:
     prices:
       input_mtok: 1.20
       output_mtok: 6.00
+    context_window: 262144
 
   - id: qwen/qwen3-max-thinking
     name: Qwen3 Max Thinking
@@ -4712,8 +4894,10 @@ models:
     prices:
       input_mtok: 0.78
       output_mtok: 3.9
+    context_window: 262144
 
   - id: qwen/qwen3-next-80b-a3b-instruct
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-next-80b-a3b-instruct/endpoints
     name: Qwen3 Next 80B A3B Instruct
     match:
       or:
@@ -4730,6 +4914,7 @@ models:
     prices: {}
 
   - id: qwen/qwen3-next-80b-a3b-thinking
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-next-80b-a3b-thinking/endpoints
     name: Qwen3 Next 80B A3B Thinking
     match:
       or:
@@ -4740,6 +4925,7 @@ models:
       output_mtok: 0.78
 
   - id: qwen/qwen3-vl-235b-a22b-instruct
+    # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-235b-a22b-instruct/endpoints
     name: Qwen3 VL 235B A22B Instruct
     match:
       equals: qwen/qwen3-vl-235b-a22b-instruct
@@ -4755,8 +4941,10 @@ models:
     prices:
       input_mtok: 0.26
       output_mtok: 2.6
+    context_window: 131072
 
   - id: qwen/qwen3-vl-30b-a3b-instruct
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-30b-a3b-instruct/endpoints
     name: Qwen3 VL 30B A3B Instruct
     match:
       equals: qwen/qwen3-vl-30b-a3b-instruct
@@ -4765,6 +4953,7 @@ models:
       output_mtok: 0.52
 
   - id: qwen/qwen3-vl-30b-a3b-thinking
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-30b-a3b-thinking/endpoints
     name: Qwen3 VL 30B A3B Thinking
     match:
       equals: qwen/qwen3-vl-30b-a3b-thinking
@@ -4779,8 +4968,10 @@ models:
     prices:
       input_mtok: 0.104
       output_mtok: 0.416
+    context_window: 131072
 
   - id: qwen/qwen3-vl-8b-instruct
+    # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-8b-instruct/endpoints
     name: Qwen3 VL 8B Instruct
     match:
       equals: qwen/qwen3-vl-8b-instruct
@@ -4795,6 +4986,7 @@ models:
     prices:
       input_mtok: 0.117
       output_mtok: 1.365
+    context_window: 131072
 
   - id: qwen/qwen3.5-122b-a10b
     name: Qwen3.5-122B-A10B
@@ -4805,6 +4997,7 @@ models:
     prices:
       input_mtok: 0.26
       output_mtok: 2.08
+    context_window: 262144
 
   - id: qwen/qwen3.5-27b
     name: Qwen3.5-27B
@@ -4815,8 +5008,10 @@ models:
     prices:
       input_mtok: 0.195
       output_mtok: 1.56
+    context_window: 262144
 
   - id: qwen/qwen3.5-35b-a3b
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-35b-a3b/endpoints
     name: Qwen3.5-35B-A3B
     match:
       or:
@@ -4828,6 +5023,7 @@ models:
       output_mtok: 1
 
   - id: qwen/qwen3.5-397b-a17b
+    # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-397b-a17b/endpoints
     name: Qwen3.5 397B A17B
     match:
       or:
@@ -4838,6 +5034,7 @@ models:
       output_mtok: 2.34
 
   - id: qwen/qwen3.5-9b
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-9b/endpoints
     name: Qwen3.5-9B
     match:
       or:
@@ -4856,6 +5053,7 @@ models:
     prices:
       input_mtok: 0.065
       output_mtok: 0.26
+    context_window: 1000000
 
   - id: qwen/qwen3.5-plus-02-15
     name: Qwen3.5 plus-02-15
@@ -4866,6 +5064,7 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 2.4
+    context_window: 1000000
 
   - id: qwen/qwen3.5-plus-20260420
     name: Qwen3.5 Plus 2026-04-20
@@ -4875,8 +5074,10 @@ models:
       input_mtok: 0.3
       cache_write_mtok: 0.375
       output_mtok: 1.8
+    context_window: 1000000
 
   - id: qwen/qwen3.6-27b
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.6-27b/endpoints
     name: Qwen3.6 27B
     match:
       or:
@@ -4887,6 +5088,7 @@ models:
       output_mtok: 2.4
 
   - id: qwen/qwen3.6-35b-a3b
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.6-35b-a3b/endpoints
     name: Qwen3.6 35B A3B
     match:
       or:
@@ -4904,6 +5106,7 @@ models:
       input_mtok: 0.1875
       cache_write_mtok: 0.234375
       output_mtok: 1.125
+    context_window: 1000000
 
   - id: qwen/qwen3.6-max-preview
     name: Qwen3.6 Max Preview
@@ -4915,6 +5118,7 @@ models:
       input_mtok: 1.04
       cache_write_mtok: 1.3
       output_mtok: 6.24
+    context_window: 262144
 
   - id: qwen/qwen3.6-plus
     name: Qwen3.6 Plus
@@ -4926,6 +5130,7 @@ models:
       input_mtok: 0.325
       cache_write_mtok: 0.40625
       output_mtok: 1.95
+    context_window: 1000000
 
   - id: qwen/qwen3.7-max
     name: Qwen3.7 Max
@@ -4938,6 +5143,7 @@ models:
       cache_write_mtok: 1.5625
       cache_read_mtok: 0.25
       output_mtok: 3.75
+    context_window: 1000000
 
   - id: qwen/qwen3.7-plus
     name: Qwen3.7 Plus
@@ -4950,6 +5156,7 @@ models:
       cache_write_mtok: 0.5
       cache_read_mtok: 0.08
       output_mtok: 1.6
+    context_window: 1000000
 
   - id: qwen/qwq-32b
     match:
@@ -5087,6 +5294,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
+    context_window: 16384
 
   - id: rekaai/reka-flash-3
     name: Reka Flash 3
@@ -5095,6 +5303,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
+    context_window: 65536
 
   - id: "rekaai/reka-flash-3:free"
     match:
@@ -5108,6 +5317,7 @@ models:
     prices:
       input_mtok: 0.85
       output_mtok: 1.25
+    context_window: 256000
 
   - id: relace/relace-search
     name: Relace Search
@@ -5116,6 +5326,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 3
+    context_window: 256000
 
   - id: sao10k/fimbulvetr-11b-v2
     match:
@@ -5138,6 +5349,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.05
+    context_window: 8192
 
   - id: sao10k/l3.1-70b-hanami-x1
     name: Llama 3.1 70B Hanami x1
@@ -5148,6 +5360,7 @@ models:
       output_mtok: 3
 
   - id: sao10k/l3.1-euryale-70b
+    # No context_window: endpoints range from 8,192 to 131,072: https://openrouter.ai/api/v1/models/sao10k/l3.1-euryale-70b/endpoints
     name: Llama 3.1 Euryale 70B v2.2
     match:
       equals: sao10k/l3.1-euryale-70b
@@ -5162,6 +5375,7 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 0.8
+    context_window: 131072
 
   - id: sarvam-m:free
     name: Sarvam-M (free)
@@ -5245,8 +5459,10 @@ models:
       input_mtok: 0.09
       cache_read_mtok: 0.02
       output_mtok: 0.3
+    context_window: 262144
 
   - id: stepfun/step-3.7-flash
+    # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/stepfun/step-3.7-flash/endpoints
     name: Step 3.7 Flash
     match:
       equals: stepfun/step-3.7-flash
@@ -5270,6 +5486,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.57
+    context_window: 131072
 
   - id: tencent/hy3-preview
     name: Hy3 preview
@@ -5279,6 +5496,7 @@ models:
       input_mtok: 0.063
       cache_read_mtok: 0.021
       output_mtok: 0.21
+    context_window: 262144
 
   - id: thedrummer/anubis-pro-105b-v1
     match:
@@ -5295,6 +5513,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.15
       output_mtok: 0.5
+    context_window: 131072
 
   - id: thedrummer/rocinante-12b
     name: Rocinante 12B
@@ -5311,8 +5530,10 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 0.8
+    context_window: 32768
 
   - id: thedrummer/unslopnemo-12b
+    # No context_window: endpoints range from 32,768 to 1,024,000: https://openrouter.ai/api/v1/models/thedrummer/unslopnemo-12b/endpoints
     match:
       equals: thedrummer/unslopnemo-12b
     prices:
@@ -5344,6 +5565,7 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+    context_window: 6144
 
   - id: undi95/toppy-m-7b
     match:
@@ -5360,6 +5582,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.6
+    context_window: 131072
 
   - id: valkyrie-49b-v1
     name: Valkyrie 49B V1
@@ -5384,6 +5607,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 6
+    context_window: 1040000
 
   - id: x-ai/grok-2-1212
     match:
@@ -5444,6 +5668,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
+    context_window: 2000000
 
   - id: x-ai/grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
@@ -5453,6 +5678,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.2
       output_mtok: 6
+    context_window: 2000000
 
   - id: x-ai/grok-4.3
     name: Grok 4.3
@@ -5464,6 +5690,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
+    context_window: 1000000
 
   - id: x-ai/grok-beta
     match:
@@ -5480,6 +5707,7 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.2
       output_mtok: 2
+    context_window: 256000
 
   - id: x-ai/grok-code-fast-1
     match:
@@ -5507,6 +5735,7 @@ models:
       output_mtok: 0.3
 
   - id: xiaomi/mimo-v2.5
+    # No context_window: endpoints range from 262,144 to 1,050,000: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5/endpoints
     name: MiMo-V2.5
     match:
       equals: xiaomi/mimo-v2.5
@@ -5516,6 +5745,7 @@ models:
       output_mtok: 0.28
 
   - id: xiaomi/mimo-v2.5-pro
+    # No context_window: endpoints range from 262,144 to 1,050,000: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5-pro/endpoints
     name: MiMo-V2.5-Pro
     match:
       equals: xiaomi/mimo-v2.5-pro
@@ -5547,6 +5777,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.11
       output_mtok: 2.2
+    context_window: 131072
 
   - id: z-ai/glm-4.5-air
     name: GLM 4.5 Air
@@ -5556,6 +5787,7 @@ models:
       input_mtok: 0.125
       cache_read_mtok: 0.06
       output_mtok: 0.85
+    context_window: 131072
 
   - id: z-ai/glm-4.5v
     name: GLM 4.5V
@@ -5565,8 +5797,10 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.11
       output_mtok: 1.8
+    context_window: 65536
 
   - id: z-ai/glm-4.6
+    # No context_window: endpoints range from 198,000 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-4.6/endpoints
     name: GLM 4.6
     match:
       equals: z-ai/glm-4.6
@@ -5583,8 +5817,10 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.05
       output_mtok: 0.9
+    context_window: 131072
 
   - id: z-ai/glm-4.7
+    # No context_window: endpoints range from 131,072 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-4.7/endpoints
     name: GLM 4.7
     match:
       equals: z-ai/glm-4.7
@@ -5594,6 +5830,7 @@ models:
       output_mtok: 1.75
 
   - id: z-ai/glm-4.7-flash
+    # No context_window: endpoints range from 128,000 to 202,752: https://openrouter.ai/api/v1/models/z-ai/glm-4.7-flash/endpoints
     name: GLM 4.7 Flash
     match:
       or:
@@ -5605,6 +5842,7 @@ models:
       output_mtok: 0.4
 
   - id: z-ai/glm-5
+    # No context_window: endpoints range from 64,000 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-5/endpoints
     name: GLM 5
     match:
       or:
@@ -5625,8 +5863,10 @@ models:
       input_mtok: 1.2
       cache_read_mtok: 0.24
       output_mtok: 4
+    context_window: 202752
 
   - id: z-ai/glm-5.1
+    # No context_window: endpoints range from 163,840 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-5.1/endpoints
     name: GLM 5.1
     match:
       or:
@@ -5686,6 +5926,7 @@ models:
       cache_write_mtok: 12.5
       cache_read_mtok: 1
       output_mtok: 50
+    context_window: 1000000
 
   - id: ~anthropic/claude-haiku-latest
     name: Anthropic Claude Haiku Latest
@@ -5696,6 +5937,7 @@ models:
       cache_write_mtok: 1.25
       cache_read_mtok: 0.1
       output_mtok: 5
+    context_window: 200000
 
   - id: ~anthropic/claude-opus-latest
     name: Claude Opus Latest
@@ -5706,6 +5948,7 @@ models:
       cache_write_mtok: 6.25
       cache_read_mtok: 0.5
       output_mtok: 25
+    context_window: 1000000
 
   - id: ~anthropic/claude-sonnet-latest
     name: Anthropic Claude Sonnet Latest
@@ -5716,6 +5959,7 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+    context_window: 1000000
 
   - id: ~google/gemini-flash-latest
     name: Google Gemini Flash Latest
@@ -5726,6 +5970,7 @@ models:
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.15
       output_mtok: 9
+    context_window: 1048576
 
   - id: ~google/gemini-pro-latest
     name: Google Gemini Pro Latest
@@ -5736,6 +5981,7 @@ models:
       cache_write_mtok: 0.375
       cache_read_mtok: 0.2
       output_mtok: 12
+    context_window: 1048576
 
   - id: ~moonshotai/kimi-latest
     name: MoonshotAI Kimi Latest
@@ -5745,6 +5991,7 @@ models:
       input_mtok: 0.68
       cache_read_mtok: 0.34
       output_mtok: 3.41
+    context_window: 1048576
 
   - id: ~openai/gpt-latest
     name: OpenAI GPT Latest
@@ -5754,6 +6001,7 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
+    context_window: 1050000
 
   - id: ~openai/gpt-mini-latest
     name: OpenAI GPT Mini Latest
@@ -5763,3 +6011,4 @@ models:
       input_mtok: 0.75
       cache_read_mtok: 0.075
       output_mtok: 4.5
+    context_window: 400000

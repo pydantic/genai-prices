@@ -276,6 +276,7 @@ models:
     name: Qwen3 32B 131k
     match:
       equals: qwen/qwen3-32b
+    context_window: 131072
     prices_checked: 2025-08-12
     prices:
       input_mtok: 0.29
@@ -285,6 +286,8 @@ models:
     name: Whisper Large V3
     match:
       equals: whisper-large-v3
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
     prices_checked: 2026-08-24
     price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
     prices:
@@ -295,6 +298,8 @@ models:
     name: Whisper Large V3 Turbo
     match:
       equals: whisper-large-v3-turbo
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
     prices_checked: 2026-08-24
     price_comments: See https://console.groq.com/docs/model/whisper-large-v3-turbo.
     prices:

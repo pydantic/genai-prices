@@ -7,7 +7,7 @@ api_pattern: 'https://api\.mistral\.ai'
 provider_match:
   starts_with: mistral
 model_match:
-  regex: "^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))"
+  regex: "^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))"
 
 # https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
 extractors:
@@ -47,6 +47,7 @@ models:
       or:
         - equals: codestral-latest
         - equals: codestral-2501
+    context_window: 256000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.3
@@ -59,6 +60,7 @@ models:
       tasks such as fill-in-the-middle (FIM), code correction and test generation.
     match:
       equals: codestral-2508
+    context_window: 256000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.3
@@ -72,6 +74,7 @@ models:
       dense transformer model supporting a 256K context window.
     match:
       equals: devstral-2512
+    context_window: 262144
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.4
@@ -86,10 +89,23 @@ models:
       codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on
       SWE-Bench Verified (46.8%).
     match:
-      equals: devstral-small
+      or:
+        - equals: devstral-small
+        - equals: devstral-small-2505
+        - equals: devstral-small-2507
+        - equals: devstral-small-latest
+        - equals: labs-devstral-small-2512
+    # Every Devstral Small generation is deprecated or retired: 1.0 (devstral-small-2505) retired 2025-11-30,
+    # 1.1 (devstral-small-2507) retired 2026-05-31, Small 2 (labs-devstral-small-2512, devstral-small-latest)
+    # retired 2026-03-31.
+    deprecated: true
+    prices_checked: 2026-08-27
+    price_comments: >-
+      The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30.
+      Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.12
+      input_mtok: 0.1
+      output_mtok: 0.3
 
   - id: devstral-small:free
     name: Devstral Small (free)
@@ -113,6 +129,8 @@ models:
       or:
         - starts_with: magistral-medium
     prices_checked: 2025-08-12
+    # No context_window: this record also matches the retired magistral-medium-2506/2507 releases
+    # (40k per Mistral's model docs) vs magistral-medium-latest's 262,144 — no single value is true
     prices:
       input_mtok: 2
       output_mtok: 5
@@ -126,6 +144,8 @@ models:
     match:
       starts_with: magistral-small-
     prices_checked: 2025-08-12
+    # No context_window: this record also matches the retired magistral-small-2506/2507 releases
+    # (40k per Mistral's model docs) vs magistral-small-latest's 262,144 — no single value is true
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -137,6 +157,7 @@ models:
       to its larger Mistral Small 3.2 24B counterpart.
     match:
       equals: ministral-14b-2512
+    context_window: 262144
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.2
@@ -163,6 +184,7 @@ models:
       capabilities.
     match:
       equals: ministral-3b-2512
+    context_window: 131072
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.1
@@ -194,6 +216,7 @@ models:
       Ministral 3 8B is an efficient text and vision model for edge deployment.
     match:
       equals: ministral-8b-2512
+    context_window: 262144
     prices_checked: 2026-08-24
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
@@ -206,6 +229,8 @@ models:
     name: Ministral 8B Latest
     match:
       equals: ministral-8b-latest
+    # No context_window: this alias pointed to Ministral 8B 24.10 (128k) until 2025-12-02,
+    # now to Ministral 3 8B (262,144) — no single value is true for every request it matches
     prices_checked: 2026-08-24
     price_comments: >-
       The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02.
@@ -235,6 +260,7 @@ models:
   - id: mistral-embed
     match:
       equals: mistral-embed
+    context_window: 8192
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -252,6 +278,8 @@ models:
         - equals: mistral-large-2407
         - equals: mistral-large-2411
     prices_checked: 2025-07-04
+    # No context_window: this record also matches the retired mistral-large-2407/2411 aliases
+    # (131,072) vs mistral-large-latest's 262,144 — no single value is true for every ref it matches
     prices:
       input_mtok: 2
       output_mtok: 6
@@ -263,6 +291,7 @@ models:
       41B active parameters (675B total), and released under the Apache 2.0 license.
     match:
       equals: mistral-large-2512
+    context_window: 262144
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.5
@@ -298,6 +327,8 @@ models:
     price_comments: >-
       Mistral Medium 3 and 3.1 retain their original $0.40/$2 per MTok rates.
       Ref: https://github.com/mistralai/platform-docs-public/blob/222f4ba9114f84ce9f2d718b9a12fbac1e527f4b/src/schema/models/models/mistral-medium-3-1-25-08.ts
+    # No context_window: live aliases disagree — mistral-medium reports 262,144 while
+    # mistral-medium-2505/2508 report 131,072 — no single value is true for every ref it matches
     prices:
       input_mtok: 0.4
       cache_read_mtok: 0.04
@@ -312,6 +343,7 @@ models:
         - equals: mistral-medium-3.5
         - equals: mistral-medium-3-5
         - equals: mistral-medium-3
+    context_window: 262144
     prices_checked: 2026-08-24
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
@@ -324,6 +356,8 @@ models:
     name: Mistral Medium Latest
     match:
       equals: mistral-medium-latest
+    # No context_window: this alias pointed to the 128k mistral-medium-2505 before repointing
+    # to the 262,144 Medium 3.5 — no single value is true for every request it matches
     prices_checked: 2026-08-24
     price_comments: >-
       The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16.
@@ -396,6 +430,7 @@ models:
       or:
         - equals: mistral-ocr-2512
         - equals: mistral-ocr-2512-completion
+    context_window: 16384
     prices_checked: 2026-08-25
     price_comments: https://docs.mistral.ai/models/ocr-3-25-12
     prices:
@@ -408,6 +443,7 @@ models:
       or:
         - equals: mistral-ocr-4-0
         - equals: mistral-ocr-4-0-completion
+    context_window: 16384
     prices_checked: 2026-08-25
     price_comments: https://docs.mistral.ai/models/ocr-4-0
     prices:
@@ -422,6 +458,7 @@ models:
         - equals: mistral-ocr-4-completion
         - equals: mistral-ocr-4-1
         - equals: mistral-ocr-4-1-completion
+    context_window: 16384
     prices_checked: 2026-08-25
     price_comments: https://docs.mistral.ai/models/ocr-4-1
     prices:
@@ -434,6 +471,8 @@ models:
       or:
         - equals: mistral-ocr-latest
         - equals: mistral-ocr-latest-completion
+    # No context_window: this alias pointed to the 40k mistral-ocr-2505 before today's
+    # 16,384 OCR 4 — no single value is true for every request it matches
     prices_checked: 2026-08-25
     price_comments: >-
       The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026.
@@ -505,6 +544,7 @@ models:
       Mistral models into a single system.
     match:
       equals: mistral-small-2603
+    context_window: 262144
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.15
@@ -542,6 +582,8 @@ models:
     name: Mistral Small 3.2
     match:
       equals: mistral-small-latest
+    # No context_window: this alias pointed to the 128k mistral-small-2506 before repointing
+    # to the 262,144 mistral-small-2603 — no single value is true for every request it matches
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
@@ -618,6 +660,7 @@ models:
       or:
         - equals: voxtral-mini-latest
         - equals: voxtral-mini-2602
+    context_window: 16384
     prices_checked: 2026-08-24
     price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
     prices:
@@ -634,6 +677,7 @@ models:
         - equals: voxtral-small-24b-2507
         - equals: voxtral-small-2507
         - equals: voxtral-small-latest
+    context_window: 32768
     prices_checked: 2026-08-24
     price_comments: >-
       Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11.

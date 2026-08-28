@@ -45,6 +45,77 @@ def test_sync_success_with_provider():
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('composer-2.5', Decimal('3.2')),
+        ('composer-2.5-fast', Decimal('18.5')),
+        ('grok-4.5', Decimal('8.5')),
+        ('grok-4.5-fast', Decimal('23')),
+        ('grok-4.6', Decimal('8.5')),
+        ('grok-4.6-fast', Decimal('17')),
+    ],
+)
+def test_cursor_model_prices(model_ref: str, expected_total_price: Decimal):
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='cursor',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+def test_cursor_provider_inference():
+    composer_price = calc_price(Usage(input_tokens=1), model_ref='composer-2.5[fast=true]')
+    grok_price = calc_price(
+        Usage(input_tokens=1),
+        model_ref='grok-4.6[fast=false]',
+        provider_api_url='https://api.cursor.com/v1/agents',
+    )
+
+    assert composer_price.provider.id == 'cursor'
+    assert composer_price.model.id == 'composer-2.5-fast'
+    assert grok_price.provider.id == 'cursor'
+    assert grok_price.model.id == 'grok-4.6'
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('deepseek/deepseek-v4-flash-latest', Decimal('0.448')),
+        ('deepseek/deepseek-v4-pro', Decimal('5.42')),
+        ('moonshotai/kimi-k3', Decimal('18.3')),
+        ('thinkingmachines/inkling-small', Decimal('1.8')),
+        ('trinity-large-thinking', Decimal('1.11')),
+        ('zai-org/glm-5.2', Decimal('6.06')),
+    ],
+)
+def test_arcee_model_prices(model_ref: str, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='arcee',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+def test_arcee_provider_inference() -> None:
+    explicit_price = calc_price(Usage(input_tokens=1), model_ref='trinity-large-thinking', provider_id='arcee')
+    url_price = calc_price(
+        Usage(input_tokens=1),
+        model_ref='deepseek/deepseek-v4-pro',
+        provider_api_url='https://api.arcee.ai/api/v1/chat/completions',
+    )
+
+    assert explicit_price.provider.id == 'arcee'
+    assert url_price.provider.id == 'arcee'
+
+    with pytest.raises(LookupError, match='in deepseek'):
+        calc_price(Usage(input_tokens=1), model_ref='deepseek/deepseek-v4-pro')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),
@@ -409,6 +480,19 @@ def test_sync_success_with_model_regex():
     assert price.total_price == snapshot(Decimal('0.0028'))
     assert price.model.name == snapshot('o3')
     assert price.provider.id == snapshot('openai')
+
+
+def test_cloudflare_provider_api_url() -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='@cf/openai/gpt-oss-20b',
+        provider_api_url='https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+    )
+
+    assert price.provider.id == 'cloudflare'
+    assert price.input_price == Decimal('0.2')
+    assert price.output_price == Decimal('0.3')
+    assert price.total_price == Decimal('0.5')
 
 
 def test_openrouter_deepseek_v32_price():
@@ -1008,6 +1092,36 @@ def test_openai_gpt_56_sol_web_search_price():
     )
 
     assert price.total_price == Decimal('0.03')
+
+
+def test_gpt_4o_original_snapshot_price():
+    usage = Usage(input_tokens=1_000, cache_read_tokens=500, output_tokens=100)
+    original = calc_price(usage, model_ref='gpt-4o-2024-05-13', provider_id='openai')
+    later = calc_price(usage, model_ref='gpt-4o-2024-08-06', provider_id='openai')
+
+    assert original.model.id == 'gpt-4o-2024-05-13'
+    assert original.input_price == Decimal('0.005')
+    assert original.output_price == Decimal('0.0015')
+    assert later.model.id == 'gpt-4o'
+    assert later.input_price == Decimal('0.001875')
+    assert later.output_price == Decimal('0.001')
+
+
+def test_devstral_small_price():
+    price = calc_price(
+        Usage(input_tokens=10_000, output_tokens=1_000), model_ref='devstral-small-2507', provider_id='mistral'
+    )
+
+    assert price.model.id == 'devstral-small'
+    assert price.input_price == Decimal('0.001')
+    assert price.output_price == Decimal('0.0003')
+    assert price.total_price == Decimal('0.0013')
+
+    inferred = calc_price(Usage(input_tokens=10_000), model_ref='labs-devstral-small-2512')
+
+    assert inferred.provider.id == 'mistral'
+    assert inferred.model.id == 'devstral-small'
+    assert inferred.input_price == Decimal('0.001')
 
 
 def test_openai_file_search_price():

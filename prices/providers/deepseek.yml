@@ -88,6 +88,7 @@ models:
       issues reported by users, including language consistency and agent capabilities.
     match:
       equals: deepseek-v3.1-terminus
+    context_window: 128000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.27
@@ -101,6 +102,7 @@ models:
       agentic tool-use performance.
     match:
       equals: deepseek-v3.2
+    context_window: 128000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.2288
@@ -113,6 +115,7 @@ models:
       and future architectures.
     match:
       equals: deepseek-v3.2-exp
+    context_window: 128000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 0.27

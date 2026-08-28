@@ -93,3 +93,34 @@ providers:
       - https://docs.voyageai.com/docs/pricing
     notes: >-
       Compare the standard per-million-token price with input_mtok. Do not apply the Batch API discount or free-token allowance.
+
+  - name: Cloudflare Workers AI
+    file: prices/providers/cloudflare.yml
+    scope: Token-priced models in Cloudflare's public catalog. Exclude image and audio models.
+    sources:
+      - https://developers.cloudflare.com/workers-ai/platform/pricing/index.md
+    notes: >-
+      Compare per-million input, cached-input, and output token prices with input_mtok, cache_read_mtok, and output_mtok. Ignore
+      the account-wide free Neuron allocation. This YAML deliberately covers only token-priced models. Do not add image, tile,
+      step, character, or audio-minute prices during this check.
+
+  - name: Cursor
+    file: prices/providers/cursor.yml
+    scope: Cursor Models pool variants with public on-demand token pricing.
+    sources:
+      - https://cursor.com/docs/models-and-pricing
+    notes: >-
+      The Cursor Models table is the complete in-scope catalog. Compare Input, Cache Read, and Output with input_mtok,
+      cache_read_mtok, and output_mtok. Cache Write is not priced. Treat each Fast row as a separate variant. Exclude third-party
+      models, the Cursor Token Rate, usage pools, plan allowances, regional uplifts, Legacy Enterprise Auto, and legacy Max Mode.
+
+  - name: Arcee
+    file: prices/providers/arcee.yml
+    scope: Models in Arcee's public Text Models pricing table.
+    sources:
+      - https://docs.arcee.ai/get-started/pricing
+    notes: >-
+      The Text Models table is the complete in-scope catalog. Compare Input, Cached, and Output with input_mtok,
+      cache_read_mtok, and output_mtok. Exclude context windows and image, request, and cache-write rates because the public
+      pricing page does not publish them. Match exact model IDs and do not treat their third-party namespaces as provider
+      ownership.

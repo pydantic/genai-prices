@@ -57,7 +57,9 @@ class ProviderYaml:
         self._extra_prices = []
         self._removed_models = set()
 
-    def update_model(self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False) -> None:
+    def update_model(
+        self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False, preserve_price_history: bool = False
+    ) -> None:
         yaml_model = self._get_model(lookup_id)
         description = model.description
         if description:
@@ -73,11 +75,28 @@ class ProviderYaml:
         if set_prices:
             prices = cast(Any, yaml_model['prices'])
             assert isinstance(model.prices, ModelPrice)
-            if isinstance(prices, CommentedMap):
+            new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
+            if preserve_price_history:
+                current_model = self.provider.find_model(lookup_id)
+                assert current_model is not None
+                current_prices = (
+                    current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
+                )
+                if current_prices != model.prices:
+                    conditional_price = {'constraint': {'start_date': model.prices_checked}, 'prices': new_prices}
+                    if isinstance(prices, CommentedMap):
+                        yaml_model['prices'] = [{'prices': prices}, conditional_price]
+                    else:
+                        cast(CommentedSeq, prices).append(conditional_price)  # pyright: ignore[reportUnknownMemberType]
+            elif isinstance(prices, CommentedMap):
                 prices.clear()  # pyright: ignore[reportUnknownMemberType]
-                prices.update(model.prices.model_dump(by_alias=True, mode='json', exclude_none=True))  # pyright: ignore[reportUnknownMemberType]
+                prices.update(new_prices)  # pyright: ignore[reportUnknownMemberType]
             else:
-                yaml_model['prices'] = model.prices.model_dump(by_alias=True, mode='json')
+                yaml_model['prices'] = new_prices
+            if model.prices_checked is not None:
+                yaml_model['prices_checked'] = model.prices_checked
+                if 'price_discrepancies' in yaml_model:
+                    del yaml_model['price_discrepancies']
 
         current_match_yaml = cast(CommentedMap, yaml_model['match'])
         current_match = match_logic_schema.validate_python(current_match_yaml)
@@ -128,10 +147,14 @@ class ProviderYaml:
         if self._removed_models:
             existing_models = [m for m in existing_models if m['id'] not in self._removed_models]
 
-        new_models = [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self._extra_prices]
-        for m in new_models:
-            if description := m.get('description'):
-                m['description'] = FoldedScalarString(description.strip())
+        new_models: list[dict[str, Any]] = []
+        for model in self._extra_prices:
+            new_model = model.model_dump(by_alias=True, mode='json', exclude_none=True)
+            if model.prices_checked is not None:
+                new_model['prices_checked'] = model.prices_checked
+            if description := new_model.get('description'):
+                new_model['description'] = FoldedScalarString(description.strip())
+            new_models.append(new_model)
 
         existing_models += new_models
         self.data['models'] = existing_models
