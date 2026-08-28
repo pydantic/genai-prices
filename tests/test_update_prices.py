@@ -743,7 +743,7 @@ def test_forked_child_restarts_shared_updater_and_preserves_claims() -> None:
 
     try:
         pid = os.fork()
-        if pid == 0:
+        if pid == 0:  # pragma: no cover
             try:
                 revived = first._updater
                 ok = (
@@ -793,7 +793,7 @@ def test_fork_during_shutdown_resets_child_to_restartable_idle_state() -> None:
             assert worker.stop_event.wait(timeout=5)
 
             pid = os.fork()
-            if pid == 0:
+            if pid == 0:  # pragma: no cover
                 try:
                     ok = update_prices.wait(timeout=0) is False
                     update_prices.stop()
@@ -818,13 +818,13 @@ def test_failed_fork_revival_makes_inherited_claims_inert(monkeypatch: pytest.Mo
     update_prices = NullUpdatePrices()
     update_prices.start(wait=True)
 
-    def fail_revival(_worker: update_prices_module._SharedUpdater) -> None:
+    def fail_revival(_worker: update_prices_module._SharedUpdater) -> None:  # pragma: no cover
         raise RuntimeError('revival failed')
 
     monkeypatch.setattr(update_prices_module._SharedUpdater, 'revive_after_fork', fail_revival)
     try:
         pid = os.fork()
-        if pid == 0:
+        if pid == 0:  # pragma: no cover
             try:
                 ok = update_prices.wait(timeout=0) is False
                 update_prices.stop()
@@ -850,7 +850,7 @@ def test_fork_without_active_updater_preserves_manual_snapshot() -> None:
     data_snapshot.set_custom_snapshot(manual_snapshot)
     try:
         pid = os.fork()
-        if pid == 0:
+        if pid == 0:  # pragma: no cover
             os._exit(0 if data_snapshot._custom_snapshot is manual_snapshot else 1)
 
         _, status = os.waitpid(pid, 0)
@@ -885,3 +885,123 @@ def test_concurrent_instances_share_one_worker_without_leaks() -> None:
     assert not errors
     assert update_prices_module._global_update_prices is None
     assert not [thread for thread in threading.enumerate() if thread.name == 'genai_prices:update']
+
+
+def _unstarted_shared_updater() -> tuple[NullUpdatePrices, update_prices_module._SharedUpdater]:
+    owner = NullUpdatePrices()
+    config = update_prices_module._UpdateConfig.from_values(
+        owner.url,
+        owner.update_interval,
+        owner.request_timeout,
+    )
+    worker = update_prices_module._SharedUpdater(config, owner)
+    worker.claims = 1
+    owner._updater = worker
+    owner._fetch_updater = worker
+    return owner, worker
+
+
+def test_fork_callbacks_freeze_parent_and_reset_idle_child(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(update_prices_module, '_global_update_prices', None)
+    parent_lifecycle = update_prices_module._lifecycle
+
+    update_prices_module._fork_before()
+    update_prices_module._fork_after_in_parent()
+    update_prices_module._fork_after_in_child()
+
+    assert update_prices_module._lifecycle is not parent_lifecycle
+
+
+def test_fork_child_revives_active_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    _owner, worker = _unstarted_shared_updater()
+    revived = False
+
+    def revive_after_fork(_worker: update_prices_module._SharedUpdater) -> None:
+        nonlocal revived
+        revived = True
+
+    monkeypatch.setattr(update_prices_module, '_global_update_prices', worker)
+    monkeypatch.setattr(update_prices_module._SharedUpdater, 'revive_after_fork', revive_after_fork)
+
+    update_prices_module._fork_after_in_child()
+
+    assert revived
+    assert update_prices_module._global_update_prices is worker
+
+
+def test_fork_child_invalidates_stopping_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner, worker = _unstarted_shared_updater()
+    worker.phase = update_prices_module._UpdaterPhase.STOPPING
+    previous_stop_event = worker.stop_event
+    manual_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(manual_snapshot)
+    monkeypatch.setattr(update_prices_module, '_global_update_prices', worker)
+
+    update_prices_module._fork_after_in_child()
+
+    assert update_prices_module._global_update_prices is None
+    assert worker.phase is update_prices_module._UpdaterPhase.DEAD
+    assert worker.claims == 0
+    assert worker.stop_event is not previous_stop_event
+    assert worker.stop_event.is_set()
+    assert worker.run_event.is_set()
+    assert worker.outcome.ready.is_set()
+    assert owner._fetch_updater is None
+    assert data_snapshot._custom_snapshot is None
+
+
+def test_fork_child_revival_failure_resets_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    _owner, worker = _unstarted_shared_updater()
+    logged = False
+
+    def fail_revival(_worker: update_prices_module._SharedUpdater) -> None:
+        raise RuntimeError('revival failed')
+
+    def record_log(_log: Callable[..., None], _message: str, *_args: object) -> None:
+        nonlocal logged
+        logged = True
+
+    monkeypatch.setattr(update_prices_module, '_global_update_prices', worker)
+    monkeypatch.setattr(update_prices_module._SharedUpdater, 'revive_after_fork', fail_revival)
+    monkeypatch.setattr(update_prices_module._SharedUpdater, '_log', record_log)
+
+    update_prices_module._fork_after_in_child()
+
+    assert logged
+    assert update_prices_module._global_update_prices is None
+    assert worker.phase is update_prices_module._UpdaterPhase.DEAD
+
+
+def test_shared_worker_revival_replaces_inherited_thread_state() -> None:
+    owner, worker = _unstarted_shared_updater()
+    inherited_stop_event = worker.stop_event
+    inherited_outcome = worker.outcome
+    inherited_thread = worker.thread
+
+    worker.revive_after_fork()
+    try:
+        assert worker.stop_event is not inherited_stop_event
+        assert worker.outcome is not inherited_outcome
+        assert worker.thread is not inherited_thread
+        assert owner._fetch_updater is worker
+        assert worker.wait(timeout=5)
+    finally:
+        worker.stop()
+
+
+def test_stale_fork_claims_are_inert_and_restartable(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner, stale_worker = _unstarted_shared_updater()
+    monkeypatch.setattr(update_prices_module, '_global_update_prices', None)
+
+    assert owner.wait(timeout=0) is False
+    owner.stop()
+    assert owner._updater is None
+
+    owner._updater = stale_worker
+    owner._fetch_updater = stale_worker
+    owner.start(wait=True)
+    try:
+        assert owner._updater is update_prices_module._global_update_prices
+        assert owner._updater is not stale_worker
+    finally:
+        owner.stop()
