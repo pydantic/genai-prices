@@ -732,6 +732,10 @@ def test_litellm_provider_id():
         # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
         # not claim either window — a 200,000 here would mis-size o1-preview requests
         ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
+        # Groq's own catalog (`context_window`); Whisper's 448 is the audio decoder's token limit
+        ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
+        # no longer in Groq's live catalog, so there is no source for a window
+        ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
     ],
 )
 def test_model_has_effective_context_window(

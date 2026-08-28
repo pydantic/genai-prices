@@ -7757,6 +7757,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-32b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
@@ -7768,6 +7769,7 @@ export const data: Provider[] = [
         match: {
           equals: 'whisper-large-v3',
         },
+        context_window: 448,
         price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3.',
         prices: {
           audio_hours: 0.111,
@@ -7780,6 +7782,7 @@ export const data: Provider[] = [
         match: {
           equals: 'whisper-large-v3-turbo',
         },
+        context_window: 448,
         price_comments: 'See https://console.groq.com/docs/model/whisper-large-v3-turbo.',
         prices: {
           audio_hours: 0.04,
