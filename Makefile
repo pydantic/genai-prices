@@ -67,6 +67,10 @@ huggingface-get: ## get huggingface prices
 cloudflare-get: ## get cloudflare workers ai prices
 	uv run -m prices get_cloudflare_prices
 
+.PHONY: cursor-get
+cursor-get: ## get cursor model prices
+	uv run -m prices get_cursor_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
@@ -76,7 +80,7 @@ quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get cloudflare-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

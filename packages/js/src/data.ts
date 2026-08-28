@@ -4260,6 +4260,194 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'cursor',
+    name: 'Cursor',
+    pricing_urls: [
+      'https://cursor.com/docs/models-and-pricing',
+      'https://cursor.com/docs/models/grok-4-6',
+      'https://cursor.com/docs/models/grok-4-5',
+      'https://cursor.com/docs/models/cursor-composer-2-5',
+    ],
+    api_pattern: 'https://api\\.cursor\\.com',
+    description: "Agentic coding models available through Cursor's editor, SDK, and Cloud Agents API.",
+    model_match: {
+      starts_with: 'composer-',
+    },
+    extractors: [
+      {
+        api_flavor: 'usage-event',
+        root: 'tokenUsage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'inputTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cacheWriteTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cacheReadTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cacheWriteTokens',
+            dest: 'cache_write_tokens',
+            required: true,
+          },
+          {
+            path: 'cacheReadTokens',
+            dest: 'cache_read_tokens',
+            required: true,
+          },
+          {
+            path: 'outputTokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'composer-2.5',
+        name: 'Composer 2.5',
+        description: "Cursor's agentic coding model, optimized for long-running tasks and tool use.",
+        match: {
+          or: [
+            {
+              equals: 'composer-2.5',
+            },
+            {
+              regex: '^composer-2\\.5\\[fast=false\\]$',
+            },
+          ],
+        },
+        context_window: 200000,
+        price_comments: 'Standard on-demand usage. Fast is a separately priced variant.',
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'composer-2.5-fast',
+        name: 'Composer 2.5 Fast',
+        description: 'Faster Composer 2.5 speed tier with the same model intelligence.',
+        match: {
+          or: [
+            {
+              equals: 'composer-2.5-fast',
+            },
+            {
+              regex: '^composer-2\\.5\\[fast=true\\]$',
+            },
+          ],
+        },
+        context_window: 200000,
+        price_comments: 'Fast on-demand usage.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.5,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description: "Cursor and SpaceXAI's agentic model for long-running coding and knowledge work.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5',
+            },
+            {
+              regex: '^grok-4\\.5\\[fast=false\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Standard on-demand usage. Fast is a separately priced variant.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'grok-4.5-fast',
+        name: 'Grok 4.5 Fast',
+        description: 'Faster Grok 4.5 speed tier for agentic coding and knowledge work.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5-fast',
+            },
+            {
+              regex: '^grok-4\\.5\\[fast=true\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Fast on-demand usage.',
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 1,
+          output_mtok: 18,
+        },
+      },
+      {
+        id: 'grok-4.6',
+        name: 'Grok 4.6',
+        description: "Cursor and SpaceXAI's frontier model for complex coding and knowledge work.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.6',
+            },
+            {
+              regex: '^grok-4\\.6\\[fast=false\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Standard on-demand usage. Fast is a separately priced variant.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'grok-4.6-fast',
+        name: 'Grok 4.6 Fast',
+        description: 'Faster Grok 4.6 speed tier for complex coding and knowledge work.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.6-fast',
+            },
+            {
+              regex: '^grok-4\\.6\\[fast=true\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Fast on-demand usage.',
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 1,
+          output_mtok: 12,
+        },
+      },
+    ],
+  },
+  {
     id: 'deepseek',
     name: 'Deepseek',
     pricing_urls: ['https://api-docs.deepseek.com/quick_start/pricing'],
