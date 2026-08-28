@@ -8348,6 +8348,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='chatgpt-4o-latest'),
                 name='ChatGPT-4o',
                 description='OpenAI ChatGPT 4o is continually updated by OpenAI to point to the current version of GPT-4o used by ChatGPT. It therefore differs slightly from the API version of GPT-4o in that it has additional RLHF. It is intended for research and evaluation.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
@@ -8355,6 +8356,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='codex-mini'), ClauseEquals(equals='codex-mini-latest')]),
                 name='Codex Mini',
                 description='codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.',
+                context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6')
                 ),
@@ -8363,6 +8365,7 @@ providers: list[Provider] = [
                 id='computer-use',
                 match=ClauseStartsWith(starts_with='computer-use'),
                 name='Computer use',
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
@@ -8634,11 +8637,13 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
                 name='gpt 4o mini audio preview',
                 description='Audio model for gpt-4o mini',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-realtime'),
+                context_window=16000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),
                     cache_read_mtok=Decimal('0.3'),
@@ -8651,6 +8656,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-transcribe',
                 match=ClauseEquals(equals='gpt-4o-mini-transcribe'),
+                context_window=16000,
                 prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5'), input_audio_mtok=Decimal('3')),
             ),
             ModelInfo(
@@ -8661,6 +8667,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-realtime-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-realtime'),
+                context_window=32000,
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_read_mtok=Decimal('2.5'),
@@ -8680,6 +8687,7 @@ providers: list[Provider] = [
                 ),
                 name='GPT-4o Search Preview',
                 description='GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
@@ -8687,6 +8695,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
+                context_window=16000,
                 price_comments='See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
@@ -9198,6 +9207,7 @@ providers: list[Provider] = [
                 ),
                 name='GPT Audio',
                 description="The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
+                context_window=128000,
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'),
                     output_mtok=Decimal('10'),
@@ -9216,6 +9226,7 @@ providers: list[Provider] = [
                 ),
                 name='GPT Audio Mini',
                 description='A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
+                context_window=128000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),
                     output_mtok=Decimal('2.4'),
@@ -9295,6 +9306,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-oss-120b'),
                 name='gpt-oss-120b',
                 description='gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases.',
+                context_window=131072,
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.039'), output_mtok=Decimal('0.18')),
             ),
@@ -9303,6 +9315,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-oss-20b'),
                 name='gpt-oss-20b',
                 description='gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-Experts (MoE) architecture with 3.6B active parameters per forward pass.',
+                context_window=131072,
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.029'), output_mtok=Decimal('0.14')),
             ),
@@ -9311,6 +9324,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-oss-safeguard-20b'),
                 name='gpt-oss-safeguard-20b',
                 description='gpt-oss-safeguard-20b is a safety reasoning model from OpenAI built upon gpt-oss-20b. This open-weight, 21B-parameter Mixture-of-Experts (MoE) model offers lower latency for safety tasks.',
+                context_window=131072,
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.037'), output_mtok=Decimal('0.3')
@@ -9325,6 +9339,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-realtime-1.5'),
                     ]
                 ),
+                context_window=32000,
                 price_comments='See https://developers.openai.com/api/docs/models/gpt-realtime.',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
@@ -9340,6 +9355,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-realtime-2',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2'), ClauseEquals(equals='gpt-realtime-2.1')]),
+                context_window=128000,
                 price_comments='See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
@@ -9417,6 +9433,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='o1-pro'), ClauseEquals(equals='o1-pro-2025-03-19')]),
                 name='o1-pro',
                 description='The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently better answers.',
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('150'), output_mtok=Decimal('600')),
             ),
             ModelInfo(
@@ -9452,6 +9469,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='o3-deep-research'), ClauseEquals(equals='o3-deep-research-2025-06-26')]
                 ),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
             ),
             ModelInfo(
@@ -9475,6 +9493,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='o3-pro'), ClauseEquals(equals='o3-pro-2025-06-10')]),
                 name='o3 Pro',
                 description='The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently better answers.',
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('80')),
             ),
             ModelInfo(
@@ -9505,6 +9524,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='o4-mini-deep-research-2025-06-26'),
                     ]
                 ),
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(

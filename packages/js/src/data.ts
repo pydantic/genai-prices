@@ -14232,6 +14232,7 @@ export const data: Provider[] = [
         match: {
           equals: 'chatgpt-4o-latest',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 5,
           output_mtok: 15,
@@ -14252,6 +14253,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.5,
           cache_read_mtok: 0.375,
@@ -14264,6 +14266,7 @@ export const data: Provider[] = [
         match: {
           starts_with: 'computer-use',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 3,
           output_mtok: 12,
@@ -14739,6 +14742,7 @@ export const data: Provider[] = [
         match: {
           starts_with: 'gpt-4o-mini-audio',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -14749,6 +14753,7 @@ export const data: Provider[] = [
         match: {
           starts_with: 'gpt-4o-mini-realtime',
         },
+        context_window: 16000,
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.3,
@@ -14763,6 +14768,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-4o-mini-transcribe',
         },
+        context_window: 16000,
         prices: {
           input_mtok: 1.25,
           output_mtok: 5,
@@ -14784,6 +14790,7 @@ export const data: Provider[] = [
         match: {
           starts_with: 'gpt-4o-realtime',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 5,
           cache_read_mtok: 2.5,
@@ -14808,6 +14815,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -14825,6 +14833,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16000,
         price_comments: 'See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.',
         prices: {
           input_mtok: 2.5,
@@ -15832,6 +15841,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -15857,6 +15867,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
@@ -15970,6 +15981,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-120b',
         },
+        context_window: 131072,
         price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.039,
@@ -15984,6 +15996,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-20b',
         },
+        context_window: 131072,
         price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.029,
@@ -15998,6 +16011,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-oss-safeguard-20b',
         },
+        context_window: 131072,
         price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.075,
@@ -16020,6 +16034,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 32000,
         price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime.',
         prices: {
           input_mtok: 4,
@@ -16044,6 +16059,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.',
         prices: {
           input_mtok: 4,
@@ -16183,6 +16199,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 150,
           output_mtok: 600,
@@ -16241,6 +16258,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 10,
           cache_read_mtok: 2.5,
@@ -16287,6 +16305,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 20,
           output_mtok: 80,
@@ -16330,6 +16349,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
