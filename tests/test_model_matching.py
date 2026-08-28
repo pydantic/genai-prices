@@ -789,6 +789,12 @@ def test_litellm_provider_id():
         ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
         # removed from the Perplexity API 2025-12-15; no live statement of its window survives
         ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
+        # docs.x.ai model pages state each context window ("Context window: N tokens")
+        ('x-ai', 'grok-4.20', 'x-ai', 'grok-4.20', 1_000_000),
+        ('x-ai', 'grok-build-0.1', 'x-ai', 'grok-build-0.1', 256_000),
+        # xAI states no context window for its voice models, and grok-voice-latest is a rolling
+        # alias that repointed to a different model on 2026-08-05
+        ('x-ai', 'grok-voice-latest', 'x-ai', 'grok-voice-latest', None),
     ],
 )
 def test_model_has_effective_context_window(
