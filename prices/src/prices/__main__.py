@@ -8,6 +8,7 @@ from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
 from .source_cloudflare import get_cloudflare_prices
+from .source_cursor import get_cursor_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
@@ -23,6 +24,7 @@ def main():
         collapse,
         detect_deprecated,
         get_cloudflare_prices,
+        get_cursor_prices,
         get_huggingface_prices,
         get_litellm_prices,
         get_openrouter_prices,

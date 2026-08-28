@@ -2549,6 +2549,104 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='cursor',
+        name='Cursor',
+        api_pattern='https://api\\.cursor\\.com',
+        pricing_urls=[
+            'https://cursor.com/docs/models-and-pricing',
+            'https://cursor.com/docs/models/grok-4-6',
+            'https://cursor.com/docs/models/grok-4-5',
+            'https://cursor.com/docs/models/cursor-composer-2-5',
+        ],
+        description="Agentic coding models available through Cursor's editor, SDK, and Cloud Agents API.",
+        model_match=ClauseStartsWith(starts_with='composer-'),
+        extractors=[
+            UsageExtractor(
+                root='tokenUsage',
+                mappings=[
+                    UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheWriteTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheReadTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheWriteTokens', dest='cache_write_tokens', required=True),
+                    UsageExtractorMapping(path='cacheReadTokens', dest='cache_read_tokens', required=True),
+                    UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='usage-event',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='composer-2.5',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='composer-2.5'), ClauseRegex(regex='^composer-2\\.5\\[fast=false\\]$')]
+                ),
+                name='Composer 2.5',
+                description="Cursor's agentic coding model, optimized for long-running tasks and tool use.",
+                context_window=200000,
+                price_comments='Standard on-demand usage. Fast is a separately priced variant.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='composer-2.5-fast',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='composer-2.5-fast'), ClauseRegex(regex='^composer-2\\.5\\[fast=true\\]$')]
+                ),
+                name='Composer 2.5 Fast',
+                description='Faster Composer 2.5 speed tier with the same model intelligence.',
+                context_window=200000,
+                price_comments='Fast on-demand usage.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='grok-4.5',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.5'), ClauseRegex(regex='^grok-4\\.5\\[fast=false\\]$')]
+                ),
+                name='Grok 4.5',
+                description="Cursor and SpaceXAI's agentic model for long-running coding and knowledge work.",
+                context_window=256000,
+                price_comments='Standard on-demand usage. Fast is a separately priced variant.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='grok-4.5-fast',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.5-fast'), ClauseRegex(regex='^grok-4\\.5\\[fast=true\\]$')]
+                ),
+                name='Grok 4.5 Fast',
+                description='Faster Grok 4.5 speed tier for agentic coding and knowledge work.',
+                context_window=256000,
+                price_comments='Fast on-demand usage.',
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('18')),
+            ),
+            ModelInfo(
+                id='grok-4.6',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.6'), ClauseRegex(regex='^grok-4\\.6\\[fast=false\\]$')]
+                ),
+                name='Grok 4.6',
+                description="Cursor and SpaceXAI's frontier model for complex coding and knowledge work.",
+                context_window=256000,
+                price_comments='Standard on-demand usage. Fast is a separately priced variant.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='grok-4.6-fast',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.6-fast'), ClauseRegex(regex='^grok-4\\.6\\[fast=true\\]$')]
+                ),
+                name='Grok 4.6 Fast',
+                description='Faster Grok 4.6 speed tier for complex coding and knowledge work.',
+                context_window=256000,
+                price_comments='Fast on-demand usage.',
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('12')),
+            ),
+        ],
+    ),
+    Provider(
         id='deepseek',
         name='Deepseek',
         api_pattern='https://api\\.deepseek\\.com',

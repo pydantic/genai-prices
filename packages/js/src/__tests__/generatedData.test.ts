@@ -104,6 +104,21 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 3.2, model: 'composer-2.5' },
+    { expectedTotalPrice: 18.5, model: 'composer-2.5-fast' },
+    { expectedTotalPrice: 8.5, model: 'grok-4.5' },
+    { expectedTotalPrice: 23, model: 'grok-4.5-fast' },
+    { expectedTotalPrice: 8.5, model: 'grok-4.6' },
+    { expectedTotalPrice: 17, model: 'grok-4.6-fast' },
+  ])('prices Cursor $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'cursor',
+    })
+
+    expect(result?.total_price).toBe(expectedTotalPrice)
+  })
+
+  it.each([
     { expectedInputPrice: (200_000 * 3) / 1_000_000, inputTokens: 200_000 },
     { expectedInputPrice: (200_001 * 6) / 1_000_000, inputTokens: 200_001 },
   ])('prices Google Claude Sonnet 4.5 at the 200K boundary', ({ expectedInputPrice, inputTokens }) => {
