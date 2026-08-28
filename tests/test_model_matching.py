@@ -732,6 +732,12 @@ def test_litellm_provider_id():
         # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
         # not claim either window — a 200,000 here would mis-size o1-preview requests
         ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
+        # Novita's own catalog (`context_size`), corroborated by OpenRouter's Novita endpoint —
+        # Novita serves this model at 12,288, far below other hosts' 131,072
+        ('novita', 'meta-llama/llama-3.3-70b-instruct', 'novita', 'meta-llama/llama-3.3-70b-instruct', 12_288),
+        ('novita', 'deepseek/deepseek-r1', 'novita', 'deepseek/deepseek-r1', 64_000),
+        # no longer in Novita's live catalog, so there is no source for a window
+        ('novita', 'meta-llama/llama-3.1-70b-instruct', 'novita', 'meta-llama/llama-3.1-70b-instruct', None),
         # Mistral's own catalog (`max_context_length`), corroborated by OpenRouter's Mistral endpoints
         ('mistral', 'mistral-small-latest', 'mistral', 'mistral-small-latest', 262_144),
         # the codestral record also matches the retired codestral-2501 alias, whose window was the
