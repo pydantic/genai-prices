@@ -53,6 +53,7 @@ models:
     prices_checked: 2026-06-10
     match:
       contains: amazon.nova-2-sonic
+    context_window: 1000000
     prices:
       input_mtok: 0.33
       output_mtok: 2.75
@@ -67,6 +68,7 @@ models:
       customer interactions, document analysis, and visual question-answering tasks with high accuracy.
     match:
       contains: amazon.nova-lite
+    context_window: 300000
     prices:
       input_mtok: 0.06
       cache_read_mtok: 0.015
@@ -82,6 +84,7 @@ models:
       abilities.
     match:
       contains: amazon.nova-micro
+    context_window: 128000
     prices:
       input_mtok: 0.035
       cache_read_mtok: 0.00875
@@ -91,6 +94,7 @@ models:
     name: Nova Premier
     match:
       contains: amazon.nova-premier
+    context_window: 1000000
     prices:
       input_mtok: 2.5
       cache_read_mtok: 0.625
@@ -104,6 +108,7 @@ models:
       performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).
     match:
       contains: amazon.nova-pro
+    context_window: 300000
     prices:
       input_mtok: 0.8
       cache_read_mtok: 0.2
@@ -123,6 +128,7 @@ models:
     name: Titan Embeddings G1 - Text
     match:
       contains: amazon.titan-embed-text
+    context_window: 8192
     prices:
       input_mtok: 0.1
 
@@ -146,6 +152,7 @@ models:
     name: DeepSeek-R1
     match:
       contains: deepseek.r1
+    context_window: 128000
     prices:
       input_mtok: 1.35
       output_mtok: 5.4
@@ -155,6 +162,7 @@ models:
     prices_checked: 2026-06-11
     match:
       contains: global.amazon.nova-2-lite
+    context_window: 1000000
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.075
@@ -290,6 +298,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: google.gemma-3-12b-it
+    context_window: 128000
     prices:
       input_mtok: 0.09
       output_mtok: 0.29
@@ -299,6 +308,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: google.gemma-3-27b-it
+    context_window: 128000
     prices:
       input_mtok: 0.23
       output_mtok: 0.38
@@ -308,6 +318,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: google.gemma-3-4b-it
+    context_window: 128000
     prices:
       input_mtok: 0.04
       output_mtok: 0.08
@@ -316,6 +327,7 @@ models:
     name: Llama 3.1 70B Instruct
     match:
       contains: meta.llama3-1-70b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.72
       output_mtok: 0.72
@@ -324,6 +336,7 @@ models:
     name: Llama 3.1 8B Instruct
     match:
       contains: meta.llama3-1-8b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.22
       output_mtok: 0.22
@@ -332,6 +345,7 @@ models:
     name: Llama 3.2 11B Instruct
     match:
       contains: meta.llama3-2-11b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.16
       output_mtok: 0.16
@@ -340,6 +354,7 @@ models:
     name: Llama 3.2 1B Instruct
     match:
       contains: meta.llama3-2-1b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -348,6 +363,7 @@ models:
     name: Llama 3.2 3B Instruct
     match:
       contains: meta.llama3-2-3b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.15
       output_mtok: 0.15
@@ -356,6 +372,7 @@ models:
     name: Llama 3.2 90B Instruct
     match:
       contains: meta.llama3-2-90b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.72
       output_mtok: 0.72
@@ -364,6 +381,7 @@ models:
     name: Llama 3.3 70B Instruct
     match:
       contains: meta.llama3-3-70b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.72
       output_mtok: 0.72
@@ -372,6 +390,7 @@ models:
     name: Llama 3 70B Instruct
     match:
       contains: meta.llama3-70b-instruct
+    context_window: 8192
     prices:
       input_mtok: 2.65
       output_mtok: 3.5
@@ -380,6 +399,7 @@ models:
     name: Llama 3 8B Instruct
     match:
       contains: meta.llama3-8b-instruct
+    context_window: 8192
     prices:
       input_mtok: 0.3
       output_mtok: 0.6
@@ -388,6 +408,7 @@ models:
     name: Llama 4 Maverick 17B Instruct
     match:
       contains: meta.llama4-maverick-17b-instruct
+    context_window: 1000000
     prices:
       input_mtok: 0.24
       output_mtok: 0.97
@@ -396,6 +417,7 @@ models:
     name: Llama 4 Scout 17B Instruct
     match:
       contains: meta.llama4-scout-17b-instruct
+    context_window: 10000000
     prices:
       input_mtok: 0.17
       output_mtok: 0.66
@@ -405,6 +427,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.devstral-2-123b
+    context_window: 256000
     prices:
       input_mtok: 0.4
       output_mtok: 2
@@ -414,6 +437,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.magistral-small-2509
+    context_window: 128000
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -423,6 +447,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.ministral-3-14b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
@@ -432,6 +457,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.ministral-3-3b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -441,6 +467,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.ministral-3-8b-instruct
+    context_window: 128000
     prices:
       input_mtok: 0.15
       output_mtok: 0.15
@@ -449,6 +476,7 @@ models:
     name: Mistral 7B Instruct
     match:
       contains: mistral.mistral-7b-instruct-v0
+    context_window: 32000
     prices:
       input_mtok: 0.15
       output_mtok: 0.2
@@ -457,6 +485,7 @@ models:
     name: Mistral Large (24.02)
     match:
       contains: mistral.mistral-large-2402
+    context_window: 32000
     prices:
       input_mtok: 4
       output_mtok: 12
@@ -466,6 +495,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.mistral-large-3-675b-instruct
+    context_window: 256000
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -474,6 +504,7 @@ models:
     name: Mistral Small (24.02)
     match:
       contains: mistral.mistral-small-2402
+    context_window: 32000
     prices:
       input_mtok: 1
       output_mtok: 3
@@ -482,6 +513,7 @@ models:
     name: Mixtral 8x7B Instruct
     match:
       contains: mistral.mixtral-8x7b-instruct-v0
+    context_window: 32000
     prices:
       input_mtok: 0.45
       output_mtok: 0.7
@@ -490,6 +522,7 @@ models:
     name: Pixtral Large (25.02)
     match:
       contains: mistral.pixtral-large-2502
+    context_window: 128000
     prices:
       input_mtok: 2
       output_mtok: 6
@@ -499,6 +532,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.voxtral-mini-3b-2507
+    context_window: 32000
     prices:
       input_mtok: 0.04
       output_mtok: 0.04
@@ -508,6 +542,7 @@ models:
     prices_checked: 2026-06-03
     match:
       contains: mistral.voxtral-small-24b-2507
+    context_window: 32000
     prices:
       input_mtok: 0.1
       output_mtok: 0.3
@@ -517,6 +552,7 @@ models:
     prices_checked: 2026-04-08
     match:
       contains: nvidia.nemotron-nano-3-30b
+    context_window: 256000
     prices:
       input_mtok: 0.06
       output_mtok: 0.24
@@ -526,6 +562,7 @@ models:
     prices_checked: 2026-04-08
     match:
       contains: nvidia.nemotron-nano-9b-v2
+    context_window: 128000
     prices:
       input_mtok: 0.06
       output_mtok: 0.23
@@ -535,6 +572,7 @@ models:
     prices_checked: 2026-04-08
     match:
       contains: nvidia.nemotron-super-3-120b
+    context_window: 256000
     prices:
       input_mtok: 0.15
       output_mtok: 0.65
@@ -544,6 +582,8 @@ models:
     match:
       equals: openai.gpt-5.4
     prices_checked: 2026-06-30
+    # No context_window: AWS's model card states 272K with max output 'N/A', and 272K equals the
+    # GPT-5 family's input-only cap — whether it is the total window is unclear, so no value is recorded
     prices:
       input_mtok: 2.75
       cache_read_mtok: 0.275
@@ -554,6 +594,8 @@ models:
     match:
       equals: openai.gpt-5.5
     prices_checked: 2026-06-30
+    # No context_window: AWS's model card states 272K with max output 'N/A', and 272K equals the
+    # GPT-5 family's input-only cap — whether it is the total window is unclear, so no value is recorded
     prices:
       input_mtok: 5.5
       cache_read_mtok: 0.55
@@ -689,6 +731,7 @@ models:
     name: gpt-oss-120b
     match:
       contains: openai.gpt-oss-120b-1
+    context_window: 128000
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
@@ -697,6 +740,7 @@ models:
     name: gpt-oss-20b
     match:
       contains: openai.gpt-oss-20b-1
+    context_window: 128000
     prices:
       input_mtok: 0.07
       output_mtok: 0.3
@@ -705,6 +749,7 @@ models:
     name: Qwen3 32B (dense)
     match:
       contains: qwen.qwen3-32b
+    context_window: 32000
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
@@ -713,6 +758,7 @@ models:
     name: Qwen3-Coder-30B-A3B-Instruct
     match:
       contains: qwen.qwen3-coder-30b-a3b
+    context_window: 256000
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
@@ -721,6 +767,7 @@ models:
     name: Qwen3-Coder-480B-A35B-Instruct
     match:
       contains: qwen.qwen3-coder-480b-a35b
+    context_window: 128000
     prices:
       input_mtok: 0.45
       output_mtok: 1.8
@@ -729,6 +776,7 @@ models:
     name: Qwen3-VL-235B-A22B-Instruct
     match:
       contains: qwen.qwen3-vl-235b-a22b
+    context_window: 256000
     prices:
       input_mtok: 0.53
       output_mtok: 2.66
@@ -746,6 +794,7 @@ models:
         - contains: us.amazon.nova-2-lite
         - contains: eu.amazon.nova-2-lite
         - contains: jp.amazon.nova-2-lite
+    context_window: 1000000
     prices:
       input_mtok: 0.33
       cache_read_mtok: 0.0825
@@ -1068,6 +1117,7 @@ models:
     prices_checked: 2026-07-29
     match:
       contains: writer.palmyra-x4
+    context_window: 128000
     price_comments: >-
       Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference
       arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions.
@@ -1081,6 +1131,7 @@ models:
     prices_checked: 2026-07-29
     match:
       contains: writer.palmyra-x5
+    context_window: 128000
     price_comments: >-
       Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference
       arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions.

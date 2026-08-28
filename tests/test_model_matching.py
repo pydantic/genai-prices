@@ -756,6 +756,14 @@ def test_litellm_provider_id():
         ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
         # no longer in Groq's live catalog, so there is no source for a window
         ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
+        # AWS Bedrock model cards state each context window ("Context window: 300K tokens" etc.)
+        ('bedrock', 'amazon.nova-pro-v1:0', 'aws', 'amazon.nova-pro-v1:0', 300_000),
+        ('bedrock', 'us.amazon.nova-2-lite-v1:0', 'aws', 'regional.amazon.nova-2-lite-v1:0', 1_000_000),
+        # AWS serves this below the model's native 256K — the card states 128K
+        ('bedrock', 'qwen.qwen3-coder-480b-a35b-v1:0', 'aws', 'qwen.qwen3-coder-480b-a35b-v1:0', 128_000),
+        # AWS's card states 272K with max output N/A — the GPT-5 family's input-only cap, so the
+        # total-window framing is unclear and the record stays windowless
+        ('bedrock', 'openai.gpt-5.4', 'aws', 'openai.gpt-5.4', None),
     ],
 )
 def test_model_has_effective_context_window(

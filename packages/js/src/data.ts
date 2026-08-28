@@ -1286,6 +1286,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.nova-2-sonic',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.33,
           output_mtok: 2.75,
@@ -1301,6 +1302,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.nova-lite',
         },
+        context_window: 300000,
         prices: {
           input_mtok: 0.06,
           cache_read_mtok: 0.015,
@@ -1315,6 +1317,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.nova-micro',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.035,
           cache_read_mtok: 0.00875,
@@ -1327,6 +1330,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.nova-premier',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.625,
@@ -1341,6 +1345,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.nova-pro',
         },
+        context_window: 300000,
         prices: {
           input_mtok: 0.8,
           cache_read_mtok: 0.2,
@@ -1366,6 +1371,7 @@ export const data: Provider[] = [
         match: {
           contains: 'amazon.titan-embed-text',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.1,
         },
@@ -1398,6 +1404,7 @@ export const data: Provider[] = [
         match: {
           contains: 'deepseek.r1',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 1.35,
           output_mtok: 5.4,
@@ -1409,6 +1416,7 @@ export const data: Provider[] = [
         match: {
           contains: 'global.amazon.nova-2-lite',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.075,
@@ -1566,6 +1574,7 @@ export const data: Provider[] = [
         match: {
           contains: 'google.gemma-3-12b-it',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.09,
           output_mtok: 0.29,
@@ -1577,6 +1586,7 @@ export const data: Provider[] = [
         match: {
           contains: 'google.gemma-3-27b-it',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.23,
           output_mtok: 0.38,
@@ -1588,6 +1598,7 @@ export const data: Provider[] = [
         match: {
           contains: 'google.gemma-3-4b-it',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.08,
@@ -1599,6 +1610,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-1-70b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.72,
           output_mtok: 0.72,
@@ -1610,6 +1622,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-1-8b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.22,
           output_mtok: 0.22,
@@ -1621,6 +1634,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-2-11b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.16,
           output_mtok: 0.16,
@@ -1632,6 +1646,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-2-1b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -1643,6 +1658,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-2-3b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.15,
@@ -1654,6 +1670,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-2-90b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.72,
           output_mtok: 0.72,
@@ -1665,6 +1682,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-3-70b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.72,
           output_mtok: 0.72,
@@ -1676,6 +1694,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-70b-instruct',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 2.65,
           output_mtok: 3.5,
@@ -1687,6 +1706,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama3-8b-instruct',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.6,
@@ -1698,6 +1718,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama4-maverick-17b-instruct',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.24,
           output_mtok: 0.97,
@@ -1709,6 +1730,7 @@ export const data: Provider[] = [
         match: {
           contains: 'meta.llama4-scout-17b-instruct',
         },
+        context_window: 10000000,
         prices: {
           input_mtok: 0.17,
           output_mtok: 0.66,
@@ -1720,6 +1742,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.devstral-2-123b',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.4,
           output_mtok: 2,
@@ -1731,6 +1754,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.magistral-small-2509',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
@@ -1742,6 +1766,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.ministral-3-14b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
@@ -1753,6 +1778,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.ministral-3-3b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -1764,6 +1790,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.ministral-3-8b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.15,
@@ -1775,6 +1802,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.mistral-7b-instruct-v0',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.2,
@@ -1786,6 +1814,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.mistral-large-2402',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 4,
           output_mtok: 12,
@@ -1797,6 +1826,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.mistral-large-3-675b-instruct',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
@@ -1808,6 +1838,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.mistral-small-2402',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 1,
           output_mtok: 3,
@@ -1819,6 +1850,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.mixtral-8x7b-instruct-v0',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.45,
           output_mtok: 0.7,
@@ -1830,6 +1862,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.pixtral-large-2502',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2,
           output_mtok: 6,
@@ -1841,6 +1874,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.voxtral-mini-3b-2507',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.04,
@@ -1852,6 +1886,7 @@ export const data: Provider[] = [
         match: {
           contains: 'mistral.voxtral-small-24b-2507',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.3,
@@ -1863,6 +1898,7 @@ export const data: Provider[] = [
         match: {
           contains: 'nvidia.nemotron-nano-3-30b',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.24,
@@ -1874,6 +1910,7 @@ export const data: Provider[] = [
         match: {
           contains: 'nvidia.nemotron-nano-9b-v2',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.23,
@@ -1885,6 +1922,7 @@ export const data: Provider[] = [
         match: {
           contains: 'nvidia.nemotron-super-3-120b',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.65,
@@ -2096,6 +2134,7 @@ export const data: Provider[] = [
         match: {
           contains: 'openai.gpt-oss-120b-1',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -2107,6 +2146,7 @@ export const data: Provider[] = [
         match: {
           contains: 'openai.gpt-oss-20b-1',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.3,
@@ -2118,6 +2158,7 @@ export const data: Provider[] = [
         match: {
           contains: 'qwen.qwen3-32b',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -2129,6 +2170,7 @@ export const data: Provider[] = [
         match: {
           contains: 'qwen.qwen3-coder-30b-a3b',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -2140,6 +2182,7 @@ export const data: Provider[] = [
         match: {
           contains: 'qwen.qwen3-coder-480b-a35b',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.45,
           output_mtok: 1.8,
@@ -2151,6 +2194,7 @@ export const data: Provider[] = [
         match: {
           contains: 'qwen.qwen3-vl-235b-a22b',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.53,
           output_mtok: 2.66,
@@ -2174,6 +2218,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.33,
           cache_read_mtok: 0.0825,
@@ -2753,6 +2798,7 @@ export const data: Provider[] = [
         match: {
           contains: 'writer.palmyra-x4',
         },
+        context_window: 128000,
         price_comments:
           "Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
         prices: {
@@ -2766,6 +2812,7 @@ export const data: Provider[] = [
         match: {
           contains: 'writer.palmyra-x5',
         },
+        context_window: 128000,
         price_comments:
           "Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
         prices: {
