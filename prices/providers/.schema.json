@@ -281,7 +281,10 @@
           "title": "Canonical Model"
         },
         "context_window": {
-          "type": "integer",
+          "type": [
+            "integer",
+            "null"
+          ],
           "description": "Maximum number of input tokens allowed for this model",
           "title": "Context Window"
         },
