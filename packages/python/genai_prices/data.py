@@ -2815,7 +2815,6 @@ providers: list[Provider] = [
                 id='deepseek-ai/DeepSeek-V4-Flash-0731',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Flash-0731'),
                 name='DeepSeek V4 Flash 0731',
-                context_window=1048576,
                 price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.18')

@@ -4687,7 +4687,6 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
         },
-        context_window: 1048576,
         price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
         prices: {
           input_mtok: 0.09,
