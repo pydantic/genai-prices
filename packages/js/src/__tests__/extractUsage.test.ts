@@ -55,7 +55,9 @@ describe('extractUsage', () => {
       })
 
       const price = calcPrice(usage, model!, { providerId: 'cursor' })
-      expect(price?.total_price).toBeCloseTo(0.00099)
+      expect(price?.input_price).toBeCloseTo(0.00051, 8)
+      expect(price?.output_price).toBeCloseTo(0.00048, 8)
+      expect(price?.total_price).toBeCloseTo(0.00099, 8)
     })
 
     it('should extract usage with cache tokens', () => {
