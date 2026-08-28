@@ -68,7 +68,7 @@ The following providers are currently supported:
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
-- [X AI](prices/providers/x_ai.yml) - 18 models
+- [X AI](prices/providers/x_ai.yml) - 21 models
 - [Z.AI](prices/providers/zai.yml) - 3 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
 

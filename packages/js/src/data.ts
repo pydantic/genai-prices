@@ -27040,6 +27040,53 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'realtime',
+        root: ['response', 'usage'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'billable_audio_seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+          {
+            path: 'input_text_messages',
+            dest: 'input_text_messages',
+            required: false,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -27595,6 +27642,57 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'grok-voice-latest',
+        name: 'Grok Voice',
+        match: {
+          equals: 'grok-voice-latest',
+        },
+        price_comments: 'See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.',
+        prices: [
+          {
+            prices: {
+              audio_hours: 3,
+              input_text_messages_kcount: 4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-08-05',
+              type: 'start_date',
+            },
+            prices: {
+              audio_hours: 4.8,
+              input_text_messages_kcount: 4,
+            },
+          },
+        ],
+      },
+      {
+        id: 'grok-voice-think-fast-1.0',
+        name: 'Grok Voice Think Fast 1.0',
+        match: {
+          equals: 'grok-voice-think-fast-1.0',
+        },
+        price_comments: 'See https://docs.x.ai/developers/pricing#voice-pricing.',
+        prices: {
+          audio_hours: 3,
+          input_text_messages_kcount: 4,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'grok-voice-think-fast-2.0',
+        name: 'Grok Voice Think Fast 2.0',
+        match: {
+          equals: 'grok-voice-think-fast-2.0',
+        },
+        price_comments: 'See https://docs.x.ai/developers/pricing#voice-pricing.',
+        prices: {
+          audio_hours: 4.8,
+          input_text_messages_kcount: 4,
         },
       },
     ],
