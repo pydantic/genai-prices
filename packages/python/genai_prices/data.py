@@ -7281,6 +7281,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='minimax-01'),
                 name='MiniMax-01',
                 description='MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.',
+                context_window=1000192,
                 price_comments='Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('1.1')),
             ),

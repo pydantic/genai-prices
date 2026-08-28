@@ -12304,6 +12304,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax-01',
         },
+        context_window: 1000192,
         price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.2,
