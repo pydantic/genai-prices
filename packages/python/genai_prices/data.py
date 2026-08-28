@@ -1932,6 +1932,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mai-ds-r1:free'),
                 name='MAI DS R1 (free)',
                 description="MAI-DS-R1 is a post-trained variant of DeepSeek-R1 developed by the Microsoft AI team to improve the model's responsiveness on previously blocked topics while enhancing its safety profile. Built on top of DeepSeek-R1's reasoning foundation, it integrates 110k examples from the Tulu-3 SFT dataset and 350k internally curated multilingual safety-alignment samples. The model retains strong reasoning, coding, and problem-solving capabilities, while unblocking a wide range of prompts previously restricted in R1.",
+                context_window=163840,
                 prices=ModelPrice(),
             ),
             ModelInfo(
@@ -1981,6 +1982,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-3-medium-128k-instruct'),
                 name='Phi-3 Medium 128K Instruct',
                 description='Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
@@ -1988,6 +1990,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-3-mini-128k-instruct'),
                 name='Phi-3 Mini 128K Instruct',
                 description='Phi-3 Mini is a powerful 3.8B parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -1995,6 +1998,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-3.5-mini-128k-instruct'),
                 name='Phi-3.5 Mini 128K Instruct',
                 description='Phi-3.5 models are lightweight, state-of-the-art open models. These models were trained with Phi-3 datasets that include both synthetic data and the filtered, publicly available websites data, with a focus on high quality and reasoning-dense properties. Phi-3.5 Mini uses 3.8B parameters, and is a dense decoder-only transformer model using the same tokenizer as Phi-3 Mini.',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -2002,6 +2006,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4'),
                 name='Phi 4',
                 description='Microsoft Research Phi-4 is designed to perform well in complex reasoning tasks and can operate efficiently in situations with limited memory or where quick responses are needed.',
+                context_window=16384,
                 prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.14')),
             ),
             ModelInfo(
@@ -2009,6 +2014,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4-mini-instruct'),
                 name='Phi 4 Mini Instruct',
                 description='Phi-4-mini-instruct is a lightweight open model built upon synthetic data and filtered publicly available websites, with a focus on high-quality, reasoning-dense data.',
+                context_window=131072,
                 price_comments='Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')),
             ),
@@ -2017,6 +2023,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4-multimodal-instruct'),
                 name='Phi 4 Multimodal Instruct',
                 description='Phi-4 Multimodal Instruct is a versatile 5.6B parameter foundation model that combines advanced reasoning and instruction-following capabilities across both text and visual inputs, providing accurate text outputs. The unified architecture enables efficient, low-latency inference, suitable for edge and mobile deployments. Phi-4 Multimodal Instruct supports text inputs in multiple languages including Arabic, Chinese, English, French, German, Japanese, Spanish, and more, with visual input optimized primarily for English. It delivers impressive performance on multimodal tasks involving mathematical, scientific, and document reasoning, providing developers and enterprises a powerful yet compact model for sophisticated interactive applications. For more information, see the Phi-4 Multimodal blog post.',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -2024,6 +2031,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4-reasoning-plus'),
                 name='Phi 4 Reasoning Plus',
                 description='Phi-4-reasoning-plus is an enhanced 14B parameter model from Microsoft, fine-tuned from Phi-4 with additional reinforcement learning to boost accuracy on math, science, and code reasoning tasks. It uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs structured into a step-by-step reasoning trace and final answer.',
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.35')),
             ),
             ModelInfo(
@@ -2031,6 +2039,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4-reasoning-plus:free'),
                 name='Phi 4 Reasoning Plus (free)',
                 description='Phi-4-reasoning-plus is an enhanced 14B parameter model from Microsoft, fine-tuned from Phi-4 with additional reinforcement learning to boost accuracy on math, science, and code reasoning tasks. It uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs structured into a step-by-step reasoning trace and final answer.',
+                context_window=32768,
                 prices=ModelPrice(),
             ),
             ModelInfo(
@@ -2038,6 +2047,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-4-reasoning:free'),
                 name='Phi 4 Reasoning (free)',
                 description='Phi-4-reasoning is a 14B parameter dense decoder-only transformer developed by Microsoft, fine-tuned from Phi-4 to enhance complex reasoning capabilities. It uses a combination of supervised fine-tuning on chain-of-thought traces and reinforcement learning, targeting math, science, and code reasoning tasks. With a 32k context window and high inference efficiency, it is optimized for structured responses in a two-part format: reasoning trace followed by a final solution.',
+                context_window=32768,
                 prices=ModelPrice(),
             ),
             ModelInfo(

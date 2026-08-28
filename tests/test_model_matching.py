@@ -771,6 +771,13 @@ def test_litellm_provider_id():
         # AWS's card states 272K with max output N/A — the GPT-5 family's input-only cap, so the
         # total-window framing is unclear and the record stays windowless
         ('bedrock', 'openai.gpt-5.4', 'aws', 'openai.gpt-5.4', None),
+        # Microsoft's own model cards and the Azure model catalog state each context window;
+        # "128K" resolves to 131,072 per Microsoft's own config.json (max_position_embeddings)
+        ('azure', 'phi-4', 'azure', 'phi-4', 16_384),
+        ('azure', 'phi-4-mini-instruct', 'azure', 'phi-4-mini-instruct', 131_072),
+        ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
+        # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
+        ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
     ],
 )
 def test_model_has_effective_context_window(
