@@ -146,21 +146,35 @@ print(p)
 update_prices.stop()
 ```
 
-All `UpdatePrices` instances share one background thread, so libraries such as Logfire and Pydantic AI can each
-call `start()` and `stop()` without creating duplicate threads. The first `start()` launches the thread, later
-`start()` calls join it, and the last `stop()` stops it and restores the data bundled with the installed package.
-Starting with a different `url`, `update_interval` or `request_timeout` than the running thread raises
-`RuntimeError`. The thread runs the `fetch()` of whichever instance started first, so if you subclass
-`UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
+A single shared, process-wide updater backs every `UpdatePrices` instance. Starting an instance acquires shared
+ownership rather than creating a private thread: the first `start()` launches the updater, compatible later
+instances join it, and the last `stop()` shuts it down and restores the data bundled with the installed package.
+This lets libraries such as Logfire and Pydantic AI opt in independently without creating duplicate threads.
 
-If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
-`stop()` never raises fetch failures.
+The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
+settings raises `RuntimeError` instead of silently ignoring its configuration. The first owner also supplies the
+`fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
+Custom `fetch()` implementations are responsible for keeping any configuration they read stable while the shared
+updater is running.
+Calling `start()`, `stop()`, or a synchronous wait API from the worker raises `RuntimeError` instead of deadlocking.
+Applications that need custom behavior should start their updater before integrations initialize and retain it
+until shutdown.
 
-`start()` doesn't wait for the download: until the first fetch completes, `calc_price` uses the bundled data,
-which may be missing recently released models. If you need fresh prices before calculating, pass `wait` to
-`start()` or use the wait functions below.
+The last `stop()` waits for an in-flight fetch to finish, then restores the bundled snapshot. It does not raise
+background fetch failures: those failures are logged and reported by every `wait()` call until a later fetch
+succeeds. This makes failure observation independent of which library owns or stops the updater first. Cancelling
+`wait_prices_updated_async()` does not consume or change that shared outcome. `calc_price()` does not acquire the
+updater lock.
 
-Start the updater only after any `os.fork()`; a child process must not inherit a running updater.
+As with other background threads, start the updater only after calling `os.fork()`; inheriting a running updater
+in a child process is unsupported.
+
+`start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
+keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
+missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
+data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
+short-lived script), pass `wait` to `start()`, or call `wait_prices_updated_sync()` /
+`wait_prices_updated_async()`. Fetch failures are raised by these methods, matching `UpdatePrices.wait()`.
 
 You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
 `wait_prices_updated_sync`:

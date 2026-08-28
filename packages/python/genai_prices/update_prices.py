@@ -6,6 +6,7 @@ import logging
 import threading
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from enum import Enum
 from time import time
 from types import TracebackType
 
@@ -24,144 +25,281 @@ logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = (
     'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json'
 )
+DEFAULT_UPDATE_INTERVAL = 3600.0
 
-_Config = tuple[str, float, httpx2.Timeout]
 
-# All UpdatePrices instances share one worker so that libraries and applications can opt in
-# independently without creating duplicate threads. `_lock` guards `_worker` and is held for the
-# whole of start() and stop() — including the final join — so lifecycle transitions never overlap.
-_lock = threading.Lock()
-_worker: _Worker | None = None
+def _default_request_timeout() -> httpx2.Timeout:
+    return httpx2.Timeout(timeout=10, connect=5)
+
+
+@dataclass(frozen=True)
+class _UpdateConfig:
+    url: str
+    update_interval: float
+    request_timeout: httpx2.Timeout
+
+    @classmethod
+    def from_values(cls, url: str, update_interval: float, request_timeout: httpx2.Timeout) -> _UpdateConfig:
+        # Timeout is mutable, so the worker needs a launch-time copy.
+        return cls(url, update_interval, httpx2.Timeout(request_timeout))
+
+
+def _fetch_prices(config: _UpdateConfig) -> data_snapshot.DataSnapshot:
+    from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+
+    response = httpx2.get(config.url, timeout=config.request_timeout)
+    response.raise_for_status()
+    raw_payload = json.loads(response.content)
+    if not isinstance(raw_payload, list):
+        raise ValueError('Expected fetched prices payload to be a provider array')
+
+    providers = _providers_from_raw(raw_payload)
+    return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+
+
+@dataclass
+class _UpdateOutcome:
+    """Latest fetch outcome for one shared-updater lifecycle."""
+
+    ready: threading.Event = field(default_factory=threading.Event)
+    lock: threading.Lock = field(default_factory=threading.Lock)
+    error: Exception | None = None
+    error_traceback: TracebackType | None = None
+    succeeded: bool = False
+
+    def publish_success(self) -> None:
+        with self.lock:
+            self.error = None
+            self.error_traceback = None
+            self.succeeded = True
+            self.ready.set()
+
+    def publish_failure(self, error: Exception) -> None:
+        with self.lock:
+            self.error = error
+            self.error_traceback = error.__traceback__
+            self.succeeded = False
+            self.ready.set()
+
+    def read(self) -> bool:
+        with self.lock:
+            error = self.error
+            error_traceback = self.error_traceback
+            succeeded = self.succeeded
+        if error is not None:
+            raise error.with_traceback(error_traceback)
+        return succeeded
+
+
+class _UpdaterPhase(Enum):
+    ACTIVE = 'active'
+    STOPPING = 'stopping'
+    DEAD = 'dead'
+
+
+# Price calculations use one process-wide snapshot, so independent consumers must share the
+# updater that owns it. The condition protects lifecycle publication; calculations never acquire it.
+_global_update_prices: _SharedUpdater | None = None
+_lifecycle = threading.Condition()
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
-    """Synchronously wait for prices to be updated by the shared background updater.
+    """Synchronously wait for an outcome from the shared background updater.
 
-    A fetch failure is raised to every waiter until a later fetch succeeds.
-
-    Args:
-        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
-
-    Returns:
-        True if prices were updated, False if no updater is active or the timeout elapses.
+    A fetch failure is raised to every waiter until a later fetch succeeds. Returns `False` if no
+    updater is active or the timeout elapses.
     """
-    worker = _worker
-    if worker is None:
-        return False
-    return worker.wait(timeout)
+    with _lifecycle:
+        update_prices = _global_update_prices
+        if update_prices is None or update_prices.phase is _UpdaterPhase.STOPPING:
+            return False
+    return update_prices.wait(timeout)
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
-    """Asynchronously wait for prices to be updated by the shared background updater.
+    """Asynchronously wait for an outcome from the shared background updater.
 
-    A fetch failure is raised to every waiter until a later fetch succeeds.
-
-    Args:
-        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
-
-    Returns:
-        True if prices were updated, False if no updater is active or the timeout elapses.
+    Cancelling this coroutine does not consume or alter the shared outcome.
     """
-    return await asyncio.to_thread(wait_prices_updated_sync, timeout)
+    with _lifecycle:
+        update_prices = _global_update_prices
+        if update_prices is None or update_prices.phase is _UpdaterPhase.STOPPING:
+            return False
+    return await asyncio.to_thread(update_prices.wait, timeout)
 
 
 @dataclass
 class UpdatePrices:
-    """Update prices in the background using a shared daemon thread.
+    """Own a claim on the process-wide background price updater.
 
-    All instances share one process-wide worker: the first `start()` launches it, later compatible
-    `start()` calls join it, and the last `stop()` shuts it down and restores the bundled prices.
-    Starting with different configuration than the running worker raises `RuntimeError`.
-
-    Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
+    Compatible instances share one worker. The first `start()` launches it, and the last `stop()`
+    shuts it down and restores bundled prices. Starting twice, or joining with different
+    configuration, raises `RuntimeError`.
     """
 
-    update_interval: float = 3600
+    update_interval: float = DEFAULT_UPDATE_INTERVAL
     """How often to update prices in seconds."""
     url: str = DEFAULT_UPDATE_URL
     """The URL to fetch prices from."""
-    request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
+    request_timeout: httpx2.Timeout = field(default_factory=_default_request_timeout)
     """The timeout for HTTP requests."""
-    _worker: _Worker | None = field(default=None, init=False, repr=False)
+    _updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
+    _fetch_updater: _SharedUpdater | None = field(default=None, init=False, repr=False)
+    _ownership_lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
-        """Start the background task, or join the one already running.
+        """Acquire a claim on the process-wide background updater.
 
         Args:
-            wait: Whether to wait for the prices to be updated before returning, if an int is passed
-                wait for that many seconds, if `True` wait for 30 seconds.
+            wait: Whether to wait for the first fetch outcome; if a number is passed, wait that
+                many seconds, and if `True`, wait for 30 seconds.
         """
-        global _worker
-
-        _check_not_worker_thread('start')
-        with _lock:
-            if self._worker is not None:
-                raise RuntimeError('UpdatePrices background task already started')
-
-            config: _Config = (self.url, self.update_interval, self.request_timeout)
-            worker = _worker
-            if worker is None:
-                worker = _Worker(config, self.fetch)
-                worker.claims = 1
-                # Publish before starting the thread so the worker-thread guards see it from the
-                # very first fetch.
-                _worker = worker
-                self._worker = worker
-                try:
-                    worker.thread.start()
-                except BaseException:
-                    _worker = None
-                    self._worker = None
-                    raise
-            else:
-                if worker.dead:
-                    raise RuntimeError('UpdatePrices background task terminated unexpectedly')
-                if worker.config != config:
-                    url, update_interval, request_timeout = worker.config
-                    raise RuntimeError(
-                        'UpdatePrices background task already started with different configuration: '
-                        f'url={url!r}, update_interval={update_interval!r}, request_timeout={request_timeout!r}'
-                    )
-                worker.claims += 1
-                self._worker = worker
+        self._reject_worker_call('start')
+        with self._ownership_lock:
+            update_prices = self._start()
 
         if wait:
-            worker.wait(timeout=30 if wait is True else wait)
+            update_prices.wait(timeout=30 if wait is True else wait)
 
-    def wait(self, timeout: float | None = None) -> bool:
-        """Wait for the prices to be updated in the background task.
+    def _start(self) -> _SharedUpdater:
+        global _global_update_prices
 
-        A fetch failure is raised to every waiter until a later fetch succeeds.
+        failed_worker: _SharedUpdater | None = None
+        start_error: BaseException | None = None
+        with _lifecycle:
+            while (
+                update_prices := _global_update_prices
+            ) is not None and update_prices.phase is _UpdaterPhase.STOPPING:
+                _lifecycle.wait()
 
-        Args:
-            timeout: The maximum time to wait for the prices to be updated in seconds.
+            if self._updater is not None:
+                raise RuntimeError('UpdatePrices background task already started')
 
-        Returns:
-            True if prices were updated, False if this instance is not started or the timeout elapses.
-        """
-        worker = self._worker
-        if worker is None:
-            return False
-        return worker.wait(timeout)
+            config = _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
+            if update_prices is None:
+                update_prices = _SharedUpdater(config, self)
+                try:
+                    self._fetch_updater = update_prices
+                    _global_update_prices = update_prices
+                    update_prices.claims = 1
+                    self._updater = update_prices
+                    update_prices.start()
+                except BaseException as exc:
+                    # The thread may already be alive even if Thread.start() raised after delegating.
+                    # Publish a stopping state before releasing the condition so no caller can join it.
+                    failed_worker = update_prices
+                    start_error = exc
+
+                    def rollback_start() -> None:
+                        update_prices.phase = _UpdaterPhase.STOPPING
+                        update_prices.claims = 0
+                        self._updater = None
+                        self._fetch_updater = None
+
+                    rollback_interrupted = _finish_despite_interruption(rollback_start)
+                    start_error = rollback_interrupted or start_error
+            else:
+                if update_prices.phase is _UpdaterPhase.DEAD:
+                    raise RuntimeError('UpdatePrices background task terminated unexpectedly')
+                if update_prices.config != config:
+                    raise RuntimeError(
+                        'UpdatePrices background task already started with different configuration: '
+                        f'url={update_prices.config.url!r}, '
+                        f'update_interval={update_prices.config.update_interval!r}, '
+                        f'request_timeout={update_prices.config.request_timeout!r}'
+                    )
+                previous_claims = update_prices.claims
+                try:
+                    update_prices.claims = previous_claims + 1
+                    self._updater = update_prices
+                except BaseException as exc:
+                    # Both fields must describe the same ownership if acquisition is interrupted.
+                    def rollback_claim() -> None:
+                        self._updater = None
+                        update_prices.claims = previous_claims
+
+                    rollback_interrupted = _finish_despite_interruption(rollback_claim)
+                    raise rollback_interrupted or exc
+
+        if failed_worker is not None:
+            _finish_shutdown(failed_worker)
+            assert start_error is not None
+            raise start_error
+        return update_prices
 
     def stop(self):
-        """Stop the background task, or release this instance's claim on it.
+        """Release this instance's claim on the shared updater.
 
-        The last `stop()` waits for any in-flight fetch, stops the worker and restores the bundled
-        prices. Fetch failures never make `stop()` raise; they are reported by `wait()`.
+        The last release waits for an in-flight fetch, stops the worker, and restores bundled
+        prices. Fetch failures are logged and reported by `wait()`; they never make `stop()` fail.
+        Lifecycle interruptions such as `KeyboardInterrupt` are preserved after cleanup completes.
         """
-        global _worker
+        self._reject_worker_call('stop')
+        with self._ownership_lock:
+            self._stop()
 
-        _check_not_worker_thread('stop')
-        with _lock:
-            worker = self._worker
-            if worker is None:
-                return
-            self._worker = None
-            worker.claims -= 1
-            if worker.claims == 0:
-                worker.shutdown()
-                _worker = None
+    @staticmethod
+    def _reject_worker_call(action: str) -> None:
+        with _lifecycle:
+            update_prices = _global_update_prices
+            if update_prices is not None and threading.current_thread() is update_prices.thread:
+                raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
+
+    def _stop(self) -> None:
+        update_prices: _SharedUpdater | None = None
+        remaining_claims: int | None = None
+        release_prepared = False
+
+        def release_claim() -> None:
+            nonlocal update_prices, remaining_claims, release_prepared
+            with _lifecycle:
+                if not release_prepared:
+                    update_prices = self._updater
+                    if update_prices is not None:
+                        remaining_claims = update_prices.claims - 1
+                    # A retry must finish the same release instead of decrementing twice.
+                    release_prepared = True
+
+                if update_prices is not None:
+                    assert remaining_claims is not None
+                    self._updater = None
+                    update_prices.claims = remaining_claims
+                    if remaining_claims == 0:
+                        update_prices.phase = _UpdaterPhase.STOPPING
+
+        release_interrupted: BaseException | None = None
+        shutdown_interrupted: BaseException | None = None
+        try:
+            release_interrupted = _finish_despite_interruption(release_claim)
+        finally:
+            # Once the last release starts, no interruption may leave it stuck in STOPPING.
+            if update_prices is not None and update_prices.claims == 0:
+                shutdown_interrupted = _finish_shutdown(update_prices)
+        interrupted = shutdown_interrupted or release_interrupted
+        if interrupted is not None:
+            raise interrupted
+
+    def wait(self, timeout: float | None = None) -> bool:
+        """Wait for the shared updater's latest fetch outcome.
+
+        A fetch failure is raised to every waiter until a later fetch succeeds. Returns `False` if
+        this instance is not started or the timeout elapses.
+        """
+        with _lifecycle:
+            update_prices = self._updater
+            if update_prices is None:
+                return False
+        return update_prices.wait(timeout)
+
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        """Fetch the latest provider data from this instance's configured URL."""
+        worker = self._fetch_updater
+        if worker is not None and threading.current_thread() is worker.thread:
+            # A subclass calling super() must use the settings accepted when its worker started.
+            config = worker.config
+        else:
+            config = _UpdateConfig.from_values(self.url, self.update_interval, self.request_timeout)
+        return _fetch_prices(config)
 
     def __enter__(self):
         self.start()
@@ -170,101 +308,145 @@ class UpdatePrices:
     def __exit__(self, *_args: object):
         self.stop()
 
-    def fetch(self) -> data_snapshot.DataSnapshot | None:
-        """Fetches the latest provider data from the configured URL."""
-        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
 
-        r = httpx2.get(self.url, timeout=self.request_timeout)
-        r.raise_for_status()
-        raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, list):
-            raise ValueError('Expected fetched prices payload to be a provider array')
+class _SharedUpdater:
+    """Private worker shared by public `UpdatePrices` ownership claims."""
 
-        providers = _providers_from_raw(raw_payload)
-        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
-
-
-def _check_not_worker_thread(action: str) -> None:
-    # start() and stop() block on `_lock`, which the last stop() holds while joining the worker,
-    # so calling them from a `fetch()` override would deadlock.
-    worker = _worker
-    if worker is not None and threading.current_thread() is worker.thread:
-        raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
-
-
-class _Worker:
-    """The process-wide background thread shared by all started `UpdatePrices` instances."""
-
-    def __init__(self, config: _Config, fetch: Callable[[], data_snapshot.DataSnapshot | None]) -> None:
+    def __init__(self, config: _UpdateConfig, owner: UpdatePrices) -> None:
         self.config = config
-        self.fetch = fetch
+        # The base fetch uses frozen lifecycle settings; subclasses keep their supported override hook.
+        fetch = owner.fetch
+        if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
+            self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(config)
+        else:
+            self.fetch = fetch
         self.claims = 0
-        self.dead = False
+        self.phase = _UpdaterPhase.ACTIVE
         self.stop_event = threading.Event()
+        self.run_event = threading.Event()
+        self.outcome = _UpdateOutcome()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
-        # The latest fetch outcome, reported to every waiter.
-        self.ready = threading.Event()
-        self._outcome_lock = threading.Lock()
-        self._error: Exception | None = None
-        self._error_traceback: TracebackType | None = None
-        self._succeeded = False
+        self.owner = owner
+
+    def start(self) -> None:
+        self.thread.start()
+        # Thread.start() can be interrupted after OS launch, so a late worker needs this gate to
+        # observe cleanup before it can publish prices.
+        self.run_event.set()
 
     def wait(self, timeout: float | None) -> bool:
         if threading.current_thread() is self.thread:
             raise RuntimeError('UpdatePrices background task cannot wait for itself')
-        if not self.ready.wait(timeout=timeout):
+        if not self.outcome.ready.wait(timeout=timeout):
             return False
-        with self._outcome_lock:
-            error, error_traceback, succeeded = self._error, self._error_traceback, self._succeeded
-        if error is not None:
-            # Re-raise with the original traceback so waiters don't accumulate each other's frames.
-            raise error.with_traceback(error_traceback)
-        return succeeded
+        return self.outcome.read()
 
-    def shutdown(self) -> None:
+    def stop(self) -> BaseException | None:
         self.stop_event.set()
-        self.thread.join()
-        # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
-        data_snapshot.set_custom_snapshot(None)
-        # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
-        self.ready.set()
+        self.run_event.set()
 
-    def _publish(self, error: Exception | None) -> None:
-        with self._outcome_lock:
-            self._error = error
-            self._error_traceback = error.__traceback__ if error is not None else None
-            self._succeeded = error is None
-            self.ready.set()
+        def cleanup() -> None:
+            # An interrupted Thread.start() can publish ident before join() becomes legal.
+            if self.thread.is_alive():
+                self.thread.join()
+            # A worker stopped before its first fetch has no outcome of its own to wake waiters with.
+            self.outcome.ready.set()
+            data_snapshot.set_custom_snapshot(None)
+            self.owner._fetch_updater = None  # pyright: ignore[reportPrivateUsage]
+
+        return _finish_despite_interruption(cleanup)
 
     def _run(self) -> None:
-        logger.info('Starting genai-prices background task')
+        terminal_error: BaseException | None = None
         try:
-            while not self.stop_event.is_set():
+            self.run_event.wait()
+            if self.stop_event.is_set():
+                return
+            self._log(logger.info, 'Starting genai-prices background task')
+            while True:
                 try:
                     self._update_prices()
-                except Exception as e:
-                    self._publish(e)
-                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                except Exception as exc:
+                    self.outcome.publish_failure(exc)
+                    self._log(
+                        logger.error,
+                        'Error updating genai-prices in the background (%s): %s',
+                        type(exc).__name__,
+                        exc,
+                    )
                 else:
-                    self._publish(None)
-                if self.stop_event.wait(self.config[1]):
+                    self.outcome.publish_success()
+
+                if self.stop_event.wait(self.config.update_interval):
                     break
-        except BaseException as e:
-            # Nothing above should raise this; if it does, fail waiters and joiners instead of hanging them.
-            self.dead = True
+        except BaseException as exc:
+            terminal_error = exc
             error = RuntimeError('UpdatePrices background task terminated unexpectedly')
-            error.__cause__ = e
-            self._publish(error)
+            error.__cause__ = exc
+            self.outcome.publish_failure(error)
         finally:
-            logger.info('genai-prices background task stopped')
+            with _lifecycle:
+                if self.phase is _UpdaterPhase.ACTIVE and terminal_error is not None:
+                    self.phase = _UpdaterPhase.DEAD
+                _lifecycle.notify_all()
+            self._log(logger.info, 'genai-prices background task stopped')
 
     def _update_prices(self) -> None:
-        start = time()
+        started = time()
         snapshot = self.fetch()
-        interval = time() - start
+        interval = time() - started
         if snapshot:
-            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+            self._log(
+                logger.info,
+                'Successfully fetched %d providers in %.2f seconds',
+                len(snapshot.providers),
+                interval,
+            )
         else:
-            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
-
+            self._log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
         data_snapshot.set_custom_snapshot(snapshot)
+
+    @staticmethod
+    def _log(log: Callable[..., None], message: str, *args: object) -> None:
+        try:
+            log(message, *args)
+        except Exception:
+            # Logging must not terminate the updater or strand lifecycle publication.
+            pass
+
+
+def _publish_idle(update_prices: _SharedUpdater) -> None:
+    global _global_update_prices
+
+    with _lifecycle:
+        # A retry must not clear a replacement installed after the first publication succeeded.
+        if _global_update_prices is update_prices:
+            _global_update_prices = None
+        _lifecycle.notify_all()
+
+
+def _finish_shutdown(update_prices: _SharedUpdater) -> BaseException | None:
+    """Drain one worker and always publish the final idle state."""
+    stopped = False
+    stop_interrupted: BaseException | None = None
+
+    def finish() -> None:
+        nonlocal stopped, stop_interrupted
+        if not stopped:
+            stop_interrupted = update_prices.stop()
+            stopped = True
+        _publish_idle(update_prices)
+
+    finish_interrupted = _finish_despite_interruption(finish)
+    return finish_interrupted or stop_interrupted
+
+
+def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
+    """Finish lifecycle cleanup before propagating Ctrl-C or process exit."""
+    interrupted: BaseException | None = None
+    while True:
+        try:
+            action()
+            return interrupted
+        except (KeyboardInterrupt, SystemExit) as exc:
+            interrupted = exc
