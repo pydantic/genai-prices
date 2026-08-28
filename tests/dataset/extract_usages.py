@@ -29,7 +29,7 @@ extractors = [
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
     keys = set[str]()
     for path in [extractor.model_path, extractor.root]:
-        if path:
+        if path:  # pragma: no branch - published extractors always use nonempty paths
             if isinstance(path, list):
                 path = path[0]
             assert isinstance(path, str)
@@ -46,7 +46,7 @@ def rebuild_usages() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Recompute the dataset from the recorded bodies. Returns `(current, rebuilt)`; writes nothing."""
     usages_file = this_dir / 'usages.json'
     current_result: list[dict[str, Any]] = json.loads(usages_file.read_text())
-    if raw_bodies_path.exists():
+    if raw_bodies_path.exists():  # pragma: no cover - raw recordings are not committed with the golden dataset
         bodies = json.loads(raw_bodies_path.read_text())
         result = get_usages(bodies)
     else:
@@ -76,7 +76,7 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
         cases: list[Case] = [
             e for provider, extractor in extractors if (e := extract_and_check(body, extractor, provider))
         ]
-        if cases:
+        if cases:  # pragma: no branch - the golden dataset retains only extractable response bodies
             this_result: dict[str, Any] = {'body': body, 'extracted': []}
             result.append(this_result)
             models: set[str] = {case.model_ref for case in cases if case.model_ref}
@@ -136,7 +136,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
             )
         except LookupError:
             pass
-        except Exception as e:
+        except Exception as e:  # pragma: no cover - the checked-in golden corpus has no calculation errors
             message = f'Error calculating price for {case.provider_id}:{case.model_ref} with usage {case.usage_dict} and file {this_result["body"]["file"]}'
             raise AssertionError(message) from e
         else:
@@ -153,7 +153,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
     return extractor_dict
 
 
-def check_cases_usages_match(cases: list[Case]):
+def check_cases_usages_match(cases: list[Case]):  # pragma: no cover - its call site is intentionally disabled above
     for case1, case2 in combinations(cases, 2):
         for k, v in case1.usage_dict.items():
             if k in case2.usage_dict:

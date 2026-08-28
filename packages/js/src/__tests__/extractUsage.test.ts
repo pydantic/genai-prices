@@ -7,6 +7,7 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
   extractors: [
@@ -31,6 +32,34 @@ afterEach(() => {
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
+    it('should extract Cursor usage events', () => {
+      const responseData = {
+        model: 'grok-4.6-fast',
+        tokenUsage: {
+          cacheReadTokens: 30,
+          cacheWriteTokens: 20,
+          inputTokens: 100,
+          outputTokens: 40,
+          totalCents: 0.099,
+        },
+      }
+
+      const { model, usage } = extractUsage(cursorProvider, responseData, 'usage-event')
+
+      expect(model).toBe('grok-4.6-fast')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        cache_write_tokens: 20,
+        input_tokens: 150,
+        output_tokens: 40,
+      })
+
+      const price = calcPrice(usage, model!, { providerId: 'cursor' })
+      expect(price?.input_price).toBeCloseTo(0.00051, 8)
+      expect(price?.output_price).toBeCloseTo(0.00048, 8)
+      expect(price?.total_price).toBeCloseTo(0.00099, 8)
+    })
+
     it('should extract usage with cache tokens', () => {
       const responseData = {
         id: 'msg_0152tnC3YpjyASTB9qxqDJXu',
@@ -252,6 +281,88 @@ describe('extractUsage', () => {
       }
 
       expect(() => extractUsage(openaiProvider, responseData)).toThrow("Unknown apiFlavor 'default', allowed values: chat, responses")
+    })
+  })
+
+  describe('Cloudflare provider', () => {
+    const cloudflareProvider: Provider = data.find((provider) => provider.id === 'cloudflare')!
+
+    it('should extract and price OpenAI-compatible chat usage', () => {
+      const { model, usage } = extractUsage(
+        cloudflareProvider,
+        {
+          model: '@cf/deepseek-ai/deepseek-v4-flash-0731',
+          usage: {
+            completion_tokens: 1_000_000,
+            completion_tokens_details: { reasoning_tokens: 500_000 },
+            prompt_tokens: 2_000_000,
+            prompt_tokens_details: { cached_tokens: 1_000_000 },
+          },
+        },
+        'chat'
+      )
+
+      expect(model).toBe('@cf/deepseek-ai/deepseek-v4-flash-0731')
+      expect(usage).toEqual({
+        cache_read_tokens: 1_000_000,
+        input_tokens: 2_000_000,
+        output_reasoning_tokens: 500_000,
+        output_tokens: 1_000_000,
+      })
+      if (!model) throw new Error('Expected extracted Cloudflare model')
+      expect(calcPrice(usage, model, { providerId: 'cloudflare' })?.total_price).toBeCloseTo(1.774)
+    })
+
+    it('should match the Cloudflare Workers AI endpoint', () => {
+      const price = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, '@cf/openai/gpt-oss-20b', {
+        providerApiUrl: 'https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+      })
+
+      expect(price?.provider.id).toBe('cloudflare')
+      expect(price?.total_price).toBeCloseTo(0.5)
+    })
+
+    it('should extract and price native REST usage', () => {
+      const { model, usage } = extractUsage(cloudflareProvider, {
+        errors: [],
+        messages: [],
+        result: {
+          response: 'Hello',
+          usage: {
+            completion_tokens: 1_000_000,
+            prompt_tokens: 2_000_000,
+            total_tokens: 3_000_000,
+          },
+        },
+        success: true,
+      })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({ input_tokens: 2_000_000, output_tokens: 1_000_000 })
+      expect(calcPrice(usage, '@cf/meta/llama-3.2-1b-instruct', { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.255)
+    })
+  })
+
+  describe('Mistral provider', () => {
+    const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
+    const responseData = {
+      model: 'mistral-ocr-4-1-completion',
+      usage_info: { doc_size_bytes: 108_451_500, pages_processed: 29 },
+    }
+
+    it('extracts and prices OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr')
+
+      expect(model).toBe('mistral-ocr-4-1-completion')
+      expect(usage).toEqual({ input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.116)
+    })
+
+    it('extracts and prices annotated OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr_annotated')
+
+      expect(usage).toEqual({ input_annotated_document_pages: 29, input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.145)
     })
   })
 

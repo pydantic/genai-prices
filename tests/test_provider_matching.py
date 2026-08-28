@@ -72,6 +72,15 @@ def test_unknown_providers():
     assert result is None
 
 
+def test_mistral_model_matching_preserves_native_aliases_without_claiming_qualified_ids() -> None:
+    mistral = next(provider for provider in providers if provider.id == 'mistral')
+
+    assert mistral.model_match is not None
+    for model_ref in ('open-mistral-7b', 'open-mistral-nemo', 'open-mixtral-8x7b'):
+        assert mistral.model_match.is_match(model_ref)
+    assert not mistral.model_match.is_match('mistralai/voxtral-small-24b-2507')
+
+
 @pytest.mark.parametrize(
     'provider_ref,provider_id',
     [
