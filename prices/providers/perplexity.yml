@@ -79,6 +79,7 @@ models:
       features optimized for speed.
     match:
       equals: sonar
+    context_window: 128000
     prices_checked: 2025-07-03
     prices:
       input_mtok: 1
@@ -94,6 +95,7 @@ models:
       health, and current events.
     match:
       equals: sonar-deep-research
+    context_window: 128000
     prices_checked: 2026-07-22
     price_comments: >-
       Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens.
@@ -111,6 +113,7 @@ models:
       Note: Sonar Pro pricing includes Perplexity search pricing. See details here
     match:
       equals: sonar-pro
+    context_window: 200000
     prices_checked: 2025-07-03
     prices:
       requests_kcount: 14
@@ -146,6 +149,7 @@ models:
     description: Sonar Pro pricing includes Perplexity search pricing.
     match:
       equals: sonar-reasoning-pro
+    context_window: 128000
     prices_checked: 2025-07-03
     prices:
       requests_kcount: 14

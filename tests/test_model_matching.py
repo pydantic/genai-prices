@@ -778,6 +778,17 @@ def test_litellm_provider_id():
         ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
         # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
         ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # MiniMax's platform doc states 1,000,192 as the total input+output cap per request
+        ('minimax', 'minimax-01', 'minimax', 'minimax-01', 1_000_192),
+        # MiniMax states only separate input/output caps for M1, never a total window
+        ('minimax', 'minimax-m1', 'minimax', 'minimax-m1', None),
+        # the kimi-k2 family spans 128k (0711) and 256k (0905) windows, so the bare name gets none
+        ('moonshotai', 'kimi-k2', 'moonshotai', 'kimi-k2', None),
+        # Perplexity's model cards state each context length ("128K context length" etc.)
+        ('perplexity', 'sonar-pro', 'perplexity', 'sonar-pro', 200_000),
+        ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
+        # removed from the Perplexity API 2025-12-15; no live statement of its window survives
+        ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
         # docs.x.ai model pages state each context window ("Context window: N tokens")
         ('x-ai', 'grok-4.20', 'x-ai', 'grok-4.20', 1_000_000),
         ('x-ai', 'grok-build-0.1', 'x-ai', 'grok-build-0.1', 256_000),
