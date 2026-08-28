@@ -778,6 +778,11 @@ def test_litellm_provider_id():
         ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
         # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
         ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # Perplexity's model cards state each context length ("128K context length" etc.)
+        ('perplexity', 'sonar-pro', 'perplexity', 'sonar-pro', 200_000),
+        ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
+        # removed from the Perplexity API 2025-12-15; no live statement of its window survives
+        ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
     ],
 )
 def test_model_has_effective_context_window(
