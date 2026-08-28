@@ -778,6 +778,11 @@ def test_litellm_provider_id():
         ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
         # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
         ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # DeepSeek's API pricing pages state "128K" context length for the V3.x era; read decimal
+        # for consistency with the file's existing 64K/1M records (the HF configs' 163,840 is
+        # checkpoint capacity, not what DeepSeek's API serves)
+        ('deepseek', 'deepseek-v3.2', 'deepseek', 'deepseek-v3.2', 128_000),
+        ('deepseek', 'deepseek-v3.1-terminus', 'deepseek', 'deepseek-v3.1-terminus', 128_000),
     ],
 )
 def test_model_has_effective_context_window(

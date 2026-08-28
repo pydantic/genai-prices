@@ -4778,6 +4778,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-v3.1-terminus',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.27,
           cache_read_mtok: 0.13,
@@ -4792,6 +4793,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-v3.2',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.2288,
           output_mtok: 0.3432,
@@ -4805,6 +4807,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-v3.2-exp',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.27,
           output_mtok: 0.41,
