@@ -286,7 +286,8 @@ models:
     name: Whisper Large V3
     match:
       equals: whisper-large-v3
-    context_window: 448
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
     prices_checked: 2026-08-24
     price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
     prices:
@@ -297,7 +298,8 @@ models:
     name: Whisper Large V3 Turbo
     match:
       equals: whisper-large-v3-turbo
-    context_window: 448
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
     prices_checked: 2026-08-24
     price_comments: See https://console.groq.com/docs/model/whisper-large-v3-turbo.
     prices:
