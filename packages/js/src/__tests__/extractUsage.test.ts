@@ -7,6 +7,7 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
@@ -58,6 +59,28 @@ describe('extractUsage', () => {
       expect(price?.input_price).toBeCloseTo(0.00051, 8)
       expect(price?.output_price).toBeCloseTo(0.00048, 8)
       expect(price?.total_price).toBeCloseTo(0.00099, 8)
+    })
+
+    it.each(['default', 'chat'])('should extract Arcee %s usage', (apiFlavor) => {
+      const responseData = {
+        model: 'deepseek/deepseek-v4-flash-latest',
+        usage: {
+          completion_tokens: 40,
+          completion_tokens_details: { reasoning_tokens: 10 },
+          prompt_tokens: 100,
+          prompt_tokens_details: { cached_tokens: 30 },
+        },
+      }
+
+      const { model, usage } = extractUsage(arceeProvider, responseData, apiFlavor)
+
+      expect(model).toBe('deepseek/deepseek-v4-flash-latest')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        input_tokens: 100,
+        output_reasoning_tokens: 10,
+        output_tokens: 40,
+      })
     })
 
     it('should extract usage with cache tokens', () => {

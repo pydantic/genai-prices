@@ -119,6 +119,21 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 0.448, model: 'deepseek/deepseek-v4-flash-latest' },
+    { expectedTotalPrice: 5.42, model: 'deepseek/deepseek-v4-pro' },
+    { expectedTotalPrice: 18.3, model: 'moonshotai/kimi-k3' },
+    { expectedTotalPrice: 1.8, model: 'thinkingmachines/inkling-small' },
+    { expectedTotalPrice: 1.11, model: 'trinity-large-thinking' },
+    { expectedTotalPrice: 6.06, model: 'zai-org/glm-5.2' },
+  ])('prices Arcee $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'arcee',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
     { expectedInputPrice: (200_000 * 3) / 1_000_000, inputTokens: 200_000 },
     { expectedInputPrice: (200_001 * 6) / 1_000_000, inputTokens: 200_001 },
   ])('prices Google Claude Sonnet 4.5 at the 200K boundary', ({ expectedInputPrice, inputTokens }) => {
