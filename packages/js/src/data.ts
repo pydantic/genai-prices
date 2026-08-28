@@ -16210,6 +16210,7 @@ export const data: Provider[] = [
         match: {
           equals: 'aion-labs/aion-2.0',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.8,
           cache_read_mtok: 0.2,
@@ -16221,6 +16222,7 @@ export const data: Provider[] = [
         match: {
           equals: 'aion-labs/aion-rp-llama-3.1-8b',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
@@ -16259,6 +16261,7 @@ export const data: Provider[] = [
         match: {
           equals: 'allenai/olmo-3-32b-think',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.5,
@@ -16290,6 +16293,7 @@ export const data: Provider[] = [
         match: {
           equals: 'amazon/nova-2-lite-v1',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.3,
           output_mtok: 2.5,
@@ -16300,6 +16304,7 @@ export const data: Provider[] = [
         match: {
           equals: 'amazon/nova-lite-v1',
         },
+        context_window: 300000,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.24,
@@ -16310,6 +16315,7 @@ export const data: Provider[] = [
         match: {
           equals: 'amazon/nova-micro-v1',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.035,
           output_mtok: 0.14,
@@ -16321,6 +16327,7 @@ export const data: Provider[] = [
         match: {
           equals: 'amazon/nova-premier-v1',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.625,
@@ -16332,6 +16339,7 @@ export const data: Provider[] = [
         match: {
           equals: 'amazon/nova-pro-v1',
         },
+        context_window: 300000,
         prices: {
           input_mtok: 0.8,
           output_mtok: 3.2,
@@ -16352,6 +16360,7 @@ export const data: Provider[] = [
         match: {
           equals: 'anthracite-org/magnum-v4-72b',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 1.5,
           output_mtok: 2.25,
@@ -16398,6 +16407,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 0.25,
           output_mtok: 1.25,
@@ -16549,6 +16559,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
@@ -16569,6 +16580,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
@@ -16600,6 +16612,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -16682,6 +16695,7 @@ export const data: Provider[] = [
         match: {
           equals: 'anthropic/claude-opus-4.7-fast',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 30,
           cache_write_mtok: 37.5,
@@ -16717,6 +16731,7 @@ export const data: Provider[] = [
         match: {
           equals: 'anthropic/claude-opus-4.8-fast',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
@@ -16768,6 +16783,7 @@ export const data: Provider[] = [
         match: {
           equals: 'anthropic/claude-sonnet-4',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -16925,6 +16941,7 @@ export const data: Provider[] = [
         match: {
           equals: 'arcee-ai/trinity-large-thinking',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.22,
           cache_read_mtok: 0.06,
@@ -16948,6 +16965,7 @@ export const data: Provider[] = [
         match: {
           equals: 'arcee-ai/virtuoso-large',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.75,
           output_mtok: 1.2,
@@ -16977,6 +16995,7 @@ export const data: Provider[] = [
         match: {
           equals: 'baidu/ernie-4.5-vl-424b-a47b',
         },
+        context_window: 123000,
         prices: {
           input_mtok: 0.42,
           output_mtok: 1.25,
@@ -16995,6 +17014,7 @@ export const data: Provider[] = [
         match: {
           equals: 'bytedance-seed/seed-1.6',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.25,
           output_mtok: 2,
@@ -17006,6 +17026,7 @@ export const data: Provider[] = [
         match: {
           equals: 'bytedance-seed/seed-1.6-flash',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.075,
           output_mtok: 0.3,
@@ -17017,6 +17038,7 @@ export const data: Provider[] = [
         match: {
           equals: 'bytedance-seed/seed-2.0-lite',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.25,
           output_mtok: 2,
@@ -17028,6 +17050,7 @@ export const data: Provider[] = [
         match: {
           equals: 'bytedance-seed/seed-2.0-mini',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.4,
@@ -17039,6 +17062,7 @@ export const data: Provider[] = [
         match: {
           equals: 'bytedance/ui-tars-1.5-7b',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.2,
@@ -17276,6 +17300,7 @@ export const data: Provider[] = [
         match: {
           equals: 'cohere/command-a',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -17303,6 +17328,7 @@ export const data: Provider[] = [
         match: {
           equals: 'cohere/command-r-08-2024',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -17330,6 +17356,7 @@ export const data: Provider[] = [
         match: {
           equals: 'cohere/command-r-plus-08-2024',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -17340,6 +17367,7 @@ export const data: Provider[] = [
         match: {
           equals: 'cohere/command-r7b-12-2024',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.0375,
           output_mtok: 0.15,
@@ -17571,6 +17599,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-chat',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.38,
           output_mtok: 0.89,
@@ -17582,6 +17611,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-chat-v3-0324',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.88,
@@ -17600,6 +17630,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-chat-v3.1',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.21,
           cache_read_mtok: 0.13,
@@ -17619,6 +17650,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1',
         },
+        context_window: 64000,
         prices: {
           input_mtok: 0.45,
           output_mtok: 2.15,
@@ -17630,6 +17662,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-0528',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.5,
           output_mtok: 2.15,
@@ -17641,6 +17674,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-distill-llama-70b',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.4,
@@ -17747,6 +17781,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v3.2',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.2288,
           output_mtok: 0.3432,
@@ -17758,6 +17793,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v3.2-exp',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.27,
           output_mtok: 0.41,
@@ -17769,6 +17805,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-flash',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.0983,
           cache_read_mtok: 0.0197,
@@ -17781,6 +17818,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4-pro',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.003625,
@@ -18258,6 +18296,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-2.5-flash',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.3,
           cache_write_mtok: 0.3833,
@@ -18271,6 +18310,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-2.5-flash-image',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.3,
           cache_write_mtok: 0.08333333333333334,
@@ -18284,6 +18324,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-2.5-flash-lite',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.1,
           cache_write_mtok: 0.08333333333333334,
@@ -18351,6 +18392,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 1.25,
           cache_write_mtok: 1.625,
@@ -18381,6 +18423,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-3-flash-preview',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.5,
           cache_write_mtok: 0.08333333333333334,
@@ -18394,6 +18437,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-3-pro-image-preview',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 2,
           cache_write_mtok: 0.375,
@@ -18407,6 +18451,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemini-3.1-flash-image-preview',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.5,
           output_mtok: 3,
@@ -18425,6 +18470,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.25,
           cache_write_mtok: 0.08333333333333334,
@@ -18445,6 +18491,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 2,
           cache_write_mtok: 0.375,
@@ -18465,6 +18512,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 1.5,
           cache_write_mtok: 0.08333333333333334,
@@ -18532,6 +18580,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-2-27b-it',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.8,
           output_mtok: 0.8,
@@ -18560,6 +18609,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-3-12b-it',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.1,
@@ -18585,6 +18635,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-3-27b-it',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.2,
@@ -18603,6 +18654,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-3-4b-it',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.02,
           output_mtok: 0.04,
@@ -18632,6 +18684,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-26b-a4b-it',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.33,
@@ -18643,6 +18696,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-26b-a4b-it:free',
         },
+        context_window: 262144,
         prices: {},
       },
       {
@@ -18681,6 +18735,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-31b-it:free',
         },
+        context_window: 262144,
         prices: {},
       },
       {
@@ -18696,6 +18751,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/lyria-3-clip-preview',
         },
+        context_window: 1048576,
         prices: {},
       },
       {
@@ -18704,6 +18760,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/lyria-3-pro-preview',
         },
+        context_window: 1048576,
         prices: {},
       },
       {
@@ -18872,6 +18929,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gryphe/mythomax-l2-13b',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.065,
           output_mtok: 0.065,
@@ -18901,6 +18959,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ibm-granite/granite-4.0-h-micro',
         },
+        context_window: 131000,
         prices: {
           input_mtok: 0.017,
           output_mtok: 0.112,
@@ -18912,6 +18971,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ibm-granite/granite-4.1-8b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.1,
@@ -18923,6 +18983,7 @@ export const data: Provider[] = [
         match: {
           equals: 'inception/mercury-2',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -19067,6 +19128,7 @@ export const data: Provider[] = [
         match: {
           equals: 'kwaipilot/kat-coder-pro-v2',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.06,
@@ -19488,6 +19550,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mancer/weaver',
         },
+        context_window: 8000,
         prices: {
           input_mtok: 1.125,
           output_mtok: 1.125,
@@ -19579,6 +19642,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.1-70b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.28,
@@ -19589,6 +19653,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.1-8b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.02,
           output_mtok: 0.03,
@@ -19625,6 +19690,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.2-1b-instruct',
         },
+        context_window: 60000,
         prices: {
           input_mtok: 0.005,
           output_mtok: 0.01,
@@ -19643,6 +19709,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.2-3b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.01,
           output_mtok: 0.02,
@@ -19672,6 +19739,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.3-70b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.24,
@@ -19691,6 +19759,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-4-maverick',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -19709,6 +19778,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-4-scout',
         },
+        context_window: 1310720,
         prices: {
           input_mtok: 0.08,
           output_mtok: 0.3,
@@ -19748,6 +19818,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-guard-4-12b',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
@@ -19788,6 +19859,7 @@ export const data: Provider[] = [
         match: {
           equals: 'microsoft/phi-4',
         },
+        context_window: 16384,
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.14,
@@ -19829,6 +19901,7 @@ export const data: Provider[] = [
         match: {
           equals: 'microsoft/wizardlm-2-8x22b',
         },
+        context_window: 65535,
         prices: {
           input_mtok: 0.5,
           output_mtok: 0.5,
@@ -19862,6 +19935,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-01',
         },
+        context_window: 1000192,
         prices: {
           input_mtok: 0.2,
           output_mtok: 1.1,
@@ -19873,6 +19947,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-m1',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.3,
           output_mtok: 1.65,
@@ -19884,6 +19959,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-m2',
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.255,
           cache_read_mtok: 0.03,
@@ -19903,6 +19979,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -19915,6 +19992,7 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-m2.1',
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.29,
           cache_read_mtok: 0.03,
@@ -19934,6 +20012,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.05,
@@ -19953,6 +20032,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.27,
           cache_read_mtok: 0.054,
@@ -19972,6 +20052,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.06,
@@ -20139,6 +20220,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/codestral-2508',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -20161,6 +20243,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/devstral-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
@@ -20173,6 +20256,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/ministral-14b-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
@@ -20195,6 +20279,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/ministral-3b-2512',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
@@ -20217,6 +20302,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/ministral-8b-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
@@ -20283,6 +20369,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2,
           output_mtok: 6,
@@ -20294,6 +20381,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-large-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.05,
@@ -20316,6 +20404,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-medium-3',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.4,
           output_mtok: 2,
@@ -20327,6 +20416,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-medium-3-5',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 1.5,
           output_mtok: 7.5,
@@ -20338,6 +20428,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-medium-3.1',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
@@ -20350,6 +20441,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-nemo',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.01,
           output_mtok: 0.019,
@@ -20368,6 +20460,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-saba',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.6,
@@ -20389,6 +20482,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-small-24b-instruct-2501',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.09,
@@ -20407,6 +20501,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-small-2603',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
@@ -20419,6 +20514,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-small-3.1-24b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.15,
@@ -20437,6 +20533,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-small-3.2-24b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.075,
           output_mtok: 0.2,
@@ -20457,6 +20554,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mixtral-8x22b-instruct',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.9,
           output_mtok: 0.9,
@@ -20498,6 +20596,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/voxtral-small-24b-2507',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
@@ -20554,6 +20653,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.57,
           output_mtok: 2.3,
@@ -20565,6 +20665,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2-0905',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.5,
@@ -20576,6 +20677,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2-thinking',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.5,
@@ -20587,6 +20689,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2.5',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.09,
@@ -20599,6 +20702,7 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k2.6',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.68,
           cache_read_mtok: 0.34,
@@ -20675,6 +20779,7 @@ export const data: Provider[] = [
         match: {
           equals: 'morph/morph-v3-fast',
         },
+        context_window: 81920,
         prices: {
           input_mtok: 0.8,
           output_mtok: 1.2,
@@ -20686,6 +20791,7 @@ export const data: Provider[] = [
         match: {
           equals: 'morph/morph-v3-large',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.9,
           output_mtok: 1.9,
@@ -20822,6 +20928,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/hermes-3-llama-3.1-405b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.8,
@@ -20841,6 +20948,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/hermes-3-llama-3.1-70b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.12,
           output_mtok: 0.3,
@@ -20852,6 +20960,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/hermes-4-405b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 1,
           output_mtok: 3,
@@ -20863,6 +20972,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/hermes-4-70b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.13,
           output_mtok: 0.4,
@@ -20943,6 +21053,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-nano-30b-a3b',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.2,
@@ -20962,6 +21073,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
         },
+        context_window: 256000,
         prices: {},
       },
       {
@@ -20970,6 +21082,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-super-120b-a12b',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.09,
           output_mtok: 0.45,
@@ -20981,6 +21094,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-super-120b-a12b:free',
         },
+        context_window: 262144,
         prices: {},
       },
       {
@@ -20989,6 +21103,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-ultra-550b-a55b',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.15,
@@ -21001,6 +21116,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3-ultra-550b-a55b:free',
         },
+        context_window: 1000000,
         prices: {},
       },
       {
@@ -21009,6 +21125,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nvidia/nemotron-3.5-content-safety:free',
         },
+        context_window: 128000,
         prices: {},
       },
       {
@@ -21105,6 +21222,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16385,
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
@@ -21116,6 +21234,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-3.5-turbo-0613',
         },
+        context_window: 4095,
         prices: {
           input_mtok: 1,
           output_mtok: 2,
@@ -21137,6 +21256,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-3.5-turbo-16k',
         },
+        context_window: 16385,
         prices: {
           input_mtok: 3,
           output_mtok: 4,
@@ -21148,6 +21268,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-3.5-turbo-instruct',
         },
+        context_window: 4095,
         prices: {
           input_mtok: 1.5,
           output_mtok: 2,
@@ -21166,6 +21287,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 8191,
         prices: {
           input_mtok: 30,
           output_mtok: 60,
@@ -21211,6 +21333,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 10,
           output_mtok: 30,
@@ -21222,6 +21345,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-4.1',
         },
+        context_window: 1047576,
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -21241,6 +21365,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1047576,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.1,
@@ -21253,6 +21378,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-4.1-nano',
         },
+        context_window: 1047576,
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.025,
@@ -21287,6 +21413,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -21298,6 +21425,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-4o-2024-05-13',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 5,
           output_mtok: 15,
@@ -21316,6 +21444,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.075,
@@ -21376,6 +21505,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
@@ -21388,6 +21518,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5-image',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 10,
           cache_read_mtok: 1.25,
@@ -21400,6 +21531,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5-image-mini',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.25,
@@ -21419,6 +21551,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -21431,6 +21564,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5-nano',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.05,
           cache_read_mtok: 0.01,
@@ -21443,6 +21577,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5-pro',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 15,
           output_mtok: 120,
@@ -21464,6 +21599,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.13,
@@ -21483,6 +21619,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -21508,6 +21645,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
@@ -21527,6 +21665,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 21,
           output_mtok: 168,
@@ -21557,6 +21696,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
@@ -21615,6 +21755,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5.4-image-2',
         },
+        context_window: 272000,
         prices: {
           input_mtok: 8,
           cache_read_mtok: 2,
@@ -21627,6 +21768,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5.4-mini',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.75,
           cache_read_mtok: 0.075,
@@ -21639,6 +21781,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-5.4-nano',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
@@ -21915,6 +22058,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-audio',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
@@ -21926,6 +22070,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-audio-mini',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
@@ -21937,6 +22082,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-chat-latest',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 5,
           cache_read_mtok: 0.5,
@@ -21949,6 +22095,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-oss-120b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.039,
           output_mtok: 0.18,
@@ -21968,6 +22115,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-oss-20b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.029,
           output_mtok: 0.14,
@@ -21987,6 +22135,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-oss-safeguard-20b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.075,
           cache_read_mtok: 0.037,
@@ -22009,6 +22158,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_read_mtok: 7.5,
@@ -22038,6 +22188,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/o1-pro',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 150,
           output_mtok: 600,
@@ -22049,6 +22200,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/o3',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -22080,6 +22232,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.55,
@@ -22092,6 +22245,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/o3-pro',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 20,
           output_mtok: 80,
@@ -22110,6 +22264,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
@@ -22155,6 +22310,7 @@ export const data: Provider[] = [
         match: {
           equals: 'perceptron/perceptron-mk1',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.15,
           output_mtok: 1.5,
@@ -22195,6 +22351,7 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar',
         },
+        context_window: 127072,
         prices: {
           input_mtok: 1,
           output_mtok: 1,
@@ -22205,6 +22362,7 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar-deep-research',
         },
+        context_window: 128000,
         price_comments:
           'OpenRouter reports internal reasoning as a distinct $3 per million-token charge. Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing',
         prices: {
@@ -22218,6 +22376,7 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar-pro',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           output_mtok: 15,
@@ -22238,6 +22397,7 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar-reasoning-pro',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2,
           output_mtok: 8,
@@ -22473,6 +22633,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2.5-72b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.12,
           output_mtok: 0.39,
@@ -22491,6 +22652,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2.5-7b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.1,
@@ -22509,6 +22671,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2.5-coder-32b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.15,
@@ -22564,6 +22727,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-plus',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.16,
@@ -22576,6 +22740,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-plus-2025-07-28',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.26,
           output_mtok: 0.78,
@@ -22662,6 +22827,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen2.5-vl-72b-instruct',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.7,
@@ -22680,6 +22846,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-14b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.24,
@@ -22691,6 +22858,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-235b-a22b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.13,
           output_mtok: 0.6,
@@ -22702,6 +22870,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-235b-a22b-2507',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.09,
           output_mtok: 0.1,
@@ -22713,6 +22882,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-235b-a22b-thinking-2507',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -22724,6 +22894,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-30b-a3b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.08,
           output_mtok: 0.29,
@@ -22735,6 +22906,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-30b-a3b-instruct-2507',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.04815,
           output_mtok: 0.19305,
@@ -22746,6 +22918,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-30b-a3b-thinking-2507',
         },
+        context_window: 81920,
         prices: {
           input_mtok: 0.08,
           output_mtok: 0.4,
@@ -22757,6 +22930,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-32b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.3,
@@ -22768,6 +22942,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-8b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.035,
           output_mtok: 0.138,
@@ -22786,6 +22961,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.22,
           output_mtok: 1.8,
@@ -22797,6 +22973,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-coder-30b-a3b-instruct',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.27,
@@ -22808,6 +22985,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-coder-flash',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.195,
           cache_write_mtok: 0.24375,
@@ -22828,6 +23006,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.11,
           cache_read_mtok: 0.07,
@@ -22840,6 +23019,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-coder-plus',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.65,
           cache_write_mtok: 0.8125,
@@ -22861,6 +23041,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-max',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 1.2,
           output_mtok: 6,
@@ -22879,6 +23060,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.78,
           output_mtok: 3.9,
@@ -22897,6 +23079,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.09,
           output_mtok: 1.1,
@@ -22923,6 +23106,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.0975,
           output_mtok: 0.78,
@@ -22934,6 +23118,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-235b-a22b-instruct',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.11,
@@ -22946,6 +23131,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-235b-a22b-thinking',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.26,
           output_mtok: 2.6,
@@ -22957,6 +23143,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-30b-a3b-instruct',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.13,
           output_mtok: 0.52,
@@ -22968,6 +23155,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-30b-a3b-thinking',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.13,
           output_mtok: 1.56,
@@ -22979,6 +23167,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-32b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.104,
           output_mtok: 0.416,
@@ -22990,6 +23179,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-8b-instruct',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.08,
           output_mtok: 0.5,
@@ -23001,6 +23191,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-8b-thinking',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.117,
           output_mtok: 1.365,
@@ -23019,6 +23210,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.26,
           output_mtok: 2.08,
@@ -23037,6 +23229,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.195,
           output_mtok: 1.56,
@@ -23055,6 +23248,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.14,
           cache_read_mtok: 0.05,
@@ -23074,6 +23268,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.39,
           output_mtok: 2.34,
@@ -23092,6 +23287,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.15,
@@ -23110,6 +23306,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.065,
           output_mtok: 0.26,
@@ -23128,6 +23325,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.4,
           output_mtok: 2.4,
@@ -23139,6 +23337,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3.5-plus-20260420',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.3,
           cache_write_mtok: 0.375,
@@ -23158,6 +23357,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.289,
           output_mtok: 2.4,
@@ -23176,6 +23376,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.14,
           output_mtok: 1,
@@ -23187,6 +23388,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3.6-flash',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.1875,
           cache_write_mtok: 0.234375,
@@ -23206,6 +23408,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         prices: {
           input_mtok: 1.04,
           cache_write_mtok: 1.3,
@@ -23225,6 +23428,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.325,
           cache_write_mtok: 0.40625,
@@ -23244,6 +23448,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 1.25,
           cache_write_mtok: 1.5625,
@@ -23264,6 +23469,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.4,
           cache_write_mtok: 0.5,
@@ -23453,6 +23659,7 @@ export const data: Provider[] = [
         match: {
           equals: 'rekaai/reka-edge',
         },
+        context_window: 16384,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -23464,6 +23671,7 @@ export const data: Provider[] = [
         match: {
           equals: 'rekaai/reka-flash-3',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.2,
@@ -23482,6 +23690,7 @@ export const data: Provider[] = [
         match: {
           equals: 'relace/relace-apply-3',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.85,
           output_mtok: 1.25,
@@ -23493,6 +23702,7 @@ export const data: Provider[] = [
         match: {
           equals: 'relace/relace-search',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 1,
           output_mtok: 3,
@@ -23524,6 +23734,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3-lunaris-8b',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.02,
           output_mtok: 0.05,
@@ -23546,6 +23757,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3.1-euryale-70b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.8,
@@ -23557,6 +23769,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3.3-euryale-70b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.8,
@@ -23671,6 +23884,7 @@ export const data: Provider[] = [
         match: {
           equals: 'stepfun/step-3.5-flash',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.09,
           cache_read_mtok: 0.02,
@@ -23683,6 +23897,7 @@ export const data: Provider[] = [
         match: {
           equals: 'stepfun/step-3.7-flash',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.04,
@@ -23706,6 +23921,7 @@ export const data: Provider[] = [
         match: {
           equals: 'tencent/hunyuan-a13b-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.14,
           output_mtok: 0.57,
@@ -23717,6 +23933,7 @@ export const data: Provider[] = [
         match: {
           equals: 'tencent/hy3-preview',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.063,
           cache_read_mtok: 0.021,
@@ -23739,6 +23956,7 @@ export const data: Provider[] = [
         match: {
           equals: 'thedrummer/cydonia-24b-v4.1',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.15,
@@ -23762,6 +23980,7 @@ export const data: Provider[] = [
         match: {
           equals: 'thedrummer/skyfall-36b-v2',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.5,
           output_mtok: 0.8,
@@ -23772,6 +23991,7 @@ export const data: Provider[] = [
         match: {
           equals: 'thedrummer/unslopnemo-12b',
         },
+        context_window: 1024000,
         prices: {
           input_mtok: 0.5,
           output_mtok: 0.5,
@@ -23808,6 +24028,7 @@ export const data: Provider[] = [
         match: {
           equals: 'undi95/remm-slerp-l2-13b',
         },
+        context_window: 6144,
         prices: {
           input_mtok: 0.8,
           output_mtok: 1.2,
@@ -23829,6 +24050,7 @@ export const data: Provider[] = [
         match: {
           equals: 'upstage/solar-pro-3',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
@@ -23863,6 +24085,7 @@ export const data: Provider[] = [
         match: {
           equals: 'writer/palmyra-x5',
         },
+        context_window: 1040000,
         prices: {
           input_mtok: 0.6,
           output_mtok: 6,
@@ -23950,6 +24173,7 @@ export const data: Provider[] = [
         match: {
           equals: 'x-ai/grok-4.20',
         },
+        context_window: 2000000,
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.2,
@@ -23962,6 +24186,7 @@ export const data: Provider[] = [
         match: {
           equals: 'x-ai/grok-4.20-multi-agent',
         },
+        context_window: 2000000,
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.2,
@@ -23981,6 +24206,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.2,
@@ -24003,6 +24229,7 @@ export const data: Provider[] = [
         match: {
           equals: 'x-ai/grok-build-0.1',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 1,
           cache_read_mtok: 0.2,
@@ -24049,6 +24276,7 @@ export const data: Provider[] = [
         match: {
           equals: 'xiaomi/mimo-v2.5',
         },
+        context_window: 1050000,
         prices: {
           input_mtok: 0.14,
           cache_read_mtok: 0.0028,
@@ -24061,6 +24289,7 @@ export const data: Provider[] = [
         match: {
           equals: 'xiaomi/mimo-v2.5-pro',
         },
+        context_window: 1050000,
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.0036,
@@ -24094,6 +24323,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.5',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.11,
@@ -24106,6 +24336,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.5-air',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.125,
           cache_read_mtok: 0.06,
@@ -24118,6 +24349,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.5v',
         },
+        context_window: 65536,
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.11,
@@ -24130,6 +24362,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.6',
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.43,
           cache_read_mtok: 0.08,
@@ -24142,6 +24375,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.6v',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.05,
@@ -24154,6 +24388,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.7',
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.08,
@@ -24173,6 +24408,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 202752,
         prices: {
           input_mtok: 0.06,
           cache_read_mtok: 0.01,
@@ -24192,6 +24428,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.12,
@@ -24211,6 +24448,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 202752,
         prices: {
           input_mtok: 1.2,
           cache_read_mtok: 0.24,
@@ -24230,6 +24468,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 204800,
         prices: {
           input_mtok: 0.98,
           cache_read_mtok: 0.182,
@@ -24297,6 +24536,7 @@ export const data: Provider[] = [
         match: {
           equals: '~anthropic/claude-fable-latest',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
@@ -24310,6 +24550,7 @@ export const data: Provider[] = [
         match: {
           equals: '~anthropic/claude-haiku-latest',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
@@ -24323,6 +24564,7 @@ export const data: Provider[] = [
         match: {
           equals: '~anthropic/claude-opus-latest',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -24336,6 +24578,7 @@ export const data: Provider[] = [
         match: {
           equals: '~anthropic/claude-sonnet-latest',
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -24349,6 +24592,7 @@ export const data: Provider[] = [
         match: {
           equals: '~google/gemini-flash-latest',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 1.5,
           cache_write_mtok: 0.08333333333333334,
@@ -24362,6 +24606,7 @@ export const data: Provider[] = [
         match: {
           equals: '~google/gemini-pro-latest',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 2,
           cache_write_mtok: 0.375,
@@ -24375,6 +24620,7 @@ export const data: Provider[] = [
         match: {
           equals: '~moonshotai/kimi-latest',
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 0.68,
           cache_read_mtok: 0.34,
@@ -24387,6 +24633,7 @@ export const data: Provider[] = [
         match: {
           equals: '~openai/gpt-latest',
         },
+        context_window: 1050000,
         prices: {
           input_mtok: 5,
           cache_read_mtok: 0.5,
@@ -24399,6 +24646,7 @@ export const data: Provider[] = [
         match: {
           equals: '~openai/gpt-mini-latest',
         },
+        context_window: 400000,
         prices: {
           input_mtok: 0.75,
           cache_read_mtok: 0.075,

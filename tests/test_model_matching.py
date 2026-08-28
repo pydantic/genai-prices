@@ -724,7 +724,8 @@ def test_litellm_provider_id():
         ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
         ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
-        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
+        # direct value from OpenRouter's /models API (`context_length`), describing their own offering
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', 1_048_576),
     ],
 )
 def test_model_has_effective_context_window(
