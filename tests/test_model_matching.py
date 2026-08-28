@@ -724,7 +724,14 @@ def test_litellm_provider_id():
         ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
         ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
+        # deliberately windowless: OpenRouter serves this model from endpoints with differing context
+        # lengths, so no single value is true — see the record's comment in openrouter.yml
         ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
+        # direct value from OpenRouter's /models API (`context_length`), endpoint-unanimous
+        ('openrouter', 'deepseek/deepseek-v3.2-exp', 'openrouter', 'deepseek/deepseek-v3.2-exp', 163_840),
+        # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
+        # not claim either window — a 200,000 here would mis-size o1-preview requests
+        ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
     ],
 )
 def test_model_has_effective_context_window(
