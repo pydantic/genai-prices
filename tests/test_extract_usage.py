@@ -23,6 +23,31 @@ class MyMapping(dict[str, Any]):
     pass
 
 
+def test_cursor_usage_event():
+    response_data = {
+        'model': 'grok-4.6-fast',
+        'tokenUsage': {
+            'inputTokens': 100,
+            'cacheWriteTokens': 20,
+            'cacheReadTokens': 30,
+            'outputTokens': 40,
+            'totalCents': 0.099,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='cursor', api_flavor='usage-event')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'grok-4.6-fast'
+    assert extracted.usage == Usage(
+        input_tokens=150,
+        cache_write_tokens=20,
+        cache_read_tokens=30,
+        output_tokens=40,
+    )
+    assert extracted.calc_price().total_price == Decimal('0.00099')
+
+
 @pytest.mark.parametrize(
     'response_data,expected_model,expected_usage,expected_price',
     [

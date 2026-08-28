@@ -7,6 +7,7 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
   extractors: [
@@ -31,6 +32,32 @@ afterEach(() => {
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
+    it('should extract Cursor usage events', () => {
+      const responseData = {
+        model: 'grok-4.6-fast',
+        tokenUsage: {
+          cacheReadTokens: 30,
+          cacheWriteTokens: 20,
+          inputTokens: 100,
+          outputTokens: 40,
+          totalCents: 0.099,
+        },
+      }
+
+      const { model, usage } = extractUsage(cursorProvider, responseData, 'usage-event')
+
+      expect(model).toBe('grok-4.6-fast')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        cache_write_tokens: 20,
+        input_tokens: 150,
+        output_tokens: 40,
+      })
+
+      const price = calcPrice(usage, model!, { providerId: 'cursor' })
+      expect(price?.total_price).toBeCloseTo(0.00099)
+    })
+
     it('should extract usage with cache tokens', () => {
       const responseData = {
         id: 'msg_0152tnC3YpjyASTB9qxqDJXu',

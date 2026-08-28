@@ -45,6 +45,41 @@ def test_sync_success_with_provider():
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('composer-2.5', Decimal('3.2')),
+        ('composer-2.5-fast', Decimal('18.5')),
+        ('grok-4.5', Decimal('8.5')),
+        ('grok-4.5-fast', Decimal('23')),
+        ('grok-4.6', Decimal('8.5')),
+        ('grok-4.6-fast', Decimal('17')),
+    ],
+)
+def test_cursor_model_prices(model_ref: str, expected_total_price: Decimal):
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='cursor',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+def test_cursor_provider_inference():
+    composer_price = calc_price(Usage(input_tokens=1), model_ref='composer-2.5[fast=true]')
+    grok_price = calc_price(
+        Usage(input_tokens=1),
+        model_ref='grok-4.6[fast=false]',
+        provider_api_url='https://api.cursor.com/v1/agents',
+    )
+
+    assert composer_price.provider.id == 'cursor'
+    assert composer_price.model.id == 'composer-2.5-fast'
+    assert grok_price.provider.id == 'cursor'
+    assert grok_price.model.id == 'grok-4.6'
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),

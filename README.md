@@ -39,6 +39,7 @@ The following providers are currently supported:
 - [Cerebras](prices/providers/cerebras.yml) - 7 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
+- [Cursor](prices/providers/cursor.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 20 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
