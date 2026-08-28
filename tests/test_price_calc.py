@@ -80,6 +80,42 @@ def test_cursor_provider_inference():
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('deepseek/deepseek-v4-flash-latest', Decimal('0.448')),
+        ('deepseek/deepseek-v4-pro', Decimal('5.42')),
+        ('moonshotai/kimi-k3', Decimal('18.3')),
+        ('thinkingmachines/inkling-small', Decimal('1.8')),
+        ('trinity-large-thinking', Decimal('1.11')),
+        ('zai-org/glm-5.2', Decimal('6.06')),
+    ],
+)
+def test_arcee_model_prices(model_ref: str, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='arcee',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+def test_arcee_provider_inference() -> None:
+    explicit_price = calc_price(Usage(input_tokens=1), model_ref='trinity-large-thinking', provider_id='arcee')
+    url_price = calc_price(
+        Usage(input_tokens=1),
+        model_ref='deepseek/deepseek-v4-pro',
+        provider_api_url='https://api.arcee.ai/api/v1/chat/completions',
+    )
+
+    assert explicit_price.provider.id == 'arcee'
+    assert url_price.provider.id == 'arcee'
+
+    with pytest.raises(LookupError, match='in deepseek'):
+        calc_price(Usage(input_tokens=1), model_ref='deepseek/deepseek-v4-pro')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),
