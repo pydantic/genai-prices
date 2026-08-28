@@ -172,6 +172,7 @@ models:
       MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.
     match:
       equals: minimax-01
+    context_window: 1000192
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
     prices:
@@ -186,6 +187,8 @@ models:
       efficient long-context processing.
     match:
       equals: minimax-m1
+    # No context_window: MiniMax states only separate caps for this model (1M max input tokens, 80K max output
+    # tokens), never a single total window, so no value can be recorded without picking a convention.
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
     prices:

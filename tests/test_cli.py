@@ -357,6 +357,16 @@ def test_calc_no_color_vertical_table(capsys: pytest.CaptureFixture[str]):
     assert err == ''
 
 
+def test_calc_rich_model_without_context_window(capsys: pytest.CaptureFixture[str]):
+    # babbage is retired with no documented context window, so its record stays windowless;
+    # this keeps the None-row branch of the rich table covered regardless of data fills
+    assert cli_logic(['calc', '--no-color', '--input-tokens', '1000', 'openai:babbage']) == 0
+    out, err = capsys.readouterr()
+    assert 'Provider' in out
+    assert 'Context Window' not in out
+    assert err == ''
+
+
 def test_calc_keep_going(capsys: pytest.CaptureFixture[str]):
     assert (
         cli_logic(

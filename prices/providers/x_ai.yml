@@ -264,6 +264,7 @@ models:
       low hallucination rates with strict prompt adherence.
     match:
       equals: grok-4.20
+    context_window: 1000000
     price_comments: >-
       Prompts at or above 200k tokens are billed at the higher rate for every token in the
       request, not just the tokens past the threshold. xAI's boundary is inclusive -- its
@@ -295,6 +296,7 @@ models:
       operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
     match:
       equals: grok-4.20-multi-agent
+    context_window: 1000000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 2
@@ -422,6 +424,7 @@ models:
       text and image inputs with text output, and is optimized for interactive coding.
     match:
       equals: grok-build-0.1
+    context_window: 256000
     price_comments: >-
       Prompts at or above 200k tokens are billed at the higher rate for every token in the
       request, not just the tokens past the threshold. xAI's boundary is inclusive -- its

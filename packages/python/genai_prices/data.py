@@ -7284,6 +7284,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='minimax-01'),
                 name='MiniMax-01',
                 description='MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.',
+                context_window=1000192,
                 price_comments='Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('1.1')),
             ),
@@ -14921,6 +14922,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar'),
                 name='Sonar',
                 description='Sonar is lightweight, affordable, fast, and simple to use — now featuring citations and the ability to customize sources. It is designed for companies seeking to integrate lightweight question-and-answer features optimized for speed.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'), requests_kcount=Decimal('12')),
             ),
             ModelInfo(
@@ -14928,6 +14930,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-deep-research'),
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
+                context_window=128000,
                 price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
@@ -14942,6 +14945,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-pro'),
                 name='Sonar Pro',
                 description='Note: Sonar Pro pricing includes Perplexity search pricing. See details here',
+                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'), requests_kcount=Decimal('14')),
             ),
             ModelInfo(
@@ -14964,6 +14968,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-reasoning-pro'),
                 name='Sonar Reasoning Pro',
                 description='Sonar Pro pricing includes Perplexity search pricing.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8'), requests_kcount=Decimal('14')),
             ),
         ],
@@ -16176,6 +16181,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20'),
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
+                context_window=1000000,
                 price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
@@ -16188,6 +16194,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20-multi-agent'),
                 name='Grok 4.20 Multi-Agent',
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
+                context_window=1000000,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
@@ -16259,6 +16266,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-build-0.1'),
                 name='Grok Build 0.1',
                 description="Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding.",
+                context_window=256000,
                 price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=199999, price=Decimal('2'))]),
