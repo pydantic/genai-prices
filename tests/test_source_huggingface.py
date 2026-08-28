@@ -13,6 +13,7 @@ from inline_snapshot import snapshot
 from prices import source_huggingface
 from prices.prices_types import ModelPrice, UsageExtractor
 from prices.source_huggingface import get_model_infos
+from prices.write_guard import ALLOW_MODEL_COUNT_DROP_ENV
 
 from .fixtures import load_entries
 
@@ -131,6 +132,8 @@ def test_huggingface_main_exits_nonzero_on_empty_payload(monkeypatch: pytest.Mon
 
 
 def test_huggingface_main_checks_all_providers_before_writing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    monkeypatch.delenv(ALLOW_MODEL_COUNT_DROP_ENV, raising=False)
+
     class FakeResponse:
         def json(self) -> dict[str, list[dict[str, object]]]:
             return {'data': huggingface_models()}
