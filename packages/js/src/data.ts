@@ -8008,6 +8008,48 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
@@ -8087,6 +8129,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -8206,6 +8290,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -8363,6 +8489,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -8653,6 +8821,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -9209,6 +9419,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -10455,6 +10707,48 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
@@ -10903,6 +11197,48 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
@@ -11097,6 +11433,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -11303,6 +11681,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -11517,6 +11937,48 @@ export const data: Provider[] = [
       ],
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
@@ -25052,6 +25514,48 @@ export const data: Provider[] = [
     pricing_urls: ['https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'],
     api_pattern: 'https://oai\\.endpoints\\.kepler\\.ai\\.cloud\\.ovh\\.net',
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
