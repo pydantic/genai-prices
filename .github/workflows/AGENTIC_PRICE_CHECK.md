@@ -6,11 +6,11 @@ pricing page** and file a GitHub issue when they diverge. This complements the
 existing aggregator-based checks (`make check-for-price-discrepancies`, which
 uses LiteLLM / OpenRouter / etc.) by reading the authoritative source directly.
 
-| Workflow                                  | Providers                                                                                                               | Issue                              |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic                                                                                                       | `[price-check/openai-anthropic] …` |
-| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral                                                                                                | `[price-check/google-mistral] …`   |
-| `agentic-price-check-direct-providers.md` | DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor | `[price-check/direct-providers] …` |
+| Workflow                                  | Providers                                                                                                                      | Issue                              |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic                                                                                                              | `[price-check/openai-anthropic] …` |
+| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral                                                                                                       | `[price-check/google-mistral] …`   |
+| `agentic-price-check-direct-providers.md` | DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor, Arcee | `[price-check/direct-providers] …` |
 
 Each agent is told the **exact pricing URL** to fetch per provider, reads the recorded
 `prices:` from the YAML, and compares. The direct-provider workflow reads its provider

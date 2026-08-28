@@ -49,6 +49,27 @@ def test_cursor_usage_event():
     assert extracted.calc_price().total_price == Decimal('0.00099')
 
 
+@pytest.mark.parametrize('api_flavor', ['default', 'chat'])
+def test_arcee_chat_usage(api_flavor: str) -> None:
+    response_data = {
+        'model': 'deepseek/deepseek-v4-flash-latest',
+        'usage': {
+            'prompt_tokens': 100,
+            'prompt_tokens_details': {'cached_tokens': 30},
+            'completion_tokens': 40,
+            'completion_tokens_details': {'reasoning_tokens': 10},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='arcee', api_flavor=api_flavor)
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'deepseek/deepseek-v4-flash-latest'
+    assert extracted.usage == Usage(
+        input_tokens=100, cache_read_tokens=30, output_tokens=40, output_reasoning_tokens=10
+    )
+
+
 @pytest.mark.parametrize(
     'response_data,expected_model,expected_usage,expected_price',
     [
