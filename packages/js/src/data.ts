@@ -4015,6 +4015,8 @@ export const data: Provider[] = [
         match: {
           equals: 'Qwen/Qwen3.8-27B-FP8',
         },
+        context_window: 262144,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.',
         prices: {
           input_mtok: 0.45,
           cache_read_mtok: 0.04,
@@ -4038,6 +4040,8 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
         },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
         prices: {
           input_mtok: 0.09,
           cache_read_mtok: 0.02,
@@ -4094,6 +4098,8 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k3',
         },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.',
         prices: {
           input_mtok: 3,
           cache_read_mtok: 0.3,
@@ -4139,6 +4145,8 @@ export const data: Provider[] = [
         match: {
           equals: 'zai-org/GLM-5.2-FP8',
         },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.',
         prices: {
           input_mtok: 0.93,
           cache_read_mtok: 0.19,

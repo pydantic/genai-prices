@@ -2415,6 +2415,8 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3.8-27B-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3.8-27B-FP8'),
                 name='Qwen3.8 27B',
+                context_window=262144,
+                price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('3')
                 ),
@@ -2429,6 +2431,8 @@ providers: list[Provider] = [
                 id='deepseek-ai/DeepSeek-V4-Flash-0731',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Flash-0731'),
                 name='DeepSeek V4 Flash 0731',
+                context_window=1048576,
+                price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.18')
                 ),
@@ -2461,6 +2465,8 @@ providers: list[Provider] = [
                 id='moonshotai/kimi-k3',
                 match=ClauseEquals(equals='moonshotai/kimi-k3'),
                 name='Kimi K3',
+                context_window=1048576,
+                price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.',
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
@@ -2485,6 +2491,8 @@ providers: list[Provider] = [
                 id='zai-org/GLM-5.2-FP8',
                 match=ClauseEquals(equals='zai-org/GLM-5.2-FP8'),
                 name='GLM 5.2',
+                context_window=1048576,
+                price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.93'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('3')
                 ),

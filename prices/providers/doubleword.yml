@@ -118,7 +118,10 @@ models:
     name: Qwen3.8 27B
     match:
       equals: Qwen/Qwen3.8-27B-FP8
-    prices_checked: 2026-08-26
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.
     prices:
       input_mtok: 0.45
       cache_read_mtok: 0.04
@@ -138,7 +141,10 @@ models:
     name: DeepSeek V4 Flash 0731
     match:
       equals: deepseek-ai/DeepSeek-V4-Flash-0731
-    prices_checked: 2026-08-26
+    context_window: 1048576
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.
     prices:
       input_mtok: 0.09
       cache_read_mtok: 0.02
@@ -187,7 +193,10 @@ models:
     name: Kimi K3
     match:
       equals: moonshotai/kimi-k3
-    prices_checked: 2026-08-26
+    context_window: 1048576
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30
@@ -227,7 +236,10 @@ models:
     name: GLM 5.2
     match:
       equals: zai-org/GLM-5.2-FP8
-    prices_checked: 2026-08-26
+    context_window: 1048576
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.
     prices:
       input_mtok: 0.93
       cache_read_mtok: 0.19
