@@ -40,6 +40,8 @@ models:
       equals: kimi-k2
     # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
     # prices kept for historical usage.
+    # No context_window: the kimi-k2 family spans two windows — kimi-k2-0711-preview was 128k and
+    # kimi-k2-0905-preview 256k — so no single value is true for the bare name.
     deprecated: true
     prices_checked: 2026-06-09
     prices:
