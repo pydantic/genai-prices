@@ -96,7 +96,7 @@ def test_model_info_carries_context_window_only_when_requested():
     """OpenRouter's `context_length` describes their own offering, so it only goes on `openrouter` records."""
     model = openrouter_model('anthropic/claude-opus-5')
 
-    openrouter_record = model.model_info(inc_description=False, strip_provider=False, inc_context_window=True)
+    openrouter_record = model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
     native_record = model.model_info()
 
     assert openrouter_record.context_window == 1_000_000

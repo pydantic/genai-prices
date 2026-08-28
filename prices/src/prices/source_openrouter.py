@@ -46,7 +46,7 @@ class OpenRouterModel(BaseModel):
         return self.name.split(':', 1)[-1].strip()
 
     def model_info(
-        self, inc_description: bool = True, *, strip_provider: bool = True, inc_context_window: bool = False
+        self, inc_description: bool = True, *, strip_provider: bool = True, include_context_window: bool = False
     ) -> ModelInfo:
         model_id = self.model_id(strip_provider=strip_provider)
         match_clauses = [ClauseEquals(equals=model_id)]
@@ -73,7 +73,7 @@ class OpenRouterModel(BaseModel):
             prices=self.pricing.model_price(),
             # Only for the `openrouter` provider's own records: OpenRouter's `context_length` describes
             # their offering, not what the model's native provider enforces.
-            context_window=self.context_length if inc_context_window else None,
+            context_window=self.context_length if include_context_window else None,
         )
 
 
@@ -183,7 +183,7 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
             or_providers[provider_id] = [or_model]
 
         # add all models to the openrouter provider
-        model_info = or_model.model_info(inc_description=False, strip_provider=False, inc_context_window=True)
+        model_info = or_model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
         assert isinstance(model_info.prices, ModelPrice)
         try:
             or_provider_yaml.update_model(model_info.id, model_info)
