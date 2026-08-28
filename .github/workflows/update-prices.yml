@@ -31,7 +31,7 @@ jobs:
       - name: Read importer targets
         id: targets
         run: |
-          targets=$(make --silent list-price-importers | jq --raw-input --slurp --compact-output 'split("\n") | map(select(length > 0))')
+          targets=$(make --silent list-provider-price-importers | jq --raw-input --slurp --compact-output 'split("\n") | map(select(length > 0))')
           echo "targets=$targets" >> "$GITHUB_OUTPUT"
 
   import:
@@ -64,7 +64,7 @@ jobs:
           set -e
 
           if [ "$status" -eq 0 ]; then
-            git add --all
+            git add --all -- . ':(exclude)price-update/**'
             git diff --cached --binary --full-index > price-update/changes.patch
             printf -- '- `%s`: succeeded\n' "$TARGET" > price-update/result.md
             echo "### $TARGET: succeeded" >> "$GITHUB_STEP_SUMMARY"
@@ -93,10 +93,10 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: importer-*
-          path: importer-results
+          path: ${{ runner.temp }}/importer-results
       - name: Apply successful importer changes
         run: |
-          find importer-results -name changes.patch -print0 | sort --zero-terminated | while IFS= read -r -d '' patch; do
+          find "$RUNNER_TEMP/importer-results" -name changes.patch -print0 | sort --zero-terminated | while IFS= read -r -d '' patch; do
             if [ -s "$patch" ]; then
               git apply --index "$patch"
             fi
@@ -116,10 +116,10 @@ jobs:
             printf 'Automated price refresh from [workflow run %s](%s/%s/actions/runs/%s).\n\n' \
               "$GITHUB_RUN_ID" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
             printf '## Importers\n\n'
-            find importer-results -name result.md -print0 | sort --zero-terminated | xargs --null cat
+            find "$RUNNER_TEMP/importer-results" -name result.md -print0 | sort --zero-terminated | xargs --null cat
             printf '\n## AI Disclaimer\n\n'
             printf "This PR was developed with the assistance of either Claude or Codex. I've reviewed and verified the changes.\n"
-          } > price-update-pr-body.md
+          } > "$RUNNER_TEMP/price-update-pr-body.md"
       - name: Create GitHub App token
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -136,4 +136,4 @@ jobs:
           delete-branch: true
           commit-message: Refresh provider prices
           title: Refresh provider prices
-          body-path: price-update-pr-body.md
+          body-path: ${{ runner.temp }}/price-update-pr-body.md
