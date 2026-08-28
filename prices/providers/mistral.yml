@@ -229,7 +229,8 @@ models:
     name: Ministral 8B Latest
     match:
       equals: ministral-8b-latest
-    context_window: 262144
+    # No context_window: this alias pointed to Ministral 8B 24.10 (128k) until 2025-12-02,
+    # now to Ministral 3 8B (262,144) — no single value is true for every request it matches
     prices_checked: 2026-08-24
     price_comments: >-
       The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02.
@@ -355,7 +356,8 @@ models:
     name: Mistral Medium Latest
     match:
       equals: mistral-medium-latest
-    context_window: 262144
+    # No context_window: this alias pointed to the 128k mistral-medium-2505 before repointing
+    # to the 262,144 Medium 3.5 — no single value is true for every request it matches
     prices_checked: 2026-08-24
     price_comments: >-
       The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16.
@@ -469,7 +471,8 @@ models:
       or:
         - equals: mistral-ocr-latest
         - equals: mistral-ocr-latest-completion
-    context_window: 16384
+    # No context_window: this alias pointed to the 40k mistral-ocr-2505 before today's
+    # 16,384 OCR 4 — no single value is true for every request it matches
     prices_checked: 2026-08-25
     price_comments: >-
       The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026.
@@ -579,7 +582,8 @@ models:
     name: Mistral Small 3.2
     match:
       equals: mistral-small-latest
-    context_window: 262144
+    # No context_window: this alias pointed to the 128k mistral-small-2506 before repointing
+    # to the 262,144 mistral-small-2603 — no single value is true for every request it matches
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1

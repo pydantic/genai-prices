@@ -12588,7 +12588,6 @@ export const data: Provider[] = [
         match: {
           equals: 'ministral-8b-latest',
         },
-        context_window: 262144,
         price_comments:
           'The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
         prices: [
@@ -12752,7 +12751,6 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-medium-latest',
         },
-        context_window: 262144,
         price_comments:
           'The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
         prices: [
@@ -12923,7 +12921,6 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 16384,
         price_comments:
           'The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
         prices: [
@@ -13058,7 +13055,6 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-small-latest',
         },
-        context_window: 262144,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.3,

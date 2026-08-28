@@ -7409,7 +7409,6 @@ providers: list[Provider] = [
                 id='ministral-8b-latest',
                 match=ClauseEquals(equals='ministral-8b-latest'),
                 name='Ministral 8B Latest',
-                context_window=262144,
                 price_comments='The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
                 prices=[
                     ConditionalPrice(
@@ -7502,7 +7501,6 @@ providers: list[Provider] = [
                 id='mistral-medium-latest',
                 match=ClauseEquals(equals='mistral-medium-latest'),
                 name='Mistral Medium Latest',
-                context_window=262144,
                 price_comments='The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
                 prices=[
                     ConditionalPrice(
@@ -7596,7 +7594,6 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Mistral OCR Latest',
-                context_window=16384,
                 price_comments='The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
                 prices=[
                     ConditionalPrice(constraint=None, prices=ModelPrice(input_document_kpages=Decimal('1'))),
@@ -7673,7 +7670,6 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mistral-small-latest'),
                 name='Mistral Small 3.2',
                 description='SOTA. Multimodal. Multilingual. Apache 2.0.',
-                context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
