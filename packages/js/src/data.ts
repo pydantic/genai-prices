@@ -13266,6 +13266,7 @@ export const data: Provider[] = [
         match: {
           equals: 'Sao10K/L3-8B-Stheno-v3.2',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
@@ -13286,6 +13287,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1',
         },
+        context_window: 64000,
         prices: {
           input_mtok: 4,
           output_mtok: 4,
@@ -13296,6 +13298,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-distill-llama-70b',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.8,
           output_mtok: 0.8,
@@ -13316,6 +13319,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-distill-qwen-14b',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.15,
@@ -13326,6 +13330,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-distill-qwen-32b',
         },
+        context_window: 64000,
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.3,
@@ -13336,6 +13341,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek_v3',
         },
+        context_window: 64000,
         prices: {
           input_mtok: 0.89,
           output_mtok: 0.89,
@@ -13356,6 +13362,7 @@ export const data: Provider[] = [
         match: {
           equals: 'gryphe/mythomax-l2-13b',
         },
+        context_window: 4096,
         prices: {
           input_mtok: 0.09,
           output_mtok: 0.09,
@@ -13376,6 +13383,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3-70b-instruct',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.51,
           output_mtok: 0.74,
@@ -13386,6 +13394,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3-8b-instruct',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.04,
@@ -13413,6 +13422,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
@@ -13443,6 +13453,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.2-1b-instruct',
         },
+        context_window: 131000,
         prices: {
           input_mtok: 0.02,
           output_mtok: 0.02,
@@ -13453,6 +13464,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.2-3b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.03,
           output_mtok: 0.05,
@@ -13463,6 +13475,7 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.3-70b-instruct',
         },
+        context_window: 12288,
         prices: {
           input_mtok: 0.39,
           output_mtok: 0.39,
@@ -13473,6 +13486,7 @@ export const data: Provider[] = [
         match: {
           equals: 'microsoft/wizardlm-2-8x22b',
         },
+        context_window: 65535,
         prices: {
           input_mtok: 0.62,
           output_mtok: 0.62,
@@ -13493,6 +13507,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistralai/mistral-nemo',
         },
+        context_window: 60288,
         prices: {
           input_mtok: 0.17,
           output_mtok: 0.17,
@@ -13503,6 +13518,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/hermes-2-pro-llama-3-8b',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.14,
           output_mtok: 0.14,
@@ -13513,6 +13529,7 @@ export const data: Provider[] = [
         match: {
           equals: 'nousresearch/nous-hermes-llama2-13b',
         },
+        context_window: 4096,
         prices: {
           input_mtok: 0.17,
           output_mtok: 0.17,
@@ -13523,6 +13540,7 @@ export const data: Provider[] = [
         match: {
           equals: 'openchat/openchat-7b',
         },
+        context_window: 4096,
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.06,
@@ -13533,6 +13551,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2-7b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.054,
           output_mtok: 0.054,
@@ -13543,6 +13562,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2-vl-72b-instruct',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.45,
           output_mtok: 0.45,
@@ -13553,6 +13573,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2.5-72b-instruct',
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.38,
           output_mtok: 0.4,
@@ -13563,6 +13584,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3-70b-euryale-v2.1',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 1.48,
           output_mtok: 1.48,
@@ -13573,6 +13595,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3-8b-lunaris',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
@@ -13583,6 +13606,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l31-70b-euryale-v2.2',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 1.48,
           output_mtok: 1.48,
@@ -13603,6 +13627,7 @@ export const data: Provider[] = [
         match: {
           equals: 'teknium/openhermes-2.5-mistral-7b',
         },
+        context_window: 4096,
         prices: {
           input_mtok: 0.17,
           output_mtok: 0.17,

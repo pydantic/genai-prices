@@ -7793,6 +7793,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='Sao10K/L3-8B-Stheno-v3.2',
                 match=ClauseEquals(equals='Sao10K/L3-8B-Stheno-v3.2'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.05')),
             ),
             ModelInfo(
@@ -7803,11 +7804,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='deepseek/deepseek-r1',
                 match=ClauseEquals(equals='deepseek/deepseek-r1'),
+                context_window=64000,
                 prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='deepseek/deepseek-r1-distill-llama-70b',
                 match=ClauseEquals(equals='deepseek/deepseek-r1-distill-llama-70b'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
@@ -7818,16 +7821,19 @@ providers: list[Provider] = [
             ModelInfo(
                 id='deepseek/deepseek-r1-distill-qwen-14b',
                 match=ClauseEquals(equals='deepseek/deepseek-r1-distill-qwen-14b'),
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='deepseek/deepseek-r1-distill-qwen-32b',
                 match=ClauseEquals(equals='deepseek/deepseek-r1-distill-qwen-32b'),
+                context_window=64000,
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='deepseek/deepseek_v3',
                 match=ClauseEquals(equals='deepseek/deepseek_v3'),
+                context_window=64000,
                 prices=ModelPrice(input_mtok=Decimal('0.89'), output_mtok=Decimal('0.89')),
             ),
             ModelInfo(
@@ -7838,6 +7844,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gryphe/mythomax-l2-13b',
                 match=ClauseEquals(equals='gryphe/mythomax-l2-13b'),
+                context_window=4096,
                 prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.09')),
             ),
             ModelInfo(
@@ -7848,11 +7855,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='meta-llama/llama-3-70b-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-3-70b-instruct'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.51'), output_mtok=Decimal('0.74')),
             ),
             ModelInfo(
                 id='meta-llama/llama-3-8b-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-3-8b-instruct'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
             ),
             ModelInfo(
@@ -7868,6 +7877,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct-max'),
                     ]
                 ),
+                context_window=16384,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.05')),
             ),
             ModelInfo(
@@ -7883,21 +7893,25 @@ providers: list[Provider] = [
             ModelInfo(
                 id='meta-llama/llama-3.2-1b-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-3.2-1b-instruct'),
+                context_window=131000,
                 prices=ModelPrice(input_mtok=Decimal('0.02'), output_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='meta-llama/llama-3.2-3b-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-3.2-3b-instruct'),
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.05')),
             ),
             ModelInfo(
                 id='meta-llama/llama-3.3-70b-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct'),
+                context_window=12288,
                 prices=ModelPrice(input_mtok=Decimal('0.39'), output_mtok=Decimal('0.39')),
             ),
             ModelInfo(
                 id='microsoft/wizardlm-2-8x22b',
                 match=ClauseEquals(equals='microsoft/wizardlm-2-8x22b'),
+                context_window=65535,
                 prices=ModelPrice(input_mtok=Decimal('0.62'), output_mtok=Decimal('0.62')),
             ),
             ModelInfo(
@@ -7908,51 +7922,61 @@ providers: list[Provider] = [
             ModelInfo(
                 id='mistralai/mistral-nemo',
                 match=ClauseEquals(equals='mistralai/mistral-nemo'),
+                context_window=60288,
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.17')),
             ),
             ModelInfo(
                 id='nousresearch/hermes-2-pro-llama-3-8b',
                 match=ClauseEquals(equals='nousresearch/hermes-2-pro-llama-3-8b'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.14')),
             ),
             ModelInfo(
                 id='nousresearch/nous-hermes-llama2-13b',
                 match=ClauseEquals(equals='nousresearch/nous-hermes-llama2-13b'),
+                context_window=4096,
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.17')),
             ),
             ModelInfo(
                 id='openchat/openchat-7b',
                 match=ClauseEquals(equals='openchat/openchat-7b'),
+                context_window=4096,
                 prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.06')),
             ),
             ModelInfo(
                 id='qwen/qwen-2-7b-instruct',
                 match=ClauseEquals(equals='qwen/qwen-2-7b-instruct'),
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.054'), output_mtok=Decimal('0.054')),
             ),
             ModelInfo(
                 id='qwen/qwen-2-vl-72b-instruct',
                 match=ClauseEquals(equals='qwen/qwen-2-vl-72b-instruct'),
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='qwen/qwen-2.5-72b-instruct',
                 match=ClauseEquals(equals='qwen/qwen-2.5-72b-instruct'),
+                context_window=32000,
                 prices=ModelPrice(input_mtok=Decimal('0.38'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='sao10k/l3-70b-euryale-v2.1',
                 match=ClauseEquals(equals='sao10k/l3-70b-euryale-v2.1'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('1.48'), output_mtok=Decimal('1.48')),
             ),
             ModelInfo(
                 id='sao10k/l3-8b-lunaris',
                 match=ClauseEquals(equals='sao10k/l3-8b-lunaris'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.05')),
             ),
             ModelInfo(
                 id='sao10k/l31-70b-euryale-v2.2',
                 match=ClauseEquals(equals='sao10k/l31-70b-euryale-v2.2'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('1.48'), output_mtok=Decimal('1.48')),
             ),
             ModelInfo(
@@ -7963,6 +7987,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='teknium/openhermes-2.5-mistral-7b',
                 match=ClauseEquals(equals='teknium/openhermes-2.5-mistral-7b'),
+                context_window=4096,
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.17')),
             ),
         ],
