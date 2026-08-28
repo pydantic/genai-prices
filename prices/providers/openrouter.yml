@@ -499,7 +499,9 @@ models:
         - equals: anthropic/claude-sonnet-4.5-20250929
         - equals: anthropic/claude-sonnet-4.5-20250929:beta
         - equals: anthropic/claude-sonnet-4.5:beta
-    context_window: 1000000
+    # explicit null: OpenRouter endpoints for this model range from 200000 to 1000000,
+    # so there is no single window (https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-4.5/endpoints)
+    context_window: null
     prices:
       input_mtok:
         base: 3
@@ -1164,7 +1166,9 @@ models:
     name: DeepSeek V3.1 Terminus
     match:
       equals: deepseek/deepseek-v3.1-terminus
-    context_window: 163840
+    # explicit null: OpenRouter endpoints for this model range from 128000 to 163840,
+    # so there is no single window (https://openrouter.ai/api/v1/models/deepseek/deepseek-v3.1-terminus/endpoints)
+    context_window: null
     prices:
       input_mtok: 0.23
       output_mtok: 0.90
@@ -1849,7 +1853,9 @@ models:
     name: Gemma 4 31B
     match:
       equals: google/gemma-4-31b-it
-    context_window: 262144
+    # explicit null: OpenRouter endpoints for this model range from 131072 to 262144,
+    # so there is no single window (https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints)
+    context_window: null
     prices_checked: 2026-08-27
     price_comments: >-
       OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on
@@ -3328,7 +3334,9 @@ models:
       or:
         - equals: moonshotai/kimi-k2.7-code
         - equals: moonshotai/kimi-k2.7-code-20260612
-    context_window: 262144
+    # explicit null: OpenRouter endpoints for this model range from 256000 to 262144,
+    # so there is no single window (https://openrouter.ai/api/v1/models/moonshotai/kimi-k2.7-code/endpoints)
+    context_window: null
     prices_checked: "2026-06-15"
     price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
@@ -3342,7 +3350,9 @@ models:
       or:
         - equals: moonshotai/kimi-k3
         - equals: moonshotai/kimi-k3-20260715
-    context_window: 1048576
+    # explicit null: OpenRouter endpoints for this model range from 974842 to 1048576,
+    # so there is no single window (https://openrouter.ai/api/v1/models/moonshotai/kimi-k3/endpoints)
+    context_window: null
     prices_checked: "2026-07-16"
     price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
@@ -6006,7 +6016,9 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    context_window: 1048576
+    # explicit null: OpenRouter endpoints for this model range from 202752 to 1048576,
+    # so there is no single window (https://openrouter.ai/api/v1/models/z-ai/glm-5.2/endpoints)
+    context_window: null
 
   - id: z-ai/glm-5.3
     name: GLM 5.3
@@ -6034,7 +6046,9 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.015
       output_mtok: 0.25
-    context_window: 1310720
+    # explicit null: OpenRouter endpoints for this model range from 262144 to 1310720,
+    # so there is no single window (https://openrouter.ai/api/v1/models/z-ai/glm-5.3-flash/endpoints)
+    context_window: null
 
   - id: ~anthropic/claude-fable-latest
     name: Claude Fable Latest
