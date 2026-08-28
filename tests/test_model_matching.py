@@ -752,6 +752,10 @@ def test_litellm_provider_id():
         ('mistral', 'mistral-large-2407', 'mistral', 'mistral-large', None),
         # starts_with match catches the retired 40k magistral releases vs latest's 262,144
         ('mistral', 'magistral-medium-2506', 'mistral', 'magistral-medium', None),
+        # Groq's own catalog (`context_window`)
+        ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
+        # no longer in Groq's live catalog, so there is no source for a window
+        ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
     ],
 )
 def test_model_has_effective_context_window(

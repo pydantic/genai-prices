@@ -7899,6 +7899,7 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-32b',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,

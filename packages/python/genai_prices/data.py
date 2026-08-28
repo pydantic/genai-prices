@@ -4689,6 +4689,7 @@ providers: list[Provider] = [
                 id='qwen/qwen3-32b',
                 match=ClauseEquals(equals='qwen/qwen3-32b'),
                 name='Qwen3 32B 131k',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
             ),
             ModelInfo(
