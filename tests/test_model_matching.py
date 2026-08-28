@@ -763,6 +763,14 @@ def test_litellm_provider_id():
         # the record also matches gpt-realtime-2.1-mini (128,000) vs gpt-realtime-mini's 32,000,
         # so it must not claim either window
         ('openai', 'gpt-realtime-2.1-mini', 'openai', 'gpt-realtime-mini', None),
+        # AWS Bedrock model cards state each context window ("Context window: 300K tokens" etc.)
+        ('bedrock', 'amazon.nova-pro-v1:0', 'aws', 'amazon.nova-pro-v1:0', 300_000),
+        ('bedrock', 'us.amazon.nova-2-lite-v1:0', 'aws', 'regional.amazon.nova-2-lite-v1:0', 1_000_000),
+        # AWS serves this below the model's native 256K — the card states 128K
+        ('bedrock', 'qwen.qwen3-coder-480b-a35b-v1:0', 'aws', 'qwen.qwen3-coder-480b-a35b-v1:0', 128_000),
+        # AWS's card states 272K with max output N/A — the GPT-5 family's input-only cap, so the
+        # total-window framing is unclear and the record stays windowless
+        ('bedrock', 'openai.gpt-5.4', 'aws', 'openai.gpt-5.4', None),
     ],
 )
 def test_model_has_effective_context_window(
