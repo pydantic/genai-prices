@@ -411,6 +411,19 @@ def test_sync_success_with_model_regex():
     assert price.provider.id == snapshot('openai')
 
 
+def test_cloudflare_provider_api_url() -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='@cf/openai/gpt-oss-20b',
+        provider_api_url='https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+    )
+
+    assert price.provider.id == 'cloudflare'
+    assert price.input_price == Decimal('0.2')
+    assert price.output_price == Decimal('0.3')
+    assert price.total_price == Decimal('0.5')
+
+
 def test_openrouter_deepseek_v32_price():
     price = calc_price(
         Usage(input_tokens=2_000_000, output_tokens=1_000_000, cache_read_tokens=1_000_000),
