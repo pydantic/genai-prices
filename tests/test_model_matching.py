@@ -738,6 +738,20 @@ def test_litellm_provider_id():
         ('novita', 'deepseek/deepseek-r1', 'novita', 'deepseek/deepseek-r1', 64_000),
         # no longer in Novita's live catalog, so there is no source for a window
         ('novita', 'meta-llama/llama-3.1-70b-instruct', 'novita', 'meta-llama/llama-3.1-70b-instruct', None),
+        # Mistral's own catalog (`max_context_length`), corroborated by OpenRouter's Mistral endpoints
+        ('mistral', 'mistral-small-2603', 'mistral', 'mistral-small-2603', 262_144),
+        # rolling -latest aliases have pointed to models with different windows (128k then 262,144
+        # per Mistral's model docs), so their records must not claim either value
+        ('mistral', 'mistral-small-latest', 'mistral', 'mistral-small-latest', None),
+        ('mistral', 'ministral-8b-latest', 'mistral', 'ministral-8b-latest', None),
+        # the codestral record also matches the retired codestral-2501 alias, whose window was the
+        # same 256k (per Mistral's Codestral 25.01 announcement), so the shared value is true for both
+        ('mistral', 'codestral-2501', 'mistral', 'codestral', 256_000),
+        # the mistral-large record also matches the retired 131,072 mistral-large-2407/2411 aliases
+        # vs mistral-large-latest's 262,144, so it must not claim either window
+        ('mistral', 'mistral-large-2407', 'mistral', 'mistral-large', None),
+        # starts_with match catches the retired 40k magistral releases vs latest's 262,144
+        ('mistral', 'magistral-medium-2506', 'mistral', 'magistral-medium', None),
     ],
 )
 def test_model_has_effective_context_window(
