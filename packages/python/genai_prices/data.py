@@ -2885,6 +2885,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-v3.1-terminus'),
                 name='DeepSeek V3.1 Terminus',
                 description="DeepSeek-V3.1 Terminus is an update to DeepSeek V3.1 that maintains the model's original capabilities while addressing issues reported by users, including language consistency and agent capabilities.",
+                context_window=128000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('0.95')
                 ),
@@ -2894,6 +2895,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-v3.2'),
                 name='DeepSeek V3.2',
                 description='DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and agentic tool-use performance.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('0.2288'), output_mtok=Decimal('0.3432')),
             ),
             ModelInfo(
@@ -2901,6 +2903,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-v3.2-exp'),
                 name='DeepSeek V3.2 Exp',
                 description='DeepSeek-V3.2-Exp is an experimental large language model released by DeepSeek as an intermediate step between V3.1 and future architectures.',
+                context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('0.27'), output_mtok=Decimal('0.41')),
             ),
             ModelInfo(

@@ -795,6 +795,12 @@ def test_litellm_provider_id():
         # xAI states no context window for its voice models, and grok-voice-latest is a rolling
         # alias that repointed to a different model on 2026-08-05
         ('x-ai', 'grok-voice-latest', 'x-ai', 'grok-voice-latest', None),
+        # DeepSeek's API pricing pages state "128K" context length for the V3.x era; read decimal
+        # for consistency with the file's existing 64K/1M records (the HF configs' 163,840 is
+        # checkpoint capacity, not what DeepSeek's API serves)
+        ('deepseek', 'deepseek-v3.2', 'deepseek', 'deepseek-v3.2', 128_000),
+        ('deepseek', 'deepseek-v3.2-exp', 'deepseek', 'deepseek-v3.2-exp', 128_000),
+        ('deepseek', 'deepseek-v3.1-terminus', 'deepseek', 'deepseek-v3.1-terminus', 128_000),
     ],
 )
 def test_model_has_effective_context_window(
