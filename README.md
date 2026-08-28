@@ -37,9 +37,10 @@ The following providers are currently supported:
 - [AWS Bedrock](prices/providers/aws.yml) - 86 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Cerebras](prices/providers/cerebras.yml) - 7 models
+- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
-- [Doubleword](prices/providers/doubleword.yml) - 16 models
+- [Doubleword](prices/providers/doubleword.yml) - 20 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [Google](prices/providers/google.yml) - 53 models
 - [Groq](prices/providers/groq.yml) - 31 models
@@ -59,7 +60,7 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 89 models
+- [OpenAI](prices/providers/openai.yml) - 90 models
 - [OpenRouter](prices/providers/openrouter.yml) - 695 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models

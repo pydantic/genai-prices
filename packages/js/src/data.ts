@@ -3391,6 +3391,653 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'cloudflare',
+    name: 'Cloudflare Workers AI',
+    pricing_urls: [
+      'https://developers.cloudflare.com/workers-ai/platform/pricing/',
+      'https://developers.cloudflare.com/workers-ai/models/',
+    ],
+    api_pattern: 'https://api\\.cloudflare\\.com/client/v4/accounts/[^/]+/ai(?:/|$)',
+    price_comments:
+      "Paid Workers plan rates, expressed using Cloudflare's token-equivalent prices. Calculations do not apply the account-wide free allocation of 10,000 Neurons per day. This provider entry deliberately covers only models with token-equivalent prices. Image and audio models are omitted.",
+    model_match: {
+      starts_with: '@cf/',
+    },
+    provider_match: {
+      contains: 'cloudflare',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: ['result', 'usage'],
+        model_path: ['result', 'model'],
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: '@cf/ai4bharat/indictrans2-en-indic-1B',
+        name: 'IndicTrans2 EN-Indic 1B',
+        match: {
+          equals: '@cf/ai4bharat/indictrans2-en-indic-1B',
+        },
+        prices: {
+          input_mtok: 0.342,
+          output_mtok: 0.342,
+        },
+      },
+      {
+        id: '@cf/aisingapore/gemma-sea-lion-v4-27b-it',
+        name: 'Gemma SEA-LION v4 27B IT',
+        match: {
+          equals: '@cf/aisingapore/gemma-sea-lion-v4-27b-it',
+        },
+        prices: {
+          input_mtok: 0.351,
+          output_mtok: 0.555,
+        },
+      },
+      {
+        id: '@cf/baai/bge-base-en-v1.5',
+        name: 'BGE Base English v1.5',
+        match: {
+          equals: '@cf/baai/bge-base-en-v1.5',
+        },
+        prices: {
+          input_mtok: 0.067,
+        },
+      },
+      {
+        id: '@cf/baai/bge-large-en-v1.5',
+        name: 'BGE Large English v1.5',
+        match: {
+          equals: '@cf/baai/bge-large-en-v1.5',
+        },
+        prices: {
+          input_mtok: 0.204,
+        },
+      },
+      {
+        id: '@cf/baai/bge-m3',
+        name: 'BGE-M3',
+        match: {
+          equals: '@cf/baai/bge-m3',
+        },
+        prices: {
+          input_mtok: 0.012,
+        },
+      },
+      {
+        id: '@cf/baai/bge-reranker-base',
+        name: 'BGE Reranker Base',
+        match: {
+          equals: '@cf/baai/bge-reranker-base',
+        },
+        prices: {
+          input_mtok: 0.003,
+        },
+      },
+      {
+        id: '@cf/baai/bge-small-en-v1.5',
+        name: 'BGE Small English v1.5',
+        match: {
+          equals: '@cf/baai/bge-small-en-v1.5',
+        },
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
+        name: 'DeepSeek R1 Distill Qwen 32B',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
+        },
+        prices: {
+          input_mtok: 0.497,
+          output_mtok: 4.881,
+        },
+      },
+      {
+        id: '@cf/deepseek-ai/deepseek-v4-flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-v4-flash-0731',
+        },
+        prices: {
+          input_mtok: 0.44,
+          cache_read_mtok: 0.014,
+          output_mtok: 1.32,
+        },
+      },
+      {
+        id: '@cf/deepseek-ai/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: '@cf/google/gemma-3-12b-it',
+        name: 'Gemma 3 12B IT',
+        match: {
+          equals: '@cf/google/gemma-3-12b-it',
+        },
+        prices: {
+          input_mtok: 0.345,
+          output_mtok: 0.556,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/google/gemma-4-26b-a4b-it',
+        name: 'Gemma 4 26B A4B IT',
+        match: {
+          equals: '@cf/google/gemma-4-26b-a4b-it',
+        },
+        context_window: 256000,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: '@cf/huggingface/distilbert-sst-2-int8',
+        name: 'DistilBERT SST-2 INT8',
+        match: {
+          equals: '@cf/huggingface/distilbert-sst-2-int8',
+        },
+        prices: {
+          input_mtok: 0.026,
+        },
+      },
+      {
+        id: '@cf/ibm-granite/granite-4.0-h-micro',
+        name: 'Granite 4.0 H Micro',
+        match: {
+          equals: '@cf/ibm-granite/granite-4.0-h-micro',
+        },
+        prices: {
+          input_mtok: 0.017,
+          output_mtok: 0.112,
+        },
+      },
+      {
+        id: '@cf/meta/llama-2-7b-chat-fp16',
+        name: 'Llama 2 7B Chat FP16',
+        match: {
+          equals: '@cf/meta/llama-2-7b-chat-fp16',
+        },
+        prices: {
+          input_mtok: 0.556,
+          output_mtok: 6.667,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/meta/llama-3-8b-instruct',
+        name: 'Llama 3 8B Instruct',
+        match: {
+          equals: '@cf/meta/llama-3-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.282,
+          output_mtok: 0.827,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/meta/llama-3-8b-instruct-awq',
+        name: 'Llama 3 8B Instruct AWQ',
+        match: {
+          equals: '@cf/meta/llama-3-8b-instruct-awq',
+        },
+        prices: {
+          input_mtok: 0.123,
+          output_mtok: 0.266,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/meta/llama-3.1-70b-instruct-fp8-fast',
+        name: 'Llama 3.1 70B Instruct FP8 Fast',
+        match: {
+          equals: '@cf/meta/llama-3.1-70b-instruct-fp8-fast',
+        },
+        prices: {
+          input_mtok: 0.293,
+          output_mtok: 2.253,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.1-8b-instruct',
+        name: 'Llama 3.1 8B Instruct',
+        match: {
+          equals: '@cf/meta/llama-3.1-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.282,
+          output_mtok: 0.827,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/meta/llama-3.1-8b-instruct-awq',
+        name: 'Llama 3.1 8B Instruct AWQ',
+        match: {
+          equals: '@cf/meta/llama-3.1-8b-instruct-awq',
+        },
+        prices: {
+          input_mtok: 0.123,
+          output_mtok: 0.266,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/meta/llama-3.1-8b-instruct-fp8',
+        name: 'Llama 3.1 8B Instruct FP8',
+        match: {
+          equals: '@cf/meta/llama-3.1-8b-instruct-fp8',
+        },
+        prices: {
+          input_mtok: 0.152,
+          output_mtok: 0.287,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.1-8b-instruct-fp8-fast',
+        name: 'Llama 3.1 8B Instruct FP8 Fast',
+        match: {
+          or: [
+            {
+              equals: '@cf/meta/llama-3.1-8b-instruct-fp8-fast',
+            },
+            {
+              equals: '@cf/meta/llama-3.1-8b-instruct-fast',
+            },
+          ],
+        },
+        price_comments: "Cloudflare's pricing table uses the fp8-fast identifier while the model catalog documents the fast identifier.",
+        prices: {
+          input_mtok: 0.045,
+          output_mtok: 0.384,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.2-11b-vision-instruct',
+        name: 'Llama 3.2 11B Vision Instruct',
+        match: {
+          equals: '@cf/meta/llama-3.2-11b-vision-instruct',
+        },
+        prices: {
+          input_mtok: 0.049,
+          output_mtok: 0.676,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.2-1b-instruct',
+        name: 'Llama 3.2 1B Instruct',
+        match: {
+          equals: '@cf/meta/llama-3.2-1b-instruct',
+        },
+        prices: {
+          input_mtok: 0.027,
+          output_mtok: 0.201,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.2-3b-instruct',
+        name: 'Llama 3.2 3B Instruct',
+        match: {
+          equals: '@cf/meta/llama-3.2-3b-instruct',
+        },
+        prices: {
+          input_mtok: 0.051,
+          output_mtok: 0.335,
+        },
+      },
+      {
+        id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+        name: 'Llama 3.3 70B Instruct FP8 Fast',
+        match: {
+          equals: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+        },
+        context_window: 24000,
+        prices: {
+          input_mtok: 0.293,
+          output_mtok: 2.253,
+        },
+      },
+      {
+        id: '@cf/meta/llama-4-scout-17b-16e-instruct',
+        name: 'Llama 4 Scout 17B 16E Instruct',
+        match: {
+          equals: '@cf/meta/llama-4-scout-17b-16e-instruct',
+        },
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: '@cf/meta/llama-guard-3-8b',
+        name: 'Llama Guard 3 8B',
+        match: {
+          equals: '@cf/meta/llama-guard-3-8b',
+        },
+        prices: {
+          input_mtok: 0.484,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: '@cf/meta/m2m100-1.2b',
+        name: 'M2M100 1.2B',
+        match: {
+          equals: '@cf/meta/m2m100-1.2b',
+        },
+        prices: {
+          input_mtok: 0.342,
+          output_mtok: 0.342,
+        },
+      },
+      {
+        id: '@cf/mistral/mistral-7b-instruct-v0.1',
+        name: 'Mistral 7B Instruct v0.1',
+        match: {
+          equals: '@cf/mistral/mistral-7b-instruct-v0.1',
+        },
+        prices: {
+          input_mtok: 0.11,
+          output_mtok: 0.19,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/mistralai/mistral-small-3.1-24b-instruct',
+        name: 'Mistral Small 3.1 24B Instruct',
+        match: {
+          equals: '@cf/mistralai/mistral-small-3.1-24b-instruct',
+        },
+        prices: {
+          input_mtok: 0.351,
+          output_mtok: 0.555,
+        },
+      },
+      {
+        id: '@cf/moondream/moondream3.1-9B-A2B',
+        name: 'Moondream 3.1 9B A2B',
+        match: {
+          equals: '@cf/moondream/moondream3.1-9B-A2B',
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: '@cf/moonshotai/kimi-k2.5',
+        name: 'Kimi K2.5',
+        match: {
+          equals: '@cf/moonshotai/kimi-k2.5',
+        },
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
+        },
+        deprecated: true,
+      },
+      {
+        id: '@cf/moonshotai/kimi-k2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: '@cf/moonshotai/kimi-k2.6',
+        },
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: '@cf/moonshotai/kimi-k2.7-code',
+        name: 'Kimi K2.7 Code',
+        match: {
+          equals: '@cf/moonshotai/kimi-k2.7-code',
+        },
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.19,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: '@cf/nvidia/nemotron-3-120b-a12b',
+        name: 'Nemotron 3 120B A12B',
+        match: {
+          equals: '@cf/nvidia/nemotron-3-120b-a12b',
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: '@cf/openai/gpt-oss-120b',
+        name: 'GPT-OSS 120B',
+        match: {
+          equals: '@cf/openai/gpt-oss-120b',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: '@cf/openai/gpt-oss-20b',
+        name: 'GPT-OSS 20B',
+        match: {
+          equals: '@cf/openai/gpt-oss-20b',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: '@cf/pfnet/plamo-embedding-1b',
+        name: 'PLaMo Embedding 1B',
+        match: {
+          equals: '@cf/pfnet/plamo-embedding-1b',
+        },
+        prices: {
+          input_mtok: 0.019,
+        },
+      },
+      {
+        id: '@cf/qwen/qwen2.5-coder-32b-instruct',
+        name: 'Qwen2.5 Coder 32B Instruct',
+        match: {
+          equals: '@cf/qwen/qwen2.5-coder-32b-instruct',
+        },
+        prices: {
+          input_mtok: 0.66,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: '@cf/qwen/qwen3-30b-a3b-fp8',
+        name: 'Qwen3 30B A3B FP8',
+        match: {
+          equals: '@cf/qwen/qwen3-30b-a3b-fp8',
+        },
+        prices: {
+          input_mtok: 0.051,
+          output_mtok: 0.335,
+        },
+      },
+      {
+        id: '@cf/qwen/qwen3-embedding-0.6b',
+        name: 'Qwen3 Embedding 0.6B',
+        match: {
+          equals: '@cf/qwen/qwen3-embedding-0.6b',
+        },
+        prices: {
+          input_mtok: 0.012,
+        },
+      },
+      {
+        id: '@cf/qwen/qwen3.8-27b',
+        name: 'Qwen3.8 27B',
+        match: {
+          equals: '@cf/qwen/qwen3.8-27b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: '@cf/qwen/qwq-32b',
+        name: 'QwQ 32B',
+        match: {
+          equals: '@cf/qwen/qwq-32b',
+        },
+        prices: {
+          input_mtok: 0.66,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: '@cf/zai-org/glm-4.7-flash',
+        name: 'GLM 4.7 Flash',
+        match: {
+          equals: '@cf/zai-org/glm-4.7-flash',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: '@cf/zai-org/glm-5.2',
+        name: 'GLM 5.2',
+        match: {
+          equals: '@cf/zai-org/glm-5.2',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: '@cf/zai-org/glm-5.3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: '@cf/zai-org/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+    ],
+  },
+  {
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
@@ -4061,6 +4708,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.8-27B-FP8',
+        name: 'Qwen3.8 27B',
+        match: {
+          equals: 'Qwen/Qwen3.8-27B-FP8',
+        },
+        context_window: 262144,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.',
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.04,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4-Flash',
         name: 'DeepSeek V4 Flash',
         match: {
@@ -4069,6 +4730,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.14,
           output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        },
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
+        prices: {
+          input_mtok: 0.09,
+          cache_read_mtok: 0.02,
+          output_mtok: 0.18,
         },
       },
       {
@@ -4116,6 +4790,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
         name: 'Nemotron 3 Super 120B A12B',
         match: {
@@ -4146,6 +4834,20 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.4,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2-FP8',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/GLM-5.2-FP8',
+        },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.',
+        prices: {
+          input_mtok: 0.93,
+          cache_read_mtok: 0.19,
+          output_mtok: 3,
         },
       },
     ],
@@ -11283,7 +11985,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing/api'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
+      regex: '^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))',
     },
     provider_match: {
       starts_with: 'mistral',
@@ -11401,12 +12103,31 @@ export const data: Provider[] = [
         description:
           'Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
         match: {
-          equals: 'devstral-small',
+          or: [
+            {
+              equals: 'devstral-small',
+            },
+            {
+              equals: 'devstral-small-2505',
+            },
+            {
+              equals: 'devstral-small-2507',
+            },
+            {
+              equals: 'devstral-small-latest',
+            },
+            {
+              equals: 'labs-devstral-small-2512',
+            },
+          ],
         },
+        price_comments:
+          "The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30. Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)",
         prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.12,
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
+        deprecated: true,
       },
       {
         id: 'devstral-small:free',
@@ -13552,9 +14273,6 @@ export const data: Provider[] = [
               equals: 'gpt-4o',
             },
             {
-              equals: 'gpt-4o-2024-05-13',
-            },
-            {
               equals: 'gpt-4o-2024-08-06',
             },
             {
@@ -13567,6 +14285,24 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-4o-2024-05-13',
+        name: 'gpt 4o (2024-05-13)',
+        description:
+          'Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have no cached-input discount.',
+        match: {
+          equals: 'gpt-4o-2024-05-13',
+        },
+        context_window: 128000,
+        price_comments:
+          'Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
+        prices: {
+          input_mtok: 5,
+          output_mtok: 15,
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },

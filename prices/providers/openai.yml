@@ -426,7 +426,6 @@ models:
     match:
       or:
         - equals: gpt-4o
-        - equals: gpt-4o-2024-05-13
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
     context_window: 128000
@@ -435,6 +434,24 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-4o-2024-05-13
+    name: gpt 4o (2024-05-13)
+    description: >-
+      Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have
+      no cached-input discount.
+    match:
+      equals: gpt-4o-2024-05-13
+    context_window: 128000
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input
+      price. Ref: https://developers.openai.com/api/docs/pricing.md
+    prices:
+      input_mtok: 5
+      output_mtok: 15
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
 

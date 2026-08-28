@@ -7,7 +7,7 @@ api_pattern: 'https://api\.mistral\.ai'
 provider_match:
   starts_with: mistral
 model_match:
-  regex: "^(?![^/]+/)(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))"
+  regex: "^(?![^/]+/)(?:labs-)?(?:(?:mi|code|dev|magi|mini)stral|mixtral|pixtral|voxtral|open-(?:mistral|mixtral))"
 
 # https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
 extractors:
@@ -86,10 +86,23 @@ models:
       codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on
       SWE-Bench Verified (46.8%).
     match:
-      equals: devstral-small
+      or:
+        - equals: devstral-small
+        - equals: devstral-small-2505
+        - equals: devstral-small-2507
+        - equals: devstral-small-latest
+        - equals: labs-devstral-small-2512
+    # Every Devstral Small generation is deprecated or retired: 1.0 (devstral-small-2505) retired 2025-11-30,
+    # 1.1 (devstral-small-2507) retired 2026-05-31, Small 2 (labs-devstral-small-2512, devstral-small-latest)
+    # retired 2026-03-31.
+    deprecated: true
+    prices_checked: 2026-08-27
+    price_comments: >-
+      The previous $0.06/$0.12 rates were not Mistral's; every Devstral Small generation is documented at $0.10/$0.30.
+      Ref: https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models (devstral-small-*.ts)
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.12
+      input_mtok: 0.1
+      output_mtok: 0.3
 
   - id: devstral-small:free
     name: Devstral Small (free)

@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Direct Providers'
-description: 'Check ten direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
+description: 'Check eleven direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
 on:
   workflow_dispatch:
   schedule: weekly on monday
@@ -75,6 +75,7 @@ network:
     - docs.perplexity.ai
     - cohere.com
     - docs.voyageai.com
+    - developers.cloudflare.com
 ---
 
 # Price Check: Direct Providers
@@ -143,5 +144,5 @@ If any price change, new model, potential removal, unchecked field, or unreadabl
 Use tables and one row per finding. End with `Checked YYYY-MM-DD.` using the run date.
 
 Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
-checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all ten
+checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all eleven
 direct providers match.

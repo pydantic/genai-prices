@@ -8,6 +8,12 @@ prices/new_data/**/*.json
 prices/providers/.schema.json
 tests/dataset/usages.json
 
+# Generated bundled package data (rewritten from prices/ by `make build`)
+packages/python/genai_prices/data.py
+packages/python/genai_prices/data_units.py
+packages/js/src/data.ts
+packages/js/src/dataUnits.ts
+
 # === Vendored / dependency directories ===
 **/.git/**
 **/__pycache__/**
