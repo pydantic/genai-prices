@@ -29,8 +29,12 @@ def test_zero_models_refuses_to_overwrite(tmp_path: Path):
         check_model_count(path, 0, source='test')
 
 
-def test_sharp_drop_refuses_to_overwrite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.delenv(ALLOW_MODEL_COUNT_DROP_ENV, raising=False)
+@pytest.mark.parametrize('override', [None, '0', 'false'])
+def test_sharp_drop_refuses_to_overwrite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, override: str | None):
+    if override is None:
+        monkeypatch.delenv(ALLOW_MODEL_COUNT_DROP_ENV, raising=False)
+    else:
+        monkeypatch.setenv(ALLOW_MODEL_COUNT_DROP_ENV, override)
     path = tmp_path / 'guarded.yml'
     write_provider(path, 10)
 

@@ -21,7 +21,7 @@ def check_model_count(path: Path, new_count: int, *, source: str) -> None:
     existing = len(ProviderYaml(path).provider.models)
     if new_count == 0:
         raise SystemExit(f'{source} returned no priced models but {path.name} has {existing}; refusing to write')
-    if new_count * 2 < existing and not os.environ.get(ALLOW_MODEL_COUNT_DROP_ENV):
+    if new_count * 2 < existing and os.environ.get(ALLOW_MODEL_COUNT_DROP_ENV) != '1':
         raise SystemExit(
             f'{source} returned {new_count} priced models but {path.name} has {existing}; refusing to write. '
             f'Set {ALLOW_MODEL_COUNT_DROP_ENV}=1 to override.'
