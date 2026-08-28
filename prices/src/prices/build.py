@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import difflib
 import gzip
 import io
@@ -12,6 +13,8 @@ import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
+from genai_prices.units import UnitDef
+from prices.export_validation import validate_export_payload, validate_units
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
@@ -25,15 +28,16 @@ yaml = ruamel.yaml.YAML(typ='safe')
 yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
 
 
-def build():
-    """Build providers/.schema.json and data.json and data_schema.json."""
-    # write the schema JSON file used by the yaml language server
-    schema_json_path = package_dir / 'providers' / '.schema.json'
-    json_schema = Provider.model_json_schema()
-    json_schema = simplify_json_schema(json_schema)
-    schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
-    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+def load_units() -> dict[str, Any]:
+    with (package_dir / 'units.yml').open() as f:
+        units = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
+    return units
+
+
+def build():
+    """Validate the publication inputs and build the provider schema and v2 data."""
+    units = load_units()
     providers: list[Provider] = []
 
     providers_dir = package_dir / 'providers'
@@ -52,30 +56,115 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    for provider in providers:
-        provider.exclude_removed()
-    write_prices(providers, 'data.json')
+    prepare_providers_for_export(providers)
+    validate_export_payload(providers, units)
+
+    schema_json_path = package_dir / 'providers' / '.schema.json'
+    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
+    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+    write_prices(providers, units, 'new_data/v2/data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, 'data_slim.json', slim=True)
+    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = False):
+def prepare_providers_for_export(providers: list[Provider]) -> None:
+    """Resolve canonical links before dropping removed models, so a removed record can still pass on its metadata."""
+    inherit_context_windows(providers)
+    for provider in providers:
+        provider.exclude_removed()
+
+
+def inherit_context_windows(providers: list[Provider]) -> None:
+    """Fill each model's missing context window from its canonical record."""
+    models = {f'{provider.id}/{model.id}': model for provider in providers for model in provider.models}
+
+    for provider in providers:
+        for model in provider.models:
+            if canonical_ref := model.canonical_model:
+                canonical = models.get(canonical_ref)
+                if canonical is None:
+                    raise ValueError(
+                        f'Model `{provider.id}/{model.id}` references unknown canonical model `{canonical_ref}`'
+                    )
+                if canonical.canonical_model is not None:
+                    raise ValueError(f'Canonical model `{canonical_ref}` must not reference another canonical model')
+                if model.context_window is None and canonical.context_window is not None:
+                    model.context_window = canonical.context_window
+
+
+def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
+    """Build the provider YAML authoring schema from validated unit registry data."""
+    json_schema = simplify_json_schema(Provider.model_json_schema())
+    return _add_unit_vocabulary_to_schema(json_schema, raw_units)
+
+
+def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[str, Any]) -> dict[str, Any]:
+    registry = validate_units(raw_units)
+
+    model_price_schema = cast(dict[str, Any], json_schema['$defs']['ModelPrice'])
+    model_price_properties = cast(dict[str, Any], model_price_schema['properties'])
+    additional_price_schema = cast(dict[str, Any], model_price_schema['additionalProperties'])
+    for unit in registry.units.values():
+        model_price_properties.setdefault(unit.price_key, _unit_price_schema(unit, additional_price_schema))
+
+    extractor_mapping_schema = cast(dict[str, Any], json_schema['$defs']['UsageExtractorMapping'])
+    extractor_mapping_properties = cast(dict[str, Any], extractor_mapping_schema['properties'])
+    dest_schema = cast(dict[str, Any], extractor_mapping_properties['dest'])
+    dest_schema['enum'] = sorted(registry._reported_usage_keys)  # pyright: ignore[reportPrivateUsage]
+
+    return json_schema
+
+
+def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -> dict[str, Any]:
+    schema = copy.deepcopy(additional_price_schema)
+    schema['title'] = unit.price_key.replace('_', ' ').title()
+    normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
+    cache_ttl = unit.dimensions.get('cache_ttl')
+    duration_price_unit = {60: ('minutes', 'minute'), 3_600: ('hours', 'hour')}.get(unit.per)
+    if (
+        duration_price_unit is not None
+        and unit.usage_key.endswith('_seconds')
+        and unit.price_key.endswith(f'_{duration_price_unit[0]}')
+    ):
+        normalization = ''
+        usage_name = f'{unit.usage_key.removesuffix("_seconds").replace("_", " ")} {duration_price_unit[1]}'
+    elif (
+        unit.dimensions.get('token_type') == 'cache_write'
+        and unit.dimensions.get('modality') is None
+        and cache_ttl is not None
+    ):
+        ttl_description = {'5m': '5-minute', '1h': '1-hour'}.get(cache_ttl, cache_ttl)
+        usage_name = f'tokens written to the cache with a {ttl_description} TTL'
+    else:
+        usage_name = unit.usage_key.replace('_', ' ')
+    schema['description'] = f'price in USD per {" ".join(filter(None, (normalization, usage_name)))}'
+    return schema
+
+
+def write_prices(
+    providers: list[Provider],
+    units: dict[str, Any],
+    prices_file: str,
+    *,
+    slim: bool = False,
+) -> None:
     print('')
     prices_json_path = package_dir / prices_file
+    prices_json_path.parent.mkdir(parents=True, exist_ok=True)
 
-    data_json_schema = providers_schema.json_schema(mode='serialization')
-    data_json_schema = simplify_json_schema(data_json_schema)
+    providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
+    data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
 
     if slim:
-        # delete Provider fields
-        data_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
-        data_json_schema['$defs']['Provider']['properties'].pop('description')
-        data_json_schema['$defs']['Provider']['properties'].pop('price_comments')
-        # delete ModelInfo fields
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('name')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('description')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+        provider_properties = cast(dict[str, Any], data_json_schema['$defs']['Provider']['properties'])
+        provider_properties.pop('pricing_urls')
+        provider_properties.pop('description')
+        provider_properties.pop('price_comments')
+        model_properties = cast(dict[str, Any], data_json_schema['$defs']['ModelInfo']['properties'])
+        model_properties.pop('name')
+        model_properties.pop('description')
+        model_properties.pop('price_comments')
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
@@ -85,7 +174,7 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
     if slim:
         exclude = {
             '__all__': {
-                'pricing_url': True,
+                'pricing_urls': True,
                 'description': True,
                 'price_comments': True,
                 'models': {'__all__': {'name', 'description', 'price_comments'}},

@@ -9,7 +9,7 @@ price_comments: >-
   as the default (first) price then the second price with a constraint is the "standard" pricing
   that applies "UTC 00:30-16:30".
 model_match:
-  contains: deepseek
+  starts_with: deepseek
 
 extractors:
   # assuming this API matches OpenAI
@@ -23,6 +23,9 @@ extractors:
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens
@@ -78,6 +81,46 @@ models:
           cache_read_mtok: 0.14
           output_mtok: 2.19
 
+  - id: deepseek-v3.1-terminus
+    name: DeepSeek V3.1 Terminus
+    description: >-
+      DeepSeek-V3.1 Terminus is an update to DeepSeek V3.1 that maintains the model's original capabilities while addressing
+      issues reported by users, including language consistency and agent capabilities.
+    match:
+      equals: deepseek-v3.1-terminus
+    context_window: 128000
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.27
+      cache_read_mtok: 0.13
+      output_mtok: 0.95
+
+  - id: deepseek-v3.2
+    name: DeepSeek V3.2
+    description: >-
+      DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and
+      agentic tool-use performance.
+    match:
+      equals: deepseek-v3.2
+    context_window: 128000
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.2288
+      output_mtok: 0.3432
+
+  - id: deepseek-v3.2-exp
+    name: DeepSeek V3.2 Exp
+    description: >-
+      DeepSeek-V3.2-Exp is an experimental large language model released by DeepSeek as an intermediate step between V3.1
+      and future architectures.
+    match:
+      equals: deepseek-v3.2-exp
+    context_window: 128000
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.27
+      output_mtok: 0.41
+
   - id: deepseek-v4-flash
     name: DeepSeek V4 Flash
     description: >-
@@ -87,26 +130,89 @@ models:
       or:
         - starts_with: deepseek-v4-flash
     context_window: 1000000
-    prices_checked: 2026-05-12
+    price_comments: >-
+      From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
+      "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that
+      applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate
+      is gated on start_date, and the two peak windows come last so they win during peak hours.
+      Two things this layout still cannot say, because `constraint` is a union and one entry
+      cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall
+      inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate
+      rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at
+      weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays
+      the peak prices here are an upper bound. See
+      https://github.com/pydantic/genai-prices/issues/582.
+    prices_checked: 2026-08-22
     prices:
-      input_mtok: 0.14
-      cache_read_mtok: 0.0028
-      output_mtok: 0.28
+      - prices:
+          input_mtok: 0.14
+          cache_read_mtok: 0.0028
+          output_mtok: 0.28
+      - constraint:
+          start_date: 2026-08-17
+        prices:
+          input_mtok: 0.22
+          cache_read_mtok: 0.007
+          output_mtok: 0.66
+      - constraint:
+          start_time: 01:00:00Z
+          end_time: 04:00:00Z
+        prices:
+          input_mtok: 0.44
+          cache_read_mtok: 0.014
+          output_mtok: 1.32
+      - constraint:
+          start_time: 06:00:00Z
+          end_time: 10:00:00Z
+        prices:
+          input_mtok: 0.44
+          cache_read_mtok: 0.014
+          output_mtok: 1.32
 
   - id: deepseek-v4-pro
     name: DeepSeek V4 Pro
     description: >-
       DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls,
       chat prefix completion, and FIM completion (non-thinking only).
-    price_comments: >-
-      Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount
-      that is not reflected here.
     match:
       or:
         - starts_with: deepseek-v4-pro
     context_window: 1000000
-    prices_checked: 2026-05-12
+    price_comments: >-
+      From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
+      "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that
+      applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate
+      is gated on start_date, and the two peak windows come last so they win during peak hours.
+      Two things this layout still cannot say, because `constraint` is a union and one entry
+      cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall
+      inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate
+      rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at
+      weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays
+      the peak prices here are an upper bound. See
+      https://github.com/pydantic/genai-prices/issues/582.
+    prices_checked: 2026-08-22
     prices:
-      input_mtok: 1.74
-      cache_read_mtok: 0.0145
-      output_mtok: 3.48
+      - prices:
+          input_mtok: 0.435
+          cache_read_mtok: 0.003625
+          output_mtok: 0.87
+      - constraint:
+          start_date: 2026-08-17
+        prices:
+          input_mtok: 0.66
+          cache_read_mtok: 0.022
+          output_mtok: 1.98
+      - constraint:
+          start_time: 01:00:00Z
+          end_time: 04:00:00Z
+        prices:
+          input_mtok: 1.32
+          cache_read_mtok: 0.044
+          output_mtok: 3.96
+      - constraint:
+          start_time: 06:00:00Z
+          end_time: 10:00:00Z
+        prices:
+          input_mtok: 1.32
+          cache_read_mtok: 0.044
+          output_mtok: 3.96

@@ -2,7 +2,12 @@
 name: MoonshotAi
 id: moonshotai
 pricing_urls:
-  - https://platform.moonshot.ai/docs/pricing/chat#product-pricing
+  - https://platform.kimi.ai/docs/models.md
+  - https://platform.kimi.ai/docs/pricing/chat-k3.md
+  - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+  - https://platform.kimi.ai/docs/pricing/chat-k26.md
+  - https://platform.kimi.ai/docs/pricing/chat-k25.md
+  - https://platform.kimi.ai/docs/pricing/chat-v1.md
 api_pattern: 'https://api\.moonshot\.'
 model_match:
   or:
@@ -19,10 +24,30 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
 
 models:
+  - id: kimi-k2
+    name: Kimi K2 0711
+    description: >-
+      Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion
+      total parameters with 32 billion active per forward pass.
+    match:
+      equals: kimi-k2
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    # No context_window: the kimi-k2 family spans two windows — kimi-k2-0711-preview was 128k and
+    # kimi-k2-0905-preview 256k — so no single value is true for the bare name.
+    deprecated: true
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.57
+      output_mtok: 2.3
+
   - id: kimi-k2-0711-preview
     name: Kimi K2 0711 Preview
     description: >-
@@ -31,6 +56,9 @@ models:
     match:
       equals: kimi-k2-0711-preview
     context_window: 131072
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -46,6 +74,9 @@ models:
     match:
       equals: kimi-k2-0905-preview
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -59,6 +90,9 @@ models:
     match:
       equals: kimi-k2-thinking
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -73,6 +107,9 @@ models:
     match:
       equals: kimi-k2-thinking-turbo
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 1.15
@@ -87,6 +124,9 @@ models:
     match:
       starts_with: kimi-k2-turbo
     context_window: 262144
+    # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
+    # prices kept for historical usage.
+    deprecated: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 1.15
@@ -107,6 +147,68 @@ models:
       input_mtok: 0.60
       cache_read_mtok: 0.10
       output_mtok: 3.00
+
+  - id: kimi-k2.6
+    name: Kimi K2.6
+    description: >-
+      Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and
+      self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking
+      and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode,
+      and internet search.
+    match:
+      starts_with: kimi-k2.6
+    context_window: 262144
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.16
+      output_mtok: 4.00
+
+  - id: kimi-k2.7-code
+    name: Kimi K2.7 Code
+    description: >-
+      Kimi's most intelligent coding model, capable of completing programming tasks with higher success rates in long
+      context. It features a native multimodal architecture that supports text, image, video input, thinking modes,
+      dialogue, and agent tasks.
+    match:
+      equals: kimi-k2.7-code
+    context_window: 262144
+    prices_checked: "2026-06-15"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.19
+      output_mtok: 4.00
+
+  - id: kimi-k2.7-code-highspeed
+    name: Kimi K2.7 Code HighSpeed
+    description: >-
+      High-speed version of Kimi K2.7 Code, with output speed of approximately 180 tokens/sec and up to
+      260 tokens/sec in short context scenarios.
+    match:
+      equals: kimi-k2.7-code-highspeed
+    context_window: 262144
+    prices_checked: "2026-08-27"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
+    prices:
+      input_mtok: 1.90
+      cache_read_mtok: 0.38
+      output_mtok: 8.00
+
+  - id: kimi-k3
+    name: Kimi K3
+    description: >-
+      Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input,
+      tool use, and structured output. 2.8 trillion total parameters MoE.
+    match:
+      equals: kimi-k3
+    context_window: 1048576
+    prices_checked: "2026-07-16"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
 
   - id: moonshot-v1-128k
     name: Moonshot V1 128K

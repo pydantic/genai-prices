@@ -2,11 +2,38 @@
 name: Perplexity
 id: perplexity
 pricing_urls:
-  - https://docs.perplexity.ai/guides/pricing
+  - https://docs.perplexity.ai/docs/getting-started/pricing
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
   Prices per request vary based on usage, this is not represented here,
   instead we just take the highest price shown for `requests_kcount`.
+extractors:
+  # https://docs.perplexity.ai/api-reference/sonar-post
+  # https://docs.perplexity.ai/docs/getting-started/pricing documents reasoning and citation tokens as separate
+  # billable categories only for Sonar Deep Research. Sonar Reasoning Pro includes its <think> content in
+  # completion_tokens and does not return separate reasoning or citation fields:
+  # https://docs.perplexity.ai/docs/sonar/models/sonar-reasoning-pro
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: reasoning_tokens
+        dest: output_tokens
+        required: false
+      - path: reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: citation_tokens
+        dest: output_tokens
+        required: false
+      - path: citation_tokens
+        dest: output_citation_tokens
+        required: false
+      - path: num_search_queries
+        dest: web_searches
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
 models:
   - id: llama-3.1-sonar-large-128k-online
     name: Llama 3.1 Sonar 70B Online
@@ -52,6 +79,7 @@ models:
       features optimized for speed.
     match:
       equals: sonar
+    context_window: 128000
     prices_checked: 2025-07-03
     prices:
       input_mtok: 1
@@ -67,9 +95,17 @@ models:
       health, and current events.
     match:
       equals: sonar-deep-research
+    context_window: 128000
+    prices_checked: 2026-07-22
+    price_comments: >-
+      Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens.
+      Search queries cost $5 per thousand.
     prices:
       input_mtok: 2
       output_mtok: 8
+      output_reasoning_mtok: 3
+      output_citation_mtok: 2
+      web_searches_kcount: 5
 
   - id: sonar-pro
     name: Sonar Pro
@@ -77,9 +113,22 @@ models:
       Note: Sonar Pro pricing includes Perplexity search pricing. See details here
     match:
       equals: sonar-pro
+    context_window: 200000
     prices_checked: 2025-07-03
     prices:
       requests_kcount: 14
+      input_mtok: 3
+      output_mtok: 15
+
+  - id: sonar-pro-search
+    name: Sonar Pro Search
+    description: >-
+      Sonar Pro Search is Perplexity's advanced agentic search system for deeper reasoning and analysis.
+    match:
+      equals: sonar-pro-search
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.
+    prices:
       input_mtok: 3
       output_mtok: 15
 
@@ -100,6 +149,7 @@ models:
     description: Sonar Pro pricing includes Perplexity search pricing.
     match:
       equals: sonar-reasoning-pro
+    context_window: 128000
     prices_checked: 2025-07-03
     prices:
       requests_kcount: 14

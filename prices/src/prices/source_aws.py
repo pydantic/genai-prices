@@ -6,16 +6,15 @@ from decimal import Decimal
 from typing import Any, TypedDict
 
 import boto3
+from mypy_boto3_bedrock import BedrockClient
 from mypy_boto3_bedrock.type_defs import FoundationModelSummaryTypeDef
+from mypy_boto3_pricing import PricingClient
 
 from prices.prices_types import ClauseContains, ModelInfo, ModelPrice
 from prices.update import get_providers_yaml
 
-pricing_client = boto3.client('pricing', region_name='us-east-1')  # pyright: ignore[reportUnknownMemberType]
-
 # TODO other regions (pricing client region will still be us-east-1)
 target_region = 'us-east-1'
-bedrock_client = boto3.client('bedrock', region_name=target_region)  # pyright: ignore[reportUnknownMemberType]
 
 
 class PricingEntry(TypedDict):
@@ -31,7 +30,7 @@ class ExtendedFoundationModelSummaryTypeDef(FoundationModelSummaryTypeDef):
     modelName: str  # pyright: ignore[reportGeneralTypeIssues]
 
 
-def get_available_models():
+def get_available_models(bedrock_client: BedrockClient):
     response = bedrock_client.list_foundation_models()
     for m in response['modelSummaries']:
         status = m.get('modelLifecycle', {}).get('status')
@@ -44,7 +43,7 @@ def get_available_models():
         yield ExtendedFoundationModelSummaryTypeDef(**m, prices=[])
 
 
-def get_bedrock_pricing_data():
+def get_bedrock_pricing_data(pricing_client: PricingClient):
     paginator = pricing_client.get_paginator('get_products')
     page_iterator = paginator.paginate(
         ServiceCode='AmazonBedrock',
@@ -116,7 +115,9 @@ def parse_pricing_item(product: dict[str, Any]):
     return pricing_entries
 
 
-def get_model(price: PricingEntry) -> ExtendedFoundationModelSummaryTypeDef | None:
+def get_model(
+    price: PricingEntry, models: list[ExtendedFoundationModelSummaryTypeDef]
+) -> ExtendedFoundationModelSummaryTypeDef | None:
     provider_models = [m for m in models if m.get('providerName') == price['provider']]
     matches = [
         m
@@ -142,7 +143,7 @@ def get_model(price: PricingEntry) -> ExtendedFoundationModelSummaryTypeDef | No
     ) == (not matches), (price, matches, provider_models)
     if not matches:
         return None
-    if price['model'] == 'Mistral Large':
+    if price['model'] == 'Mistral Large':  # pragma: no cover - legacy fixed-price payload is no longer returned
         # Currently there are two Mistral Large models with different prices,
         # but the prices of the newer model aren't available via the API yet.
         assert len(matches) == 2
@@ -171,16 +172,14 @@ def get_model(price: PricingEntry) -> ExtendedFoundationModelSummaryTypeDef | No
     return matches[0]
 
 
-models = list(get_available_models())
-
-
-def get_model_infos():
-    raw_prices = list(get_bedrock_pricing_data())
+def get_model_infos(pricing_client: PricingClient, bedrock_client: BedrockClient):
+    models = list(get_available_models(bedrock_client))
+    raw_prices = list(get_bedrock_pricing_data(pricing_client))
     parsed_prices = [x for p in raw_prices for x in parse_pricing_item(p)]
     models_by_id = {m['modelId']: m for m in models}
     assert len(models_by_id) == len(models), 'Duplicate model IDs found'
     for p in parsed_prices:
-        model = get_model(p)
+        model = get_model(p, models)
         if not model:
             continue
         model['prices'].append(p)
@@ -252,7 +251,9 @@ def canonical_model_name(name: str):
 
 
 def main():
-    model_infos = get_model_infos()
+    pricing_client = boto3.client('pricing', region_name='us-east-1')  # pyright: ignore[reportUnknownMemberType]
+    bedrock_client = boto3.client('bedrock', region_name=target_region)  # pyright: ignore[reportUnknownMemberType]
+    model_infos = get_model_infos(pricing_client, bedrock_client)
     providers_yaml = get_providers_yaml()
 
     provider_yaml = providers_yaml['aws']
@@ -275,4 +276,5 @@ def main():
         provider_yaml.save()
 
 
-main()
+if __name__ == '__main__':
+    main()

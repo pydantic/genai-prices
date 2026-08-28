@@ -1,0 +1,4 @@
+{
+  "extends": "../../packages/js/tsconfig.json",
+  "include": ["pricing.ts"]
+}

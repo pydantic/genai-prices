@@ -5,7 +5,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 import httpx2
-from pydantic import BaseModel, OnErrorOmit, TypeAdapter
+from pydantic import BaseModel, TypeAdapter
 
 from . import source_prices
 from .prices_types import ModelPrice
@@ -13,12 +13,20 @@ from .update import get_providers_yaml
 
 
 class SimonWModel(BaseModel):
+    id: str
+    vendor: str
     name: str
     input: Decimal
     output: Decimal
+    input_cached: Decimal | None = None
 
 
-simonw_response_schema = TypeAdapter(dict[str, OnErrorOmit[SimonWModel]])
+class SimonWResponse(BaseModel):
+    updated_at: str
+    prices: list[SimonWModel]
+
+
+simonw_response_schema = TypeAdapter(SimonWResponse)
 
 
 def get_simonw_prices():
@@ -30,46 +38,34 @@ def get_simonw_prices():
 
     prices: source_prices.SourcePricesType = {}
     providers_yml = get_providers_yaml()
-    for key, model in response_data.items():
-        provider_name = get_provider(key)
+    for model in response_data.prices:
+        provider_name = get_provider(model)
         if not provider_name:
-            print(f'Unknown provider for {key}')
+            print(f'Unknown provider for {model.id} (vendor {model.vendor!r})')
             continue
 
-        assert provider_name in providers_yml, f'Unknown provider for {key}'
+        assert provider_name in providers_yml, f'Unknown provider {provider_name!r} for {model.id}'
 
-        price = ModelPrice(input_mtok=model.input, output_mtok=model.output)
-        if provider_prices := prices.get(provider_name):
-            provider_prices[key] = price
-        else:
-            prices[provider_name] = {key: price}
+        price = ModelPrice(input_mtok=model.input, output_mtok=model.output, cache_read_mtok=model.input_cached)
+        prices.setdefault(provider_name, {})[model.id] = price
 
     source_prices.write_source_prices('simonw', prices)
 
 
-lookup_provider = {
-    'gemini': 'google',
-    'claude': 'anthropic',
-    'gpt': 'openai',
-    'o1': 'openai',
-    'o3': 'openai',
-    'o4': 'openai',
+# `vendor` values we deliberately don't map: models whose weights are served by many providers
+# (meta-ai, qwen) have no single provider entry to attribute an upstream price to.
+lookup_vendor = {
     'amazon': 'aws',
+    'anthropic': 'anthropic',
     'deepseek': 'deepseek',
-    'pixtral': 'mistral',
+    'google': 'google',
+    'minimax': 'minimax',
     'mistral': 'mistral',
-    'magistral': 'mistral',
-    'codestral': 'mistral',
-    'ministral': 'mistral',
-    'grok': 'x-ai',
+    'moonshot-ai': 'moonshotai',
+    'openai': 'openai',
+    'xai': 'x-ai',
 }
 
 
-def get_provider(key: str) -> str | None:
-    start = key.split('-', 1)[0]
-
-    if provider := lookup_provider.get(start):
-        return provider
-
-    if key.startswith(('open-mixtral', 'open-mistral')):
-        return 'mistral'
+def get_provider(model: SimonWModel) -> str | None:
+    return lookup_vendor.get(model.vendor)

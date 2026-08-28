@@ -51,6 +51,30 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Cached input tokens
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(
+        input_tokens=4740,
+        cache_read_tokens=0,
+        cache_write_tokens=4735,
+        output_tokens=255,
+    ),
+    model_ref='claude-sonnet-4-20250514',
+    provider_id='anthropic',
+)
+print(price_data.total_price)
+```
+
+`input_tokens` is the total number of input tokens. It includes uncached tokens, cache-read tokens, and cache-write
+tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `calc_price` can apply their separate rates.
+
+Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
+cannot exceed `input_tokens`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,
@@ -94,9 +118,9 @@ print(price.total_price)
 Please note:
 
 - this functionality is explicitly opt-in
-- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
+- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file downloaded is around 26KB when compressed, so is generally very
+At the time of writing, the v2 `data.json` file downloaded is around 51KB when compressed, so is generally very
 quick to download. By default the first fetch happens immediately in the background, then every hour after that.
 
 Usage as a context manager:
@@ -122,42 +146,37 @@ print(p)
 update_prices.stop()
 ```
 
-A single shared, process-wide updater backs every `UpdatePrices` instance, so it is safe to create and start them
-from anywhere — including from several libraries in the same process. Starting an instance is a **claim** on that
-one updater, not a private thread: the first `start()` launches it, later ones join it, and the background thread
-stops (reverting prices to the data bundled with the installed package) only when the **last** started instance is
-stopped.
+A single shared, process-wide updater backs every `UpdatePrices` instance. Starting an instance acquires shared
+ownership rather than creating a private thread: the first `start()` launches the updater, compatible later
+instances join it, and the last `stop()` shuts it down and restores the data bundled with the installed package.
+This lets libraries such as Logfire and Pydantic AI opt in independently without creating duplicate threads.
 
-**For libraries and integrations** (e.g. Logfire, Pydantic AI): create one `UpdatePrices()` with no arguments,
-`start()` it at startup, and `stop()` it on shutdown. If several libraries do this they share the one updater
-rather than spawning duplicate threads, and each one's claim independently keeps it alive until stopped. Leave
-configuration to the application.
+The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
+settings raises `RuntimeError` instead of silently ignoring its configuration. The first owner also supplies the
+`fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
+Custom `fetch()` implementations are responsible for keeping any configuration they read stable while the shared
+updater is running.
+Calling `start()`, `stop()`, or a synchronous wait API from the worker raises `RuntimeError` instead of deadlocking.
+Applications that need custom behavior should start their updater before integrations initialize and retain it
+until shutdown.
 
-**For application authors** who need a custom URL or refresh interval: pass them, and start early in startup,
-before the libraries initialize:
+The last `stop()` waits for an in-flight fetch to finish, then restores the bundled snapshot. It does not raise
+background fetch failures: those failures are logged and reported by every `wait()` call until a later fetch
+succeeds. This makes failure observation independent of which library owns or stops the updater first. Cancelling
+`wait_prices_updated_async()` does not consume or change that shared outcome. `calc_price()` does not acquire the
+updater lock.
 
-```py
-UpdatePrices(url='https://my-mirror.example/prices.json', update_interval=1800).start()
-```
-
-Configuration is **first-wins**: the first instance to start fixes `url`, `update_interval` and `request_timeout`
-for the updater's lifetime. Starting another instance with different settings logs a warning on the `genai-prices`
-logger and joins the running updater; its settings are ignored. Starting early ensures your configuration is the
-one that takes effect.
-
-`stop()` is idempotent and never raises — a background fetch error is logged instead (use `wait()` if you want it
-raised). Stopping the last claim reverts prices to the bundled data immediately. If a fetch is in flight, the
-daemon thread is given a short grace period to exit and is otherwise abandoned with a warning log: it exits once
-the fetch completes, and its result is discarded — a stopped updater can never install prices afterwards. Other
-updater API calls are never blocked, and `calc_price` is always unaffected.
+On platforms with `os.register_at_fork`, an updater started before `os.fork()` is restarted in the child while
+preserving every active ownership claim. This supports preloaded process servers such as gunicorn. Spawned
+processes and platforms without `register_at_fork` start with independent interpreter state and should opt in
+during their normal child initialization.
 
 `start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
 keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
 missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
 data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
 short-lived script), pass `wait` to `start()`, or call `wait_prices_updated_sync()` /
-`wait_prices_updated_async()` — these never raise and return `False` if the update failed (the error is logged on
-the `genai-prices` logger), so your calculations simply fall back to the bundled data.
+`wait_prices_updated_async()`. Fetch failures are raised by these methods, matching `UpdatePrices.wait()`.
 
 You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
 `wait_prices_updated_sync`:
@@ -212,3 +231,33 @@ CLI output notes:
 We do not yet build API documentation for this package, but the source code is relatively simple and well documented.
 
 If you need further information on the API, we encourage you to read the source code.
+
+## Fractional usage values
+
+Every reportable usage unit accepts finite non-negative integers or fractional values. For example, duration usage can
+include fractions of a second:
+
+```python
+from decimal import Decimal
+
+from genai_prices import Usage
+
+duration = Usage(audio_seconds=0.1) + Usage(audio_seconds=0.2)
+exact_duration = Usage(audio_seconds=Decimal('0.1')) + Usage(audio_seconds=0.2)
+
+assert duration.audio_seconds == 0.3
+assert type(duration.audio_seconds) is float
+assert exact_duration.audio_seconds == Decimal('0.3')
+assert type(Usage(audio_seconds=3.0).audio_seconds) is float
+```
+
+Python preserves supplied `int`, `float`, and `Decimal` values, including `3.0` as a float. Other accepted non-boolean
+integer implementations normalize to built-in `int`. Arithmetic interprets floats through their shortest round-trippable
+decimal spellings: a result is Decimal if any operand was Decimal, otherwise float if any operand was float, otherwise
+int. This cannot recover decimal precision that was already lost before a float reached `Usage`.
+
+Standard JSON decoding normally supplies `int` and `float`, while callers may request Decimal parsing before extraction.
+Decimal-bearing usage is not serializable by Python's standard JSON encoder without a custom conversion.
+
+For Groq's Whisper models, report the transcription duration as `audio_seconds` or `input_audio_seconds`. These models
+apply Groq's documented 10-second minimum. A missing or zero duration costs zero.

@@ -2,7 +2,7 @@
 name: Groq
 id: groq
 pricing_urls:
-  - https://groq.com/pricing/
+  - https://console.groq.com/docs/models
 api_pattern: 'https://api\.groq\.com'
 
 # https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
@@ -13,6 +13,26 @@ extractors:
         dest: input_tokens
       - path: completion_tokens
         dest: output_tokens
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
 
 models:
   - id: deepseek-r1-distill-llama-70b
@@ -256,7 +276,32 @@ models:
     name: Qwen3 32B 131k
     match:
       equals: qwen/qwen3-32b
+    context_window: 131072
     prices_checked: 2025-08-12
     prices:
       input_mtok: 0.29
       output_mtok: 0.59
+
+  - id: whisper-large-v3
+    name: Whisper Large V3
+    match:
+      equals: whisper-large-v3
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
+    prices_checked: 2026-08-24
+    price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
+    prices:
+      audio_hours: 0.111
+      input_audio_hours: 0.111
+
+  - id: whisper-large-v3-turbo
+    name: Whisper Large V3 Turbo
+    match:
+      equals: whisper-large-v3-turbo
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
+    prices_checked: 2026-08-24
+    price_comments: See https://console.groq.com/docs/model/whisper-large-v3-turbo.
+    prices:
+      audio_hours: 0.04
+      input_audio_hours: 0.04

@@ -3,7 +3,7 @@ name: Cohere
 id: cohere
 pricing_urls:
   - https://cohere.com/pricing
-api_pattern: 'https://api\.cohere\.ai'
+api_pattern: 'https://api\.cohere\.(?:ai|com)'
 model_match:
   starts_with: "command-"
 provider_match:
@@ -17,6 +17,22 @@ extractors:
         dest: input_tokens
       - path: output_tokens
         dest: output_tokens
+  # https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L14
+  # and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_tokens.py
+  - api_flavor: tokens
+    root: usage
+    mappings:
+      - path: [tokens, input_tokens]
+        dest: input_tokens
+        required: false
+      - path: [tokens, output_tokens]
+        dest: output_tokens
+        required: false
+      # Assumes tokens.input_tokens includes cached tokens (Cohere docs do not specify).
+      # Currently price-neutral: no Cohere model has cache_read_mtok pricing. Revisit if that changes.
+      - path: cached_tokens
+        dest: cache_read_tokens
+        required: false
   # https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/embed_by_type_response.py#L30
   # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta.py#L15
   # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta_billed_units.py
@@ -27,6 +43,40 @@ extractors:
         dest: input_tokens
 
 models:
+  - id: c4ai-aya-expanse-32b
+    name: Aya Expanse 32B
+    description: >-
+      Aya Expanse is a highly performant 32B multilingual model, designed to rival monolingual performance through
+      innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.
+    match:
+      contains: aya-expanse-32b
+    context_window: 128000
+    prices_checked: 2026-08-27
+    price_comments: >-
+      https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
+      for input and $1.50/1M tokens for output.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: c4ai-aya-expanse-8b
+    name: Aya Expanse 8B
+    description: >-
+      Aya Expanse is a highly performant 8B multilingual model, designed to rival monolingual performance through
+      innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.
+    match:
+      contains: aya-expanse-8b
+    context_window: 8192
+    deprecated: true
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Retired 2026-04-04 per https://docs.cohere.com/docs/models; last published price kept for historical usage.
+      https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens
+      for input and $1.50/1M tokens for output.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
   - id: command
     name: Command
     description: >-
@@ -47,11 +97,29 @@ models:
       Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware
       costs, excelling on business-critical agentic and multilingual tasks.
     match:
-      starts_with: command-a
+      or:
+        - equals: command-a
+        - equals: command-a-03-2025
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5
       output_mtok: 10
+
+  - id: command-light
+    name: Command Light
+    description: >-
+      A smaller, faster version of Command. Almost as capable, but a lot faster.
+    match:
+      starts_with: command-light
+    context_window: 4096
+    deprecated: true
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Deprecated 2025-09-15 per https://docs.cohere.com/docs/models; still billable for existing customers.
+      https://cohere.com/pricing FAQ: Command-light pricing is $0.30/1M tokens for input and $0.60/1M tokens for output.
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.6
 
   - id: command-r
     name: Command R
