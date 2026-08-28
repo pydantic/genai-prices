@@ -7207,6 +7207,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='codestral-latest'), ClauseEquals(equals='codestral-2501')]),
                 name='Codestral',
                 description="Mistral's cutting-edge language model for coding. Codestral specializes in low-latency, high-frequency tasks such as fill-in-the-middle (FIM), code correction and test generation.",
+                context_window=256000,
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.9')),
             ),
             ModelInfo(
@@ -7214,6 +7215,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='codestral-2508'),
                 name='Codestral 2508',
                 description="Mistral's cutting-edge language model for coding released end of July 2025. Codestral specializes in low-latency, high-frequency tasks such as fill-in-the-middle (FIM), code correction and test generation.",
+                context_window=256000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.9')
                 ),
@@ -7223,6 +7225,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='devstral-2512'),
                 name='Devstral 2 2512',
                 description='Devstral 2 is a state-of-the-art open-source model by Mistral AI specializing in agentic coding. It is a 123B-parameter dense transformer model supporting a 256K context window.',
+                context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
@@ -7268,6 +7271,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='ministral-14b-2512'),
                 name='Ministral 3 14B 2512',
                 description='The largest model in the Ministral 3 family, Ministral 3 14B offers frontier capabilities and performance comparable to its larger Mistral Small 3.2 24B counterpart.',
+                context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.2')
                 ),
@@ -7284,6 +7288,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='ministral-3b-2512'),
                 name='Ministral 3 3B 2512',
                 description='The smallest model in the Ministral 3 family, Ministral 3 3B is a powerful, efficient tiny language model with vision capabilities.',
+                context_window=131072,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.1')
                 ),
@@ -7301,6 +7306,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='ministral-8b-2512'),
                 name='Ministral 3 8B 2512',
                 description='Ministral 3 8B is an efficient text and vision model for edge deployment.',
+                context_window=262144,
                 price_comments='Ref: https://mistral.ai/pricing/api',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.15')
@@ -7310,6 +7316,7 @@ providers: list[Provider] = [
                 id='ministral-8b-latest',
                 match=ClauseEquals(equals='ministral-8b-latest'),
                 name='Ministral 8B Latest',
+                context_window=262144,
                 price_comments='The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
                 prices=[
                     ConditionalPrice(
@@ -7332,6 +7339,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='mistral-embed',
                 match=ClauseEquals(equals='mistral-embed'),
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -7353,6 +7361,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mistral-large-2512'),
                 name='Mistral Large 3 2512',
                 description="Mistral Large 3 2512 is Mistral's most capable model to date, featuring a sparse mixture-of-experts architecture with 41B active parameters (675B total), and released under the Apache 2.0 license.",
+                context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.5')
                 ),
@@ -7390,6 +7399,7 @@ providers: list[Provider] = [
                 ),
                 name='Mistral Medium 3.5',
                 description='Mistral Medium 3.5 is a frontier-class multimodal model optimized for agentic and coding use cases.',
+                context_window=262144,
                 price_comments='Ref: https://mistral.ai/pricing/api',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
@@ -7399,6 +7409,7 @@ providers: list[Provider] = [
                 id='mistral-medium-latest',
                 match=ClauseEquals(equals='mistral-medium-latest'),
                 name='Mistral Medium Latest',
+                context_window=262144,
                 price_comments='The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
                 prices=[
                     ConditionalPrice(
@@ -7454,6 +7465,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='mistral-ocr-2512'), ClauseEquals(equals='mistral-ocr-2512-completion')]
                 ),
                 name='Mistral OCR 3',
+                context_window=16384,
                 price_comments='https://docs.mistral.ai/models/ocr-3-25-12',
                 prices=ModelPrice(input_document_kpages=Decimal('2'), input_annotated_document_kpages=Decimal('3')),
             ),
@@ -7463,6 +7475,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='mistral-ocr-4-0'), ClauseEquals(equals='mistral-ocr-4-0-completion')]
                 ),
                 name='Mistral OCR 4.0',
+                context_window=16384,
                 price_comments='https://docs.mistral.ai/models/ocr-4-0',
                 prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
             ),
@@ -7477,6 +7490,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Mistral OCR 4.1',
+                context_window=16384,
                 price_comments='https://docs.mistral.ai/models/ocr-4-1',
                 prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
             ),
@@ -7489,6 +7503,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Mistral OCR Latest',
+                context_window=16384,
                 price_comments='The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
                 prices=[
                     ConditionalPrice(constraint=None, prices=ModelPrice(input_document_kpages=Decimal('1'))),
@@ -7539,6 +7554,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mistral-small-2603'),
                 name='Mistral Small 4',
                 description='Mistral Small 4 is the next major release in the Mistral Small family, unifying the capabilities of several flagship Mistral models into a single system.',
+                context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
                 ),
@@ -7564,6 +7580,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mistral-small-latest'),
                 name='Mistral Small 3.2',
                 description='SOTA. Multimodal. Multilingual. Apache 2.0.',
+                context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
@@ -7611,6 +7628,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='voxtral-mini-latest'), ClauseEquals(equals='voxtral-mini-2602')]
                 ),
                 name='Voxtral Mini Transcribe 2',
+                context_window=16384,
                 price_comments='See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
                 prices=ModelPrice(audio_hours=Decimal('0.18'), input_audio_hours=Decimal('0.18')),
             ),
@@ -7625,6 +7643,7 @@ providers: list[Provider] = [
                 ),
                 name='Voxtral Small 24B 2507',
                 description='Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
+                context_window=32768,
                 price_comments='Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
                 prices=[
                     ConditionalPrice(

@@ -12252,6 +12252,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.9,
@@ -12265,6 +12266,7 @@ export const data: Provider[] = [
         match: {
           equals: 'codestral-2508',
         },
+        context_window: 256000,
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -12279,6 +12281,7 @@ export const data: Provider[] = [
         match: {
           equals: 'devstral-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
@@ -12365,6 +12368,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ministral-14b-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
@@ -12392,6 +12396,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ministral-3b-2512',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
@@ -12427,6 +12432,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ministral-8b-2512',
         },
+        context_window: 262144,
         price_comments: 'Ref: https://mistral.ai/pricing/api',
         prices: {
           input_mtok: 0.15,
@@ -12440,6 +12446,7 @@ export const data: Provider[] = [
         match: {
           equals: 'ministral-8b-latest',
         },
+        context_window: 262144,
         price_comments:
           'The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02. Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107',
         prices: [
@@ -12485,6 +12492,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-embed',
         },
+        context_window: 8192,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -12524,6 +12532,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-large-2512',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.05,
@@ -12587,6 +12596,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         price_comments: 'Ref: https://mistral.ai/pricing/api',
         prices: {
           input_mtok: 1.5,
@@ -12600,6 +12610,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-medium-latest',
         },
+        context_window: 262144,
         price_comments:
           'The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16. Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f',
         prices: [
@@ -12704,6 +12715,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         price_comments: 'https://docs.mistral.ai/models/ocr-3-25-12',
         prices: {
           input_document_kpages: 2,
@@ -12723,6 +12735,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         price_comments: 'https://docs.mistral.ai/models/ocr-4-0',
         prices: {
           input_document_kpages: 4,
@@ -12748,6 +12761,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         price_comments: 'https://docs.mistral.ai/models/ocr-4-1',
         prices: {
           input_document_kpages: 4,
@@ -12767,6 +12781,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         price_comments:
           'The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026. OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs',
         prices: [
@@ -12859,6 +12874,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-small-2603',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
@@ -12900,6 +12916,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mistral-small-latest',
         },
+        context_window: 262144,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.3,
@@ -13002,6 +13019,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 16384,
         price_comments: 'See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.',
         prices: {
           audio_hours: 0.18,
@@ -13026,6 +13044,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 32768,
         price_comments:
           'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
         prices: [

@@ -732,6 +732,16 @@ def test_litellm_provider_id():
         # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
         # not claim either window — a 200,000 here would mis-size o1-preview requests
         ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
+        # Mistral's own catalog (`max_context_length`), corroborated by OpenRouter's Mistral endpoints
+        ('mistral', 'mistral-small-latest', 'mistral', 'mistral-small-latest', 262_144),
+        # the codestral record also matches the retired codestral-2501 alias, whose window was the
+        # same 256k (per Mistral's Codestral 25.01 announcement), so the shared value is true for both
+        ('mistral', 'codestral-2501', 'mistral', 'codestral', 256_000),
+        # the mistral-large record also matches the retired 131,072 mistral-large-2407/2411 aliases
+        # vs mistral-large-latest's 262,144, so it must not claim either window
+        ('mistral', 'mistral-large-2407', 'mistral', 'mistral-large', None),
+        # starts_with match catches the retired 40k magistral releases vs latest's 262,144
+        ('mistral', 'magistral-medium-2506', 'mistral', 'magistral-medium', None),
     ],
 )
 def test_model_has_effective_context_window(
