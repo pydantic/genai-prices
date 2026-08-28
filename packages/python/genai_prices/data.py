@@ -9802,6 +9802,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-sonnet-4.5:beta'),
                     ]
                 ),
+                context_window=1000000,
                 price_comments='Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
@@ -10360,6 +10361,7 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-v3.1-terminus',
                 match=ClauseEquals(equals='deepseek/deepseek-v3.1-terminus'),
                 name='DeepSeek V3.1 Terminus',
+                context_window=163840,
                 prices=ModelPrice(input_mtok=Decimal('0.23'), output_mtok=Decimal('0.9')),
             ),
             ModelInfo(
@@ -10972,6 +10974,7 @@ providers: list[Provider] = [
                 id='google/gemma-4-31b-it',
                 match=ClauseEquals(equals='google/gemma-4-31b-it'),
                 name='Gemma 4 31B',
+                context_window=262144,
                 price_comments='OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
                 prices=[
                     ConditionalPrice(
@@ -12154,6 +12157,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Kimi K2.7 Code',
+                context_window=262144,
                 price_comments='Ref: https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('3.5')
@@ -12165,6 +12169,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='moonshotai/kimi-k3'), ClauseEquals(equals='moonshotai/kimi-k3-20260715')]
                 ),
                 name='Kimi K3',
+                context_window=1048576,
                 price_comments='Ref: https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
@@ -12917,7 +12922,6 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='o1',
-                context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
@@ -14253,6 +14257,7 @@ providers: list[Provider] = [
                 id='z-ai/glm-5.2',
                 match=ClauseOr(or_=[ClauseEquals(equals='z-ai/glm-5.2'), ClauseEquals(equals='z-ai/glm-5.2-20260616')]),
                 name='GLM 5.2',
+                context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
@@ -14270,6 +14275,7 @@ providers: list[Provider] = [
                 id='z-ai/glm-5.3-flash',
                 match=ClauseEquals(equals='z-ai/glm-5.3-flash'),
                 name='GLM 5.3 Flash',
+                context_window=1310720,
                 price_comments="OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
                 prices=ModelPrice(
                     input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.25')

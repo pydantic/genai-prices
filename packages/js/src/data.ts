@@ -16814,6 +16814,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         price_comments:
           'Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
@@ -17764,6 +17765,7 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v3.1-terminus',
         },
+        context_window: 163840,
         prices: {
           input_mtok: 0.23,
           output_mtok: 0.9,
@@ -18694,6 +18696,7 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-31b-it',
         },
+        context_window: 262144,
         price_comments:
           'OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on 2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry starts on the day the lower rate was verified. Ref: https://openrouter.ai/api/v1/models/google/gemma-4-31b-it/endpoints',
         prices: [
@@ -20702,6 +20705,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 262144,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
         prices: {
           input_mtok: 0.75,
@@ -20722,6 +20726,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
         prices: {
           input_mtok: 3,
@@ -22125,7 +22130,6 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 200000,
         prices: {
           input_mtok: 15,
           cache_read_mtok: 7.5,
@@ -24423,6 +24427,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1048576,
         prices: {
           input_mtok: 1.4,
           cache_read_mtok: 0.26,
@@ -24455,6 +24460,7 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-5.3-flash',
         },
+        context_window: 1310720,
         price_comments:
           "OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
         prices: {
