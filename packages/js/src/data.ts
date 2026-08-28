@@ -3106,6 +3106,7 @@ export const data: Provider[] = [
         match: {
           equals: 'mai-ds-r1:free',
         },
+        context_window: 163840,
         prices: {},
       },
       {
@@ -3230,6 +3231,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-3-medium-128k-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 1,
           output_mtok: 1,
@@ -3243,6 +3245,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-3-mini-128k-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -3256,6 +3259,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-3.5-mini-128k-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
@@ -3269,6 +3273,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4',
         },
+        context_window: 16384,
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.14,
@@ -3282,6 +3287,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-mini-instruct',
         },
+        context_window: 131072,
         price_comments: 'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
         prices: {
           input_mtok: 0.08,
@@ -3296,6 +3302,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-multimodal-instruct',
         },
+        context_window: 131072,
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.1,
@@ -3309,6 +3316,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-reasoning-plus',
         },
+        context_window: 32768,
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.35,
@@ -3322,6 +3330,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-reasoning-plus:free',
         },
+        context_window: 32768,
         prices: {},
       },
       {
@@ -3332,6 +3341,7 @@ export const data: Provider[] = [
         match: {
           equals: 'phi-4-reasoning:free',
         },
+        context_window: 32768,
         prices: {},
       },
       {
