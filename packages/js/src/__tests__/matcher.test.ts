@@ -42,6 +42,10 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { modelId: 'composer-2.5' })?.id).toBe('cursor')
       expect(matchProvider(actualProviders, { modelId: 'grok-4.6' })?.id).not.toBe('cursor')
     })
+
+    it('does not claim third-party model namespaces for Arcee', () => {
+      expect(matchProvider(actualProviders, { modelId: 'deepseek/deepseek-v4-pro' })?.id).not.toBe('arcee')
+    })
   })
 
   describe('matchProvider with providerId', () => {
@@ -49,6 +53,7 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'google' })?.id).toBe('google')
       expect(matchProvider(actualProviders, { providerId: 'anthropic' })?.id).toBe('anthropic')
       expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerId: 'arcee' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerId: 'cursor' })?.id).toBe('cursor')
     })
 
@@ -99,6 +104,7 @@ describe('Provider Matching', () => {
 
     it('should match a provider at the start of the URL', () => {
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.openai.com/v1/chat/completions' })?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.arcee.ai/api/v1/chat/completions' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.cursor.com/v1/agents' })?.id).toBe('cursor')
     })
 

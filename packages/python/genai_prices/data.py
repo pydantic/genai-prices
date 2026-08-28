@@ -530,6 +530,99 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='arcee',
+        name='Arcee',
+        api_pattern='https://api\\.arcee\\.ai(?:/|$)',
+        pricing_urls=['https://docs.arcee.ai/get-started/pricing', 'https://api.arcee.ai/api/v1/models'],
+        description='OpenAI-compatible hosted inference through the Arcee Platform API.',
+        price_comments='Covers the complete public Text Models pricing table. The table publishes input, cached-input, and output token rates. Context windows and rates for images, requests, and cache writes are omitted because the public pricing page does not publish them. Model IDs use third-party namespaces, so they do not infer the Arcee provider without an Arcee provider ID or API URL.',
+        provider_match=ClauseContains(contains='arcee'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-latest',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-latest'),
+                name='DeepSeek V4 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
+                name='DeepSeek V4 Pro',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.48')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3',
+                match=ClauseEquals(equals='moonshotai/kimi-k3'),
+                name='Kimi K3',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-small'),
+                name='Inkling Small',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='trinity-large-thinking',
+                match=ClauseEquals(equals='trinity-large-thinking'),
+                name='Trinity Large Thinking',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('0.8')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5.2',
+                match=ClauseEquals(equals='zai-org/glm-5.2'),
+                name='GLM 5.2',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='avian',
         name='Avian',
         api_pattern='https://api\\.avian\\.io',

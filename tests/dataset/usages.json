@@ -8381,6 +8381,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -8579,6 +8587,14 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "azure"
@@ -8799,6 +8815,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -8981,6 +9005,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -9161,6 +9193,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -9360,6 +9400,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -9557,6 +9605,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -9759,6 +9815,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -9952,6 +10016,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -10151,6 +10223,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -10346,6 +10426,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -10539,6 +10627,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -10738,6 +10834,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -10918,6 +11022,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -11131,6 +11243,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -11348,6 +11468,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -11563,6 +11691,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -11758,6 +11894,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -11956,6 +12100,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -12148,6 +12300,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -12332,6 +12492,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -12531,6 +12699,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -12715,6 +12891,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -12912,6 +13096,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -13117,6 +13309,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -13336,6 +13536,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000003822",
             "output_price": "0.00000846",
@@ -13545,6 +13753,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -13730,6 +13946,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -13937,6 +14161,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -14140,6 +14372,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -21562,6 +21802,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -21944,6 +22192,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -22121,6 +22377,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -22355,6 +22619,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000039",
             "output_price": "0.001122",
@@ -22560,6 +22832,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -22929,6 +23209,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000325",
             "output_price": "0.000174",
@@ -23134,6 +23422,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -23548,6 +23844,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -23977,6 +24281,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -24164,6 +24476,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -24435,6 +24755,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -24761,6 +25089,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000045",
             "output_price": "0.00043",
@@ -24974,6 +25310,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00005375",
             "output_price": "0.001132",
@@ -25178,6 +25522,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -25356,6 +25708,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -25564,6 +25924,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -25781,6 +26149,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -25959,6 +26335,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -26170,6 +26554,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -26357,6 +26749,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -26552,6 +26952,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -26765,6 +27173,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -27083,6 +27499,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -27797,6 +28221,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -28116,6 +28548,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -28430,6 +28870,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -28736,6 +29184,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -28917,6 +29373,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -29579,6 +30043,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "cerebras"
           },
@@ -29806,6 +30278,14 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.002046",
             "output_price": "0.00012",
@@ -29984,6 +30464,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -30429,6 +30917,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -30610,6 +31106,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -30991,6 +31495,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000166",
@@ -31202,6 +31714,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -31661,6 +32181,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -31839,6 +32367,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -32420,6 +32956,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -32598,6 +33142,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -32920,6 +33472,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -33098,6 +33658,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -34478,6 +35046,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000166",
@@ -34822,6 +35398,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -35000,6 +35584,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -35597,6 +36189,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -36004,6 +36604,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -36669,6 +37277,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -37308,6 +37924,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -37501,6 +38125,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -37710,6 +38342,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -37891,6 +38531,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -38217,6 +38865,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -38503,6 +39159,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -38696,6 +39360,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -39040,6 +39712,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -40002,6 +40682,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -40180,6 +40868,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -40713,6 +41409,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -40896,6 +41600,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -41077,6 +41789,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -41463,6 +42183,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -41650,6 +42378,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -41845,6 +42581,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -42370,6 +43114,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -42563,6 +43315,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -42799,6 +43559,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -43381,6 +44149,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -43884,6 +44660,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -44697,6 +45481,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -45660,6 +46452,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -45989,6 +46789,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -46182,6 +46990,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -46397,6 +47213,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -46590,6 +47414,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -47724,6 +48556,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -47905,6 +48745,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -48094,6 +48942,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -48307,6 +49163,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -48698,6 +49562,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -48876,6 +49748,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -49529,6 +50409,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -49950,6 +50838,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -50187,6 +51083,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -50525,6 +51429,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -50706,6 +51618,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -51081,6 +52001,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -52025,6 +52953,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -52363,6 +53299,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -52878,6 +53822,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -53071,6 +54023,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -53280,6 +54240,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -53461,6 +54429,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -53650,6 +54626,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -53926,6 +54910,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -54119,6 +55111,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -54450,6 +55450,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000166",
@@ -54706,6 +55714,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -54886,6 +55902,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -55410,6 +56434,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -56277,6 +57309,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -56455,6 +57495,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -56862,6 +57910,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -57040,6 +58096,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -57340,6 +58404,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -58983,6 +60055,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -59716,6 +60796,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -60281,6 +61369,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -60459,6 +61555,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -60733,6 +61837,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -60926,6 +62038,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -61248,6 +62368,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -61426,6 +62554,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -62490,6 +63626,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000166",
@@ -62701,6 +63845,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -63163,6 +64315,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -63344,6 +64504,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -63553,6 +64721,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -63908,6 +65084,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -64086,6 +65270,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -64897,6 +66089,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -65075,6 +66275,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -66173,6 +67381,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -66387,6 +67603,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -66580,6 +67804,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -66789,6 +68021,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -66972,6 +68212,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -67153,6 +68401,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -67510,6 +68766,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -68440,6 +69704,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -68633,6 +69905,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -69032,6 +70312,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -69210,6 +70498,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -69395,6 +70691,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -69573,6 +70877,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -70571,6 +71883,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -70749,6 +72069,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -72555,6 +73883,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -72733,6 +74069,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -72976,6 +74320,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -73157,6 +74509,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -73580,6 +74940,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -73766,6 +75134,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -73947,6 +75323,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -74217,6 +75601,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -74410,6 +75802,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -74712,6 +76112,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003325",
             "output_price": "0.000038",
@@ -74905,6 +76313,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -75161,6 +76577,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -75339,6 +76763,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -75980,6 +77412,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003225",
             "output_price": "0.000038",
@@ -76164,6 +77604,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -76359,6 +77807,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -76552,6 +78008,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -76743,6 +78207,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -76939,6 +78411,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -77126,6 +78606,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -77310,6 +78798,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -77505,6 +79001,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -77696,6 +79200,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -78732,6 +80244,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -78907,6 +80427,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -79086,6 +80614,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -79263,6 +80799,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -79438,6 +80982,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -79625,6 +81177,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -79820,6 +81380,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -80117,6 +81685,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00003",
             "output_price": "0.00293",
@@ -80310,6 +81886,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -80607,6 +82191,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001775",
             "output_price": "0.00012",
@@ -80802,6 +82394,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00023",
             "output_price": "0.00015",
@@ -80987,6 +82587,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -81164,6 +82772,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -81353,6 +82969,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -81551,6 +83175,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -81755,6 +83387,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -81970,6 +83610,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0006",
             "output_price": "0.0015",
@@ -82163,6 +83811,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -82360,6 +84016,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001125",
             "output_price": "0.00026",
@@ -82553,6 +84217,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -82750,6 +84422,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00002",
             "output_price": "0.000024",
@@ -82943,6 +84623,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -83140,6 +84828,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001375",
             "output_price": "0.00077",
@@ -83333,6 +85029,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -83530,6 +85234,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0007775",
             "output_price": "0.00017",
@@ -83723,6 +85435,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -83920,6 +85640,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0012575",
             "output_price": "0.00008",
@@ -84106,6 +85834,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -84309,6 +86045,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000012",
             "output_price": "0.0000054",
@@ -84504,6 +86248,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00017",
             "output_price": "0.00012",
@@ -84697,6 +86449,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -84985,6 +86745,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0006347",
             "output_price": "0.010208",
@@ -85196,6 +86964,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -85411,6 +87187,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0027975",
             "output_price": "0.0001",
@@ -85599,6 +87383,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -85779,6 +87571,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -85968,6 +87768,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -86165,6 +87973,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000325",
             "output_price": "0.00011",
@@ -86358,6 +88174,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -86555,6 +88379,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0006825",
             "output_price": "0.00011",
@@ -86748,6 +88580,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -86945,6 +88785,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00002",
             "output_price": "0.0001",
@@ -87138,6 +88986,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -87335,6 +89191,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000105",
             "output_price": "0.00011",
@@ -87528,6 +89392,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -87725,6 +89597,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0041975",
             "output_price": "0.00025",
@@ -87920,6 +89800,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000124",
             "output_price": "0.0000128",
@@ -88106,6 +89994,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -88379,6 +90275,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000515",
             "output_price": "0.0000024",
@@ -88572,6 +90476,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -88769,6 +90681,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00788",
             "output_price": "0.00018",
@@ -88962,6 +90882,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -89159,6 +91087,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00001625",
             "output_price": "0.00011",
@@ -89352,6 +91288,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -89653,6 +91597,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000156",
             "output_price": "0.0000096",
@@ -89848,6 +91800,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00001935",
             "output_price": "0.0000054",
@@ -90041,6 +92001,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -90338,6 +92306,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0004",
             "output_price": "0.00011",
@@ -90531,6 +92507,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -90811,6 +92795,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -93168,6 +95160,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -93348,6 +95348,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -93532,6 +95540,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -93711,6 +95727,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -93888,6 +95912,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -94070,6 +96102,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -94273,6 +96313,14 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "azure"
@@ -94531,6 +96579,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -105716,6 +107772,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -105899,6 +107963,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -106078,6 +108150,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -106267,6 +108347,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -106472,6 +108560,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00001155",
             "output_price": "0.00309666",
@@ -106661,6 +108757,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -106854,6 +108958,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -107043,6 +109155,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -107224,6 +109344,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -107415,6 +109543,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -107598,6 +109734,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -107779,6 +109923,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -107985,6 +110137,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -108208,6 +110368,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -108390,6 +110558,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -108631,6 +110807,14 @@
       },
       {
         "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "azure"
@@ -108877,6 +111061,14 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000085736",
             "output_price": "0.00003248",
@@ -109093,6 +111285,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -109319,6 +111519,14 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000137088",
             "output_price": "0.00001708",
@@ -109537,6 +111745,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0000066",
             "output_price": "0.00172791",
@@ -109744,6 +111960,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -109945,6 +112169,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -110150,6 +112382,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -110351,6 +112591,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -110573,6 +112821,14 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -110781,6 +113037,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -110982,6 +113246,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -111938,6 +114210,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "cerebras"
           },
@@ -112164,6 +114444,67 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cloudflare"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 3211,
+          "input_tokens": 3329,
+          "output_tokens": 53
+        }
+      },
+      {
+        "extractors": [
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -112267,59 +114608,6 @@
         "usage": {
           "input_tokens": 3329
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "chat",
-            "provider_id": "cloudflare"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 3211,
-          "input_tokens": 3329,
-          "output_tokens": 53
-        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -112358,6 +114646,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -112557,6 +114853,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -112752,6 +115056,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -112951,6 +115263,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -113148,6 +115468,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -113343,6 +115671,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -113560,6 +115896,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -113755,6 +116099,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -113954,6 +116306,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -114149,6 +116509,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -114348,6 +116716,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -114543,6 +116919,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -114742,6 +117126,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -114937,6 +117329,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -115165,6 +117565,67 @@
       {
         "extractors": [
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cloudflare"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 2569,
+          "input_tokens": 2649,
+          "output_tokens": 100
+        }
+      },
+      {
+        "extractors": [
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -115268,59 +117729,6 @@
         "usage": {
           "input_tokens": 2649
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "chat",
-            "provider_id": "cloudflare"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 2569,
-          "input_tokens": 2649,
-          "output_tokens": 100
-        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -115374,6 +117782,67 @@
           }
         ],
         "usage": {
+          "input_tokens": 2572,
+          "output_tokens": 100
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cloudflare"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 2240,
           "input_tokens": 2572,
           "output_tokens": 100
         }
@@ -115484,59 +117953,6 @@
         "usage": {
           "input_tokens": 2572
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "chat",
-            "provider_id": "cloudflare"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "moonshotai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 2240,
-          "input_tokens": 2572,
-          "output_tokens": 100
-        }
       }
     ],
     "model": "anthropic/claude-4.6-sonnet-20260217"
@@ -115575,6 +117991,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -115774,6 +118198,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -115969,6 +118401,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -116168,6 +118608,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -116363,6 +118811,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -117108,6 +119564,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001775",
             "output_price": "0.00046",
@@ -117301,6 +119765,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -117498,6 +119970,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -117691,6 +120171,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -117888,6 +120376,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0002175",
             "output_price": "0.00017",
@@ -118081,6 +120577,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -118278,6 +120782,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000095",
             "output_price": "0.00011",
@@ -118471,6 +120983,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -118668,6 +121188,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001775",
             "output_price": "0.00046",
@@ -118861,6 +121389,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -119058,6 +121594,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -119251,6 +121795,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -119448,6 +122000,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -119641,6 +122201,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -119838,6 +122406,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -120033,6 +122609,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -120226,6 +122810,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -120429,6 +123021,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -120744,6 +123344,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -120959,6 +123567,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -121155,6 +123771,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -121335,6 +123959,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -121521,6 +124153,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -121745,6 +124385,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -121972,6 +124620,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -122156,6 +124812,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -122379,6 +125043,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -122577,6 +125249,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -122803,6 +125483,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -123027,6 +125715,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -123249,6 +125945,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -123476,6 +126180,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00000312",
             "output_price": "0.0000081",
@@ -123688,6 +126400,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -123872,6 +126592,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -124093,6 +126821,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -124328,6 +127064,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -124524,6 +127268,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -124711,6 +127463,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -124908,6 +127668,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00409",
             "output_price": "0.00142",
@@ -125101,6 +127869,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -125298,6 +128074,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00006",
             "output_price": "0.00008",
@@ -125491,6 +128275,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -125688,6 +128480,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -125883,6 +128683,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -126076,6 +128884,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -126362,6 +129178,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -126660,6 +129484,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001175",
             "output_price": "0.00017",
@@ -126853,6 +129685,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -127050,6 +129890,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00029",
             "output_price": "0.0001",
@@ -127243,6 +130091,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -127440,6 +130296,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.00019",
@@ -127633,6 +130497,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -127830,6 +130702,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0032975",
             "output_price": "0.00145",
@@ -128023,6 +130903,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -128220,6 +131108,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00012",
             "output_price": "0.0002",
@@ -128413,6 +131309,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -128610,6 +131514,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0003175",
             "output_price": "0.0001",
@@ -128803,6 +131715,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -129000,6 +131920,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -129193,6 +132121,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -131278,6 +134214,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00019875",
             "output_price": "0.0001035",
@@ -131471,6 +134415,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -131668,6 +134620,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0003",
             "output_price": "0.0000855",
@@ -131861,6 +134821,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -132058,6 +135026,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0002955",
             "output_price": "0.000081",
@@ -132251,6 +135227,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -132448,6 +135432,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00019875",
             "output_price": "0.0000495",
@@ -132641,6 +135633,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -137742,6 +140742,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -137970,6 +140978,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -138239,6 +141255,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -138814,6 +141838,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00012",
             "output_price": "0.00014",
@@ -139007,6 +142039,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -139204,6 +142244,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001625",
             "output_price": "0.00001",
@@ -139397,6 +142445,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -140188,6 +143244,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00012",
             "output_price": "0.00014",
@@ -140381,6 +143445,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -140578,6 +143650,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00016",
             "output_price": "0.00001",
@@ -140771,6 +143851,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -142692,6 +145780,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -142885,6 +145981,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -143082,6 +146186,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -143275,6 +146387,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -143472,6 +146592,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0001175",
             "output_price": "0.00017",
@@ -143665,6 +146793,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -143862,6 +146998,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.00029",
             "output_price": "0.0001",
@@ -144055,6 +147199,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -144252,6 +147404,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -144445,6 +147605,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -144642,6 +147810,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.0002",
@@ -144835,6 +148011,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -145032,6 +148216,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.00022",
@@ -145225,6 +148417,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -145422,6 +148622,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -145617,6 +148825,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00009",
@@ -145802,6 +149018,14 @@
             "provider_id": "anthropic"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
+          },
+          {
             "api_flavor": "chat",
             "provider_id": "azure"
           },
@@ -145983,6 +149207,14 @@
             "input_price": "0.000042",
             "output_price": "0.000765",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -146179,6 +149411,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
@@ -146447,6 +149687,14 @@
           {
             "api_flavor": "chat",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "arcee"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "arcee"
           },
           {
             "api_flavor": "chat",
