@@ -778,6 +778,12 @@ def test_litellm_provider_id():
         ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
         # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
         ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # docs.x.ai model pages state each context window ("Context window: N tokens")
+        ('x-ai', 'grok-4.20', 'x-ai', 'grok-4.20', 1_000_000),
+        ('x-ai', 'grok-build-0.1', 'x-ai', 'grok-build-0.1', 256_000),
+        # xAI states no context window for its voice models, and grok-voice-latest is a rolling
+        # alias that repointed to a different model on 2026-08-05
+        ('x-ai', 'grok-voice-latest', 'x-ai', 'grok-voice-latest', None),
     ],
 )
 def test_model_has_effective_context_window(
