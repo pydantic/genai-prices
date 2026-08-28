@@ -161,6 +161,7 @@ models:
       output_mtok: 2.5
 
   - id: global.anthropic.claude-fable-5-v1:0
+    canonical_model: anthropic/claude-fable-5
     prices_checked: 2026-06-09
     match:
       contains: global.anthropic.claude-fable-5
@@ -171,6 +172,7 @@ models:
       output_mtok: 50
 
   - id: global.anthropic.claude-haiku-4-5-20251001-v1:0
+    canonical_model: anthropic/claude-haiku-4-5
     match:
       contains: global.anthropic.claude-haiku-4-5-20251001
     prices:
@@ -180,6 +182,7 @@ models:
       output_mtok: 5
 
   - id: global.anthropic.claude-opus-4-5-v1:0
+    canonical_model: anthropic/claude-opus-4-5
     prices_checked: 2026-02-23
     match:
       contains: global.anthropic.claude-opus-4-5
@@ -190,6 +193,7 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-6-v1:0
+    canonical_model: anthropic/claude-opus-4-6
     prices_checked: 2026-06-26
     match:
       contains: global.anthropic.claude-opus-4-6
@@ -200,6 +204,7 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-7-v1:0
+    canonical_model: anthropic/claude-opus-4-7
     prices_checked: 2026-04-16
     match:
       contains: global.anthropic.claude-opus-4-7
@@ -210,6 +215,7 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-8-v1:0
+    canonical_model: anthropic/claude-opus-4-8
     prices_checked: 2026-05-28
     match:
       contains: global.anthropic.claude-opus-4-8
@@ -220,6 +226,7 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-5
+    canonical_model: anthropic/claude-opus-5
     prices_checked: 2026-07-25
     match:
       contains: global.anthropic.claude-opus-5
@@ -230,6 +237,7 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-sonnet-4-20250514-v1:0
+    canonical_model: anthropic/claude-sonnet-4-0
     match:
       contains: global.anthropic.claude-sonnet-4-20250514
     prices:
@@ -239,8 +247,11 @@ models:
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-4-5-20250929-v1:0
+    canonical_model: anthropic/claude-sonnet-4-5
     match:
       contains: global.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
+    context_window: 200000
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -248,6 +259,7 @@ models:
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-4-6-v1:0
+    canonical_model: anthropic/claude-sonnet-4-6
     prices_checked: 2026-06-26
     match:
       contains: global.anthropic.claude-sonnet-4-6
@@ -258,6 +270,7 @@ models:
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-5-v1:0
+    canonical_model: anthropic/claude-sonnet-5
     prices_checked: 2026-08-24
     match:
       contains: global.anthropic.claude-sonnet-5
@@ -739,6 +752,7 @@ models:
       output_mtok: 2.75
 
   - id: regional.anthropic.claude-3-5-haiku-20241022-v1:0
+    canonical_model: anthropic/claude-3-5-haiku-latest
     match:
       contains: claude-3-5-haiku-20241022
     prices:
@@ -748,6 +762,7 @@ models:
       output_mtok: 4
 
   - id: regional.anthropic.claude-3-5-sonnet-20240620-v1:0
+    canonical_model: anthropic/claude-3-5-sonnet
     match:
       contains: claude-3-5-sonnet-20240620
     prices:
@@ -757,6 +772,7 @@ models:
       output_mtok: 15
 
   - id: regional.anthropic.claude-3-5-sonnet-20241022-v2:0
+    canonical_model: anthropic/claude-3-5-sonnet
     match:
       contains: claude-3-5-sonnet-20241022
     prices:
@@ -766,6 +782,7 @@ models:
       output_mtok: 15
 
   - id: regional.anthropic.claude-3-7-sonnet-20250219-v1:0
+    canonical_model: anthropic/claude-3-7-sonnet-latest
     match:
       contains: claude-3-7-sonnet-20250219
     prices:
@@ -775,6 +792,7 @@ models:
       output_mtok: 15
 
   - id: regional.anthropic.claude-3-haiku-20240307-v1:0
+    canonical_model: anthropic/claude-3-haiku
     match:
       contains: claude-3-haiku-20240307
     prices:
@@ -782,6 +800,7 @@ models:
       output_mtok: 1.25
 
   - id: regional.anthropic.claude-3-opus-20240229-v1:0
+    canonical_model: anthropic/claude-3-opus-latest
     match:
       contains: claude-3-opus-20240229
     prices:
@@ -789,6 +808,7 @@ models:
       output_mtok: 75
 
   - id: regional.anthropic.claude-3-sonnet-20240229-v1:0
+    canonical_model: anthropic/claude-3-sonnet
     match:
       contains: claude-3-sonnet-20240229
     prices:
@@ -798,6 +818,7 @@ models:
       output_mtok: 15
 
   - id: regional.anthropic.claude-fable-5-v1:0
+    canonical_model: anthropic/claude-fable-5
     prices_checked: 2026-06-09
     match:
       or:
@@ -814,6 +835,7 @@ models:
       output_mtok: 55
 
   - id: regional.anthropic.claude-haiku-4-5-20251001-v1:0
+    canonical_model: anthropic/claude-haiku-4-5
     match:
       or:
         - starts_with: anthropic.claude-haiku-4-5-20251001
@@ -831,6 +853,7 @@ models:
       output_mtok: 5.5
 
   - id: regional.anthropic.claude-opus-4-1-20250805-v1:0
+    canonical_model: anthropic/claude-opus-4-1
     match:
       or:
         - starts_with: anthropic.claude-opus-4-1-20250805
@@ -848,6 +871,7 @@ models:
       output_mtok: 75
 
   - id: regional.anthropic.claude-opus-4-20250514-v1:0
+    canonical_model: anthropic/claude-opus-4-0
     match:
       or:
         - starts_with: anthropic.claude-opus-4-20250514
@@ -865,6 +889,7 @@ models:
       output_mtok: 75
 
   - id: regional.anthropic.claude-opus-4-5-v1:0
+    canonical_model: anthropic/claude-opus-4-5
     prices_checked: 2026-02-23
     match:
       or:
@@ -883,6 +908,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-6-v1:0
+    canonical_model: anthropic/claude-opus-4-6
     prices_checked: 2026-06-26
     match:
       or:
@@ -901,6 +927,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-7-v1:0
+    canonical_model: anthropic/claude-opus-4-7
     prices_checked: 2026-04-16
     match:
       or:
@@ -919,6 +946,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-8-v1:0
+    canonical_model: anthropic/claude-opus-4-8
     prices_checked: 2026-05-28
     match:
       or:
@@ -935,6 +963,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-5
+    canonical_model: anthropic/claude-opus-5
     prices_checked: 2026-07-25
     price_comments: >-
       Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
@@ -954,6 +983,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-sonnet-4-20250514-v1:0
+    canonical_model: anthropic/claude-sonnet-4-0
     match:
       or:
         - starts_with: anthropic.claude-sonnet-4-20250514
@@ -971,6 +1001,7 @@ models:
       output_mtok: 15
 
   - id: regional.anthropic.claude-sonnet-4-5-20250929-v1:0
+    canonical_model: anthropic/claude-sonnet-4-5
     match:
       or:
         - starts_with: anthropic.claude-sonnet-4-5-20250929
@@ -981,6 +1012,8 @@ models:
         - contains: eu.anthropic.claude-sonnet-4-5-20250929
         - contains: us-gov.anthropic.claude-sonnet-4-5-20250929
         - contains: jp.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
+    context_window: 200000
     prices:
       input_mtok: 3.3
       cache_write_mtok: 4.125
@@ -988,6 +1021,7 @@ models:
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-4-6-v1:0
+    canonical_model: anthropic/claude-sonnet-4-6
     prices_checked: 2026-06-26
     match:
       or:
@@ -1006,6 +1040,7 @@ models:
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-5-v1:0
+    canonical_model: anthropic/claude-sonnet-5
     prices_checked: 2026-08-24
     match:
       or:

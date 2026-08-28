@@ -1154,6 +1154,7 @@ models:
       output_mtok: 0.1966
 
   - id: deepseek/deepseek-v4-pro
+    # No context_window: selectable endpoints range from 512K to 1,048,576: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints
     name: DeepSeek V4 Pro
     match:
       equals: deepseek/deepseek-v4-pro

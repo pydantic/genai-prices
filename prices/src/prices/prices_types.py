@@ -32,6 +32,7 @@ class _Model(BaseModel, extra='forbid', use_attribute_docstrings=True):
 
 
 IdField = Annotated[str, MaxLen(100), Field(pattern=r'^\S+$')]
+ModelRefField = Annotated[str, MaxLen(201), Field(pattern=r'^\S+/\S+$')]
 NameField = Annotated[str, MaxLen(100)]
 DescriptionField = Annotated[str, MaxLen(1000)]
 
@@ -178,6 +179,13 @@ class ModelInfo(_Model):
     """Description of the model"""
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
+    canonical_model: ModelRefField | None = Field(default=None, exclude=True)
+    """The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.
+
+    The build copies missing metadata (currently only `context_window`) from that record; an explicit
+    value on this record wins. Only set this when the value holds for every model this record matches.
+    Not included in published data.
+    """
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None

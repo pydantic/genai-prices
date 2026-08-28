@@ -230,6 +230,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
       Provider: OpenAI
          Model: o3
   Model Prices: $2/input MTok, $8/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/storage searches K
+Context Window: 200,000
    Input Price: $0.02
   Output Price: $0
    Total Price: $0.02
@@ -243,6 +244,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
       Provider: OpenAI
          Model: o3
   Model Prices: $10/input MTok, $40/output MTok, $0.5/input cache read MTok, $10/web searches K, $2.5/storage searches K
+Context Window: 200,000
    Input Price: $0.1
   Output Price: $0
    Total Price: $0.1

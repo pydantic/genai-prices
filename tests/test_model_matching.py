@@ -708,6 +708,37 @@ def test_litellm_provider_id():
     assert model.id == 'gpt-4o-mini'
 
 
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
+    [
+        (
+            'bedrock',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            'aws',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            1_000_000,
+        ),
+        ('azure', 'o1', 'azure', 'o1', 200_000),
+        ('azure', 'o1-preview', 'azure', 'o1-preview', 128_000),
+        ('openai', 'o1-preview', 'openai', 'o1-preview', 128_000),
+        ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
+        ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
+        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
+    ],
+)
+def test_model_has_effective_context_window(
+    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int | None
+):
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model(model_ref, None, provider_id, None)
+
+    assert provider.id == expected_provider
+    assert model.id == provider_model
+    assert model.context_window == context_window
+
+
 def test_compact_dated_model_ref_normalized():
     """Compact dated refs from LiteLLM/OpenRouter (e.g. `gpt-5.2-20251211`) fall back to the dashed alias."""
     from genai_prices.types import _normalize_compact_dated_ref

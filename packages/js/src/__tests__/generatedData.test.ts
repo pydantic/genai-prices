@@ -104,6 +104,44 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedInputPrice: (200_000 * 3) / 1_000_000, inputTokens: 200_000 },
+    { expectedInputPrice: (200_001 * 6) / 1_000_000, inputTokens: 200_001 },
+  ])('prices Google Claude Sonnet 4.5 at the 200K boundary', ({ expectedInputPrice, inputTokens }) => {
+    const result = calcPrice({ input_tokens: inputTokens }, 'claude-sonnet-4-5@20250929', { providerId: 'google' })
+
+    expect(result?.model.id).toBe('claude-sonnet-4-5')
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it('prices Google Claude Sonnet 4.5 long-context cache usage', () => {
+    const result = calcPrice(
+      { cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: 300_001 },
+      'claude-sonnet-4-5@20250929',
+      { providerId: 'google' }
+    )
+
+    const expectedInputPrice = (150_001 * 6 + 100_000 * 0.6 + 50_000 * 7.5) / 1_000_000
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it.each([
+    { contextWindow: 200_000, model: 'anthropic/claude-sonnet-4.5', modelId: 'claude-sonnet-4-5' },
+    { contextWindow: 1_000_000, model: 'anthropic/claude-sonnet-4.6', modelId: 'claude-sonnet-4-6' },
+  ])('matches the direct Google offering for $model', ({ contextWindow, model, modelId }) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.model.id).toBe(modelId)
+    expect(result?.model.context_window).toBe(contextWindow)
+  })
+
+  it.each(['claude-sonnet-4-0', 'anthropic/claude-sonnet-4'])('keeps the Google Claude Sonnet 4 alias $model on Google', (model) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.provider.id).toBe('google')
+    expect(result?.model.id).toBe('claude-4-sonnet')
+  })
+
+  it.each([
     { expectedModelId: 'pixtral-12b', expectedTotalPrice: 0.000165, model: 'pixtral-12b-latest' },
     { expectedModelId: 'pixtral-large', expectedTotalPrice: 0.0026, model: 'pixtral-large-2411' },
     { expectedModelId: 'mixtral-8x7b', expectedTotalPrice: 0.00077, model: 'mixtral-8x7b-instruct-v0.1' },

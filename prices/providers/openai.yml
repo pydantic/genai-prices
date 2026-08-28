@@ -1408,6 +1408,10 @@ models:
       contains: moderation
     prices: {}
 
+  # Keep o1 and o1-preview separate even though their prices match: OpenAI documents different context windows
+  # (200,000 vs 128,000 tokens):
+  # https://developers.openai.com/api/docs/models/o1
+  # https://developers.openai.com/api/docs/models/o1-preview
   - id: o1
     name: o1
     description: O1 is a model that offers a balance between cost and performance.
@@ -1415,9 +1419,8 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
-    context_window: 128000
+    # https://developers.openai.com/api/docs/models/o1
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 15
@@ -1431,12 +1434,30 @@ models:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-mini
     context_window: 128000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
+
+  - id: o1-preview
+    name: o1 preview
+    description: Preview release of OpenAI's first reasoning model.
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-preview
+    context_window: 128000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
 
   - id: o1-pro
     name: o1-pro
@@ -1463,6 +1484,8 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
+    # https://developers.openai.com/api/docs/models/o3
+    context_window: 200000
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -1501,6 +1524,8 @@ models:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
         - equals: o3-mini-high
+    # https://developers.openai.com/api/docs/models/o3-mini
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
@@ -1529,6 +1554,8 @@ models:
         - equals: o4-mini-2025-04-16
         - equals: o4-mini-high
         - equals: o4-mini
+    # https://developers.openai.com/api/docs/models/o4-mini
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1

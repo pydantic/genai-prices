@@ -176,13 +176,15 @@ models:
       equals: mai-ds-r1:free
     prices: {}
 
+  # Azure documents the same limits as OpenAI for these o-series models.
+  # Keep o1 and o1-preview separate: the table lists 200,000 vs 128,000 input token limits.
+  # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
   - id: o1
+    canonical_model: openai/o1
     match:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
     prices_checked: 2025-07-03
     prices:
       input_mtok: 15
@@ -190,6 +192,7 @@ models:
       output_mtok: 60
 
   - id: o1-mini
+    canonical_model: openai/o1-mini
     match:
       or:
         - equals: o1-mini
@@ -200,7 +203,22 @@ models:
       cache_read_mtok: 0.55
       output_mtok: 4.4
 
+  - id: o1-preview
+    canonical_model: openai/o1-preview
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    prices_checked: 2025-07-03
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
   - id: o3-2025-04-16
+    canonical_model: openai/o3
     match:
       or:
         - equals: o3
@@ -212,6 +230,7 @@ models:
       output_mtok: 8
 
   - id: o3-mini
+    canonical_model: openai/o3-mini
     match:
       or:
         - equals: o3-mini
@@ -223,6 +242,7 @@ models:
       output_mtok: 4.4
 
   - id: o4-mini
+    canonical_model: openai/o4-mini
     match:
       or:
         - contains: o4-mini
@@ -349,6 +369,8 @@ models:
     prices: {}
 
   - id: text-embedding-3-large
+    # Azure documents 8,192 input tokens for both text-embedding-3 models: https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/azureopenai/embeddings
+    canonical_model: openai/text-embedding-3-large
     match:
       equals: text-embedding-3-large
     prices_checked: 2025-07-13
@@ -356,6 +378,7 @@ models:
       input_mtok: 0.13
 
   - id: text-embedding-3-small
+    canonical_model: openai/text-embedding-3-small
     match:
       equals: text-embedding-3-small
     prices_checked: 2025-07-13
