@@ -4657,6 +4657,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.8-27B-FP8',
+        name: 'Qwen3.8 27B',
+        match: {
+          equals: 'Qwen/Qwen3.8-27B-FP8',
+        },
+        context_window: 262144,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.',
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.04,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4-Flash',
         name: 'DeepSeek V4 Flash',
         match: {
@@ -4665,6 +4679,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.14,
           output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        },
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.',
+        prices: {
+          input_mtok: 0.09,
+          cache_read_mtok: 0.02,
+          output_mtok: 0.18,
         },
       },
       {
@@ -4712,6 +4739,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
         name: 'Nemotron 3 Super 120B A12B',
         match: {
@@ -4742,6 +4783,20 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.4,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2-FP8',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/GLM-5.2-FP8',
+        },
+        context_window: 1048576,
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.',
+        prices: {
+          input_mtok: 0.93,
+          cache_read_mtok: 0.19,
+          output_mtok: 3,
         },
       },
     ],

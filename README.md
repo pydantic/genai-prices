@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
-- [Doubleword](prices/providers/doubleword.yml) - 16 models
+- [Doubleword](prices/providers/doubleword.yml) - 20 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [Google](prices/providers/google.yml) - 51 models
 - [Groq](prices/providers/groq.yml) - 31 models
