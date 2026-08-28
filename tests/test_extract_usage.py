@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -1461,6 +1462,51 @@ def test_xai_native():
     extracted_usage = extract_usage(response_data, provider_id='x-ai')
     assert extracted_usage.usage == usage
     assert extracted_usage.calc_price().total_price == Decimal('0.0000349')
+
+
+def test_xai_realtime_duration_and_message_usage_and_price() -> None:
+    provider = next(provider for provider in providers if provider.id == 'x-ai')
+    response_data: dict[str, Any] = {
+        'type': 'response.done',
+        'response': {
+            'usage': {
+                'input_tokens': 5,
+                'input_token_details': {'text_tokens': 5, 'audio_tokens': 0},
+                'output_tokens': 42,
+                'output_token_details': {'text_tokens': 3, 'audio_tokens': 39},
+                'billable_audio_seconds': 60,
+                'input_text_messages': 2,
+            }
+        },
+    }
+
+    model, usage = provider.extract_usage(response_data, api_flavor='realtime')
+    assert model is None
+    assert usage == Usage(
+        input_tokens=5,
+        output_tokens=42,
+        input_text_tokens=5,
+        output_text_tokens=3,
+        input_audio_tokens=0,
+        output_audio_tokens=39,
+        input_text_messages=2,
+        audio_seconds=60,
+    )
+    for model_ref, timestamp, expected_total in [
+        ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
+        ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+    ]:
+        price = calc_price(
+            usage,
+            model_ref=model_ref,
+            provider_id='x-ai',
+            genai_request_timestamp=timestamp,
+        )
+        assert price.input_price == Decimal('0.008')
+        assert price.output_price == 0
+        assert price.total_price == expected_total
 
 
 @pytest.mark.parametrize(

@@ -450,6 +450,48 @@ describe('extractUsage', () => {
         output_tokens: 14,
       })
     })
+
+    it('should extract and price realtime duration and message usage', () => {
+      const responseData = {
+        response: {
+          usage: {
+            billable_audio_seconds: 60,
+            input_text_messages: 2,
+            input_token_details: { audio_tokens: 0, text_tokens: 5 },
+            input_tokens: 5,
+            output_token_details: { audio_tokens: 39, text_tokens: 3 },
+            output_tokens: 42,
+          },
+        },
+        type: 'response.done',
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData, 'realtime')
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({
+        audio_seconds: 60,
+        input_audio_tokens: 0,
+        input_text_messages: 2,
+        input_text_tokens: 5,
+        input_tokens: 5,
+        output_audio_tokens: 39,
+        output_text_tokens: 3,
+        output_tokens: 42,
+      })
+      for (const [modelRef, timestamp, expectedTotal] of [
+        ['grok-voice-think-fast-1.0', undefined, 0.058],
+        ['grok-voice-think-fast-2.0', undefined, 0.088],
+        ['grok-voice-latest', new Date('2026-08-04T00:00:00Z'), 0.058],
+        ['grok-voice-latest', new Date('2026-08-05T00:00:00Z'), 0.088],
+      ] as const) {
+        const price = calcPrice(usage, modelRef, { provider: xaiProvider, timestamp })
+        expect(price).not.toBeNull()
+        expect(price!.input_price).toBeCloseTo(0.008, 15)
+        expect(price!.output_price).toBe(0)
+        expect(price!.total_price).toBeCloseTo(expectedTotal, 15)
+      }
+    })
   })
 
   describe('Perplexity provider', () => {

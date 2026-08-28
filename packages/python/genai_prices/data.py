@@ -15769,6 +15769,29 @@ providers: list[Provider] = [
                 api_flavor='chat',
                 model_path='model',
             ),
+            UsageExtractor(
+                root=['response', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_token_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'text_tokens'], dest='output_text_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_token_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='billable_audio_seconds', dest='audio_seconds', required=True),
+                    UsageExtractorMapping(path='input_text_messages', dest='input_text_messages', required=False),
+                ],
+                api_flavor='realtime',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -16044,6 +16067,36 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
                 ),
+            ),
+            ModelInfo(
+                id='grok-voice-latest',
+                match=ClauseEquals(equals='grok-voice-latest'),
+                name='Grok Voice',
+                price_comments='See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(audio_hours=Decimal('3'), input_text_messages_kcount=Decimal('4'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 5)),
+                        prices=ModelPrice(audio_hours=Decimal('4.8'), input_text_messages_kcount=Decimal('4')),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='grok-voice-think-fast-1.0',
+                match=ClauseEquals(equals='grok-voice-think-fast-1.0'),
+                name='Grok Voice Think Fast 1.0',
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing.',
+                deprecated=True,
+                prices=ModelPrice(audio_hours=Decimal('3'), input_text_messages_kcount=Decimal('4')),
+            ),
+            ModelInfo(
+                id='grok-voice-think-fast-2.0',
+                match=ClauseEquals(equals='grok-voice-think-fast-2.0'),
+                name='Grok Voice Think Fast 2.0',
+                price_comments='See https://docs.x.ai/developers/pricing#voice-pricing.',
+                prices=ModelPrice(audio_hours=Decimal('4.8'), input_text_messages_kcount=Decimal('4')),
             ),
         ],
     ),
