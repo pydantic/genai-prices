@@ -1,11 +1,21 @@
 from __future__ import annotations
 
 from datetime import date, timedelta
-from typing import Any
+from typing import Any, Protocol
 
-from prices.prices_types import ModelPrice, TieredPrices
+from prices.prices_types import ModelPrice, Provider, TieredPrices
 from prices.source_prices import load_source_prices
-from prices.update import ProviderYaml, get_providers_yaml
+from prices.update import get_providers_yaml
+
+
+class ProviderYamlForPriceDiscrepancies(Protocol):
+    provider: Provider
+
+    def add_price(self, model_id: str, price: ModelPrice) -> None: ...
+
+    def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None: ...
+
+    def save(self) -> None: ...
 
 
 def update_price_discrepancies(check_threshold: date | None = None):
@@ -95,7 +105,7 @@ def can_ignore_missing_model(provider_id: str, model_id: str) -> bool:
     return False
 
 
-def handle_missing_model(price: ModelPrice, model_id: str, provider_yml: ProviderYaml):
+def handle_missing_model(price: ModelPrice, model_id: str, provider_yml: ProviderYamlForPriceDiscrepancies):
     matching_by_price = [
         m
         for m in provider_yml.provider.models
@@ -132,7 +142,7 @@ def check_for_price_discrepancies() -> int:
     """List price discrepancies between providers and source prices.
 
     Returns:
-        The number of price discrepancies found.
+        The total number of price discrepancies found.
     """
     providers_yml = get_providers_yaml()
 
@@ -142,7 +152,7 @@ def check_for_price_discrepancies() -> int:
         if discs:
             if not found:
                 print('price discrepancies:')
-            found += 1
+            found += discs
             print(f'{provider_yml.provider.name:>20}: {discs}')
 
     if not found:

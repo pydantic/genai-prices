@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -21,6 +22,52 @@ from genai_prices.units import UnitRegistry
 
 class MyMapping(dict[str, Any]):
     pass
+
+
+def test_cursor_usage_event():
+    response_data = {
+        'model': 'grok-4.6-fast',
+        'tokenUsage': {
+            'inputTokens': 100,
+            'cacheWriteTokens': 20,
+            'cacheReadTokens': 30,
+            'outputTokens': 40,
+            'totalCents': 0.099,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='cursor', api_flavor='usage-event')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'grok-4.6-fast'
+    assert extracted.usage == Usage(
+        input_tokens=150,
+        cache_write_tokens=20,
+        cache_read_tokens=30,
+        output_tokens=40,
+    )
+    assert extracted.calc_price().total_price == Decimal('0.00099')
+
+
+@pytest.mark.parametrize('api_flavor', ['default', 'chat'])
+def test_arcee_chat_usage(api_flavor: str) -> None:
+    response_data = {
+        'model': 'deepseek/deepseek-v4-flash-latest',
+        'usage': {
+            'prompt_tokens': 100,
+            'prompt_tokens_details': {'cached_tokens': 30},
+            'completion_tokens': 40,
+            'completion_tokens_details': {'reasoning_tokens': 10},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='arcee', api_flavor=api_flavor)
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'deepseek/deepseek-v4-flash-latest'
+    assert extracted.usage == Usage(
+        input_tokens=100, cache_read_tokens=30, output_tokens=40, output_reasoning_tokens=10
+    )
 
 
 @pytest.mark.parametrize(
@@ -191,6 +238,82 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_cloudflare_chat_usage() -> None:
+    response_data = {
+        'model': '@cf/deepseek-ai/deepseek-v4-flash-0731',
+        'usage': {
+            'prompt_tokens': 2_000_000,
+            'prompt_tokens_details': {'cached_tokens': 1_000_000},
+            'completion_tokens': 1_000_000,
+            'completion_tokens_details': {'reasoning_tokens': 500_000},
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare-workers-ai', api_flavor='chat')
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/deepseek-ai/deepseek-v4-flash-0731'
+    assert extracted_usage.usage == Usage(
+        input_tokens=2_000_000,
+        cache_read_tokens=1_000_000,
+        output_tokens=1_000_000,
+        output_reasoning_tokens=500_000,
+    )
+    assert extracted_usage.calc_price().total_price == Decimal('1.774')
+
+
+def test_cloudflare_native_rest_usage() -> None:
+    response_data: dict[str, object] = {
+        'result': {
+            'response': 'Hello',
+            'usage': {'prompt_tokens': 2_000_000, 'completion_tokens': 1_000_000, 'total_tokens': 3_000_000},
+        },
+        'success': True,
+        'errors': [],
+        'messages': [],
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/meta/llama-3.2-1b-instruct',
+    )
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/meta/llama-3.2-1b-instruct'
+    assert extracted_usage.usage == Usage(input_tokens=2_000_000, output_tokens=1_000_000)
+    assert extracted_usage.calc_price().total_price == Decimal('0.255')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.cloudflare.com/client/v4/accounts/test-account/ai/run/@cf/example/unknown-model',
+        'https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+    ],
+)
+def test_cloudflare_native_rest_usage_without_known_url_model(provider_api_url: str) -> None:
+    response_data = {'result': {'usage': {'prompt_tokens': 2, 'completion_tokens': 1}}}
+
+    extracted_usage = extract_usage(response_data, provider_api_url=provider_api_url)
+
+    assert extracted_usage.model is None
+    assert extracted_usage.usage == Usage(input_tokens=2, output_tokens=1)
+
+
+def test_cloudflare_embeddings_usage() -> None:
+    response_data = {
+        'model': '@cf/baai/bge-m3',
+        'usage': {'prompt_tokens': 1_000_000, 'total_tokens': 1_000_000},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare', api_flavor='embeddings')
+
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000)
+    assert extracted_usage.calc_price().total_price == Decimal('0.012')
+
+
 def test_modal_responses_usage() -> None:
     response_data = {
         'model': 'moonshotai/Kimi-K3',
@@ -258,8 +381,49 @@ def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
     assert extracted_usage.calc_price().total_price == Decimal('0.015944')
 
 
-def test_openai_realtime_usage_modalities():
-    provider = next(provider for provider in providers if provider.id == 'openai')
+@pytest.mark.parametrize(
+    ('api_flavor', 'usage_data'),
+    [
+        (
+            'chat',
+            {
+                'prompt_tokens': 2_006,
+                'prompt_tokens_details': {'cached_tokens': 0, 'cache_write_tokens': 1_920},
+                'completion_tokens': 300,
+            },
+        ),
+        (
+            'responses',
+            {
+                'input_tokens': 2_006,
+                'input_tokens_details': {'cached_tokens': 0, 'cache_write_tokens': 1_920},
+                'output_tokens': 300,
+            },
+        ),
+    ],
+)
+def test_azure_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
+    """Azure's OpenAI-compatible v1 API returns the same usage shape as direct OpenAI
+    (see test_openai_cache_write_tokens); this mirrors it for the `azure` provider,
+    whose extractors were missing the `cache_write_tokens` mapping.
+
+    `gpt-5.6-sol` resolves through Azure's `fallback_model_providers: [openai]`, so the price
+    asserts the cache-write premium is actually applied, not just that the tokens were extracted.
+    """
+    response_data = {'model': 'gpt-5.6-sol', 'usage': usage_data}
+    extracted_usage = extract_usage(response_data, provider_id='azure', api_flavor=api_flavor)
+
+    assert extracted_usage.usage == Usage(
+        input_tokens=2_006,
+        cache_write_tokens=1_920,
+        cache_read_tokens=0,
+        output_tokens=300,
+    )
+    assert extracted_usage.calc_price().total_price == Decimal('0.015944')
+
+
+@pytest.mark.parametrize('provider_id', ['openai', 'azure'])
+def test_openai_realtime_usage_modalities(provider_id: str):
     response_data = {
         'type': 'response.done',
         'response': {
@@ -282,21 +446,21 @@ def test_openai_realtime_usage_modalities():
         },
     }
 
-    assert provider.extract_usage(response_data, api_flavor='realtime') == (
-        None,
-        Usage(
-            input_tokens=1_000,
-            output_tokens=500,
-            cache_read_tokens=400,
-            input_text_tokens=600,
-            output_text_tokens=200,
-            input_audio_tokens=250,
-            output_audio_tokens=300,
-            input_image_tokens=150,
-            cache_text_read_tokens=250,
-            cache_audio_read_tokens=100,
-            cache_image_read_tokens=50,
-        ),
+    extracted_usage = extract_usage(response_data, provider_id=provider_id, api_flavor='realtime')
+
+    assert extracted_usage.provider.id == provider_id
+    assert extracted_usage.usage == Usage(
+        input_tokens=1_000,
+        output_tokens=500,
+        cache_read_tokens=400,
+        input_text_tokens=600,
+        output_text_tokens=200,
+        input_audio_tokens=250,
+        output_audio_tokens=300,
+        input_image_tokens=150,
+        cache_text_read_tokens=250,
+        cache_audio_read_tokens=100,
+        cache_image_read_tokens=50,
     )
 
 
@@ -359,6 +523,23 @@ def test_mistral():
     assert provider.extract_usage(response_data_no_cache) == snapshot(
         ('mistral-large-2512', Usage(input_tokens=10, output_tokens=5))
     )
+
+
+def test_mistral_ocr():
+    response_data = {
+        'model': 'mistral-ocr-4-1-completion',
+        'usage_info': {'pages_processed': 29, 'doc_size_bytes': 108_451_500},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='mistral', api_flavor='ocr')
+    assert extracted_usage.usage == Usage(input_document_pages=29)
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'mistral-ocr-4-1'
+    assert extracted_usage.calc_price().total_price == Decimal('0.116')
+
+    annotated_usage = extract_usage(response_data, provider_id='mistral', api_flavor='ocr_annotated')
+    assert annotated_usage.usage == Usage(input_document_pages=29, input_annotated_document_pages=29)
+    assert annotated_usage.calc_price().total_price == Decimal('0.145')
 
 
 def test_groq_cached_tokens():
@@ -1302,6 +1483,51 @@ def test_xai_native():
     extracted_usage = extract_usage(response_data, provider_id='x-ai')
     assert extracted_usage.usage == usage
     assert extracted_usage.calc_price().total_price == Decimal('0.0000349')
+
+
+def test_xai_realtime_duration_and_message_usage_and_price() -> None:
+    provider = next(provider for provider in providers if provider.id == 'x-ai')
+    response_data: dict[str, Any] = {
+        'type': 'response.done',
+        'response': {
+            'usage': {
+                'input_tokens': 5,
+                'input_token_details': {'text_tokens': 5, 'audio_tokens': 0},
+                'output_tokens': 42,
+                'output_token_details': {'text_tokens': 3, 'audio_tokens': 39},
+                'billable_audio_seconds': 60,
+                'input_text_messages': 2,
+            }
+        },
+    }
+
+    model, usage = provider.extract_usage(response_data, api_flavor='realtime')
+    assert model is None
+    assert usage == Usage(
+        input_tokens=5,
+        output_tokens=42,
+        input_text_tokens=5,
+        output_text_tokens=3,
+        input_audio_tokens=0,
+        output_audio_tokens=39,
+        input_text_messages=2,
+        audio_seconds=60,
+    )
+    for model_ref, timestamp, expected_total in [
+        ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
+        ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+    ]:
+        price = calc_price(
+            usage,
+            model_ref=model_ref,
+            provider_id='x-ai',
+            genai_request_timestamp=timestamp,
+        )
+        assert price.input_price == Decimal('0.008')
+        assert price.output_price == 0
+        assert price.total_price == expected_total
 
 
 @pytest.mark.parametrize(

@@ -1,0 +1,126 @@
+# Providers covered by agentic-price-check-direct-providers.md.
+providers:
+  - name: DeepSeek
+    file: prices/providers/deepseek.yml
+    scope: Public DeepSeek API models.
+    sources:
+      - https://api-docs.deepseek.com/quick_start/pricing
+    notes: >-
+      The first two YAML models use a legacy schedule. Do not assume it matches the current policy. DeepSeek has announced daily
+      peak hours at UTC 01:00-04:00 and 06:00-10:00 with 2x pricing, but compare that tier only after the official page publishes
+      an effective date on or before the run date.
+
+  - name: xAI
+    file: prices/providers/x_ai.yml
+    scope: Public xAI text-generation models represented by the YAML, including models that accept image input.
+    sources:
+      - https://docs.x.ai/developers/models
+      - https://docs.x.ai/developers/pricing
+    notes: >-
+      Follow model links from the catalog only when the catalog does not show a recorded field. Model aliases do not count as
+      separate missing models.
+
+  - name: Groq
+    file: prices/providers/groq.yml
+    scope: Production and preview models on GroqCloud, excluding Compound systems unless the YAML represents them.
+    sources:
+      - https://console.groq.com/docs/models
+    notes: >-
+      Use the on-demand price. Treat Contact Sales and blank prices as unchecked, not as numeric prices.
+
+  - name: Cerebras
+    file: prices/providers/cerebras.yml
+    scope: Models returned by the public Cerebras Inference API.
+    sources:
+      - https://api.cerebras.ai/public/v1/models
+    notes: >-
+      The public API is the catalog and pricing source. Its OpenRouter-style prompt and completion decimal values are USD per
+      token, so multiply them by 1,000,000 before comparing them with input_mtok and output_mtok.
+
+  - name: MiniMax
+    file: prices/providers/minimax.yml
+    scope: Public international-platform models with pay-as-you-go USD pricing.
+    sources:
+      - https://platform.minimax.io/docs/guides/pricing-paygo
+    notes: >-
+      Compare the M2.7-highspeed, M2.5-highspeed, and M2.1-highspeed models only with their same-named official rows. M3 Priority
+      is a separate service tier priced at 1.5x standard and is not represented in the YAML; do not map it to highspeed or compare
+      it. Do not compare subscription token-plan prices.
+
+  - name: MoonshotAI
+    file: prices/providers/moonshotai.yml
+    scope: Public Moonshot platform chat models.
+    sources:
+      - https://platform.kimi.ai/docs/models.md
+      - https://platform.kimi.ai/docs/pricing/chat-k3.md
+      - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+      - https://platform.kimi.ai/docs/pricing/chat-k26.md
+      - https://platform.kimi.ai/docs/pricing/chat-k25.md
+      - https://platform.kimi.ai/docs/pricing/chat-v1.md
+    notes: >-
+      models.md is the catalog and lists discontinued models; the other sources are plain-markdown pricing pages, one per
+      model family (index: https://platform.kimi.ai/docs/llms.txt). The pricing/chat overview page has no per-model prices. Match exact API model IDs. Compare cache-hit, input, and output columns separately when the page publishes them.
+
+  - name: Avian
+    file: prices/providers/avian.yml
+    scope: Models in Avian's public serverless catalog.
+    sources:
+      - https://avian.io/docs/
+    notes: >-
+      The docs catalog is authoritative for model IDs, prices, and context windows.
+
+  - name: Perplexity
+    file: prices/providers/perplexity.yml
+    scope: Public Sonar API models and their search, reasoning, and citation charges.
+    sources:
+      - https://docs.perplexity.ai/docs/getting-started/pricing
+    notes: >-
+      The YAML intentionally records the highest published request-band price in requests_kcount. Compare reasoning and citation
+      token rates separately for Sonar Deep Research.
+
+  - name: Cohere
+    file: prices/providers/cohere.yml
+    scope: Pay-as-you-go generation and embedding models represented by the YAML. Exclude Rerank and Model Vault.
+    sources:
+      - https://cohere.com/pricing
+    notes: >-
+      Compare production API usage prices. Do not compare trial, dedicated-instance, or Model Vault prices.
+
+  - name: Voyage AI
+    file: prices/providers/voyageai.yml
+    scope: Text embedding models only. Exclude rerankers and multimodal embedding models.
+    sources:
+      - https://docs.voyageai.com/docs/pricing
+    notes: >-
+      Compare the standard per-million-token price with input_mtok. Do not apply the Batch API discount or free-token allowance.
+
+  - name: Cloudflare Workers AI
+    file: prices/providers/cloudflare.yml
+    scope: Token-priced models in Cloudflare's public catalog. Exclude image and audio models.
+    sources:
+      - https://developers.cloudflare.com/workers-ai/platform/pricing/index.md
+    notes: >-
+      Compare per-million input, cached-input, and output token prices with input_mtok, cache_read_mtok, and output_mtok. Ignore
+      the account-wide free Neuron allocation. This YAML deliberately covers only token-priced models. Do not add image, tile,
+      step, character, or audio-minute prices during this check.
+
+  - name: Cursor
+    file: prices/providers/cursor.yml
+    scope: Cursor Models pool variants with public on-demand token pricing.
+    sources:
+      - https://cursor.com/docs/models-and-pricing
+    notes: >-
+      The Cursor Models table is the complete in-scope catalog. Compare Input, Cache Read, and Output with input_mtok,
+      cache_read_mtok, and output_mtok. Cache Write is not priced. Treat each Fast row as a separate variant. Exclude third-party
+      models, the Cursor Token Rate, usage pools, plan allowances, regional uplifts, Legacy Enterprise Auto, and legacy Max Mode.
+
+  - name: Arcee
+    file: prices/providers/arcee.yml
+    scope: Models in Arcee's public Text Models pricing table.
+    sources:
+      - https://docs.arcee.ai/get-started/pricing
+    notes: >-
+      The Text Models table is the complete in-scope catalog. Compare Input, Cached, and Output with input_mtok,
+      cache_read_mtok, and output_mtok. Exclude context windows and image, request, and cache-write rates because the public
+      pricing page does not publish them. Match exact model IDs and do not treat their third-party namespaces as provider
+      ownership.

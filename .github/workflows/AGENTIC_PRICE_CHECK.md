@@ -1,38 +1,42 @@
 # Agentic price-check workflows
 
-Two [gh-aw](https://github.com/github/gh-aw) agentic workflows that compare the
+Three [gh-aw](https://github.com/github/gh-aw) agentic workflows that compare the
 prices recorded in `prices/providers/*.yml` against each provider's **official
 pricing page** and file a GitHub issue when they diverge. This complements the
 existing aggregator-based checks (`make check-for-price-discrepancies`, which
 uses LiteLLM / OpenRouter / etc.) by reading the authoritative source directly.
 
-| Workflow                                  | Providers                | Issue                              |
-| ----------------------------------------- | ------------------------ | ---------------------------------- |
-| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic        | `[price-check/openai-anthropic] …` |
-| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral | `[price-check/google-mistral] …`   |
+| Workflow                                  | Providers                                                                                                                      | Issue                              |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic                                                                                                              | `[price-check/openai-anthropic] …` |
+| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral                                                                                                       | `[price-check/google-mistral] …`   |
+| `agentic-price-check-direct-providers.md` | DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor, Arcee | `[price-check/direct-providers] …` |
 
-Each agent is told the **exact pricing URL** to fetch per provider (it does not
-browse the site), reads the recorded `prices:` from the YAML, and compares. When one or
-more prices differ it files **one rolling issue** and, via `close-older-issues: true`,
-closes the previous one, so at most one discrepancy issue is ever open. When every price
-matches (or a page can't be read and nothing else diverges) the agent stays silent: it
-files and closes nothing. So after you fix the last flagged price the next run goes quiet
-but does **not** auto-close the open issue, so close it yourself, or leave it for the next
-discrepancy run to replace.
+Each agent is told the **exact pricing URL** to fetch per provider, reads the recorded
+`prices:` from the YAML, and compares. The direct-provider workflow reads its provider
+list, source URLs, scope, and mapping notes from `.github/agentic-price-check-providers.yml`.
+It also reports new models, potential removals, unchecked fields, tier differences, and
+unreadable sources. The original two workflows compare base prices and can stay silent
+when a page cannot be read.
+
+When a workflow finds anything, it files **one rolling issue** and, via
+`close-older-issues: true`, closes the previous one, so at most one issue per workflow is
+open. A clean run files and closes nothing. After you fix the last flagged finding, close
+the issue yourself or leave it for the next finding run to replace.
 
 They run weekly (Mondays) and on manual dispatch, gated on the
 `AGENTIC_WORKFLOWS_ENABLED` repo variable, with the engine keyed on the
 `FIREWORKS_API_KEY` secret (Claude Code via Fireworks, minimax-m3, matching the
 pydantic/platform fleet). To use Anthropic directly instead, edit the `engine:` block in
-both `.md` files: set `ANTHROPIC_API_KEY` to the Anthropic secret and remove the
+all three `.md` files: set `ANTHROPIC_API_KEY` to the Anthropic secret and remove the
 Fireworks-specific bits (`api-target`, `ANTHROPIC_BASE_URL`, and the `ANTHROPIC_MODEL` /
 `ANTHROPIC_DEFAULT_*_MODEL` overrides, which pin the model to Fireworks `minimax-m3`) so
 runs use a real Anthropic model. Then recompile.
 
 ## Editing / extending
 
-These are gh-aw workflows: the `.md` is the source, the `.lock.yml` is compiled
-output — **never edit the `.lock.yml` by hand**. After editing a `.md`:
+These are gh-aw workflows: the `.md` is the source, and the `.lock.yml` is compiled
+output. **Never edit the `.lock.yml` by hand.** After editing a `.md`:
 
 ```bash
 gh extension install github/gh-aw --pin v0.82.2   # once; the version pin matters, see below
@@ -51,11 +55,9 @@ credit cap and the 400; **(2)** recompiling with a newer gh-aw (firewall 0.27.35
 drops the `-1`, so it re-enforces and 400s. Until `minimax-m3` is added to gh-aw's pricing
 catalog, both the version pin and the `max-ai-credits` lines are load-bearing.
 
-To cover more providers, copy one of the `.md` files, then update **every** piece of
-provider-specific text: the `name`, `description`, and `emoji` frontmatter; the
-`title-prefix` and `close-older-key`; the `network.allowed` domains; and, in the prompt
-body, the per-provider YAML paths, pricing URLs, the Step 3 id-to-page-name matching
-examples, and the Step 4 issue title. Then run `gh aw compile`.
+To add another direct provider, add its YAML path, official sources, scope, and mapping
+notes to `.github/agentic-price-check-providers.yml`. Add each new source domain to
+`network.allowed` in `agentic-price-check-direct-providers.md`, then run `gh aw compile`.
 
 ## Notes / caveats
 

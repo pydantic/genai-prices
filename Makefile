@@ -63,12 +63,28 @@ simonw-prices-get: ## get simonw-prices
 huggingface-get: ## get huggingface prices
 	uv run -m prices get_huggingface_prices
 
+.PHONY: cloudflare-get
+cloudflare-get: ## get cloudflare workers ai prices
+	uv run -m prices get_cloudflare_prices
+
+.PHONY: arcee-get
+arcee-get: ## get arcee model prices
+	uv run -m prices get_arcee_prices
+
+.PHONY: cursor-get
+cursor-get: ## get cursor model prices
+	uv run -m prices get_cursor_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
 
+.PHONY: quicksilverpro-get
+quicksilverpro-get: ## get quicksilver pro prices
+	uv run -m prices get_quicksilverpro_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get ovhcloud-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies
@@ -102,12 +118,11 @@ test: ## Run tests and collect coverage data
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
-	@uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under=0
+	@uv run coverage html
 
 .PHONY: coverage-report
-coverage-report: ## Package 100% / pipeline 52% — same split as the CI coverage job
-	@uv run coverage report --include='packages/python/*,tests/*' --omit='tests/dataset/*' --fail-under 100
-	@uv run coverage report --include='prices/src/*,tests/dataset/*' --fail-under 52
+coverage-report: ## Report coverage for all Python code
+	@uv run coverage report
 
 .PHONY: test-all-python
 test-all-python: ## Run tests on Python 3.10 to 3.14

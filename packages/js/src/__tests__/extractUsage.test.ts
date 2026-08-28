@@ -7,6 +7,8 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
+const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
   extractors: [
@@ -31,6 +33,56 @@ afterEach(() => {
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
+    it('should extract Cursor usage events', () => {
+      const responseData = {
+        model: 'grok-4.6-fast',
+        tokenUsage: {
+          cacheReadTokens: 30,
+          cacheWriteTokens: 20,
+          inputTokens: 100,
+          outputTokens: 40,
+          totalCents: 0.099,
+        },
+      }
+
+      const { model, usage } = extractUsage(cursorProvider, responseData, 'usage-event')
+
+      expect(model).toBe('grok-4.6-fast')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        cache_write_tokens: 20,
+        input_tokens: 150,
+        output_tokens: 40,
+      })
+
+      const price = calcPrice(usage, model!, { providerId: 'cursor' })
+      expect(price?.input_price).toBeCloseTo(0.00051, 8)
+      expect(price?.output_price).toBeCloseTo(0.00048, 8)
+      expect(price?.total_price).toBeCloseTo(0.00099, 8)
+    })
+
+    it.each(['default', 'chat'])('should extract Arcee %s usage', (apiFlavor) => {
+      const responseData = {
+        model: 'deepseek/deepseek-v4-flash-latest',
+        usage: {
+          completion_tokens: 40,
+          completion_tokens_details: { reasoning_tokens: 10 },
+          prompt_tokens: 100,
+          prompt_tokens_details: { cached_tokens: 30 },
+        },
+      }
+
+      const { model, usage } = extractUsage(arceeProvider, responseData, apiFlavor)
+
+      expect(model).toBe('deepseek/deepseek-v4-flash-latest')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        input_tokens: 100,
+        output_reasoning_tokens: 10,
+        output_tokens: 40,
+      })
+    })
+
     it('should extract usage with cache tokens', () => {
       const responseData = {
         id: 'msg_0152tnC3YpjyASTB9qxqDJXu',
@@ -210,6 +262,41 @@ describe('extractUsage', () => {
       })
     })
 
+    it.each(['openai', 'azure'])('should extract realtime cached audio usage for %s', (providerId) => {
+      const provider: Provider = data.find((candidate) => candidate.id === providerId)!
+      const responseData = {
+        response: {
+          usage: {
+            input_token_details: {
+              audio_tokens: 250,
+              cached_tokens: 400,
+              cached_tokens_details: { audio_tokens: 100, image_tokens: 50, text_tokens: 250 },
+              image_tokens: 150,
+              text_tokens: 600,
+            },
+            input_tokens: 1000,
+            output_token_details: { audio_tokens: 300, text_tokens: 200 },
+            output_tokens: 500,
+          },
+        },
+        type: 'response.done',
+      }
+
+      expect(extractUsage(provider, responseData, 'realtime').usage).toEqual({
+        cache_audio_read_tokens: 100,
+        cache_image_read_tokens: 50,
+        cache_read_tokens: 400,
+        cache_text_read_tokens: 250,
+        input_audio_tokens: 250,
+        input_image_tokens: 150,
+        input_text_tokens: 600,
+        input_tokens: 1000,
+        output_audio_tokens: 300,
+        output_text_tokens: 200,
+        output_tokens: 500,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
@@ -217,6 +304,88 @@ describe('extractUsage', () => {
       }
 
       expect(() => extractUsage(openaiProvider, responseData)).toThrow("Unknown apiFlavor 'default', allowed values: chat, responses")
+    })
+  })
+
+  describe('Cloudflare provider', () => {
+    const cloudflareProvider: Provider = data.find((provider) => provider.id === 'cloudflare')!
+
+    it('should extract and price OpenAI-compatible chat usage', () => {
+      const { model, usage } = extractUsage(
+        cloudflareProvider,
+        {
+          model: '@cf/deepseek-ai/deepseek-v4-flash-0731',
+          usage: {
+            completion_tokens: 1_000_000,
+            completion_tokens_details: { reasoning_tokens: 500_000 },
+            prompt_tokens: 2_000_000,
+            prompt_tokens_details: { cached_tokens: 1_000_000 },
+          },
+        },
+        'chat'
+      )
+
+      expect(model).toBe('@cf/deepseek-ai/deepseek-v4-flash-0731')
+      expect(usage).toEqual({
+        cache_read_tokens: 1_000_000,
+        input_tokens: 2_000_000,
+        output_reasoning_tokens: 500_000,
+        output_tokens: 1_000_000,
+      })
+      if (!model) throw new Error('Expected extracted Cloudflare model')
+      expect(calcPrice(usage, model, { providerId: 'cloudflare' })?.total_price).toBeCloseTo(1.774)
+    })
+
+    it('should match the Cloudflare Workers AI endpoint', () => {
+      const price = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, '@cf/openai/gpt-oss-20b', {
+        providerApiUrl: 'https://api.cloudflare.com/client/v4/accounts/test-account/ai/v1',
+      })
+
+      expect(price?.provider.id).toBe('cloudflare')
+      expect(price?.total_price).toBeCloseTo(0.5)
+    })
+
+    it('should extract and price native REST usage', () => {
+      const { model, usage } = extractUsage(cloudflareProvider, {
+        errors: [],
+        messages: [],
+        result: {
+          response: 'Hello',
+          usage: {
+            completion_tokens: 1_000_000,
+            prompt_tokens: 2_000_000,
+            total_tokens: 3_000_000,
+          },
+        },
+        success: true,
+      })
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({ input_tokens: 2_000_000, output_tokens: 1_000_000 })
+      expect(calcPrice(usage, '@cf/meta/llama-3.2-1b-instruct', { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.255)
+    })
+  })
+
+  describe('Mistral provider', () => {
+    const mistralProvider: Provider = data.find((provider) => provider.id === 'mistral')!
+    const responseData = {
+      model: 'mistral-ocr-4-1-completion',
+      usage_info: { doc_size_bytes: 108_451_500, pages_processed: 29 },
+    }
+
+    it('extracts and prices OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr')
+
+      expect(model).toBe('mistral-ocr-4-1-completion')
+      expect(usage).toEqual({ input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.116)
+    })
+
+    it('extracts and prices annotated OCR pages', () => {
+      const { model, usage } = extractUsage(mistralProvider, responseData, 'ocr_annotated')
+
+      expect(usage).toEqual({ input_annotated_document_pages: 29, input_document_pages: 29 })
+      expect(calcPrice(usage, model!, { providerId: 'mistral' })?.total_price).toBeCloseTo(0.145)
     })
   })
 
@@ -303,6 +472,48 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 6,
         output_tokens: 14,
       })
+    })
+
+    it('should extract and price realtime duration and message usage', () => {
+      const responseData = {
+        response: {
+          usage: {
+            billable_audio_seconds: 60,
+            input_text_messages: 2,
+            input_token_details: { audio_tokens: 0, text_tokens: 5 },
+            input_tokens: 5,
+            output_token_details: { audio_tokens: 39, text_tokens: 3 },
+            output_tokens: 42,
+          },
+        },
+        type: 'response.done',
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData, 'realtime')
+
+      expect(model).toBeNull()
+      expect(usage).toEqual({
+        audio_seconds: 60,
+        input_audio_tokens: 0,
+        input_text_messages: 2,
+        input_text_tokens: 5,
+        input_tokens: 5,
+        output_audio_tokens: 39,
+        output_text_tokens: 3,
+        output_tokens: 42,
+      })
+      for (const [modelRef, timestamp, expectedTotal] of [
+        ['grok-voice-think-fast-1.0', undefined, 0.058],
+        ['grok-voice-think-fast-2.0', undefined, 0.088],
+        ['grok-voice-latest', new Date('2026-08-04T00:00:00Z'), 0.058],
+        ['grok-voice-latest', new Date('2026-08-05T00:00:00Z'), 0.088],
+      ] as const) {
+        const price = calcPrice(usage, modelRef, { provider: xaiProvider, timestamp })
+        expect(price).not.toBeNull()
+        expect(price!.input_price).toBeCloseTo(0.008, 15)
+        expect(price!.output_price).toBe(0)
+        expect(price!.total_price).toBeCloseTo(expectedTotal, 15)
+      }
     })
   })
 

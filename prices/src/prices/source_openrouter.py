@@ -45,7 +45,9 @@ class OpenRouterModel(BaseModel):
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
 
-    def model_info(self, inc_description: bool = True, *, strip_provider: bool = True) -> ModelInfo:
+    def model_info(
+        self, inc_description: bool = True, *, strip_provider: bool = True, include_context_window: bool = False
+    ) -> ModelInfo:
         model_id = self.model_id(strip_provider=strip_provider)
         match_clauses = [ClauseEquals(equals=model_id)]
         if not strip_provider and self.canonical_slug != self.id:
@@ -69,6 +71,9 @@ class OpenRouterModel(BaseModel):
             description=description,
             match=match,
             prices=self.pricing.model_price(),
+            # Only for the `openrouter` provider's own records: OpenRouter's `context_length` describes
+            # their offering, not what the model's native provider enforces.
+            context_window=self.context_length if include_context_window else None,
         )
 
 
@@ -178,7 +183,7 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
             or_providers[provider_id] = [or_model]
 
         # add all models to the openrouter provider
-        model_info = or_model.model_info(inc_description=False, strip_provider=False)
+        model_info = or_model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
         assert isinstance(model_info.prices, ModelPrice)
         try:
             or_provider_yaml.update_model(model_info.id, model_info)
@@ -249,11 +254,11 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
         source_prices.write_source_prices('openrouter', prices)
 
 
-def update_from_openrouter():
+def update_from_openrouter():  # pragma: no cover - thin CLI alias for main
     """Update metadata and add new models based on OpenRouter API."""
     main('metadata')
 
 
-def get_openrouter_prices():
+def get_openrouter_prices():  # pragma: no cover - thin CLI alias for main
     """Get prices from OpenRouter API."""
     main('prices')

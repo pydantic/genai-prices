@@ -1,9 +1,12 @@
+from dataclasses import replace
 from datetime import datetime, timedelta
 from decimal import Decimal
+from unittest.mock import Mock
 
 import pytest
 from inline_snapshot import snapshot
 
+from genai_prices import Usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, find_provider_by_id
 
@@ -114,6 +117,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('anthropic', 'claude-3-5-haiku-20241022', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('google-gla', 'gemini-2.5-flash-lite-preview-06-17', snapshot(('google', 'gemini-2.5-flash-lite'))),
+    ('google-gla', 'gemini-2.5-flash-lite-preview', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param(
         'bedrock',
         'us.anthropic.claude-3-5-haiku-20241022-v1:0',
@@ -128,7 +132,8 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-sonnet-4-20250514-v1:0')),
     ),
     pytest.param('bedrock', 'us.meta.llama3-2-90b-instruct-v1:0', snapshot(('aws', 'meta.llama3-2-90b-instruct-v1:0'))),
-    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o'))),
+    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o-2024-05-13'))),
+    ('openai', 'gpt-4o-2024-08-06', snapshot(('openai', 'gpt-4o'))),
     ('google-gla', 'gemini-1.5-flash', snapshot(('google', 'gemini-1.5-flash'))),
     (
         'groq',
@@ -225,6 +230,8 @@ test_cases: list[tuple[str, str, str]] = [
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
     ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
+    ('mistral_ai', 'devstral-small-2507', snapshot(('mistral', 'devstral-small'))),
+    ('mistral_ai', 'labs-devstral-small-2512', snapshot(('mistral', 'devstral-small'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
@@ -294,7 +301,11 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('openrouter', 'openai/gpt-oss-120b', None, marks=mark_xfail_todo),
     ('google-gla', 'gemini-2.0-flash-exp', snapshot(('google', 'gemini-2.0-flash'))),
     ('deepseek', 'deepseek-chat', snapshot(('deepseek', 'deepseek-chat'))),
-    pytest.param('azure', 'DeepSeek-R1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-R1-0528', snapshot(('azure', 'deepseek-reasoner'))),
+    # Azure AI Foundry marketplace models priced through the origin provider (#455)
+    ('azure', 'Kimi-K2.6-1', snapshot(('azure', 'kimi-k2.6'))),
+    ('azure', 'grok-4.3', snapshot(('azure', 'grok-4.3'))),
+    ('azure', 'DeepSeek-V4-Pro', snapshot(('azure', 'deepseek-v4-pro'))),
     pytest.param('bedrock', 'us.amazon.nova-lite-v1:0', snapshot(('aws', 'amazon.nova-lite-v1:0'))),
     ('mistral_ai', 'magistral-small-2507', snapshot(('mistral', 'magistral-small'))),
     pytest.param(
@@ -318,12 +329,12 @@ test_cases: list[tuple[str, str, str]] = [
     ('anthropic', 'claude-4-sonnet-latest', snapshot(('anthropic', 'claude-sonnet-4-0'))),
     ('vertex_ai', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('openai', 'gpt-4o-realtime', snapshot(('openai', 'gpt-4o-realtime-preview'))),
-    pytest.param('azure', 'DeepSeek-r1-0528', None, marks=mark_xfail_todo),
+    ('azure', 'DeepSeek-r1-0528', snapshot(('azure', 'deepseek-reasoner'))),
     ('google-vertex', 'gemini-1.5-pro-002', snapshot(('google', 'gemini-1.5-pro'))),
     ('gemini', 'gemini-2.0-flash-001', snapshot(('google', 'gemini-2.0-flash'))),
     ('mistral_ai', 'mistral-7b', snapshot(('mistral', 'mistral-7b'))),
     ('mistral_ai', 'mistral-large', snapshot(('mistral', 'mistral-large'))),
-    pytest.param('azure', 'deepseek-r1', None, marks=mark_xfail_todo),
+    ('azure', 'deepseek-r1', snapshot(('azure', 'deepseek-reasoner'))),
     pytest.param('deepinfra', 'deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('deepinfra', 'deepinfra/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('perplexity', 'perplexity/sonar-deep-research', None, marks=mark_xfail_todo),
@@ -335,6 +346,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('mistral_ai', 'magistral-medium', snapshot(('mistral', 'magistral-medium'))),
     ('gcp.vertex.agent', 'gemini-2.0-flash', snapshot(('google', 'gemini-2.0-flash'))),
     ('google-gla', 'gemma-3n-e4b-it', snapshot(('google', 'gemma-3n'))),
+    ('google-gla', 'gemma-4-31b-it', snapshot(('google', 'gemma-4-31b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it', snapshot(('google', 'gemma-4-26b-a4b-it'))),
+    ('google-vertex', 'gemma-4-26b-a4b-it-maas', snapshot(('google', 'gemma-4-26b-a4b-it-maas'))),
+    ('openrouter', 'google/gemma-4-31b-it', snapshot(('openrouter', 'google/gemma-4-31b-it'))),
     ('google-gla', 'gemini-2.5-flash-latest', snapshot(('google', 'gemini-2.5-flash'))),
     pytest.param(
         'bedrock',
@@ -420,6 +435,9 @@ test_cases: list[tuple[str, str, str]] = [
     ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
+    ('openai', 'gpt-5.2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('openai', 'gpt-5-2-20251211', snapshot(('openai', 'gpt-5.2'))),
+    ('azure', 'gpt-4.1-20250414', snapshot(('azure', 'gpt-4.1'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
     pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
     pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
@@ -442,18 +460,50 @@ def test_fallback_tries_all_providers():
     """Test that fallback iterates through all providers until finding a match.
 
     This tests the case where the first fallback provider doesn't have the model,
-    but a subsequent fallback provider does. Azure has fallback_model_providers=['openai', 'anthropic'],
+    but a subsequent fallback provider does. Azure's fallback_model_providers starts with ['openai', 'anthropic'],
     so for a Claude model, it should skip openai and find it via anthropic.
     """
     azure = find_provider_by_id(providers, 'azure')
     assert azure is not None
-    assert azure.fallback_model_providers == ['openai', 'anthropic']
+    assert azure.fallback_model_providers == ['openai', 'anthropic', 'deepseek', 'x-ai', 'moonshotai']
 
     # Azure doesn't have claude-sonnet-4 directly, openai doesn't have it either,
     # but anthropic does - so fallback should find it
     model = azure.find_model('claude-sonnet-4-20250514', all_providers=providers)
     assert model is not None, 'Fallback should have found claude-sonnet via anthropic'
     assert model.id == 'claude-sonnet-4-0'
+
+
+def test_exact_fallback_match_precedes_normalized_fallback_match():
+    """An exact compact ID is safer than a normalized alias in an earlier fallback provider."""
+    from genai_prices.types import ClauseEquals, ModelInfo, Provider
+
+    normalized_provider = Provider(
+        id='normalized-provider',
+        name='Normalized Provider',
+        api_pattern='normalized.example.com',
+        models=[ModelInfo(id='normalized-model', match=ClauseEquals(equals='model-2025-02-28'))],
+    )
+    exact_provider = Provider(
+        id='exact-provider',
+        name='Exact Provider',
+        api_pattern='exact.example.com',
+        models=[ModelInfo(id='exact-model', match=ClauseEquals(equals='model-20250228'))],
+    )
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['normalized-provider', 'exact-provider'],
+        models=[],
+    )
+
+    model = main_provider.find_model(
+        'model-20250228', all_providers=[main_provider, normalized_provider, exact_provider]
+    )
+
+    assert model is not None
+    assert model.id == 'exact-model'
 
 
 def test_find_model_directly_in_provider():
@@ -658,11 +708,228 @@ def test_litellm_provider_id():
     assert model.id == 'gpt-4o-mini'
 
 
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
+    [
+        (
+            'bedrock',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            'aws',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            1_000_000,
+        ),
+        ('azure', 'o1', 'azure', 'o1', 200_000),
+        ('azure', 'o1-preview', 'azure', 'o1-preview', 128_000),
+        ('openai', 'o1-preview', 'openai', 'o1-preview', 128_000),
+        ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
+        ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
+        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
+        # deliberately windowless: OpenRouter serves this model from endpoints with differing context
+        # lengths, so no single value is true — see the record's comment in openrouter.yml
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
+        # direct value from OpenRouter's /models API (`context_length`), endpoint-unanimous
+        ('openrouter', 'deepseek/deepseek-v3.2-exp', 'openrouter', 'deepseek/deepseek-v3.2-exp', 163_840),
+        # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
+        # not claim either window — a 200,000 here would mis-size o1-preview requests
+        ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
+        # Novita's own catalog (`context_size`), corroborated by OpenRouter's Novita endpoint —
+        # Novita serves this model at 12,288, far below other hosts' 131,072
+        ('novita', 'meta-llama/llama-3.3-70b-instruct', 'novita', 'meta-llama/llama-3.3-70b-instruct', 12_288),
+        ('novita', 'deepseek/deepseek-r1', 'novita', 'deepseek/deepseek-r1', 64_000),
+        # no longer in Novita's live catalog, so there is no source for a window
+        ('novita', 'meta-llama/llama-3.1-70b-instruct', 'novita', 'meta-llama/llama-3.1-70b-instruct', None),
+        # Mistral's own catalog (`max_context_length`), corroborated by OpenRouter's Mistral endpoints
+        ('mistral', 'mistral-small-2603', 'mistral', 'mistral-small-2603', 262_144),
+        # rolling -latest aliases have pointed to models with different windows (128k then 262,144
+        # per Mistral's model docs), so their records must not claim either value
+        ('mistral', 'mistral-small-latest', 'mistral', 'mistral-small-latest', None),
+        ('mistral', 'ministral-8b-latest', 'mistral', 'ministral-8b-latest', None),
+        # the codestral record also matches the retired codestral-2501 alias, whose window was the
+        # same 256k (per Mistral's Codestral 25.01 announcement), so the shared value is true for both
+        ('mistral', 'codestral-2501', 'mistral', 'codestral', 256_000),
+        # the mistral-large record also matches the retired 131,072 mistral-large-2407/2411 aliases
+        # vs mistral-large-latest's 262,144, so it must not claim either window
+        ('mistral', 'mistral-large-2407', 'mistral', 'mistral-large', None),
+        # starts_with match catches the retired 40k magistral releases vs latest's 262,144
+        ('mistral', 'magistral-medium-2506', 'mistral', 'magistral-medium', None),
+        # Groq's own catalog (`context_window`)
+        ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
+        # no longer in Groq's live catalog, so there is no source for a window
+        ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
+        # OpenAI's model docs pages state each context window; corroborated by OpenRouter's
+        # OpenAI-served endpoints for o1-pro/o3-pro/gpt-audio
+        ('openai', 'o3-pro', 'openai', 'o3-pro', 200_000),
+        ('openai', 'chatgpt-4o-latest', 'openai', 'chatgpt-4o-latest', 128_000),
+        # the record also matches gpt-realtime-2.1-mini (128,000) vs gpt-realtime-mini's 32,000,
+        # so it must not claim either window
+        ('openai', 'gpt-realtime-2.1-mini', 'openai', 'gpt-realtime-mini', None),
+        # AWS Bedrock model cards state each context window ("Context window: 300K tokens" etc.)
+        ('bedrock', 'amazon.nova-pro-v1:0', 'aws', 'amazon.nova-pro-v1:0', 300_000),
+        ('bedrock', 'us.amazon.nova-2-lite-v1:0', 'aws', 'regional.amazon.nova-2-lite-v1:0', 1_000_000),
+        # AWS serves this below the model's native 256K — the card states 128K
+        ('bedrock', 'qwen.qwen3-coder-480b-a35b-v1:0', 'aws', 'qwen.qwen3-coder-480b-a35b-v1:0', 128_000),
+        # AWS's card states 272K with max output N/A — the GPT-5 family's input-only cap, so the
+        # total-window framing is unclear and the record stays windowless
+        ('bedrock', 'openai.gpt-5.4', 'aws', 'openai.gpt-5.4', None),
+        # Microsoft's own model cards and the Azure model catalog state each context window;
+        # "128K" resolves to 131,072 per Microsoft's own config.json (max_position_embeddings)
+        ('azure', 'phi-4', 'azure', 'phi-4', 16_384),
+        ('azure', 'phi-4-mini-instruct', 'azure', 'phi-4-mini-instruct', 131_072),
+        ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
+        # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
+        ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # MiniMax's platform doc states 1,000,192 as the total input+output cap per request
+        ('minimax', 'minimax-01', 'minimax', 'minimax-01', 1_000_192),
+        # MiniMax states only separate input/output caps for M1, never a total window
+        ('minimax', 'minimax-m1', 'minimax', 'minimax-m1', None),
+        # the kimi-k2 family spans 128k (0711) and 256k (0905) windows, so the bare name gets none
+        ('moonshotai', 'kimi-k2', 'moonshotai', 'kimi-k2', None),
+        # Perplexity's model cards state each context length ("128K context length" etc.)
+        ('perplexity', 'sonar-pro', 'perplexity', 'sonar-pro', 200_000),
+        ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
+        # removed from the Perplexity API 2025-12-15; no live statement of its window survives
+        ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
+        # docs.x.ai model pages state each context window ("Context window: N tokens")
+        ('x-ai', 'grok-4.20', 'x-ai', 'grok-4.20', 1_000_000),
+        ('x-ai', 'grok-build-0.1', 'x-ai', 'grok-build-0.1', 256_000),
+        # xAI states no context window for its voice models, and grok-voice-latest is a rolling
+        # alias that repointed to a different model on 2026-08-05
+        ('x-ai', 'grok-voice-latest', 'x-ai', 'grok-voice-latest', None),
+        # DeepSeek's API pricing pages state "128K" context length for the V3.x era; read decimal
+        # for consistency with the file's existing 64K/1M records (the HF configs' 163,840 is
+        # checkpoint capacity, not what DeepSeek's API serves)
+        ('deepseek', 'deepseek-v3.2', 'deepseek', 'deepseek-v3.2', 128_000),
+        ('deepseek', 'deepseek-v3.2-exp', 'deepseek', 'deepseek-v3.2-exp', 128_000),
+        ('deepseek', 'deepseek-v3.1-terminus', 'deepseek', 'deepseek-v3.1-terminus', 128_000),
+    ],
+)
+def test_model_has_effective_context_window(
+    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int | None
+):
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model(model_ref, None, provider_id, None)
+
+    assert provider.id == expected_provider
+    assert model.id == provider_model
+    assert model.context_window == context_window
+
+
+def test_compact_dated_model_ref_normalized():
+    """Compact dated refs from LiteLLM/OpenRouter (e.g. `gpt-5.2-20251211`) fall back to the dashed alias."""
+    from genai_prices.types import _normalize_compact_dated_ref
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert (provider.id, model.id) == ('openai', 'gpt-5.2')
+
+    # a ref that already matches is unaffected by the normalization fallback
+    openai = find_provider_by_id(providers, 'openai')
+    assert openai is not None
+    assert openai.find_model('gpt-5.2-2025-12-11', all_providers=providers) is not None
+
+    # a model that matches on the compact date form (Bedrock `contains`) is returned as-is, not normalized away
+    aws = find_provider_by_id(providers, 'aws')
+    assert aws is not None
+    haiku = aws.find_model('claude-3-5-haiku-20241022', all_providers=providers)
+    assert haiku is not None and haiku.id == 'regional.anthropic.claude-3-5-haiku-20241022-v1:0'
+
+    assert _normalize_compact_dated_ref('gpt-5.2-20251211') == 'gpt-5.2-2025-12-11'
+    assert _normalize_compact_dated_ref('claude-3-5-haiku-20241022') == 'claude-3-5-haiku-2024-10-22'
+    assert _normalize_compact_dated_ref('model-20240229') == 'model-2024-02-29'
+    # suffixes that aren't valid calendar dates are left untouched
+    assert _normalize_compact_dated_ref('gpt-4o-12345678') == 'gpt-4o-12345678'
+    assert _normalize_compact_dated_ref('gpt-4o-20251301') == 'gpt-4o-20251301'
+    assert _normalize_compact_dated_ref('gpt-4o-20250230') == 'gpt-4o-20250230'
+
+
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 
     with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing/gpt-4o'"):
         snapshot.find_provider_model('missing/gpt-4o', None, 'litellm', None)
+
+
+SHARED_MODEL_REF = 'claude-opus-4-6'
+
+
+def test_provider_specific_extraction_does_not_affect_unqualified_lookup():
+    usage = Usage(input_tokens=1_000_000, output_tokens=1_000_000)
+    baseline_snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+    baseline = baseline_snapshot.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    snapshot_after_google_lookup = DataSnapshot(providers=providers, from_auto_update=False)
+    extracted = snapshot_after_google_lookup.extract_usage(
+        {
+            'modelVersion': SHARED_MODEL_REF,
+            'usageMetadata': {'promptTokenCount': 1, 'candidatesTokenCount': 1},
+        },
+        provider_id='google',
+    )
+    assert extracted.provider.id != baseline.provider.id
+
+    after = snapshot_after_google_lookup.calc(usage, SHARED_MODEL_REF, None, None, None)
+
+    assert after.provider.id == baseline.provider.id
+    assert after.total_price == baseline.total_price
+
+
+def test_lookup_with_resolved_provider_is_cached(monkeypatch: pytest.MonkeyPatch):
+    stored_google_provider = find_provider_by_id(providers, 'google')
+    assert stored_google_provider is not None
+    google_provider = replace(stored_google_provider)
+    find_model = Mock(wraps=google_provider.find_model)
+    monkeypatch.setattr(google_provider, 'find_model', find_model)
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+    snapshot.find_provider_model(SHARED_MODEL_REF, google_provider, None, None)
+
+    find_model.assert_called_once_with(SHARED_MODEL_REF, all_providers=providers)
+
+
+def test_find_provider_caches_successful_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = True
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    assert snapshot.find_provider('cached-model', None, None) is provider
+    assert snapshot.find_provider('cached-model', None, None) is provider
+
+    model_match.is_match.assert_called_once_with('cached-model')
+
+
+def test_find_provider_caches_failed_resolution():
+    model_match = Mock()
+    model_match.is_match.return_value = False
+    provider = replace(providers[0], model_match=model_match)
+    snapshot = DataSnapshot(providers=[provider], from_auto_update=False)
+
+    for _ in range(2):
+        with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing-model'"):
+            snapshot.find_provider('missing-model', None, None)
+
+    model_match.is_match.assert_called_once_with('missing-model')
+
+
+def test_find_provider_cache_is_isolated_by_snapshot():
+    missing_match = Mock()
+    missing_match.is_match.return_value = False
+    missing_provider = replace(providers[0], model_match=missing_match)
+    missing_snapshot = DataSnapshot(providers=[missing_provider], from_auto_update=False)
+
+    matching_match = Mock()
+    matching_match.is_match.return_value = True
+    matching_provider = replace(providers[0], model_match=matching_match)
+    matching_snapshot = DataSnapshot(providers=[matching_provider], from_auto_update=False)
+
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'snapshot-model'"):
+        missing_snapshot.find_provider('snapshot-model', None, None)
+
+    assert matching_snapshot.find_provider('snapshot-model', None, None) is matching_provider
+    missing_match.is_match.assert_called_once_with('snapshot-model')
+    matching_match.is_match.assert_called_once_with('snapshot-model')
 
 
 def test_snapshot_active_uses_ttl():
