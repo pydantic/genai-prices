@@ -782,6 +782,7 @@ def test_litellm_provider_id():
         # for consistency with the file's existing 64K/1M records (the HF configs' 163,840 is
         # checkpoint capacity, not what DeepSeek's API serves)
         ('deepseek', 'deepseek-v3.2', 'deepseek', 'deepseek-v3.2', 128_000),
+        ('deepseek', 'deepseek-v3.2-exp', 'deepseek', 'deepseek-v3.2-exp', 128_000),
         ('deepseek', 'deepseek-v3.1-terminus', 'deepseek', 'deepseek-v3.1-terminus', 128_000),
     ],
 )
