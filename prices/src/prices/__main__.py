@@ -7,6 +7,7 @@ from .detect_deprecated import detect_deprecated
 from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
+from .source_arcee import get_arcee_prices
 from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
 from .source_huggingface import get_huggingface_prices
@@ -23,6 +24,7 @@ def main():
         update_from_openrouter,
         collapse,
         detect_deprecated,
+        get_arcee_prices,
         get_cloudflare_prices,
         get_cursor_prices,
         get_huggingface_prices,

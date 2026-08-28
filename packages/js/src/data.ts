@@ -820,6 +820,148 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'arcee',
+    name: 'Arcee',
+    pricing_urls: ['https://docs.arcee.ai/get-started/pricing', 'https://api.arcee.ai/api/v1/models'],
+    api_pattern: 'https://api\\.arcee\\.ai(?:/|$)',
+    description: 'OpenAI-compatible hosted inference through the Arcee Platform API.',
+    price_comments:
+      'Covers the complete public Text Models pricing table. The table publishes input, cached-input, and output token rates. Context windows and rates for images, requests, and cache writes are omitted because the public pricing page does not publish them. Model IDs use third-party namespaces, so they do not infer the Arcee provider without an Arcee provider ID or API URL.',
+    provider_match: {
+      contains: 'arcee',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'deepseek/deepseek-v4-flash-latest',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4-flash-latest',
+        },
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro',
+        },
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.2,
+          output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling-small',
+        name: 'Inkling Small',
+        match: {
+          equals: 'thinkingmachines/inkling-small',
+        },
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'trinity-large-thinking',
+        name: 'Trinity Large Thinking',
+        match: {
+          equals: 'trinity-large-thinking',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.06,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.2',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/glm-5.2',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+    ],
+  },
+  {
     id: 'avian',
     name: 'Avian',
     pricing_urls: ['https://avian.io/pricing/'],
