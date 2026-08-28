@@ -756,6 +756,13 @@ def test_litellm_provider_id():
         ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
         # no longer in Groq's live catalog, so there is no source for a window
         ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
+        # OpenAI's model docs pages state each context window; corroborated by OpenRouter's
+        # OpenAI-served endpoints for o1-pro/o3-pro/gpt-audio
+        ('openai', 'o3-pro', 'openai', 'o3-pro', 200_000),
+        ('openai', 'chatgpt-4o-latest', 'openai', 'chatgpt-4o-latest', 128_000),
+        # the record also matches gpt-realtime-2.1-mini (128,000) vs gpt-realtime-mini's 32,000,
+        # so it must not claim either window
+        ('openai', 'gpt-realtime-2.1-mini', 'openai', 'gpt-realtime-mini', None),
         # AWS Bedrock model cards state each context window ("Context window: 300K tokens" etc.)
         ('bedrock', 'amazon.nova-pro-v1:0', 'aws', 'amazon.nova-pro-v1:0', 300_000),
         ('bedrock', 'us.amazon.nova-2-lite-v1:0', 'aws', 'regional.amazon.nova-2-lite-v1:0', 1_000_000),
