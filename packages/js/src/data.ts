@@ -25441,6 +25441,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 1,
           output_mtok: 1,
@@ -25455,6 +25456,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-deep-research',
         },
+        context_window: 128000,
         price_comments:
           'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
         prices: {
@@ -25472,6 +25474,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-pro',
         },
+        context_window: 200000,
         prices: {
           input_mtok: 3,
           output_mtok: 15,
@@ -25511,6 +25514,7 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-reasoning-pro',
         },
+        context_window: 128000,
         prices: {
           input_mtok: 2,
           output_mtok: 8,

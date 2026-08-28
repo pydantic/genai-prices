@@ -784,6 +784,11 @@ def test_litellm_provider_id():
         ('minimax', 'minimax-m1', 'minimax', 'minimax-m1', None),
         # the kimi-k2 family spans 128k (0711) and 256k (0905) windows, so the bare name gets none
         ('moonshotai', 'kimi-k2', 'moonshotai', 'kimi-k2', None),
+        # Perplexity's model cards state each context length ("128K context length" etc.)
+        ('perplexity', 'sonar-pro', 'perplexity', 'sonar-pro', 200_000),
+        ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
+        # removed from the Perplexity API 2025-12-15; no live statement of its window survives
+        ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
     ],
 )
 def test_model_has_effective_context_window(
