@@ -96,17 +96,7 @@ def inherit_context_windows(providers: list[Provider]) -> None:
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
     """Build the provider YAML authoring schema from validated unit registry data."""
     json_schema = simplify_json_schema(Provider.model_json_schema())
-    _allow_explicit_null_context_window(json_schema)
     return _add_unit_vocabulary_to_schema(json_schema, raw_units)
-
-
-def _allow_explicit_null_context_window(json_schema: dict[str, Any]) -> None:
-    """An explicit `context_window: null` is a deliberate authoring decision — no single window
-    exists (e.g. OpenRouter serves the model from endpoints with differing context lengths), and the
-    present key stops fill-only metadata updates from re-inserting one — so the authoring schema
-    accepts it even though nullable unions are otherwise simplified away."""
-    field = cast(dict[str, Any], json_schema['$defs']['ModelInfo']['properties']['context_window'])
-    field['type'] = ['integer', 'null']
 
 
 def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[str, Any]) -> dict[str, Any]:

@@ -725,7 +725,7 @@ def test_litellm_provider_id():
         ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
         ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
         # deliberately windowless: OpenRouter serves this model from endpoints with differing context
-        # lengths, so the record carries an explicit `context_window: null` (see openrouter.yml)
+        # lengths, so no single value is true — see the record's comment in openrouter.yml
         ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
         # direct value from OpenRouter's /models API (`context_length`), endpoint-unanimous
         ('openrouter', 'deepseek/deepseek-v3.2-exp', 'openrouter', 'deepseek/deepseek-v3.2-exp', 163_840),

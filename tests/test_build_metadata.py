@@ -133,13 +133,3 @@ def test_removed_canonical_model_can_supply_active_offering():
 
     assert providers[0].models == []
     assert offering.context_window == 200_000
-
-
-def test_authoring_schema_accepts_explicit_null_context_window():
-    """`context_window: null` is a deliberate no-single-window decision (see openrouter.yml), so the
-    authoring schema must not make editors flag it even though nullable unions are simplified away."""
-    from prices.build import _provider_yaml_schema, load_units
-
-    schema = _provider_yaml_schema(load_units())
-
-    assert schema['$defs']['ModelInfo']['properties']['context_window']['type'] == ['integer', 'null']
