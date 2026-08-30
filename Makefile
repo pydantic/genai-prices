@@ -83,8 +83,32 @@ ovhcloud-get: ## get ovhcloud ai endpoints prices
 quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
+SOURCE_PRICE_IMPORTERS := \
+	helicone-get \
+	openrouter-get \
+	litellm-get \
+	simonw-prices-get
+
+PROVIDER_PRICE_IMPORTERS := \
+	huggingface-get \
+	arcee-get \
+	cloudflare-get \
+	cursor-get \
+	ovhcloud-get \
+	quicksilverpro-get
+
+PRICE_IMPORTERS := $(SOURCE_PRICE_IMPORTERS) $(PROVIDER_PRICE_IMPORTERS)
+
+.PHONY: list-price-importers
+list-price-importers: ## list price importer targets
+	@printf '%s\n' $(PRICE_IMPORTERS)
+
+.PHONY: list-provider-price-importers
+list-provider-price-importers: ## list importers that update provider YAML
+	@printf '%s\n' $(PROVIDER_PRICE_IMPORTERS)
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: $(PRICE_IMPORTERS) ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies
