@@ -243,6 +243,42 @@ jobs:
           name: release-npm-dist
           path: npm-dist/
 
+  release-go:
+    name: tag Go module
+    needs: [release-build]
+    if: needs.release-build.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create Go module tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          GO_TAG: packages/go/v${{ needs.release-build.outputs.version }}
+          RELEASE_SHA: ${{ github.sha }}
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const tag = process.env.GO_TAG
+            const releaseSha = process.env.RELEASE_SHA
+
+            try {
+              const existing = await github.rest.git.getRef({ owner, repo, ref: `tags/${tag}` })
+              let target = existing.data.object
+              while (target.type === 'tag') {
+                const annotated = await github.rest.git.getTag({ owner, repo, tag_sha: target.sha })
+                target = annotated.data.object
+              }
+              if (target.type !== 'commit' || target.sha !== releaseSha) {
+                core.setFailed(`Tag ${tag} already exists at ${target.sha}, expected ${releaseSha}`)
+              }
+              return
+            } catch (error) {
+              if (error.status !== 404) throw error
+            }
+
+            await github.rest.git.createRef({ owner, repo, ref: `refs/tags/${tag}`, sha: releaseSha })
+
   release-pypi:
     name: publish to PyPI
     needs: [release-build]
