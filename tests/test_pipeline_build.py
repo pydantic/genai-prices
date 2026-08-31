@@ -321,7 +321,14 @@ def test_build_reports_invalid_export(
 
 
 def test_package_data_generates_both_runtime_packages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    units = UNITS_YAML + 'requests:\n  per: 1000\n  dimensions: {family: requests}\n'
+    units = (
+        UNITS_YAML
+        + 'input_5m_tokens:\n'
+        + '  per: 1000000\n'
+        + '  price_key: input_5m_mtok\n'
+        + '  dimensions: {family: tokens, direction: input, cache_ttl: 5m}\n'
+        + 'requests:\n  per: 1000\n  dimensions: {family: requests}\n'
+    )
     providers_dir = prepare_build(monkeypatch, tmp_path, units=units)
     provider_yaml = PROVIDER_YAML.replace(
         'prices:\n      input_mtok: 1.25',
@@ -339,8 +346,10 @@ prices:
 
     python_dir = tmp_path / 'packages' / 'python' / 'genai_prices'
     javascript_dir = tmp_path / 'packages' / 'js' / 'src'
+    go_dir = tmp_path / 'packages' / 'go'
     python_dir.mkdir(parents=True)
     javascript_dir.mkdir(parents=True)
+    go_dir.mkdir(parents=True)
     monkeypatch.setattr(runtime_types, '__file__', str(python_dir / 'types.py'))
     monkeypatch.setattr(package_data, 'this_package_dir', tmp_path / 'prices')
     monkeypatch.setattr(package_data, 'root_dir', tmp_path)
@@ -359,7 +368,10 @@ prices:
     assert (python_dir / 'data_units.py').is_file()
     assert (javascript_dir / 'data.ts').is_file()
     assert (javascript_dir / 'dataUnits.ts').is_file()
-    assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'npx']
+    assert (go_dir / 'data_units.go').is_file()
+    assert 'UsageInput5MTokens' in (go_dir / 'data_units.go').read_text()
+    assert (go_dir / 'internal' / 'data' / 'prices.json').is_file()
+    assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']
 
 
 def test_package_data_rejects_a_non_array_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

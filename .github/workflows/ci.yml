@@ -31,6 +31,11 @@ jobs:
         with:
           cache: npm # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: npm ci
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        with:
+          go-version-file: packages/go/go.mod
+          cache-dependency-path: packages/go/go.sum
+          cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5 # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
         with:
           path: ~/.cache/pre-commit
@@ -116,6 +121,26 @@ jobs:
 
       - run: npm run ci
 
+  test-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        with:
+          go-version-file: packages/go/go.mod
+          cache-dependency-path: packages/go/go.sum
+          cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+      - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.2.0
+        with:
+          version: v2.10.1
+          working-directory: packages/go
+      - run: go test -race -coverprofile=coverage.out ./...
+        working-directory: packages/go
+      - run: go tool cover -func=coverage.out
+        working-directory: packages/go
+
   # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
   v2-schema-frozen:
     if: github.event_name == 'pull_request'
@@ -142,7 +167,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, v2-schema-frozen]
+    needs: [pre-commit, test-python, coverage, test-js, test-go, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed

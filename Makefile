@@ -138,8 +138,21 @@ test-all-python: ## Run tests on Python 3.10 to 3.14
 test-js: ## Build, typecheck, lint and test the JS package with coverage
 	npm run ci
 
+.PHONY: format-go
+format-go: ## Format the Go package
+	cd packages/go && gofmt -w $$(find . -name '*.go' -type f)
+
+.PHONY: lint-go
+lint-go: ## Lint the Go package
+	cd packages/go && golangci-lint run ./...
+
+.PHONY: test-go
+test-go: ## Test the Go package with the race detector and coverage
+	cd packages/go && go test -race -coverprofile=coverage.out ./...
+	cd packages/go && go tool cover -func=coverage.out
+
 .PHONY: all
-all: build package-data format lint typecheck testcov test-js ## Run code formatting, linting, static type checks, and both test suites with coverage
+all: build package-data format format-go lint lint-go typecheck testcov test-js test-go ## Run all builds, checks, and tests
 
 .PHONY: help
 help: ## Show this help (usage: make help)

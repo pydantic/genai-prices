@@ -24,6 +24,7 @@
 - support for [identifying price discrepancies](prices/README.md) from other sources
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
+- Go package
 - TODO: API and web UI
 
 ### Providers
@@ -84,6 +85,10 @@ See the [Python README](packages/python/README.md) for instructions on how to in
 ### JavaScript/TypeScript Package
 
 See the [JS/TS README](packages/js/README.md) for instructions on how to install and use the JavaScript/TypeScript package and CLI.
+
+### Go Package
+
+See the [Go README](packages/go/README.md) for instructions on how to install and use the Go package.
 
 ### Download data
 

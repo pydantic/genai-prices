@@ -106,3 +106,11 @@ repos:
         language: system
         types: [ts]
         pass_filenames: false
+      - id: format-go
+        name: format go
+        entry: make
+        args: [format-go]
+        files: "packages/go/"
+        types: [go]
+        language: system
+        pass_filenames: false
