@@ -31,6 +31,11 @@ jobs:
         with:
           cache: npm # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: npm ci
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        with:
+          go-version-file: packages/go/go.mod
+          cache-dependency-path: packages/go/go.sum
+          cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5 # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
         with:
           path: ~/.cache/pre-commit
@@ -116,6 +121,23 @@ jobs:
 
       - run: npm run ci
 
+  test-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        with:
+          go-version-file: packages/go/go.mod
+          cache-dependency-path: packages/go/go.sum
+          cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+      - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.2.0
+        with:
+          version: v2.10.1
+          working-directory: packages/go
+      - run: make test-go
+
   # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
   v2-schema-frozen:
     if: github.event_name == 'pull_request'
@@ -142,7 +164,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, v2-schema-frozen]
+    needs: [pre-commit, test-python, coverage, test-js, test-go, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
@@ -228,6 +250,55 @@ jobs:
           path: npm-dist/
           if-no-files-found: error
 
+  release-go:
+    name: tag Go module
+    needs: [release-build]
+    if: ${{ !cancelled() && needs.release-build.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create Go module tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          GO_TAG: packages/go/v${{ needs.release-build.outputs.version }}
+          RELEASE_SHA: ${{ github.sha }}
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const tag = process.env.GO_TAG
+            const releaseSha = process.env.RELEASE_SHA
+
+            const getTagTarget = async () => {
+              const existing = await github.rest.git.getRef({ owner, repo, ref: `tags/${tag}` })
+              let target = existing.data.object
+              while (target.type === 'tag') {
+                const annotated = await github.rest.git.getTag({ owner, repo, tag_sha: target.sha })
+                target = annotated.data.object
+              }
+              return target
+            }
+
+            const verifyTag = (target) => {
+              if (target.type !== 'commit' || target.sha !== releaseSha) {
+                throw new Error(`Tag ${tag} already exists at ${target.sha}, expected ${releaseSha}`)
+              }
+            }
+
+            try {
+              verifyTag(await getTagTarget())
+              return
+            } catch (error) {
+              if (error.status !== 404) throw error
+            }
+
+            try {
+              await github.rest.git.createRef({ owner, repo, ref: `refs/tags/${tag}`, sha: releaseSha })
+            } catch (error) {
+              if (error.status !== 422) throw error
+              verifyTag(await getTagTarget())
+            }
+
   release-pypi:
     name: publish to PyPI
     needs: [release-build]
@@ -279,13 +350,13 @@ jobs:
 
   release-check:
     name: check release published
-    needs: [release-pypi, release-npm]
+    needs: [release-pypi, release-npm, release-go]
     # This status function ensures the job still runs and reports a failure if a publish job is
     # skipped or fails. Without it, GitHub would silently skip this job too.
     if: ${{ !cancelled() && startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Verify both publish jobs succeeded
+      - name: Verify all release jobs succeeded
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}

@@ -13,6 +13,8 @@ packages/python/genai_prices/data.py
 packages/python/genai_prices/data_units.py
 packages/js/src/data.ts
 packages/js/src/dataUnits.ts
+packages/go/data_units.go
+packages/go/internal/data/prices.json
 
 # === Vendored / dependency directories ===
 **/.git/**

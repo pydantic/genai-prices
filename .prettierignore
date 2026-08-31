@@ -3,6 +3,7 @@
 /prices/*.json
 /prices/new_data/**/*.json
 /prices/providers/.schema.json
+/packages/go/internal/data/prices.json
 /.html_cache/
 /htmlcov/
 /tests/cassettes/
