@@ -15,14 +15,14 @@ import (
 	"fmt"
 	"log"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 func main() {
-	price, err := genaiprices.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens:  1_000,
-			genaiprices.UsageOutputTokens: 100,
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:  1_000,
+			genai_prices.UsageOutputTokens: 100,
 		},
 		Model:      "gpt-5",
 		ProviderID: "openai",
@@ -47,11 +47,11 @@ import (
 	"fmt"
 	"log"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 func main() {
-	extracted, err := genaiprices.ExtractUsage(genaiprices.ExtractRequest{
+	extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
 		ResponseJSON: []byte(`{
 			"model": "gpt-5",
 			"usage": {
@@ -66,7 +66,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	price, err := genaiprices.Calculate(genaiprices.PriceRequest{
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{
 		Usage:      extracted.Usage,
 		Model:      extracted.Model,
 		ProviderID: extracted.ProviderID,
@@ -94,14 +94,14 @@ import (
 	"log"
 	"net/http"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 func main() {
 	request, err := http.NewRequestWithContext(
 		context.Background(),
 		http.MethodGet,
-		genaiprices.RemoteDataURL,
+		genai_prices.RemoteDataURL,
 		nil,
 	)
 	if err != nil {
@@ -120,14 +120,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	calculator, err := genaiprices.NewCalculatorFromJSON(data)
+	calculator, err := genai_prices.NewCalculatorFromJSON(data)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	price, err := calculator.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens: 1_000,
+	price, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens: 1_000,
 		},
 		Model:      "gpt-5",
 		ProviderID: "openai",

@@ -327,6 +327,9 @@ def test_package_data_generates_both_runtime_packages(monkeypatch: pytest.Monkey
         + '  per: 1000000\n'
         + '  price_key: input_5m_mtok\n'
         + '  dimensions: {family: tokens, direction: input, cache_ttl: 5m}\n'
+        + 'request__count:\n'
+        + '  per: 1000\n'
+        + '  dimensions: {family: request_counts}\n'
         + 'requests:\n  per: 1000\n  dimensions: {family: requests}\n'
     )
     providers_dir = prepare_build(monkeypatch, tmp_path, units=units)
@@ -370,6 +373,7 @@ prices:
     assert (javascript_dir / 'dataUnits.ts').is_file()
     assert (go_dir / 'data_units.go').is_file()
     assert 'UsageInput5MTokens' in (go_dir / 'data_units.go').read_text()
+    assert 'UsageRequest_Count' in (go_dir / 'data_units.go').read_text()
     assert (go_dir / 'internal' / 'data' / 'prices.json').is_file()
     assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']
 

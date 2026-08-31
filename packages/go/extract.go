@@ -1,4 +1,4 @@
-package genaiprices
+package genai_prices
 
 import (
 	"encoding/json"
@@ -132,7 +132,16 @@ func (calculator *Calculator) ExtractUsage(request ExtractRequest) (ExtractedUsa
 		return ExtractedUsage{}, fmt.Errorf("no usage information found at %s", dottedPath(extractor.Root))
 	}
 	if modelID == "" && selected.ID == "cloudflare" && request.ProviderAPIURL != "" {
-		modelID = cloudflareModelFromURL(request.ProviderAPIURL)
+		modelReference := cloudflareModelFromURL(request.ProviderAPIURL)
+		if modelReference != "" {
+			matchedModel, err := findModel(calculator.providers, selected, modelReference)
+			if err != nil {
+				return ExtractedUsage{}, fmt.Errorf("match model: %w", err)
+			}
+			if matchedModel != nil {
+				modelID = matchedModel.ID
+			}
+		}
 	}
 	warnings := []string(nil)
 	if len(unsupportedDestinations) > 0 {

@@ -1,4 +1,4 @@
-package genaiprices
+package genai_prices
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func activeModelPrice(model *model, timestamp time.Time) modelPrice {
 		if constraint == nil {
 			return candidate.Prices
 		}
-		if !constraint.date.IsZero() {
+		if constraint.StartDate != "" {
 			if !timestamp.Before(constraint.date) {
 				return candidate.Prices
 			}
@@ -112,6 +112,9 @@ func parseConstraint(constraint *priceConstraint) error {
 		date, err := time.Parse("2006-01-02", constraint.StartDate)
 		if err != nil {
 			return fmt.Errorf("invalid start-date constraint %q: %w", constraint.StartDate, err)
+		}
+		if date.Year() < 1 {
+			return fmt.Errorf("invalid start-date constraint %q: year must be at least 1", constraint.StartDate)
 		}
 		constraint.date = date
 		return nil

@@ -144,12 +144,14 @@ format-go: ## Format the Go package
 
 .PHONY: lint-go
 lint-go: ## Lint the Go package
-	cd packages/go && golangci-lint run ./...
+	cd packages/go && go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.10.1 run ./...
 
 .PHONY: test-go
 test-go: ## Test the Go package with the race detector and coverage
 	cd packages/go && go test -race -coverprofile=coverage.out ./...
 	cd packages/go && go tool cover -func=coverage.out
+	@cd packages/go && go tool cover -func=coverage.out | \
+		awk '/^total:/ && $$3 + 0 < 90 { print "Go coverage must be at least 90%"; exit 1 }'
 
 .PHONY: all
 all: build package-data format format-go lint lint-go typecheck testcov test-js test-go ## Run all builds, checks, and tests

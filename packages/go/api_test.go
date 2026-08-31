@@ -1,4 +1,4 @@
-package genaiprices_test
+package genai_prices_test
 
 import (
 	"errors"
@@ -6,14 +6,14 @@ import (
 	"testing"
 	"time"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 func TestCalculate(t *testing.T) {
-	calculation, err := genaiprices.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens:  1_000,
-			genaiprices.UsageOutputTokens: 100,
+	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:  1_000,
+			genai_prices.UsageOutputTokens: 100,
 		},
 		Model:      "gpt-5",
 		ProviderID: "openai",
@@ -31,10 +31,10 @@ func TestCalculate(t *testing.T) {
 }
 
 func TestCalculateReportsUnsupportedUsage(t *testing.T) {
-	calculation, err := genaiprices.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens: 1,
-			"unknown_tokens":             2,
+	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens: 1,
+			"unknown_tokens":              2,
 		},
 		Model:      "gpt-5",
 		ProviderID: "openai",
@@ -50,51 +50,51 @@ func TestCalculateReportsUnsupportedUsage(t *testing.T) {
 func TestCalculateErrors(t *testing.T) {
 	tests := []struct {
 		name    string
-		request genaiprices.PriceRequest
+		request genai_prices.PriceRequest
 		target  error
 	}{
-		{name: "missing model", request: genaiprices.PriceRequest{}, target: genaiprices.ErrModelNotFound},
+		{name: "missing model", request: genai_prices.PriceRequest{}, target: genai_prices.ErrModelNotFound},
 		{
 			name: "conflicting provider selectors",
-			request: genaiprices.PriceRequest{
+			request: genai_prices.PriceRequest{
 				Model:          "gpt-5",
 				ProviderID:     "openai",
 				ProviderAPIURL: "https://api.openai.com",
 			},
-			target: genaiprices.ErrInvalidUsage,
+			target: genai_prices.ErrInvalidUsage,
 		},
 		{
 			name:    "unknown provider",
-			request: genaiprices.PriceRequest{Model: "gpt-5", ProviderID: "missing"},
-			target:  genaiprices.ErrProviderNotFound,
+			request: genai_prices.PriceRequest{Model: "gpt-5", ProviderID: "missing"},
+			target:  genai_prices.ErrProviderNotFound,
 		},
 		{
 			name:    "unknown model",
-			request: genaiprices.PriceRequest{Model: "missing", ProviderID: "openai"},
-			target:  genaiprices.ErrModelNotFound,
+			request: genai_prices.PriceRequest{Model: "missing", ProviderID: "openai"},
+			target:  genai_prices.ErrModelNotFound,
 		},
 		{
 			name: "negative usage",
-			request: genaiprices.PriceRequest{
-				Usage:      genaiprices.Usage{genaiprices.UsageInputTokens: -1},
+			request: genai_prices.PriceRequest{
+				Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: -1},
 				Model:      "gpt-5",
 				ProviderID: "openai",
 			},
-			target: genaiprices.ErrInvalidUsage,
+			target: genai_prices.ErrInvalidUsage,
 		},
 		{
 			name: "non-finite usage",
-			request: genaiprices.PriceRequest{
-				Usage:      genaiprices.Usage{genaiprices.UsageInputTokens: math.Inf(1)},
+			request: genai_prices.PriceRequest{
+				Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: math.Inf(1)},
 				Model:      "gpt-5",
 				ProviderID: "openai",
 			},
-			target: genaiprices.ErrInvalidUsage,
+			target: genai_prices.ErrInvalidUsage,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			_, err := genaiprices.Calculate(test.request)
+			_, err := genai_prices.Calculate(test.request)
 			if !errors.Is(err, test.target) {
 				t.Fatalf("got %v, want %v", err, test.target)
 			}
@@ -103,7 +103,7 @@ func TestCalculateErrors(t *testing.T) {
 }
 
 func TestNewCalculatorFromJSON(t *testing.T) {
-	calculator, err := genaiprices.NewCalculatorFromJSON([]byte(`[
+	calculator, err := genai_prices.NewCalculatorFromJSON([]byte(`[
 		{
 			"id": "testing",
 			"name": "Testing",
@@ -119,10 +119,10 @@ func TestNewCalculatorFromJSON(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	calculation, err := calculator.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens:  1_000_000,
-			genaiprices.UsageOutputTokens: 500_000,
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:  1_000_000,
+			genai_prices.UsageOutputTokens: 500_000,
 		},
 		Model: "test-model",
 	})
@@ -136,8 +136,8 @@ func TestNewCalculatorFromJSON(t *testing.T) {
 
 func TestNewCalculatorFromJSONRejectsInvalidData(t *testing.T) {
 	for _, data := range [][]byte{[]byte(`{}`), []byte(`null`), []byte(`not JSON`)} {
-		_, err := genaiprices.NewCalculatorFromJSON(data)
-		if !errors.Is(err, genaiprices.ErrInvalidData) {
+		_, err := genai_prices.NewCalculatorFromJSON(data)
+		if !errors.Is(err, genai_prices.ErrInvalidData) {
 			t.Fatalf("got %v", err)
 		}
 	}

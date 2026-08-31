@@ -1,4 +1,4 @@
-package genaiprices
+package genai_prices
 
 import (
 	"encoding/json"
@@ -61,7 +61,7 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if modelID == "" {
 		return PriceCalculation{}, fmt.Errorf("%w: model is required", ErrModelNotFound)
 	}
-	providerID := request.ProviderID
+	providerID := strings.TrimSpace(request.ProviderID)
 	if strings.EqualFold(providerID, "litellm") {
 		actualProviderID, actualModelID, found := strings.Cut(modelID, "/")
 		if found && actualProviderID != "" && actualModelID != "" {
@@ -193,16 +193,26 @@ func (calculator *Calculator) validate() error {
 			if len(model.Prices.conditional) == 0 {
 				return fmt.Errorf("provider %q model %q has no conditional prices", provider.ID, model.ID)
 			}
+			unconstrainedPrices := 0
 			for conditionalIndex := range model.Prices.conditional {
 				conditional := &model.Prices.conditional[conditionalIndex]
 				if conditional.Constraint != nil {
 					if err := parseConstraint(conditional.Constraint); err != nil {
 						return fmt.Errorf("provider %q model %q constraint: %w", provider.ID, model.ID, err)
 					}
+				} else {
+					unconstrainedPrices++
 				}
 				if err := validateModelPrice(conditional.Prices, calculator.registry); err != nil {
 					return fmt.Errorf("provider %q model %q conditional prices: %w", provider.ID, model.ID, err)
 				}
+			}
+			if unconstrainedPrices != 1 {
+				return fmt.Errorf(
+					"provider %q model %q must have exactly one unconstrained price",
+					provider.ID,
+					model.ID,
+				)
 			}
 		}
 	}

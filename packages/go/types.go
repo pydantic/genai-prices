@@ -1,4 +1,4 @@
-package genaiprices
+package genai_prices
 
 import (
 	"encoding/json"
@@ -116,6 +116,22 @@ type tier struct {
 	Price float64 `json:"price"`
 }
 
+func (t *tier) UnmarshalJSON(data []byte) error {
+	var value struct {
+		Start *int64   `json:"start"`
+		Price *float64 `json:"price"`
+	}
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	if value.Start == nil || value.Price == nil {
+		return errors.New("tier must contain start and price")
+	}
+	t.Start = *value.Start
+	t.Price = *value.Price
+	return nil
+}
+
 func (p *priceValue) UnmarshalJSON(data []byte) error {
 	data = trimSpace(data)
 	if len(data) == 0 {
@@ -157,6 +173,33 @@ type conditionalPrice struct {
 	Prices     modelPrice       `json:"prices"`
 }
 
+func (p *conditionalPrice) UnmarshalJSON(data []byte) error {
+	var value struct {
+		Constraint json.RawMessage `json:"constraint"`
+		Prices     json.RawMessage `json:"prices"`
+	}
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	if len(value.Prices) == 0 || string(trimSpace(value.Prices)) == "null" {
+		return errors.New("conditional price must contain prices")
+	}
+	if err := json.Unmarshal(value.Prices, &p.Prices); err != nil {
+		return err
+	}
+	if len(value.Constraint) > 0 {
+		if string(trimSpace(value.Constraint)) == "null" {
+			return errors.New("constraint must be an object")
+		}
+		var constraint priceConstraint
+		if err := json.Unmarshal(value.Constraint, &constraint); err != nil {
+			return err
+		}
+		p.Constraint = &constraint
+	}
+	return nil
+}
+
 type priceConstraint struct {
 	StartDate string `json:"start_date"`
 	StartTime string `json:"start_time"`
@@ -164,6 +207,42 @@ type priceConstraint struct {
 	date      time.Time
 	start     float64
 	end       float64
+}
+
+func (c *priceConstraint) UnmarshalJSON(data []byte) error {
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for key := range fields {
+		if key != "start_date" && key != "start_time" && key != "end_time" && key != "type" {
+			return fmt.Errorf("unknown price constraint field %q", key)
+		}
+	}
+	var value struct {
+		StartDate string  `json:"start_date"`
+		StartTime string  `json:"start_time"`
+		EndTime   string  `json:"end_time"`
+		Type      *string `json:"type"`
+	}
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	if _, found := fields["type"]; found {
+		if value.Type == nil {
+			return errors.New("price constraint type must be a string")
+		}
+		validStartDate := *value.Type == "start_date" && value.StartDate != "" && value.StartTime == "" && value.EndTime == ""
+		validTimeOfDay := *value.Type == "time_of_date" &&
+			value.StartDate == "" && value.StartTime != "" && value.EndTime != ""
+		if !validStartDate && !validTimeOfDay {
+			return errors.New("price constraint type does not match its fields")
+		}
+	}
+	c.StartDate = value.StartDate
+	c.StartTime = value.StartTime
+	c.EndTime = value.EndTime
+	return nil
 }
 
 const regexMatchTimeout = 100 * time.Millisecond
@@ -286,8 +365,11 @@ func (path *extractPath) UnmarshalJSON(data []byte) error {
 	}
 	steps := make(extractPath, 0, len(values))
 	for _, value := range values {
-		var key string
-		if err := json.Unmarshal(value, &key); err == nil {
+		if len(value) > 0 && value[0] == '"' {
+			var key string
+			if err := json.Unmarshal(value, &key); err != nil {
+				return err
+			}
 			steps = append(steps, pathStep{key: &key})
 			continue
 		}

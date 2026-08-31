@@ -136,10 +136,7 @@ jobs:
         with:
           version: v2.10.1
           working-directory: packages/go
-      - run: go test -race -coverprofile=coverage.out ./...
-        working-directory: packages/go
-      - run: go tool cover -func=coverage.out
-        working-directory: packages/go
+      - run: make test-go
 
   # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
   v2-schema-frozen:

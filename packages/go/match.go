@@ -1,4 +1,4 @@
-package genaiprices
+package genai_prices
 
 import (
 	"fmt"
@@ -40,7 +40,7 @@ func findProvider(
 ) (*provider, error) {
 	if providerID != "" {
 		provider, err := findProviderByID(providers, providerID)
-		if err != nil || provider != nil || !strings.EqualFold(providerID, "litellm") {
+		if err != nil || provider != nil || !strings.EqualFold(strings.TrimSpace(providerID), "litellm") {
 			return provider, err
 		}
 	}

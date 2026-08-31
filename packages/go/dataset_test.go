@@ -1,4 +1,4 @@
-package genaiprices_test
+package genai_prices_test
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 type datasetRow struct {
@@ -23,7 +23,7 @@ type datasetRow struct {
 
 type datasetExtracted struct {
 	Extractors []datasetExtractor `json:"extractors"`
-	Usage      genaiprices.Usage  `json:"usage"`
+	Usage      genai_prices.Usage `json:"usage"`
 }
 
 type datasetExtractor struct {
@@ -51,7 +51,7 @@ func TestDataset(t *testing.T) {
 		t.Run(strconv.Itoa(rowIndex+1), func(t *testing.T) {
 			for _, expected := range row.Extracted {
 				for _, extractor := range expected.Extractors {
-					actual, err := genaiprices.ExtractUsage(genaiprices.ExtractRequest{
+					actual, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
 						ResponseJSON: row.Body,
 						ProviderID:   extractor.ProviderID,
 						APIFlavor:    extractor.APIFlavor,
@@ -76,14 +76,17 @@ func TestDataset(t *testing.T) {
 					if actual.Model == "" {
 						continue
 					}
-					calculation, err := genaiprices.Calculate(genaiprices.PriceRequest{
+					calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 						Usage:      actual.Usage,
 						Model:      actual.Model,
 						ProviderID: extractor.ProviderID,
 						Timestamp:  time.Date(2025, 11, 6, 12, 0, 0, 0, time.UTC),
 					})
 					if err != nil {
-						if errors.Is(err, genaiprices.ErrModelNotFound) && extractor.InputPrice == nil && extractor.OutputPrice == nil {
+						if errors.Is(err, genai_prices.ErrModelNotFound) &&
+							extractor.InputPrice == nil &&
+							extractor.OutputPrice == nil &&
+							extractor.TotalPrice == nil {
 							continue
 						}
 						t.Fatalf("calculate %s/%s: %v", extractor.ProviderID, extractor.APIFlavor, err)
@@ -99,7 +102,7 @@ func TestDataset(t *testing.T) {
 	}
 }
 
-func assertUsage(t *testing.T, actual, expected genaiprices.Usage) {
+func assertUsage(t *testing.T, actual, expected genai_prices.Usage) {
 	t.Helper()
 	for key, expectedValue := range expected {
 		actualValue, found := actual[key]

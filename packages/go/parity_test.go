@@ -1,4 +1,4 @@
-package genaiprices_test
+package genai_prices_test
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	genaiprices "github.com/pydantic/genai-prices/packages/go"
+	"github.com/pydantic/genai-prices/packages/go"
 )
 
 func TestProviderAndModelMatching(t *testing.T) {
@@ -50,12 +50,12 @@ func TestProviderAndModelMatching(t *testing.T) {
 		{name: "regex", model: "source-regex-value", providerID: "source", wantModel: "regex"},
 		{name: "fallback", model: "model-2025-12-11", providerID: "source", wantModel: "dated"},
 		{name: "compact date", model: "model-20251211", providerID: "source", wantModel: "dated"},
-		{name: "litellm", model: "source/source-equals", providerID: "litellm", wantModel: "equals"},
+		{name: "litellm", model: "source/source-equals", providerID: " LiTeLLM ", wantModel: "equals"},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			calculation, err := calculator.Calculate(genaiprices.PriceRequest{
-				Usage:          genaiprices.Usage{genaiprices.UsageInputTokens: 1},
+			calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+				Usage:          genai_prices.Usage{genai_prices.UsageInputTokens: 1},
 				Model:          test.model,
 				ProviderID:     test.providerID,
 				ProviderAPIURL: test.providerURL,
@@ -69,8 +69,8 @@ func TestProviderAndModelMatching(t *testing.T) {
 		})
 	}
 	for _, model := range []string{"source-regex-tts", "model-20250230"} {
-		_, err := calculator.Calculate(genaiprices.PriceRequest{Model: model, ProviderID: "source"})
-		if !errors.Is(err, genaiprices.ErrModelNotFound) {
+		_, err := calculator.Calculate(genai_prices.PriceRequest{Model: model, ProviderID: "source"})
+		if !errors.Is(err, genai_prices.ErrModelNotFound) {
 			t.Fatalf("got %v", err)
 		}
 	}
@@ -84,6 +84,10 @@ func TestConditionalTieredAndRequestPricing(t *testing.T) {
 				{"id":"date","match":{"equals":"date"},"prices":[
 					{"prices":{"input_mtok":1}},
 					{"constraint":{"start_date":"2026-01-01"},"prices":{"input_mtok":2}}
+				]},
+				{"id":"year-one","match":{"equals":"year-one"},"prices":[
+					{"prices":{"input_mtok":1}},
+					{"constraint":{"type":"start_date","start_date":"0001-01-01"},"prices":{"input_mtok":2}}
 				]},
 				{"id":"day","match":{"equals":"day"},"prices":[
 					{"prices":{"input_mtok":1}},
@@ -102,22 +106,23 @@ func TestConditionalTieredAndRequestPricing(t *testing.T) {
 	tests := []struct {
 		model     string
 		timestamp time.Time
-		usage     genaiprices.Usage
+		usage     genai_prices.Usage
 		want      float64
 	}{
-		{model: "date", timestamp: time.Date(2025, 12, 31, 23, 0, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 1},
-		{model: "date", timestamp: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 2},
-		{model: "day", timestamp: time.Date(2026, 1, 1, 1, 30, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 2},
-		{model: "day", timestamp: time.Date(2026, 1, 1, 2, 0, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 1},
-		{model: "wrap", timestamp: time.Date(2026, 1, 1, 22, 30, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 3},
-		{model: "wrap", timestamp: time.Date(2026, 1, 1, 0, 30, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 1},
-		{model: "tier", usage: genaiprices.Usage{genaiprices.UsageInputTokens: 100, genaiprices.UsageOutputTokens: 1_000_000}, want: 4.0001},
-		{model: "tier", usage: genaiprices.Usage{genaiprices.UsageInputTokens: 101, genaiprices.UsageOutputTokens: 1_000_000}, want: 4.000202},
+		{model: "date", timestamp: time.Date(2025, 12, 31, 23, 0, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 1},
+		{model: "date", timestamp: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 2},
+		{model: "year-one", timestamp: time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 2},
+		{model: "day", timestamp: time.Date(2026, 1, 1, 1, 30, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 2},
+		{model: "day", timestamp: time.Date(2026, 1, 1, 2, 0, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 1},
+		{model: "wrap", timestamp: time.Date(2026, 1, 1, 22, 30, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 3},
+		{model: "wrap", timestamp: time.Date(2026, 1, 1, 0, 30, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 1},
+		{model: "tier", usage: genai_prices.Usage{genai_prices.UsageInputTokens: 100, genai_prices.UsageOutputTokens: 1_000_000}, want: 4.0001},
+		{model: "tier", usage: genai_prices.Usage{genai_prices.UsageInputTokens: 101, genai_prices.UsageOutputTokens: 1_000_000}, want: 4.000202},
 		{model: "request", want: 0.005},
-		{model: "date", timestamp: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, want: 1},
+		{model: "date", timestamp: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC), usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, want: 1},
 	}
 	for _, test := range tests {
-		calculation, err := calculator.Calculate(genaiprices.PriceRequest{
+		calculation, err := calculator.Calculate(genai_prices.PriceRequest{
 			Usage: test.usage, Model: test.model, ProviderID: "testing", Timestamp: test.timestamp,
 		})
 		if err != nil {
@@ -129,30 +134,24 @@ func TestConditionalTieredAndRequestPricing(t *testing.T) {
 	}
 }
 
-func TestConditionalFallbackAndTimeZoneNormalization(t *testing.T) {
+func TestTimeZoneNormalization(t *testing.T) {
 	calculator := newTestCalculator(t, `[
 		{"id":"testing","name":"Testing","api_pattern":"testing","models":[
-			{"id":"future","match":{"equals":"future"},"prices":[
-				{"constraint":{"start_date":"2030-01-01"},"prices":{"input_mtok":1}},
-				{"constraint":{"start_date":"2040-01-01"},"prices":{"input_mtok":2}}
-			]},
 			{"id":"offset","match":{"equals":"offset"},"prices":[
 				{"prices":{"input_mtok":1}},
 				{"constraint":{"start_time":"00:30:00+01:00","end_time":"23:30:00-01:00"},"prices":{"input_mtok":2}}
 			]}
 		]}
 	]`)
-	for _, model := range []string{"future", "offset"} {
-		calculation, err := calculator.Calculate(genaiprices.PriceRequest{
-			Usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000},
-			Model: model, ProviderID: "testing", Timestamp: time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC),
-		})
-		if err != nil {
-			t.Fatal(err)
-		}
-		if calculation.TotalPrice != 1 {
-			t.Fatalf("%s: got %g", model, calculation.TotalPrice)
-		}
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
+		Model: "offset", ProviderID: "testing", Timestamp: time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if calculation.TotalPrice != 1 {
+		t.Fatalf("got %g", calculation.TotalPrice)
 	}
 }
 
@@ -162,10 +161,10 @@ func TestTieredPricingRequiresTotalInputTokens(t *testing.T) {
 			{"id":"model","match":{"equals":"model"},"prices":{"output_mtok":{"base":1,"tiers":[]}}}
 		]}
 	]`)
-	_, err := calculator.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{genaiprices.UsageInputAudioTokens: 1}, Model: "model", ProviderID: "testing",
+	_, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputAudioTokens: 1}, Model: "model", ProviderID: "testing",
 	})
-	if !errors.Is(err, genaiprices.ErrInvalidUsage) {
+	if !errors.Is(err, genai_prices.ErrInvalidUsage) {
 		t.Fatal(err)
 	}
 }
@@ -178,13 +177,13 @@ func TestUsageDecompositionErrors(t *testing.T) {
 			}}
 		]}
 	]`)
-	calculation, err := calculator.Calculate(genaiprices.PriceRequest{
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
 		Model: "units", ProviderID: "testing",
-		Usage: genaiprices.Usage{
-			genaiprices.UsageInputTokens:          100,
-			genaiprices.UsageCacheReadTokens:      60,
-			genaiprices.UsageInputAudioTokens:     40,
-			genaiprices.UsageCacheAudioReadTokens: 10,
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:          100,
+			genai_prices.UsageCacheReadTokens:      60,
+			genai_prices.UsageInputAudioTokens:     40,
+			genai_prices.UsageCacheAudioReadTokens: 10,
 		},
 	})
 	if err != nil {
@@ -194,15 +193,15 @@ func TestUsageDecompositionErrors(t *testing.T) {
 		t.Fatalf("got %g", calculation.TotalPrice)
 	}
 
-	invalid := []genaiprices.Usage{
-		{genaiprices.UsageInputAudioTokens: 1},
-		{genaiprices.UsageCacheReadTokens: 1, genaiprices.UsageInputAudioTokens: 1},
-		{genaiprices.UsageInputTokens: 1, genaiprices.UsageInputAudioTokens: 2},
-		{genaiprices.UsageInputTokens: 1, genaiprices.UsageCacheReadTokens: 1, genaiprices.UsageInputAudioTokens: 1},
+	invalid := []genai_prices.Usage{
+		{genai_prices.UsageInputAudioTokens: 1},
+		{genai_prices.UsageCacheReadTokens: 1, genai_prices.UsageInputAudioTokens: 1},
+		{genai_prices.UsageInputTokens: 1, genai_prices.UsageInputAudioTokens: 2},
+		{genai_prices.UsageInputTokens: 1, genai_prices.UsageCacheReadTokens: 1, genai_prices.UsageInputAudioTokens: 1},
 	}
 	for _, usage := range invalid {
-		_, err := calculator.Calculate(genaiprices.PriceRequest{Usage: usage, Model: "units", ProviderID: "testing"})
-		if !errors.Is(err, genaiprices.ErrInvalidUsage) {
+		_, err := calculator.Calculate(genai_prices.PriceRequest{Usage: usage, Model: "units", ProviderID: "testing"})
+		if !errors.Is(err, genai_prices.ErrInvalidUsage) {
 			t.Fatalf("usage %v: got %v", usage, err)
 		}
 	}
@@ -211,16 +210,16 @@ func TestUsageDecompositionErrors(t *testing.T) {
 func TestGroqTranscriptionMinimum(t *testing.T) {
 	tests := []struct {
 		model string
-		usage genaiprices.Usage
+		usage genai_prices.Usage
 		want  float64
 	}{
-		{model: "whisper-large-v3", usage: genaiprices.Usage{}, want: 0},
-		{model: "whisper-large-v3", usage: genaiprices.Usage{genaiprices.UsageAudioSeconds: 1}, want: 0.111 * 10 / 3600},
-		{model: "whisper-large-v3", usage: genaiprices.Usage{genaiprices.UsageAudioSeconds: 0, genaiprices.UsageInputAudioSeconds: 5}, want: 0.111 * 10 / 3600},
-		{model: "whisper-large-v3-turbo", usage: genaiprices.Usage{genaiprices.UsageAudioSeconds: 11}, want: 0.04 * 11 / 3600},
+		{model: "whisper-large-v3", usage: genai_prices.Usage{}, want: 0},
+		{model: "whisper-large-v3", usage: genai_prices.Usage{genai_prices.UsageAudioSeconds: 1}, want: 0.111 * 10 / 3600},
+		{model: "whisper-large-v3", usage: genai_prices.Usage{genai_prices.UsageAudioSeconds: 0, genai_prices.UsageInputAudioSeconds: 5}, want: 0.111 * 10 / 3600},
+		{model: "whisper-large-v3-turbo", usage: genai_prices.Usage{genai_prices.UsageAudioSeconds: 11}, want: 0.04 * 11 / 3600},
 	}
 	for _, test := range tests {
-		calculation, err := genaiprices.Calculate(genaiprices.PriceRequest{Usage: test.usage, Model: test.model, ProviderID: "groq"})
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{Usage: test.usage, Model: test.model, ProviderID: "groq"})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -252,7 +251,7 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 		}
 	]`)
 
-	extracted, err := calculator.ExtractUsage(genaiprices.ExtractRequest{
+	extracted, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
 		ResponseJSON: []byte(`{"model":"test-model","usage":{"input":10,"details":[null,{"kind":1,"tokens":50},{"kind":"cached","tokens":4}]}}`),
 		ProviderID:   "testing",
 		APIFlavor:    "chat",
@@ -260,14 +259,14 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if extracted.Model != "test-model" || extracted.Usage[genaiprices.UsageInputTokens] != 10 || extracted.Usage[genaiprices.UsageCacheReadTokens] != 4 {
+	if extracted.Model != "test-model" || extracted.Usage[genai_prices.UsageInputTokens] != 10 || extracted.Usage[genai_prices.UsageCacheReadTokens] != 4 {
 		t.Fatalf("unexpected extraction: %#v", extracted)
 	}
 	if len(extracted.Warnings) != 1 || strings.Count(extracted.Warnings[0], "future_tokens") != 1 {
 		t.Fatalf("unexpected warnings: %v", extracted.Warnings)
 	}
 
-	cloudflare, err := calculator.ExtractUsage(genaiprices.ExtractRequest{
+	cloudflare, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
 		ResponseJSON:   []byte(`{"usage":{"input":1}}`),
 		ProviderAPIURL: "https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/test/model",
 	})
@@ -277,6 +276,16 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 	if cloudflare.Model != "@cf/test/model" {
 		t.Fatalf("got %q", cloudflare.Model)
 	}
+	unknownCloudflare, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
+		ResponseJSON:   []byte(`{"usage":{"input":1}}`),
+		ProviderAPIURL: "https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/unknown/model",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if unknownCloudflare.Model != "" {
+		t.Fatalf("got %q", unknownCloudflare.Model)
+	}
 }
 
 func TestFuturePriceKeyIsIgnored(t *testing.T) {
@@ -285,8 +294,8 @@ func TestFuturePriceKeyIsIgnored(t *testing.T) {
 			{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":1,"future_mtok":99}}
 		]}
 	]`)
-	calculation, err := calculator.Calculate(genaiprices.PriceRequest{
-		Usage: genaiprices.Usage{genaiprices.UsageInputTokens: 1_000_000}, Model: "model", ProviderID: "testing",
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, Model: "model", ProviderID: "testing",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -310,27 +319,27 @@ func TestExtractUsageErrors(t *testing.T) {
 	]`)
 	tests := []struct {
 		name    string
-		request genaiprices.ExtractRequest
+		request genai_prices.ExtractRequest
 		target  error
 	}{
-		{name: "no selector", request: genaiprices.ExtractRequest{}, target: genaiprices.ErrProviderNotFound},
-		{name: "both selectors", request: genaiprices.ExtractRequest{ProviderID: "testing", ProviderAPIURL: "testing"}, target: genaiprices.ErrInvalidUsage},
-		{name: "unknown provider", request: genaiprices.ExtractRequest{ProviderID: "missing"}, target: genaiprices.ErrProviderNotFound},
-		{name: "no extractors", request: genaiprices.ExtractRequest{ProviderID: "empty"}, target: genaiprices.ErrExtractorNotFound},
-		{name: "unknown flavor", request: genaiprices.ExtractRequest{ProviderID: "testing"}, target: genaiprices.ErrExtractorNotFound},
-		{name: "invalid JSON", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`x`)}, target: nil},
-		{name: "non-mapping", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`[]`)}, target: nil},
-		{name: "null response", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`null`)}, target: nil},
-		{name: "boolean response", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`true`)}, target: nil},
-		{name: "missing root", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{}`)}, target: nil},
-		{name: "wrong root", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":1}`)}, target: nil},
-		{name: "missing required", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{}}`)}, target: nil},
-		{name: "wrong required type", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{"input":"1"}}`)}, target: nil},
-		{name: "wrong nested mapping", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "optional", ResponseJSON: []byte(`{"usage":{"nested":true}}`)}, target: nil},
-		{name: "negative", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{"input":-1}}`)}, target: genaiprices.ErrInvalidUsage},
-		{name: "no optional usage", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "optional", ResponseJSON: []byte(`{"usage":{"nested":1}}`)}, target: nil},
-		{name: "array expected", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "array", ResponseJSON: []byte(`{"usage":{"items":{}}}`)}, target: nil},
-		{name: "array item missing", request: genaiprices.ExtractRequest{ProviderID: "testing", APIFlavor: "array", ResponseJSON: []byte(`{"usage":{"items":[null,{"kind":1},{"kind":"other"}]}}`)}, target: nil},
+		{name: "no selector", request: genai_prices.ExtractRequest{}, target: genai_prices.ErrProviderNotFound},
+		{name: "both selectors", request: genai_prices.ExtractRequest{ProviderID: "testing", ProviderAPIURL: "testing"}, target: genai_prices.ErrInvalidUsage},
+		{name: "unknown provider", request: genai_prices.ExtractRequest{ProviderID: "missing"}, target: genai_prices.ErrProviderNotFound},
+		{name: "no extractors", request: genai_prices.ExtractRequest{ProviderID: "empty"}, target: genai_prices.ErrExtractorNotFound},
+		{name: "unknown flavor", request: genai_prices.ExtractRequest{ProviderID: "testing"}, target: genai_prices.ErrExtractorNotFound},
+		{name: "invalid JSON", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`x`)}, target: nil},
+		{name: "non-mapping", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`[]`)}, target: nil},
+		{name: "null response", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`null`)}, target: nil},
+		{name: "boolean response", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`true`)}, target: nil},
+		{name: "missing root", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{}`)}, target: nil},
+		{name: "wrong root", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":1}`)}, target: nil},
+		{name: "missing required", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{}}`)}, target: nil},
+		{name: "wrong required type", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{"input":"1"}}`)}, target: nil},
+		{name: "wrong nested mapping", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "optional", ResponseJSON: []byte(`{"usage":{"nested":true}}`)}, target: nil},
+		{name: "negative", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "required", ResponseJSON: []byte(`{"usage":{"input":-1}}`)}, target: genai_prices.ErrInvalidUsage},
+		{name: "no optional usage", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "optional", ResponseJSON: []byte(`{"usage":{"nested":1}}`)}, target: nil},
+		{name: "array expected", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "array", ResponseJSON: []byte(`{"usage":{"items":{}}}`)}, target: nil},
+		{name: "array item missing", request: genai_prices.ExtractRequest{ProviderID: "testing", APIFlavor: "array", ResponseJSON: []byte(`{"usage":{"items":[null,{"kind":1},{"kind":"other"}]}}`)}, target: nil},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -346,11 +355,11 @@ func TestExtractUsageErrors(t *testing.T) {
 }
 
 func TestNilCalculator(t *testing.T) {
-	var calculator *genaiprices.Calculator
-	if _, err := calculator.Calculate(genaiprices.PriceRequest{}); !errors.Is(err, genaiprices.ErrInvalidData) {
+	var calculator *genai_prices.Calculator
+	if _, err := calculator.Calculate(genai_prices.PriceRequest{}); !errors.Is(err, genai_prices.ErrInvalidData) {
 		t.Fatal(err)
 	}
-	if _, err := calculator.ExtractUsage(genaiprices.ExtractRequest{}); !errors.Is(err, genaiprices.ErrInvalidData) {
+	if _, err := calculator.ExtractUsage(genai_prices.ExtractRequest{}); !errors.Is(err, genai_prices.ErrInvalidData) {
 		t.Fatal(err)
 	}
 }
@@ -386,7 +395,12 @@ func TestInvalidProviderData(t *testing.T) {
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"start":-1,"price":2}]}}}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"start":1,"price":-2}]}}}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[]}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"constraint":{"start_date":"2030-01-01"},"prices":{}}]}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"prices":{}}]}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{}]}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"constraint":{"start_date":"bad"},"prices":{}}]}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":{"start_date":"0000-01-01"},"prices":{}}]}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":{"start_date":"2026-01-01","tz":"UTC"},"prices":{}}]}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"constraint":{"start_time":"bad","end_time":"01:00:00Z"},"prices":{}}]}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"constraint":{"start_time":"00:00:00Z","end_time":"bad"},"prices":{}}]}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":[{"constraint":{},"prices":{}}]}]`),
@@ -396,22 +410,25 @@ func TestInvalidProviderData(t *testing.T) {
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{}}}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1}}}]`),
 		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"tiers":[]}}}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"price":2}]}}}]`),
+		provider(`"models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"start":1}]}}}]`),
 		provider(`"extractors":[{"root":1,"mappings":[]}],"models":[]`),
 		provider(`"extractors":[{"root":[1,"value"],"mappings":[]}],"models":[]`),
+		provider(`"extractors":[{"root":[null,"value"],"mappings":[]}],"models":[]`),
 	}
 	for index, data := range tests {
 		t.Run(strconv.Itoa(index+1), func(t *testing.T) {
-			_, err := genaiprices.NewCalculatorFromJSON([]byte(data))
-			if !errors.Is(err, genaiprices.ErrInvalidData) {
+			_, err := genai_prices.NewCalculatorFromJSON([]byte(data))
+			if !errors.Is(err, genai_prices.ErrInvalidData) {
 				t.Fatalf("got %v for %s", err, data)
 			}
 		})
 	}
 }
 
-func newTestCalculator(t *testing.T, data string) *genaiprices.Calculator {
+func newTestCalculator(t *testing.T, data string) *genai_prices.Calculator {
 	t.Helper()
-	calculator, err := genaiprices.NewCalculatorFromJSON([]byte(data))
+	calculator, err := genai_prices.NewCalculatorFromJSON([]byte(data))
 	if err != nil {
 		t.Fatal(err)
 	}
