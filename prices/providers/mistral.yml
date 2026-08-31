@@ -23,6 +23,27 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
+  # https://docs.mistral.ai/api/endpoint/audio/transcriptions
+  - api_flavor: transcription
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, audio_tokens]
+        dest: input_tokens
+        required: false
+      - path: [prompt_tokens_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+      - path: prompt_audio_seconds
+        dest: audio_seconds
+      - path: prompt_audio_seconds
+        dest: input_audio_seconds
   # https://docs.mistral.ai/api/endpoint/ocr
   - api_flavor: ocr
     root: usage_info

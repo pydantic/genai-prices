@@ -238,6 +238,57 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+@pytest.mark.parametrize('provider_id', ['openai', 'azure'])
+def test_openai_transcription_usage(provider_id: str) -> None:
+    provider = next(provider for provider in providers if provider.id == provider_id)
+
+    assert provider.extract_usage(
+        {
+            'usage': {
+                'type': 'tokens',
+                'total_tokens': 7,
+                'input_tokens': 5,
+                'input_token_details': {'text_tokens': 0, 'audio_tokens': 5},
+                'output_tokens': 2,
+            }
+        },
+        api_flavor='transcription',
+    ) == (
+        None,
+        Usage(input_tokens=5, input_text_tokens=0, input_audio_tokens=5, output_tokens=2),
+    )
+    assert provider.extract_usage(
+        {'usage': {'type': 'duration', 'seconds': 0.5}},
+        api_flavor='transcription',
+    ) == (None, Usage(audio_seconds=0.5, input_audio_seconds=0.5))
+
+
+def test_mistral_transcription_usage() -> None:
+    provider = next(provider for provider in providers if provider.id == 'mistral')
+    response_data = {
+        'model': 'voxtral-mini-latest',
+        'usage': {
+            'prompt_audio_seconds': 0.5,
+            'prompt_tokens': 3,
+            'total_tokens': 379,
+            'completion_tokens': 1,
+            'prompt_tokens_details': {'cached_tokens': 0, 'audio_tokens': 375},
+        },
+    }
+
+    assert provider.extract_usage(response_data, api_flavor='transcription') == (
+        'voxtral-mini-latest',
+        Usage(
+            input_tokens=378,
+            input_audio_tokens=375,
+            cache_read_tokens=0,
+            output_tokens=1,
+            audio_seconds=0.5,
+            input_audio_seconds=0.5,
+        ),
+    )
+
+
 @pytest.mark.parametrize(
     ('model_id', 'expected_price'),
     [
