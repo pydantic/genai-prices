@@ -323,7 +323,7 @@ jobs:
           version: "0.12.1"
           enable-cache: false
 
-      - run: uv publish --trusted-publishing always --check-url https://pypi.org/simple/ dist/*
+      - run: uv publish --trusted-publishing always
 
   release-npm:
     name: publish to npm
