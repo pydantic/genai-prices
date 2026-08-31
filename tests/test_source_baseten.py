@@ -62,9 +62,17 @@ def test_parse_catalog_rejects_duplicate_models() -> None:
 
 
 def test_parse_pricing_page_skips_incomplete_records() -> None:
-    page = r'\"__typename\":\"LibraryModelRecord\",\"perfCost\":1,\"perfCostOutput\":2}'
+    marker = r'\"__typename\":\"LibraryModelRecord\"'
+    page = (
+        marker + r',\"tryModelApiLink\":'
+        r'\"https://app.baseten.co/model-apis/zai-org/incomplete\",\"perfCostOutput\":2}'
+        + marker
+        + PRICING_PAGE.rsplit(marker, 1)[-1]
+    )
 
-    assert source_baseten.parse_pricing_page(page) == {}
+    assert source_baseten.parse_pricing_page(page) == {
+        'openai/gpt-oss-120b': ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5'))
+    }
 
 
 def test_parse_pricing_page_rejects_duplicate_models() -> None:

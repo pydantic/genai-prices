@@ -148,5 +148,5 @@ If any price change, new model, potential removal, unchecked field, or unreadabl
 Use tables and one row per finding. End with `Checked YYYY-MM-DD.` using the run date.
 
 Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
-checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all thirteen
+checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all fourteen
 direct providers match.
