@@ -132,7 +132,8 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-sonnet-4-20250514-v1:0')),
     ),
     pytest.param('bedrock', 'us.meta.llama3-2-90b-instruct-v1:0', snapshot(('aws', 'meta.llama3-2-90b-instruct-v1:0'))),
-    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o'))),
+    ('openai', 'gpt-4o-2024-05-13', snapshot(('openai', 'gpt-4o-2024-05-13'))),
+    ('openai', 'gpt-4o-2024-08-06', snapshot(('openai', 'gpt-4o'))),
     ('google-gla', 'gemini-1.5-flash', snapshot(('google', 'gemini-1.5-flash'))),
     (
         'groq',
@@ -229,6 +230,8 @@ test_cases: list[tuple[str, str, str]] = [
     ),
     ('mistral_ai', 'pixtral-large-2411', snapshot(('mistral', 'pixtral-large'))),
     ('mistral_ai', 'mistral-medium', snapshot(('mistral', 'mistral-medium-3-1'))),
+    ('mistral_ai', 'devstral-small-2507', snapshot(('mistral', 'devstral-small'))),
+    ('mistral_ai', 'labs-devstral-small-2512', snapshot(('mistral', 'devstral-small'))),
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
@@ -703,6 +706,113 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),
+    [
+        (
+            'bedrock',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            'aws',
+            'global.anthropic.claude-sonnet-5-v1:0',
+            1_000_000,
+        ),
+        ('azure', 'o1', 'azure', 'o1', 200_000),
+        ('azure', 'o1-preview', 'azure', 'o1-preview', 128_000),
+        ('openai', 'o1-preview', 'openai', 'o1-preview', 128_000),
+        ('openai', 'o1-preview-2024-09-12', 'openai', 'o1-preview', 128_000),
+        ('google-vertex', 'claude-sonnet-4-6', 'google', 'claude-sonnet-4-6', 1_000_000),
+        ('fireworks', 'accounts/fireworks/models/deepseek-v4-pro', 'fireworks', 'deepseek-v4-pro', 1_048_576),
+        # deliberately windowless: OpenRouter serves this model from endpoints with differing context
+        # lengths, so no single value is true — see the record's comment in openrouter.yml
+        ('openrouter', 'deepseek/deepseek-v4-pro', 'openrouter', 'deepseek/deepseek-v4-pro', None),
+        # direct value from OpenRouter's /models API (`context_length`), endpoint-unanimous
+        ('openrouter', 'deepseek/deepseek-v3.2-exp', 'openrouter', 'deepseek/deepseek-v3.2-exp', 163_840),
+        # the o1 record also matches the retired o1-preview aliases (128K vs o1's 200K), so it must
+        # not claim either window — a 200,000 here would mis-size o1-preview requests
+        ('openrouter', 'o1-preview', 'openrouter', 'openai/o1', None),
+        # Novita's own catalog (`context_size`), corroborated by OpenRouter's Novita endpoint —
+        # Novita serves this model at 12,288, far below other hosts' 131,072
+        ('novita', 'meta-llama/llama-3.3-70b-instruct', 'novita', 'meta-llama/llama-3.3-70b-instruct', 12_288),
+        ('novita', 'deepseek/deepseek-r1', 'novita', 'deepseek/deepseek-r1', 64_000),
+        # no longer in Novita's live catalog, so there is no source for a window
+        ('novita', 'meta-llama/llama-3.1-70b-instruct', 'novita', 'meta-llama/llama-3.1-70b-instruct', None),
+        # Mistral's own catalog (`max_context_length`), corroborated by OpenRouter's Mistral endpoints
+        ('mistral', 'mistral-small-2603', 'mistral', 'mistral-small-2603', 262_144),
+        # rolling -latest aliases have pointed to models with different windows (128k then 262,144
+        # per Mistral's model docs), so their records must not claim either value
+        ('mistral', 'mistral-small-latest', 'mistral', 'mistral-small-latest', None),
+        ('mistral', 'ministral-8b-latest', 'mistral', 'ministral-8b-latest', None),
+        # the codestral record also matches the retired codestral-2501 alias, whose window was the
+        # same 256k (per Mistral's Codestral 25.01 announcement), so the shared value is true for both
+        ('mistral', 'codestral-2501', 'mistral', 'codestral', 256_000),
+        # the mistral-large record also matches the retired 131,072 mistral-large-2407/2411 aliases
+        # vs mistral-large-latest's 262,144, so it must not claim either window
+        ('mistral', 'mistral-large-2407', 'mistral', 'mistral-large', None),
+        # starts_with match catches the retired 40k magistral releases vs latest's 262,144
+        ('mistral', 'magistral-medium-2506', 'mistral', 'magistral-medium', None),
+        # Groq's own catalog (`context_window`)
+        ('groq', 'qwen/qwen3-32b', 'groq', 'qwen/qwen3-32b', 131_072),
+        # no longer in Groq's live catalog, so there is no source for a window
+        ('groq', 'llama-3.3-70b-versatile', 'groq', 'llama-3.3-70b-versatile', None),
+        # OpenAI's model docs pages state each context window; corroborated by OpenRouter's
+        # OpenAI-served endpoints for o1-pro/o3-pro/gpt-audio
+        ('openai', 'o3-pro', 'openai', 'o3-pro', 200_000),
+        ('openai', 'chatgpt-4o-latest', 'openai', 'chatgpt-4o-latest', 128_000),
+        # the record also matches gpt-realtime-2.1-mini (128,000) vs gpt-realtime-mini's 32,000,
+        # so it must not claim either window
+        ('openai', 'gpt-realtime-2.1-mini', 'openai', 'gpt-realtime-mini', None),
+        # AWS Bedrock model cards state each context window ("Context window: 300K tokens" etc.)
+        ('bedrock', 'amazon.nova-pro-v1:0', 'aws', 'amazon.nova-pro-v1:0', 300_000),
+        ('bedrock', 'us.amazon.nova-2-lite-v1:0', 'aws', 'regional.amazon.nova-2-lite-v1:0', 1_000_000),
+        # AWS serves this below the model's native 256K — the card states 128K
+        ('bedrock', 'qwen.qwen3-coder-480b-a35b-v1:0', 'aws', 'qwen.qwen3-coder-480b-a35b-v1:0', 128_000),
+        # AWS's card states 272K with max output N/A — the GPT-5 family's input-only cap, so the
+        # total-window framing is unclear and the record stays windowless
+        ('bedrock', 'openai.gpt-5.4', 'aws', 'openai.gpt-5.4', None),
+        # Microsoft's own model cards and the Azure model catalog state each context window;
+        # "128K" resolves to 131,072 per Microsoft's own config.json (max_position_embeddings)
+        ('azure', 'phi-4', 'azure', 'phi-4', 16_384),
+        ('azure', 'phi-4-mini-instruct', 'azure', 'phi-4-mini-instruct', 131_072),
+        ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
+        # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
+        ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
+        # MiniMax's platform doc states 1,000,192 as the total input+output cap per request
+        ('minimax', 'minimax-01', 'minimax', 'minimax-01', 1_000_192),
+        # MiniMax states only separate input/output caps for M1, never a total window
+        ('minimax', 'minimax-m1', 'minimax', 'minimax-m1', None),
+        # the kimi-k2 family spans 128k (0711) and 256k (0905) windows, so the bare name gets none
+        ('moonshotai', 'kimi-k2', 'moonshotai', 'kimi-k2', None),
+        # Perplexity's model cards state each context length ("128K context length" etc.)
+        ('perplexity', 'sonar-pro', 'perplexity', 'sonar-pro', 200_000),
+        ('perplexity', 'sonar', 'perplexity', 'sonar', 128_000),
+        # removed from the Perplexity API 2025-12-15; no live statement of its window survives
+        ('perplexity', 'sonar-reasoning', 'perplexity', 'sonar-reasoning', None),
+        # docs.x.ai model pages state each context window ("Context window: N tokens")
+        ('x-ai', 'grok-4.20', 'x-ai', 'grok-4.20', 1_000_000),
+        ('x-ai', 'grok-build-0.1', 'x-ai', 'grok-build-0.1', 256_000),
+        # xAI states no context window for its voice models, and grok-voice-latest is a rolling
+        # alias that repointed to a different model on 2026-08-05
+        ('x-ai', 'grok-voice-latest', 'x-ai', 'grok-voice-latest', None),
+        # DeepSeek's API pricing pages state "128K" context length for the V3.x era; read decimal
+        # for consistency with the file's existing 64K/1M records (the HF configs' 163,840 is
+        # checkpoint capacity, not what DeepSeek's API serves)
+        ('deepseek', 'deepseek-v3.2', 'deepseek', 'deepseek-v3.2', 128_000),
+        ('deepseek', 'deepseek-v3.2-exp', 'deepseek', 'deepseek-v3.2-exp', 128_000),
+        ('deepseek', 'deepseek-v3.1-terminus', 'deepseek', 'deepseek-v3.1-terminus', 128_000),
+    ],
+)
+def test_model_has_effective_context_window(
+    provider_id: str, model_ref: str, expected_provider: str, provider_model: str, context_window: int | None
+):
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model(model_ref, None, provider_id, None)
+
+    assert provider.id == expected_provider
+    assert model.id == provider_model
+    assert model.context_window == context_window
 
 
 def test_compact_dated_model_ref_normalized():

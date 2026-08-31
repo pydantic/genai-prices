@@ -110,6 +110,8 @@ def test_ovhcloud_main_writes_and_collapses_generated_provider(
     output_path = providers_dir / 'ovhcloud.yml'
     assert output_path.is_file()
     assert 'gpt-oss-120b' in output_path.read_text()
+    assert output_path.read_text().count('api_flavor: default') == 1
+    assert output_path.read_text().count('api_flavor: chat') == 1
     output = capsys.readouterr().out
     assert output.count('Created ') == 2
     assert output.count('Collapsed and saved ') == 1

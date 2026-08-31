@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=.schema.json
+id: arcee
+name: Arcee
+description: OpenAI-compatible hosted inference through the Arcee Platform API.
+pricing_urls:
+  - https://docs.arcee.ai/get-started/pricing
+  - https://api.arcee.ai/api/v1/models
+api_pattern: 'https://api\.arcee\.ai(?:/|$)'
+provider_match:
+  contains: arcee
+price_comments: >-
+  Covers the complete public Text Models pricing table. The table publishes input, cached-input, and output token rates.
+  Context windows and rates for images, requests, and cache writes are omitted because the public pricing page does not publish
+  them. Model IDs use third-party namespaces, so they do not infer the Arcee provider without an Arcee provider ID or API URL.
+
+# Arcee returns an OpenAI-compatible chat completion response with standard model and usage fields.
+# https://docs.arcee.ai/api-reference/chat-completion
+extractors:
+  - api_flavor: default
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+models:
+  - id: deepseek/deepseek-v4-flash-latest
+    name: DeepSeek V4 Flash
+    match:
+      equals: deepseek/deepseek-v4-flash-latest
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 0.14
+      cache_read_mtok: 0.028
+      output_mtok: 0.28
+
+  - id: deepseek/deepseek-v4-pro
+    name: DeepSeek V4 Pro
+    match:
+      equals: deepseek/deepseek-v4-pro
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 1.74
+      cache_read_mtok: 0.20
+      output_mtok: 3.48
+
+  - id: moonshotai/kimi-k3
+    name: Kimi K3
+    match:
+      equals: moonshotai/kimi-k3
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
+
+  - id: thinkingmachines/inkling-small
+    name: Inkling Small
+    match:
+      equals: thinkingmachines/inkling-small
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 0.50
+      cache_read_mtok: 0.10
+      output_mtok: 1.20
+
+  - id: trinity-large-thinking
+    name: Trinity Large Thinking
+    match:
+      equals: trinity-large-thinking
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.06
+      output_mtok: 0.80
+
+  - id: zai-org/glm-5.2
+    name: GLM 5.2
+    match:
+      equals: zai-org/glm-5.2
+    prices_checked: 2026-08-28
+    prices:
+      input_mtok: 1.40
+      cache_read_mtok: 0.26
+      output_mtok: 4.40

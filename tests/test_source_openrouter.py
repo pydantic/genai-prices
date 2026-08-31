@@ -92,6 +92,17 @@ def test_native_provider_model_info_uses_native_model_id(model_id: str, native_m
     assert model_info.description == 'Test description'
 
 
+def test_model_info_carries_context_window_only_when_requested():
+    """OpenRouter's `context_length` describes their own offering, so it only goes on `openrouter` records."""
+    model = openrouter_model('anthropic/claude-opus-5')
+
+    openrouter_record = model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
+    native_record = model.model_info()
+
+    assert openrouter_record.context_window == 1_000_000
+    assert native_record.context_window is None
+
+
 @pytest.mark.parametrize(
     ('reasoning_per_token', 'expected_reasoning_mtok'),
     [
@@ -372,6 +383,11 @@ def test_openrouter_main_updates_metadata_and_reports_unknown_pricing_fields(
     assert anthropic_yaml.saved
     assert len(anthropic_yaml.updated) == 6
     assert [model.id for model in providers['perplexity'].added] == ['sonar-deep-research']
+
+    # `context_window` flows onto `openrouter` records only, never onto native provider records
+    assert all(model.context_window is not None for _, model in openrouter_yaml.updated)
+    assert all(model.context_window is None for _, model in anthropic_yaml.updated)
+    assert all(model.context_window is None for model in providers['perplexity'].added)
 
 
 def test_openrouter_main_writes_prices(monkeypatch: pytest.MonkeyPatch):

@@ -112,6 +112,9 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
         'huggingface_together.yml',
     }
     assert 'moonshotai/Kimi-K3' in (providers_dir / 'huggingface_together.yml').read_text()
+    together_yaml = (providers_dir / 'huggingface_together.yml').read_text()
+    assert together_yaml.count('api_flavor: default') == 1
+    assert together_yaml.count('api_flavor: chat') == 1
     assert [provider_yaml.path.name for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved] == [
         'huggingface_together.yml'
     ]

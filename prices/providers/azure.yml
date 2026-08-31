@@ -174,15 +174,18 @@ models:
       coding, and problem-solving capabilities, while unblocking a wide range of prompts previously restricted in R1.
     match:
       equals: mai-ds-r1:free
+    context_window: 163840
     prices: {}
 
+  # Azure documents the same limits as OpenAI for these o-series models.
+  # Keep o1 and o1-preview separate: the table lists 200,000 vs 128,000 input token limits.
+  # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
   - id: o1
+    canonical_model: openai/o1
     match:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
     prices_checked: 2025-07-03
     prices:
       input_mtok: 15
@@ -190,6 +193,7 @@ models:
       output_mtok: 60
 
   - id: o1-mini
+    canonical_model: openai/o1-mini
     match:
       or:
         - equals: o1-mini
@@ -200,7 +204,22 @@ models:
       cache_read_mtok: 0.55
       output_mtok: 4.4
 
+  - id: o1-preview
+    canonical_model: openai/o1-preview
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    prices_checked: 2025-07-03
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
   - id: o3-2025-04-16
+    canonical_model: openai/o3
     match:
       or:
         - equals: o3
@@ -212,6 +231,7 @@ models:
       output_mtok: 8
 
   - id: o3-mini
+    canonical_model: openai/o3-mini
     match:
       or:
         - equals: o3-mini
@@ -223,6 +243,7 @@ models:
       output_mtok: 4.4
 
   - id: o4-mini
+    canonical_model: openai/o4-mini
     match:
       or:
         - contains: o4-mini
@@ -241,6 +262,7 @@ models:
       adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
     match:
       equals: phi-3-medium-128k-instruct
+    context_window: 131072
     prices:
       input_mtok: 1
       output_mtok: 1
@@ -253,6 +275,7 @@ models:
       it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
     match:
       equals: phi-3-mini-128k-instruct
+    context_window: 131072
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -266,6 +289,7 @@ models:
       transformer model using the same tokenizer as Phi-3 Mini.
     match:
       equals: phi-3.5-mini-128k-instruct
+    context_window: 131072
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -277,6 +301,7 @@ models:
       with limited memory or where quick responses are needed.
     match:
       equals: phi-4
+    context_window: 16384
     prices:
       input_mtok: 0.07
       output_mtok: 0.14
@@ -288,6 +313,7 @@ models:
       with a focus on high-quality, reasoning-dense data.
     match:
       equals: phi-4-mini-instruct
+    context_window: 131072
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.
     prices:
@@ -308,6 +334,7 @@ models:
       post.
     match:
       equals: phi-4-multimodal-instruct
+    context_window: 131072
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
@@ -321,6 +348,7 @@ models:
       structured into a step-by-step reasoning trace and final answer.
     match:
       equals: phi-4-reasoning-plus
+    context_window: 32768
     prices:
       input_mtok: 0.07
       output_mtok: 0.35
@@ -334,6 +362,7 @@ models:
       structured into a step-by-step reasoning trace and final answer.
     match:
       equals: phi-4-reasoning-plus:free
+    context_window: 32768
     prices: {}
 
   - id: phi-4-reasoning:free
@@ -346,9 +375,12 @@ models:
       in a two-part format: reasoning trace followed by a final solution.
     match:
       equals: phi-4-reasoning:free
+    context_window: 32768
     prices: {}
 
   - id: text-embedding-3-large
+    # Azure documents 8,192 input tokens for both text-embedding-3 models: https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/azureopenai/embeddings
+    canonical_model: openai/text-embedding-3-large
     match:
       equals: text-embedding-3-large
     prices_checked: 2025-07-13
@@ -356,6 +388,7 @@ models:
       input_mtok: 0.13
 
   - id: text-embedding-3-small
+    canonical_model: openai/text-embedding-3-small
     match:
       equals: text-embedding-3-small
     prices_checked: 2025-07-13

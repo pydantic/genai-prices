@@ -143,6 +143,7 @@ models:
       RLHF. It is intended for research and evaluation.
     match:
       equals: chatgpt-4o-latest
+    context_window: 128000
     prices:
       input_mtok: 5
       output_mtok: 15
@@ -156,6 +157,7 @@ models:
       or:
         - equals: codex-mini
         - equals: codex-mini-latest
+    context_window: 200000
     prices:
       input_mtok: 1.5
       cache_read_mtok: 0.375
@@ -165,6 +167,7 @@ models:
     name: Computer use
     match:
       starts_with: computer-use
+    context_window: 8192
     prices:
       input_mtok: 3
       output_mtok: 12
@@ -426,7 +429,6 @@ models:
     match:
       or:
         - equals: gpt-4o
-        - equals: gpt-4o-2024-05-13
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
     context_window: 128000
@@ -435,6 +437,24 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-4o-2024-05-13
+    name: gpt 4o (2024-05-13)
+    description: >-
+      Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have
+      no cached-input discount.
+    match:
+      equals: gpt-4o-2024-05-13
+    context_window: 128000
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input
+      price. Ref: https://developers.openai.com/api/docs/pricing.md
+    prices:
+      input_mtok: 5
+      output_mtok: 15
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
 
@@ -486,6 +506,7 @@ models:
     description: Audio model for gpt-4o mini
     match:
       starts_with: gpt-4o-mini-audio
+    context_window: 128000
     prices_checked: 2025-07-22
     prices:
       # prompt_tokens includes audio_tokens; OpenAI lists the same price for
@@ -496,6 +517,7 @@ models:
   - id: gpt-4o-mini-realtime-preview
     match:
       starts_with: gpt-4o-mini-realtime
+    context_window: 16000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.6
@@ -508,6 +530,7 @@ models:
   - id: gpt-4o-mini-transcribe
     match:
       equals: gpt-4o-mini-transcribe
+    context_window: 16000
     prices:
       input_mtok: 1.25
       input_audio_mtok: 3
@@ -525,6 +548,7 @@ models:
   - id: gpt-4o-realtime-preview
     match:
       starts_with: gpt-4o-realtime
+    context_window: 32000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 5
@@ -543,6 +567,7 @@ models:
       or:
         - equals: gpt-4o-search-preview
         - equals: gpt-4o-search-preview-2025-03-11
+    context_window: 128000
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -552,6 +577,7 @@ models:
       or:
         - equals: gpt-4o-transcribe
         - equals: gpt-4o-transcribe-diarize
+    context_window: 16000
     prices_checked: 2026-08-24
     price_comments: See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.
     prices:
@@ -1169,6 +1195,7 @@ models:
         - equals: gpt-audio
         - equals: gpt-audio-2025-08-28
         - equals: gpt-audio-1.5
+    context_window: 128000
     prices_checked: 2026-06-26
     prices:
       input_mtok: 2.5
@@ -1186,6 +1213,7 @@ models:
         - equals: gpt-audio-mini
         - equals: gpt-audio-mini-2025-10-06
         - equals: gpt-audio-mini-2025-12-15
+    context_window: 128000
     prices_checked: 2026-06-26
     prices:
       input_mtok: 0.6
@@ -1286,6 +1314,7 @@ models:
       agentic, and general-purpose production use cases.
     match:
       equals: gpt-oss-120b
+    context_window: 131072
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
       published.
@@ -1300,6 +1329,7 @@ models:
       (MoE) architecture with 3.6B active parameters per forward pass.
     match:
       equals: gpt-oss-20b
+    context_window: 131072
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
       published.
@@ -1314,6 +1344,7 @@ models:
       Mixture-of-Experts (MoE) model offers lower latency for safety tasks.
     match:
       equals: gpt-oss-safeguard-20b
+    context_window: 131072
     prices_checked: 2026-06-09
     price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
       published.
@@ -1328,6 +1359,7 @@ models:
         - equals: gpt-realtime
         - equals: gpt-realtime-2025-08-28
         - equals: gpt-realtime-1.5
+    context_window: 32000
     prices_checked: 2026-07-22
     price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime.
     prices:
@@ -1345,6 +1377,7 @@ models:
       or:
         - equals: gpt-realtime-2
         - equals: gpt-realtime-2.1
+    context_window: 128000
     price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.
     prices_checked: 2026-07-22
     prices:
@@ -1366,6 +1399,8 @@ models:
         - equals: gpt-realtime-mini-2025-10-06
     prices_checked: 2026-07-22
     price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini.
+    # No context_window: this record also matches gpt-realtime-2.1-mini (128,000) while
+    # gpt-realtime-mini is 32,000 — no single value is true for every ref it matches
     prices:
       input_mtok: 0.6
       cache_read_mtok: 0.06
@@ -1391,6 +1426,10 @@ models:
       contains: moderation
     prices: {}
 
+  # Keep o1 and o1-preview separate even though their prices match: OpenAI documents different context windows
+  # (200,000 vs 128,000 tokens):
+  # https://developers.openai.com/api/docs/models/o1
+  # https://developers.openai.com/api/docs/models/o1-preview
   - id: o1
     name: o1
     description: O1 is a model that offers a balance between cost and performance.
@@ -1398,9 +1437,8 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
-    context_window: 128000
+    # https://developers.openai.com/api/docs/models/o1
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 15
@@ -1414,12 +1452,30 @@ models:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-mini
     context_window: 128000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
+
+  - id: o1-preview
+    name: o1 preview
+    description: Preview release of OpenAI's first reasoning model.
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-preview
+    context_window: 128000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
 
   - id: o1-pro
     name: o1-pro
@@ -1430,6 +1486,7 @@ models:
       or:
         - equals: o1-pro
         - equals: o1-pro-2025-03-19
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 150
@@ -1446,6 +1503,8 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
+    # https://developers.openai.com/api/docs/models/o3
+    context_window: 200000
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -1469,6 +1528,7 @@ models:
       or:
         - equals: o3-deep-research
         - equals: o3-deep-research-2025-06-26
+    context_window: 200000
     prices:
       input_mtok: 10
       cache_read_mtok: 2.5
@@ -1484,6 +1544,8 @@ models:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
         - equals: o3-mini-high
+    # https://developers.openai.com/api/docs/models/o3-mini
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
@@ -1499,6 +1561,7 @@ models:
       or:
         - equals: o3-pro
         - equals: o3-pro-2025-06-10
+    context_window: 200000
     prices:
       input_mtok: 20
       output_mtok: 80
@@ -1512,6 +1575,8 @@ models:
         - equals: o4-mini-2025-04-16
         - equals: o4-mini-high
         - equals: o4-mini
+    # https://developers.openai.com/api/docs/models/o4-mini
+    context_window: 200000
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
@@ -1525,6 +1590,7 @@ models:
       or:
         - equals: o4-mini-deep-research
         - equals: o4-mini-deep-research-2025-06-26
+    context_window: 200000
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5

@@ -123,6 +123,8 @@ models:
     name: qwen-3-coder-480b
     match:
       equals: qwen-3-coder-480b
+    # No context_window: Cerebras served this with a tier-dependent window (64k free tier vs 128k paid tiers),
+    # so no single value is true; deprecated by Cerebras on 2025-11-05.
     price_comments: Seems to be no longer available on cerebras, here to help with tests
     prices: {}
 
