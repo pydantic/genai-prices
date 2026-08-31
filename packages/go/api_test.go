@@ -106,15 +106,6 @@ func TestCalculateErrors(t *testing.T) {
 			},
 			target: genai_prices.ErrInvalidUsage,
 		},
-		{
-			name: "overflowing price",
-			request: genai_prices.PriceRequest{
-				Usage:      genai_prices.Usage{genai_prices.UsageOutputTokens: math.MaxFloat64},
-				Model:      "gpt-5",
-				ProviderID: "openai",
-			},
-			target: genai_prices.ErrInvalidUsage,
-		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -123,6 +114,24 @@ func TestCalculateErrors(t *testing.T) {
 				t.Fatalf("got %v, want %v", err, test.target)
 			}
 		})
+	}
+}
+
+func TestCalculateRejectsPriceOverflow(t *testing.T) {
+	calculator, err := genai_prices.NewCalculatorFromJSON([]byte(`[
+		{
+			"id":"testing","name":"Testing","api_pattern":"testing",
+			"models":[{"id":"model","match":{"equals":"model"},"prices":{"output_mtok":2}}]
+		}
+	]`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageOutputTokens: math.MaxFloat64}, Model: "model", ProviderID: "testing",
+	})
+	if !errors.Is(err, genai_prices.ErrInvalidUsage) {
+		t.Fatalf("got %v", err)
 	}
 }
 
