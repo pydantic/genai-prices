@@ -129,7 +129,7 @@ executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPath
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json"
+skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json,tests/cassettes/test_source_baseten/*.yaml"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"
