@@ -8,6 +8,7 @@ from pydantic import HttpUrl
 from prices.collapse import collapse_provider
 from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
+from prices.write_guard import check_model_count
 
 
 def get_model_infos(models: list[dict[str, Any]], provider: str):
@@ -42,6 +43,8 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
 
 def main():
     models = httpx2.get('https://router.huggingface.co/v1/models').json()['data']
+    if not models:
+        raise SystemExit('HuggingFace router returned no models; nothing written')
 
     providers = {p['provider'] for model in models for p in model['providers']}
     providers_dir = Path(__file__).parent / '../../providers'
@@ -52,9 +55,13 @@ def main():
     # Only the chat completions API is served, so it is also the `default` flavor (#324).
     extractors = [chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor]
 
+    # Build and check every provider before writing any, so a bad payload can't leave the set half-updated.
+    outputs: list[tuple[Path, str]] = []
     for provider in providers:
         provider_id = f'huggingface_{provider}'
+        path = providers_dir / f'{provider_id}.yml'
         model_infos = sorted(get_model_infos(models, provider), key=attrgetter('id'))
+        check_model_count(path, len(model_infos), source=f'HuggingFace router ({provider})')
         if not model_infos:
             continue
 
@@ -87,7 +94,9 @@ def main():
             '# !!!!!!\n\n'
         ) + get_provider_yaml_string(yaml_data)
 
-        path = providers_dir / f'{provider_id}.yml'
+        outputs.append((path, yaml_string))
+
+    for path, yaml_string in outputs:
         path.write_text(yaml_string)
         provider_yaml = ProviderYaml(path)
         if collapse_provider(provider_yaml):

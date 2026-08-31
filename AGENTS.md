@@ -93,7 +93,10 @@ make collapse-models                   # Collapse duplicate similar models
 
 `make help` lists every target. These importers run against live third-party APIs and nothing in CI
 exercises them, so they break silently when an upstream schema changes — if one returns suspiciously
-little, suspect the importer before the data.
+little, suspect the importer before the data. The importers that rewrite tracked `prices/providers/*.yml`
+(`huggingface-get`, `ovhcloud-get`, `quicksilverpro-get`) exit non-zero instead of writing when the upstream
+catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard.py`); set
+`PRICES_ALLOW_MODEL_COUNT_DROP=1` to override a genuine catalog cut.
 
 ## Important Notes
 
