@@ -18,13 +18,14 @@ func (calculator *Calculator) ExtractUsage(request ExtractRequest) (ExtractedUsa
 	if calculator == nil {
 		return ExtractedUsage{}, fmt.Errorf("%w: calculator is nil", ErrInvalidData)
 	}
-	if request.ProviderID == "" && request.ProviderAPIURL == "" {
+	providerID := strings.TrimSpace(request.ProviderID)
+	if providerID == "" && request.ProviderAPIURL == "" {
 		return ExtractedUsage{}, fmt.Errorf("%w: provider ID or provider API URL is required", ErrProviderNotFound)
 	}
-	if request.ProviderID != "" && request.ProviderAPIURL != "" {
+	if providerID != "" && request.ProviderAPIURL != "" {
 		return ExtractedUsage{}, fmt.Errorf("%w: provider ID and provider API URL are mutually exclusive", ErrInvalidUsage)
 	}
-	selected, err := findProvider(calculator.providers, "", request.ProviderID, request.ProviderAPIURL)
+	selected, err := findProvider(calculator.providers, "", providerID, request.ProviderAPIURL)
 	if err != nil {
 		return ExtractedUsage{}, fmt.Errorf("match provider: %w", err)
 	}
@@ -132,7 +133,7 @@ func (calculator *Calculator) ExtractUsage(request ExtractRequest) (ExtractedUsa
 		return ExtractedUsage{}, fmt.Errorf("no usage information found at %s", dottedPath(extractor.Root))
 	}
 	if modelID == "" && selected.ID == "cloudflare" && request.ProviderAPIURL != "" {
-		modelReference := cloudflareModelFromURL(request.ProviderAPIURL)
+		modelReference := strings.ToLower(cloudflareModelFromURL(request.ProviderAPIURL))
 		if modelReference != "" {
 			matchedModel, err := findModel(calculator.providers, selected, modelReference)
 			if err != nil {

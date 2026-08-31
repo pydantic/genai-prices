@@ -54,14 +54,14 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if calculator == nil {
 		return PriceCalculation{}, fmt.Errorf("%w: calculator is nil", ErrInvalidData)
 	}
-	if request.ProviderID != "" && request.ProviderAPIURL != "" {
+	providerID := strings.TrimSpace(request.ProviderID)
+	if providerID != "" && request.ProviderAPIURL != "" {
 		return PriceCalculation{}, fmt.Errorf("%w: provider ID and provider API URL are mutually exclusive", ErrInvalidUsage)
 	}
 	modelID := strings.ToLower(strings.TrimSpace(request.Model))
 	if modelID == "" {
 		return PriceCalculation{}, fmt.Errorf("%w: model is required", ErrModelNotFound)
 	}
-	providerID := strings.TrimSpace(request.ProviderID)
 	if strings.EqualFold(providerID, "litellm") {
 		actualProviderID, actualModelID, found := strings.Cut(modelID, "/")
 		if found && actualProviderID != "" && actualModelID != "" {

@@ -30,6 +30,21 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestCalculateTreatsWhitespaceProviderIDAsAbsent(t *testing.T) {
+	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage:          genai_prices.Usage{genai_prices.UsageInputTokens: 1_000},
+		Model:          "gpt-5",
+		ProviderID:     "  ",
+		ProviderAPIURL: "https://api.openai.com",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if calculation.ProviderID != "openai" {
+		t.Fatalf("got provider %q", calculation.ProviderID)
+	}
+}
+
 func TestCalculateReportsUnsupportedUsage(t *testing.T) {
 	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 		Usage: genai_prices.Usage{

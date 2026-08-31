@@ -268,7 +268,8 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 
 	cloudflare, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
 		ResponseJSON:   []byte(`{"usage":{"input":1}}`),
-		ProviderAPIURL: "https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/test/model",
+		ProviderID:     "  ",
+		ProviderAPIURL: "https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/Test/Model",
 	})
 	if err != nil {
 		t.Fatal(err)
