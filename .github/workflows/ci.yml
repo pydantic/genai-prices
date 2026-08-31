@@ -212,20 +212,29 @@ jobs:
       - run: npm run build --workspace=packages/js
       - run: mkdir -p npm-dist
       - run: npm pack --workspace=packages/js --pack-destination npm-dist
+      - name: Verify npm release artifact
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: test -f "npm-dist/pydantic-genai-prices-${VERSION}.tgz"
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-pypi-dist
           path: dist/
+          if-no-files-found: error
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-npm-dist
           path: npm-dist/
+          if-no-files-found: error
 
   release-pypi:
     name: publish to PyPI
     needs: [release-build]
-    if: needs.release-build.result == 'success'
+    # Not success(): v2-schema-frozen is skipped on tag runs, and a skipped job anywhere in the
+    # needs chain makes success() false. Including a status function also prevents GitHub from
+    # implicitly wrapping this expression in success().
+    if: ${{ !cancelled() && needs.release-build.result == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
@@ -245,7 +254,8 @@ jobs:
   release-npm:
     name: publish to npm
     needs: [release-build]
-    if: needs.release-build.result == 'success'
+    # Keep this explicit status function in sync with release-pypi; see the comment above.
+    if: ${{ !cancelled() && needs.release-build.result == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: release-npm
@@ -266,3 +276,16 @@ jobs:
 
       # Trusted publishing (OIDC) - no token; npm attaches provenance automatically.
       - run: npm publish npm-dist/pydantic-genai-prices-*.tgz --access public
+
+  release-check:
+    name: check release published
+    needs: [release-pypi, release-npm]
+    # This status function ensures the job still runs and reports a failure if a publish job is
+    # skipped or fails. Without it, GitHub would silently skip this job too.
+    if: ${{ !cancelled() && startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify both publish jobs succeeded
+        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}
