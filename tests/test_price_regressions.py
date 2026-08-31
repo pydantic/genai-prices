@@ -42,6 +42,37 @@ def test_gemini_25_flash_context_window() -> None:
 
 
 @pytest.mark.parametrize(
+    ('input_tokens', 'rate'),
+    [(200_000, '3'), (200_001, '6')],
+)
+def test_google_claude_sonnet_45_long_context_price_boundary(input_tokens: int, rate: str) -> None:
+    price = calc_price(Usage(input_tokens=input_tokens), model_ref='claude-sonnet-4-5@20250929', provider_id='google')
+
+    assert price.model.id == 'claude-sonnet-4-5'
+    assert price.input_price == mtok(rate, input_tokens)
+
+
+def test_google_claude_sonnet_45_long_context_cache_prices() -> None:
+    usage = Usage(input_tokens=300_001, cache_read_tokens=100_000, cache_write_tokens=50_000)
+
+    price = calc_price(usage, model_ref='claude-sonnet-4-5@20250929', provider_id='google')
+
+    expected_input = mtok('6', 150_001) + mtok('0.6', 100_000) + mtok('7.5', 50_000)
+    assert price.input_price == expected_input
+
+
+@pytest.mark.parametrize(
+    'model_ref',
+    ['claude-sonnet-4', 'claude-sonnet-4-0', 'claude-sonnet-4-20250514', 'anthropic/claude-sonnet-4'],
+)
+def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref: str) -> None:
+    price = calc_price(Usage(web_searches=1), model_ref=model_ref, provider_id='google')
+
+    assert price.model.id == 'claude-4-sonnet'
+    assert price.total_price == 0
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
     [
         ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),

@@ -13,6 +13,7 @@ from inline_snapshot import snapshot
 from prices import source_huggingface
 from prices.prices_types import ModelPrice, UsageExtractor
 from prices.source_huggingface import get_model_infos
+from prices.write_guard import ALLOW_MODEL_COUNT_DROP_ENV
 
 from .fixtures import load_entries
 
@@ -111,6 +112,70 @@ def test_huggingface_main_writes_and_collapses_generated_providers(monkeypatch: 
         'huggingface_together.yml',
     }
     assert 'moonshotai/Kimi-K3' in (providers_dir / 'huggingface_together.yml').read_text()
+    together_yaml = (providers_dir / 'huggingface_together.yml').read_text()
+    assert together_yaml.count('api_flavor: default') == 1
+    assert together_yaml.count('api_flavor: chat') == 1
     assert [provider_yaml.path.name for provider_yaml in FakeProviderYaml.instances if provider_yaml.saved] == [
         'huggingface_together.yml'
     ]
+
+
+def test_huggingface_main_exits_nonzero_on_empty_payload(monkeypatch: pytest.MonkeyPatch):
+    class FakeResponse:
+        def json(self) -> dict[str, list[dict[str, object]]]:
+            return {'data': []}
+
+    def fake_get(_url: str) -> FakeResponse:
+        return FakeResponse()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+
+    with pytest.raises(SystemExit, match='HuggingFace router returned no models'):
+        source_huggingface.main()
+
+
+def test_huggingface_main_checks_all_providers_before_writing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    monkeypatch.delenv(ALLOW_MODEL_COUNT_DROP_ENV, raising=False)
+
+    class FakeResponse:
+        def json(self) -> dict[str, list[dict[str, object]]]:
+            return {'data': huggingface_models()}
+
+    class FakeProviderYaml:
+        def __init__(self, path: Path) -> None:
+            assert path.name == 'openai.yml'
+            self.provider = SimpleNamespace(
+                extractors=[UsageExtractor(api_flavor='chat', root='usage', mappings=[])],
+            )
+
+    source_file = tmp_path / 'src' / 'prices' / 'source_huggingface.py'
+    source_file.parent.mkdir(parents=True)
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    existing_path = providers_dir / 'huggingface_together.yml'
+    models = ''.join(
+        f'  - id: model-{i}\n    match:\n      equals: model-{i}\n    prices:\n      input_mtok: 1\n' for i in range(10)
+    )
+    existing = (
+        f'id: huggingface_together\nname: HuggingFace Together\napi_pattern: https://example.com\nmodels:\n{models}'
+    )
+    existing_path.write_text(existing)
+
+    def fake_path(_: str) -> Path:
+        return source_file
+
+    def fake_get(_: str) -> FakeResponse:
+        return FakeResponse()
+
+    monkeypatch.setattr(source_huggingface, 'Path', fake_path)
+    monkeypatch.setattr(source_huggingface, 'ProviderYaml', FakeProviderYaml)
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+
+    with pytest.raises(
+        SystemExit,
+        match=r'HuggingFace router \(together\) returned 4 priced models but huggingface_together.yml has 10',
+    ):
+        source_huggingface.main()
+
+    assert list(providers_dir.iterdir()) == [existing_path]
+    assert existing_path.read_text() == existing

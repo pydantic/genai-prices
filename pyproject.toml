@@ -47,7 +47,6 @@ include = [
     "packages/python/**/*.py",
     "benchmarks/**/*.py",
     "tests/**/*.py",
-    ".github/scripts/**/*.py",
 ]
 
 [tool.ruff.lint]
@@ -121,7 +120,7 @@ reportIgnoreCommentWithoutRule = true
 reportUnusedParameter = true
 reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
-include = ["prices/src", "packages/python", "benchmarks", "tests", ".github/scripts"]
+include = ["prices/src", "packages/python", "benchmarks", "tests"]
 venv = ".venv"
 venvPath = "."
 # `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
@@ -130,7 +129,7 @@ executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPath
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json"
+skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json,tests/cassettes/test_source_baseten/*.yaml"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"

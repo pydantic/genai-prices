@@ -104,6 +104,75 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 3.2, model: 'composer-2.5' },
+    { expectedTotalPrice: 18.5, model: 'composer-2.5-fast' },
+    { expectedTotalPrice: 8.5, model: 'grok-4.5' },
+    { expectedTotalPrice: 23, model: 'grok-4.5-fast' },
+    { expectedTotalPrice: 8.5, model: 'grok-4.6' },
+    { expectedTotalPrice: 17, model: 'grok-4.6-fast' },
+  ])('prices Cursor $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'cursor',
+    })
+
+    expect(result?.total_price).toBe(expectedTotalPrice)
+  })
+
+  it.each([
+    { expectedTotalPrice: 0.68, model: 'zai-org/GLM-5.3-Flash', providerId: 'baseten' },
+    { expectedTotalPrice: 0.448, model: 'deepseek/deepseek-v4-flash-latest' },
+    { expectedTotalPrice: 5.42, model: 'deepseek/deepseek-v4-pro' },
+    { expectedTotalPrice: 18.3, model: 'moonshotai/kimi-k3' },
+    { expectedTotalPrice: 1.8, model: 'thinkingmachines/inkling-small' },
+    { expectedTotalPrice: 1.11, model: 'trinity-large-thinking' },
+    { expectedTotalPrice: 6.06, model: 'zai-org/glm-5.2' },
+  ])('prices provider model $model', ({ expectedTotalPrice, model, providerId = 'arcee' }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId,
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
+    { expectedInputPrice: (200_000 * 3) / 1_000_000, inputTokens: 200_000 },
+    { expectedInputPrice: (200_001 * 6) / 1_000_000, inputTokens: 200_001 },
+  ])('prices Google Claude Sonnet 4.5 at the 200K boundary', ({ expectedInputPrice, inputTokens }) => {
+    const result = calcPrice({ input_tokens: inputTokens }, 'claude-sonnet-4-5@20250929', { providerId: 'google' })
+
+    expect(result?.model.id).toBe('claude-sonnet-4-5')
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it('prices Google Claude Sonnet 4.5 long-context cache usage', () => {
+    const result = calcPrice(
+      { cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: 300_001 },
+      'claude-sonnet-4-5@20250929',
+      { providerId: 'google' }
+    )
+
+    const expectedInputPrice = (150_001 * 6 + 100_000 * 0.6 + 50_000 * 7.5) / 1_000_000
+    expect(result?.input_price).toBe(expectedInputPrice)
+  })
+
+  it.each([
+    { contextWindow: 200_000, model: 'anthropic/claude-sonnet-4.5', modelId: 'claude-sonnet-4-5' },
+    { contextWindow: 1_000_000, model: 'anthropic/claude-sonnet-4.6', modelId: 'claude-sonnet-4-6' },
+  ])('matches the direct Google offering for $model', ({ contextWindow, model, modelId }) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.model.id).toBe(modelId)
+    expect(result?.model.context_window).toBe(contextWindow)
+  })
+
+  it.each(['claude-sonnet-4-0', 'anthropic/claude-sonnet-4'])('keeps the Google Claude Sonnet 4 alias $model on Google', (model) => {
+    const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
+
+    expect(result?.provider.id).toBe('google')
+    expect(result?.model.id).toBe('claude-4-sonnet')
+  })
+
+  it.each([
     { expectedModelId: 'pixtral-12b', expectedTotalPrice: 0.000165, model: 'pixtral-12b-latest' },
     { expectedModelId: 'pixtral-large', expectedTotalPrice: 0.0026, model: 'pixtral-large-2411' },
     { expectedModelId: 'mixtral-8x7b', expectedTotalPrice: 0.00077, model: 'mixtral-8x7b-instruct-v0.1' },
@@ -138,6 +207,54 @@ describe('generated data split', () => {
 
     expect(result?.model.id).toBe(expectedModel)
   })
+
+  it('prices a bare GLM-5.3 model with Zhipu AI', () => {
+    const result = calcPrice({ input_tokens: 1_000, output_tokens: 100 }, 'glm-5.3')
+
+    expect(result?.provider.id).toBe('zhipuai')
+    expect(result?.model.id).toBe('GLM-5.3')
+    expect(result?.input_price).toBe(0.001103)
+    expect(result?.output_price).toBe(0.0003862)
+    expect(result?.total_price).toBe(0.0014892)
+  })
+
+  it.each([
+    {
+      expectedInput: 0.0000316,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.0000193,
+      expectedProvider: 'zhipuai',
+      model: 'GLM-5.3-Flash',
+      options: { providerId: 'zhipuai' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'GLM-5.3-Flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'zai',
+      model: 'glm-5.3-flash',
+      options: { providerApiUrl: 'https://api.z.ai/api/paas/v4' },
+    },
+    {
+      expectedInput: 0.000039,
+      expectedModel: 'z-ai/glm-5.3-flash',
+      expectedOutput: 0.000025,
+      expectedProvider: 'openrouter',
+      model: 'z-ai/glm-5.3-flash',
+      options: { providerApiUrl: 'https://openrouter.ai/api/v1' },
+    },
+  ])(
+    'prices GLM-5.3 Flash with $expectedProvider',
+    ({ expectedInput, expectedModel, expectedOutput, expectedProvider, model, options }) => {
+      const result = calcPrice({ cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }, model, options)
+
+      expect(result?.provider.id).toBe(expectedProvider)
+      expect(result?.model.id).toBe(expectedModel)
+      expect(result?.input_price).toBeCloseTo(expectedInput, 12)
+      expect(result?.output_price).toBeCloseTo(expectedOutput, 12)
+      expect(result?.total_price).toBeCloseTo(expectedInput + expectedOutput, 12)
+    }
+  )
 
   it.each([
     {
@@ -185,6 +302,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
         input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
         output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-20T23:59:59Z'),
@@ -195,6 +314,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
         input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
         output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-sol',
       timestamp: new Date('2026-08-21T00:00:00Z'),
@@ -205,6 +326,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
         input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
         output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-29T23:59:59Z'),
@@ -215,6 +338,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
         input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
         output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-luna',
       timestamp: new Date('2026-07-30T00:00:00Z'),
@@ -225,6 +350,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
         input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
         output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-29T23:59:59Z'),
@@ -235,6 +362,8 @@ describe('generated data split', () => {
         cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
         input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
         output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
+        storage_searches_kcount: 2.5,
+        web_searches_kcount: 10,
       },
       model: 'gpt-5.6-terra',
       timestamp: new Date('2026-07-30T00:00:00Z'),

@@ -3,6 +3,7 @@
 /prices/*.json
 /prices/new_data/**/*.json
 /prices/providers/.schema.json
+/packages/go/internal/data/prices.json
 /.html_cache/
 /htmlcov/
 /tests/cassettes/
@@ -13,3 +14,9 @@
 /.github/workflows/*.lock.yml
 /.github/workflows/agentics-maintenance.yml
 /.github/aw/
+
+# Vendored gh-aw engine definitions, copied verbatim from their upstream source
+# so they can be diffed against it — must stay byte-exact, never reformat.
+/.github/workflows/shared/
+# Plain glob patterns, not Markdown prose.
+/.macroscope/ignore.md
