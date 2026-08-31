@@ -93,6 +93,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/pydantic/genai-prices/packages/go"
 )
@@ -107,7 +108,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	response, err := http.DefaultClient.Do(request)
+	client := &http.Client{Timeout: 30 * time.Second}
+	response, err := client.Do(request)
 	if err != nil {
 		log.Fatal(err)
 	}

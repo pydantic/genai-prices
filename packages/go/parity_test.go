@@ -237,6 +237,7 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 				"api_flavor":"chat","root":"usage",
 				"mappings":[
 					{"path":"input","dest":"input_tokens","required":true},
+					{"path":"input_2","dest":"input_tokens","required":false},
 					{"path":["details",{"type":"array-match","field":"kind","match":{"equals":"cached"}},"tokens"],"dest":"cache_read_tokens","required":false},
 					{"path":"ignored","dest":"future_tokens","required":false},
 					{"path":"also_ignored","dest":"future_tokens","required":false}
@@ -264,6 +265,14 @@ func TestExtractUsagePathsAndCloudflareURL(t *testing.T) {
 	}
 	if len(extracted.Warnings) != 1 || strings.Count(extracted.Warnings[0], "future_tokens") != 1 {
 		t.Fatalf("unexpected warnings: %v", extracted.Warnings)
+	}
+	_, err = calculator.ExtractUsage(genai_prices.ExtractRequest{
+		ResponseJSON: []byte(`{"usage":{"input":1e308,"input_2":1e308}}`),
+		ProviderID:   "testing",
+		APIFlavor:    "chat",
+	})
+	if !errors.Is(err, genai_prices.ErrInvalidUsage) {
+		t.Fatalf("got %v", err)
 	}
 
 	cloudflare, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
@@ -371,6 +380,7 @@ func TestInvalidProviderData(t *testing.T) {
 	}
 	tests := []string{
 		`[{"id":"","name":"Testing","api_pattern":"testing","models":[]}]`,
+		`[{"id":"Testing","name":"Testing","api_pattern":"testing","models":[]}]`,
 		`[{"id":"testing","name":"Testing","api_pattern":"testing","models":[]},{"id":"testing","name":"Other","api_pattern":"other","models":[]}]`,
 		`[{"id":"testing","name":"Testing","api_pattern":"[","models":[]}]`,
 		provider(`"provider_match":{"equals":"a","contains":"b"},"models":[]`),

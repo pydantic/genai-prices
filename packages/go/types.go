@@ -94,6 +94,8 @@ type modelPrices struct {
 
 func (p *modelPrices) UnmarshalJSON(data []byte) error {
 	data = trimSpace(data)
+	p.direct = nil
+	p.conditional = nil
 	if len(data) > 0 && data[0] == '[' {
 		return json.Unmarshal(data, &p.conditional)
 	}

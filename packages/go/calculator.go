@@ -133,6 +133,9 @@ func (calculator *Calculator) validate() error {
 		if provider.ID == "" || provider.Name == "" || provider.APIPattern == "" {
 			return fmt.Errorf("provider id, name, and api_pattern are required")
 		}
+		if provider.ID != strings.ToLower(strings.TrimSpace(provider.ID)) {
+			return fmt.Errorf("provider ID %q must be lowercase without surrounding whitespace", provider.ID)
+		}
 		if _, duplicate := providerIDs[provider.ID]; duplicate {
 			return fmt.Errorf("duplicate provider ID %q", provider.ID)
 		}

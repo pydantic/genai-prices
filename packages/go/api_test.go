@@ -106,6 +106,15 @@ func TestCalculateErrors(t *testing.T) {
 			},
 			target: genai_prices.ErrInvalidUsage,
 		},
+		{
+			name: "overflowing price",
+			request: genai_prices.PriceRequest{
+				Usage:      genai_prices.Usage{genai_prices.UsageOutputTokens: math.MaxFloat64},
+				Model:      "gpt-5",
+				ProviderID: "openai",
+			},
+			target: genai_prices.ErrInvalidUsage,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -114,6 +123,31 @@ func TestCalculateErrors(t *testing.T) {
 				t.Fatalf("got %v, want %v", err, test.target)
 			}
 		})
+	}
+}
+
+func TestDuplicatePricesUsesLastValue(t *testing.T) {
+	calculator, err := genai_prices.NewCalculatorFromJSON([]byte(`[
+		{
+			"id":"testing","name":"Testing","api_pattern":"testing",
+			"models":[{
+				"id":"model","match":{"equals":"model"},
+				"prices":[{"prices":{"input_mtok":2}}],
+				"prices":{"input_mtok":1}
+			}]
+		}
+	]`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, Model: "model", ProviderID: "testing",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if calculation.TotalPrice != 1 {
+		t.Fatalf("got %g", calculation.TotalPrice)
 	}
 }
 

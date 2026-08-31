@@ -127,7 +127,11 @@ func (calculator *Calculator) ExtractUsage(request ExtractRequest) (ExtractedUsa
 		if err := validateNumber(string(mapping.Dest), number); err != nil {
 			return ExtractedUsage{}, err
 		}
-		usage[mapping.Dest] += number
+		total := usage[mapping.Dest] + number
+		if err := validateNumber(string(mapping.Dest), total); err != nil {
+			return ExtractedUsage{}, err
+		}
+		usage[mapping.Dest] = total
 	}
 	if supportedMappings > 0 && len(usage) == 0 {
 		return ExtractedUsage{}, fmt.Errorf("no usage information found at %s", dottedPath(extractor.Root))

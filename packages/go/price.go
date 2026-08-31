@@ -93,16 +93,31 @@ func calculateModelPrice(
 			}
 		}
 		unitPrice := price * count / item.unit.per
+		if err := validateNumber("calculated unit price", unitPrice); err != nil {
+			return 0, 0, 0, err
+		}
 		switch item.unit.dimensions["direction"] {
 		case "input":
 			inputPrice += unitPrice
+			if err := validateNumber("calculated input price", inputPrice); err != nil {
+				return 0, 0, 0, err
+			}
 		case "output":
 			outputPrice += unitPrice
+			if err := validateNumber("calculated output price", outputPrice); err != nil {
+				return 0, 0, 0, err
+			}
 		default:
 			totalPrice += unitPrice
+			if err := validateNumber("calculated total price", totalPrice); err != nil {
+				return 0, 0, 0, err
+			}
 		}
 	}
 	totalPrice += inputPrice + outputPrice
+	if err := validateNumber("calculated total price", totalPrice); err != nil {
+		return 0, 0, 0, err
+	}
 	return inputPrice, outputPrice, totalPrice, nil
 }
 
