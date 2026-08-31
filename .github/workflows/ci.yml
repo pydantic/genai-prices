@@ -318,9 +318,12 @@ jobs:
           name: release-pypi-dist
           path: dist/
 
-      - uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
-          skip-existing: true
+          version: "0.12.1"
+          enable-cache: false
+
+      - run: uv publish --trusted-publishing always
 
   release-npm:
     name: publish to npm
@@ -346,7 +349,7 @@ jobs:
           path: npm-dist/
 
       # Trusted publishing (OIDC) - no token; npm attaches provenance automatically.
-      - run: npm publish npm-dist/pydantic-genai-prices-*.tgz --access public
+      - run: npm publish ./npm-dist/pydantic-genai-prices-*.tgz --access public
 
   release-check:
     name: check release published
