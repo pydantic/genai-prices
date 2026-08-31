@@ -37,6 +37,7 @@ The following providers are currently supported:
 - [Avian](prices/providers/avian.yml) - 17 models
 - [AWS Bedrock](prices/providers/aws.yml) - 86 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
+- [Baseten](prices/providers/baseten.yml) - 15 models
 - [Cerebras](prices/providers/cerebras.yml) - 7 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models

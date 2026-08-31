@@ -70,6 +70,43 @@ def test_arcee_chat_usage(api_flavor: str) -> None:
     )
 
 
+def test_baseten_chat_usage() -> None:
+    response_data = {
+        'model': 'zai-org/GLM-5.3-Flash',
+        'usage': {
+            'prompt_tokens': 100,
+            'prompt_tokens_details': {'cached_tokens': 30, 'audio_tokens': 5},
+            'completion_tokens': 40,
+            'completion_tokens_details': {'reasoning_tokens': 10, 'audio_tokens': 3},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='baseten', api_flavor='chat')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'zai-org/GLM-5.3-Flash'
+    assert extracted.usage == Usage(
+        input_tokens=100,
+        cache_read_tokens=30,
+        input_audio_tokens=5,
+        output_tokens=40,
+        output_audio_tokens=3,
+        output_reasoning_tokens=10,
+    )
+
+
+def test_baseten_messages_usage() -> None:
+    response_data = {
+        'model': 'zai-org/GLM-5.3-Flash',
+        'usage': {'input_tokens': 70, 'cache_read_input_tokens': 30, 'output_tokens': 40},
+    }
+
+    extracted = extract_usage(response_data, provider_id='baseten', api_flavor='anthropic')
+
+    assert extracted.usage == Usage(input_tokens=100, cache_read_tokens=30, output_tokens=40)
+    assert extracted.calc_price().total_price == Decimal('0.0000314')
+
+
 @pytest.mark.parametrize(
     'response_data,expected_model,expected_usage,expected_price',
     [

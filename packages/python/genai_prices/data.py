@@ -2072,6 +2072,185 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='baseten',
+        name='Baseten',
+        api_pattern='https://inference\\.baseten\\.co(?:/|$)',
+        pricing_urls=['https://www.baseten.co/pricing/', 'https://docs.baseten.co/inference/model-apis/overview'],
+        description='OpenAI- and Anthropic-compatible hosted inference through Baseten Model APIs.',
+        price_comments="Covers the complete public Model APIs pricing table. Baseten automatically caches prompt prefixes and bills cached input at the published cache-input rate. Context windows use the catalog's displayed values in thousands of tokens. Model IDs use third-party namespaces, so they do not infer the Baseten provider without a Baseten provider ID or API URL.",
+        provider_match=ClauseContains(contains='baseten'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='anthropic',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Flash-0731',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Flash-0731'),
+                name='DeepSeek V4 Flash 0731',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.13'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.26')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro'),
+                name='DeepSeek V4 Pro',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro-0813',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.132'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K2.6',
+                match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
+                name='Kimi K2.6',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K2.7-Code',
+                match=ClauseEquals(equals='moonshotai/Kimi-K2.7-Code'),
+                name='Kimi K2.7 Code',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K3',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3'),
+                name='Kimi K3',
+                context_window=1048000,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B',
+                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B'),
+                name='NVIDIA Nemotron 3 Ultra',
+                context_window=202000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('2.4')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                name='GPT OSS 120B',
+                context_window=128000,
+                price_comments='The pricing table does not publish a separate cached-input rate for this model.',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling',
+                match=ClauseEquals(equals='thinkingmachines/inkling'),
+                name='Inkling',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-small'),
+                name='Inkling Small',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-4.7',
+                match=ClauseEquals(equals='zai-org/GLM-4.7'),
+                name='GLM 4.7',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.2',
+                match=ClauseEquals(equals='zai-org/GLM-5.2'),
+                name='GLM 5.2',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.2-Fast',
+                match=ClauseEquals(equals='zai-org/GLM-5.2-Fast'),
+                name='GLM 5.2 Fast',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3',
+                match=ClauseEquals(equals='zai-org/GLM-5.3'),
+                name='GLM 5.3',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3-Flash',
+                match=ClauseEquals(equals='zai-org/GLM-5.3-Flash'),
+                name='GLM 5.3 Flash',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='cerebras',
         name='Cerebras',
         api_pattern='https://api\\.cerebras\\.ai',

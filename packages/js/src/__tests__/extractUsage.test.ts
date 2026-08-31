@@ -8,6 +8,7 @@ import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
+const basetenProvider: Provider = data.find((provider) => provider.id === 'baseten')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
@@ -81,6 +82,42 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 10,
         output_tokens: 40,
       })
+    })
+
+    it('should extract Baseten chat usage', () => {
+      const responseData = {
+        model: 'zai-org/GLM-5.3-Flash',
+        usage: {
+          completion_tokens: 40,
+          completion_tokens_details: { audio_tokens: 3, reasoning_tokens: 10 },
+          prompt_tokens: 100,
+          prompt_tokens_details: { audio_tokens: 5, cached_tokens: 30 },
+        },
+      }
+
+      const { model, usage } = extractUsage(basetenProvider, responseData, 'chat')
+
+      expect(model).toBe('zai-org/GLM-5.3-Flash')
+      expect(usage).toEqual({
+        cache_read_tokens: 30,
+        input_audio_tokens: 5,
+        input_tokens: 100,
+        output_audio_tokens: 3,
+        output_reasoning_tokens: 10,
+        output_tokens: 40,
+      })
+    })
+
+    it('should extract Baseten Messages usage', () => {
+      const responseData = {
+        model: 'zai-org/GLM-5.3-Flash',
+        usage: { cache_read_input_tokens: 30, input_tokens: 70, output_tokens: 40 },
+      }
+
+      const { model, usage } = extractUsage(basetenProvider, responseData, 'anthropic')
+
+      expect(model).toBe('zai-org/GLM-5.3-Flash')
+      expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_tokens: 40 })
     })
 
     it('should extract usage with cache tokens', () => {

@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Direct Providers'
-description: 'Check thirteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
+description: 'Check fourteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
 on:
   workflow_dispatch:
   schedule: weekly on monday
@@ -78,6 +78,8 @@ network:
     - developers.cloudflare.com
     - cursor.com
     - docs.arcee.ai
+    - docs.baseten.co
+    - www.baseten.co
 ---
 
 # Price Check: Direct Providers
