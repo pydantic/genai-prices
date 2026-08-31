@@ -124,3 +124,15 @@ providers:
       cache_read_mtok, and output_mtok. Exclude context windows and image, request, and cache-write rates because the public
       pricing page does not publish them. Match exact model IDs and do not treat their third-party namespaces as provider
       ownership.
+
+  - name: Baseten
+    file: prices/providers/baseten.yml
+    scope: Models in Baseten's public Model APIs catalog and pricing table.
+    sources:
+      - https://docs.baseten.co/inference/model-apis/overview.md
+      - https://www.baseten.co/pricing/
+    notes: >-
+      The docs table is authoritative for API model IDs and context windows. The pricing table is authoritative for per-million
+      input, cached-input, and output token rates. Match the two tables by their Model API links; some pricing links use short
+      aliases while the docs table publishes qualified model IDs. A missing cached-input value is intentional only when the
+      pricing table displays a dash. Do not treat third-party namespaces as Baseten provider ownership.
