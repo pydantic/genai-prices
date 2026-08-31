@@ -9,6 +9,7 @@ from pydantic import HttpUrl
 from prices.collapse import collapse_provider
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
+from prices.write_guard import check_model_count
 
 
 def get_model_infos(models: list[dict[str, Any]]):
@@ -65,8 +66,8 @@ def main():
         data = response.json()
         models = data.get('data', [])
     except Exception as e:
-        print(f'Error fetching OVHcloud AI Endpoints models: {e}')
-        return
+        # Exit non-zero so a scheduled or scripted refresh can't report success on stale data.
+        raise SystemExit(f'Error fetching OVHcloud AI Endpoints models: {e}') from e
 
     providers_dir = Path(__file__).parent / '../../providers'
 
@@ -81,10 +82,11 @@ def main():
     model_infos = sorted(get_model_infos(models), key=attrgetter('id'))
 
     if not model_infos:
-        print('No valid models found with pricing information')
-        return
+        raise SystemExit('No valid models found with pricing information')
 
     provider_id = 'ovhcloud'
+    path = providers_dir / f'{provider_id}.yml'
+    check_model_count(path, len(model_infos), source='OVHcloud AI Endpoints')
 
     # Create provider configuration
     provider_info = Provider(
@@ -111,7 +113,6 @@ def main():
     ) + get_provider_yaml_string(yaml_data)
 
     # Write to file
-    path = providers_dir / f'{provider_id}.yml'
     path.write_text(yaml_string)
     print(f'Created {path}')
 

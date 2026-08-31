@@ -159,6 +159,8 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
+    if not or_response.data:
+        raise SystemExit('OpenRouter returned no models; nothing written')
     report_unknown_pricing_fields(or_response.data)
 
     providers_yaml = get_providers_yaml()

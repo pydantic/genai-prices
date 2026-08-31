@@ -347,6 +347,17 @@ def fake_providers() -> tuple[dict[str, FakeProviderYaml], FakeProviderYaml, Fak
     )
 
 
+def test_openrouter_main_exits_nonzero_on_empty_payload(monkeypatch: pytest.MonkeyPatch):
+    def fake_get(_url: str) -> FakeResponse:
+        return FakeResponse(b'{"data": []}')
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(source_openrouter, 'get_providers_yaml', lambda: pytest.fail('nothing should be loaded'))
+
+    with pytest.raises(SystemExit, match='OpenRouter returned no models'):
+        source_openrouter.main('metadata')
+
+
 def test_openrouter_main_updates_metadata_and_reports_unknown_pricing_fields(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):

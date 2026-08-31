@@ -11,6 +11,7 @@ from pydantic import HttpUrl
 from prices.collapse import collapse_provider
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
+from prices.write_guard import check_model_count
 
 CATALOG_URL = 'https://quicksilverpro.io/pricing.json'
 
@@ -71,6 +72,8 @@ def main():
         raise SystemExit('No valid models found with pricing information')
 
     provider_id = 'quicksilverpro'
+    path = providers_dir / f'{provider_id}.yml'
+    check_model_count(path, len(model_infos), source='QuickSilver Pro catalog')
     provider_info = Provider(
         id=provider_id,
         name='QuickSilver Pro',
@@ -91,7 +94,6 @@ def main():
         '# !!!!!!\n\n'
     ) + get_provider_yaml_string(yaml_data)
 
-    path = providers_dir / f'{provider_id}.yml'
     path.write_text(yaml_string)
     print(f'Created {path}')
 
