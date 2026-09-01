@@ -352,3 +352,40 @@ describe('Model Matching with Fallback', () => {
     })
   })
 })
+
+describe('Claude Fable 5 vs 5.1', () => {
+  // Fable 5.1 caches reads at 0.025x base input; Fable 5 at the usual 0.1x. The Fable 5
+  // records match by prefix, so a loose clause silently prices Fable 5.1 cache reads 4x
+  // too high instead of failing.
+  const usage = { cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }
+
+  it.each([
+    ['anthropic', 'claude-fable-5', 'claude-fable-5-1'],
+    ['google', 'claude-fable-5', 'claude-fable-5-1'],
+    ['aws', 'global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-1-v1:0'],
+    ['aws', 'us.anthropic.claude-fable-5-v1:0', 'us.anthropic.claude-fable-5-1-v1:0'],
+    ['openrouter', 'anthropic/claude-fable-5', 'anthropic/claude-fable-5.1'],
+  ])('keeps %s Fable 5.1 off Fable 5 prices', (providerId, fable5Ref, fable51Ref) => {
+    const fable5 = calcPrice(usage, fable5Ref, { providerId })
+    const fable51 = calcPrice(usage, fable51Ref, { providerId })
+
+    expect(fable51!.model.id).not.toBe(fable5!.model.id)
+    expect(fable51!.total_price).toBeCloseTo(fable5!.total_price / 4, 10)
+  })
+
+  it.each([
+    ['anthropic', 'claude-fable-5-1', 0.25],
+    ['google', 'claude-fable-5-1', 0.25],
+    ['aws', 'global.anthropic.claude-fable-5-1-v1:0', 0.25],
+    ['aws', 'us.anthropic.claude-fable-5-1-v1:0', 0.275],
+    ['openrouter', 'anthropic/claude-fable-5.1', 0.25],
+  ])('prices %s %s cache reads at the 0.025x rate', (providerId, modelRef, expected) => {
+    expect(calcPrice(usage, modelRef, { providerId })!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it('leaves the OpenRouter family-level alias on Fable 5', () => {
+    const price = calcPrice(usage, '~anthropic/claude-fable-latest', { providerId: 'openrouter' })
+
+    expect(price!.total_price).toBeCloseTo(1, 10)
+  })
+})

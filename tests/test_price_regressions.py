@@ -585,3 +585,57 @@ def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:
         'output_price': expected_output,
         'total_price': expected_output,
     }
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'fable_5_ref', 'fable_5_1_ref'),
+    [
+        ('anthropic', 'claude-fable-5', 'claude-fable-5-1'),
+        ('google', 'claude-fable-5', 'claude-fable-5-1'),
+        ('aws', 'global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-1-v1:0'),
+        ('aws', 'us.anthropic.claude-fable-5-v1:0', 'us.anthropic.claude-fable-5-1-v1:0'),
+        ('openrouter', 'anthropic/claude-fable-5', 'anthropic/claude-fable-5.1'),
+    ],
+)
+def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_ref: str, fable_5_1_ref: str) -> None:
+    """Fable 5.1 caches reads at 0.025x base input; Fable 5 at the usual 0.1x.
+
+    The Fable 5 records match by prefix, so a loose clause silently prices Fable 5.1 cache
+    reads 4x too high instead of failing.
+    """
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000)
+
+    fable_5 = calc_price(usage, model_ref=fable_5_ref, provider_id=provider_id)
+    fable_5_1 = calc_price(usage, model_ref=fable_5_1_ref, provider_id=provider_id)
+
+    assert fable_5.model.id != fable_5_1.model.id
+    assert fable_5_1.total_price == fable_5.total_price / 4
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'cache_read_mtok'),
+    [
+        ('anthropic', 'claude-fable-5-1', '0.25'),
+        ('google', 'claude-fable-5-1', '0.25'),
+        ('aws', 'global.anthropic.claude-fable-5-1-v1:0', '0.25'),
+        ('aws', 'us.anthropic.claude-fable-5-1-v1:0', '0.275'),
+        ('openrouter', 'anthropic/claude-fable-5.1', '0.25'),
+    ],
+)
+def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cache_read_mtok: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+    )
+
+    assert price.total_price == Decimal(cache_read_mtok)
+
+
+def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
+    """OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref='~anthropic/claude-fable-latest',
+        provider_id='openrouter',
+    )
+
+    assert price.total_price == Decimal('1')
