@@ -265,8 +265,13 @@ describe('Comprehensive API Tests', () => {
       ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-build-0.1', 200_000, 1, 2],
-      ['openai', 'gpt-5.5', 272_001, 5, 10],
-      ['openai', 'gpt-5.5-pro', 272_001, 30, 60],
+      ['openai', 'gpt-5.4', 272_000, 2.5, 5],
+      ['openai', 'gpt-5.4-pro', 272_000, 30, 60],
+      ['openai', 'gpt-5.5', 272_000, 5, 10],
+      ['openai', 'gpt-5.5-pro', 272_000, 30, 60],
+      ['openai', 'gpt-5.6-luna', 272_000, 0.2, 0.4],
+      ['openai', 'gpt-5.6-sol', 272_000, 4, 8],
+      ['openai', 'gpt-5.6-terra', 272_000, 2, 4],
     ]
 
     it.each(cases)(
