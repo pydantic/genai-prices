@@ -1,7 +1,6 @@
 package genai_prices_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"os"
@@ -83,18 +82,7 @@ func TestWrappedCompatibilityWarningsReachCalculationAndExtraction(t *testing.T)
 }
 
 func TestWrappedCalculatorSupportsRemoteOnlyUsageKey(t *testing.T) {
-	wrapper := readRawV3Wrapper(t)
-	wrapper.Units = appendRawUnit(t, wrapper.Units, `"remote_events":{
-		"dimensions":{"direction":"input","family":"remote_events"},"per":1000,"price_key":"remote_events_kcount"
-	}`)
-	wrapper.Providers = json.RawMessage(`[
-		{
-			"id":"testing","name":"Testing","api_pattern":"testing",
-			"extractors":[{"root":"usage","mappings":[{"path":"events","dest":"remote_events"}]}],
-			"models":[{"id":"model","match":{"equals":"model"},"prices":{"remote_events_kcount":2}}]
-		}
-	]`)
-	data, err := json.Marshal(wrapper)
+	data, err := os.ReadFile("../../tests/fixtures/remote-unit-v3.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,26 +92,48 @@ func TestWrappedCalculatorSupportsRemoteOnlyUsageKey(t *testing.T) {
 	}
 
 	extracted, err := calculator.ExtractUsage(genai_prices.ExtractRequest{
-		ResponseJSON: []byte(`{"model":"model","usage":{"events":500}}`),
-		ProviderID:   "testing",
+		ResponseJSON: []byte(`{"model":"remote-model","usage":{"events":500}}`),
+		ProviderID:   "remote-alias",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	remoteEvents := genai_prices.UsageKey("remote_events")
-	if extracted.Usage[remoteEvents] != 500 || len(extracted.Warnings) != 0 {
+	if extracted.Usage[remoteEvents] != 500 || extracted.ProviderID != "remote-fixture" ||
+		extracted.Model != "remote-model" || len(extracted.Warnings) != 0 {
 		t.Fatalf("unexpected extraction: %#v", extracted)
 	}
 	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
 		Usage:      genai_prices.Usage{remoteEvents: 500},
-		Model:      "model",
-		ProviderID: "testing",
+		Model:      "remote-model",
+		ProviderID: "remote-alias",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if calculation.InputPrice != 1 || calculation.OutputPrice != 0 || calculation.TotalPrice != 1 || len(calculation.Warnings) != 0 {
+	if calculation.ProviderID != "remote-fixture" || calculation.ModelID != "remote-model" ||
+		calculation.InputPrice != 1 || calculation.OutputPrice != 0 || calculation.TotalPrice != 1 ||
+		len(calculation.Warnings) != 0 {
 		t.Fatalf("unexpected calculation: %#v", calculation)
+	}
+
+	wrapper := readRawV3WrapperFromData(t, data)
+	wrapper.Units = json.RawMessage(`[]`)
+	invalid, err := json.Marshal(wrapper)
+	if err != nil {
+		t.Fatal(err)
+	}
+	invalidCalculator, err := genai_prices.NewCalculatorFromJSON(invalid)
+	if invalidCalculator != nil || !errors.Is(err, genai_prices.ErrInvalidData) {
+		t.Fatalf("got calculator=%#v error=%v", invalidCalculator, err)
+	}
+	repeated, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage:      genai_prices.Usage{remoteEvents: 500},
+		Model:      "remote-model",
+		ProviderID: "remote-alias",
+	})
+	if err != nil || repeated.TotalPrice != 1 {
+		t.Fatalf("original calculator changed: calculation=%#v error=%v", repeated, err)
 	}
 }
 
@@ -194,8 +204,13 @@ type rawV3Wrapper struct {
 
 func readRawV3Wrapper(t *testing.T) rawV3Wrapper {
 	t.Helper()
+	return readRawV3WrapperFromData(t, readV3Data(t))
+}
+
+func readRawV3WrapperFromData(t *testing.T, data []byte) rawV3Wrapper {
+	t.Helper()
 	var wrapper rawV3Wrapper
-	if err := json.Unmarshal(readV3Data(t), &wrapper); err != nil {
+	if err := json.Unmarshal(data, &wrapper); err != nil {
 		t.Fatal(err)
 	}
 	return wrapper
@@ -215,17 +230,4 @@ func assertCompatibilityWarning(t *testing.T, warnings []string) {
 	if len(warnings) != 1 || !strings.Contains(warnings[0], "Unsupported match variant at providers[0].provider_match") {
 		t.Fatalf("unexpected warnings: %v", warnings)
 	}
-}
-
-func appendRawUnit(t *testing.T, units json.RawMessage, member string) json.RawMessage {
-	t.Helper()
-	trimmed := bytes.TrimSpace(units)
-	if len(trimmed) < 2 || trimmed[len(trimmed)-1] != '}' {
-		t.Fatalf("unexpected units object: %s", units)
-	}
-	appended := append(json.RawMessage(nil), trimmed[:len(trimmed)-1]...)
-	appended = append(appended, ',')
-	appended = append(appended, member...)
-	appended = append(appended, '}')
-	return appended
 }
