@@ -16,6 +16,7 @@ NormalizedImplications = dict[str, tuple[ImplicationTriple, ...]]
 
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
 _PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+_MAX_SAFE_INTEGER = 9_007_199_254_740_991
 _JAVASCRIPT_KEYWORDS = frozenset(
     {
         'arguments',
@@ -75,46 +76,10 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
     """Validate publishable flat unit data and return the indexed registry."""
     # This validates the current registry only. Cross-release compatibility of
     # source unit data is a maintainer responsibility, not a build-time diff check.
-    price_keys: set[str] = set()
-    per_by_family: dict[str, int] = {}
-    dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
-
-    for usage_key, raw_unit in raw_units.items():
-        _validate_public_key('usage', usage_key)
-
-        price_key = cast(str, raw_unit.get('price_key', usage_key))
-        _validate_public_key('price', price_key)
-        if price_key in price_keys:
-            raise ValueError(f'Duplicate unit price key: {price_key}')
-        price_keys.add(price_key)
-
-        if 'per' not in raw_unit:
-            raise ValueError(f'Missing per for unit {usage_key}')
-        per = raw_unit['per']
-        if isinstance(per, bool) or not isinstance(per, int) or per <= 0:
-            raise ValueError(f'Invalid per for unit {usage_key}: expected a positive integer, got {per!r}')
-
-        dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
-        family_value = dimensions.get('family')
-        if family_value is None:
-            raise ValueError(f'Missing required family dimension for unit {usage_key}')
-
-        existing_per = per_by_family.setdefault(family_value, per)
-        if existing_per != per:
-            raise ValueError(
-                f'Inconsistent per for family dimension {family_value}: expected {existing_per}, got {per} on {usage_key}'
-            )
-
-        dimension_set = frozenset(dimensions.items())
-        if existing_usage_key := dimension_sets.get(dimension_set):
-            raise ValueError(f'Duplicate unit dimensions: {existing_usage_key} and {usage_key}')
-        dimension_sets[dimension_set] = usage_key
-
+    registry = validate_runtime_unit_projection(raw_units)
     normalized_implications = normalize_conditional_implications(raw_units)
     dimension_requirements_by_usage_key = _requirements_from_normalized_implications(normalized_implications)
-    registry = UnitRegistry(runtime_unit_projection(raw_units))
     _validate_interval_closure(registry, dimension_requirements_by_usage_key)
-    _validate_join_closedness(registry)
     return registry
 
 
@@ -141,6 +106,89 @@ def normalize_conditional_implications(
         requirements = _parse_dimension_requirements(usage_key, raw_unit.get('dimension_requirements', {}))
         normalized[usage_key] = _normalize_unit_implications(usage_key, dimensions, requirements)
     return normalized
+
+
+def validate_runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object]]) -> UnitRegistry:
+    """Validate invariants available from the runtime unit wire projection."""
+    raw_units_mapping = _object_mapping(raw_units, 'Invalid units: expected a mapping')
+
+    usage_keys: set[str] = set()
+    price_keys: set[str] = set()
+    per_by_family: dict[str, int] = {}
+    dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
+    validated_raw_units: dict[str, Mapping[str, object]] = {}
+
+    for raw_usage_key, raw_unit_value in raw_units_mapping.items():
+        if not isinstance(raw_usage_key, str):
+            raise ValueError(f'Invalid unit usage key: {raw_usage_key!r} is not a string')
+        usage_key = raw_usage_key
+        _validate_public_key('usage', usage_key)
+        if usage_key in usage_keys:
+            raise ValueError(f'Duplicate unit usage key: {usage_key}')
+        usage_keys.add(usage_key)
+
+        if not isinstance(raw_unit_value, Mapping):
+            raise ValueError(f'Invalid unit {usage_key}: expected a mapping')
+        raw_unit = cast(Mapping[str, object], raw_unit_value)
+        validated_raw_units[usage_key] = raw_unit
+
+        raw_price_key = raw_unit.get('price_key', usage_key)
+        if not isinstance(raw_price_key, str):
+            raise ValueError(f'Invalid unit price key for {usage_key}: expected a string, got {raw_price_key!r}')
+        price_key = raw_price_key
+        _validate_public_key('price', price_key)
+        if price_key in price_keys:
+            raise ValueError(f'Duplicate unit price key: {price_key}')
+        price_keys.add(price_key)
+
+        if 'per' not in raw_unit:
+            raise ValueError(f'Missing per for unit {usage_key}')
+        per = raw_unit['per']
+        if isinstance(per, bool) or not isinstance(per, int) or not 1 <= per <= _MAX_SAFE_INTEGER:
+            raise ValueError(
+                f'Invalid per for unit {usage_key}: expected a positive integer from 1 to '
+                f'{_MAX_SAFE_INTEGER}, got {per!r}'
+            )
+
+        if 'dimensions' not in raw_unit:
+            raise ValueError(f'Missing dimensions for unit {usage_key}')
+        raw_dimensions = raw_unit['dimensions']
+        if not isinstance(raw_dimensions, Mapping):
+            raise ValueError(f'Invalid dimensions for unit {usage_key}: expected a mapping')
+
+        dimensions: dict[str, str] = {}
+        for raw_dimension_key, raw_dimension_value in cast(Mapping[object, object], raw_dimensions).items():
+            if not isinstance(raw_dimension_key, str) or not raw_dimension_key:
+                raise ValueError(f'Invalid dimensions for unit {usage_key}: keys must be non-empty strings')
+            if not isinstance(raw_dimension_value, str) or not raw_dimension_value:
+                raise ValueError(f'Invalid dimensions for unit {usage_key}: values must be non-empty strings')
+            dimensions[raw_dimension_key] = raw_dimension_value
+
+        family_value = dimensions.get('family')
+        if family_value is None:
+            raise ValueError(f'Missing required family dimension for unit {usage_key}')
+
+        existing_per = per_by_family.setdefault(family_value, per)
+        if existing_per != per:
+            raise ValueError(
+                f'Inconsistent per for family dimension {family_value}: expected {existing_per}, got {per} on {usage_key}'
+            )
+
+        dimension_set = frozenset(dimensions.items())
+        if existing_usage_key := dimension_sets.get(dimension_set):
+            raise ValueError(f'Duplicate unit dimensions: {existing_usage_key} and {usage_key}')
+        dimension_sets[dimension_set] = usage_key
+
+    projection = runtime_unit_projection(validated_raw_units)
+    registry = UnitRegistry(projection)
+    _validate_join_closedness(registry)
+    return registry
+
+
+def _object_mapping(value: object, message: str) -> Mapping[object, object]:
+    if not isinstance(value, Mapping):
+        raise ValueError(message)
+    return cast(Mapping[object, object], value)
 
 
 def validate_export_payload(providers: list[Provider], units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:

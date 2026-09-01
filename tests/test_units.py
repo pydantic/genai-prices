@@ -22,6 +22,7 @@ from prices.build import load_units
 from prices.export_validation import (
     normalize_conditional_implications,
     runtime_unit_projection,
+    validate_runtime_unit_projection,
     validate_units,
 )
 
@@ -439,6 +440,98 @@ def test_runtime_unit_projection_is_ordered_canonical_and_runtime_only() -> None
             'dimensions': {'family': 'events', 'kind': 'different'},
         },
     }
+
+
+@pytest.mark.parametrize('per', [1, 9_007_199_254_740_991])
+def test_validate_runtime_unit_projection_accepts_safe_integer_boundaries(per: int) -> None:
+    registry = validate_runtime_unit_projection(
+        {'events': {'per': per, 'dimensions': {'family': f'events_{per}'}, 'extension': object()}}
+    )
+
+    assert registry.units['events'].per == per
+
+
+@pytest.mark.parametrize('per', [0, -1, True, 1.5, 9_007_199_254_740_992])
+def test_validate_runtime_unit_projection_rejects_invalid_normalization(per: Any) -> None:
+    with pytest.raises(ValueError, match='expected a positive integer from 1 to 9007199254740991'):
+        validate_runtime_unit_projection({'events': {'per': per, 'dimensions': {'family': 'events'}}})
+
+
+@pytest.mark.parametrize(
+    ('raw_units', 'message'),
+    [
+        ([], 'Invalid units: expected a mapping'),
+        ({1: {'per': 1, 'dimensions': {'family': 'events'}}}, 'usage key.*is not a string'),
+        ({'events': []}, 'Invalid unit events: expected a mapping'),
+        ({'events': {'dimensions': {'family': 'events'}}}, 'Missing per for unit events'),
+        ({'events': {'per': 1, 'price_key': 1, 'dimensions': {'family': 'events'}}}, 'price key.*expected a string'),
+        ({'events': {'per': 1}}, 'Missing dimensions for unit events'),
+        ({'events': {'per': 1, 'dimensions': []}}, 'dimensions.*expected a mapping'),
+        ({'events': {'per': 1, 'dimensions': {1: 'events'}}}, 'keys must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'': 'events'}}}, 'keys must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'family': 1}}}, 'values must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'family': ''}}}, 'values must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'kind': 'event'}}}, 'Missing required family dimension'),
+    ],
+)
+def test_validate_runtime_unit_projection_rejects_malformed_core(raw_units: Any, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_runtime_unit_projection(raw_units)
+
+
+def test_validate_runtime_unit_projection_enforces_identities_families_and_joins() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit price key: event_price'):
+        validate_runtime_unit_projection(
+            {
+                'events': {'per': 1, 'price_key': 'event_price', 'dimensions': {'family': 'events'}},
+                'special_events': {
+                    'per': 1,
+                    'price_key': 'event_price',
+                    'dimensions': {'family': 'events', 'kind': 'special'},
+                },
+            }
+        )
+
+    with pytest.raises(ValueError, match='Duplicate unit dimensions: events and event_count'):
+        validate_runtime_unit_projection(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'event_count': {'per': 1, 'dimensions': {'family': 'events'}},
+            }
+        )
+
+    with pytest.raises(ValueError, match='Inconsistent per for family dimension events'):
+        validate_runtime_unit_projection(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'special_events': {'per': 1_000, 'dimensions': {'family': 'events', 'kind': 'special'}},
+            }
+        )
+
+    with pytest.raises(ValueError, match='Missing join unit dimensions between special_events and batch_events'):
+        validate_runtime_unit_projection(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+                'batch_events': {'per': 1, 'dimensions': {'family': 'events', 'mode': 'batch'}},
+            }
+        )
+
+
+def test_validate_runtime_unit_projection_ignores_extensions_and_does_not_require_intervals() -> None:
+    registry = validate_runtime_unit_projection(
+        {
+            'events': {'per': 1, 'dimensions': {'family': 'events'}},
+            'special_batch_events': {
+                'per': 1,
+                'dimensions': {'family': 'events', 'kind': 'special', 'mode': 'batch'},
+                'dimension_requirements': [],
+                'future_extension': object(),
+            },
+        }
+    )
+
+    assert registry.ancestor_usage_keys('special_batch_events') == frozenset({'events'})
 
 
 def test_normalize_conditional_implications_is_transitive_and_canonical() -> None:
