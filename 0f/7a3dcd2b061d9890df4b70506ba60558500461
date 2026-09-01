@@ -1,0 +1,43 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_9e90b85cb22fb5::t_9eb21e7926f91b 103-105
+  s_9e90b85cb22fb5::t_d9c0808f492c8f 196-198
+  s_9e90b85cb22fb5::t_c85c4d34bb9ef5 459-461
+  s_9e90b85cb22fb5::t_f8758d8c90fd4b 463-465
+  s_9e90b85cb22fb5::t_f367a4961d6bbc 194,205-208,308-309,318-320,322,333,335-341,344,351,353-354,356-360,362-364,369-370,374-375,392,395-397
+  s_9e90b85cb22fb5::t_e65f5e24fa389c 179-181,193,200-203,213-215,312,323-325,327,330-332,345-349,352,378-381,389-390
+  s_9e90b85cb22fb5::t_44b9941907b1d7 195,313,595-600,602,642
+  s_9e90b85cb22fb5::t_35965d80a0588b 462
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_9e90b85cb22fb5::t_059d623663b868 301-317
+  s_9e90b85cb22fb5::t_d769b3a197cc83 319,325-326
+  s_9e90b85cb22fb5::t_5c92b653b485d0 191-196,352-355
+  s_9e90b85cb22fb5::t_40331884e72222 236-237,245,258-267
+  s_9e90b85cb22fb5::t_cccf3b279d528e 348-351,357-359,361
+  s_9e90b85cb22fb5::t_7cb2a8d52ad5db 390-391
+  s_9e90b85cb22fb5::t_843786b15fbc48 188
+  s_9e90b85cb22fb5::t_4d2b1dbab82945 37-44,286-290,379-384
+  s_9e90b85cb22fb5::t_1152ecb94e94e4 281
+  s_9e90b85cb22fb5::t_66e8b49db02ff6 186,189-190,209-218,232-234
+  s_9e90b85cb22fb5::t_d24d21ecec809b 404
+  s_9e90b85cb22fb5::t_c49797979e19ae 9
+  s_9e90b85cb22fb5::t_1d55f43616d271 13,411,531,536-540,543-544,547-552
+  s_9e90b85cb22fb5::t_b4d432036e2696 269,292-293,296
+  s_9e90b85cb22fb5::t_0a1065eea383f6 268
+  s_9e90b85cb22fb5::t_3896a5a3170403 318
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "0f7a3dcd2b061d9890df4b70506ba60558500461",
+  "prompts": {},
+  "sessions": {
+    "s_9e90b85cb22fb5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05ca6-b0ea-7ef1-b948-77019eaf6e36",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
