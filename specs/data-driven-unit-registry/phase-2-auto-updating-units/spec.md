@@ -28,6 +28,20 @@ This subsection defines the wire contract and the invariants shared by the build
 A new price key or extractor destination becomes usable without another package release, and no wrapped update is
 activated against an unrelated registry.
 
+**New v3 features degrade locally on older clients.** _(from "Changes — Shared contract and runtime behavior")_
+An older client applies every portion of a newer v3 payload that it understands. An unsupported addition is ignored at
+the smallest independently usable boundary rather than causing rejection of the wrapper, provider, or model around it.
+
+**Partial v3 support is explicit.** _(from "New v3 features degrade locally on older clients")_
+Ignoring an unsupported addition emits a deterministic upgrade warning through the client's existing warning channel,
+with enough member or provider/model context to identify what was skipped and that upgrading the package enables fuller
+support.
+
+**Incomplete old-client support does not require a new data version.** _(from "New v3 features degrade locally on older clients")_
+V3 may add features that older clients cannot use completely. Those clients continue receiving providers, models, and
+prices expressed through constructs they understand; a new endpoint version is reserved for a framing or core-semantic
+change that prevents safe use of the understood projection.
+
 **Python, JavaScript, and Go each consume the wrapped v3 contract.** _(from "Changes — Shared contract and runtime behavior")_
 Context: the build now generates and releases all three packages. Phase 2 gives each package a wrapped-v3 ingestion path.
 
@@ -48,38 +62,65 @@ The authoritative legacy-array shape is `prices/new_data/v2/data.schema.json` fr
 used by the initial v3 compatibility check.
 
 **Phase 2 publishes one full wrapped v3 payload.** _(from "Changes: Phase 2 is limited to versioned publication and paired runtime state", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
-`prices/new_data/v3/data.json` has exactly two members: a usage-keyed `units` object and a `providers` array. The colocated
-`prices/new_data/v3/data.schema.json` describes the complete wire shape.
+`prices/new_data/v3/data.json` has two required core members: a usage-keyed `units` object and a `providers` array. The
+colocated `prices/new_data/v3/data.schema.json` describes the current complete wire shape.
 
 **V3 unit definitions use the minimal runtime projection.**
 Only data required to construct the runtime registry is published with each unit.
 
-**V3 unit definitions have exactly three admitted members.** _(from "V3 unit definitions use the minimal runtime projection")_
-Each unit contains required `per`, optional `price_key`, and required `dimensions`; no additional member is allowed.
+**V3 unit definitions have three stable core members.** _(from "V3 unit definitions use the minimal runtime projection", "New v3 features degrade locally on older clients")_
+Each unit contains required `per`, optional `price_key`, and required `dimensions`. Additional members are extensions;
+clients that do not understand them ignore them and construct the unit from its understood core.
 
-**An omitted v3 `price_key` resolves to the usage key.** _(from "V3 unit definitions have exactly three admitted members")_
+**An omitted v3 `price_key` resolves to the usage key.** _(from "V3 unit definitions have three stable core members")_
 The wire omission and an explicit matching value construct the same runtime price-key identity.
 
-**V3 dimensions are a non-empty string mapping containing `family`.** _(from "V3 unit definitions have exactly three admitted members")_
+**V3 dimensions are a non-empty string mapping containing `family`.** _(from "V3 unit definitions have three stable core members")_
 Every dimension key and value is a string, and every unit declares its family.
 
 **Source-only conditional metadata is omitted from v3 unit definitions.** _(from "V3 unit definitions use the minimal runtime projection")_
 Conditional implications remain publisher input rather than runtime wire data.
 
-**V3 normalization factors fit every runtime exactly.** _(from "V3 unit definitions have exactly three admitted members", "Python, JavaScript, and Go each consume the wrapped v3 contract")_
+**V3 normalization factors fit every runtime exactly.** _(from "V3 unit definitions have three stable core members", "Python, JavaScript, and Go each consume the wrapped v3 contract")_
 `per` is an integer from 1 through 9,007,199,254,740,991 inclusive: JavaScript's `Number.MAX_SAFE_INTEGER`, the largest
 positive integer through which consecutive integer values have unique exact `Number` identities and safe integer
 round-tripping. Go converts only values in this range to `float64`. The schema, publisher, and all decoders enforce the
 same range.
 
-**The v3 provider member uses the cutover v2 provider contract.** _(from "The v2 provider contract is pinned at the Phase 2 cutover", "Phase 2 publishes one full wrapped v3 payload")_
+**The v3 provider member begins with the cutover v2 provider contract and evolves additively.** _(from "The v2 provider contract is pinned at the Phase 2 cutover", "Phase 2 publishes one full wrapped v3 payload", "New v3 features degrade locally on older clients")_
 It supports every provider field and value form in the v2 schema pinned above. Price maps and extractor destinations
-remain dynamically keyed strings resolved against the adjacent units. A new structural provider field or value shape
-requires a new versioned contract.
+remain dynamically keyed strings resolved against the adjacent units. Later schemas may add optional members and new
+structural variants without removing or redefining the core forms older clients understand.
 
-**The initial v3 schema is permanent.**
-Later v3 payloads validate against the cutover `data.schema.json`, and that schema file remains byte-for-byte unchanged.
-Provider and model entries and their admitted values may change within the frozen shape.
+**Unknown object members are ignorable v3 extensions.** _(from "New v3 features degrade locally on older clients")_
+Wrapper, unit, provider, model, extractor, match, constraint, and price objects validate every recognized member while
+ignoring unrecognized members. An added field alone never rejects a candidate.
+
+**Unsupported structural variants skip only their containing capability.** _(from "New v3 features degrade locally on older clients", "Partial v3 support is explicit")_
+For example, an unknown extractor variant skips that extractor while other extractors, models, prices, and providers
+remain usable. An unsupported match, constraint, or price variant skips the smallest containing entry that cannot be
+interpreted. A new provider or model whose usable parts are entirely unsupported may be omitted without blocking the
+rest of the update.
+
+**Behavior-changing extensions must be distinguishable from existing forms.** _(from "Unknown object members are ignorable v3 extensions", "Unsupported structural variants skip only their containing capability")_
+An added member may be ignored only when the recognized form remains correct without it. A new extractor, match,
+constraint, price, or other variant whose omitted behavior could change a result uses a distinguishable variant shape or
+discriminator, allowing an older client to skip that capability instead of misinterpreting it as an existing form.
+
+**The stable v3 core never changes meaning.** _(from "Incomplete old-client support does not require a new data version")_
+The required wrapper members and the names, types, defaults, and meanings of existing recognized fields remain stable.
+An optional member does not become required, and an existing object or variant does not acquire a new required member.
+Removing or redefining that core requires a new endpoint version because older clients could not recover an equivalent
+understood projection.
+
+**The v3 schema evolves with the payload.** _(from "The stable v3 core never changes meaning", "New v3 features degrade locally on older clients", "Behavior-changing extensions must be distinguishable from existing forms")_
+Each publication regenerates `data.schema.json` for the current complete shape. Compatibility checks permit additive
+extensions but reject removal or incompatible redefinition of the stable core.
+
+**Runtime compatibility is capability-based, not schema-version equality.** _(from "The v3 schema evolves with the payload", "Incomplete old-client support does not require a new data version")_
+An older v3 client does not reject a payload merely because the current schema contains fields or variants absent from
+the schema shipped with that client. Its decoder validates and uses the projection it understands, so compatible model
+and price updates continue flowing without a package upgrade.
 
 **An existing v3 unit's runtime definition never changes.**
 A later publication cannot remove an existing usage key or change its resolved `price_key`, `per`, or complete
@@ -116,9 +157,10 @@ implied assignment. This result is independent of YAML mapping order and source-
 The source representation may evolve only when the normalized triple set for every old usage key is identical. Changing
 the implication model or an old unit's normalized set requires a new wire contract.
 
-**A mistaken published unit or conditional implication requires a new contract.** _(from "An existing v3 unit's runtime definition never changes", "An existing v3 unit's normalized conditional implications never change")_
-V3 cannot correct or remove an erroneous `price_key`, `per`, dimension assignment, or conditional implication without
-changing the meaning already released packages attach to the stable URL.
+**A mistaken published unit or conditional implication is repaired additively.** _(from "An existing v3 unit's runtime definition never changes", "An existing v3 unit's normalized conditional implications never change", "Incomplete old-client support does not require a new data version")_
+V3 does not correct or remove an erroneous `price_key`, `per`, dimension assignment, or conditional implication in
+place. It publishes a replacement usage key or other additive representation while leaving the old meaning intact; a
+new endpoint version is needed only when no safe additive representation exists.
 
 **Every wrapped runtime candidate is append-only relative to its compatibility registry.** _(from "An existing v3 unit's runtime definition never changes", "Existing usage-key order is stable and new units append", "A new v3 unit never becomes an ancestor or intermediate of an existing unit")_
 Python and JavaScript compare with the active registry during preparation and immediately before activation. Go compares
@@ -129,23 +171,29 @@ ancestor of a known unit is rejected. Legacy provider arrays are exempt because 
 A runtime constructs and validates the complete candidate before activation or Go constructor return. Any failure leaves
 the Python or JavaScript pair unchanged and returns no Go calculator.
 
-**Runtime unit validation enforces every invariant available in the v3 projection.**
-It rejects an invalid wrapper or unit shape, unsafe public keys, out-of-range normalization, duplicate price or dimension
-identities, missing `family`, inconsistent family normalization, and missing joins for conflict-free units.
+**Runtime unit validation enforces every understood invariant in the v3 projection.** _(from "Unknown object members are ignorable v3 extensions")_
+It validates the recognized wrapper and unit core, unsafe public keys, normalization, price and dimension identities,
+`family`, family normalization, and joins for conflict-free understood units. Unknown members do not weaken validation
+of recognized data.
 
-**Runtime wire validation starts from a decoded JSON value.** _(from "Runtime unit validation enforces every invariant available in the v3 projection")_
+**Runtime wire validation starts from a decoded JSON value.** _(from "Runtime unit validation enforces every understood invariant in the v3 projection")_
 Python and Go decode bytes internally, while JavaScript normally receives an object after caller-owned JSON parsing.
 Phase 2 validates the resulting value consistently and does not promise detection of duplicate source-text object member
 names that a standard decoder has already collapsed.
 
-**Runtime provider validation uses the frozen v3 provider contract and candidate registry.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "The v3 provider member uses the cutover v2 provider contract")_
-Dynamic price keys and extractor destinations are resolved against the candidate. Every recognized model price in a
-wrapped candidate has complete ancestor and join coverage before activation or Go constructor return.
+**Runtime provider validation uses the understood v3 provider projection and candidate registry.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "The v3 provider member begins with the cutover v2 provider contract and evolves additively", "Unsupported structural variants skip only their containing capability")_
+Dynamic price keys and extractor destinations are resolved against the understood candidate units. Every retained model
+price has complete ancestor and join coverage before activation or Go constructor return. Unsupported price entries or
+extractor mappings are warned and omitted without discarding understood siblings.
 
-**Wrapped v3 candidates are validated eagerly in every runtime.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change")_
-Before Python or JavaScript activation or a Go constructor return, the entire decoded wrapper, every recognized provider
-structure and price value, every registry relationship, all model price coverage, and all extractor destinations are
-checked against the candidate registry. An official wrapper cannot contain an unknown registry name.
+**Wrapped v3 candidates eagerly validate their understood projection in every runtime.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change", "New v3 features degrade locally on older clients")_
+Before Python or JavaScript activation or a Go constructor return, every retained unit, provider structure, price value,
+registry relationship, model price, and extractor destination is checked against one candidate registry. Unsupported
+extensions are warned and removed during preparation; the remaining pair activates or returns atomically.
+
+**Recognized malformed v3 data still fails atomically.** _(from "Candidate preparation has no externally visible state change", "New v3 features degrade locally on older clients")_
+An unknown extension follows the warning-and-omit path, but an invalid value or shape for a construct the client claims
+to support is a contract error. That distinction prevents forward compatibility from hiding corruption in known data.
 
 **Python and JavaScript activate one paired state reference.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change")_
 After final validation, activation replaces one process-global reference containing registry and providers. Standard
@@ -154,8 +202,12 @@ pricing, matching, and extraction capture that reference once per operation.
 **Runtime ingestion tests cover both accepted root shapes.** _(from "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays", "The v2 provider contract is pinned at the Phase 2 cutover")_
 Each runtime exercises wrapped v3 objects and legacy provider arrays.
 
-**Runtime atomicity tests reject invalid candidates without state change.** _(from "Candidate preparation has no externally visible state change", "Wrapped v3 candidates are validated eagerly in every runtime")_
+**Runtime atomicity tests reject invalid candidates without state change.** _(from "Candidate preparation has no externally visible state change", "Wrapped v3 candidates eagerly validate their understood projection in every runtime", "Recognized malformed v3 data still fails atomically")_
 Coverage includes invalid units, providers, price coverage, extractor destinations, and append-only relationships.
+
+**Forward-compatibility tests retain the understood projection.** _(from "New v3 features degrade locally on older clients", "Partial v3 support is explicit", "Unknown object members are ignorable v3 extensions", "Unsupported structural variants skip only their containing capability", "Behavior-changing extensions must be distinguishable from existing forms")_
+Each runtime ignores added object members, warns and skips an unsupported extractor or price variant, and still activates
+understood providers, models, extractors, units, and prices from the same payload.
 
 **Runtime boundary tests pin decoded-value and integer rules.** _(from "V3 normalization factors fit every runtime exactly.", "Runtime wire validation starts from a decoded JSON value.")_
 They accept `per` values 1 and 9,007,199,254,740,991, reject 0, non-integers, and larger integers, and demonstrate that
@@ -181,8 +233,8 @@ Every baseline input is read from the target object rather than the working tree
 
 **Later checks compare deployed v3 data and source semantics from the exact target revision.** _(from "The bootstrap check compares both runtime units and conditional implications from the exact target revision")_
 They read `prices/new_data/v3/data.json`, `data.schema.json`, and `prices/units.yml` from the target object. Missing or
-invalid baselines, forbidden unit or implication changes, new ancestors, changed schema bytes, and candidate data that
-fails the deployed schema all fail publication.
+invalid baselines, forbidden unit or implication changes, new ancestors, incompatible stable-core schema changes, and
+candidate data that fails the candidate schema all fail publication. Additive schema extensions are allowed.
 
 **Compatibility checks report their full target object ID.** _(from "The bootstrap check compares both runtime units and conditional implications from the exact target revision", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
 CI output identifies the exact revision against which the candidate was authorized.
@@ -210,16 +262,14 @@ It excludes free models; omits provider `pricing_urls`, `description`, and `pric
 **Normal builds stop writing v2 after cutover.** _(from "The v3 cutover freezes the four v2 artifacts")_
 Publication writes the v3 contract, package generation reads it, and neither stage regenerates a v1 or v2 artifact.
 
-**The initial `build-prices` cutover writes v3 data and schema.** _(from "Phase 2 publishes one full wrapped v3 payload", "The initial v3 schema is permanent")_
+**The initial `build-prices` cutover writes v3 data and schema.** _(from "Phase 2 publishes one full wrapped v3 payload", "The v3 schema evolves with the payload")_
 It validates the authoring sources and bootstrap compatibility, regenerates `prices/providers/.schema.json`, then writes
 `prices/new_data/v3/data.json` and the first `data.schema.json`. It also verifies the frozen v2 bytes rather than
 deriving or rewriting them.
 
-**Later `build-prices` runs write provider authoring schema and v3 data.** _(from "The initial v3 schema is permanent", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
-They read the existing v3 schema, verify its bytes against the exact target revision, validate candidate data against it,
-regenerate `prices/providers/.schema.json` from the current unit source, and replace `data.json`. Inside
-`prices/new_data/v3/`, `data.json` is the only rewritten artifact after cutover; v3 schema generation is a check, not a
-write path.
+**Later `build-prices` runs write provider authoring schema, v3 schema, and v3 data.** _(from "The v3 schema evolves with the payload", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
+They compare the generated schema's stable core with the exact target revision, validate candidate data against the
+generated schema, regenerate `prices/providers/.schema.json`, and replace both v3 `data.schema.json` and `data.json`.
 
 **`package-data` reads and splits the validated v3 wrapper.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Phase 2 publishes one full wrapped v3 payload")_
 It does not reconstruct the wrapper from separate provider and unit sources and does not write publication artifacts.
@@ -236,8 +286,9 @@ provides one.
 **V2 cutover tests pin final artifact isolation.** _(from "The v3 cutover freezes the four v2 artifacts", "The final slim v2 payload remains an exact projection", "Normal builds stop writing v2 after cutover")_
 They pin the final v2 bytes, verify the slim projection, and prove normal builds do not rewrite those artifacts.
 
-**V3 publication tests pin the wrapper and schema.** _(from "Phase 2 publishes one full wrapped v3 payload", "The initial v3 schema is permanent")_
-They validate generated v3 data against the cutover schema and pin that schema's bytes.
+**V3 publication tests pin the wrapper and compatible schema evolution.** _(from "Phase 2 publishes one full wrapped v3 payload", "The v3 schema evolves with the payload", "The stable v3 core never changes meaning")_
+They validate generated v3 data against its schema, accept additive extensions, and reject removal or incompatible
+redefinition of stable core fields.
 
 **Compatibility tests pin target-bound unit evolution.** _(from "The bootstrap check compares both runtime units and conditional implications from the exact target revision", "Later checks compare deployed v3 data and source semantics from the exact target revision", "Compatibility checks report their full target object ID", "Every compatibility baseline read uses the reported target object ID")_
 They exercise bootstrap, later-source, stale-target, target-object reporting, stable unit ordering, old-unit and
