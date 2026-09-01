@@ -70,9 +70,9 @@ lookup are interpreted with the registry captured by that lookup operation; call
 active registry captured when extraction starts.
 
 **JavaScript keeps its current non-null update ordering.** _(from "Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements")_
-A later non-null `setProviderData(...)` invocation supersedes an older pending promise. `null` means no update and does
-not supersede a pending attempt. A rejected current promise leaves data unchanged, rejects `waitForUpdate()`, and warns
-fire-and-forget callers.
+A direct `null` is a no-op and does not supersede a pending attempt. Supplying a promise starts an update attempt and
+supersedes older pending attempts immediately, even if it later resolves to `null`. A rejected current promise leaves
+data unchanged, rejects `waitForUpdate()`, and warns fire-and-forget callers.
 
 **Go keeps immutable calculator construction.** _(from "Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements")_
 `Calculate(PriceRequest) (PriceCalculation, error)`, `NewCalculator() (*Calculator, error)`, and
@@ -98,15 +98,17 @@ validate recognized price keys and extractor destinations when those providers a
 
 **The v2 provider contract is pinned at the Phase 2 cutover.**
 The authoritative legacy-array shape is `prices/new_data/v2/data.schema.json` from the exact target-branch Git object
-used by the initial v3 compatibility check. Implementations decode every structural field and value form admitted by
-that schema. A `{start_date}` price constraint becomes a start-date constraint, and a `{start_time, end_time}` price
-constraint becomes a time-of-day constraint.
+used by the initial v3 compatibility check. Implementations decode every structural field and representation form
+admitted by that schema, subject to the baseline semantic validation rules below; the schema is not an exhaustive
+statement of valid numeric values or cross-field relationships. A `{start_date}` price constraint becomes a start-date
+constraint, and a `{start_time, end_time}` price constraint becomes a time-of-day constraint.
 
 **Legacy arrays retain each runtime's baseline structural tolerance.** _(from "The v2 provider contract is pinned at the Phase 2 cutover", "The audited Phase 1 behavioral baseline is Git object `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa`")_
 Python and JavaScript perform their existing activation-time parsing and normalization, including failure for malformed
 recognized structures they consume, but Phase 2 does not add exhaustive schema validation or rejection of extra object
 members. Go retains its constructor-time decode and full validation, including its existing tolerance for extra JSON
-object members. All three must continue accepting every shape admitted by the pinned v2 schema.
+object members. All three continue decoding every structural and representation form admitted by the pinned v2 schema,
+then apply their baseline semantic checks at the times specified below.
 
 **Legacy arrays retain each runtime's baseline registry-validation timing.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "Legacy arrays retain each runtime's baseline structural tolerance")_
 Python and JavaScript warn about unsupported extractor destinations while preparing the array, but defer unknown price
@@ -291,8 +293,9 @@ warning, and leaves the active pair unchanged. Non-`Error` promise rejection rea
 behavior; contract validation itself always creates `Error` with the synchronous prefix.
 
 **JavaScript `null` remains a no-op.** _(from "JavaScript keeps its current non-null update ordering")_
-Synchronous or promise-resolved `null` performs no validation, does not replace active data, and does not supersede a
-pending non-null attempt.
+Direct or promise-resolved `null` performs no validation and does not replace active data. Direct `null` does not
+supersede a pending attempt; a supplied promise supersedes older pending attempts immediately, so a later `null`
+resolution does not undo that supersession.
 
 **Go validation failures wrap `ErrInvalidData`.** _(from "Go keeps immutable calculator construction", "Candidate preparation has no externally visible state change")_
 `NewCalculatorFromJSON(...)` returns `nil` and an error satisfying `errors.Is(err, ErrInvalidData)` for an invalid
@@ -308,15 +311,18 @@ It excludes free models; omits provider `pricing_urls`, `description`, and `pric
 `description`, and `price_comments`; and otherwise equals the frozen full v2 provider data.
 
 **Normal builds stop writing v2 after cutover.** _(from "The v3 cutover freezes the four v2 artifacts")_
-Build and package generation read the v3 wrapper and never regenerate any v1 or v2 artifact.
+Publication writes the v3 contract, package generation reads it, and neither stage regenerates a v1 or v2 artifact.
 
 **The initial `build-prices` cutover writes v3 data and schema.** _(from "Phase 2 publishes one full wrapped v3 payload", "The initial v3 schema is permanent")_
-It validates the authoring sources and bootstrap compatibility, then writes `prices/new_data/v3/data.json` and the first
-`data.schema.json`. It also verifies the frozen v2 bytes rather than deriving or rewriting them.
+It validates the authoring sources and bootstrap compatibility, regenerates `prices/providers/.schema.json`, then writes
+`prices/new_data/v3/data.json` and the first `data.schema.json`. It also verifies the frozen v2 bytes rather than
+deriving or rewriting them.
 
-**Later `build-prices` runs write only v3 data.** _(from "The initial v3 schema is permanent", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
+**Later `build-prices` runs write provider authoring schema and v3 data.** _(from "The initial v3 schema is permanent", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
 They read the existing v3 schema, verify its bytes against the exact target revision, validate candidate data against it,
-and replace only `data.json`; schema generation is a check, not a write path.
+regenerate `prices/providers/.schema.json` from the current unit source, and replace `data.json`. Inside
+`prices/new_data/v3/`, `data.json` is the only rewritten artifact after cutover; v3 schema generation is a check, not a
+write path.
 
 **`package-data` reads and splits the validated v3 wrapper.** _(from "Normal builds stop writing v2 after cutover")_
 It does not reconstruct the wrapper from separate provider and unit sources and does not write publication artifacts.
@@ -400,8 +406,8 @@ old-implication, removal, and new-ancestor rejection.
 They cover both input shapes; all v2-admitted provider fields and value forms, including both constraint shapes; each
 runtime's legacy structural tolerance and validation timing; Python fetch, activation, lookup provenance, clearing,
 stop/join, manual-write exclusion, and exact exception behavior; JavaScript synchronous, asynchronous, null, current and
-stale rejection, and promise identity; Go `ErrInvalidData`; append-only activation; invalid units, providers, and
-coverage; and one-state-per-operation capture.
+stale rejection, promise identity, direct-null no-op, and promise-resolved-null supersession; Go `ErrInvalidData`;
+append-only activation; invalid units, providers, and coverage; and one-state-per-operation capture.
 
 **Runtime boundary tests pin decoded-value and integer rules.** _(from "V3 normalization factors fit every runtime exactly.", "Runtime wire validation starts from a decoded JSON value.")_
 They accept `per` values 1 and 9,007,199,254,740,991, reject 0, non-integers, and larger integers, and demonstrate that
