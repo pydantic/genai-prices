@@ -1,0 +1,19 @@
+specs/data-driven-unit-registry/spec.md
+  s_160643a39ba27d::t_2fe057675d5f90 121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "a16be1dbd1c6f7bf71fc0227f296834c0cb5180d",
+  "prompts": {},
+  "sessions": {
+    "s_160643a39ba27d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05da8-e7b2-77b1-a7d0-5c09b9301379",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
