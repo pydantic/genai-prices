@@ -5,6 +5,7 @@ import json
 import logging
 import threading
 import warnings
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from time import time
 from types import TracebackType
@@ -28,7 +29,7 @@ DEFAULT_UPDATE_URL = (
 # All instances share one worker so libraries can opt in independently without duplicate threads.
 # The one lock guards the worker reference, claim counts, and snapshot install/restore, and is
 # never held across anything that blocks — stop() signals the worker instead of joining it — so
-# it cannot deadlock and Ctrl-C has nothing to interrupt.
+# lifecycle calls never wait for the worker.
 _lock = threading.Lock()
 _worker: _Worker | None = None
 
@@ -95,6 +96,8 @@ class UpdatePrices:
         """
         global _worker
 
+        _check_not_worker_thread('start')
+        dead_worker_warning = False
         config_warning: str | None = None
         with _lock:
             if self._worker is not None:
@@ -103,7 +106,7 @@ class UpdatePrices:
             worker = _worker
             if worker is not None and worker.dead:
                 # Don't join a worker that died unexpectedly; start a replacement.
-                logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
+                dead_worker_warning = True
                 worker = None
             if worker is None:
                 worker = _Worker(self)
@@ -112,13 +115,18 @@ class UpdatePrices:
                     _worker = worker
                     self._worker = worker
                     worker.thread.start()
-                except BaseException:
+                except BaseException as e:
                     # Thread.start() can fail after the OS thread launched; a shut-down worker
-                    # exits on its own, so releasing ownership is the whole rollback.
-                    worker.shutdown()
-                    _worker = None
-                    self._worker = None
-                    raise
+                    # exits on its own once ownership rollback completes.
+                    def rollback() -> None:
+                        global _worker
+
+                        worker.shutdown()
+                        _worker = None
+                        self._worker = None
+
+                    interrupted = _finish_despite_interruption(rollback)
+                    raise interrupted or e
             else:
                 owner = worker.owner
                 if (self.url, self.update_interval, self.request_timeout) != (
@@ -134,7 +142,13 @@ class UpdatePrices:
                 worker.claims += 1
                 self._worker = worker
 
-        # Warning hooks are arbitrary application code; never call them while holding the lock.
+        # Logging and warning hooks are arbitrary application code; never call them while holding the lock.
+        if dead_worker_warning:
+            try:
+                logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
+            except BaseException:
+                self.stop()
+                raise
         if config_warning is not None:
             try:
                 warnings.warn(config_warning, stacklevel=2)
@@ -169,19 +183,32 @@ class UpdatePrices:
         """
         global _worker
 
+        _check_not_worker_thread('stop')
         with _lock:
             worker = self._worker
             if worker is None:
                 return
-            self._worker = None
-            worker.claims -= 1
-            if worker.claims == 0:
-                worker.shutdown()
-                if _worker is worker:
-                    # A dead worker may already have been replaced; only the current worker's
-                    # retirement restores the bundled prices.
-                    _worker = None
-                    data_snapshot.set_custom_snapshot(None)
+            remaining_claims = worker.claims - 1
+
+            def cleanup() -> None:
+                global _worker
+
+                # Fixed target values make retries idempotent at every interruption point.
+                worker.claims = remaining_claims
+                self._worker = None
+                if remaining_claims == 0:
+                    try:
+                        worker.shutdown()
+                    finally:
+                        if _worker is worker:
+                            # A dead worker may already have been replaced; only the current worker's
+                            # retirement restores the bundled prices.
+                            data_snapshot.set_custom_snapshot(None)
+                            _worker = None
+
+            interrupted = _finish_despite_interruption(cleanup)
+            if interrupted is not None:
+                raise interrupted
 
     def __enter__(self):
         self.start()
@@ -202,6 +229,24 @@ class UpdatePrices:
 
         providers = _providers_from_raw(raw_payload)
         return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+
+
+def _check_not_worker_thread(action: str) -> None:
+    worker = _worker
+    if worker is not None and threading.current_thread() is worker.thread:
+        raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
+
+
+def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
+    """Finish idempotent lifecycle bookkeeping before propagating an interruption."""
+    interrupted: BaseException | None = None
+    while True:
+        try:
+            action()
+        except (KeyboardInterrupt, SystemExit) as e:
+            interrupted = e
+        else:
+            return interrupted
 
 
 class _Worker:
@@ -240,9 +285,15 @@ class _Worker:
         Runs under `_lock` and must not block: an in-flight fetch is not waited for, and its
         result is discarded because installs check `stop_event` under the same lock.
         """
-        self.stop_event.set()
-        # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
-        self.ready.set()
+
+        def cleanup() -> None:
+            self.stop_event.set()
+            # Wake waiters blocked before the first fetch; with no outcome, wait() returns False.
+            self.ready.set()
+
+        interrupted = _finish_despite_interruption(cleanup)
+        if interrupted is not None:
+            raise interrupted
 
     def _publish(self, error: Exception | None) -> None:
         self._outcome = (error, error.__traceback__ if error is not None else None)
