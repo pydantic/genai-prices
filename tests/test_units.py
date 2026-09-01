@@ -23,6 +23,7 @@ from prices.export_validation import (
     normalize_conditional_implications,
     runtime_unit_projection,
     validate_runtime_unit_projection,
+    validate_unit_evolution,
     validate_units,
 )
 
@@ -532,6 +533,147 @@ def test_validate_runtime_unit_projection_ignores_extensions_and_does_not_requir
     )
 
     assert registry.ancestor_usage_keys('special_batch_events') == frozenset({'events'})
+
+
+def _published_evolution_source() -> dict[str, dict[str, Any]]:
+    return {
+        'events': {'per': 1, 'dimensions': {'family': 'events'}},
+        'special_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'kind': 'special'},
+            'dimension_requirements': {'kind': {'family': 'events'}},
+        },
+    }
+
+
+def test_validate_unit_evolution_accepts_appended_descendants_intersections_and_families() -> None:
+    previous_source = _published_evolution_source()
+    candidate_source = {
+        **previous_source,
+        'vip_events': {'per': 1, 'dimensions': {'family': 'events', 'audience': 'vip'}},
+        'vip_special_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'kind': 'special', 'audience': 'vip'},
+        },
+        'seconds': {'per': 1, 'dimensions': {'family': 'durations'}},
+    }
+
+    validate_unit_evolution(
+        runtime_unit_projection(previous_source),
+        normalize_conditional_implications(previous_source),
+        candidate_source,
+    )
+    assert list(runtime_unit_projection(candidate_source))[-3:] == [
+        'vip_events',
+        'vip_special_events',
+        'seconds',
+    ]
+
+
+def test_validate_unit_evolution_accepts_additive_replacement_for_mistaken_unit() -> None:
+    previous_source = {
+        'mistaken_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'mistaken'}},
+    }
+    candidate_source = {
+        **previous_source,
+        'corrected_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'kind': 'mistaken', 'correction': 'v2'},
+        },
+    }
+
+    validate_unit_evolution(
+        runtime_unit_projection(previous_source),
+        normalize_conditional_implications(previous_source),
+        candidate_source,
+    )
+
+
+def test_validate_unit_evolution_rejects_removal_reordering_and_insertion() -> None:
+    previous_source = _published_evolution_source()
+    previous_projection = runtime_unit_projection(previous_source)
+    previous_implications = normalize_conditional_implications(previous_source)
+
+    with pytest.raises(ValueError, match='Removed published unit: special_events'):
+        validate_unit_evolution(previous_projection, previous_implications, {'events': previous_source['events']})
+
+    with pytest.raises(ValueError, match='Reordered published units'):
+        validate_unit_evolution(
+            previous_projection,
+            previous_implications,
+            {
+                'special_events': previous_source['special_events'],
+                'events': previous_source['events'],
+            },
+        )
+
+    with pytest.raises(ValueError, match='New unit seconds must be appended'):
+        validate_unit_evolution(
+            previous_projection,
+            previous_implications,
+            {
+                'events': previous_source['events'],
+                'seconds': {'per': 1, 'dimensions': {'family': 'durations'}},
+                'special_events': previous_source['special_events'],
+            },
+        )
+
+
+@pytest.mark.parametrize(
+    ('field', 'replacement'),
+    [
+        ('per', 2),
+        ('price_key', 'replacement_price'),
+        ('dimensions', {'family': 'events', 'kind': 'corrected'}),
+    ],
+)
+def test_validate_unit_evolution_rejects_redefinitions(field: str, replacement: object) -> None:
+    previous_source = {
+        'published_events': {
+            'per': 1,
+            'price_key': 'published_price',
+            'dimensions': {'family': 'events', 'kind': 'original'},
+        }
+    }
+    candidate_unit: dict[str, object] = dict(previous_source['published_events'])
+    candidate_unit[field] = replacement
+
+    with pytest.raises(ValueError, match='Redefined published unit: published_events'):
+        validate_unit_evolution(
+            runtime_unit_projection(previous_source),
+            normalize_conditional_implications(previous_source),
+            {'published_events': candidate_unit},
+        )
+
+
+def test_validate_unit_evolution_rejects_changed_implications_and_new_ancestors() -> None:
+    previous_source = _published_evolution_source()
+    candidate_source = {
+        'events': previous_source['events'],
+        'special_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'kind': 'special'},
+        },
+    }
+    with pytest.raises(ValueError, match='Changed published conditional implications for unit special_events'):
+        validate_unit_evolution(
+            runtime_unit_projection(previous_source),
+            normalize_conditional_implications(previous_source),
+            candidate_source,
+        )
+
+    ancestor_previous_source = {
+        'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+    }
+    with pytest.raises(ValueError, match='New unit events is an ancestor.*special_events'):
+        validate_unit_evolution(
+            runtime_unit_projection(ancestor_previous_source),
+            normalize_conditional_implications(ancestor_previous_source),
+            {
+                **ancestor_previous_source,
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+            },
+        )
 
 
 def test_normalize_conditional_implications_is_transitive_and_canonical() -> None:

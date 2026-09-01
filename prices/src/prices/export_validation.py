@@ -185,6 +185,50 @@ def validate_runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object
     return registry
 
 
+def validate_unit_evolution(
+    previous_units: RuntimeUnitProjection,
+    previous_implications: NormalizedImplications,
+    candidate_units: Mapping[str, Mapping[str, object]],
+) -> None:
+    """Validate append-only source evolution from a published runtime projection."""
+    previous_projection = runtime_unit_projection(previous_units)
+    previous_registry = validate_runtime_unit_projection(previous_projection)
+    candidate_registry = validate_units(candidate_units)
+    candidate_projection = runtime_unit_projection(candidate_units)
+    candidate_implications = normalize_conditional_implications(candidate_units)
+
+    previous_order = list(previous_projection)
+    candidate_order = list(candidate_projection)
+    missing_usage_keys = [usage_key for usage_key in previous_order if usage_key not in candidate_projection]
+    if missing_usage_keys:
+        raise ValueError(f'Removed published unit: {missing_usage_keys[0]}')
+
+    candidate_old_order = [usage_key for usage_key in candidate_order if usage_key in previous_projection]
+    if candidate_old_order != previous_order:
+        raise ValueError(f'Reordered published units: expected {previous_order!r}, got {candidate_old_order!r}')
+    if candidate_order[: len(previous_order)] != previous_order:
+        first_inserted = next(usage_key for usage_key in candidate_order if usage_key not in previous_projection)
+        raise ValueError(f'New unit {first_inserted} must be appended after all published units')
+
+    for usage_key in previous_order:
+        if candidate_projection[usage_key] != previous_projection[usage_key]:
+            raise ValueError(f'Redefined published unit: {usage_key}')
+
+        if usage_key not in previous_implications:
+            raise ValueError(f'Missing published conditional implications for unit {usage_key}')
+        if candidate_implications[usage_key] != previous_implications[usage_key]:
+            raise ValueError(f'Changed published conditional implications for unit {usage_key}')
+
+    for new_usage_key in candidate_order[len(previous_order) :]:
+        new_unit = candidate_registry.units[new_usage_key]
+        for old_usage_key in previous_order:
+            old_unit = previous_registry.units[old_usage_key]
+            if new_unit.dimensions.items() < old_unit.dimensions.items():
+                raise ValueError(
+                    f'New unit {new_usage_key} is an ancestor or intermediate of published unit {old_usage_key}'
+                )
+
+
 def _object_mapping(value: object, message: str) -> Mapping[object, object]:
     if not isinstance(value, Mapping):
         raise ValueError(message)
