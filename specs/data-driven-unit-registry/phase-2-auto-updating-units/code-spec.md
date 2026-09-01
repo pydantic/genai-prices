@@ -12,7 +12,7 @@ Existing matching, constraint selection, tiering, decomposition, price arithmeti
 public request/result types remain in their current modules. Phase 2 adds wire decoding, registry evolution validation,
 paired state ownership, and v3 publication around those engines.
 
-**The v3 wire types are closed except for their documented dynamic mappings.** _(implements "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them.", "Phase 2 publishes one full wrapped v3 payload.", "V3 unit definitions use the minimal runtime projection.", "V3 unit definitions have exactly three admitted members.", "An omitted v3 `price_key` resolves to the usage key.", "V3 dimensions are a non-empty string mapping containing `family`.", "Source-only conditional metadata is omitted from v3 unit definitions.", "V3 normalization factors fit every runtime exactly.", "The v3 provider member uses the cutover v2 provider contract.", "The initial v3 schema is permanent.", "Runtime wire validation starts from a decoded JSON value.")_
+**The v3 wire types are closed except for their documented dynamic mappings.** _(implements "Changes — Shared contract and runtime behavior: every client consumes one versioned unit/provider pair.", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them.", "Phase 2 publishes one full wrapped v3 payload.", "V3 unit definitions use the minimal runtime projection.", "V3 unit definitions have exactly three admitted members.", "An omitted v3 `price_key` resolves to the usage key.", "V3 dimensions are a non-empty string mapping containing `family`.", "Source-only conditional metadata is omitted from v3 unit definitions.", "V3 normalization factors fit every runtime exactly.", "The v3 provider member uses the cutover v2 provider contract.", "The initial v3 schema is permanent.", "Runtime wire validation starts from a decoded JSON value.")_
 The build, schema, and three runtime decoders share these conceptual shapes without sharing generated executable code:
 
 ```text
@@ -76,7 +76,7 @@ syntax, keywords, transformed-name uniqueness, and collisions with the identifie
 constants being replaced. `build.py` and `package_data.py` import this leaf module, avoiding a build/package-generation
 import cycle. Remote-only keys still need no generated constant to be passed as Go `UsageKey` strings.
 
-**`build-prices` owns v3 publication and the mutable provider authoring schema.** _(implements "The initial `build-prices` cutover writes v3 data and schema.", "Later `build-prices` runs write provider authoring schema and v3 data.", "Normal builds stop writing v2 after cutover.", "Serialized outputs remain pure data.")_
+**`build-prices` owns v3 publication and the mutable provider authoring schema.** _(implements "Changes — Build: the build owns v3 publication and compatibility enforcement.", "The initial `build-prices` cutover writes v3 data and schema.", "Later `build-prices` runs write provider authoring schema and v3 data.", "Normal builds stop writing v2 after cutover.", "Serialized outputs remain pure data.")_
 Modify `prices/src/prices/build.py` around these signatures:
 
 ```python
@@ -196,7 +196,7 @@ export function validateUnitEvolution(previous: UnitRegistry, candidate: UnitReg
 `validateUnitEvolution(...)` owns JavaScript's equivalent append-only comparison. Both are package-internal surfaces even
 though TypeScript exports them for module imports and focused tests.
 
-**Python stores the process pair and snapshot-private registry in `data_snapshot.py`.** _(implements "The public Python `DataSnapshot` construction surface remains stable.", "Python custom-snapshot activation remains explicit.", "Python and JavaScript activate one paired state reference.", "A fetched Python v3 snapshot privately owns its candidate registry.", "A caller-constructed Python snapshot changes providers only.", "Clearing Python state intentionally keeps the latest registry.", "Python activation races fail atomically.")_
+**Python stores the process pair and snapshot-private registry in `data_snapshot.py`.** _(implements "Changes — Python: wrapped snapshots activate providers and units as one pair.", "The public Python `DataSnapshot` construction surface remains stable.", "Python custom-snapshot activation remains explicit.", "Python and JavaScript activate one paired state reference.", "A fetched Python v3 snapshot privately owns its candidate registry.", "A caller-constructed Python snapshot changes providers only.", "Clearing Python state intentionally keeps the latest registry.", "Python activation races fail atomically.")_
 Modify `packages/python/genai_prices/data_snapshot.py` with these private shapes and boundaries:
 
 ```python
@@ -399,7 +399,7 @@ input. `ProviderDataValue` and `ProviderDataPayload` remain the sole storage-fac
 is added. `REMOTE_DATA_JSON_URL` changes to `prices/new_data/v3/data.json` and still flows through
 `StorageFactoryParams.remoteDataUrl`.
 
-**JavaScript runtime state owns one pair and provider lookup provenance.** _(implements "Python and JavaScript activate one paired state reference.", "JavaScript's public extraction entry point remains `extractUsage(...)`.", "JavaScript operations capture one applicable registry.", "Validation caches and decomposition caches are excluded.")_
+**JavaScript runtime state owns one pair and provider lookup provenance.** _(implements "Changes — JavaScript: provider-data updates activate complete pairs.", "Python and JavaScript activate one paired state reference.", "JavaScript's public extraction entry point remains `extractUsage(...)`.", "JavaScript operations capture one applicable registry.", "Validation caches and decomposition caches are excluded.")_
 Add `packages/js/src/runtimeState.ts` with:
 
 ```typescript
@@ -478,7 +478,7 @@ same registry through engine, validation, usage, and decomposition helpers. `pac
 `registryForProvider(provider) ?? getActiveRegistry()` once. Direct helpers in `engine.ts`, `usage.ts`, and
 `validation.ts` keep optional-registry entry points but resolve the default once and pass it through nested calls.
 
-**Go decodes both roots into a new immutable calculator.** _(implements "Go keeps immutable calculator construction.", "Go keeps both extraction entry points.", "Go accepts wrapped v3 through immutable construction.", "Caller-managed Go updates replace the calculator only after construction succeeds.", "Go validation failures wrap `ErrInvalidData`.", "The default remote URL is v3 in every runtime.")_
+**Go decodes both roots into a new immutable calculator.** _(implements "Changes — Go: wrapped JSON constructs a new immutable calculator.", "Go keeps immutable calculator construction.", "Go keeps both extraction entry points.", "Go accepts wrapped v3 through immutable construction.", "Caller-managed Go updates replace the calculator only after construction succeeds.", "Go validation failures wrap `ErrInvalidData`.", "The default remote URL is v3 in every runtime.")_
 Modify `packages/go/types.go`, `calculator.go`, and `units.go` with these private shapes and signatures:
 
 ```go
@@ -585,7 +585,7 @@ appended new keys, and no new ancestor of an old unit. They do not accept condit
 exact interval closure. Go compares wrappers with bundled units; Python and JavaScript compare during preparation and
 again against active state immediately before activation.
 
-**Runtime tests are organized by contract boundary, not by implementation helper.** _(implements "V2 cutover tests pin final artifact isolation.", "V3 publication tests pin the wrapper and schema.", "Compatibility tests pin target-bound unit evolution.", "Go identifier validation tests cover generated-name safety.", "Runtime ingestion tests cover both accepted root shapes.", "Runtime atomicity tests reject invalid candidates without state change.", "Python snapshot tests cover paired state behavior.", "Python background tests cover paired activation and stopping.", "Python contract-error tests cover decoded failures and activation races.", "JavaScript pair-ordering tests cover non-null attempts.", "JavaScript contract-validation tests cover error timing.", "Go wrapped-construction tests cover remote-only units.", "Go construction-failure tests cover caller-owned atomicity.", "Operation-capture tests prevent mixed-registry reads.", "Runtime boundary tests pin decoded-value and integer rules.", "Parity tests prove remotely added units.", "Go generation tests preserve identifier spelling.", "Legacy-array compatibility tests cover preserved v2 behavior.", "Python compatibility tests cover preserved failure behavior.", "JavaScript compatibility tests cover preserved update outcomes.", "Frozen compatibility tests pin v1 and v2 bytes.")_
+**Runtime tests are organized by contract boundary, not by implementation helper.** _(implements "V2 cutover tests pin final artifact isolation.", "V3 publication tests pin the wrapper and schema.", "Compatibility tests pin target-bound unit evolution.", "Go identifier validation tests cover generated-name safety.", "Runtime ingestion tests cover both accepted root shapes.", "Runtime atomicity tests reject invalid candidates without state change.", "Python snapshot tests cover paired state behavior.", "Python background tests cover paired activation and stopping.", "Python contract-error tests cover decoded failures and activation races.", "Python operation-capture tests prevent mixed-registry reads.", "JavaScript pair-ordering tests cover non-null attempts.", "JavaScript contract-validation tests cover error timing.", "JavaScript operation-capture tests prevent mixed-registry reads.", "Go wrapped-construction tests cover remote-only units.", "Go construction-failure tests cover caller-owned atomicity.", "Runtime boundary tests pin decoded-value and integer rules.", "Parity tests prove remotely added units.", "Go generation tests preserve identifier spelling.", "Legacy-array compatibility tests cover preserved v2 behavior.", "Python compatibility tests cover preserved failure behavior.", "JavaScript compatibility tests cover preserved update outcomes.", "Frozen compatibility tests pin v1 and v2 bytes.")_
 Extend `tests/test_pipeline_build.py`, add `tests/test_frozen_v2_data.py`, and add
 `tests/test_v3_compatibility.py` for publication, schema, order, implications, identifier, bootstrap/later-target,
 stale-target, slim projection, and artifact-freeze coverage. Extend Python updater/provider-array/lifecycle/unit tests,
