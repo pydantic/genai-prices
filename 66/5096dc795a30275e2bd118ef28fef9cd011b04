@@ -1,0 +1,28 @@
+packages/js/src/__tests__/remoteUnitParity.test.ts
+  s_319e04081d82e0::t_78eef1be1ad21b 1-57
+tests/fixtures/remote-unit-v3.json
+  s_319e04081d82e0::t_85f44c6c4cd5f3 1
+  s_319e04081d82e0::t_ee84257e6d2e91 2-356
+packages/go/v3_api_test.go
+  s_319e04081d82e0::t_f26764ee0be195 95
+  s_319e04081d82e0::t_0476ee2da79fe6 85,96,108-109,119-137,206-210,213
+  s_319e04081d82e0::t_fc1be46b668b61 102-103,114-116
+tests/test_remote_unit_parity.py
+  s_319e04081d82e0::t_78eef1be1ad21b 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "665096dc795a30275e2bd118ef28fef9cd011b04",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
