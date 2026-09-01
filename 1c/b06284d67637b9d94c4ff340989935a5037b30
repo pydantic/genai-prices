@@ -1,0 +1,50 @@
+tests/test_tiered_pricing.py
+  s_9f1f334435a064::t_5ff6302eea5f45 198-199,217-218,243-244
+tests/test_price_calc.py
+  s_9f1f334435a064::t_d5a66d0fb1d1f6 151,236-239,248-251,260-263,272-275,284,286,288-289,298-301
+  s_9f1f334435a064::t_65038a6119740e 1953-1959
+packages/js/src/__tests__/generatedData.test.ts
+  s_9f1f334435a064::t_ece663654d09cf 301-304,313-316,325-328,337-340,349-352,361-364
+packages/js/src/__tests__/comprehensive.test.ts
+  s_9f1f334435a064::t_5247287a0f1b4e 268-274
+prices/providers/openai.yml
+  s_9f1f334435a064::t_7ab401a8c73e5d 824,829,834,911,916,950,955,960,985,990
+  s_9f1f334435a064::t_9ea490d29d52b0 1018,1023,1028,1033,1043,1048,1053,1058,1089,1094,1099,1104,1115,1120,1125,1130,1158,1163,1168,1173,1183,1188,1193,1198
+  s_9f1f334435a064::t_aeb6d31da14188 815-819,902-906,940,942-944,975,977-979,1006,1008-1011,1076,1078-1081,1146,1148-1151
+packages/go/api_test.go
+  s_9f1f334435a064::t_5ef77e5111a191 33-72
+packages/go/internal/data/prices.json
+  s_8965e552681bea::t_aa3e0d480541e7 1
+packages/js/src/data.ts
+  s_8965e552681bea::t_77e16aceee46d9 16002-16003,16009,16018,16027,16130-16131,16137,16146,16201,16207,16216,16225,16256,16262,16271,16302,16310,16319,16328,16337,16356,16365,16374,16383,16422,16430,16439,16448,16457,16476,16485,16494,16503,16536,16544,16553,16562,16571,16590,16599,16608,16617
+packages/python/genai_prices/data.py
+  s_8965e552681bea::t_211bac72f9cba9 9440,9442,9444,9446,9514,9516-9517,9543,9545-9547,9565,9567-9568,9586,9590,9592,9595,9597,9606,9609,9612,9615,9638,9642,9644,9647,9650,9659,9661,9664,9667,9688,9693,9696,9699,9702,9711,9713,9716,9719
+prices/new_data/v2/data.json
+  s_9f1f334435a064::t_2154349ec526d5 1
+prices/new_data/v2/data_slim.json
+  s_9f1f334435a064::t_c75cb373312188 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "1cb06284d67637b9d94c4ff340989935a5037b30",
+  "prompts": {},
+  "sessions": {
+    "s_8965e552681bea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05d03-78f5-7ed2-a44d-d806189797ac",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_9f1f334435a064": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05cd4-5d12-7b71-ae7e-8ab3e306d15a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
