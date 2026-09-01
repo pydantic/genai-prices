@@ -102,6 +102,7 @@ class UpdatePrices:
         """
         global _worker
 
+        _check_not_worker_thread('start')
         with _lock:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
@@ -116,13 +117,18 @@ class UpdatePrices:
                     _worker = worker
                     self._worker = worker
                     worker.thread.start()
-                except BaseException:
-                    # Thread.start() can fail after the OS thread launched; a shut-down worker
-                    # exits on its own, so releasing ownership is the whole rollback.
-                    worker.shutdown()
-                    _worker = None
-                    self._worker = None
-                    raise
+                except BaseException as e:
+                    # Thread.start() can fail after OS launch. Signal it and finish publication
+                    # rollback before propagating any interruption.
+                    def rollback() -> None:
+                        global _worker
+
+                        worker.shutdown()
+                        _worker = None
+                        self._worker = None
+
+                    interrupted = _finish_despite_interruption(rollback)
+                    raise interrupted or e
             else:
                 if worker.dead:
                     raise RuntimeError('UpdatePrices background task terminated unexpectedly')
@@ -162,15 +168,28 @@ class UpdatePrices:
         """
         global _worker
 
+        _check_not_worker_thread('stop')
         with _lock:
             worker = self._worker
             if worker is None:
                 return
-            self._worker = None
-            worker.claims -= 1
-            if worker.claims == 0:
-                worker.shutdown()
-                _worker = None
+            remaining_claims = worker.claims - 1
+
+            def cleanup() -> None:
+                global _worker
+
+                # Fixed target values make retries idempotent at every interruption point.
+                worker.claims = remaining_claims
+                self._worker = None
+                if remaining_claims == 0:
+                    try:
+                        worker.shutdown()
+                    finally:
+                        _worker = None
+
+            interrupted = _finish_despite_interruption(cleanup)
+            if interrupted is not None:
+                raise interrupted
 
     def __enter__(self):
         self.start()
@@ -195,6 +214,24 @@ def _fetch_prices(url: str, request_timeout: httpx2.Timeout) -> data_snapshot.Da
 
     providers = _providers_from_raw(raw_payload)
     return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+
+
+def _check_not_worker_thread(action: str) -> None:
+    worker = _worker
+    if worker is not None and threading.current_thread() is worker.thread:
+        raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
+
+
+def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
+    """Finish idempotent lifecycle bookkeeping before propagating an interruption."""
+    interrupted: BaseException | None = None
+    while True:
+        try:
+            action()
+        except (KeyboardInterrupt, SystemExit) as e:
+            interrupted = e
+        else:
+            return interrupted
 
 
 class _Worker:
@@ -239,10 +276,16 @@ class _Worker:
         Runs under `_lock` and must not block: an in-flight fetch is not waited for, and its
         result is discarded because installs check `stop_event` under the same lock.
         """
-        self.stop_event.set()
-        data_snapshot.set_custom_snapshot(None)
-        # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
-        self.ready.set()
+
+        def cleanup() -> None:
+            self.stop_event.set()
+            data_snapshot.set_custom_snapshot(None)
+            # Wake waiters blocked before the first fetch; with no outcome, wait() returns False.
+            self.ready.set()
+
+        interrupted = _finish_despite_interruption(cleanup)
+        if interrupted is not None:
+            raise interrupted
 
     def _publish(self, error: Exception | None) -> None:
         self._outcome = (error, error.__traceback__ if error is not None else None)
@@ -255,16 +298,22 @@ class _Worker:
                 try:
                     self._update_prices()
                 except Exception as e:
-                    self._publish(e)
+                    with _lock:
+                        if self.stop_event.is_set():
+                            break
+                        self._publish(e)
                     _log(logger.error, 'Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 if self.stop_event.wait(self.config.update_interval):
                     break
         except BaseException as e:
-            # Nothing above should raise this; if it does, fail waiters instead of hanging them.
-            self.dead = True
-            error = RuntimeError('UpdatePrices background task terminated unexpectedly')
-            error.__cause__ = e
-            self._publish(error)
+            # Serialize terminal publication with new claims; a stop that already won suppresses it.
+            with _lock:
+                if self.stop_event.is_set():
+                    return
+                self.dead = True
+                error = RuntimeError('UpdatePrices background task terminated unexpectedly')
+                error.__cause__ = e
+                self._publish(error)
         finally:
             _log(logger.info, 'genai-prices background task stopped')
 
@@ -282,7 +331,7 @@ class _Worker:
                 # A stop() already won: its discarded fetch is not an update, so install and publish nothing.
                 return
             data_snapshot.set_custom_snapshot(snapshot)
-        self._publish(None)
+            self._publish(None)
 
 
 def _log(log: Callable[..., None], message: str, *args: object) -> None:
