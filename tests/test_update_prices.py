@@ -5,6 +5,7 @@ import concurrent.futures
 import logging
 import threading
 import traceback
+import warnings
 from collections.abc import Callable
 from decimal import Decimal
 
@@ -232,6 +233,35 @@ def test_different_configuration_warns_and_joins(
         # The first configuration wins: the second instance joins the running worker unchanged.
         assert second._worker is first._worker
         second.stop()
+
+
+def test_configuration_warning_hook_runs_outside_lifecycle_lock(monkeypatch: pytest.MonkeyPatch) -> None:
+    _mock_update_prices_get(monkeypatch)
+    first = UpdatePrices()
+    second = UpdatePrices(update_interval=1)
+    warning_seen = False
+    first.start(wait=True)
+
+    def showwarning(*_args: object, **_kwargs: object) -> None:
+        nonlocal warning_seen
+        warning_seen = True
+        assert update_prices_module._lock.acquire(blocking=False)
+        update_prices_module._lock.release()
+        first.stop()
+
+    with warnings.catch_warnings():
+        warnings.simplefilter('always')
+        monkeypatch.setattr(warnings, 'showwarning', showwarning)
+        try:
+            second.start()
+        finally:
+            first.stop()
+            second.stop()
+
+    assert warning_seen
+    assert first._worker is None
+    assert second._worker is None
+    assert update_prices_module._worker is None
 
 
 def test_same_instance_cannot_start_twice():

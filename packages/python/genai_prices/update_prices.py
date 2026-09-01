@@ -104,6 +104,7 @@ class UpdatePrices:
         global _worker
 
         _check_not_worker_thread('start')
+        config_warning: str | None = None
         with _lock:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
@@ -136,15 +137,17 @@ class UpdatePrices:
                     raise interrupted or e
             else:
                 if worker.config != config:
-                    warnings.warn(
+                    config_warning = (
                         'UpdatePrices background task is already running with different configuration; keeping '
                         f'url={worker.config.url!r}, update_interval={worker.config.update_interval!r}, '
-                        f'request_timeout={worker.config.request_timeout!r}',
-                        stacklevel=2,
+                        f'request_timeout={worker.config.request_timeout!r}'
                     )
                 worker.claims += 1
                 self._worker = worker
 
+        # Warning hooks are arbitrary application code; never call them while holding the lifecycle lock.
+        if config_warning is not None:
+            warnings.warn(config_warning, stacklevel=2)
         if wait:
             worker.wait(timeout=30 if wait is True else wait)
 
