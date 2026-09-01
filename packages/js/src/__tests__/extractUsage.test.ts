@@ -513,17 +513,16 @@ describe('extractUsage', () => {
 
     it('should extract and price realtime duration and message usage', () => {
       const responseData = {
-        response: {
-          usage: {
-            billable_audio_seconds: 60,
-            input_text_messages: 2,
-            input_token_details: { audio_tokens: 0, text_tokens: 5 },
-            input_tokens: 5,
-            output_token_details: { audio_tokens: 39, text_tokens: 3 },
-            output_tokens: 42,
-          },
-        },
+        response: { usage: {} },
         type: 'response.done',
+        usage: {
+          billable_audio_seconds: 60,
+          input_text_messages: 2,
+          input_token_details: { audio_tokens: 0, text_tokens: 5 },
+          input_tokens: 5,
+          output_token_details: { audio_tokens: 39, text_tokens: 3 },
+          output_tokens: 42,
+        },
       }
 
       const { model, usage } = extractUsage(xaiProvider, responseData, 'realtime')
