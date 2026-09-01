@@ -1,66 +1,189 @@
 # Phase 2: Auto-Updating Unit Definitions
 
-**Code-level architecture is in [code-spec](code-spec.md).**
+**This prose spec is the complete Phase 2 source of truth.**
+The existing [code spec](code-spec.md) predates the completed Phase 1 implementation and the Go package. It must be
+rewritten from this document before implementation; where the two disagree, this document wins.
 
-**Phase 2 makes unit definitions update atomically with provider prices.**
-It adds the runtime capability deliberately excluded from the releasable static-registry Phase 1.
+**Phase 2 ships as an independent change on top of the completed Phase 1 release.**
+Phase 1 remains a supported static-registry release without any Phase 2 code or artifact.
 
-**Phase 2 is a future independent PR, not part of the Phase 1 release or a stacked prerequisite.**
-Implementation begins only after Phase 1 is merged and released. Phase 1 remains complete and supported without this work.
+**The Phase 2 product outcome is that a published unit and every provider field that depends on it become usable without another package release.**
+The registry and provider data travel together and become one calculation snapshot, so a newly published price key or
+extractor destination is never interpreted against an unrelated registry.
 
-**Existing v1 and v2 update contracts remain stable.** _(from "Phase 2 is a future independent PR")_
-`data.json` continues serving v1 packages. At the v3 cutover, Phase 2 records and freezes the then-current full and slim v2 data and schema bytes so static-registry packages never receive a later unit key; valid Phase 1 price updates made before that cutover are retained. This deliberately ends live price-data updates for Phase 1 packages once v3 is published. It goes against "The goal is to calculate prices as accurately as possible for a given request" in the [root spec](../spec.md), but is allowed here because continuing to evolve v2 would either break its static unit vocabulary or require a permanent filtered-publication pipeline. Phase 2 does not repurpose any v2 URL or change either root shape.
+**Python, JavaScript, and Go all support the Phase 2 v3 contract.** _(from "The Phase 2 product outcome")_
+Context: Phase 1 originally covered Python and JavaScript; the repository now also generates and releases a native Go
+package whose `Calculator` already owns an immutable provider/registry pair. Phase 2 includes all three maintained
+runtimes, with language-appropriate lifecycle behavior rather than leaving Go on the static v2 feed.
 
-**Phase 2 freezes Phase 1's slim v2 projection.** _(from "Phase 2 is a future independent PR", "Existing v1 and v2 update contracts remain stable")_
-Phase 1 publishes `prices/new_data/v2/data_slim.json` and `prices/new_data/v2/data_slim.schema.json` alongside the full v2 pair. At the v3 cutover, Phase 2 verifies that the slim payload is the exact projection of the final full v2 provider data and freezes all four artifacts together. The slim payload keeps the v2 top-level provider-array shape and frozen unit vocabulary, contains no unit definitions, excludes free models, omits provider `pricing_urls`, `description`, and `price_comments`, omits model `name`, `description`, and `price_comments`, and otherwise preserves the final v2 provider data. It remains an optional compatibility artifact; package auto-updaters do not switch to it by default.
+**Phase 2 preserves the shared registry and pricing semantics.** _(from "Phase 2 ships as an independent change", "The Phase 2 product outcome")_
+The [root specification](../spec.md) remains authoritative for unit identities, normalization, dimension relationships,
+explicit-only usage, price coverage, decomposition, runtime tolerance of unknown names, and generated-output purity.
+Phase 2 changes publication and runtime lifecycle boundaries, not calculation semantics.
 
-**Phase 2 publishes wrapped v3 data in its versioned directory.** _(from "Phase 2 makes unit definitions update atomically with provider prices", "Existing v1 and v2 update contracts remain stable")_
-The `prices/new_data/v3/data.json` payload contains unit definitions and providers in one versioned object. Unit definitions travel with every price and extractor field that depends on them, preventing a v3 runtime from activating provider data against an unrelated registry.
+**Existing behavior we preserve is the default compatibility boundary.**
+Phase 2 changes an existing public data lifecycle, so behavior not required for paired unit/provider updates remains as
+it is in the completed Phase 1 code.
 
-**Every response at the v3 URL remains consumable by every released v3 package.**
-The URL identifies a stable wire contract, not merely the latest writer. A change that an already released v3 parser cannot safely accept requires a new versioned URL.
+**Bundled calculation remains network-independent.** _(from "Existing behavior we preserve")_
+Every released package contains one generated provider set and its matching registry. Python and JavaScript use that
+pair until an update is activated; each Go `Calculator` constructed from bundled data owns that pair permanently.
 
-**V3 units are append-only by usage key.** _(from "Every response at the v3 URL remains consumable by every released v3 package")_
-A publication may add a complete new unit, but it cannot remove an existing unit or change that unit's resolved `price_key`, `per`, or complete `dimensions` mapping. A new unit's dimensions cannot be a proper subset of an existing unit's dimensions, so it cannot become a new ancestor or intermediate node that changes validation or decomposition for an old price set. Ancestor and join relationships among existing units therefore remain unchanged.
+**Existing calculation and custom-data APIs keep their recognizable callable shapes.** _(from "Existing behavior we preserve")_
+Python retains `calc_price(...)`, `DataSnapshot`, `UpdatePrices.fetch()`, and `set_custom_snapshot(...)`; JavaScript
+retains `calcPrice(...)`, `updatePrices(...)`, its storage-factory callback, and provider-array inputs; Go retains
+`Calculate(...)`, `NewCalculator()`, and `NewCalculatorFromJSON(...)`. Phase 2 may widen accepted update payload types
+and add private state needed to bind a registry, but it does not require callers to adopt a replacement API.
 
-**The v3 wrapper and unit-definition shapes are frozen.** _(from "Every response at the v3 URL remains consumable by every released v3 package")_
-The wrapper has exactly `units` and `providers`. A unit definition has exactly `per`, optional `price_key`, and `dimensions`. Adding a structural member or changing either object shape requires another versioned URL.
+**Legacy provider-array inputs remain provider-only updates.** _(from "Existing calculation and custom-data APIs")_
+Python and JavaScript continue accepting v2-shaped provider arrays from custom URLs, storage adapters, and tests. Such
+an array is decoded against the currently active registry and never replaces that registry. Go
+`NewCalculatorFromJSON(...)` continues accepting a v2 provider array and pairs it with the registry bundled in that Go
+release.
 
-**The v3 provider structure is frozen.** _(from "Every response at the v3 URL remains consumable by every released v3 package")_
-Provider/model records may add and remove array entries and change values within the field names and value shapes published at the v3 cutover. The frozen schema models price maps as string-keyed records of the existing price-value shape and extractor destinations as strings; runtime and publication validation resolve those dynamic names against units in the same payload. Adding another structural provider field or changing a field's value shape requires a new versioned URL; `prices/new_data/v3/data.schema.json` remains byte-for-byte fixed after cutover.
+**The existing v1 artifacts remain byte-frozen.** _(from "Existing behavior we preserve")_
+The four root `prices/data*` payload and schema files remain the digest-pinned compatibility snapshots already enforced
+by `tests/test_frozen_v1_data.py`. Phase 2 neither regenerates nor redefines them.
 
-**V3-capable packages point only at the v3 URL.** _(from "Phase 2 publishes wrapped v3 data in its versioned directory")_
-Older packages remain on their versioned URLs. V3 runtimes do not require a shape-detection migration path for v1 or v2 auto-update responses because their default updater requests the contract they implement.
+**The v2 URLs, array roots, and unit vocabulary remain compatible with every Phase 1 package.** _(from "Existing behavior we preserve")_
+`prices/new_data/v2/data.json` and `data_slim.json` remain provider arrays, their schemas remain the existing frozen v2
+schemas, and no later build places a new price key or extractor destination in either payload.
 
-**Registry and provider activation is atomic.** _(from "Phase 2 makes unit definitions update atomically with provider prices", "Phase 2 publishes wrapped v3 data in its versioned directory")_
-A runtime first constructs a side-effect-free candidate containing both the fetched registry and parsed providers. Standard package entry points obtain registry and providers from one process-global state object. Activation is one state-reference replacement after preparation succeeds; parse, validation, rejected-promise, or stale-update failure performs no replacement and therefore preserves both previous values.
+**Behavior we change is limited to versioned publication and paired runtime state.**
+Phase 2 introduces the smallest new data contract and runtime lifecycle needed to deliver its product outcome.
 
-**Remote v3 activation validates the complete candidate before the swap.** _(from "Registry and provider activation is atomic", "Every response at the v3 URL remains consumable by every released v3 package")_
-The wrapper and every nested unit/provider field are decoded from untrusted input with unknown structural fields, missing fields, and invalid value shapes rejected. Unit public-key safety, unique identities, family normalization, interval closure, and join-closedness are validated before providers are parsed against that candidate. Provider price keys and extractor destinations absent from the candidate registry produce runtime warnings and are omitted under the shared runtime-tolerance rule. Recognized provider prices still require complete ancestor and join coverage before activation. Bundled Phase 1 registry construction may trust generated data; remote v3 construction may not.
+**Phase 2 publishes one full wrapped v3 payload.** _(from "Behavior we change", "The Phase 2 product outcome")_
+`prices/new_data/v3/data.json` is an object with exactly `units` and `providers`. `units` is keyed by usage key and
+`providers` is the full provider array. The colocated `prices/new_data/v3/data.schema.json` describes that wire
+contract. A v3 slim variant is not required for automatic unit updates.
 
-**Concurrent update ordering is last-invocation-wins.** _(from "Registry and provider activation is atomic")_
-Every accepted update attempt receives a monotonically increasing process-local generation before asynchronous work begins, including attempts supplied as synchronous data, promises, manual Python fetches, background Python fetches, `null`, stop, or custom-snapshot changes. A candidate may commit only while its generation is still current. A later accepted invocation therefore supersedes an earlier pending attempt even when the later attempt performs no data replacement or fails. A Python `fetch()` rejected synchronously because that `UpdatePrices` instance is already stopping never enters the update pipeline, receives no generation, and is the explicit exception.
+**V3 unit definitions use the existing minimal runtime projection.** _(from "Phase 2 publishes one full wrapped v3 payload", "Phase 2 preserves the shared registry and pricing semantics")_
+Each unit contains exactly a positive integer `per`, an optional `price_key` that defaults to its usage key, and a
+non-empty string-to-string `dimensions` mapping containing `family`. Source-only fields such as
+`dimension_requirements` remain in `prices/units.yml` and do not become wire or installed-runtime fields.
 
-**The active v3 registry remains process-global and provider snapshots remain provider-only.** _(from "Registry and provider activation is atomic")_
-Pricing, usage, extraction, and validation consult the one active registry. `DataSnapshot` does not embed a second registry, and custom provider snapshot activation does not independently change unit definitions.
+**The v3 provider member keeps the full v2 provider wire shape at cutover.** _(from "Phase 2 publishes one full wrapped v3 payload", "Existing calculation and custom-data APIs")_
+Provider/model entries and values may continue changing within that shape. Price maps and extractor destinations remain
+dynamically keyed and are resolved against the units beside them. A new structural provider field or value shape that
+an already released v3 decoder cannot safely consume requires a new versioned contract rather than silently widening
+v3.
 
-**Detached base pricing APIs capture one active registry per call.** _(from "The active v3 registry remains process-global and provider snapshots remain provider-only", "V3 units are append-only by usage key")_
-This is an explicit compatibility exception to the paired-provider read in "Registry and provider activation is atomic": direct `DataSnapshot.calc(...)`, `ModelInfo.calc_price(...)`, and base `ModelPrice.calc_price(...)` calls use the provider/model object supplied by the caller and capture the active registry once at call entry. This is safe because v3 unit evolution preserves every existing unit relationship. Each standalone `Usage` construction, read, assignment, equality, addition, or representation operation likewise captures one active registry and does not observe a mid-operation replacement. An arbitrary overridden `ModelPrice.calc_price(...)` retains its unchanged signature and owns its internal behavior; Phase 2 does not guarantee one captured registry across registry lookups that custom override code initiates itself.
+**Every later response at the v3 URL remains consumable by every released v3 package.** _(from "V3 unit definitions use the existing minimal runtime projection", "The v3 provider member keeps the full v2 provider wire shape")_
+The initial v3 schema is the permanent compatibility oracle: later v3 payloads validate against it, and the published
+schema file does not change. Provider and model records may be added, removed, or updated within the frozen shape, while
+unit evolution follows the stricter append-only rules below.
 
-**Stopping Python's v3 updater restores bundled providers without rolling the registry back.** _(from "V3 units are append-only by usage key", "Concurrent update ordering is last-invocation-wins", "The active v3 registry remains process-global and provider snapshots remain provider-only")_
-`UpdatePrices.stop()` conditionally replaces fetched providers with the snapshot generated with the installed package while retaining the latest active registry. The append-only registry is a compatible superset for bundled providers and remains available to detached `Usage`, `DataSnapshot`, and model-price objects that contain fetched units. Stop uses the generation assigned when invoked, so a later custom-snapshot or update invocation wins rather than being overwritten when the worker finishes. Process restart restores the fully bundled provider/registry pair. JavaScript's storage-factory API has no package-owned stop lifecycle: `null` continues to mean a failed update that leaves state untouched, and a wrapped update or explicit provider-array update is the only state-change input.
+**V3 units are append-only by usage key.** _(from "Every later response at the v3 URL remains consumable")_
+A publication may add a complete unit, but it may not remove an existing unit or change that unit's resolved
+`price_key`, `per`, or complete `dimensions` mapping. A new unit's dimensions may not be a proper subset of an existing
+unit's dimensions, so it cannot become a new ancestor or intermediate node that changes validation or decomposition
+for an old price set. Existing ancestor and join relationships therefore remain stable.
 
-**V3 publication compares against the deployed v3 contract.** _(from "V3 units are append-only by usage key", "The v3 wrapper and unit-definition shapes are frozen", "The v3 provider structure is frozen")_
-For every candidate PR after the initial v3 publication, the required compatibility check reads `prices/new_data/v3/data.json` and `prices/new_data/v3/data.schema.json` from the exact target `main` Git object ID. It compares every old unit definition, requires the schema bytes to remain identical, and validates the candidate payload against that deployed schema. Missing current data, an invalid current wrapper, a schema change, a removed or changed unit, or a new ancestor of an old unit fails the check. The initial publication compares candidate units with the final Phase 1 bundled registry and records the v3 schema at cutover. Runtime packages need no history database because this compatibility check belongs to the publisher.
+**The initial v3 publication is compatible with the final Phase 1 registry, and later publications are compatible with the deployed v3 registry.** _(from "V3 units are append-only by usage key")_
+The publisher compares the initial candidate with the recorded final v2 unit projection. On later pull requests it
+reads `prices/new_data/v3/data.json` and `data.schema.json` from the exact target-branch Git object being proposed for
+replacement. It rejects an invalid or missing baseline, a changed old unit, a removed unit, a new ancestor of an old
+unit, a changed schema, or a candidate payload that does not validate against the deployed schema.
 
-**V3 publication is conditional on the compared Git object.** _(from "Every response at the v3 URL remains consumable by every released v3 package", "V3 publication compares against the deployed v3 contract")_
-`main` branch protection requires the v3 compatibility check in strict up-to-date mode. The check records the target `main` object ID it compared; GitHub may merge the candidate only while that object ID is still the PR base, and the Git ref update is the atomic compare-and-swap. A concurrent `main` update makes the check stale and requires updating the branch and comparing again, so the raw-GitHub artifact served from `main` cannot be replaced after a stale comparison.
+**A stale compatibility comparison cannot authorize publication.** _(from "The initial v3 publication is compatible with the final Phase 1 registry")_
+The required CI result is tied to the candidate and target-branch revisions it compared. If the target branch advances,
+the branch must be updated and the comparison rerun before merge. This prevents two individually compatible candidates
+from bypassing cross-release checks when combined sequentially on `main`.
 
-**Generated and fetched v3 outputs remain pure data.**
-Payloads and generated modules contain raw units, providers, and raw prices only. Validation markers, trust flags, fingerprints, cache records, and decomposition plans remain runtime concerns rather than serialized contract fields.
+**Source-level structural validation remains a publisher responsibility.** _(from "V3 unit definitions use the existing minimal runtime projection", "The initial v3 publication is compatible with the final Phase 1 registry")_
+The build validates the complete `prices/units.yml` representation, including public-name safety, identity and family
+normalization, conditional-dimension rules, exact interval closure, join-closedness, provider price coverage, and
+extractor destinations before writing v3. This remains the authoritative check because conditional source metadata is
+deliberately absent from the wire projection.
 
-**Phase 2 does not include validation or decomposition caching.**
-Registry replacement may later motivate cache identities and invalidation, but those optimizations require a separate decision. They are not part of enabling atomic unit updates.
+**Runtime validation is strict about the v3 data that can affect calculation.** _(from "Source-level structural validation remains a publisher responsibility", "The Phase 2 product outcome")_
+A runtime prepares a side-effect-free candidate before activation. It rejects an invalid wrapper or unit shape,
+non-positive normalization, unsafe or duplicate public identities, duplicate dimension sets, inconsistent family
+normalization, or a missing compatible join. It decodes providers using the runtime's existing v2 wire rules, resolves
+their dynamic keys against the candidate registry, and requires recognized prices to have complete ancestor and join
+coverage before the candidate can become active. Runtime interval-closure validation is intentionally not required:
+the minimal wire form omits the conditional-dimension metadata needed to distinguish invalid intermediate dimension
+sets, while publisher validation still enforces the full rule.
 
-**Tests prove version isolation and atomic activation.** _(from "Existing v1 and v2 update contracts remain stable", "Phase 2 freezes Phase 1's slim v2 projection", "Remote v3 activation validates the complete candidate before the swap", "V3 publication is conditional on the compared Git object")_
-Coverage verifies frozen v1/v2 artifacts, the slim v2 projection and schema, wrapped v3 schemas, publisher rejection of removed or changed units, conditional-publication conflicts, matching unit/provider activation, warnings and omission for provider price keys and extractor destinations absent from the candidate registry, no state change after invalid unit structure, recognized provider-price coverage, structural provider data, promise, or stale-update failure, consistent detached calls and `Usage` operations during replacement, Python restoration of bundled providers while fetched units and detached objects remain usable, use of newly fetched units in both runtimes, and absence of runtime cache state in serialized outputs.
+**Unknown provider price keys and extractor destinations retain the shared runtime-tolerance behavior.** _(from "Runtime validation is strict about the v3 data that can affect calculation", "Phase 2 preserves the shared registry and pricing semantics")_
+They produce deterministic warnings and are omitted from standard calculation or extraction. Invalid values and
+incomplete ancestor or join coverage among recognized units remain errors. This tolerance protects custom or
+mismatched inputs; an official v3 payload is still required to use only its accompanying registry.
+
+**The v3 cutover turns both v2 variants into exact compatibility snapshots.** _(from "The v2 URLs, array roots, and unit vocabulary remain compatible", "Phase 2 publishes one full wrapped v3 payload")_
+At cutover, Phase 2 records and pins the bytes of the full and slim v2 payload/schema pairs and removes all four from
+normal build output. The final slim payload must be the existing exact slim projection of the final full v2 provider
+data. This deliberately ends price updates for Phase 1 packages instead of maintaining a permanent lossy projection
+that would silently discard post-v2 units; v3-capable packages become the live feed.
+
+**Package generation consumes the v3 wrapper and keeps generated concerns separated in all three runtimes.** _(from "Python, JavaScript, and Go all support the Phase 2 v3 contract", "Phase 2 publishes one full wrapped v3 payload")_
+The build validates one source registry/provider pair, writes the v3 wrapper, and then feeds its two members separately
+to Python, JavaScript, and Go generation. Python `data.py` and JavaScript `data.ts` still contain providers while their
+unit modules contain units. Go still embeds provider JSON and generates its unit definitions/constants. No generated
+package file embeds updater state or validation machinery.
+
+**V3-capable remote entry points use only the v3 URL by default.** _(from "Package generation consumes the v3 wrapper", "Legacy provider-array inputs remain provider-only updates")_
+Python's default updater URL, JavaScript's exported remote-data URL, and Go's `RemoteDataURL` point to
+`prices/new_data/v3/data.json`. They do not shape-detect data fetched from v1 or v2 at that URL. Explicit custom inputs
+may still use the legacy provider-array path described above.
+
+**An activated Python or JavaScript state always pairs one registry with one provider set.** _(from "The Phase 2 product outcome", "Runtime validation is strict about the v3 data that can affect calculation")_
+Candidate preparation performs no global writes. After decoding and validation succeeds, activation replaces one
+process-global state reference. Failure at any earlier step leaves the complete previous pair active. Top-level
+pricing, matching, and extraction operations capture that reference once rather than independently reading provider
+and registry globals.
+
+**Python `UpdatePrices.fetch()` remains parse-and-return rather than becoming a hidden activation API.** _(from "Existing calculation and custom-data APIs", "An activated Python or JavaScript state always pairs one registry")_
+Context: completed Phase 1 tests and integration usage call `fetch()`, inspect the returned `DataSnapshot`, and decide
+separately whether to pass it to `set_custom_snapshot(...)`. Phase 2 preserves that behavior. A snapshot decoded from a
+v3 wrapper privately retains its candidate registry so its own calculation and extraction methods use the matching
+pair and later activation can install both atomically. A snapshot decoded from a provider array uses the active
+registry. The public `DataSnapshot` constructor and provider-facing fields remain compatible.
+
+**Python background and custom activation use the snapshot's registry association when present.** _(from "Python `UpdatePrices.fetch()` remains parse-and-return", "An activated Python or JavaScript state always pairs one registry")_
+The single supported background `UpdatePrices` instance fetches a candidate and installs it through the same atomic
+path as `set_custom_snapshot(...)`. A user-created provider-only snapshot changes providers while retaining the active
+registry. Clearing a custom snapshot restores bundled providers while retaining the latest active append-only registry,
+which remains compatible with bundled and detached old provider objects.
+
+**Stopping Python's updater preserves its existing ownership boundary.** _(from "Python background and custom activation use the snapshot's registry association", "V3 units are append-only by usage key")_
+`UpdatePrices.stop()` signals and joins its worker before restoring bundled providers, so an in-flight worker cannot
+reinstall fetched data afterward. It does not roll the registry back. Phase 2 serializes state replacement but does not
+add a process-wide generation protocol or promise new ordering semantics among unrelated manual custom-snapshot writes.
+
+**JavaScript extends its existing storage-factory update path to wrapped v3 data.** _(from "Existing calculation and custom-data APIs", "An activated Python or JavaScript state always pairs one registry")_
+`setProviderData` accepts a v3 wrapper, a legacy provider array, `null`, or a promise of those values. A wrapper prepares
+and conditionally installs a new pair; an array replaces providers against the active registry; `null`, rejection, and
+invalid data leave the pair untouched. The existing promise-identity rule continues to prevent an older pending
+non-null update from overwriting a newer non-null update, and `waitForUpdate()` continues representing the active update
+attempt.
+
+**Go represents atomicity with immutable `Calculator` construction rather than mutable global state.** _(from "Python, JavaScript, and Go all support the Phase 2 v3 contract", "The Phase 2 product outcome")_
+`NewCalculatorFromJSON(...)` accepts either a wrapped v3 payload or a legacy provider array. A wrapper is fully decoded
+and validated before returning a `Calculator` that owns its registry/provider pair; an array uses bundled units. Failure
+returns no candidate and cannot affect an existing calculator. New remote usage names remain expressible through the
+existing open `UsageKey` string type even when the installed package has no generated constant for them.
+
+**Detached operations capture one applicable registry per call.** _(from "V3 units are append-only by usage key", "An activated Python or JavaScript state always pairs one registry")_
+Python `DataSnapshot` methods use their associated registry when present; other detached base pricing and standalone
+`Usage` operations capture the active registry once at entry. JavaScript helpers likewise receive or capture one
+registry for an operation. Existing objects remain safe against a later registry replacement because append-only
+evolution cannot change their old unit relationships. Custom Python `ModelPrice.calc_price(...)` overrides keep their
+existing signature and remain responsible for any registry lookups they initiate themselves.
+
+**Generated and fetched v3 outputs remain pure data.** _(from "Phase 2 preserves the shared registry and pricing semantics", "Package generation consumes the v3 wrapper")_
+The v3 payload and generated package files contain only runtime-semantic units, providers, and prices. Trust markers,
+schema fingerprints, generations, locks, prepared validation results, and decomposition plans stay out of serialized
+contracts.
+
+**Tests prove version isolation, language parity, and failure atomicity.** _(from "The existing v1 artifacts remain byte-frozen", "The v3 cutover turns both v2 variants into exact compatibility snapshots", "Runtime validation is strict about the v3 data that can affect calculation", "An activated Python or JavaScript state always pairs one registry", "Go represents atomicity with immutable `Calculator` construction")_
+Coverage pins v1 and final v2 artifacts; verifies the final slim v2 projection; validates the v3 schema and append-only
+publisher comparison; exercises a new unit absent from bundled data in Python, JavaScript, and Go; preserves legacy
+provider-array inputs; proves Python `fetch()` has no activation side effect; proves JavaScript stale promises cannot
+replace a newer update; proves invalid wrappers, units, providers, coverage, and rejected updates retain the prior
+Python/JavaScript pair or fail Go construction; verifies each operation sees one matching state; and asserts that
+serialized outputs contain no runtime state or source-only validation metadata.
+
+**Scope exclusions remain explicit.**
+Phase 2 does not expose arbitrary caller-defined registry mutation, add a v3 slim payload, add validation or
+decomposition caches, persist fetched registry state across process restarts, or change the shared pricing algorithm.
