@@ -1459,7 +1459,14 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-fable-5-1-v1:0',
         match: {
-          contains: 'global.anthropic.claude-fable-5-1',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-fable-5-1',
+            },
+            {
+              contains: 'global.anthropic.claude-fable-5-1-v1',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -2372,13 +2379,19 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-fable-5-1',
+              equals: 'anthropic.claude-fable-5-1',
             },
             {
-              starts_with: 'claude-fable-5-1',
+              equals: 'claude-fable-5-1',
             },
             {
-              contains: 'us.anthropic.claude-fable-5-1',
+              starts_with: 'anthropic.claude-fable-5-1-v1',
+            },
+            {
+              starts_with: 'claude-fable-5-1-v1',
+            },
+            {
+              contains: 'us.anthropic.claude-fable-5-1-v1',
             },
           ],
         },
@@ -6783,7 +6796,14 @@ export const data: Provider[] = [
       {
         id: 'claude-fable-5-1',
         match: {
-          contains: 'claude-fable-5-1',
+          or: [
+            {
+              ends_with: 'claude-fable-5-1',
+            },
+            {
+              contains: 'claude-fable-5-1@',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:

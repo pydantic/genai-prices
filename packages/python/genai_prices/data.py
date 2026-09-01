@@ -932,7 +932,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.anthropic.claude-fable-5-1-v1:0',
-                match=ClauseContains(contains='global.anthropic.claude-fable-5-1'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEndsWith(ends_with='global.anthropic.claude-fable-5-1'),
+                        ClauseContains(contains='global.anthropic.claude-fable-5-1-v1'),
+                    ]
+                ),
                 context_window=1000000,
                 price_comments='Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
                 prices=ModelPrice(
@@ -1509,9 +1514,11 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-fable-5-1-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='anthropic.claude-fable-5-1'),
-                        ClauseStartsWith(starts_with='claude-fable-5-1'),
-                        ClauseContains(contains='us.anthropic.claude-fable-5-1'),
+                        ClauseEquals(equals='anthropic.claude-fable-5-1'),
+                        ClauseEquals(equals='claude-fable-5-1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-fable-5-1-v1'),
+                        ClauseStartsWith(starts_with='claude-fable-5-1-v1'),
+                        ClauseContains(contains='us.anthropic.claude-fable-5-1-v1'),
                     ]
                 ),
                 context_window=1000000,
@@ -4144,7 +4151,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-fable-5-1',
-                match=ClauseContains(contains='claude-fable-5-1'),
+                match=ClauseOr(
+                    or_=[ClauseEndsWith(ends_with='claude-fable-5-1'), ClauseContains(contains='claude-fable-5-1@')]
+                ),
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai',
                 prices=ModelPrice(

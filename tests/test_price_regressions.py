@@ -591,7 +591,9 @@ def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:
     ('provider_id', 'fable_5_ref', 'fable_5_1_ref'),
     [
         ('anthropic', 'claude-fable-5', 'claude-fable-5-1'),
+        ('anthropic', 'claude-fable-5-20260901', 'claude-fable-5-1-20260901'),
         ('google', 'claude-fable-5', 'claude-fable-5-1'),
+        ('google', 'claude-fable-5@20260901', 'claude-fable-5-1@20260901'),
         ('aws', 'global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-1-v1:0'),
         ('aws', 'us.anthropic.claude-fable-5-v1:0', 'us.anthropic.claude-fable-5-1-v1:0'),
         ('openrouter', 'anthropic/claude-fable-5', 'anthropic/claude-fable-5.1'),
@@ -616,7 +618,9 @@ def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_
     ('provider_id', 'model_ref', 'cache_read_mtok'),
     [
         ('anthropic', 'claude-fable-5-1', '0.25'),
+        ('anthropic', 'claude-fable-5-1-20260901', '0.25'),
         ('google', 'claude-fable-5-1', '0.25'),
+        ('google', 'claude-fable-5-1@20260901', '0.25'),
         ('aws', 'global.anthropic.claude-fable-5-1-v1:0', '0.25'),
         ('aws', 'us.anthropic.claude-fable-5-1-v1:0', '0.275'),
         ('openrouter', 'anthropic/claude-fable-5.1', '0.25'),

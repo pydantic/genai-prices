@@ -177,7 +177,9 @@ models:
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
     match:
-      contains: global.anthropic.claude-fable-5-1
+      or:
+        - ends_with: global.anthropic.claude-fable-5-1
+        - contains: global.anthropic.claude-fable-5-1-v1
     prices:
       input_mtok: 10
       cache_write_mtok: 12.5
@@ -894,9 +896,11 @@ models:
       Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
     match:
       or:
-        - starts_with: anthropic.claude-fable-5-1
-        - starts_with: claude-fable-5-1
-        - contains: us.anthropic.claude-fable-5-1
+        - equals: anthropic.claude-fable-5-1
+        - equals: claude-fable-5-1
+        - starts_with: anthropic.claude-fable-5-1-v1
+        - starts_with: claude-fable-5-1-v1
+        - contains: us.anthropic.claude-fable-5-1-v1
     prices:
       input_mtok: 11
       cache_write_mtok: 13.75

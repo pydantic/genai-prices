@@ -426,7 +426,9 @@ models:
   - id: claude-fable-5-1
     canonical_model: anthropic/claude-fable-5-1
     match:
-      contains: claude-fable-5-1
+      or:
+        - ends_with: claude-fable-5-1
+        - contains: claude-fable-5-1@
     context_window: 1000000
     prices_checked: 2026-09-01
     price_comments: >-

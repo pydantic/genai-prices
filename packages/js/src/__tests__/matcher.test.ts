@@ -361,7 +361,9 @@ describe('Claude Fable 5 vs 5.1', () => {
 
   it.each([
     ['anthropic', 'claude-fable-5', 'claude-fable-5-1'],
+    ['anthropic', 'claude-fable-5-20260901', 'claude-fable-5-1-20260901'],
     ['google', 'claude-fable-5', 'claude-fable-5-1'],
+    ['google', 'claude-fable-5@20260901', 'claude-fable-5-1@20260901'],
     ['aws', 'global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-1-v1:0'],
     ['aws', 'us.anthropic.claude-fable-5-v1:0', 'us.anthropic.claude-fable-5-1-v1:0'],
     ['openrouter', 'anthropic/claude-fable-5', 'anthropic/claude-fable-5.1'],
@@ -375,7 +377,9 @@ describe('Claude Fable 5 vs 5.1', () => {
 
   it.each([
     ['anthropic', 'claude-fable-5-1', 0.25],
+    ['anthropic', 'claude-fable-5-1-20260901', 0.25],
     ['google', 'claude-fable-5-1', 0.25],
+    ['google', 'claude-fable-5-1@20260901', 0.25],
     ['aws', 'global.anthropic.claude-fable-5-1-v1:0', 0.25],
     ['aws', 'us.anthropic.claude-fable-5-1-v1:0', 0.275],
     ['openrouter', 'anthropic/claude-fable-5.1', 0.25],
