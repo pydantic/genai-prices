@@ -113,7 +113,7 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub.
 
 Please note:
 
@@ -169,7 +169,7 @@ wait_prices_updated_sync()
 ...
 ```
 
-Or it's async variant, `wait_prices_updated_async`.
+Or its async variant, `wait_prices_updated_async`.
 
 ### CLI Usage
 
