@@ -100,7 +100,7 @@ def test_update_prices_fetch_parses_provider_array_without_registry_change(monke
     assert _get_registry() is bundled
 
 
-def test_update_prices_fetch_provider_array_warns_for_invalid_extractor_without_state_changes(
+def test_update_prices_fetch_provider_array_defers_invalid_extractor_without_state_changes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     bundled = _get_registry()
@@ -114,14 +114,17 @@ def test_update_prices_fetch_provider_array_warns_for_invalid_extractor_without_
     _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
 
     try:
+        snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+        assert snapshot is not None
+        provider = snapshot.find_provider(None, 'broken', None)
         with pytest.warns(
             UserWarning,
             match='Unsupported extractor destination for standard extraction: imaginary_tokens',
         ):
-            snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+            provider.extract_usage({'usage': {'tokens': 1}})
 
-        assert snapshot is not None
-        assert snapshot.find_provider(None, 'broken', None).id == 'broken'
+        assert provider.id == 'broken'
         assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is previous_snapshot
     finally:

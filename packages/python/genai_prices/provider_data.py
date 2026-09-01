@@ -1,0 +1,223 @@
+from __future__ import annotations
+
+from collections.abc import Mapping
+from dataclasses import dataclass
+from typing import Any, cast
+
+from .types import Provider, _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+from .units import UnitRegistry, _validate_unit_evolution  # pyright: ignore[reportPrivateUsage]
+
+
+@dataclass(frozen=True)
+class _DecodedProviderData:
+    providers: list[Provider]
+    registry: UnitRegistry | None
+    compatibility_warnings: tuple[str, ...]
+
+
+def _decode_provider_data(  # pyright: ignore[reportUnusedFunction]
+    raw: object, compatibility_registry: UnitRegistry
+) -> _DecodedProviderData:
+    if isinstance(raw, list):
+        return _decode_legacy_provider_array(cast(list[object], raw))
+    if isinstance(raw, Mapping):
+        return _decode_wrapped_provider_data(cast(Mapping[str, object], raw), compatibility_registry)
+    raise ValueError('Invalid provider data root: expected a wrapped object or provider array')
+
+
+def _decode_wrapped_provider_data(
+    raw: Mapping[str, object], compatibility_registry: UnitRegistry
+) -> _DecodedProviderData:
+    if 'units' not in raw:
+        raise ValueError('Invalid provider data: missing units')
+    if 'providers' not in raw:
+        raise ValueError('Invalid provider data: missing providers')
+    raw_providers = raw['providers']
+    if not isinstance(raw_providers, list):
+        raise ValueError('Invalid provider data at providers: expected an array')
+
+    registry = UnitRegistry._from_untrusted(raw['units'])  # pyright: ignore[reportPrivateUsage]
+    _validate_unit_evolution(compatibility_registry, registry)
+    projected_providers, compatibility_warnings = _project_providers(cast(list[object], raw_providers))
+    try:
+        providers = _providers_from_raw(projected_providers)
+    except (AssertionError, ValueError) as exc:
+        raise ValueError(f'Invalid provider data at providers: {exc}') from exc
+    return _DecodedProviderData(providers, registry, compatibility_warnings)
+
+
+def _decode_legacy_provider_array(raw: list[object]) -> _DecodedProviderData:
+    return _DecodedProviderData(_providers_from_raw(raw), None, ())
+
+
+class _ProviderProjector:
+    def __init__(self) -> None:
+        self.warnings: list[str] = []
+
+    def project_provider(self, raw: object, provider_index: int) -> object:
+        if not isinstance(raw, Mapping):
+            return raw
+        provider = dict(cast(Mapping[str, Any], raw))
+        context = _provider_context(provider, provider_index)
+
+        for field in ('model_match', 'provider_match'):
+            if field in provider and not self._project_match(provider[field], f'providers[{provider_index}].{field}'):
+                self._warn('match', f'providers[{provider_index}].{field}', context)
+                del provider[field]
+
+        raw_extractors = provider.get('extractors')
+        if isinstance(raw_extractors, list):
+            extractors: list[object] = []
+            for extractor_index, raw_extractor in enumerate(cast(list[object], raw_extractors)):
+                path = f'providers[{provider_index}].extractors[{extractor_index}]'
+                projected = self._project_extractor(raw_extractor, path, context)
+                if projected is not None:
+                    extractors.append(projected)
+            provider['extractors'] = extractors
+
+        raw_models = provider.get('models')
+        if isinstance(raw_models, list):
+            models: list[object] = []
+            for model_index, raw_model in enumerate(cast(list[object], raw_models)):
+                projected = self._project_model(raw_model, provider_index, model_index, context)
+                if projected is not None:
+                    models.append(projected)
+            provider['models'] = models
+        return provider
+
+    def _project_extractor(self, raw: object, path: str, context: str) -> object | None:
+        if not isinstance(raw, Mapping):
+            return raw
+        extractor = dict(cast(Mapping[str, Any], raw))
+        if 'type' in extractor or not ({'root', 'mappings'} & extractor.keys()):
+            self._warn('extractor', path, context)
+            return None
+
+        for field in ('root', 'model_path'):
+            if field in extractor and not self._extract_path_supported(extractor[field], f'{path}.{field}'):
+                self._warn('extractor', f'{path}.{field}', context)
+                return None
+
+        raw_mappings = extractor.get('mappings')
+        if isinstance(raw_mappings, list):
+            mappings: list[object] = []
+            for mapping_index, raw_mapping in enumerate(cast(list[object], raw_mappings)):
+                mapping_path = f'{path}.mappings[{mapping_index}]'
+                if isinstance(raw_mapping, Mapping):
+                    mapping = dict(cast(Mapping[str, Any], raw_mapping))
+                    if not ({'path', 'dest'} & mapping.keys()):
+                        self._warn('extractor mapping', mapping_path, context)
+                        continue
+                    if 'path' in mapping and not self._extract_path_supported(mapping['path'], f'{mapping_path}.path'):
+                        self._warn('extractor mapping', f'{mapping_path}.path', context)
+                        continue
+                    mappings.append(mapping)
+                else:
+                    mappings.append(raw_mapping)
+            extractor['mappings'] = mappings
+        return extractor
+
+    def _extract_path_supported(self, raw: object, path: str) -> bool:
+        if isinstance(raw, str):
+            return True
+        if not isinstance(raw, list):
+            return not isinstance(raw, Mapping)
+        for index, step in enumerate(cast(list[object], raw)):
+            if isinstance(step, str):
+                continue
+            if not isinstance(step, Mapping):
+                continue
+            array_match = cast(Mapping[str, object], step)
+            if array_match.get('type') != 'array-match':
+                return False
+            if 'match' in array_match and not self._project_match(array_match['match'], f'{path}[{index}].match'):
+                return False
+        return True
+
+    def _project_model(
+        self, raw: object, provider_index: int, model_index: int, provider_context: str
+    ) -> object | None:
+        if not isinstance(raw, Mapping):
+            return raw
+        model = dict(cast(Mapping[str, Any], raw))
+        path = f'providers[{provider_index}].models[{model_index}]'
+        context = f'{provider_context}, {_model_context(model, model_index)}'
+        if 'match' in model and not self._project_match(model['match'], f'{path}.match'):
+            self._warn('match', f'{path}.match', context)
+            return None
+        if 'prices' in model:
+            model['prices'] = self._project_prices(model['prices'], f'{path}.prices', context)
+        return model
+
+    def _project_match(self, raw: object, path: str) -> bool:
+        if not isinstance(raw, Mapping):
+            raise ValueError(f'Invalid match at {path}: expected an object')
+        match = cast(Mapping[str, object], raw)
+        if not match:
+            return False
+        discriminator = next(iter(match))
+        if discriminator not in {'starts_with', 'ends_with', 'contains', 'regex', 'equals', 'or', 'and'}:
+            return False
+        if discriminator not in {'or', 'and'} or not isinstance(match[discriminator], list):
+            return True
+
+        # Nested match entries are not independently decoded here: retaining an
+        # incomplete boolean expression could broaden or narrow model matching.
+        return all(
+            self._project_match(child, f'{path}.{discriminator}[{index}]')
+            for index, child in enumerate(cast(list[object], match[discriminator]))
+        )
+
+    def _project_prices(self, raw: object, path: str, context: str) -> object:
+        if isinstance(raw, Mapping):
+            return self._project_price_map(cast(Mapping[str, object], raw), path, context)
+        if not isinstance(raw, list):
+            raise ValueError(f'Invalid prices at {path}: expected an object or array')
+
+        prices: list[object] = []
+        for price_index, raw_price in enumerate(cast(list[object], raw)):
+            price_path = f'{path}[{price_index}]'
+            if not isinstance(raw_price, Mapping):
+                prices.append(raw_price)
+                continue
+            conditional = dict(cast(Mapping[str, Any], raw_price))
+            if 'prices' not in conditional:
+                self._warn('price', price_path, context)
+                continue
+            constraint = conditional.get('constraint')
+            if isinstance(constraint, Mapping) and not ({'start_date', 'start_time', 'end_time'} & constraint.keys()):
+                self._warn('constraint', f'{price_path}.constraint', context)
+                continue
+            conditional['prices'] = self._project_prices(conditional['prices'], f'{price_path}.prices', context)
+            prices.append(conditional)
+        return prices
+
+    def _project_price_map(self, raw: Mapping[str, object], path: str, context: str) -> dict[str, object]:
+        prices: dict[str, object] = {}
+        for price_key, value in raw.items():
+            if isinstance(value, Mapping) and not ({'base', 'tiers'} & value.keys()):
+                self._warn('price', f'{path}.{price_key}', context)
+                continue
+            prices[price_key] = value
+        return prices
+
+    def _warn(self, capability: str, path: str, context: str) -> None:
+        self.warnings.append(
+            f'Unsupported {capability} variant at {path} for {context}; upgrade genai-prices for full support'
+        )
+
+
+def _project_providers(raw: list[object]) -> tuple[list[object], tuple[str, ...]]:
+    projector = _ProviderProjector()
+    providers = [projector.project_provider(provider, index) for index, provider in enumerate(raw)]
+    return providers, tuple(projector.warnings)
+
+
+def _provider_context(provider: Mapping[str, object], index: int) -> str:
+    provider_id = provider.get('id')
+    return f'provider {provider_id!r}' if isinstance(provider_id, str) else f'provider index {index}'
+
+
+def _model_context(model: Mapping[str, object], index: int) -> str:
+    model_id = model.get('id')
+    return f'model {model_id!r}' if isinstance(model_id, str) else f'model index {index}'
