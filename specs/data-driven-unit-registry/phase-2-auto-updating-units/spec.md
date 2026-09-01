@@ -403,11 +403,12 @@ later-source, stale-target, target-object reporting, Go-identifier transformatio
 old-implication, removal, and new-ancestor rejection.
 
 **Runtime tests prove failure atomicity and preserved lifecycle behavior.** _(from "Candidate preparation has no externally visible state change", "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays")_
-They cover both input shapes; all v2-admitted provider fields and value forms, including both constraint shapes; each
-runtime's legacy structural tolerance and validation timing; Python fetch, activation, lookup provenance, clearing,
-stop/join, manual-write exclusion, and exact exception behavior; JavaScript synchronous, asynchronous, null, current and
-stale rejection, promise identity, direct-null no-op, and promise-resolved-null supersession; Go `ErrInvalidData`;
-append-only activation; invalid units, providers, and coverage; and one-state-per-operation capture.
+They cover both input shapes; all v2-admitted structural fields and representation forms, including both constraint
+shapes, together with baseline rejection of invalid numeric values and cross-field relationships; each runtime's legacy
+structural tolerance and validation timing; Python fetch, activation, lookup provenance, clearing, stop/join,
+manual-write exclusion, and exact exception behavior; JavaScript synchronous, asynchronous, null, current and stale
+rejection, promise identity, direct-null no-op, and promise-resolved-null supersession; Go `ErrInvalidData`; append-only
+activation; invalid units, providers, and coverage; and one-state-per-operation capture.
 
 **Runtime boundary tests pin decoded-value and integer rules.** _(from "V3 normalization factors fit every runtime exactly.", "Runtime wire validation starts from a decoded JSON value.")_
 They accept `per` values 1 and 9,007,199,254,740,991, reject 0, non-integers, and larger integers, and demonstrate that
