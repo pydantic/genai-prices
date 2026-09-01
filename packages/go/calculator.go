@@ -1,7 +1,6 @@
 package genai_prices
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"strings"
@@ -12,8 +11,9 @@ import (
 
 // Calculator calculates prices using one immutable provider-data snapshot.
 type Calculator struct {
-	providers []*provider
-	registry  *unitRegistry
+	providers             []*provider
+	registry              *unitRegistry
+	compatibilityWarnings []string
 }
 
 var bundledCalculator = mustNewCalculator()
@@ -23,22 +23,10 @@ func NewCalculator() (*Calculator, error) {
 	return NewCalculatorFromJSON(bundledProviderData)
 }
 
-// NewCalculatorFromJSON constructs a calculator using a v2 provider-data payload.
+// NewCalculatorFromJSON constructs a calculator using a wrapped v3 or legacy v2 provider-data payload.
 func NewCalculatorFromJSON(data []byte) (*Calculator, error) {
-	var decoded []provider
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrInvalidData, err)
-	}
-	if decoded == nil {
-		return nil, fmt.Errorf("%w: expected a provider array", ErrInvalidData)
-	}
-
-	providers := make([]*provider, len(decoded))
-	for index := range decoded {
-		providers[index] = &decoded[index]
-	}
-	calculator := &Calculator{providers: providers, registry: newUnitRegistry(bundledUnits, bundledUnitOrder)}
-	if err := calculator.validate(); err != nil {
+	calculator, err := decodeCalculatorData(data)
+	if err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrInvalidData, err)
 	}
 	return calculator, nil
@@ -117,13 +105,15 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if err != nil {
 		return PriceCalculation{}, err
 	}
+	warnings := calculationWarnings(request.Usage, prices, calculator.registry)
+	warnings = append(warnings, calculator.compatibilityWarnings...)
 	return PriceCalculation{
 		InputPrice:  inputPrice,
 		OutputPrice: outputPrice,
 		TotalPrice:  totalPrice,
 		ProviderID:  selected.ID,
 		ModelID:     matchedModel.ID,
-		Warnings:    calculationWarnings(request.Usage, prices, calculator.registry),
+		Warnings:    warnings,
 	}, nil
 }
 

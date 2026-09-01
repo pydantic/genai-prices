@@ -12,8 +12,8 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
-// RemoteDataURL is the current v2 provider-data feed.
-const RemoteDataURL = "https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json"
+// RemoteDataURL is the current v3 provider-data feed.
+const RemoteDataURL = "https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v3/data.json"
 
 var (
 	// ErrProviderNotFound means no provider matched the request.

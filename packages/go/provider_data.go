@@ -9,6 +9,60 @@ import (
 	"sort"
 )
 
+func decodeCalculatorData(data []byte) (*Calculator, error) {
+	switch rawKind(data) {
+	case '{':
+		return decodeWrappedCalculatorData(data)
+	case '[':
+		return decodeLegacyCalculatorData(data)
+	default:
+		return nil, errors.New("expected a wrapped object or provider array")
+	}
+}
+
+func decodeWrappedCalculatorData(data []byte) (*Calculator, error) {
+	var wrapped wrappedProviderData
+	if err := json.Unmarshal(data, &wrapped); err != nil {
+		return nil, err
+	}
+	registry, err := newUntrustedUnitRegistry(wrapped.Units)
+	if err != nil {
+		return nil, fmt.Errorf("units: %w", err)
+	}
+	bundledRegistry := newUnitRegistry(bundledUnits, bundledUnitOrder)
+	if err := validateUnitEvolution(bundledRegistry, registry); err != nil {
+		return nil, fmt.Errorf("units: %w", err)
+	}
+	decoded, err := decodeWrappedProviders(wrapped.Providers, registry)
+	if err != nil {
+		return nil, err
+	}
+	warnings := append([]string(nil), wrapped.Units.CompatibilityWarnings...)
+	warnings = append(warnings, decoded.CompatibilityWarnings...)
+	return calculatorFromDecodedProviders(decoded.Values, registry, warnings), nil
+}
+
+func decodeLegacyCalculatorData(data []byte) (*Calculator, error) {
+	registry := newUnitRegistry(bundledUnits, bundledUnitOrder)
+	decoded, err := decodeLegacyProviders(data, registry)
+	if err != nil {
+		return nil, err
+	}
+	return calculatorFromDecodedProviders(decoded.Values, registry, decoded.CompatibilityWarnings), nil
+}
+
+func calculatorFromDecodedProviders(values []provider, registry *unitRegistry, warnings []string) *Calculator {
+	providers := make([]*provider, len(values))
+	for index := range values {
+		providers[index] = &values[index]
+	}
+	return &Calculator{
+		providers:             providers,
+		registry:              registry,
+		compatibilityWarnings: append([]string(nil), warnings...),
+	}
+}
+
 func decodeWrappedProviders(data json.RawMessage, registry *unitRegistry) (decodedProviders, error) {
 	projector := providerProjector{}
 	projected, err := projector.projectProviderArray(data)
