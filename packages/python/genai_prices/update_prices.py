@@ -95,7 +95,6 @@ class UpdatePrices:
         """
         global _worker
 
-        config_warning: str | None = None
         with _lock:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
@@ -126,22 +125,15 @@ class UpdatePrices:
                     owner.update_interval,
                     owner.request_timeout,
                 ):
-                    config_warning = (
+                    warnings.warn(
                         'UpdatePrices background task is already running with different configuration; keeping '
                         f'url={owner.url!r}, update_interval={owner.update_interval!r}, '
-                        f'request_timeout={owner.request_timeout!r}'
+                        f'request_timeout={owner.request_timeout!r}',
+                        stacklevel=2,
                     )
                 worker.ref_count += 1
                 self._worker = worker
 
-        # Warning hooks are arbitrary application code; never call them while holding the lock.
-        if config_warning is not None:
-            try:
-                warnings.warn(config_warning, stacklevel=2)
-            except BaseException:
-                # A warning promoted to an exception means start() failed; release the reference it just took.
-                self.stop()
-                raise
         if wait:
             worker.wait(timeout=30 if wait is True else wait)
 
@@ -255,22 +247,16 @@ class _Worker:
                 try:
                     self._update_prices()
                 except Exception as e:
-                    with _lock:
-                        if self.stop_event.is_set():
-                            break
-                        self._publish(e)
+                    self._publish(e)
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 if self.stop_event.wait(self.owner.update_interval):
                     break
         except BaseException as e:
-            # Serialize terminal publication with new references; a stop that already won suppresses it.
-            with _lock:
-                if self.stop_event.is_set():
-                    return
-                self.dead = True
-                error = RuntimeError('UpdatePrices background task terminated unexpectedly')
-                error.__cause__ = e
-                self._publish(error)
+            # Nothing above should raise this; if it does, fail waiters instead of hanging them.
+            self.dead = True
+            error = RuntimeError('UpdatePrices background task terminated unexpectedly')
+            error.__cause__ = e
+            self._publish(error)
         finally:
             logger.info('genai-prices background task stopped')
 
@@ -288,4 +274,4 @@ class _Worker:
                 # A stop() already won: its discarded fetch is not an update, so install and publish nothing.
                 return
             data_snapshot.set_custom_snapshot(snapshot)
-            self._publish(None)
+        self._publish(None)

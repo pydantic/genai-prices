@@ -4,7 +4,6 @@ import asyncio
 import concurrent.futures
 import threading
 import traceback
-import warnings
 from collections.abc import Callable
 from decimal import Decimal
 
@@ -232,60 +231,6 @@ def test_different_configuration_warns_and_joins(
         # The first configuration wins: the second instance joins the running worker unchanged.
         assert second._worker is first._worker
         second.stop()
-
-
-def test_configuration_warning_hook_runs_outside_lifecycle_lock(monkeypatch: pytest.MonkeyPatch) -> None:
-    _mock_update_prices_get(monkeypatch)
-    first = UpdatePrices()
-    second = UpdatePrices(update_interval=1)
-    warning_seen = False
-    first.start(wait=True)
-
-    def showwarning(*_args: object, **_kwargs: object) -> None:
-        nonlocal warning_seen
-        warning_seen = True
-        assert update_prices_module._lock.acquire(blocking=False)
-        update_prices_module._lock.release()
-        first.stop()
-
-    with warnings.catch_warnings():
-        warnings.simplefilter('always')
-        monkeypatch.setattr(warnings, 'showwarning', showwarning)
-        try:
-            second.start()
-        finally:
-            first.stop()
-            second.stop()
-
-    assert warning_seen
-    assert first._worker is None
-    assert second._worker is None
-    assert update_prices_module._worker is None
-
-
-def test_configuration_warning_as_error_releases_reference(monkeypatch: pytest.MonkeyPatch) -> None:
-    _mock_update_prices_get(monkeypatch)
-    first = UpdatePrices()
-    second = UpdatePrices(update_interval=1)
-    first.start(wait=True)
-
-    try:
-        with (
-            warnings.catch_warnings(),
-            pytest.raises(UserWarning, match='already running with different configuration'),
-        ):
-            warnings.simplefilter('error')
-            second.start()
-
-        assert second._worker is None
-        worker = first._worker
-        assert worker is update_prices_module._worker
-        assert worker is not None
-        assert worker.ref_count == 1
-    finally:
-        first.stop()
-
-    assert update_prices_module._worker is None
 
 
 def test_same_instance_cannot_start_twice():
@@ -587,54 +532,6 @@ def test_stop_wakes_waiter_before_first_fetch(monkeypatch: pytest.MonkeyPatch) -
         assert wait_future.result(timeout=5) is False
     allow_worker_run.set()
     worker.thread.join(timeout=5)
-
-
-def test_stop_suppresses_in_flight_failure() -> None:
-    fetch_started = threading.Event()
-    release_fetch = threading.Event()
-
-    class FailingUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            fetch_started.set()
-            assert release_fetch.wait(timeout=5)
-            raise RuntimeError('discarded failure')
-
-    update_prices = FailingUpdatePrices()
-    update_prices.start()
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    assert fetch_started.wait(timeout=5)
-
-    update_prices.stop()
-    assert worker.wait(timeout=0) is False
-    release_fetch.set()
-    worker.thread.join(timeout=5)
-    assert not worker.thread.is_alive()
-    assert worker.wait(timeout=0) is False
-
-
-def test_stop_suppresses_in_flight_terminal_failure() -> None:
-    fetch_started = threading.Event()
-    release_fetch = threading.Event()
-
-    class TerminatingUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            fetch_started.set()
-            assert release_fetch.wait(timeout=5)
-            raise KeyboardInterrupt
-
-    update_prices = TerminatingUpdatePrices()
-    update_prices.start()
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    assert fetch_started.wait(timeout=5)
-
-    update_prices.stop()
-    release_fetch.set()
-    worker.thread.join(timeout=5)
-    assert not worker.thread.is_alive()
-    assert not worker.dead
-    assert worker.wait(timeout=0) is False
 
 
 def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch: pytest.MonkeyPatch) -> None:
