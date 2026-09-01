@@ -61,9 +61,14 @@ class _ProviderProjector:
         context = _provider_context(provider, provider_index)
 
         for field in ('model_match', 'provider_match'):
-            if field in provider and not self._project_match(provider[field], f'providers[{provider_index}].{field}'):
-                self._warn('match', f'providers[{provider_index}].{field}', context)
-                del provider[field]
+            if field in provider:
+                path = f'providers[{provider_index}].{field}'
+                supported, projected = self._project_match(provider[field], path)
+                if supported:
+                    provider[field] = projected
+                else:
+                    self._warn('match', path, context)
+                    del provider[field]
 
         raw_extractors = provider.get('extractors')
         if isinstance(raw_extractors, list):
@@ -94,9 +99,13 @@ class _ProviderProjector:
             return None
 
         for field in ('root', 'model_path'):
-            if field in extractor and not self._extract_path_supported(extractor[field], f'{path}.{field}'):
-                self._warn('extractor', f'{path}.{field}', context)
-                return None
+            if field in extractor:
+                field_path = f'{path}.{field}'
+                supported, projected = self._project_extract_path(extractor[field], field_path)
+                if not supported:
+                    self._warn('extractor', field_path, context)
+                    return None
+                extractor[field] = projected
 
         raw_mappings = extractor.get('mappings')
         if isinstance(raw_mappings, list):
@@ -108,31 +117,42 @@ class _ProviderProjector:
                     if not ({'path', 'dest'} & mapping.keys()):
                         self._warn('extractor mapping', mapping_path, context)
                         continue
-                    if 'path' in mapping and not self._extract_path_supported(mapping['path'], f'{mapping_path}.path'):
-                        self._warn('extractor mapping', f'{mapping_path}.path', context)
-                        continue
+                    if 'path' in mapping:
+                        path_path = f'{mapping_path}.path'
+                        supported, projected = self._project_extract_path(mapping['path'], path_path)
+                        if not supported:
+                            self._warn('extractor mapping', path_path, context)
+                            continue
+                        mapping['path'] = projected
                     mappings.append(mapping)
                 else:
                     mappings.append(raw_mapping)
             extractor['mappings'] = mappings
         return extractor
 
-    def _extract_path_supported(self, raw: object, path: str) -> bool:
+    def _project_extract_path(self, raw: object, path: str) -> tuple[bool, object]:
         if isinstance(raw, str):
-            return True
+            return True, raw
         if not isinstance(raw, list):
-            return not isinstance(raw, Mapping)
+            return not isinstance(raw, Mapping), raw
+        projected_steps: list[object] = []
         for index, step in enumerate(cast(list[object], raw)):
             if isinstance(step, str):
+                projected_steps.append(step)
                 continue
             if not isinstance(step, Mapping):
+                projected_steps.append(step)
                 continue
-            array_match = cast(Mapping[str, object], step)
+            array_match = dict(cast(Mapping[str, object], step))
             if array_match.get('type') != 'array-match':
-                return False
-            if 'match' in array_match and not self._project_match(array_match['match'], f'{path}[{index}].match'):
-                return False
-        return True
+                return False, cast(object, raw)
+            if 'match' in array_match:
+                supported, projected = self._project_match(array_match['match'], f'{path}[{index}].match')
+                if not supported:
+                    return False, cast(object, raw)
+                array_match['match'] = projected
+            projected_steps.append(array_match)
+        return True, projected_steps
 
     def _project_model(
         self, raw: object, provider_index: int, model_index: int, provider_context: str
@@ -142,31 +162,41 @@ class _ProviderProjector:
         model = dict(cast(Mapping[str, Any], raw))
         path = f'providers[{provider_index}].models[{model_index}]'
         context = f'{provider_context}, {_model_context(model, model_index)}'
-        if 'match' in model and not self._project_match(model['match'], f'{path}.match'):
-            self._warn('match', f'{path}.match', context)
-            return None
+        if 'match' in model:
+            supported, projected = self._project_match(model['match'], f'{path}.match')
+            if not supported:
+                self._warn('match', f'{path}.match', context)
+                return None
+            model['match'] = projected
         if 'prices' in model:
             model['prices'] = self._project_prices(model['prices'], f'{path}.prices', context)
         return model
 
-    def _project_match(self, raw: object, path: str) -> bool:
+    def _project_match(self, raw: object, path: str) -> tuple[bool, object]:
         if not isinstance(raw, Mapping):
             raise ValueError(f'Invalid match at {path}: expected an object')
         match = cast(Mapping[str, object], raw)
         if not match:
-            return False
-        discriminator = next(iter(match))
-        if discriminator not in {'starts_with', 'ends_with', 'contains', 'regex', 'equals', 'or', 'and'}:
-            return False
+            return False, cast(object, raw)
+        known_discriminators = {'starts_with', 'ends_with', 'contains', 'regex', 'equals', 'or', 'and'}
+        discriminator = next((key for key in match if key in known_discriminators), None)
+        if discriminator is None:
+            return False, cast(object, raw)
+        projected_match = {discriminator: match[discriminator]}
+        projected_match.update((key, value) for key, value in match.items() if key != discriminator)
         if discriminator not in {'or', 'and'} or not isinstance(match[discriminator], list):
-            return True
+            return True, projected_match
 
         # Nested match entries are not independently decoded here: retaining an
         # incomplete boolean expression could broaden or narrow model matching.
-        return all(
-            self._project_match(child, f'{path}.{discriminator}[{index}]')
-            for index, child in enumerate(cast(list[object], match[discriminator]))
-        )
+        projected_children: list[object] = []
+        for index, child in enumerate(cast(list[object], match[discriminator])):
+            supported, projected = self._project_match(child, f'{path}.{discriminator}[{index}]')
+            if not supported:
+                return False, cast(object, raw)
+            projected_children.append(projected)
+        projected_match[discriminator] = projected_children
+        return True, projected_match
 
     def _project_prices(self, raw: object, path: str, context: str) -> object:
         if isinstance(raw, Mapping):

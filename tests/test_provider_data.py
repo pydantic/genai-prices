@@ -70,6 +70,21 @@ def test_decode_provider_data_accepts_both_roots_and_ignores_extensions() -> Non
     compatibility_registry = _registry()
     provider = _provider()
     provider['future_provider_note'] = {'anything': True}
+    provider['provider_match'] = {'future_match_note': True, 'equals': 'testing'}
+    models = cast(list[object], provider['models'])
+    cast(dict[str, object], models[0])['match'] = {'future_match_note': True, 'equals': 'model-a'}
+    extractors = cast(list[object], provider['extractors'])
+    extractor = cast(dict[str, object], extractors[0])
+    mappings = cast(list[object], extractor['mappings'])
+    cast(dict[str, object], mappings[0])['path'] = [
+        {
+            'future_array_match_note': True,
+            'type': 'array-match',
+            'field': 'kind',
+            'match': {'future_match_note': True, 'equals': 'tokens'},
+        },
+        'count',
+    ]
     wrapped = _wrapped(provider)
     wrapped['future_wrapper_note'] = ['anything']
     units = wrapped['units']
@@ -82,6 +97,8 @@ def test_decode_provider_data_accepts_both_roots_and_ignores_extensions() -> Non
     assert decoded_wrapped.registry is not None
     assert list(decoded_wrapped.registry.units) == ['input_tokens', 'output_tokens']
     assert decoded_wrapped.providers[0].models[0].id == 'model-a'
+    assert decoded_wrapped.providers[0].provider_match is not None
+    assert decoded_wrapped.providers[0].provider_match.is_match('testing')
     assert decoded_wrapped.compatibility_warnings == ()
     assert decoded_legacy.registry is None
     assert decoded_legacy.providers[0].models[1].id == 'model-b'
@@ -297,6 +314,10 @@ def _malformed_extractor_mapping(provider: dict[str, object]) -> None:
     provider['extractors'] = [{'root': 'usage', 'mappings': [3]}]
 
 
+def _malformed_extractor_mapping_without_path(provider: dict[str, object]) -> None:
+    provider['extractors'] = [{'root': 'usage', 'mappings': [{'dest': 'input_tokens'}]}]
+
+
 def _malformed_extractor_path(provider: dict[str, object]) -> None:
     provider['extractors'] = [{'root': 'usage', 'mappings': [{'path': 3, 'dest': 'input_tokens'}]}]
 
@@ -305,8 +326,24 @@ def _malformed_extractor_path_step(provider: dict[str, object]) -> None:
     provider['extractors'] = [{'root': 'usage', 'mappings': [{'path': [3], 'dest': 'input_tokens'}]}]
 
 
+def _malformed_array_match_without_match(provider: dict[str, object]) -> None:
+    provider['extractors'] = [
+        {
+            'root': 'usage',
+            'mappings': [
+                {'path': [{'type': 'array-match', 'field': 'kind'}, 'count'], 'dest': 'input_tokens'},
+            ],
+        }
+    ]
+
+
 def _malformed_model(provider: dict[str, object]) -> None:
     provider['models'] = [3]
+
+
+def _malformed_model_without_match(provider: dict[str, object]) -> None:
+    model = cast(dict[str, object], cast(list[object], provider['models'])[0])
+    model.pop('match')
 
 
 def _malformed_model_without_prices(provider: dict[str, object]) -> None:
@@ -336,9 +373,12 @@ def _malformed_conditional_price(provider: dict[str, object]) -> None:
         (_malformed_model_collection, 'models'),
         (_malformed_extractor_mapping_collection, 'mappings'),
         (_malformed_extractor_mapping, 'mappings.0'),
+        (_malformed_extractor_mapping_without_path, 'path'),
         (_malformed_extractor_path, 'path'),
         (_malformed_extractor_path_step, r'path.*\.0'),
+        (_malformed_array_match_without_match, 'match'),
         (_malformed_model, 'models.0'),
+        (_malformed_model_without_match, 'match'),
         (_malformed_prices_type, 'prices'),
         (_malformed_conditional_price, 'prices'),
     ],
