@@ -10,7 +10,6 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from time import time
 from types import TracebackType
-from typing import NamedTuple
 
 import httpx2
 
@@ -28,17 +27,10 @@ DEFAULT_UPDATE_URL = (
     'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json'
 )
 
-
-class _Config(NamedTuple):
-    url: str
-    update_interval: float
-    request_timeout: httpx2.Timeout
-
-
 # All instances share one worker so libraries can opt in independently without duplicate threads.
-# The one lock guards the worker reference, claim counts, and snapshot install/restore, and is
+# The one lock guards the worker reference, its reference count, and snapshot install/restore, and is
 # never held across anything that blocks — stop() signals the worker instead of joining it — so
-# it cannot deadlock and Ctrl-C has nothing to interrupt.
+# lifecycle calls never wait for the worker.
 _lock = threading.Lock()
 _worker: _Worker | None = None
 _fork_hooks_registered = False
@@ -88,6 +80,7 @@ def _invalidate_inherited_worker(worker: _Worker) -> None:
 def _fork_after_in_child() -> None:
     global _lock, _worker
 
+    # Do not log from this callback; handler locks may have been held by threads that vanished at fork.
     from_worker = getattr(_fork_state, 'from_worker', False)
     _fork_state.from_worker = False
     # The inherited lock is held by the pre-fork callback and cannot safely be reused.
@@ -100,23 +93,20 @@ def _fork_after_in_child() -> None:
         # The current _run() survives a worker-origin fork. Stop it instead of starting a second
         # loop; the before hook already serialized its inherited ownership state.
         _invalidate_inherited_worker(worker)
-        _log(logger.warning, 'Disabled the genai-prices background updater after it forked from its worker')
         return
 
     if not worker.restart_after_fork:
         # An overridden fetch may close over application locks held by vanished threads. Only the
         # built-in fetch has lifecycle state we can replace completely and safely.
         _invalidate_inherited_worker(worker)
-        _log(logger.warning, 'Custom genai-prices updater fetch must be restarted explicitly after fork')
         return
 
     try:
         worker.revive_after_fork()
     except BaseException:
-        # A public instance may still point at this worker. Make that claim inert; start(),
+        # A public instance may still point at this worker. Make that reference inert; start(),
         # stop(), and wait() compare it with the process-global worker before using it.
         _invalidate_inherited_worker(worker)
-        _log(logger.exception, 'Failed to restart the genai-prices background updater after fork')
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -156,9 +146,10 @@ class UpdatePrices:
     """Update prices in the background using a shared daemon thread.
 
     All instances share one process-wide worker: the first `start()` launches it, later `start()`
-    calls join it, and the last `stop()` shuts it down and restores the bundled prices. The first
-    configuration wins: joining with a different one warns and keeps the running worker's settings,
-    which are captured at `start()` — changing attributes afterwards has no effect on it.
+    calls join it, and the last `stop()` shuts it down and restores the bundled prices. The worker
+    fetches through the instance that started it — using its settings and `fetch()` exactly as if
+    it were the only instance — so joining with different settings warns and keeps the first
+    instance's.
 
     Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
     """
@@ -181,32 +172,31 @@ class UpdatePrices:
         global _worker
 
         _check_not_worker_thread('start')
+        dead_worker_warning = False
         config_warning: str | None = None
         with _lock:
             if self._worker is not None:
                 if self._worker is _worker:
                     raise RuntimeError('UpdatePrices background task already started')
-                # Failed fork revival leaves inherited instance claims inert in the child.
+                # Failed fork revival leaves inherited instance references inert in the child.
                 self._worker = None
 
-            # Copy the mutable Timeout so the worker's configuration is frozen at launch.
-            config = _Config(self.url, self.update_interval, httpx2.Timeout(self.request_timeout))
             worker = _worker
             if worker is not None and worker.dead:
                 # Don't join a worker that died unexpectedly; start a replacement.
-                _log(logger.warning, 'UpdatePrices background task terminated unexpectedly; starting a new one')
+                dead_worker_warning = True
                 worker = None
             if worker is None:
                 _register_fork_hooks()
-                worker = _Worker(config, self.fetch)
-                worker.claims = 1
+                worker = _Worker(self)
+                worker.ref_count = 1
                 try:
                     _worker = worker
                     self._worker = worker
                     worker.thread.start()
                 except BaseException as e:
-                    # Thread.start() can fail after OS launch. Signal it and finish publication
-                    # rollback before propagating any interruption.
+                    # Thread.start() can fail after the OS thread launched; a shut-down worker
+                    # exits on its own once ownership rollback completes.
                     def rollback() -> None:
                         global _worker
 
@@ -217,21 +207,32 @@ class UpdatePrices:
                     interrupted = _finish_despite_interruption(rollback)
                     raise interrupted or e
             else:
-                if worker.config != config:
+                owner = worker.owner
+                if (self.url, self.update_interval, self.request_timeout) != (
+                    owner.url,
+                    owner.update_interval,
+                    owner.request_timeout,
+                ):
                     config_warning = (
                         'UpdatePrices background task is already running with different configuration; keeping '
-                        f'url={worker.config.url!r}, update_interval={worker.config.update_interval!r}, '
-                        f'request_timeout={worker.config.request_timeout!r}'
+                        f'url={owner.url!r}, update_interval={owner.update_interval!r}, '
+                        f'request_timeout={owner.request_timeout!r}'
                     )
-                worker.claims += 1
+                worker.ref_count += 1
                 self._worker = worker
 
-        # Warning hooks are arbitrary application code; never call them while holding the lifecycle lock.
+        # Logging and warning hooks are arbitrary application code; never call them while holding the lock.
+        if dead_worker_warning:
+            try:
+                logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
+            except BaseException:
+                self.stop()
+                raise
         if config_warning is not None:
             try:
                 warnings.warn(config_warning, stacklevel=2)
             except BaseException:
-                # A warning promoted to an exception means start() failed; release the claim it just acquired.
+                # A warning promoted to an exception means start() failed; release the reference it just took.
                 self.stop()
                 raise
         if wait:
@@ -254,7 +255,7 @@ class UpdatePrices:
         return worker.wait(timeout)
 
     def stop(self):
-        """Stop the background task, or release this instance's claim on it.
+        """Stop the background task, or release this instance's reference to it.
 
         The last `stop()` restores the bundled prices and signals the worker, which discards any
         in-flight fetch and exits on its own; fetch failures never make `stop()` raise.
@@ -269,21 +270,21 @@ class UpdatePrices:
             if worker is not _worker:
                 self._worker = None
                 return
-            remaining_claims = worker.claims - 1
+            remaining_references = worker.ref_count - 1
 
             def cleanup() -> None:
                 global _worker
 
                 # Fixed target values make retries idempotent at every interruption point.
-                worker.claims = remaining_claims
+                worker.ref_count = remaining_references
                 self._worker = None
-                if remaining_claims == 0:
+                if remaining_references == 0:
                     try:
                         worker.shutdown()
                     finally:
                         if _worker is worker:
-                            # A dead worker may already have been replaced. Restore bundled
-                            # prices before clearing its slot so an interrupted retry is idempotent.
+                            # A dead worker may already have been replaced; only the current worker's
+                            # retirement restores the bundled prices.
                             data_snapshot.set_custom_snapshot(None)
                             _worker = None
 
@@ -300,20 +301,16 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        return _fetch_prices(self.url, self.request_timeout)
+        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
 
+        r = httpx2.get(self.url, timeout=self.request_timeout)
+        r.raise_for_status()
+        raw_payload = json.loads(r.content)
+        if not isinstance(raw_payload, list):
+            raise ValueError('Expected fetched prices payload to be a provider array')
 
-def _fetch_prices(url: str, request_timeout: httpx2.Timeout) -> data_snapshot.DataSnapshot:
-    from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
-
-    r = httpx2.get(url, timeout=request_timeout)
-    r.raise_for_status()
-    raw_payload = json.loads(r.content)
-    if not isinstance(raw_payload, list):
-        raise ValueError('Expected fetched prices payload to be a provider array')
-
-    providers = _providers_from_raw(raw_payload)
-    return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+        providers = _providers_from_raw(raw_payload)
+        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
 def _check_not_worker_thread(action: str) -> None:
@@ -337,18 +334,10 @@ def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | 
 class _Worker:
     """The process-wide background thread shared by all started `UpdatePrices` instances."""
 
-    def __init__(self, config: _Config, fetch: Callable[[], data_snapshot.DataSnapshot | None]) -> None:
-        self.config = config
-        if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
-            self.restart_after_fork = True
-            # The default fetch uses the frozen launch config; an overridden fetch controls what it reads.
-            self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(
-                config.url, config.request_timeout
-            )
-        else:
-            self.restart_after_fork = False
-            self.fetch = fetch
-        self.claims = 0
+    def __init__(self, owner: UpdatePrices) -> None:
+        # The worker fetches through the instance that started it; later instances only add references.
+        self.owner = owner
+        self.ref_count = 0
         self.dead = False
         self.stop_event = threading.Event()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
@@ -356,6 +345,10 @@ class _Worker:
         # one); `_outcome` is a single reference so it can be published and read atomically.
         self.ready = threading.Event()
         self._outcome: tuple[Exception | None, TracebackType | None] | None = None
+
+    @property
+    def restart_after_fork(self) -> bool:
+        return getattr(self.owner.fetch, '__func__', None) is UpdatePrices.fetch
 
     def revive_after_fork(self) -> None:
         """Replace inherited synchronization state and restart this worker in the child."""
@@ -376,8 +369,8 @@ class _Worker:
             raise
 
     def invalidate_after_fork(self) -> None:
-        """Make inherited claims inert after child revival fails."""
-        self.claims = 0
+        """Make inherited references inert after child revival fails."""
+        self.ref_count = 0
         self.dead = True
         self.stop_event = threading.Event()
         self.stop_event.set()
@@ -422,7 +415,7 @@ class _Worker:
 
     def _run(self) -> None:
         try:
-            _log(logger.info, 'Starting genai-prices background task')
+            logger.info('Starting genai-prices background task')
             while not self.stop_event.is_set():
                 try:
                     self._update_prices()
@@ -431,11 +424,15 @@ class _Worker:
                         if self.stop_event.is_set():
                             break
                         self._publish(e)
-                    _log(logger.error, 'Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                if self.stop_event.wait(self.config.update_interval):
+                    try:
+                        logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    except Exception:
+                        # A logging failure must not replace the fetch failure already published to waiters.
+                        pass
+                if self.stop_event.wait(self.owner.update_interval):
                     break
         except BaseException as e:
-            # Serialize terminal publication with new claims; a stop that already won suppresses it.
+            # Serialize terminal publication with new references; a stop that already won suppresses it.
             with _lock:
                 if self.stop_event.is_set():
                     return
@@ -444,16 +441,16 @@ class _Worker:
                 error.__cause__ = e
                 self._publish(error)
         finally:
-            _log(logger.info, 'genai-prices background task stopped')
+            logger.info('genai-prices background task stopped')
 
     def _update_prices(self) -> None:
         start = time()
-        snapshot = self.fetch()
+        snapshot = self.owner.fetch()
         interval = time() - start
         if snapshot:
-            _log(logger.info, 'Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
         else:
-            _log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
+            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
         with _lock:
             if self.stop_event.is_set():
@@ -461,11 +458,3 @@ class _Worker:
                 return
             data_snapshot.set_custom_snapshot(snapshot)
             self._publish(None)
-
-
-def _log(log: Callable[..., None], message: str, *args: object) -> None:
-    try:
-        log(message, *args)
-    except Exception:
-        # A broken logging handler must not kill background updates or dump thread tracebacks.
-        pass

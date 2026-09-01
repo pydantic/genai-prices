@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
-import logging
 import os
 import threading
 import traceback
@@ -205,7 +204,7 @@ def test_distinct_instances_share_ownership(monkeypatch: pytest.MonkeyPatch):
 
     try:
         first.stop()
-        # Releasing the same instance twice must not release the second owner's claim.
+        # Releasing the same instance twice must not drop the second owner's reference.
         first.stop()
         assert data_snapshot._custom_snapshot is not None
     finally:
@@ -265,7 +264,7 @@ def test_configuration_warning_hook_runs_outside_lifecycle_lock(monkeypatch: pyt
     assert update_prices_module._worker is None
 
 
-def test_configuration_warning_as_error_releases_claim(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_configuration_warning_as_error_releases_reference(monkeypatch: pytest.MonkeyPatch) -> None:
     _mock_update_prices_get(monkeypatch)
     first = UpdatePrices()
     second = UpdatePrices(update_interval=1)
@@ -283,7 +282,7 @@ def test_configuration_warning_as_error_releases_claim(monkeypatch: pytest.Monke
         worker = first._worker
         assert worker is update_prices_module._worker
         assert worker is not None
-        assert worker.claims == 1
+        assert worker.ref_count == 1
     finally:
         first.stop()
 
@@ -669,13 +668,82 @@ def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch
     assert replacement._worker is not dead._worker
     assert data_snapshot._custom_snapshot is not None
 
-    # Releasing the stale claim must not disturb the replacement or its data.
+    # Releasing the stale reference must not disturb the replacement or its data.
     dead.stop()
     assert update_prices_module._worker is replacement._worker
     assert data_snapshot._custom_snapshot is not None
 
     replacement.stop()
     assert data_snapshot._custom_snapshot is None
+
+
+def test_dead_worker_warning_hook_runs_outside_lock_and_rolls_back(monkeypatch: pytest.MonkeyPatch) -> None:
+    class DeadUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise KeyboardInterrupt
+
+    dead = DeadUpdatePrices()
+    dead.start()
+    with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+        dead.wait(timeout=5)
+
+    fetch_started = threading.Event()
+    release_fetch = threading.Event()
+    launched: list[update_prices_module._Worker] = []
+
+    class BlockedUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            fetch_started.set()
+            assert release_fetch.wait(timeout=5)
+            return None
+
+    def warning(*_args: object, **_kwargs: object) -> None:
+        assert fetch_started.wait(timeout=5)
+        assert update_prices_module._lock.acquire(blocking=False)
+        update_prices_module._lock.release()
+        assert update_prices_module._worker is not None
+        launched.append(update_prices_module._worker)
+        raise RuntimeError('broken warning handler')
+
+    monkeypatch.setattr(update_prices_module.logger, 'warning', warning)
+    replacement = BlockedUpdatePrices()
+    try:
+        with pytest.raises(RuntimeError, match='broken warning handler'):
+            replacement.start()
+    finally:
+        release_fetch.set()
+
+    assert replacement._worker is None
+    assert update_prices_module._worker is None
+    (worker,) = launched
+    worker.thread.join(timeout=5)
+    dead.stop()
+
+
+def test_logging_failure_does_not_replace_fetch_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    error = ValueError('fetch failed')
+
+    class FailingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise error
+
+    def broken_log(*_args: object, **_kwargs: object) -> None:
+        raise RuntimeError('broken logging handler')
+
+    monkeypatch.setattr(update_prices_module.logger, 'error', broken_log)
+    update_prices = FailingUpdatePrices()
+    update_prices.start()
+    try:
+        with pytest.raises(ValueError, match='fetch failed') as first:
+            update_prices.wait(timeout=5)
+        with pytest.raises(ValueError, match='fetch failed') as second:
+            update_prices.wait(timeout=0)
+        assert first.value is error
+        assert second.value is error
+        assert update_prices._worker is not None
+        assert not update_prices._worker.dead
+    finally:
+        update_prices.stop()
 
 
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
@@ -703,8 +771,35 @@ def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.M
     update_prices.stop()
 
 
+def test_interrupted_thread_start_finishes_interrupted_shutdown(monkeypatch: pytest.MonkeyPatch) -> None:
+    original_start = threading.Thread.start
+    original_shutdown = update_prices_module._Worker.shutdown
+    interrupted = False
+
+    def start_then_interrupt(thread: threading.Thread) -> None:
+        original_start(thread)
+        raise KeyboardInterrupt
+
+    def shutdown_then_interrupt(worker: update_prices_module._Worker) -> None:
+        nonlocal interrupted
+        original_shutdown(worker)
+        if not interrupted:
+            interrupted = True
+            raise KeyboardInterrupt
+
+    update_prices = NullUpdatePrices()
+    with monkeypatch.context() as context:
+        context.setattr(threading.Thread, 'start', start_then_interrupt)
+        context.setattr(update_prices_module._Worker, 'shutdown', shutdown_then_interrupt)
+        with pytest.raises(KeyboardInterrupt):
+            update_prices.start()
+
+    assert update_prices._worker is None
+    assert update_prices_module._worker is None
+
+
 @pytest.mark.parametrize('shared_owner', [False, True])
-def test_interrupted_claim_release_finishes_bookkeeping(shared_owner: bool) -> None:
+def test_interrupted_reference_release_finishes_bookkeeping(shared_owner: bool) -> None:
     class InterruptingUpdatePrices(NullUpdatePrices):
         interrupt_release = False
 
@@ -727,7 +822,7 @@ def test_interrupted_claim_release_finishes_bookkeeping(shared_owner: bool) -> N
         update_prices.stop()
 
     assert update_prices._worker is None
-    assert worker.claims == int(shared_owner)
+    assert worker.ref_count == int(shared_owner)
     if first is None:
         assert update_prices_module._worker is None
         assert worker.stop_event.is_set()
@@ -793,9 +888,9 @@ def test_interrupted_waiter_wakeup_still_finishes_shutdown(monkeypatch: pytest.M
     worker.thread.join(timeout=5)
 
 
-def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: pytest.MonkeyPatch):
-    fetches: list[tuple[str, httpx2.Timeout]] = []
-    second_fetch = threading.Event()
+def test_worker_reads_owner_settings_live(monkeypatch: pytest.MonkeyPatch):
+    urls: list[str] = []
+    changed_url_fetched = threading.Event()
 
     class Response:
         content = PROVIDER_ARRAY_PAYLOAD
@@ -804,41 +899,24 @@ def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: 
             pass
 
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        fetches.append((url, timeout))
-        if len(fetches) >= 2:
-            second_fetch.set()
+        assert timeout is not None
+        urls.append(url)
+        if url == 'https://changed.test/prices.json':
+            changed_url_fetched.set()
         return Response()
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
     update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=0.001)
     update_prices.start(wait=True)
     try:
+        # The worker fetches through the instance that started it, so attribute
+        # changes take effect from the next fetch on — the same as on a single instance.
         update_prices.url = 'https://changed.test/prices.json'
-        assert second_fetch.wait(timeout=5)
+        assert changed_url_fetched.wait(timeout=5)
     finally:
         update_prices.stop()
 
-    assert {url for url, _ in fetches} == {'https://example.test/prices.json'}
-    # The worker holds a copy, so mutating the instance's timeout cannot leak into it either.
-    assert fetches[0][1] is not update_prices.request_timeout
-
-
-def test_broken_log_handler_does_not_disturb_updating():
-    class RaisingHandler(logging.Handler):
-        def emit(self, record: logging.LogRecord) -> None:
-            raise RuntimeError('broken handler')
-
-    handler = RaisingHandler()
-    previous_level = update_prices_module.logger.level
-    update_prices_module.logger.setLevel(logging.INFO)
-    update_prices_module.logger.addHandler(handler)
-    try:
-        # Every worker log call raises, yet updating works and no waiter is stranded.
-        with NullUpdatePrices() as update_prices:
-            assert update_prices.wait(timeout=5)
-    finally:
-        update_prices_module.logger.removeHandler(handler)
-        update_prices_module.logger.setLevel(previous_level)
+    assert urls[0] == 'https://example.test/prices.json'
 
 
 def test_register_fork_hooks_once_when_supported(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -871,6 +949,16 @@ def test_register_fork_hooks_is_noop_when_unsupported(monkeypatch: pytest.Monkey
     assert update_prices_module._fork_hooks_registered is False
 
 
+def test_fork_restart_policy_follows_live_owner_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = UpdatePrices()
+    worker = update_prices_module._Worker(owner)
+    assert worker.restart_after_fork
+
+    monkeypatch.setattr(owner, 'fetch', lambda: None)
+
+    assert not worker.restart_after_fork
+
+
 def test_fork_callbacks_freeze_parent_and_replace_child_lock(monkeypatch: pytest.MonkeyPatch) -> None:
     parent_lock = update_prices_module._lock
     monkeypatch.setattr(update_prices_module, '_worker', None)
@@ -891,19 +979,18 @@ def test_fork_callbacks_freeze_parent_and_replace_child_lock(monkeypatch: pytest
         data_snapshot.set_custom_snapshot(None)
 
 
-def _unstarted_worker() -> tuple[UpdatePrices, update_prices_module._Worker]:
+def _unstarted_worker(monkeypatch: pytest.MonkeyPatch) -> tuple[UpdatePrices, update_prices_module._Worker]:
     owner = UpdatePrices()
-    config = update_prices_module._Config(owner.url, owner.update_interval, httpx2.Timeout(owner.request_timeout))
-    worker = update_prices_module._Worker(config, owner.fetch)
+    worker = update_prices_module._Worker(owner)
     # Keep the built-in-fetch fork policy while making deterministic unit callbacks network-free.
-    worker.fetch = lambda: None
-    worker.claims = 1
+    monkeypatch.setattr(worker, '_update_prices', lambda: worker._publish(None))
+    worker.ref_count = 1
     owner._worker = worker
     return owner, worker
 
 
 def test_fork_child_revives_worker_with_fresh_synchronization(monkeypatch: pytest.MonkeyPatch) -> None:
-    owner, worker = _unstarted_worker()
+    owner, worker = _unstarted_worker(monkeypatch)
     inherited_stop_event = worker.stop_event
     inherited_thread = worker.thread
     inherited_ready = worker.ready
@@ -916,7 +1003,7 @@ def test_fork_child_revives_worker_with_fresh_synchronization(monkeypatch: pytes
         assert update_prices_module._lock is not inherited_lock
         assert update_prices_module._worker is worker
         assert owner._worker is worker
-        assert worker.claims == 1
+        assert worker.ref_count == 1
         assert worker.stop_event is not inherited_stop_event
         assert worker.thread is not inherited_thread
         assert worker.ready is not inherited_ready
@@ -927,8 +1014,8 @@ def test_fork_child_revives_worker_with_fresh_synchronization(monkeypatch: pytes
         monkeypatch.setattr(update_prices_module, '_worker', None)
 
 
-def test_failed_fork_revival_makes_inherited_claims_inert(monkeypatch: pytest.MonkeyPatch) -> None:
-    owner, worker = _unstarted_worker()
+def test_failed_fork_revival_makes_inherited_references_inert(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner, worker = _unstarted_worker(monkeypatch)
 
     def fail_revival() -> None:
         raise RuntimeError('revival failed')
@@ -939,7 +1026,7 @@ def test_failed_fork_revival_makes_inherited_claims_inert(monkeypatch: pytest.Mo
 
     assert update_prices_module._worker is None
     assert worker.dead
-    assert worker.claims == 0
+    assert worker.ref_count == 0
     assert worker.stop_event.is_set()
     assert worker.ready.is_set()
     assert data_snapshot._custom_snapshot is None
@@ -947,7 +1034,7 @@ def test_failed_fork_revival_makes_inherited_claims_inert(monkeypatch: pytest.Mo
     owner.stop()
     assert owner._worker is None
 
-    # A separate inherited claim can start afresh without first calling stop().
+    # A separate inherited reference can start afresh without first calling stop().
     owner._worker = worker
     owner.start(wait=True)
     try:
@@ -957,11 +1044,10 @@ def test_failed_fork_revival_makes_inherited_claims_inert(monkeypatch: pytest.Mo
         owner.stop()
 
 
-def test_fork_child_invalidates_custom_fetch_claims(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_fork_child_invalidates_custom_fetch_references(monkeypatch: pytest.MonkeyPatch) -> None:
     owner = NullUpdatePrices()
-    config = update_prices_module._Config(owner.url, owner.update_interval, httpx2.Timeout(owner.request_timeout))
-    worker = update_prices_module._Worker(config, owner.fetch)
-    worker.claims = 1
+    worker = update_prices_module._Worker(owner)
+    worker.ref_count = 1
     owner._worker = worker
     monkeypatch.setattr(update_prices_module, '_worker', worker)
     update_prices_module._fork_state.from_worker = False
@@ -978,9 +1064,8 @@ def test_fork_child_invalidates_custom_fetch_claims(monkeypatch: pytest.MonkeyPa
 
 def test_worker_origin_fork_serializes_and_does_not_restart(monkeypatch: pytest.MonkeyPatch) -> None:
     owner = NullUpdatePrices()
-    config = update_prices_module._Config(owner.url, owner.update_interval, httpx2.Timeout(owner.request_timeout))
-    worker = update_prices_module._Worker(config, owner.fetch)
-    worker.claims = 1
+    worker = update_prices_module._Worker(owner)
+    worker.ref_count = 1
     worker.thread = threading.current_thread()
     owner._worker = worker
     inherited_lock = update_prices_module._lock
@@ -996,7 +1081,7 @@ def test_worker_origin_fork_serializes_and_does_not_restart(monkeypatch: pytest.
 
 
 def test_interrupted_fork_revival_drains_launched_worker(monkeypatch: pytest.MonkeyPatch) -> None:
-    _owner, worker = _unstarted_worker()
+    _owner, worker = _unstarted_worker(monkeypatch)
     original_start = threading.Thread.start
 
     def start_then_interrupt(thread: threading.Thread) -> None:
@@ -1015,7 +1100,7 @@ def test_interrupted_fork_revival_drains_launched_worker(monkeypatch: pytest.Mon
 
 
 @pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
-def test_forked_child_restarts_shared_worker_and_preserves_claims(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_forked_child_restarts_shared_worker_and_preserves_references(monkeypatch: pytest.MonkeyPatch) -> None:
     parent_pid = os.getpid()
     fetch_pids: list[int] = []
 
@@ -1049,7 +1134,7 @@ def test_forked_child_restarts_shared_worker_and_preserves_claims(monkeypatch: p
                     and revived is parent_worker
                     and second._worker is revived
                     and update_prices_module._worker is revived
-                    and revived.claims == 2
+                    and revived.ref_count == 2
                     and revived.thread.is_alive()
                     and first.wait(timeout=5)
                     and len(fetch_pids) > parent_fetches

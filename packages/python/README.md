@@ -113,17 +113,19 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` periodically updates the price data by downloading it from GitHub.
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub.
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the v2 `data.json` file downloaded is around 51KB when compressed, so is generally very
-quick to download. By default the first fetch happens immediately in the background, then every hour after that.
+At the time of writing, the v2 `data.json` file downloaded by `UpdatePrices` is around 51KB when compressed, so is
+generally very quick to download.
 
-Usage as a context manager:
+By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
+
+Usage with `UpdatePrices` as a context manager:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
@@ -134,43 +136,37 @@ with UpdatePrices() as update_prices:
     print(p)
 ```
 
-Or by calling `start()` / `stop()` yourself:
+Usage with `UpdatePrices` as a simple class:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
 
 update_prices = UpdatePrices()
-update_prices.start(wait=True)  # optionally wait for the first update
+update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
 p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
 print(p)
-update_prices.stop()
+update_prices.stop()  # stop updating prices
 ```
 
 All `UpdatePrices` instances share one background thread, so libraries such as Logfire and Pydantic AI can each
 call `start()` and `stop()` without creating duplicate threads. The first `start()` launches the thread, later
 `start()` calls join it, and the last `stop()` stops it and restores the data bundled with the installed package.
-The first configuration wins: starting with a different `url`, `update_interval` or `request_timeout` than
-the running thread warns and keeps the running thread's settings. The thread reads its configuration once at
-`start()`, so changing attributes on an instance afterwards has no effect on it. The thread runs the `fetch()`
-of whichever instance started first, so if you subclass `UpdatePrices` to customize fetching, start your
-instance before other libraries start theirs.
+The thread belongs to the instance that started it: it runs that instance's `fetch()` with that instance's
+settings, exactly as if it were the only instance. Starting another instance with a different `url`,
+`update_interval` or `request_timeout` warns and keeps the first instance's settings. If you subclass
+`UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
 `stop()` never raises fetch failures and never blocks: the last `stop()` restores the bundled data
 immediately and signals the thread, which discards any in-flight fetch and exits on its own.
 
-`start()` doesn't wait for the download: until the first fetch completes, `calc_price` uses the bundled data,
-which may be missing recently released models. If you need fresh prices before calculating, pass `wait` to
-`start()` or use the wait functions below.
-
 On platforms with `os.register_at_fork`, an updater started before `os.fork()` restarts in the child while preserving
-its active ownership claims. This supports preloaded process servers such as gunicorn. Spawned processes and platforms
+its active references. This supports preloaded process servers such as gunicorn. Spawned processes and platforms
 without `register_at_fork` have independent interpreter state and should opt in during normal child initialization.
 An overridden `fetch()` may depend on application locks that cannot survive a multithreaded fork, so custom-fetch
 updaters are reset to idle in the child and must be started again during child initialization.
 
-You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
-`wait_prices_updated_sync`:
+If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
 ```py
 from genai_prices import wait_prices_updated_sync
