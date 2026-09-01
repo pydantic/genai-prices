@@ -8,6 +8,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from time import time
 from types import TracebackType
+from typing import NamedTuple
 
 import httpx2
 
@@ -25,7 +26,12 @@ DEFAULT_UPDATE_URL = (
     'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json'
 )
 
-_Config = tuple[str, float, httpx2.Timeout]
+
+class _Config(NamedTuple):
+    url: str
+    update_interval: float
+    request_timeout: httpx2.Timeout
+
 
 # All UpdatePrices instances share one worker so that libraries and applications can opt in
 # independently without creating duplicate threads. `_lock` guards `_worker` and is held for the
@@ -45,6 +51,9 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False if no updater is active or the timeout elapses.
     """
+    # Deliberately not under `_lock`: the last stop() holds the lock while joining the worker, so a
+    # `fetch()` override calling this would deadlock. Any worker ever published here has its
+    # `ready` event set on every exit path, so an unlocked read can never wait forever.
     worker = _worker
     if worker is None:
         return False
@@ -71,7 +80,8 @@ class UpdatePrices:
 
     All instances share one process-wide worker: the first `start()` launches it, later compatible
     `start()` calls join it, and the last `stop()` shuts it down and restores the bundled prices.
-    Starting with different configuration than the running worker raises `RuntimeError`.
+    Starting with different configuration than the running worker raises `RuntimeError`. The worker
+    captures `url` and `request_timeout` at `start()`; changing them afterwards has no effect on it.
 
     Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
     """
@@ -98,7 +108,8 @@ class UpdatePrices:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            config: _Config = (self.url, self.update_interval, self.request_timeout)
+            # Copy the mutable Timeout so the worker's configuration is frozen at launch.
+            config = _Config(self.url, self.update_interval, httpx2.Timeout(self.request_timeout))
             worker = _worker
             if worker is None:
                 worker = _Worker(config, self.fetch)
@@ -110,17 +121,22 @@ class UpdatePrices:
                 try:
                     worker.thread.start()
                 except BaseException:
-                    _worker = None
-                    self._worker = None
+                    # Thread.start() can be interrupted after the OS thread launches, so drain the
+                    # worker before releasing ownership; an orphan would keep fetching forever.
+                    try:
+                        worker.shutdown()
+                    finally:
+                        _worker = None
+                        self._worker = None
                     raise
             else:
                 if worker.dead:
                     raise RuntimeError('UpdatePrices background task terminated unexpectedly')
                 if worker.config != config:
-                    url, update_interval, request_timeout = worker.config
                     raise RuntimeError(
                         'UpdatePrices background task already started with different configuration: '
-                        f'url={url!r}, update_interval={update_interval!r}, request_timeout={request_timeout!r}'
+                        f'url={worker.config.url!r}, update_interval={worker.config.update_interval!r}, '
+                        f'request_timeout={worker.config.request_timeout!r}'
                     )
                 worker.claims += 1
                 self._worker = worker
@@ -160,8 +176,12 @@ class UpdatePrices:
             self._worker = None
             worker.claims -= 1
             if worker.claims == 0:
-                worker.shutdown()
-                _worker = None
+                try:
+                    worker.shutdown()
+                finally:
+                    # Clear only after the join so a reentrant worker-thread guard never reads None
+                    # mid-shutdown, but always clear so an interrupted join cannot wedge the module.
+                    _worker = None
 
     def __enter__(self):
         self.start()
@@ -172,16 +192,20 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+        return _fetch_prices(self.url, self.request_timeout)
 
-        r = httpx2.get(self.url, timeout=self.request_timeout)
-        r.raise_for_status()
-        raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, list):
-            raise ValueError('Expected fetched prices payload to be a provider array')
 
-        providers = _providers_from_raw(raw_payload)
-        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+def _fetch_prices(url: str, request_timeout: httpx2.Timeout) -> data_snapshot.DataSnapshot:
+    from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+
+    r = httpx2.get(url, timeout=request_timeout)
+    r.raise_for_status()
+    raw_payload = json.loads(r.content)
+    if not isinstance(raw_payload, list):
+        raise ValueError('Expected fetched prices payload to be a provider array')
+
+    providers = _providers_from_raw(raw_payload)
+    return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
 def _check_not_worker_thread(action: str) -> None:
@@ -197,7 +221,14 @@ class _Worker:
 
     def __init__(self, config: _Config, fetch: Callable[[], data_snapshot.DataSnapshot | None]) -> None:
         self.config = config
-        self.fetch = fetch
+        if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
+            # The default fetch uses the frozen launch configuration, not the owner's live
+            # attributes; an overridden fetch stays in full control of what it reads.
+            self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(
+                config.url, config.request_timeout
+            )
+        else:
+            self.fetch = fetch
         self.claims = 0
         self.dead = False
         self.stop_event = threading.Event()
@@ -222,12 +253,23 @@ class _Worker:
         return succeeded
 
     def shutdown(self) -> None:
-        self.stop_event.set()
-        self.thread.join()
+        """Stop the thread and restore the bundled prices, finishing even if Ctrl-C interrupts the join."""
+        interrupted: BaseException | None = None
+        while True:
+            try:
+                self.stop_event.set()
+                # There is nothing to join when Thread.start() failed before the thread ran.
+                if self.thread.is_alive():
+                    self.thread.join()
+                break
+            except (KeyboardInterrupt, SystemExit) as e:
+                interrupted = e
         # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
         data_snapshot.set_custom_snapshot(None)
         # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
         self.ready.set()
+        if interrupted is not None:
+            raise interrupted
 
     def _publish(self, error: Exception | None) -> None:
         with self._outcome_lock:
@@ -237,8 +279,10 @@ class _Worker:
             self.ready.set()
 
     def _run(self) -> None:
-        logger.info('Starting genai-prices background task')
         try:
+            # Inside the try so even a raising logging handler cannot end the worker
+            # without publishing an outcome, which would hang waiters forever.
+            logger.info('Starting genai-prices background task')
             while not self.stop_event.is_set():
                 try:
                     self._update_prices()
@@ -247,7 +291,7 @@ class _Worker:
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 else:
                     self._publish(None)
-                if self.stop_event.wait(self.config[1]):
+                if self.stop_event.wait(self.config.update_interval):
                     break
         except BaseException as e:
             # Nothing above should raise this; if it does, fail waiters and joiners instead of hanging them.

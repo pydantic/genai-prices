@@ -150,8 +150,9 @@ All `UpdatePrices` instances share one background thread, so libraries such as L
 call `start()` and `stop()` without creating duplicate threads. The first `start()` launches the thread, later
 `start()` calls join it, and the last `stop()` stops it and restores the data bundled with the installed package.
 Starting with a different `url`, `update_interval` or `request_timeout` than the running thread raises
-`RuntimeError`. The thread runs the `fetch()` of whichever instance started first, so if you subclass
-`UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
+`RuntimeError`. The thread reads its configuration once at `start()`, so changing attributes on an instance
+afterwards has no effect on it. The thread runs the `fetch()` of whichever instance started first, so if you
+subclass `UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
 `stop()` never raises fetch failures.

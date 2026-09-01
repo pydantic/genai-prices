@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+import logging
 import threading
 import traceback
 from collections.abc import Callable
@@ -47,7 +48,11 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
-def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
+def _mock_update_prices_get(
+    monkeypatch: pytest.MonkeyPatch,
+    content: bytes = PROVIDER_ARRAY_PAYLOAD,
+    expected_url: str | None = None,
+) -> None:
     class Response:
         def __init__(self, content: bytes) -> None:
             self.content = content
@@ -56,7 +61,10 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
             pass
 
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        assert url in {'https://example.test/prices.json', DEFAULT_UPDATE_URL}
+        if expected_url is None:
+            assert url in {'https://example.test/prices.json', DEFAULT_UPDATE_URL}
+        else:
+            assert url == expected_url
         assert timeout is not None
         return Response(content)
 
@@ -65,7 +73,9 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
 
 def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
     previous = _get_registry()
-    _mock_update_prices_get(monkeypatch, b'[{"id":"missing-required-fields"}]')
+    _mock_update_prices_get(
+        monkeypatch, b'[{"id":"missing-required-fields"}]', expected_url='https://example.test/prices.json'
+    )
 
     with pytest.raises(ValidationError):
         UpdatePrices(url='https://example.test/prices.json').fetch()
@@ -77,7 +87,7 @@ def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     previous = _get_registry()
-    _mock_update_prices_get(monkeypatch, b'{"providers":[]}')
+    _mock_update_prices_get(monkeypatch, b'{"providers":[]}', expected_url='https://example.test/prices.json')
 
     with pytest.raises(ValueError, match='Expected fetched prices payload to be a provider array'):
         UpdatePrices(url='https://example.test/prices.json').fetch()
@@ -87,7 +97,7 @@ def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
 
 def test_update_prices_fetch_parses_provider_array_without_registry_change(monkeypatch: pytest.MonkeyPatch) -> None:
     bundled = _get_registry()
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, expected_url='https://example.test/prices.json')
 
     prices = UpdatePrices(url='https://example.test/prices.json').fetch()
 
@@ -110,7 +120,7 @@ def test_update_prices_fetch_provider_array_warns_for_invalid_extractor_without_
         '"extractors":[{"root":"usage","mappings":['
         '{"path":"tokens","dest":"imaginary_tokens","required":false}]}],"models":[]}]'
     )
-    _mock_update_prices_get(monkeypatch, providers_json.encode())
+    _mock_update_prices_get(monkeypatch, providers_json.encode(), expected_url='https://example.test/prices.json')
 
     try:
         with pytest.warns(
@@ -135,7 +145,7 @@ def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_mod
         '"models":[{"id":"unused-invalid-price","match":{"equals":"unused-invalid-price"},'
         '"prices":{"cache_image_write_mtok":1}}]}]'
     )
-    _mock_update_prices_get(monkeypatch, providers_json.encode())
+    _mock_update_prices_get(monkeypatch, providers_json.encode(), expected_url='https://example.test/prices.json')
 
     prices = UpdatePrices(url='https://example.test/prices.json').fetch()
 
@@ -543,3 +553,106 @@ def test_dead_worker_publishes_terminal_failure() -> None:
 
     with NullUpdatePrices() as replacement:
         assert replacement.wait(timeout=5)
+
+
+def test_interrupted_thread_start_drains_launched_worker(monkeypatch: pytest.MonkeyPatch):
+    original_start = threading.Thread.start
+
+    def start_then_interrupt(thread: threading.Thread) -> None:
+        # Thread.start() can raise (e.g. Ctrl-C) after the OS thread is already running.
+        original_start(thread)
+        raise KeyboardInterrupt
+
+    update_prices = NullUpdatePrices()
+    with monkeypatch.context() as context:
+        context.setattr(threading.Thread, 'start', start_then_interrupt)
+        with pytest.raises(KeyboardInterrupt):
+            update_prices.start()
+
+    # The launched thread was drained and ownership released, so nothing fetches and a fresh start works.
+    assert not any(thread.name == 'genai_prices:update' for thread in threading.enumerate())
+    assert update_prices_module._worker is None
+    update_prices.start(wait=True)
+    update_prices.stop()
+
+
+def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: pytest.MonkeyPatch):
+    fetches: list[tuple[str, httpx2.Timeout]] = []
+    second_fetch = threading.Event()
+
+    class Response:
+        content = PROVIDER_ARRAY_PAYLOAD
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
+        fetches.append((url, timeout))
+        if len(fetches) >= 2:
+            second_fetch.set()
+        return Response()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=0.001)
+    update_prices.start(wait=True)
+    try:
+        update_prices.url = 'https://changed.test/prices.json'
+        assert second_fetch.wait(timeout=5)
+    finally:
+        update_prices.stop()
+
+    assert {url for url, _ in fetches} == {'https://example.test/prices.json'}
+    # The worker holds a copy, so mutating the instance's timeout cannot leak into it either.
+    assert fetches[0][1] is not update_prices.request_timeout
+
+
+def test_interrupted_final_join_still_finishes_shutdown(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    update_prices = UpdatePrices()
+    update_prices.start(wait=True)
+    assert data_snapshot._custom_snapshot is not None
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+    original_join = worker.thread.join
+    interrupted = False
+
+    def join_then_interrupt(timeout: float | None = None) -> None:
+        nonlocal interrupted
+        if not interrupted:
+            interrupted = True
+            raise KeyboardInterrupt
+        original_join(timeout)
+
+    monkeypatch.setattr(worker.thread, 'join', join_then_interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        update_prices.stop()
+
+    # The interruption is re-raised only after shutdown finished: worker drained, bundled prices
+    # restored, and the module released for a fresh start.
+    assert not worker.thread.is_alive()
+    assert data_snapshot._custom_snapshot is None
+    assert update_prices_module._worker is None
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+
+
+def test_raising_log_handler_cannot_strand_waiters():
+    class RaisingHandler(logging.Handler):
+        def emit(self, record: logging.LogRecord) -> None:
+            if record.getMessage().startswith('Starting'):
+                raise RuntimeError('broken handler')
+
+    handler = RaisingHandler()
+    previous_level = update_prices_module.logger.level
+    update_prices_module.logger.setLevel(logging.INFO)
+    update_prices_module.logger.addHandler(handler)
+    update_prices = NullUpdatePrices()
+    try:
+        update_prices.start()
+        # The worker dies, but it must publish that outcome instead of hanging waiters forever.
+        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+            update_prices.wait(timeout=5)
+    finally:
+        update_prices_module.logger.removeHandler(handler)
+        update_prices_module.logger.setLevel(previous_level)
+        update_prices.stop()
