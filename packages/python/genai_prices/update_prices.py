@@ -310,7 +310,11 @@ class _Worker:
                         if self.stop_event.is_set():
                             break
                         self._publish(e)
-                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    try:
+                        logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    except Exception:
+                        # A logging failure must not replace the fetch failure already published to waiters.
+                        pass
                 if self.stop_event.wait(self.owner.update_interval):
                     break
         except BaseException as e:

@@ -686,19 +686,63 @@ def test_dead_worker_warning_hook_runs_outside_lock_and_rolls_back(monkeypatch: 
     with pytest.raises(RuntimeError, match='terminated unexpectedly'):
         dead.wait(timeout=5)
 
+    fetch_started = threading.Event()
+    release_fetch = threading.Event()
+    launched: list[update_prices_module._Worker] = []
+
+    class BlockedUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            fetch_started.set()
+            assert release_fetch.wait(timeout=5)
+            return None
+
     def warning(*_args: object, **_kwargs: object) -> None:
+        assert fetch_started.wait(timeout=5)
         assert update_prices_module._lock.acquire(blocking=False)
         update_prices_module._lock.release()
+        assert update_prices_module._worker is not None
+        launched.append(update_prices_module._worker)
         raise RuntimeError('broken warning handler')
 
     monkeypatch.setattr(update_prices_module.logger, 'warning', warning)
-    replacement = NullUpdatePrices()
-    with pytest.raises(RuntimeError, match='broken warning handler'):
-        replacement.start()
+    replacement = BlockedUpdatePrices()
+    try:
+        with pytest.raises(RuntimeError, match='broken warning handler'):
+            replacement.start()
+    finally:
+        release_fetch.set()
 
     assert replacement._worker is None
     assert update_prices_module._worker is None
+    (worker,) = launched
+    worker.thread.join(timeout=5)
     dead.stop()
+
+
+def test_logging_failure_does_not_replace_fetch_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    error = ValueError('fetch failed')
+
+    class FailingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise error
+
+    def broken_log(*_args: object, **_kwargs: object) -> None:
+        raise RuntimeError('broken logging handler')
+
+    monkeypatch.setattr(update_prices_module.logger, 'error', broken_log)
+    update_prices = FailingUpdatePrices()
+    update_prices.start()
+    try:
+        with pytest.raises(ValueError, match='fetch failed') as first:
+            update_prices.wait(timeout=5)
+        with pytest.raises(ValueError, match='fetch failed') as second:
+            update_prices.wait(timeout=0)
+        assert first.value is error
+        assert second.value is error
+        assert update_prices._worker is not None
+        assert not update_prices._worker.dead
+    finally:
+        update_prices.stop()
 
 
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
