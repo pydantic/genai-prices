@@ -34,9 +34,9 @@ class _Config(NamedTuple):
     request_timeout: httpx2.Timeout
 
 
-# All UpdatePrices instances share one worker so that libraries and applications can opt in
-# independently without creating duplicate threads. `_lock` guards `_worker` and is held for the
-# whole of start() and stop() — including the final join — so lifecycle transitions never overlap.
+# All instances share one worker so libraries can opt in independently without duplicate threads.
+# `_lock` guards `_worker` and is held for all of start()/stop(), including the final join, so
+# lifecycle transitions never overlap.
 _lock = threading.Lock()
 _worker: _Worker | None = None
 _fork_hooks_registered = False
@@ -130,9 +130,8 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False if no updater is active or the timeout elapses.
     """
-    # Deliberately not under `_lock`: the last stop() holds the lock while joining the worker, so a
-    # `fetch()` override calling this would deadlock. Any worker ever published here has its
-    # `ready` event set on every exit path, so an unlocked read can never wait forever.
+    # Not under `_lock`: the last stop() holds it while joining, so a `fetch()` override calling
+    # this would deadlock. Safe because every published worker sets `ready` on every exit path.
     worker = _worker
     if worker is None:
         return False
@@ -198,15 +197,13 @@ class UpdatePrices:
                 worker = _Worker(config, self.fetch)
                 worker.claims = 1
                 try:
-                    # Publish before starting the thread so the worker-thread guards see it from
-                    # the very first fetch. Inside the try so a Ctrl-C landing between publication
-                    # and launch cannot leave a published worker that never runs.
+                    # Publish before starting so the worker-thread guards see it from the first
+                    # fetch; inside the try so an interrupt can't leave a published worker that never runs.
                     _worker = worker
                     self._worker = worker
                     worker.thread.start()
                 except BaseException:
-                    # Thread.start() can be interrupted after the OS thread launches, so drain the
-                    # worker before releasing ownership; an orphan would keep fetching forever.
+                    # Thread.start() can fail after the OS thread launched; drain it so no orphan keeps fetching.
                     try:
                         worker.shutdown()
                     finally:
@@ -268,20 +265,17 @@ class UpdatePrices:
                 global _worker
                 nonlocal shutdown_finished
 
-                # Each assignment is idempotent so cleanup can resume at any bytecode boundary
-                # after Ctrl-C without losing or releasing this instance's claim twice.
+                # Idempotent assignments: a Ctrl-C retry can resume anywhere without double-releasing the claim.
                 worker.claims = remaining_claims
                 self._worker = None
                 if not shutdown_finished:
                     try:
                         worker.shutdown()
                     finally:
-                        # shutdown() completes its state cleanup before re-raising an interruption;
-                        # do not repeat an intentionally abandoned join on the cleanup retry.
+                        # shutdown() finishes its cleanup even when interrupted; never repeat an abandoned join.
                         shutdown_finished = True
                 if remaining_claims == 0:
-                    # Clear only after shutdown so a reentrant worker-thread guard never reads None
-                    # mid-shutdown, but always clear so an interrupted join cannot wedge the module.
+                    # Clear only after shutdown so a reentrant worker-thread guard never reads None mid-join.
                     _worker = None
 
             interrupted = _finish_despite_interruption(cleanup)
@@ -340,8 +334,7 @@ class _Worker:
         self.config = config
         if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
             self.restart_after_fork = True
-            # The default fetch uses the frozen launch configuration, not the owner's live
-            # attributes; an overridden fetch stays in full control of what it reads.
+            # The default fetch uses the frozen launch config; an overridden fetch controls what it reads.
             self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(
                 config.url, config.request_timeout
             )
@@ -351,8 +344,8 @@ class _Worker:
         self.claims = 0
         self.dead = False
         self.stop_event = threading.Event()
-        # Makes "check stop_event, then install" atomic against shutdown's restore, so a fetch
-        # racing an abandoned join can never reinstall data after stop() cleaned up.
+        # Makes check-stop-then-install atomic with shutdown's restore, so a late fetch can never
+        # reinstall data after stop() cleaned up.
         self._install_lock = threading.Lock()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
         # The latest fetch outcome, reported to every waiter.
@@ -415,9 +408,8 @@ class _Worker:
     def shutdown(self) -> None:
         """Stop the thread and restore the bundled prices, staying responsive to Ctrl-C.
 
-        A first interruption during the join finishes the shutdown before being re-raised, so the
-        worker is never left half-stopped; a second abandons the wait so a stalled fetch cannot
-        make the process feel unkillable — the daemon thread discards its result and exits alone.
+        A first Ctrl-C during the join finishes the shutdown before being re-raised; a second stops
+        waiting — the daemon thread discards its result and exits on its own.
         """
         interrupted: BaseException | None = None
         for _ in range(2):
@@ -431,11 +423,11 @@ class _Worker:
                 interrupted = e
 
         def cleanup() -> None:
-            # Safe even if the join was abandoned: once stop_event is set the worker discards fetched
-            # state, and the install lock covers the last fetch that raced the stop request.
+            # Safe even if the join was abandoned: with stop_event set, the install lock keeps a
+            # still-running fetch from reinstalling data after this restore.
             with self._install_lock:
                 data_snapshot.set_custom_snapshot(None)
-            # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
+            # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
             self.ready.set()
 
         cleanup_interruption = _finish_despite_interruption(cleanup)
@@ -482,8 +474,7 @@ class _Worker:
 
         with self._install_lock:
             if self.stop_event.is_set():
-                # A stop() already won: shutdown is restoring the bundled prices, and a fetch it
-                # discards was never an update, so it must not be published as one either.
+                # A concurrent stop() wins: its discarded fetch is not an update, so install and publish nothing.
                 return
             data_snapshot.set_custom_snapshot(snapshot)
         self._publish(None)
