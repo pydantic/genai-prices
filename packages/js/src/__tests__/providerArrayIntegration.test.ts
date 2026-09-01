@@ -6,8 +6,10 @@ import type { ModelInfo, Provider } from '../types'
 import { calcPrice, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { getActiveModelPrice } from '../engine'
+import { setActiveRegistry } from '../units'
 
 afterEach(() => {
+  setActiveRegistry()
   updatePrices(({ setProviderData }) => {
     setProviderData(data)
   })
@@ -76,7 +78,9 @@ describe('provider array integration', () => {
       updatePrices(({ setProviderData }) => {
         setProviderData(downloadedConditionalProviderArray(constraint as Record<string, string>))
       })
-    }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'")
+    }).toThrow(
+      "genai-prices: invalid data: providers[0].models[0].prices[1] expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
+    )
     expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
   })
 
@@ -91,7 +95,7 @@ describe('provider array integration', () => {
       updatePrices(({ setProviderData }) => {
         setProviderData(Promise.resolve(downloadedConditionalProviderArray({})))
       })
-      await expect(waitForUpdate()).rejects.toThrow('Expected a start-date or time-of-day price constraint')
+      await expect(waitForUpdate()).rejects.toThrow('genai-prices: invalid data: providers[0].models[0].prices[1]')
 
       expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('keeping previously active data'))
@@ -117,7 +121,7 @@ describe('provider array integration', () => {
     if (provider === undefined) throw new Error('Expected a provider')
 
     expect(() => calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', { provider })).toThrow(
-      "Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
+      "genai-prices: invalid data: providers[0].models[0].prices[1] expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
     )
   })
 
@@ -148,7 +152,6 @@ describe('provider array integration', () => {
     })
 
     const activeData = await waitForUpdate()
-    if (activeData === null) throw new Error('Expected v2 provider data to be active')
     const conditionalModels: ModelInfo[] = []
     for (const provider of activeData) {
       for (const model of provider.models) {

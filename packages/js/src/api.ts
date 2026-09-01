@@ -1,5 +1,4 @@
 import type {
-  ConditionalPrice,
   PriceCalculationResult,
   PriceOptions,
   Provider,
@@ -11,17 +10,18 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
-import { utcTimeOfDaySeconds } from './timeOfDay'
+import { type DecodedProviderData, decodeProviderData } from './providerData'
+import { getActiveRegistry, setActiveRegistry, validateUnitEvolution } from './units'
 import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
-export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
+export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v3/data.json'
 
 let providerData: Provider[] = embeddedData
-let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
+let providerDataPromise: Promise<Provider[]> = Promise.resolve(embeddedData)
 let autoUpdateCb: (() => void) | null = null
 
-function setProviderData(data: ProviderDataPayload) {
+function setProviderData(data: ProviderDataPayload): void {
   // null means the update failed; keep existing data
   if (data === null) {
     return
@@ -32,7 +32,10 @@ function setProviderData(data: ProviderDataPayload) {
         if (data === null || providerDataPromise !== updatePromise) {
           return providerData
         }
-        return activateProviderData(data)
+        const decoded = decodeProviderData(data, getActiveRegistry())
+        const providers = activateProviderData(decoded)
+        warnCompatibility(decoded.compatibilityWarnings)
+        return providers
       })
       .catch((error: unknown) => {
         if (providerDataPromise === updatePromise) {
@@ -51,137 +54,30 @@ function setProviderData(data: ProviderDataPayload) {
     })
     providerDataPromise = updatePromise
   } else {
-    providerDataPromise = Promise.resolve(activateProviderData(data))
+    const decoded = decodeProviderData(data, getActiveRegistry())
+    const providers = activateProviderData(decoded)
+    warnCompatibility(decoded.compatibilityWarnings)
+    providerDataPromise = Promise.resolve(providers)
   }
 }
 
-function activateProviderData(data: Provider[]): Provider[] {
-  if (!Array.isArray(data)) {
-    throw new Error('Expected null or Provider[]')
+function activateProviderData(decoded: DecodedProviderData): Provider[] {
+  const { providers, registry } = decoded
+  if (registry === undefined) {
+    warnUnsupportedExtractorDestinations(providers, getActiveRegistry())
+    providerData = providers
+    return providers
   }
 
-  const normalizedData = data.map(normalizeProvider)
-  warnUnsupportedExtractorDestinations(normalizedData)
-  providerData = normalizedData
-  return normalizedData
+  validateUnitEvolution(getActiveRegistry(), registry)
+  warnUnsupportedExtractorDestinations(providers, registry)
+  setActiveRegistry(registry)
+  providerData = providers
+  return providers
 }
 
-function normalizeProvider(provider: Provider): Provider {
-  return {
-    ...provider,
-    models: provider.models.map((model) => ({
-      ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
-    })),
-  }
-}
-
-/**
- * Convert a wire-format conditional price into the internal discriminated
- * representation `engine.ts` relies on.
- *
- * The wire format (the published v2 feed) identifies a constraint structurally
- * (`start_date`, or `start_time`/`end_time`) rather than with the `type`
- * discriminator the internal `ConditionalPrice` uses, so the input's
- * constraint is typed as `unknown` here rather than as the internal union.
- *
- * Already-discriminated constraints (bundled data re-activated at runtime) are
- * validated and passed through unchanged. This is the runtime half of the
- * wire-to-internal translation; the code generator producing the bundled
- * `data.ts` is the build-time half, and the two must stay in agreement.
- * See `normalizeProvider` for the traversal that applies this per model.
- */
-function normalizeConditionalPrice(
-  conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
-  providerId: string,
-  modelId: string
-): ConditionalPrice {
-  const constraint: unknown = conditionalPrice.constraint
-  if (constraint === undefined) {
-    return { prices: conditionalPrice.prices }
-  }
-  if (!isRecord(constraint)) {
-    throw invalidConstraintError(constraint, providerId, modelId)
-  }
-  if (constraint.type !== undefined) {
-    // Already in the internal discriminated form; validate rather than rebuild.
-    if (
-      (constraint.type === 'start_date' && hasExactKeys(constraint, ['start_date', 'type']) && isValidStartDate(constraint.start_date)) ||
-      (constraint.type === 'time_of_date' &&
-        hasExactKeys(constraint, ['end_time', 'start_time', 'type']) &&
-        isValidTimeOfDay(constraint.start_time) &&
-        isValidTimeOfDay(constraint.end_time))
-    ) {
-      return conditionalPrice as ConditionalPrice
-    }
-    throw invalidConstraintError(constraint, providerId, modelId)
-  }
-  if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
-    return {
-      constraint: { start_date: constraint.start_date, type: 'start_date' },
-      prices: conditionalPrice.prices,
-    }
-  }
-  if (
-    hasExactKeys(constraint, ['end_time', 'start_time']) &&
-    isValidTimeOfDay(constraint.start_time) &&
-    isValidTimeOfDay(constraint.end_time)
-  ) {
-    return {
-      constraint: {
-        end_time: constraint.end_time,
-        start_time: constraint.start_time,
-        type: 'time_of_date',
-      },
-      prices: conditionalPrice.prices,
-    }
-  }
-  throw invalidConstraintError(constraint, providerId, modelId)
-}
-
-function invalidConstraintError(constraint: unknown, providerId: string, modelId: string): Error {
-  return new Error(
-    `Expected a start-date or time-of-day price constraint for provider '${providerId}' model '${modelId}', got: ${JSON.stringify(constraint)}`
-  )
-}
-
-// Strict ISO calendar date: correct shape and a real date (rejects e.g.
-// '2025-02-30', which Date would silently roll over to March 2). Years start
-// at 1, matching the feed's source `date` type (Python), which cannot
-// represent year zero.
-function isValidStartDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false
-  }
-  const parsed = new Date(`${value}T00:00:00Z`)
-  return !Number.isNaN(parsed.getTime()) && parsed.getUTCFullYear() >= 1 && parsed.toISOString().startsWith(value)
-}
-
-// Reject constraints carrying keys outside the expected shape, so a mixed or
-// misspelled constraint fails activation instead of silently losing fields.
-function hasExactKeys(value: Record<string, unknown>, keys: string[]): boolean {
-  const actual = Object.keys(value)
-  return actual.length === keys.length && actual.every((key) => keys.includes(key))
-}
-
-// Reuse the engine's parser so normalization accepts exactly what price
-// calculation can later evaluate.
-function isValidTimeOfDay(value: unknown): value is string {
-  if (typeof value !== 'string') {
-    return false
-  }
-  try {
-    utcTimeOfDaySeconds(value)
-    return true
-  } catch {
-    return false
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
+function warnCompatibility(warnings: readonly string[]): void {
+  for (const warning of warnings) console.warn(warning)
 }
 
 function onCalc(cb: () => void) {
@@ -221,7 +117,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   // Caller-supplied providers bypass activation, so normalize them here to
   // give them the same constraint handling as downloaded/bundled data.
   const provider = options?.provider
-    ? normalizeProvider(options.provider)
+    ? decodeProviderData([options.provider], getActiveRegistry()).providers[0]
     : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
