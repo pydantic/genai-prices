@@ -383,7 +383,10 @@ cancel the newer attempt.
 
 **Go accepts wrapped v3 through immutable construction.** _(from "Go keeps immutable calculator construction", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
 `NewCalculatorFromJSON(...)` returns a calculator owning the validated wrapper registry and providers. New remote usage
-names remain expressible through `UsageKey` even before a package release generates a constant.
+names remain expressible through `UsageKey` even before a package release generates a constant. A caller that
+automatically fetches `RemoteDataURL` installs updated units and providers by constructing a new calculator and replacing
+its own calculator reference only after construction succeeds; the package does not mutate an existing calculator or
+process-global state.
 
 **Python detached operations capture one applicable registry.** _(from "Python and JavaScript activate one paired state reference", "A fetched Python v3 snapshot privately owns its candidate registry")_
 `DataSnapshot` methods use their private registry when present. Base `ModelInfo.calc_price(...)`, base

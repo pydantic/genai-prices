@@ -569,7 +569,9 @@ change. All decode/validation errors are wrapped with `ErrInvalidData` by `NewCa
 
 `NewCalculator()`, package `Calculate(...)`, package `ExtractUsage(...)`, and the two receiver methods retain their
 signatures and ownership: package functions use `bundledCalculator`; receiver methods use only that calculator's pair.
-`RemoteDataURL` changes to the v3 URL. Runtime-only usage keys remain ordinary `UsageKey` values.
+`RemoteDataURL` changes to the v3 URL. A caller-managed automatic updater fetches that URL, passes the bytes to
+`NewCalculatorFromJSON(...)`, and replaces its own calculator reference only after construction succeeds. Runtime-only
+usage keys remain ordinary `UsageKey` values.
 
 Add `order []UsageKey` to the existing `unitRegistry`; trusted bundled construction receives `bundledUnitOrder`, while
 `newUntrustedUnitRegistry(...)` validates and retains decoded wrapper order.
