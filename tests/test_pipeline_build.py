@@ -52,28 +52,53 @@ def prepare_build(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, units: str
     (prices_dir / 'units.yml').write_text(units)
     monkeypatch.setattr(build, 'package_dir', prices_dir)
     monkeypatch.setattr(build, 'root_dir', tmp_path)
+
+    def resolve_compatibility_target(_target_oid: str | None = None) -> str:
+        return '1' * 40
+
+    def accept_compatibility(*_args: object, **_kwargs: object) -> None:
+        return None
+
+    monkeypatch.setattr(build, 'resolve_compatibility_target', resolve_compatibility_target)
+    monkeypatch.setattr(build, 'validate_frozen_v2_artifacts', lambda: None)
+    monkeypatch.setattr(build, 'validate_v3_compatibility', accept_compatibility)
     return providers_dir
 
 
-def test_build_writes_and_updates_published_data(
+def test_build_writes_and_updates_v3_without_touching_v2(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     providers_dir = prepare_build(monkeypatch, tmp_path)
     provider_path = providers_dir / 'testing.yml'
     provider_path.write_text(PROVIDER_YAML)
     (providers_dir / 'ignored.txt').write_text('not yaml')
+    frozen_v2 = {
+        relative_path: f'frozen {relative_path}'.encode()
+        for relative_path in (
+            'data.json',
+            'data.schema.json',
+            'data_slim.json',
+            'data_slim.schema.json',
+        )
+    }
+    for relative_path, content in frozen_v2.items():
+        path = tmp_path / 'prices' / 'new_data' / 'v2' / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
 
     build.build()
     build.build()
 
-    prices_path = tmp_path / 'prices' / 'new_data' / 'v2' / 'data.json'
+    prices_path = tmp_path / 'prices' / 'new_data' / 'v3' / 'data.json'
     prices_path.write_text(json.dumps(json.loads(prices_path.read_bytes()), indent=4))
     build.build()
 
     provider_path.write_text(PROVIDER_YAML.replace('1.25', '2.5'))
     build.build()
 
-    assert json.loads(prices_path.read_bytes()) == [
+    payload = json.loads(prices_path.read_bytes())
+    assert payload['units'] == runtime_unit_projection(build.load_units())
+    assert payload['providers'] == [
         {
             'id': 'testing',
             'name': 'Testing',
@@ -81,14 +106,64 @@ def test_build_writes_and_updates_published_data(
             'models': [{'id': 'model', 'match': {'equals': 'model'}, 'prices': {'input_mtok': 2.5}}],
         }
     ]
+    data_schema = json.loads((tmp_path / 'prices' / 'new_data' / 'v3' / 'data.schema.json').read_bytes())
+    validator_cls = validator_for(data_schema, default=jsonschema.Draft202012Validator)
+    validator_cls.check_schema(data_schema)
+    validator_cls(data_schema).validate(payload)
     schema = json.loads((providers_dir / '.schema.json').read_bytes())
     assert schema['$defs']['ModelPrice']['properties']['input_mtok']['description'] == (
         'price in USD per million uncached text input/prompt token'
     )
+    assert {
+        relative_path: (tmp_path / 'prices' / 'new_data' / 'v2' / relative_path).read_bytes()
+        for relative_path in frozen_v2
+    } == frozen_v2
     output = capsys.readouterr().out
     assert 'unchanged' in output
-    assert 'Prices have whitespace/dict ordering changes' in output
-    assert 'Prices have the following changes:' in output
+    assert 'updated' in output
+
+
+def test_build_rejects_compatibility_before_writing_any_artifact(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    providers_dir = prepare_build(monkeypatch, tmp_path)
+    (providers_dir / 'testing.yml').write_text(PROVIDER_YAML)
+    artifacts = {
+        providers_dir / '.schema.json': b'authoring schema sentinel',
+        tmp_path / 'prices' / 'new_data' / 'v3' / 'data.schema.json': b'v3 schema sentinel',
+        tmp_path / 'prices' / 'new_data' / 'v3' / 'data.json': b'v3 data sentinel',
+    }
+    for path, content in artifacts.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+
+    validation_order: list[str] = []
+
+    def validate_frozen_v2_artifacts() -> None:
+        validation_order.append('frozen-v2')
+
+    def reject_compatibility(
+        target_oid: str,
+        *,
+        candidate_runtime_units: object,
+        candidate_implications: object,
+        candidate_schema: object,
+        candidate_payload: object,
+    ) -> None:
+        _ = candidate_runtime_units, candidate_implications, candidate_schema
+        validation_order.append('v3-compatibility')
+        assert target_oid == '1' * 40
+        assert cast(dict[str, object], candidate_payload)['providers']
+        raise ValueError('incompatible candidate')
+
+    monkeypatch.setattr(build, 'validate_frozen_v2_artifacts', validate_frozen_v2_artifacts)
+    monkeypatch.setattr(build, 'validate_v3_compatibility', reject_compatibility)
+
+    with pytest.raises(ValueError, match='incompatible candidate'):
+        build.build('base-ref')
+
+    assert validation_order == ['frozen-v2', 'v3-compatibility']
+    assert {path: path.read_bytes() for path in artifacts} == artifacts
 
 
 @pytest.mark.parametrize(
@@ -529,13 +604,13 @@ prices:
     assert 'dimension_requirements' not in go_content
 
 
-def test_package_data_rejects_a_non_array_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    data_dir = tmp_path / 'prices' / 'new_data' / 'v2'
+def test_package_data_rejects_a_non_object_v3_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    data_dir = tmp_path / 'prices' / 'new_data' / 'v3'
     data_dir.mkdir(parents=True)
-    (data_dir / 'data.json').write_text('{}')
+    (data_dir / 'data.json').write_text('[]')
     monkeypatch.setattr(package_data, 'this_package_dir', tmp_path / 'prices')
 
-    with pytest.raises(ValueError, match='provider array'):
+    with pytest.raises(ValueError, match='v3 payload object'):
         package_data.package_data()
 
 

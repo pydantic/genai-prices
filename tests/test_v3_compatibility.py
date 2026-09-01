@@ -295,6 +295,14 @@ def test_validate_v3_compatibility_bootstraps_from_exact_target_and_ignores_work
     assert capsys.readouterr().out == f'Validating v3 compatibility against target {target_oid}\n'
 
 
+def test_resolve_compatibility_target_defaults_to_head(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    repo, target_oid = _init_git_repo(tmp_path)
+    monkeypatch.setattr(v3_compatibility, 'root_dir', repo)
+
+    assert v3_compatibility.resolve_compatibility_target() == target_oid
+    assert v3_compatibility.resolve_compatibility_target('HEAD') == target_oid
+
+
 def test_validate_v3_compatibility_compares_later_target_artifacts(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

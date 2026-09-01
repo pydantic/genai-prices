@@ -205,6 +205,20 @@ def test_command_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
     assert called is True
 
 
+def test_build_command_dispatches_compatibility_target(monkeypatch: pytest.MonkeyPatch) -> None:
+    called_with: str | None = None
+
+    def build(compatibility_target_oid: str | None = None) -> None:
+        nonlocal called_with
+        called_with = compatibility_target_oid
+
+    monkeypatch.setattr(commands, 'build', build)
+    monkeypatch.setattr(sys, 'argv', ['prices', 'build', 'target-oid'])
+
+    assert commands.main() is None
+    assert called_with == 'target-oid'
+
+
 @pytest.mark.parametrize(('count', 'exit_code'), [(0, 0), (3, 1), (256, 1)])
 def test_check_for_price_discrepancies_command_normalizes_count_to_exit_status(
     monkeypatch: pytest.MonkeyPatch, count: int, exit_code: int
@@ -221,7 +235,7 @@ def test_check_for_price_discrepancies_command_normalizes_count_to_exit_status(
     assert exc_info.value.code == exit_code
 
 
-@pytest.mark.parametrize('argv', (['prices'], ['prices', 'unknown']))
+@pytest.mark.parametrize('argv', (['prices'], ['prices', 'unknown'], ['prices', 'unknown', 'extra']))
 def test_command_dispatch_prints_usage(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], argv: list[str]
 ) -> None:

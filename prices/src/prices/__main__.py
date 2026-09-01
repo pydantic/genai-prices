@@ -40,6 +40,9 @@ def main():
         package_data,
         inject_providers,
     )
+    if len(sys.argv) == 3 and sys.argv[1] == 'build':
+        build(sys.argv[2])
+        return
     if len(sys.argv) == 2:
         command = sys.argv[1]
         if command == 'check_for_price_discrepancies':

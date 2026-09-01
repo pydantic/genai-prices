@@ -7,8 +7,7 @@ from collections.abc import Iterable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
-from .build import load_units
-from .export_validation import RuntimeUnitProjection, runtime_unit_projection, validate_runtime_unit_projection
+from .export_validation import RuntimeUnitProjection, validate_runtime_unit_projection
 from .go_identifiers import go_usage_key_identifier
 from .prices_types import ModelPrice, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
@@ -20,13 +19,10 @@ JsonData: TypeAlias = 'None | bool | int | float | str | list[JsonData] | dict[s
 
 
 def package_data():
-    provider_data = _load_provider_data(this_package_dir / 'new_data' / 'v2' / 'data.json')
-    source_units = load_units()
-    load_unit_registry(source_units)
-    runtime_units = runtime_unit_projection(source_units)
-    package_python_data(provider_data, runtime_units)
-    package_go_data(provider_data, runtime_units)
-    package_ts_data(provider_data, runtime_units)
+    provider_data, units = load_v3_payload(this_package_dir / 'new_data' / 'v3' / 'data.json')
+    package_python_data(provider_data, units)
+    package_go_data(provider_data, units)
+    package_ts_data(provider_data, units)
 
 
 def package_python_data(provider_data: Any, units: RuntimeUnitProjection):
@@ -74,14 +70,6 @@ unit_data: dict[str, Any] = {units!r}
     print(f'Data successfully written to {data_units_py.relative_to(root_dir)}')
 
 
-def _load_provider_data(data_path: Path) -> list[JsonData]:
-    payload = json.loads(data_path.read_bytes())
-    if isinstance(payload, list):
-        return cast(list[JsonData], payload)
-
-    raise ValueError(f'Expected {data_path} to contain a provider array')
-
-
 def load_v3_payload(data_path: Path) -> tuple[list[JsonData], RuntimeUnitProjection]:
     """Split a wrapped v3 payload into its ordered provider and unit projections."""
     raw_payload: object = json.loads(data_path.read_bytes())
@@ -127,12 +115,6 @@ def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bo
         check=True,
         stdout=subprocess.PIPE,
     )
-
-
-def load_unit_registry(units: dict[str, Any]) -> UnitRegistry:
-    from prices.export_validation import validate_units
-
-    return validate_units(units)
 
 
 def validate_provider_model_prices(providers: Iterable[object], registry: UnitRegistry) -> None:

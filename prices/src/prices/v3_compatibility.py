@@ -65,7 +65,7 @@ def validate_v3_compatibility(
     candidate_payload: JsonData,
 ) -> None:
     """Compare an in-memory v3 candidate with one exact target Git object."""
-    resolved_target_oid = _resolve_target_oid(target_oid)
+    resolved_target_oid = resolve_compatibility_target(target_oid)
     print(f'Validating v3 compatibility against target {resolved_target_oid}')
     _validate_target_is_ancestor(resolved_target_oid)
 
@@ -126,9 +126,11 @@ def main() -> None:
     )
 
 
-def _resolve_target_oid(target_oid: str) -> str:
+def resolve_compatibility_target(target_oid: str | None = None) -> str:
+    """Resolve a requested compatibility target, defaulting to the current HEAD."""
+    requested_target = target_oid or 'HEAD'
     result = subprocess.run(
-        ['git', 'rev-parse', '--verify', f'{target_oid}^{{commit}}'],
+        ['git', 'rev-parse', '--verify', f'{requested_target}^{{commit}}'],
         cwd=root_dir,
         check=False,
         capture_output=True,
@@ -136,7 +138,7 @@ def _resolve_target_oid(target_oid: str) -> str:
     )
     resolved = result.stdout.strip()
     if result.returncode != 0 or not resolved:
-        raise ValueError(f'Invalid v3 compatibility target {target_oid!r}: expected a Git commit')
+        raise ValueError(f'Invalid v3 compatibility target {requested_target!r}: expected a Git commit')
     return resolved
 
 
