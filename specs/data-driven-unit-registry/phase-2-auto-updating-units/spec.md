@@ -33,6 +33,10 @@ caller provenance.
 They cannot introduce a unit definition and therefore never replace a registry. Their selected registry must still
 validate recognized price keys and extractor destinations when those providers are used.
 
+**Provider-only candidates use runtime-selected compatibility registries.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation")_
+Python and JavaScript select the active registry. Go selects bundled units because it has no process-global active
+registry and every immutable calculator owns the registry selected at construction.
+
 **The v2 provider contract is pinned at the Phase 2 cutover.**
 The authoritative legacy-array shape is `prices/new_data/v2/data.schema.json` from the exact target-branch Git object
 used by the initial v3 compatibility check.
@@ -110,28 +114,24 @@ the implication model or an old unit's normalized set requires a new wire contra
 V3 cannot correct or remove an erroneous `price_key`, `per`, dimension assignment, or conditional implication without
 changing the meaning already released packages attach to the stable URL.
 
-**Every wrapped runtime candidate is append-only relative to its compatibility registry.** _(from "An existing v3 unit's runtime definition never changes", "A new v3 unit never becomes an ancestor or intermediate of an existing unit")_
+**Every wrapped runtime candidate is append-only relative to its compatibility registry.** _(from "An existing v3 unit's runtime definition never changes", "Existing usage-key order is stable and new units append", "A new v3 unit never becomes an ancestor or intermediate of an existing unit")_
 Python and JavaScript compare with the active registry during preparation and immediately before activation. Go compares
-with bundled units before constructing a calculator. A candidate that removes, redefines, or inserts an ancestor of a
-known unit is rejected. Legacy provider arrays are exempt because they carry no units.
+with bundled units before constructing a calculator. A candidate that removes, redefines, reorders, or inserts an
+ancestor of a known unit is rejected. Legacy provider arrays are exempt because they carry no units.
 
 **Source-level validation remains the publication authority.** _(from "V3 unit definitions use the minimal runtime projection", "Conditional rules are monotone source-only implications")_
 Before writing v3, the build validates unit key safety, identity uniqueness, family normalization, conditional
 implications, exact interval closure, join-closedness, provider price coverage, and extractor destinations against the
 complete `prices/units.yml` and provider source.
 
-**Generated Go unit identifiers use the existing deterministic transformation.**
-The publisher applies the same `Usage`-prefixed transformation as `package_go_data`: underscore-separated parts are
-title-cased, digit-leading parts are uppercased, and empty parts become `_`.
-
-**Generated Go unit identifiers must remain safe and unique.** _(from "Generated Go unit identifiers use the existing deterministic transformation")_
+**Generated Go unit identifiers must remain safe and unique.**
 Publication rejects an invalid Go identifier, a Go keyword, or any collision between distinct usage keys or with an
 existing Go package-level identifier.
 
 **Go's open `UsageKey` type represents remote-only names.** _(from "Python, JavaScript, and Go each consume the wrapped v3 contract")_
 A remotely added usage key remains usable as `UsageKey("name")` before a later package release generates its constant.
 
-**The bootstrap check compares both runtime units and conditional implications from the exact target revision.** _(from "Every wrapped runtime candidate is append-only relative to its compatibility registry", "An existing v3 unit's normalized conditional implications never change")_
+**The bootstrap check compares both runtime units and conditional implications from the exact target revision.** _(from "An existing v3 unit's runtime definition never changes", "Existing usage-key order is stable and new units append", "A new v3 unit never becomes an ancestor or intermediate of an existing unit", "An existing v3 unit's normalized conditional implications never change")_
 For the initial v3 pull request, CI reads and validates `prices/units.yml` with `git show` from the pull request's exact
 target-branch object, derives both the minimal runtime projection and normalized conditional implications, and compares
 both with the candidate source.
@@ -226,7 +226,7 @@ regenerate `prices/providers/.schema.json` from the current unit source, and rep
 `prices/new_data/v3/`, `data.json` is the only rewritten artifact after cutover; v3 schema generation is a check, not a
 write path.
 
-**`package-data` reads and splits the validated v3 wrapper.** _(from "Normal builds stop writing v2 after cutover")_
+**`package-data` reads and splits the validated v3 wrapper.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Phase 2 publishes one full wrapped v3 payload")_
 It does not reconstruct the wrapper from separate provider and unit sources and does not write publication artifacts.
 
 **Package generation splits the v3 pair for all three runtimes.** _(from "Python, JavaScript, and Go each consume the wrapped v3 contract", "Phase 2 publishes one full wrapped v3 payload")_
@@ -245,6 +245,9 @@ pricing, matching, and extraction capture that reference once per operation.
 **A fetched Python v3 snapshot privately owns its candidate registry.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Python and JavaScript activate one paired state reference")_
 Its calculation and extraction methods use that registry before activation. The registry association is private to a
 fetched wrapped snapshot; a provider-array snapshot has no replacement registry and uses the active one.
+
+**A caller-constructed Python snapshot changes providers only.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "A fetched Python v3 snapshot privately owns its candidate registry")_
+Activating a `DataSnapshot` without a validated wrapped registry retains the active registry.
 
 **Python lookup results are detached from a snapshot's private registry.** _(from "A fetched Python v3 snapshot privately owns its candidate registry")_
 Snapshot lookup results carry no registry provenance. Calling their methods directly uses the active registry, so a
@@ -281,29 +284,49 @@ reference only after validation and construction complete.
 
 **JavaScript operations capture one applicable registry.** _(from "Python and JavaScript activate one paired state reference", "JavaScript widens `setProviderData` with the wrapped shape")_
 Standard entry points pass the registry captured with active providers through matching, extraction, and pricing. Direct
-helpers without an explicit registry capture the active registry once at entry.
+helpers without an explicit registry capture the active registry once at entry. `extractUsage(...)` uses the registry
+recorded by standard active lookup for its provider; a detached caller-supplied provider captures the active registry
+when extraction starts.
 
-**Publication tests prove version isolation.** _(from "The v3 cutover freezes the four v2 artifacts", "Later checks compare deployed v3 data and source semantics from the exact target revision")_
-They pin v1 and final v2 bytes, verify the slim projection, validate v3 against its frozen schema, and exercise bootstrap,
-later-source, stale-target, target-object reporting, Go-identifier transformation/collision, stable unit ordering, old-unit,
-old-implication, removal, and new-ancestor rejection.
+**V2 cutover tests pin final artifact isolation.** _(from "The v3 cutover freezes the four v2 artifacts", "The final slim v2 payload remains an exact projection", "Normal builds stop writing v2 after cutover")_
+They pin the final v2 bytes, verify the slim projection, and prove normal builds do not rewrite those artifacts.
+
+**V3 publication tests pin the wrapper and schema.** _(from "Phase 2 publishes one full wrapped v3 payload", "The initial v3 schema is permanent")_
+They validate generated v3 data against the cutover schema and pin that schema's bytes.
+
+**Compatibility tests pin target-bound unit evolution.** _(from "The bootstrap check compares both runtime units and conditional implications from the exact target revision", "Later checks compare deployed v3 data and source semantics from the exact target revision", "Compatibility checks report their full target object ID", "Every compatibility baseline read uses the reported target object ID")_
+They exercise bootstrap, later-source, stale-target, target-object reporting, stable unit ordering, old-unit and
+old-implication preservation, removal rejection, and new-ancestor rejection.
+
+**Go identifier validation tests cover generated-name safety.** _(from "Generated Go unit identifiers must remain safe and unique")_
+They reject invalid identifiers, Go keywords, and collisions with generated or existing package-level names.
 
 **Runtime ingestion tests cover both accepted root shapes.** _(from "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays", "The v2 provider contract is pinned at the Phase 2 cutover")_
-Each runtime exercises wrapped v3 and legacy arrays, including every structural representation admitted by the pinned v2
-schema and both price-constraint shapes.
+Each runtime exercises wrapped v3 objects and legacy provider arrays.
 
 **Runtime atomicity tests reject invalid candidates without state change.** _(from "Candidate preparation has no externally visible state change", "Wrapped v3 candidates are validated eagerly in every runtime")_
 Coverage includes invalid units, providers, price coverage, extractor destinations, and append-only relationships.
 
-**Python runtime tests cover paired snapshot lifecycle behavior.** _(from "A fetched Python v3 snapshot privately owns its candidate registry", "Python background activation installs the fetched pair after `fetch()` returns.", "Stopping Python cannot reinstall an in-flight fetched pair.")_
-Coverage includes fetch, activation, lookup provenance, clearing, stop/join, and Python contract-error behavior.
+**Python snapshot tests cover paired state behavior.** _(from "A fetched Python v3 snapshot privately owns its candidate registry", "A caller-constructed Python snapshot changes providers only", "Python lookup results are detached from a snapshot's private registry", "Clearing Python state intentionally keeps the latest registry")_
+Coverage includes fetch, activation, lookup provenance, caller-constructed snapshots, and clearing.
 
-**JavaScript runtime tests cover pair ordering and error timing.** _(from "JavaScript's promise ordering applies to complete pairs", "Synchronous JavaScript validation failures throw `Error` synchronously.", "Asynchronous JavaScript contract failures reject with `Error`.")_
-Coverage includes synchronous and promised candidates, current and stale attempts, rejection, direct `null`, and
-promise-resolved `null`.
+**Python background tests cover paired activation and stopping.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Stopping Python cannot reinstall an in-flight fetched pair.")_
+Coverage includes worker activation, stop signaling, join ordering, and bundled-provider restoration.
 
-**Go runtime tests cover immutable wrapped construction.** _(from "Go accepts wrapped v3 through immutable construction", "Caller-managed Go updates replace the calculator only after construction succeeds.", "Go validation failures wrap `ErrInvalidData`.")_
-Coverage includes successful remote-only units, `ErrInvalidData`, and the guarantee that failure returns no calculator.
+**Python contract-error tests cover decoded failures and activation races.** _(from "Python decoded-contract failures are `ValueError`", "Python decoded-contract errors identify the failing data", "Python activation races fail atomically")_
+They pin `ValueError` context and prove a failed final append-only check leaves the active pair unchanged.
+
+**JavaScript pair-ordering tests cover non-null attempts.** _(from "JavaScript's promise ordering applies to complete pairs")_
+Coverage includes synchronous and promised candidates plus current and stale non-null attempts.
+
+**JavaScript contract-validation tests cover error timing.** _(from "Synchronous JavaScript validation failures throw `Error` synchronously.", "Asynchronous JavaScript contract failures reject with `Error`.")_
+They distinguish invalid direct candidates from invalid promised candidates and pin the contract-error prefix.
+
+**Go wrapped-construction tests cover remote-only units.** _(from "Go accepts wrapped v3 through immutable construction", "Go's open `UsageKey` type represents remote-only names")_
+They construct a calculator that extracts and prices a valid unit absent from bundled data.
+
+**Go construction-failure tests cover caller-owned atomicity.** _(from "Caller-managed Go updates replace the calculator only after construction succeeds.", "Go validation failures wrap `ErrInvalidData`.")_
+They pin `ErrInvalidData`, a `nil` failed result, and retention of the caller's prior calculator reference.
 
 **Operation-capture tests prevent mixed-registry reads.** _(from "Python detached operations capture one applicable registry", "JavaScript operations capture one applicable registry")_
 Python and JavaScript tests exercise activation races across matching, extraction, usage inference, decomposition, and
@@ -364,7 +387,7 @@ A unit is identified by usage key, resolved price key, normalization factor, and
 **Dimension-subset relationships continue defining ancestors.** _(from "Phase 2 does not change pricing semantics")_
 A unit is an ancestor when its complete dimensions mapping is a subset of another unit's dimensions.
 
-**Conflict-free dimension unions continue defining joins.** _(from "Phase 2 does not change pricing semantics")_
+**Conflict-free dimension unions continue defining joins.** _(from "Phase 2 does not change pricing semantics", "Conflict-free valid units remain valid under union")_
 A valid union must also satisfy the source conditional implications defined earlier in this spec.
 
 **Selected prices continue requiring ancestor and join coverage.** _(from "Dimension-subset relationships continue defining ancestors", "Conflict-free dimension unions continue defining joins")_
@@ -414,14 +437,16 @@ calculation entry point; and `waitForUpdate()` returns the promise representing 
 It resolves to the active provider array and exposes no second registry API.
 
 **JavaScript's public extraction entry point remains `extractUsage(...)`.**
-It continues to accept an explicit provider object and response data. Provider objects obtained through standard active
-lookup are interpreted with the registry captured by that lookup operation; caller-supplied detached providers use the
-active registry captured when extraction starts.
+It continues to accept an explicit provider object and response data.
 
 **JavaScript keeps its current non-null update ordering.**
 A direct `null` is a no-op and does not supersede a pending attempt. Supplying a promise starts an update attempt and
 supersedes older pending attempts immediately, even if it later resolves to `null`. A rejected current promise leaves
 data unchanged, rejects `waitForUpdate()`, and warns fire-and-forget callers.
+
+**Generated Go unit identifiers retain their deterministic transformation.**
+The publisher applies the same `Usage`-prefixed transformation as `package_go_data`: underscore-separated parts are
+title-cased, digit-leading parts are uppercased, and empty parts become `_`.
 
 **Go keeps immutable calculator construction.**
 `Calculate(PriceRequest) (PriceCalculation, error)`, `NewCalculator() (*Calculator, error)`, and
@@ -442,10 +467,6 @@ Phase 2 adds no public provenance wrapper.
 
 **Custom Python `ModelPrice` overrides retain their signature and registry ownership.**
 An override of `ModelPrice.calc_price(self, usage)` keeps that signature and owns any registry lookups it initiates.
-
-**Legacy provider arrays retain independently selected registries.** _(from "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays")_
-Python and JavaScript use the active registry; Go uses bundled units because it has no process-global active registry and
-each immutable calculator owns the registry selected at construction.
 
 **Legacy arrays accept every representation admitted by the pinned v2 schema.** _(from "The v2 provider contract is pinned at the Phase 2 cutover", "The audited Phase 1 behavioral baseline is Git object `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa`")_
 Implementations continue decoding every structural field and value form admitted by that schema.
@@ -500,9 +521,6 @@ The promise previously returned by `waitForUpdate()` for that attempt rejects wi
 fire-and-forget warning. It does not change active state, replace or reject the current `waitForUpdate()` promise, or
 cancel the newer attempt.
 
-**A caller-constructed Python snapshot changes providers only.** _(from "Python custom-snapshot activation remains explicit", "Provider-only inputs are an explicit exception to wrapped-pair activation")_
-Activating a `DataSnapshot` without a validated wrapped registry retains the active registry.
-
 **The existing v1 artifacts remain byte-frozen.**
 The four root `prices/data*` payload and schema files remain the digest-pinned snapshots enforced by
 `tests/test_frozen_v1_data.py` and receive no later provider, model, price, or schema update.
@@ -510,3 +528,19 @@ The four root `prices/data*` payload and schema files remain the digest-pinned s
 **The v2 URLs, array roots, schemas, and unit vocabulary remain compatible with every Phase 1 package.** _(from "The v3 cutover freezes the four v2 artifacts")_
 `prices/new_data/v2/data.json` and `data_slim.json` remain provider arrays, their two schemas remain byte-for-byte
 unchanged, and neither payload receives a new price key or extractor destination.
+
+**Go generation tests preserve identifier spelling.** _(from "Generated Go unit identifiers retain their deterministic transformation")_
+They pin representative underscores, digit-leading parts, and empty parts against the existing transformation.
+
+**Legacy-array compatibility tests cover preserved v2 behavior.** _(from "Legacy arrays accept every representation admitted by the pinned v2 schema", "Legacy arrays retain semantic validation beyond structural schema checks", "Legacy price-constraint shapes retain their meanings", "Legacy arrays retain each runtime's baseline structural tolerance", "Legacy arrays retain each runtime's baseline registry-validation timing", "Unknown registry names retain baseline tolerance outside wrapped v3 candidates")_
+Each runtime covers admitted representations, both constraint shapes, baseline semantic checks, structural tolerance,
+validation timing, and unsupported-name behavior.
+
+**Python compatibility tests cover preserved failure behavior.** _(from "Python unsupported-name warnings remain `UserWarning` and preserve state", "Python fetch preserves transport and JSON exceptions", "Python background failures have one consumer")_
+They pin warning class and state, transport and malformed-JSON exception identity, and single-consumer background errors.
+
+**JavaScript compatibility tests cover preserved update outcomes.** _(from "JavaScript `waitForUpdate()` remains provider-only", "JavaScript preserves caller-supplied promise rejection reasons", "JavaScript `null` remains a no-op", "A stale rejected JavaScript attempt rejects only its own promise")_
+They cover provider-only results, caller rejection identity, direct and promised `null`, and stale rejection isolation.
+
+**Frozen compatibility tests pin v1 and v2 bytes.** _(from "The existing v1 artifacts remain byte-frozen", "The v2 URLs, array roots, schemas, and unit vocabulary remain compatible with every Phase 1 package")_
+They fail on any change to the four v1 or four final v2 artifacts.
