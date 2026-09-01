@@ -59,9 +59,9 @@ not supersede a pending attempt. A rejected current promise leaves data unchange
 fire-and-forget callers.
 
 **Go keeps immutable calculator construction.** _(from "Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements")_
-`Calculate(...)`, `NewCalculator()`, and `NewCalculatorFromJSON(...)` retain their names and result shapes.
-`NewCalculatorFromJSON(...)` returns a new independent calculator or `nil` plus an error; it never changes an existing
-calculator or package-global state.
+`Calculate(PriceRequest) (PriceCalculation, error)`, `NewCalculator() (*Calculator, error)`, and
+`NewCalculatorFromJSON([]byte) (*Calculator, error)` remain. JSON construction returns a new independent calculator or
+`nil` plus an error; it never changes an existing calculator or package-global state.
 
 **Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays.**
 Python `fetch()`, JavaScript `setProviderData`, and Go `NewCalculatorFromJSON` accept either form regardless of URL or
@@ -75,8 +75,8 @@ validate recognized price keys and extractor destinations when those providers a
 **The v2 provider contract is pinned at the Phase 2 cutover.**
 The authoritative legacy-array shape is `prices/new_data/v2/data.schema.json` from the exact target-branch Git object
 used by the initial v3 compatibility check. Implementations decode every structural field and value form admitted by
-that schema; conditional price constraints normalize to the existing internal representations of start-date and
-time-of-day constraints.
+that schema. A `{start_date}` price constraint becomes a start-date constraint, and a `{start_time, end_time}` price
+constraint becomes a time-of-day constraint.
 
 **The existing v1 artifacts remain byte-frozen.**
 The four root `prices/data*` payload and schema files remain the digest-pinned snapshots enforced by
@@ -112,11 +112,11 @@ requires a new versioned contract.
 Later v3 payloads validate against the cutover `data.schema.json`, and that schema file remains byte-for-byte unchanged.
 Provider and model entries and their admitted values may change within the frozen shape.
 
-**An existing v3 unit's runtime definition never changes.** _(from "The initial v3 schema is permanent")_
+**An existing v3 unit's runtime definition never changes.**
 A later publication cannot remove an existing usage key or change its resolved `price_key`, `per`, or complete
 `dimensions` mapping.
 
-**A new v3 unit never becomes an ancestor or intermediate of an existing unit.** _(from "Phase 2 does not change pricing semantics")_
+**A new v3 unit never becomes an ancestor or intermediate of an existing unit.**
 Its dimensions cannot be a proper subset of an existing unit's dimensions. Ancestor and join relationships among old
 units therefore remain stable when new descendants, intersections, or families are appended.
 
@@ -144,10 +144,10 @@ Before writing v3, the build validates unit key safety, identity uniqueness, fam
 implications, exact interval closure, join-closedness, provider price coverage, and extractor destinations against the
 complete `prices/units.yml` and provider source.
 
-**Generated Go unit identifiers are collision-free.** _(from "Python, JavaScript, and Go each consume the wrapped v3 contract", "Source-level validation remains the publication authority")_
+**Generated Go unit identifiers are collision-free.**
 The publisher applies the same `Usage`-prefixed identifier transformation as `package_go_data`: underscore-separated
 parts are title-cased, digit-leading parts are uppercased, and empty parts become `_`. It rejects an invalid Go
-identifier, a Go keyword, or any collision between distinct usage keys and existing or candidate generated identifiers.
+identifier, a Go keyword, or any collision between distinct usage keys or with an existing Go package-level identifier.
 Remote-only names remain usable through the open string type `UsageKey` before a package release generates a constant.
 
 **The bootstrap check compares both runtime units and conditional implications from the exact target revision.** _(from "Every wrapped runtime candidate is append-only relative to its compatibility registry", "An existing v3 unit's normalized conditional implications never change")_
@@ -169,7 +169,7 @@ that reruns it against the merge candidate. A green result for an older target r
 A runtime constructs and validates the complete candidate before activation or Go constructor return. Any failure leaves
 the Python or JavaScript pair unchanged and returns no Go calculator.
 
-**Runtime unit validation enforces every invariant available in the v3 projection.** _(from "Candidate preparation has no externally visible state change", "Conditional validity uses monotone source-only implications")_
+**Runtime unit validation enforces every invariant available in the v3 projection.**
 It rejects an invalid wrapper or unit shape, unsafe public keys, out-of-range normalization, duplicate price or dimension
 identities, missing `family`, inconsistent family normalization, and missing joins for conflict-free units. JavaScript
 validates the object it receives after host JSON parsing; it does not claim to recover duplicate member names already
@@ -194,7 +194,7 @@ calculation or extraction. Official v3 publication may not emit a name absent fr
 
 **Python failures remain exceptions.**
 Download, wrapper, unit, provider, coverage, and append-only failures make `UpdatePrices.fetch()` raise. A background
-failure is stored and raised by the next `wait()` or `stop()` according to the existing single-consumption behavior.
+failure is stored, raised by the next `wait()` or `stop()`, and then cleared so the same failure is not raised twice.
 Activation rechecks append-only compatibility and raises `ValueError` without changing state if the active registry
 advanced incompatibly after fetch.
 
@@ -253,7 +253,7 @@ usable. Process restart restores the fully bundled pair.
 `stop()` signals and joins the worker before restoring bundled providers. State replacement is serialized, but Phase 2
 adds no process-wide generation protocol or ordering promise among unrelated manual snapshot writes.
 
-**JavaScript widens `setProviderData` with the wrapped shape.** _(from "JavaScript keeps one storage-factory update API")_
+**JavaScript widens `setProviderData` with the wrapped shape.** _(from "JavaScript keeps one storage-factory update API", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
 The accepted non-null value becomes `Provider[] | { units, providers }`, synchronously or through a promise. A provider
 array changes providers only; a wrapped value can replace the pair after complete validation.
 
@@ -296,7 +296,8 @@ Phase 2 publishes the one full payload used by automatic updates. A smaller v3 p
 compatibility requirements.
 
 **Validation caches and decomposition caches are excluded.**
-Phase 2 retains only existing provider lookup caches. New pricing caches require a separate specification.
+Provider/model lookup caches inside a snapshot or calculator remain permitted. New pricing, validation, or decomposition
+caches require a separate specification.
 
 **Fetched registry persistence is excluded.**
 Process restart uses bundled data. Persisting and authenticating a fetched registry requires a separate specification.
