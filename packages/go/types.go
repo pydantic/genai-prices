@@ -34,6 +34,18 @@ type UsageKey string
 // Usage contains the values reported for one API call.
 type Usage map[UsageKey]float64
 
+type wireUnitDef struct {
+	PriceKey   string
+	Per        uint64
+	Dimensions map[string]string
+}
+
+type orderedWireUnits struct {
+	Order                 []UsageKey
+	Values                map[UsageKey]wireUnitDef
+	CompatibilityWarnings []string
+}
+
 // PriceRequest describes one price calculation.
 type PriceRequest struct {
 	Usage          Usage
