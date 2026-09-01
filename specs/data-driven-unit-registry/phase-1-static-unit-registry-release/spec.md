@@ -120,7 +120,7 @@ The full `prices/new_data/v2/data.json` artifact keeps the same top-level provid
 New Python and JavaScript packages fetch provider arrays from the v2 URL and activate only provider data. The bundled registry remains unchanged on successful updates, failed updates, updater shutdown, and custom snapshot activation.
 
 **The v2 unit vocabulary is frozen.** _(from "Phase 1 auto-updaters use only the full v2 artifact")_
-Ordinary provider, model, and price-value updates may continue within the unit and extractor vocabulary understood by Phase 1 packages. New unit definitions, price keys, or extractor destination keys wait for the versioned Phase 2 payload rather than appearing later at the v2 URL and breaking an already released v2 parser.
+Ordinary provider, model, and price-value updates may continue within the unit and extractor vocabulary understood by Phase 1 packages until the [Phase 2](../phase-2-auto-updating-units/spec.md) v3 cutover freezes the v2 artifacts. New unit definitions, price keys, or extractor destination keys wait for the versioned Phase 2 payload rather than appearing at the v2 URL and breaking an already released v2 parser.
 
 **Generated package providers and units have separate inputs.** _(from "Phase 1 publishes full and slim provider-array v2 data", "The Phase 1 registry is static for the lifetime of the installed package")_
 Package generation reads providers from the v2 provider array and generates unit modules from the checked-in unit source. Generated `data.py` / `data.ts` contain providers, while `data_units.py` / `dataUnits.ts` contain the runtime projection of unit definitions. None contains source-only validation metadata, cache state, trust markers, fingerprints, or generated behavior.
