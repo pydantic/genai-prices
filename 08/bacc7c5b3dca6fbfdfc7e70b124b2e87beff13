@@ -1,0 +1,23 @@
+tests/test_pipeline_build.py
+  s_319e04081d82e0::t_7f3487470b55e0 340-341,350-359
+  s_319e04081d82e0::t_31a0ad6392dd28 3,7,9,11,15,288-339,342-349,360-407
+  s_319e04081d82e0::t_c0b45f5bfce49d 408-409
+prices/src/prices/build.py
+  s_319e04081d82e0::t_2eda9e4dff6df6 17,38-94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "08bacc7c5b3dca6fbfdfc7e70b124b2e87beff13",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
