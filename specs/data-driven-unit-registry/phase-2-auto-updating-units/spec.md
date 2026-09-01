@@ -15,6 +15,13 @@ The compatibility claims in this document refer to the Python, JavaScript, and G
 Implementation starts by checking the Phase 2 branch's target object against this baseline and updating this prose spec
 for any intentional intervening behavior change; an unreviewed implementation drift does not silently become contract.
 
+**The first audited intervening target is Git object `af5190edb9afaf0a810b1e8a26d451f097c44072`.** _(from "The audited Phase 1 behavioral baseline is Git object `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa`.")_
+Relative to the behavioral baseline, that target contains one intentional change: OpenAI's long-context rates begin at
+exactly 272,000 input tokens. Provider data encodes the tier start as 271,999 because all three existing pricing engines
+select a tier when usage is greater than its start. Phase 2 preserves this target behavior without changing tier
+selection semantics. If the implementation target advances beyond this object, its additional changes require the same
+audit before implementation.
+
 **Changes: Phase 2 is limited to versioned publication and paired runtime state.**
 This is the complete change body. Phase 2 introduces the smallest new contract and lifecycle needed for wrapped
 unit/provider updates.
