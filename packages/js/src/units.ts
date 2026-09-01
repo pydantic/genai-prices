@@ -231,8 +231,48 @@ export function getActiveRegistry(): UnitRegistry {
   return generatedRegistry
 }
 
+export function validateUnitEvolution(previous: UnitRegistry, candidate: UnitRegistry): void {
+  const previousOrder = [...previous.getAllUsageKeys()]
+  const candidateOrder = [...candidate.getAllUsageKeys()]
+
+  for (const usageKey of previousOrder) {
+    if (candidate.getUnit(usageKey) === undefined) throw invalidData(`removed published unit: ${usageKey}`)
+  }
+
+  const candidateOldOrder = candidateOrder.filter((usageKey) => previous.getUnit(usageKey) !== undefined)
+  if (!arraysEqual(candidateOldOrder, previousOrder)) {
+    throw invalidData(`reordered published units: expected ${JSON.stringify(previousOrder)}, got ${JSON.stringify(candidateOldOrder)}`)
+  }
+  if (!arraysEqual(candidateOrder.slice(0, previousOrder.length), previousOrder)) {
+    const firstInserted = candidateOrder.find((usageKey) => previous.getUnit(usageKey) === undefined)
+    throw invalidData(`new unit ${String(firstInserted)} must be appended after all published units`)
+  }
+
+  for (const usageKey of previousOrder) {
+    const previousUnit = previous.getUnit(usageKey)
+    const candidateUnit = candidate.getUnit(usageKey)
+    if (!previousUnit || !candidateUnit) continue
+    if (!unitDefinitionsEqual(previousUnit, candidateUnit)) throw invalidData(`redefined published unit: ${usageKey}`)
+  }
+
+  for (const usageKey of candidateOrder.slice(previousOrder.length)) {
+    const newUnit = candidate.getUnit(usageKey)
+    if (!newUnit) continue
+    for (const oldUsageKey of previousOrder) {
+      const oldUnit = previous.getUnit(oldUsageKey)
+      if (oldUnit && isDimensionSubset(newUnit, oldUnit)) {
+        throw invalidData(`new unit ${usageKey} is an ancestor or intermediate of published unit ${oldUsageKey}`)
+      }
+    }
+  }
+}
+
 function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
   return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
+}
+
+function arraysEqual(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index])
 }
 
 function invalidData(message: string): Error {
@@ -277,6 +317,15 @@ function dimensionsCompatible(left: Readonly<Record<string, string>>, right: Rea
 
 function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
   return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
+}
+
+function unitDefinitionsEqual(left: UnitDef, right: UnitDef): boolean {
+  return (
+    left.usageKey === right.usageKey &&
+    left.priceKey === right.priceKey &&
+    left.per === right.per &&
+    dimensionKey(left.dimensions) === dimensionKey(right.dimensions)
+  )
 }
 
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {

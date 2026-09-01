@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
-import { getActiveRegistry, isCompatible, UnitRegistry } from '../units'
+import { getActiveRegistry, isCompatible, UnitRegistry, validateUnitEvolution } from '../units'
 
 const tokenUsageKeys = [
   'input_tokens',
@@ -457,3 +457,104 @@ describe('generated unit registry', () => {
     expect(getActiveRegistry().isReportedUsageKey('requests')).toBe(false)
   })
 })
+
+/* eslint-disable perfectionist/sort-objects -- Unit evolution tests intentionally exercise object-member order. */
+function publishedRegistry(): UnitRegistry {
+  return UnitRegistry.fromUntrusted({
+    events: { dimensions: { family: 'events' }, per: 1 },
+    special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+  })
+}
+
+describe('validateUnitEvolution', () => {
+  it('accepts appended descendants, intersections, and new families', () => {
+    const previous = publishedRegistry()
+    const candidate = UnitRegistry.fromUntrusted({
+      events: { dimensions: { family: 'events' }, per: 1 },
+      special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+      vip_events: { dimensions: { audience: 'vip', family: 'events' }, per: 1 },
+      vip_special_events: { dimensions: { audience: 'vip', family: 'events', kind: 'special' }, per: 1 },
+      seconds: { dimensions: { family: 'durations' }, per: 1 },
+    })
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).not.toThrow()
+    expect([...previous.reportedUsageKeys()]).toEqual(['events', 'special_events'])
+    expect([...candidate.reportedUsageKeys()].slice(-3)).toEqual(['vip_events', 'vip_special_events', 'seconds'])
+  })
+
+  it.each([
+    [UnitRegistry.fromUntrusted({ events: { dimensions: { family: 'events' }, per: 1 } }), 'removed published unit'],
+    [
+      UnitRegistry.fromUntrusted({
+        special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+        events: { dimensions: { family: 'events' }, per: 1 },
+      }),
+      'reordered published units',
+    ],
+    [
+      UnitRegistry.fromUntrusted({
+        events: { dimensions: { family: 'events' }, per: 1 },
+        seconds: { dimensions: { family: 'durations' }, per: 1 },
+        special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+      }),
+      'new unit seconds must be appended',
+    ],
+  ])('rejects removal, reorder, or insertion without mutation', (candidate, message) => {
+    const previous = publishedRegistry()
+    const previousOrder = [...previous.reportedUsageKeys()]
+    const candidateOrder = [...candidate.reportedUsageKeys()]
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).toThrow(`genai-prices: invalid data: ${message}`)
+    expect([...previous.reportedUsageKeys()]).toEqual(previousOrder)
+    expect([...candidate.reportedUsageKeys()]).toEqual(candidateOrder)
+  })
+
+  it.each([
+    { dimensions: { family: 'events', kind: 'original' }, per: 2, price_key: 'published_price' },
+    { dimensions: { family: 'events', kind: 'original' }, per: 1, price_key: 'replacement_price' },
+    { dimensions: { family: 'events', kind: 'corrected' }, per: 1, price_key: 'published_price' },
+  ])('rejects an old definition change', (candidateDefinition) => {
+    const previous = UnitRegistry.fromUntrusted({
+      published_events: {
+        dimensions: { family: 'events', kind: 'original' },
+        per: 1,
+        price_key: 'published_price',
+      },
+    })
+    const candidate = UnitRegistry.fromUntrusted({ published_events: candidateDefinition })
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).toThrow('genai-prices: invalid data: redefined published unit: published_events')
+    expect(previous.getUnit('published_events')?.per).toBe(1)
+    expect(candidate.getUnit('published_events')).toBeDefined()
+  })
+
+  it('allows additive correction descendants but rejects new ancestors', () => {
+    const previous = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+    })
+    const corrected = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+      corrected_events: { dimensions: { correction: 'v2', family: 'events', kind: 'mistaken' }, per: 1 },
+    })
+    expect(() => {
+      validateUnitEvolution(previous, corrected)
+    }).not.toThrow()
+
+    const ancestor = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+      events: { dimensions: { family: 'events' }, per: 1 },
+    })
+    expect(() => {
+      validateUnitEvolution(previous, ancestor)
+    }).toThrow('genai-prices: invalid data: new unit events is an ancestor or intermediate of published unit mistaken_events')
+    expect([...previous.reportedUsageKeys()]).toEqual(['mistaken_events'])
+    expect([...ancestor.reportedUsageKeys()]).toEqual(['mistaken_events', 'events'])
+  })
+})
+/* eslint-enable perfectionist/sort-objects */
