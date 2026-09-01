@@ -16,14 +16,16 @@ type unitDef struct {
 
 type unitRegistry struct {
 	units        map[UsageKey]*unitDef
+	order        []UsageKey
 	byPriceKey   map[string]*unitDef
 	byDimensions map[string]*unitDef
 	ancestors    map[UsageKey]map[UsageKey]struct{}
 }
 
-func newUnitRegistry(units map[UsageKey]unitDef) *unitRegistry {
+func newUnitRegistry(units map[UsageKey]unitDef, order []UsageKey) *unitRegistry {
 	registry := &unitRegistry{
 		units:        make(map[UsageKey]*unitDef, len(units)),
+		order:        append([]UsageKey(nil), order...),
 		byPriceKey:   make(map[string]*unitDef, len(units)),
 		byDimensions: make(map[string]*unitDef, len(units)),
 		ancestors:    make(map[UsageKey]map[UsageKey]struct{}, len(units)),

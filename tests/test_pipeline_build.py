@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import copy
 import json
 import subprocess
@@ -12,6 +13,8 @@ from jsonschema.validators import validator_for
 
 from genai_prices import types as runtime_types
 from prices import build, package_data
+from prices.export_validation import runtime_unit_projection
+from prices.go_identifiers import go_usage_key_identifier
 from prices.prices_types import Provider
 
 UNITS_YAML = """\
@@ -454,6 +457,7 @@ def test_package_data_generates_both_runtime_packages(monkeypatch: pytest.Monkey
         + '  per: 1000000\n'
         + '  price_key: input_5m_mtok\n'
         + '  dimensions: {family: tokens, direction: input, cache_ttl: 5m}\n'
+        + '  dimension_requirements: {cache_ttl: {family: tokens}}\n'
         + 'request__count:\n'
         + '  per: 1000\n'
         + '  dimensions: {family: request_counts}\n'
@@ -504,6 +508,26 @@ prices:
     assert (go_dir / 'internal' / 'data' / 'prices.json').is_file()
     assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']
 
+    expected_units = runtime_unit_projection(build.load_units())
+    python_content = (python_dir / 'data_units.py').read_text()
+    python_units = ast.literal_eval(python_content.split('unit_data: dict[str, Any] = ', 1)[1])
+    typescript_content = (javascript_dir / 'dataUnits.ts').read_text()
+    typescript_units = json.loads(
+        typescript_content.split('export const unitData: RawUnitsDict = ', 1)[1].removesuffix(';\n')
+    )
+    go_content = (go_dir / 'data_units.go').read_text()
+    go_order = go_content.split('var bundledUnitOrder = []UsageKey{', 1)[1].split('}', 1)[0]
+
+    assert python_units == expected_units
+    assert typescript_units == expected_units
+    assert list(python_units) == list(typescript_units) == list(expected_units)
+    assert [go_order.index(go_usage_key_identifier(key)) for key in expected_units] == sorted(
+        go_order.index(go_usage_key_identifier(key)) for key in expected_units
+    )
+    assert 'dimension_requirements' not in python_content
+    assert 'dimension_requirements' not in typescript_content
+    assert 'dimension_requirements' not in go_content
+
 
 def test_package_data_rejects_a_non_array_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     data_dir = tmp_path / 'prices' / 'new_data' / 'v2'
@@ -513,3 +537,37 @@ def test_package_data_rejects_a_non_array_payload(monkeypatch: pytest.MonkeyPatc
 
     with pytest.raises(ValueError, match='provider array'):
         package_data.package_data()
+
+
+def test_load_v3_payload_splits_and_preserves_publication_order(tmp_path: Path) -> None:
+    providers = [{'id': 'testing'}]
+    units = {
+        'z_events': {'per': 1_000, 'dimensions': {'family': 'z_events'}},
+        'a_events': {'per': 1_000, 'dimensions': {'family': 'a_events'}},
+    }
+    data_path = tmp_path / 'data.json'
+    data_path.write_text(json.dumps({'units': units, 'providers': providers}))
+
+    loaded_providers, loaded_units = package_data.load_v3_payload(data_path)
+
+    assert loaded_providers == providers
+    assert loaded_units == units
+    assert list(loaded_units) == ['z_events', 'a_events']
+
+
+@pytest.mark.parametrize(
+    ('payload', 'message'),
+    [
+        ([], 'v3 payload object'),
+        ({}, 'providers to be an array'),
+        ({'providers': {}, 'units': {}}, 'providers to be an array'),
+        ({'providers': []}, 'units to be an object'),
+        ({'providers': [], 'units': []}, 'units to be an object'),
+    ],
+)
+def test_load_v3_payload_rejects_invalid_roots(tmp_path: Path, payload: object, message: str) -> None:
+    data_path = tmp_path / 'data.json'
+    data_path.write_text(json.dumps(payload))
+
+    with pytest.raises(ValueError, match=message):
+        package_data.load_v3_payload(data_path)

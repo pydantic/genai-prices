@@ -37,7 +37,7 @@ func NewCalculatorFromJSON(data []byte) (*Calculator, error) {
 	for index := range decoded {
 		providers[index] = &decoded[index]
 	}
-	calculator := &Calculator{providers: providers, registry: newUnitRegistry(bundledUnits)}
+	calculator := &Calculator{providers: providers, registry: newUnitRegistry(bundledUnits, bundledUnitOrder)}
 	if err := calculator.validate(); err != nil {
 		return nil, fmt.Errorf("%w: %v", ErrInvalidData, err)
 	}

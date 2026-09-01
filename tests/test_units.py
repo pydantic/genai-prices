@@ -20,6 +20,7 @@ from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 from prices import package_data, prices_types as build_types
 from prices.build import load_units
 from prices.export_validation import (
+    RuntimeUnitProjection,
     normalize_conditional_implications,
     runtime_unit_projection,
     validate_runtime_unit_projection,
@@ -349,9 +350,9 @@ def test_generated_unit_modules_are_separate_from_provider_data() -> None:
 
     assert 'unit_data' not in python_provider_data
     assert 'unitData' not in typescript_provider_data
-    assert ast.literal_eval(
-        python_unit_data.split('unit_data: dict[str, Any] = ', 1)[1]
-    ) == package_data._runtime_unit_data(load_units())
+    assert ast.literal_eval(python_unit_data.split('unit_data: dict[str, Any] = ', 1)[1]) == runtime_unit_projection(
+        load_units()
+    )
     assert all(usage_key in typescript_unit_data for usage_key in load_units())
 
 
@@ -1032,12 +1033,11 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
 ) -> None:
     from genai_prices import types as runtime_types
 
-    units = {
+    units: RuntimeUnitProjection = {
         'transient_tokens': {
             'per': 1_000_000,
             'price_key': 'transient_mtok',
             'dimensions': {'family': 'transient', 'tier': 'fast'},
-            'dimension_requirements': {'tier': {'family': 'transient'}},
         },
     }
     provider = _build_provider_prices(
@@ -1105,7 +1105,7 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
         pass
 
     bundled_registry = _get_registry()
-    units = {
+    units: RuntimeUnitProjection = {
         'transient_tokens': {
             'per': 1_000_000,
             'price_key': 'transient_mtok',
@@ -1164,12 +1164,11 @@ def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
 def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    units = {
+    units: RuntimeUnitProjection = {
         'input_tokens': {
             'per': 1_000_000,
             'price_key': 'input_mtok',
             'dimensions': {'family': 'tokens', 'direction': 'input'},
-            'dimension_requirements': {'direction': {'family': 'tokens'}},
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
