@@ -255,6 +255,25 @@ def Provider._extract_usage_with_registry(
     registry: UnitRegistry,
 ) -> tuple[str | None, Usage]
 
+def UsageExtractor._extract_with_registry(
+    self,
+    response_data: Any,
+    registry: UnitRegistry,
+) -> tuple[str | None, Usage]
+
+@classmethod
+def Usage._from_values_with_registry(
+    cls,
+    values: Mapping[str, UsageValue | None],
+    registry: UnitRegistry,
+) -> Usage
+
+@classmethod
+def Usage._from_raw_with_registry(cls, obj: object, registry: UnitRegistry) -> Usage
+
+def Usage._reported_values_with_registry(self, registry: UnitRegistry) -> dict[str, UsageValue]
+def Usage._infer_missing_value_with_registry(self, usage_key: str, registry: UnitRegistry) -> UsageValue
+
 def ModelInfo._calc_price_with_registry(
     self,
     usage: AbstractUsage,
@@ -271,6 +290,12 @@ def ModelPrice._calc_price_with_registry(
     registry: UnitRegistry,
 ) -> CalcPrice
 ```
+
+`Provider._extract_usage_with_registry(...)` selects an extractor, and
+`UsageExtractor._extract_with_registry(...)` constructs its result through `Usage._from_values_with_registry(...)`, so a
+fetched-only destination survives snapshot extraction before activation. `Usage._from_raw_with_registry(...)`,
+`_reported_values_with_registry(...)`, and `_infer_missing_value_with_registry(...)` are the registry-explicit paths used
+by base pricing, decomposition, and snapshot calculation; the `Usage` object itself does not retain a registry.
 
 Public `Provider.extract_usage(...)`, `ModelInfo.calc_price(...)`, base `ModelPrice.calc_price(...)`, and standalone
 `Usage` operations capture `_get_active_registry()` once and delegate to registry-taking helpers. `DataSnapshot` methods
@@ -357,12 +382,15 @@ errors are `Error` instances beginning `genai-prices: invalid data:` and include
 **JavaScript promise identity remains the update-ordering mechanism.** _(implements "JavaScript keeps its current non-null update ordering.", "Asynchronous JavaScript failures reject with `Error`.", "JavaScript `null` remains a no-op.", "JavaScript's promise ordering applies to complete pairs.", "A stale rejected JavaScript attempt rejects only its own promise.")_
 Keep the existing private `setProviderData(data: ProviderDataPayload): void` and public
 `waitForUpdate(): Promise<Provider[]>` in `packages/js/src/api.ts`. Direct `null` returns before changing the current
-promise. A supplied promise becomes the current promise immediately; its resolved non-null value calls
-`decodeProviderData(...)` and may activate only while promise identity is still current. A `null` resolution keeps data
-unchanged, resolves that attempt to the active provider array, and does not restore the superseded promise. A stale
-fulfillment cannot activate. A stale rejection rejects its own previously returned promise and reaches the existing
-warning sink without replacing active data or the current wait promise. Synchronous values decode and activate before
-`setProviderData(...)` returns, so validation throws synchronously and leaves the earlier pair/promise intact.
+promise. A supplied promise becomes the current promise immediately. Its fulfillment handler first checks identity: a
+stale fulfillment skips decoding and resolves its own promise to the active provider array. A current `null` resolution
+also keeps data unchanged and resolves to that array without restoring the superseded promise. A current non-null value
+captures the active registry, calls `decodeProviderData(...)`, activates the pair, and resolves to its providers. A stale
+rejection rejects its own previously returned promise and reaches the existing warning sink without replacing active
+data or the current wait promise. A current rejection leaves data unchanged, rejects the promise captured by the caller,
+then restores later `waitForUpdate()` calls to a resolved active-provider promise. Synchronous values decode and activate
+before `setProviderData(...)` returns; success installs a resolved current promise, while validation failure throws and
+leaves the earlier pair/promise intact.
 
 **JavaScript pricing, lookup, and extraction pass a captured registry.** _(implements "JavaScript's public extraction entry point remains `extractUsage(...)`.", "JavaScript operations capture one applicable registry.")_
 `packages/js/src/api.ts::calcPrice(...)` and `findProvider(...)` capture one `RuntimeData`; the former passes its registry
