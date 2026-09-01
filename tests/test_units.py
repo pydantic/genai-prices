@@ -16,7 +16,7 @@ from genai_prices.types import (
     _collect_resolved_model_prices,
     _compute_registry_priced_counts,
 )
-from genai_prices.units import UnitDef, UnitRegistry, _get_registry, _validate_unit_evolution
+from genai_prices.units import UnitDef, UnitRegistry, _get_registry, _set_active_registry, _validate_unit_evolution
 from prices import package_data, prices_types as build_types
 from prices.build import load_units
 from prices.export_validation import (
@@ -794,6 +794,41 @@ def test_python_unit_evolution_rejects_new_ancestors_and_allows_additive_replace
     )
     with pytest.raises(ValueError, match='New unit events is an ancestor.*mistaken_events'):
         _validate_unit_evolution(previous, ancestor)
+
+
+def test_python_active_registry_replacement_and_restoration_preserve_bundled_identity() -> None:
+    bundled = _get_registry()
+    replacement = UnitRegistry._from_untrusted(
+        {'widgets': {'per': 1, 'price_key': 'widget_price', 'dimensions': {'family': 'widgets'}}}
+    )
+
+    try:
+        _set_active_registry(replacement)
+        assert _get_registry() is replacement
+    finally:
+        _set_active_registry(None)
+
+    assert _get_registry() is bundled
+
+
+def test_existing_python_usage_and_pricing_boundaries_observe_active_registry() -> None:
+    bundled = _get_registry()
+    replacement = UnitRegistry._from_untrusted(
+        {'widgets': {'per': 1, 'price_key': 'widget_price', 'dimensions': {'family': 'widgets'}}}
+    )
+
+    try:
+        _set_active_registry(replacement)
+        usage = Usage(widgets=5)
+        price = ModelPrice(widget_price=Decimal('2')).calc_price(usage)
+
+        assert usage == Usage(widgets=5)
+        assert repr(usage) == 'Usage(widgets=5)'
+        assert price == {'input_price': Decimal(0), 'output_price': Decimal(0), 'total_price': Decimal(10)}
+    finally:
+        _set_active_registry(None)
+
+    assert _get_registry() is bundled
 
 
 def _published_evolution_source() -> dict[str, dict[str, Any]]:

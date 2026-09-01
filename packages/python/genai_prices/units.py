@@ -331,11 +331,14 @@ def _validate_join_closedness(
 
 
 _bundled_registry: UnitRegistry | None = None
+_active_registry: UnitRegistry | None = None
 
 
 def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
     global _bundled_registry
 
+    if _active_registry is not None:
+        return _active_registry
     if _bundled_registry is not None:
         return _bundled_registry
 
@@ -343,3 +346,9 @@ def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
 
     _bundled_registry = UnitRegistry(unit_data)
     return _bundled_registry
+
+
+def _set_active_registry(registry: UnitRegistry | None) -> None:  # pyright: ignore[reportUnusedFunction]
+    """Select a replacement registry, or restore lazy bundled-registry lookup."""
+    global _active_registry
+    _active_registry = registry
