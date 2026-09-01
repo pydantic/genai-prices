@@ -165,6 +165,8 @@ which may be missing recently released models. If you need fresh prices before c
 On platforms with `os.register_at_fork`, an updater started before `os.fork()` restarts in the child while preserving
 its active ownership claims. This supports preloaded process servers such as gunicorn. Spawned processes and platforms
 without `register_at_fork` have independent interpreter state and should opt in during normal child initialization.
+An overridden `fetch()` may depend on application locks that cannot survive a multithreaded fork, so custom-fetch
+updaters are reset to idle in the child and must be started again during child initialization.
 
 You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
 `wait_prices_updated_sync`:

@@ -40,6 +40,7 @@ class _Config(NamedTuple):
 _lock = threading.Lock()
 _worker: _Worker | None = None
 _fork_hooks_registered = False
+_fork_state = threading.local()
 
 
 def _register_fork_hooks() -> None:
@@ -57,21 +58,56 @@ def _register_fork_hooks() -> None:
 
 
 def _fork_before() -> None:
-    # Serialize fork with start()/stop(), so the child inherits a complete ownership state.
-    _lock.acquire()
+    worker = _worker
+    from_worker = worker is not None and threading.current_thread() is worker.thread
+    _fork_state.from_worker = from_worker
+    if not from_worker:
+        # Serialize ordinary forks with start()/stop(), so the child inherits complete ownership.
+        _lock.acquire()
 
 
 def _fork_after_in_parent() -> None:
-    _lock.release()
+    if not getattr(_fork_state, 'from_worker', False):
+        _lock.release()
+    _fork_state.from_worker = False
+
+
+def _invalidate_inherited_worker(worker: _Worker) -> None:
+    global _worker
+
+    def cleanup() -> None:
+        global _worker
+
+        worker.invalidate_after_fork()
+        data_snapshot.set_custom_snapshot(None)
+        _worker = None
+
+    _finish_despite_interruption(cleanup)
 
 
 def _fork_after_in_child() -> None:
     global _lock, _worker
 
+    from_worker = getattr(_fork_state, 'from_worker', False)
+    _fork_state.from_worker = False
     # The inherited lock is held by the pre-fork callback and cannot safely be reused.
     _lock = threading.Lock()
     worker = _worker
     if worker is None:
+        return
+
+    if from_worker:
+        # The current _run() survives a worker-origin fork. Stop it instead of starting a second
+        # loop, and never acquire a lock that a vanished stop() thread may have owned.
+        _invalidate_inherited_worker(worker)
+        _log(logger.warning, 'Disabled the genai-prices background updater after it forked from its worker')
+        return
+
+    if not worker.restart_after_fork:
+        # An overridden fetch may close over application locks held by vanished threads. Only the
+        # built-in fetch has lifecycle state we can replace completely and safely.
+        _invalidate_inherited_worker(worker)
+        _log(logger.warning, 'Custom genai-prices updater fetch must be restarted explicitly after fork')
         return
 
     try:
@@ -79,14 +115,7 @@ def _fork_after_in_child() -> None:
     except BaseException:
         # A public instance may still point at this worker. Make that claim inert; start(),
         # stop(), and wait() compare it with the process-global worker before using it.
-        def cleanup() -> None:
-            global _worker
-
-            worker.invalidate_after_fork()
-            data_snapshot.set_custom_snapshot(None)
-            _worker = None
-
-        _finish_despite_interruption(cleanup)
+        _invalidate_inherited_worker(worker)
         _log(logger.exception, 'Failed to restart the genai-prices background updater after fork')
 
 
@@ -310,12 +339,14 @@ class _Worker:
     def __init__(self, config: _Config, fetch: Callable[[], data_snapshot.DataSnapshot | None]) -> None:
         self.config = config
         if getattr(fetch, '__func__', None) is UpdatePrices.fetch:
+            self.restart_after_fork = True
             # The default fetch uses the frozen launch configuration, not the owner's live
             # attributes; an overridden fetch stays in full control of what it reads.
             self.fetch: Callable[[], data_snapshot.DataSnapshot | None] = lambda: _fetch_prices(
                 config.url, config.request_timeout
             )
         else:
+            self.restart_after_fork = False
             self.fetch = fetch
         self.claims = 0
         self.dead = False
