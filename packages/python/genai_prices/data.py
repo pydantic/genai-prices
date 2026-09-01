@@ -16480,7 +16480,7 @@ providers: list[Provider] = [
                 model_path='model',
             ),
             UsageExtractor(
-                root=['response', 'usage'],
+                root='usage',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(

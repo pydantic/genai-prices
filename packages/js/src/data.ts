@@ -28064,7 +28064,7 @@ export const data: Provider[] = [
       },
       {
         api_flavor: 'realtime',
-        root: ['response', 'usage'],
+        root: 'usage',
         model_path: 'model',
         mappings: [
           {
