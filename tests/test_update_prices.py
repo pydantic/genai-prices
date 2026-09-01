@@ -21,7 +21,7 @@ from genai_prices import (
     wait_prices_updated_sync,
 )
 from genai_prices.data_units import unit_data
-from genai_prices.types import _providers_from_raw
+from genai_prices.types import ModelPrice, UsageExtractor, UsageExtractorMapping, _providers_from_raw
 from genai_prices.units import UnitRegistry, _get_registry
 
 pytestmark = pytest.mark.anyio
@@ -308,6 +308,69 @@ def test_update_prices_activation_rechecks_append_only_evolution(monkeypatch: py
             data_snapshot.set_custom_snapshot(fetched)
         assert _get_registry() is intervening_registry
         assert data_snapshot.get_snapshot() is intervening_snapshot
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+    assert _get_registry() is bundled_registry
+
+
+def test_update_prices_fetch_override_reapplies_lazy_customizations_on_each_refresh(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundled_registry = _get_registry()
+    _mock_update_prices_get(monkeypatch, _wrapped_provider_data())
+
+    class CustomUpdatePrices(UpdatePrices):
+        fetched_snapshots: list[data_snapshot.DataSnapshot]
+
+        def __init__(self) -> None:
+            super().__init__(url='https://example.test/prices.json')
+            self.fetched_snapshots = []
+
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            fetched = super().fetch()
+            assert fetched is not None
+            provider = fetched.providers[0]
+            model_prices = provider.models[0].prices
+            assert isinstance(model_prices, ModelPrice)
+            model_prices.remote_event_price = 'invalid custom price'  # pyright: ignore[reportAttributeAccessIssue]
+            provider.extractors = [
+                UsageExtractor(
+                    root='usage',
+                    mappings=[
+                        UsageExtractorMapping(path='count', dest='remote_events'),
+                        UsageExtractorMapping(path='custom_count', dest='custom_events', required=False),
+                    ],
+                )
+            ]
+            self.fetched_snapshots.append(fetched)
+            return fetched
+
+    updater = CustomUpdatePrices()
+    try:
+        for refresh_index in range(2):
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter('always')
+                updater._update_prices()
+            assert caught == []
+
+            active_snapshot = data_snapshot.get_snapshot()
+            assert active_snapshot is updater.fetched_snapshots[refresh_index]
+            assert active_snapshot._activation_registry is _get_registry()
+            assert active_snapshot._activation_registry is not None
+            assert 'remote_events' in active_snapshot._activation_registry.units
+            assert Usage(remote_events=1).remote_events == 1
+
+            with pytest.raises(ValueError, match='Invalid price value for remote_event_price'):
+                active_snapshot.calc(Usage(remote_events=1), 'remote-model', 'remote', None, None)
+            with pytest.warns(UserWarning, match='Unsupported extractor destination.*custom_events'):
+                extracted = active_snapshot.extract_usage(
+                    {'model': 'remote-model', 'usage': {'count': 4, 'custom_count': 5}},
+                    provider_id='remote',
+                )
+            assert extracted.usage == Usage(remote_events=4)
+
+        assert updater.fetched_snapshots[0] is not updater.fetched_snapshots[1]
     finally:
         data_snapshot.set_custom_snapshot(None)
 
