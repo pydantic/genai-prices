@@ -19,7 +19,11 @@ from genai_prices.types import (
 from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 from prices import package_data, prices_types as build_types
 from prices.build import load_units
-from prices.export_validation import validate_units
+from prices.export_validation import (
+    normalize_conditional_implications,
+    runtime_unit_projection,
+    validate_units,
+)
 
 TOKEN_USAGE_KEYS = {
     'input_tokens',
@@ -406,6 +410,105 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
 
     with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
         cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
+
+
+def test_runtime_unit_projection_is_ordered_canonical_and_runtime_only() -> None:
+    projection = runtime_unit_projection(
+        {
+            'matching_key': {
+                'per': 1,
+                'price_key': 'matching_key',
+                'dimensions': {'family': 'events'},
+                'dimension_requirements': {'kind': {'family': 'events'}},
+                'source_annotation': 'publisher only',
+            },
+            'different_key': {
+                'per': 1,
+                'price_key': 'different_price',
+                'dimensions': {'family': 'events', 'kind': 'different'},
+            },
+        }
+    )
+
+    assert list(projection) == ['matching_key', 'different_key']
+    assert projection == {
+        'matching_key': {'per': 1, 'dimensions': {'family': 'events'}},
+        'different_key': {
+            'per': 1,
+            'price_key': 'different_price',
+            'dimensions': {'family': 'events', 'kind': 'different'},
+        },
+    }
+
+
+def test_normalize_conditional_implications_is_transitive_and_canonical() -> None:
+    factored = {
+        'special_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'category': 'special', 'mode': 'batch'},
+            'dimension_requirements': {
+                'mode': {'category': 'special'},
+                'category': {'family': 'events'},
+            },
+        }
+    }
+    flattened_and_reordered = {
+        'special_events': {
+            'dimensions': {'mode': 'batch', 'category': 'special', 'family': 'events'},
+            'dimension_requirements': {
+                'category': {'family': 'events'},
+                'mode': {'family': 'events', 'category': 'special'},
+            },
+            'per': 1,
+        }
+    }
+
+    expected = {
+        'special_events': (
+            ('category', 'family', 'events'),
+            ('mode', 'category', 'special'),
+            ('mode', 'family', 'events'),
+        )
+    }
+    assert normalize_conditional_implications(factored) == expected
+    assert normalize_conditional_implications(flattened_and_reordered) == expected
+
+
+def test_normalize_conditional_implications_tolerates_conflict_free_cycles() -> None:
+    normalized = normalize_conditional_implications(
+        {
+            'cyclic_events': {
+                'per': 1,
+                'dimensions': {'family': 'events', 'a': 'on', 'b': 'set'},
+                'dimension_requirements': {'a': {'b': 'set'}, 'b': {'a': 'on'}},
+            }
+        }
+    )
+
+    assert normalized == {
+        'cyclic_events': (
+            ('a', 'a', 'on'),
+            ('a', 'b', 'set'),
+            ('b', 'a', 'on'),
+            ('b', 'b', 'set'),
+        )
+    }
+
+
+def test_normalize_conditional_implications_rejects_conflicts() -> None:
+    with pytest.raises(ValueError, match='Conflicting implied dimension assignment.*tier=two.*tier=one'):
+        normalize_conditional_implications(
+            {
+                'conflicting_events': {
+                    'per': 1,
+                    'dimensions': {'family': 'events', 'mode': 'batch', 'category': 'special', 'tier': 'one'},
+                    'dimension_requirements': {
+                        'mode': {'category': 'special', 'tier': 'one'},
+                        'category': {'tier': 'two'},
+                    },
+                }
+            }
+        )
 
 
 @pytest.mark.parametrize(

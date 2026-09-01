@@ -10,6 +10,10 @@ from genai_prices.units import UnitDef, UnitRegistry
 
 from .prices_types import Provider
 
+RuntimeUnitProjection = dict[str, dict[str, object]]
+ImplicationTriple = tuple[str, str, str]
+NormalizedImplications = dict[str, tuple[ImplicationTriple, ...]]
+
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
 _PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 _JAVASCRIPT_KEYWORDS = frozenset(
@@ -74,7 +78,6 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
     price_keys: set[str] = set()
     per_by_family: dict[str, int] = {}
     dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
-    dimension_requirements_by_usage_key: dict[str, dict[str, dict[str, str]]] = {}
 
     for usage_key, raw_unit in raw_units.items():
         _validate_public_key('usage', usage_key)
@@ -96,10 +99,6 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
 
-        dimension_requirements = _parse_dimension_requirements(usage_key, raw_unit.get('dimension_requirements', {}))
-        _validate_dimension_requirements(usage_key, dimensions, dimension_requirements)
-        dimension_requirements_by_usage_key[usage_key] = dimension_requirements
-
         existing_per = per_by_family.setdefault(family_value, per)
         if existing_per != per:
             raise ValueError(
@@ -111,10 +110,37 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
             raise ValueError(f'Duplicate unit dimensions: {existing_usage_key} and {usage_key}')
         dimension_sets[dimension_set] = usage_key
 
-    registry = UnitRegistry(raw_units)
+    normalized_implications = normalize_conditional_implications(raw_units)
+    dimension_requirements_by_usage_key = _requirements_from_normalized_implications(normalized_implications)
+    registry = UnitRegistry(runtime_unit_projection(raw_units))
     _validate_interval_closure(registry, dimension_requirements_by_usage_key)
     _validate_join_closedness(registry)
     return registry
+
+
+def runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object]]) -> RuntimeUnitProjection:
+    """Return the ordered, runtime-semantic projection of source unit data."""
+    projection: RuntimeUnitProjection = {}
+    for usage_key, raw_unit in raw_units.items():
+        runtime_unit: dict[str, object] = {'per': raw_unit['per']}
+        price_key = raw_unit.get('price_key', usage_key)
+        if price_key != usage_key:
+            runtime_unit['price_key'] = price_key
+        runtime_unit['dimensions'] = dict(cast(Mapping[str, object], raw_unit.get('dimensions', {})))
+        projection[usage_key] = runtime_unit
+    return projection
+
+
+def normalize_conditional_implications(
+    raw_units: Mapping[str, Mapping[str, object]],
+) -> NormalizedImplications:
+    """Normalize each source unit's conditional rules to canonical transitive triples."""
+    normalized: NormalizedImplications = {}
+    for usage_key, raw_unit in raw_units.items():
+        dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
+        requirements = _parse_dimension_requirements(usage_key, raw_unit.get('dimension_requirements', {}))
+        normalized[usage_key] = _normalize_unit_implications(usage_key, dimensions, requirements)
+    return normalized
 
 
 def validate_export_payload(providers: list[Provider], units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
@@ -183,6 +209,84 @@ def _validate_dimension_requirements(
                 f'{key}={value}' for key, value in sorted(required_dimensions.items() - dimensions.items())
             )
             raise ValueError(f'Unsatisfied dimension requirement for unit {usage_key}: {missing}')
+
+
+def _normalize_unit_implications(
+    usage_key: str,
+    dimensions: Mapping[str, str],
+    dimension_requirements: Mapping[str, Mapping[str, str]],
+) -> tuple[ImplicationTriple, ...]:
+    for conditional_key in dimension_requirements:
+        if conditional_key not in dimensions:
+            raise ValueError(f'Dimension requirement trigger {conditional_key} is not a dimension of unit {usage_key}')
+
+    _expand_implied_assignments(usage_key, dimension_requirements, dimension_requirements)
+    _validate_dimension_requirements(usage_key, dimensions, dimension_requirements)
+
+    triples: set[ImplicationTriple] = set()
+    for root_trigger in dimension_requirements:
+        assignments = _expand_implied_assignments(
+            usage_key,
+            {root_trigger: dimension_requirements[root_trigger]},
+            dimension_requirements,
+        )
+        for required_key, required_value in assignments.items():
+            triples.add((root_trigger, required_key, required_value))
+
+    missing_assignments = {
+        (required_key, required_value)
+        for _, required_key, required_value in triples
+        if dimensions.get(required_key) != required_value
+    }
+    if missing_assignments:
+        missing = ', '.join(f'{key}={value}' for key, value in sorted(missing_assignments))
+        raise ValueError(f'Unsatisfied dimension requirement for unit {usage_key}: {missing}')
+
+    return tuple(sorted(triples))
+
+
+def _expand_implied_assignments(
+    usage_key: str,
+    initial_requirements: Mapping[str, Mapping[str, str]],
+    all_requirements: Mapping[str, Mapping[str, str]],
+) -> dict[str, str]:
+    pending = list(initial_requirements)
+    expanded: set[str] = set()
+    assignments: dict[str, str] = {}
+
+    while pending:
+        trigger = pending.pop()
+        if trigger in expanded:
+            continue
+        expanded.add(trigger)
+
+        required_dimensions = (
+            initial_requirements[trigger] if trigger in initial_requirements else all_requirements.get(trigger, {})
+        )
+        for required_key, required_value in required_dimensions.items():
+            existing_value = assignments.get(required_key)
+            if existing_value is not None and existing_value != required_value:
+                raise ValueError(
+                    f'Conflicting implied dimension assignment for unit {usage_key}: '
+                    f'{required_key}={existing_value} and {required_key}={required_value}'
+                )
+            assignments[required_key] = required_value
+            if required_key in all_requirements:
+                pending.append(required_key)
+
+    return assignments
+
+
+def _requirements_from_normalized_implications(
+    normalized_implications: NormalizedImplications,
+) -> dict[str, dict[str, dict[str, str]]]:
+    requirements_by_usage_key: dict[str, dict[str, dict[str, str]]] = {}
+    for usage_key, implications in normalized_implications.items():
+        requirements: dict[str, dict[str, str]] = {}
+        for trigger, required_key, required_value in implications:
+            requirements.setdefault(trigger, {})[required_key] = required_value
+        requirements_by_usage_key[usage_key] = requirements
+    return requirements_by_usage_key
 
 
 def _validate_interval_closure(
