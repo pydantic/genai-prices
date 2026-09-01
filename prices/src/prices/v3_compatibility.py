@@ -1,7 +1,25 @@
 from __future__ import annotations
 
+import argparse
+import json
+import subprocess
 from collections.abc import Mapping, Sequence
 from typing import Never, TypeAlias, cast
+
+import jsonschema
+import ruamel.yaml
+from jsonschema.validators import validator_for
+
+from .export_validation import (
+    NormalizedImplications,
+    RuntimeUnitProjection,
+    normalize_conditional_implications,
+    runtime_unit_projection,
+    validate_runtime_unit_projection,
+    validate_unit_evolution,
+    validate_units,
+)
+from .utils import root_dir
 
 JsonData: TypeAlias = 'None | bool | int | float | str | list[JsonData] | dict[str, JsonData]'
 
@@ -32,6 +50,204 @@ _STRUCTURAL_KEYS = (
     | _UPPER_BOUNDS
     | _EXACT_CONSTRAINTS
 )
+
+_V3_DATA_PATH = 'prices/new_data/v3/data.json'
+_V3_SCHEMA_PATH = 'prices/new_data/v3/data.schema.json'
+_SOURCE_UNITS_PATH = 'prices/units.yml'
+
+
+def validate_v3_compatibility(
+    target_oid: str,
+    *,
+    candidate_runtime_units: RuntimeUnitProjection,
+    candidate_implications: NormalizedImplications,
+    candidate_schema: JsonData,
+    candidate_payload: JsonData,
+) -> None:
+    """Compare an in-memory v3 candidate with one exact target Git object."""
+    resolved_target_oid = _resolve_target_oid(target_oid)
+    print(f'Validating v3 compatibility against target {resolved_target_oid}')
+    _validate_target_is_ancestor(resolved_target_oid)
+
+    target_source_units = _load_target_source_units(resolved_target_oid)
+    validate_units(target_source_units)
+    target_source_projection = runtime_unit_projection(target_source_units)
+    target_implications = normalize_conditional_implications(target_source_units)
+    has_v3_data = _target_path_exists(resolved_target_oid, _V3_DATA_PATH)
+    has_v3_schema = _target_path_exists(resolved_target_oid, _V3_SCHEMA_PATH)
+    if has_v3_data != has_v3_schema:
+        raise ValueError(f'Invalid v3 compatibility baseline at {resolved_target_oid}: mixed v3 artifacts')
+
+    previous_schema: JsonData | None = None
+    if has_v3_data:
+        previous_payload = _load_target_json(resolved_target_oid, _V3_DATA_PATH)
+        previous_schema = _load_target_json(resolved_target_oid, _V3_SCHEMA_PATH)
+        previous_runtime_units = _payload_runtime_units(previous_payload, 'target v3 payload')
+        _validate_payload(previous_schema, previous_payload, 'target v3 payload')
+        if previous_runtime_units != target_source_projection:
+            raise ValueError(
+                f'Invalid v3 compatibility baseline at {resolved_target_oid}: '
+                'published units do not match target source units'
+            )
+    else:
+        previous_runtime_units = target_source_projection
+
+    validate_runtime_unit_projection(candidate_runtime_units)
+    candidate_payload_units = _payload_runtime_units(candidate_payload, 'candidate v3 payload')
+    if candidate_payload_units != runtime_unit_projection(candidate_runtime_units):
+        raise ValueError('Invalid candidate v3 payload: units do not match the supplied in-memory candidate')
+    _validate_payload(candidate_schema, candidate_payload, 'candidate v3 payload')
+
+    if previous_schema is not None:
+        validate_v3_schema_evolution(previous_schema, candidate_schema)
+
+    candidate_source_units = _source_units_from_projections(candidate_runtime_units, candidate_implications)
+    validate_unit_evolution(previous_runtime_units, target_implications, candidate_source_units)
+
+
+def main() -> None:
+    """Run the target-bound compatibility check without writing build artifacts."""
+    parser = argparse.ArgumentParser(description='Validate an in-memory v3 candidate against an exact Git target')
+    parser.add_argument('target_oid', help='Git commit or ref to use as the compatibility target')
+    args = parser.parse_args()
+
+    from .build import load_providers, load_units, prepare_providers_for_export, prepare_v3_data
+
+    raw_units = load_units()
+    providers = load_providers()
+    prepare_providers_for_export(providers)
+    candidate_schema, candidate_payload = prepare_v3_data(providers, raw_units)
+    validate_v3_compatibility(
+        args.target_oid,
+        candidate_runtime_units=runtime_unit_projection(raw_units),
+        candidate_implications=normalize_conditional_implications(raw_units),
+        candidate_schema=candidate_schema,
+        candidate_payload=candidate_payload,
+    )
+
+
+def _resolve_target_oid(target_oid: str) -> str:
+    result = subprocess.run(
+        ['git', 'rev-parse', '--verify', f'{target_oid}^{{commit}}'],
+        cwd=root_dir,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    resolved = result.stdout.strip()
+    if result.returncode != 0 or not resolved:
+        raise ValueError(f'Invalid v3 compatibility target {target_oid!r}: expected a Git commit')
+    return resolved
+
+
+def _validate_target_is_ancestor(target_oid: str) -> None:
+    result = subprocess.run(
+        ['git', 'merge-base', '--is-ancestor', target_oid, 'HEAD'],
+        cwd=root_dir,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise ValueError(f'Stale v3 compatibility target {target_oid}: target is not an ancestor of HEAD')
+
+
+def _target_path_exists(target_oid: str, relative_path: str) -> bool:
+    result = subprocess.run(
+        ['git', 'cat-file', '-e', f'{target_oid}:{relative_path}'],
+        cwd=root_dir,
+        check=False,
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def _git_show(target_oid: str, relative_path: str) -> bytes:
+    result = subprocess.run(
+        ['git', 'show', f'{target_oid}:{relative_path}'],
+        cwd=root_dir,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise ValueError(f'Invalid v3 compatibility baseline at {target_oid}: missing {relative_path}')
+    return result.stdout
+
+
+def _load_target_json(target_oid: str, relative_path: str) -> JsonData:
+    try:
+        return cast(JsonData, json.loads(_git_show(target_oid, relative_path)))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f'Invalid v3 compatibility baseline at {target_oid}: malformed {relative_path}') from exc
+
+
+def _load_target_source_units(target_oid: str) -> dict[str, dict[str, object]]:
+    raw_source = _git_show(target_oid, _SOURCE_UNITS_PATH)
+    yaml = ruamel.yaml.YAML(typ='safe')
+    try:
+        loaded = cast(object, yaml.load(raw_source))  # pyright: ignore[reportUnknownMemberType]
+    except ruamel.yaml.YAMLError as exc:
+        raise ValueError(f'Invalid v3 compatibility baseline at {target_oid}: malformed {_SOURCE_UNITS_PATH}') from exc
+    mapping = _schema_mapping(loaded, f'target {_SOURCE_UNITS_PATH}')
+    return {
+        usage_key: dict(_schema_mapping(raw_unit, f'target unit {usage_key}'))
+        for usage_key, raw_unit in mapping.items()
+    }
+
+
+def _payload_runtime_units(payload: JsonData, label: str) -> RuntimeUnitProjection:
+    payload_mapping = _schema_mapping(payload, label)
+    raw_units = payload_mapping.get('units')
+    if not isinstance(raw_units, Mapping):
+        raise ValueError(f'Invalid {label}: expected an object units member')
+    units = {
+        usage_key: dict(_schema_mapping(raw_unit, f'{label} unit {usage_key}'))
+        for usage_key, raw_unit in _schema_mapping(raw_units, f'{label} units').items()
+    }
+    registry = validate_runtime_unit_projection(units)
+    return runtime_unit_projection(
+        {
+            usage_key: {
+                'per': unit.per,
+                **({'price_key': unit.price_key} if unit.price_key != usage_key else {}),
+                'dimensions': dict(unit.dimensions),
+            }
+            for usage_key, unit in registry.units.items()
+        }
+    )
+
+
+def _validate_payload(schema: JsonData, payload: JsonData, label: str) -> None:
+    schema_mapping = _schema_mapping(schema, f'{label} schema')
+    schema_dict = dict(schema_mapping)
+    try:
+        validator_cls = validator_for(schema_dict, default=jsonschema.Draft202012Validator)
+        validator_cls.check_schema(schema_dict)
+        validator_cls(schema_dict).validate(payload)
+    except jsonschema.SchemaError as exc:
+        raise ValueError(f'Invalid {label} schema: {exc.message}') from exc
+    except jsonschema.ValidationError as exc:
+        raise ValueError(f'Invalid {label}: {exc.message}') from exc
+
+
+def _source_units_from_projections(
+    runtime_units: RuntimeUnitProjection,
+    normalized_implications: NormalizedImplications,
+) -> dict[str, dict[str, object]]:
+    if set(normalized_implications) != set(runtime_units):
+        raise ValueError('Invalid candidate unit implications: keys do not match candidate runtime units')
+    source_units: dict[str, dict[str, object]] = {}
+    for usage_key, runtime_unit in runtime_units.items():
+        source_unit = dict(runtime_unit)
+        requirements: dict[str, dict[str, str]] = {}
+        for trigger, required_key, required_value in normalized_implications[usage_key]:
+            existing_value = requirements.setdefault(trigger, {}).get(required_key)
+            if existing_value is not None and existing_value != required_value:
+                raise ValueError(f'Invalid candidate unit implications for {usage_key}: conflicting {required_key}')
+            requirements[trigger][required_key] = required_value
+        if requirements:
+            source_unit['dimension_requirements'] = requirements
+        source_units[usage_key] = source_unit
+    return source_units
 
 
 def validate_v3_schema_evolution(previous_schema: JsonData, candidate_schema: JsonData) -> None:
@@ -439,3 +655,7 @@ def _types_overlap(left: str, right: str) -> bool:
 
 def _incompatible(path: str, reason: str) -> Never:
     raise ValueError(f'Incompatible v3 schema at {path}: {reason}')
+
+
+if __name__ == '__main__':  # pragma: no cover - exercised through the installed module command
+    main()

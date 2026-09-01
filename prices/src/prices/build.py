@@ -95,6 +95,21 @@ def prepare_v3_data(providers: list[Provider], raw_units: dict[str, Any]) -> tup
 def build():
     """Validate the publication inputs and build the provider schema and v2 data."""
     units = load_units()
+    providers = load_providers()
+    prepare_providers_for_export(providers)
+    validate_export_payload(providers, units)
+
+    schema_json_path = package_dir / 'providers' / '.schema.json'
+    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
+    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+    write_prices(providers, units, 'new_data/v2/data.json')
+    for provider in providers:
+        provider.exclude_free()
+    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
+
+
+def load_providers() -> list[Provider]:
+    """Load and validate provider YAML without applying export-time mutations."""
     providers: list[Provider] = []
 
     providers_dir = package_dir / 'providers'
@@ -113,16 +128,7 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    prepare_providers_for_export(providers)
-    validate_export_payload(providers, units)
-
-    schema_json_path = package_dir / 'providers' / '.schema.json'
-    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
-    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
-    write_prices(providers, units, 'new_data/v2/data.json')
-    for provider in providers:
-        provider.exclude_free()
-    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
+    return providers
 
 
 def prepare_providers_for_export(providers: list[Provider]) -> None:
