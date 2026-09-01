@@ -2,6 +2,75 @@ import type { RawUnitsDict, UnitDef } from './types'
 
 import { unitData } from './dataUnits'
 
+const invalidDataPrefix = 'genai-prices: invalid data:'
+const publicKeyPattern = /^[A-Za-z][A-Za-z0-9_]*$/
+const reservedPublicKeys = new Set([
+  '__proto__',
+  'arguments',
+  'await',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'constructor',
+  'continue',
+  'debugger',
+  'def',
+  'default',
+  'del',
+  'delete',
+  'do',
+  'elif',
+  'else',
+  'enum',
+  'eval',
+  'except',
+  'export',
+  'extends',
+  'false',
+  'finally',
+  'for',
+  'from',
+  'function',
+  'global',
+  'if',
+  'implements',
+  'import',
+  'in',
+  'instanceof',
+  'interface',
+  'is',
+  'lambda',
+  'let',
+  'new',
+  'nonlocal',
+  'not',
+  'null',
+  'or',
+  'package',
+  'pass',
+  'private',
+  'protected',
+  'prototype',
+  'public',
+  'raise',
+  'return',
+  'static',
+  'super',
+  'switch',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'typeof',
+  'var',
+  'void',
+  'while',
+  'with',
+  'yield',
+])
+
 export class UnitRegistry {
   readonly #allPriceKeys: Set<string>
   readonly #allUsageKeys: Set<string>
@@ -51,6 +120,73 @@ export class UnitRegistry {
     }
   }
 
+  static fromUntrusted(rawUnits: unknown): UnitRegistry {
+    if (!isObject(rawUnits)) throw invalidData('units must be an object')
+
+    const canonicalUnits: RawUnitsDict = {}
+    const usageKeyByDimensions = new Map<string, string>()
+    const usageKeyByPriceKey = new Map<string, string>()
+    const perByFamily = new Map<string, number>()
+
+    for (const [usageKey, rawUnitValue] of Object.entries(rawUnits)) {
+      validatePublicKey('usage', usageKey)
+      if (!isObject(rawUnitValue)) throw invalidData(`unit ${JSON.stringify(usageKey)} must be an object`)
+      if (!hasOwn(rawUnitValue, 'per')) throw invalidData(`unit ${JSON.stringify(usageKey)} is missing per`)
+
+      const per = rawUnitValue.per
+      if (typeof per !== 'number' || !Number.isSafeInteger(per) || per < 1) {
+        throw invalidData(`unit ${JSON.stringify(usageKey)} per must be a safe positive integer, got ${JSON.stringify(per)}`)
+      }
+
+      let priceKey = usageKey
+      if (hasOwn(rawUnitValue, 'price_key')) {
+        if (typeof rawUnitValue.price_key !== 'string') {
+          throw invalidData(`unit ${JSON.stringify(usageKey)} price_key must be a string`)
+        }
+        priceKey = rawUnitValue.price_key
+      }
+      validatePublicKey('price', priceKey)
+
+      if (!hasOwn(rawUnitValue, 'dimensions') || !isObject(rawUnitValue.dimensions)) {
+        throw invalidData(`unit ${JSON.stringify(usageKey)} dimensions must be an object`)
+      }
+      const dimensions: Record<string, string> = {}
+      for (const [key, value] of Object.entries(rawUnitValue.dimensions)) {
+        if (key.length === 0 || typeof value !== 'string' || value.length === 0) {
+          throw invalidData(`unit ${JSON.stringify(usageKey)} dimensions must use non-empty string keys and values`)
+        }
+        dimensions[key] = value
+      }
+      const family = dimensions.family
+      if (family === undefined) throw invalidData(`unit ${JSON.stringify(usageKey)} is missing the family dimension`)
+
+      const previousUsageKey = usageKeyByPriceKey.get(priceKey)
+      if (previousUsageKey !== undefined) {
+        throw invalidData(`units ${JSON.stringify(previousUsageKey)} and ${JSON.stringify(usageKey)} use price key ${priceKey}`)
+      }
+      usageKeyByPriceKey.set(priceKey, usageKey)
+
+      const dimensionsKey = dimensionKey(dimensions)
+      const previousDimensionsUsageKey = usageKeyByDimensions.get(dimensionsKey)
+      if (previousDimensionsUsageKey !== undefined) {
+        throw invalidData(`units ${JSON.stringify(previousDimensionsUsageKey)} and ${JSON.stringify(usageKey)} use identical dimensions`)
+      }
+      usageKeyByDimensions.set(dimensionsKey, usageKey)
+
+      const previousPer = perByFamily.get(family)
+      if (previousPer !== undefined && previousPer !== per) {
+        throw invalidData(
+          `unit ${JSON.stringify(usageKey)} per ${String(per)} differs from ${String(previousPer)} for family ${JSON.stringify(family)}`
+        )
+      }
+      perByFamily.set(family, per)
+      canonicalUnits[usageKey] = { dimensions, per, ...(priceKey === usageKey ? {} : { price_key: priceKey }) }
+    }
+
+    validateJoinAvailability(canonicalUnits, usageKeyByDimensions)
+    return new UnitRegistry(canonicalUnits)
+  }
+
   ancestorUsageKeys(usageKey: string): Set<string> {
     const ancestorUsageKeys = this.#ancestorUsageKeysByUsageKey.get(usageKey)
     if (!ancestorUsageKeys) {
@@ -97,6 +233,46 @@ export function getActiveRegistry(): UnitRegistry {
 
 function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
   return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
+}
+
+function invalidData(message: string): Error {
+  return new Error(`${invalidDataPrefix} ${message}`)
+}
+
+function hasOwn(value: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key)
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function validateJoinAvailability(rawUnits: RawUnitsDict, usageKeyByDimensions: ReadonlyMap<string, string>): void {
+  const entries = Object.entries(rawUnits)
+  for (let leftIndex = 0; leftIndex < entries.length; leftIndex++) {
+    const leftEntry = entries[leftIndex]
+    if (!leftEntry) continue
+    const [leftUsageKey, left] = leftEntry
+    for (let rightIndex = leftIndex + 1; rightIndex < entries.length; rightIndex++) {
+      const rightEntry = entries[rightIndex]
+      if (!rightEntry) continue
+      const [rightUsageKey, right] = rightEntry
+      if (!dimensionsCompatible(left.dimensions, right.dimensions)) continue
+      const joinedDimensions = { ...left.dimensions, ...right.dimensions }
+      if (!usageKeyByDimensions.has(dimensionKey(joinedDimensions))) {
+        throw invalidData(`missing join unit dimensions between ${leftUsageKey} and ${rightUsageKey}`)
+      }
+    }
+  }
+}
+
+function validatePublicKey(kind: 'price' | 'usage', key: string): void {
+  if (!publicKeyPattern.test(key)) throw invalidData(`unit ${kind} key ${JSON.stringify(key)} is not a public identifier`)
+  if (reservedPublicKeys.has(key)) throw invalidData(`unit ${kind} key ${JSON.stringify(key)} is reserved`)
+}
+
+function dimensionsCompatible(left: Readonly<Record<string, string>>, right: Readonly<Record<string, string>>): boolean {
+  return Object.entries(left).every(([key, value]) => right[key] === undefined || right[key] === value)
 }
 
 function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {

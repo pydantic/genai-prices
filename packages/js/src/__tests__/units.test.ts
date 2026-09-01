@@ -268,6 +268,133 @@ describe('UnitRegistry', () => {
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
     expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
   })
+
+  it('constructs an ordered frozen projection from untrusted unit data', () => {
+    const raw = {
+      first_events: {
+        dimension_requirements: { ignored: true },
+        dimensions: { family: 'first_events' },
+        future_member: 'ignored',
+        per: 1,
+      },
+      last_events: {
+        dimensions: { family: 'last_events' },
+        per: Number.MAX_SAFE_INTEGER,
+        price_key: 'last_event_price',
+      },
+    }
+
+    const registry = UnitRegistry.fromUntrusted(raw)
+    raw.first_events.dimensions.family = 'changed'
+    raw.first_events.per = 2
+
+    expect([...registry.reportedUsageKeys()]).toEqual(['first_events', 'last_events'])
+    expect(registry.getUnit('first_events')).toEqual({
+      dimensions: { family: 'first_events' },
+      per: 1,
+      priceKey: 'first_events',
+      usageKey: 'first_events',
+    })
+    expect(registry.getUnit('last_events')?.per).toBe(Number.MAX_SAFE_INTEGER)
+    expect(registry.getUnit('last_events')).not.toHaveProperty('dimension_requirements')
+    expect(Object.isFrozen(registry.getUnit('first_events'))).toBe(true)
+    expect(Object.isFrozen(registry.getUnit('first_events')?.dimensions)).toBe(true)
+  })
+
+  it.each([null, [], 'units', 1, true])('rejects a non-object untrusted root: %j', (raw) => {
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow('genai-prices: invalid data: units must be an object')
+  })
+
+  it.each([
+    [{ events: null }, 'unit "events" must be an object'],
+    [{ events: [] }, 'unit "events" must be an object'],
+    [{ events: { dimensions: { family: 'events' } } }, 'unit "events" is missing per'],
+    [{ events: { dimensions: { family: 'events' }, per: 0 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: -1 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: 1.5 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: true } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: Number.MAX_SAFE_INTEGER + 1 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: Number.NaN } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: 1, price_key: null } }, 'price_key must be a string'],
+    [{ events: { per: 1 } }, 'dimensions must be an object'],
+    [{ events: { dimensions: [], per: 1 } }, 'dimensions must be an object'],
+    [{ events: { dimensions: {}, per: 1 } }, 'missing the family dimension'],
+    [{ events: { dimensions: { family: '' }, per: 1 } }, 'non-empty string keys and values'],
+    [{ events: { dimensions: { family: 'events', type: 1 }, per: 1 } }, 'non-empty string keys and values'],
+  ])('rejects malformed recognized unit fields: %j', (raw, message) => {
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow('genai-prices: invalid data:')
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow(message)
+  })
+
+  it.each(['_private', 'two words', 'class', 'constructor', 'prototype'])('rejects unsafe usage key %j', (usageKey) => {
+    expect(() => UnitRegistry.fromUntrusted({ [usageKey]: { dimensions: { family: 'events' }, per: 1 } })).toThrow(
+      'genai-prices: invalid data: unit usage key'
+    )
+  })
+
+  it.each(['_private', 'two words', 'await', 'constructor', 'prototype'])('rejects unsafe price key %j', (priceKey) => {
+    expect(() => UnitRegistry.fromUntrusted({ events: { dimensions: { family: 'events' }, per: 1, price_key: priceKey } })).toThrow(
+      'genai-prices: invalid data: unit price key'
+    )
+  })
+
+  it('rejects duplicate price and dimension identities', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        first_events: { dimensions: { family: 'first' }, per: 1, price_key: 'event_price' },
+        second_events: { dimensions: { family: 'second' }, per: 1, price_key: 'event_price' },
+      })
+    ).toThrow('units "first_events" and "second_events" use price key event_price')
+
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        first_events: { dimensions: { family: 'events' }, per: 1 },
+        second_events: { dimensions: { family: 'events' }, per: 1 },
+      })
+    ).toThrow('units "first_events" and "second_events" use identical dimensions')
+  })
+
+  it('normalizes each family to one exact factor', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        input_events: { dimensions: { direction: 'input', family: 'events' }, per: 1 },
+        output_events: { dimensions: { direction: 'output', family: 'events' }, per: 2 },
+      })
+    ).toThrow('per 2 differs from 1 for family "events"')
+  })
+
+  it('requires every compatible dimension join and accepts a complete join', () => {
+    const incomplete = {
+      input_events: { dimensions: { direction: 'input', family: 'events' }, per: 1 },
+      special_events: { dimensions: { event_type: 'special', family: 'events' }, per: 1 },
+    }
+    expect(() => UnitRegistry.fromUntrusted(incomplete)).toThrow('missing join unit dimensions between input_events and special_events')
+
+    const registry = UnitRegistry.fromUntrusted({
+      ...incomplete,
+      input_special_events: {
+        dimensions: { direction: 'input', event_type: 'special', family: 'events' },
+        per: 1,
+      },
+    })
+    const inputEvents = registry.getUnit('input_events')
+    const specialEvents = registry.getUnit('special_events')
+    expect(inputEvents).toBeDefined()
+    expect(specialEvents).toBeDefined()
+    if (!inputEvents || !specialEvents) throw new Error('Expected complete event units')
+    expect(registry.findJoin(inputEvents, specialEvents)).toBe(registry.getUnit('input_special_events'))
+  })
+
+  it('accepts the last member retained by standard JSON duplicate decoding', () => {
+    const decoded: unknown = JSON.parse(
+      '{"events":{"per":0,"dimensions":{"family":"bad"}},"events":{"per":2,"per":1,"dimensions":{"family":"events"}}}'
+    )
+
+    const registry = UnitRegistry.fromUntrusted(decoded)
+
+    expect(registry.getUnit('events')?.per).toBe(1)
+    expect(registry.getUnit('events')?.dimensions.family).toBe('events')
+  })
 })
 
 describe('generated unit registry', () => {
