@@ -1,0 +1,22 @@
+tests/test_frozen_v2_data.py
+  s_319e04081d82e0::t_f5b9aa5b816dbb 1-57
+  s_319e04081d82e0::t_ab12f67aed8a85 58
+prices/src/prices/frozen_v2.py
+  s_319e04081d82e0::t_f5b9aa5b816dbb 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "10f5497ad8e472a52acff1bdab54eea36d654b8e",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
