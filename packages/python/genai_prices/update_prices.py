@@ -5,7 +5,6 @@ import json
 import logging
 import threading
 import warnings
-from collections.abc import Callable
 from dataclasses import dataclass, field
 from time import time
 from types import TracebackType
@@ -104,7 +103,7 @@ class UpdatePrices:
             worker = _worker
             if worker is not None and worker.dead:
                 # Don't join a worker that died unexpectedly; start a replacement.
-                _log(logger.warning, 'UpdatePrices background task terminated unexpectedly; starting a new one')
+                logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
                 worker = None
             if worker is None:
                 worker = _Worker(self)
@@ -251,7 +250,7 @@ class _Worker:
 
     def _run(self) -> None:
         try:
-            _log(logger.info, 'Starting genai-prices background task')
+            logger.info('Starting genai-prices background task')
             while not self.stop_event.is_set():
                 try:
                     self._update_prices()
@@ -260,7 +259,7 @@ class _Worker:
                         if self.stop_event.is_set():
                             break
                         self._publish(e)
-                    _log(logger.error, 'Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 if self.stop_event.wait(self.owner.update_interval):
                     break
         except BaseException as e:
@@ -273,16 +272,16 @@ class _Worker:
                 error.__cause__ = e
                 self._publish(error)
         finally:
-            _log(logger.info, 'genai-prices background task stopped')
+            logger.info('genai-prices background task stopped')
 
     def _update_prices(self) -> None:
         start = time()
         snapshot = self.owner.fetch()
         interval = time() - start
         if snapshot:
-            _log(logger.info, 'Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
         else:
-            _log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
+            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
         with _lock:
             if self.stop_event.is_set():
@@ -290,11 +289,3 @@ class _Worker:
                 return
             data_snapshot.set_custom_snapshot(snapshot)
             self._publish(None)
-
-
-def _log(log: Callable[..., None], message: str, *args: object) -> None:
-    try:
-        log(message, *args)
-    except Exception:
-        # A broken logging handler must not kill background updates or dump thread tracebacks.
-        pass

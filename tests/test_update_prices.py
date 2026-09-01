@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
-import logging
 import threading
 import traceback
 import warnings
@@ -718,21 +717,3 @@ def test_worker_reads_owner_settings_live(monkeypatch: pytest.MonkeyPatch):
         update_prices.stop()
 
     assert urls[0] == 'https://example.test/prices.json'
-
-
-def test_broken_log_handler_does_not_disturb_updating():
-    class RaisingHandler(logging.Handler):
-        def emit(self, record: logging.LogRecord) -> None:
-            raise RuntimeError('broken handler')
-
-    handler = RaisingHandler()
-    previous_level = update_prices_module.logger.level
-    update_prices_module.logger.setLevel(logging.INFO)
-    update_prices_module.logger.addHandler(handler)
-    try:
-        # Every worker log call raises, yet updating works and no waiter is stranded.
-        with NullUpdatePrices() as update_prices:
-            assert update_prices.wait(timeout=5)
-    finally:
-        update_prices_module.logger.removeHandler(handler)
-        update_prices_module.logger.setLevel(previous_level)
