@@ -203,7 +203,7 @@ def test_distinct_instances_share_ownership(monkeypatch: pytest.MonkeyPatch):
 
     try:
         first.stop()
-        # Releasing the same instance twice must not release the second owner's claim.
+        # Releasing the same instance twice must not drop the second owner's reference.
         first.stop()
         assert data_snapshot._custom_snapshot is not None
     finally:
@@ -263,7 +263,7 @@ def test_configuration_warning_hook_runs_outside_lifecycle_lock(monkeypatch: pyt
     assert update_prices_module._worker is None
 
 
-def test_configuration_warning_as_error_releases_claim(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_configuration_warning_as_error_releases_reference(monkeypatch: pytest.MonkeyPatch) -> None:
     _mock_update_prices_get(monkeypatch)
     first = UpdatePrices()
     second = UpdatePrices(update_interval=1)
@@ -281,7 +281,7 @@ def test_configuration_warning_as_error_releases_claim(monkeypatch: pytest.Monke
         worker = first._worker
         assert worker is update_prices_module._worker
         assert worker is not None
-        assert worker.claims == 1
+        assert worker.ref_count == 1
     finally:
         first.stop()
 
@@ -654,7 +654,7 @@ def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch
     assert replacement._worker is not dead._worker
     assert data_snapshot._custom_snapshot is not None
 
-    # Releasing the stale claim must not disturb the replacement or its data.
+    # Releasing the stale reference must not disturb the replacement or its data.
     dead.stop()
     assert update_prices_module._worker is replacement._worker
     assert data_snapshot._custom_snapshot is not None
