@@ -649,6 +649,13 @@ def test_validate_unit_evolution_rejects_redefinitions(field: str, replacement: 
 
 def test_validate_unit_evolution_rejects_changed_implications_and_new_ancestors() -> None:
     previous_source = _published_evolution_source()
+    with pytest.raises(ValueError, match='Missing published conditional implications for unit special_events'):
+        validate_unit_evolution(
+            runtime_unit_projection(previous_source),
+            {'events': ()},
+            previous_source,
+        )
+
     candidate_source = {
         'events': previous_source['events'],
         'special_events': {

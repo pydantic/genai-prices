@@ -112,7 +112,6 @@ def validate_runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object
     """Validate invariants available from the runtime unit wire projection."""
     raw_units_mapping = _object_mapping(raw_units, 'Invalid units: expected a mapping')
 
-    usage_keys: set[str] = set()
     price_keys: set[str] = set()
     per_by_family: dict[str, int] = {}
     dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
@@ -123,9 +122,6 @@ def validate_runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object
             raise ValueError(f'Invalid unit usage key: {raw_usage_key!r} is not a string')
         usage_key = raw_usage_key
         _validate_public_key('usage', usage_key)
-        if usage_key in usage_keys:
-            raise ValueError(f'Duplicate unit usage key: {usage_key}')
-        usage_keys.add(usage_key)
 
         if not isinstance(raw_unit_value, Mapping):
             raise ValueError(f'Invalid unit {usage_key}: expected a mapping')
@@ -295,9 +291,7 @@ def _validate_dimension_requirements(
     dimensions: Mapping[str, str],
     dimension_requirements: Mapping[str, Mapping[str, str]],
 ) -> None:
-    for conditional_key, required_dimensions in dimension_requirements.items():
-        if conditional_key not in dimensions:
-            raise ValueError(f'Dimension requirement trigger {conditional_key} is not a dimension of unit {usage_key}')
+    for required_dimensions in dimension_requirements.values():
         if not required_dimensions.items() <= dimensions.items():
             missing = ', '.join(
                 f'{key}={value}' for key, value in sorted(required_dimensions.items() - dimensions.items())
@@ -326,15 +320,6 @@ def _normalize_unit_implications(
         )
         for required_key, required_value in assignments.items():
             triples.add((root_trigger, required_key, required_value))
-
-    missing_assignments = {
-        (required_key, required_value)
-        for _, required_key, required_value in triples
-        if dimensions.get(required_key) != required_value
-    }
-    if missing_assignments:
-        missing = ', '.join(f'{key}={value}' for key, value in sorted(missing_assignments))
-        raise ValueError(f'Unsatisfied dimension requirement for unit {usage_key}: {missing}')
 
     return tuple(sorted(triples))
 
