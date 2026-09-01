@@ -636,23 +636,52 @@ def test_interrupted_final_join_still_finishes_shutdown(monkeypatch: pytest.Monk
         assert replacement.wait(timeout=5)
 
 
-def test_raising_log_handler_cannot_strand_waiters():
+def test_broken_log_handler_does_not_disturb_updating():
     class RaisingHandler(logging.Handler):
         def emit(self, record: logging.LogRecord) -> None:
-            if record.getMessage().startswith('Starting'):
-                raise RuntimeError('broken handler')
+            raise RuntimeError('broken handler')
 
     handler = RaisingHandler()
     previous_level = update_prices_module.logger.level
     update_prices_module.logger.setLevel(logging.INFO)
     update_prices_module.logger.addHandler(handler)
-    update_prices = NullUpdatePrices()
     try:
-        update_prices.start()
-        # The worker dies, but it must publish that outcome instead of hanging waiters forever.
-        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
-            update_prices.wait(timeout=5)
+        # Every worker log call raises, yet updating works and no waiter is stranded.
+        with NullUpdatePrices() as update_prices:
+            assert update_prices.wait(timeout=5)
     finally:
         update_prices_module.logger.removeHandler(handler)
         update_prices_module.logger.setLevel(previous_level)
+
+
+def test_second_interrupt_abandons_join_without_reinstalling_prices(monkeypatch: pytest.MonkeyPatch):
+    fetch_started = threading.Event()
+    release_fetch = threading.Event()
+
+    class BlockingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            fetch_started.set()
+            assert release_fetch.wait(timeout=5)
+            return data_snapshot.DataSnapshot([], from_auto_update=True)
+
+    update_prices = BlockingUpdatePrices()
+    update_prices.start()
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+    assert fetch_started.wait(timeout=5)
+
+    def always_interrupted_join(_timeout: float | None = None) -> None:
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(worker.thread, 'join', always_interrupted_join)
+    with pytest.raises(KeyboardInterrupt):
         update_prices.stop()
+
+    # The second interruption abandoned the join, but the module is released for a fresh start.
+    assert update_prices_module._worker is None
+    monkeypatch.undo()
+    release_fetch.set()
+    worker.thread.join(timeout=5)
+    assert not worker.thread.is_alive()
+    # The abandoned worker discarded its fetched snapshot instead of resurrecting it after stop().
+    assert data_snapshot._custom_snapshot is None

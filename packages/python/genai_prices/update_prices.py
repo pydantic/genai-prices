@@ -164,7 +164,8 @@ class UpdatePrices:
         """Stop the background task, or release this instance's claim on it.
 
         The last `stop()` waits for any in-flight fetch, stops the worker and restores the bundled
-        prices. Fetch failures never make `stop()` raise; they are reported by `wait()`.
+        prices. Fetch failures never make `stop()` raise; they are reported by `wait()`. A Ctrl-C
+        while waiting is re-raised once shutdown finishes; a second one stops the waiting early.
         """
         global _worker
 
@@ -253,9 +254,14 @@ class _Worker:
         return succeeded
 
     def shutdown(self) -> None:
-        """Stop the thread and restore the bundled prices, finishing even if Ctrl-C interrupts the join."""
+        """Stop the thread and restore the bundled prices, staying responsive to Ctrl-C.
+
+        A first interruption during the join finishes the shutdown before being re-raised, so the
+        worker is never left half-stopped; a second abandons the wait so a stalled fetch cannot
+        make the process feel unkillable — the daemon thread discards its result and exits alone.
+        """
         interrupted: BaseException | None = None
-        while True:
+        for _ in range(2):
             try:
                 self.stop_event.set()
                 # There is nothing to join when Thread.start() failed before the thread ran.
@@ -264,7 +270,7 @@ class _Worker:
                 break
             except (KeyboardInterrupt, SystemExit) as e:
                 interrupted = e
-        # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
+        # Safe even if the join was abandoned: once stop_event is set the worker discards fetched state.
         data_snapshot.set_custom_snapshot(None)
         # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
         self.ready.set()
@@ -280,15 +286,13 @@ class _Worker:
 
     def _run(self) -> None:
         try:
-            # Inside the try so even a raising logging handler cannot end the worker
-            # without publishing an outcome, which would hang waiters forever.
-            logger.info('Starting genai-prices background task')
+            _log(logger.info, 'Starting genai-prices background task')
             while not self.stop_event.is_set():
                 try:
                     self._update_prices()
                 except Exception as e:
                     self._publish(e)
-                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    _log(logger.error, 'Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 else:
                     self._publish(None)
                 if self.stop_event.wait(self.config.update_interval):
@@ -300,15 +304,27 @@ class _Worker:
             error.__cause__ = e
             self._publish(error)
         finally:
-            logger.info('genai-prices background task stopped')
+            _log(logger.info, 'genai-prices background task stopped')
 
     def _update_prices(self) -> None:
         start = time()
         snapshot = self.fetch()
         interval = time() - start
         if snapshot:
-            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+            _log(logger.info, 'Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
         else:
-            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
+            _log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
 
+        if self.stop_event.is_set():
+            # A stop() already won, and shutdown discards fetched state; installing now would
+            # resurrect it — possibly after an abandoned join.
+            return
         data_snapshot.set_custom_snapshot(snapshot)
+
+
+def _log(log: Callable[..., None], message: str, *args: object) -> None:
+    try:
+        log(message, *args)
+    except Exception:
+        # A broken logging handler must not kill background updates or dump thread tracebacks.
+        pass

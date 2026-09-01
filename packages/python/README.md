@@ -155,7 +155,8 @@ afterwards has no effect on it. The thread runs the `fetch()` of whichever insta
 subclass `UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
-`stop()` never raises fetch failures.
+`stop()` never raises fetch failures. Ctrl-C during the final `stop()` is re-raised once shutdown finishes;
+a second Ctrl-C stops the waiting early and lets the background thread exit on its own.
 
 `start()` doesn't wait for the download: until the first fetch completes, `calc_price` uses the bundled data,
 which may be missing recently released models. If you need fresh prices before calculating, pass `wait` to
