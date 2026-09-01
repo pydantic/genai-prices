@@ -1,0 +1,32 @@
+prices/src/prices/export_validation.py
+  s_319e04081d82e0::t_5c7f0b050f225a 214-291
+  s_319e04081d82e0::t_fbf4936e6ccc04 13-16,113-115,121-143
+  s_319e04081d82e0::t_2090080ed7dbc8 144-145
+tests/test_units.py
+  s_319e04081d82e0::t_12dd3737f1c37f 22-26,415-511
+  s_f3340f49ae7504::t_850f5b59c3ce6f 512-513
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "70363b8f59de08bd4a1b0ccbdb86fad0b638769a",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_f3340f49ae7504": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e34-63b0-7d93-80b0-6c18ee136c4b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
