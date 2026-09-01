@@ -234,6 +234,9 @@ class _Worker:
         self.claims = 0
         self.dead = False
         self.stop_event = threading.Event()
+        # Makes "check stop_event, then install" atomic against shutdown's restore, so a fetch
+        # racing an abandoned join can never reinstall data after stop() cleaned up.
+        self._install_lock = threading.Lock()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
         # The latest fetch outcome, reported to every waiter.
         self.ready = threading.Event()
@@ -271,8 +274,10 @@ class _Worker:
                 break
             except (KeyboardInterrupt, SystemExit) as e:
                 interrupted = e
-        # Safe even if the join was abandoned: once stop_event is set the worker discards fetched state.
-        data_snapshot.set_custom_snapshot(None)
+        # Safe even if the join was abandoned: once stop_event is set the worker discards fetched
+        # state, and the install lock covers the last fetch that raced the stop request.
+        with self._install_lock:
+            data_snapshot.set_custom_snapshot(None)
         # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
         self.ready.set()
         if interrupted is not None:
@@ -294,8 +299,6 @@ class _Worker:
                 except Exception as e:
                     self._publish(e)
                     _log(logger.error, 'Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                else:
-                    self._publish(None)
                 if self.stop_event.wait(self.config.update_interval):
                     break
         except BaseException as e:
@@ -316,11 +319,13 @@ class _Worker:
         else:
             _log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
 
-        if self.stop_event.is_set():
-            # A stop() already won, and shutdown discards fetched state; installing now would
-            # resurrect it — possibly after an abandoned join.
-            return
-        data_snapshot.set_custom_snapshot(snapshot)
+        with self._install_lock:
+            if self.stop_event.is_set():
+                # A stop() already won: shutdown is restoring the bundled prices, and a fetch it
+                # discards was never an update, so it must not be published as one either.
+                return
+            data_snapshot.set_custom_snapshot(snapshot)
+        self._publish(None)
 
 
 def _log(log: Callable[..., None], message: str, *args: object) -> None:

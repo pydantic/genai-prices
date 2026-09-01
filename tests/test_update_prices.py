@@ -303,11 +303,15 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
     worker = update_prices._worker
     try:
         assert fetch_started.wait(timeout=5)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             stop_future = executor.submit(update_prices.stop)
             assert worker.stop_event.wait(timeout=5)
+            # stop() is blocked joining, so the shared updater is still published for this waiter.
+            wait_future = executor.submit(wait_prices_updated_sync, 5)
             allow_fetch_return.set()
             stop_future.result(timeout=5)
+            # The fetch that stop() discarded was never installed, so it must not report an update.
+            assert wait_future.result(timeout=5) is False
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
