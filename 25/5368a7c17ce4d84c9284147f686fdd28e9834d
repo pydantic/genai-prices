@@ -1,0 +1,26 @@
+packages/js/src/__tests__/units.test.ts
+  s_319e04081d82e0::t_2ba4dc9470afc1 325-326
+  s_319e04081d82e0::t_6d1c53c3bd4004 271-275,277-324,327-329,333-335,339-370,372-379,386-397
+  s_319e04081d82e0::t_73247243508e7f 276,330-332,336-338,371,380-385
+packages/js/src/units.ts
+  s_319e04081d82e0::t_73247243508e7f 20,137,178-180
+  s_319e04081d82e0::t_f56f815b52bc23 134,138,142,150,172,240-243
+  s_319e04081d82e0::t_6d1c53c3bd4004 5-19,21-73,123-133,135-136,139-141,143-149,151-171,173-177,181-189,238-239,244-276
+  s_319e04081d82e0::t_90de18b1f66517 277
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "255368a7c17ce4d84c9284147f686fdd28e9834d",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
