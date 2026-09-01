@@ -240,3 +240,70 @@ func TestNewCalculatorFromJSONRejectsInvalidData(t *testing.T) {
 		}
 	}
 }
+
+// Fable 5.1 caches reads at 0.025x base input; Fable 5 at the usual 0.1x. The Fable 5
+// records match by prefix, so a loose clause silently prices Fable 5.1 cache reads 4x
+// too high instead of failing.
+func TestClaudeFable51DoesNotUseFable5Prices(t *testing.T) {
+	tests := []struct {
+		providerID    string
+		fable5        string
+		fable51       string
+		wantCacheRead float64
+	}{
+		{"anthropic", "claude-fable-5", "claude-fable-5-1", 0.25},
+		{"anthropic", "claude-fable-5-20260901", "claude-fable-5-1-20260901", 0.25},
+		{"google", "claude-fable-5", "claude-fable-5-1", 0.25},
+		{"google", "claude-fable-5@20260901", "claude-fable-5-1@20260901", 0.25},
+		{"aws", "global.anthropic.claude-fable-5-v1:0", "global.anthropic.claude-fable-5-1-v1:0", 0.25},
+		{"aws", "us.anthropic.claude-fable-5-v1:0", "us.anthropic.claude-fable-5-1-v1:0", 0.275},
+		{"openrouter", "anthropic/claude-fable-5", "anthropic/claude-fable-5.1", 0.25},
+	}
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     1_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.fable51, func(t *testing.T) {
+			fable5, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: usage, Model: test.fable5, ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			fable51, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: usage, Model: test.fable51, ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if fable5.ModelID == fable51.ModelID {
+				t.Fatalf("Fable 5.1 resolved to the Fable 5 record %q", fable51.ModelID)
+			}
+			if math.Abs(fable51.TotalPrice-test.wantCacheRead) > 1e-9 {
+				t.Fatalf("got cache-read price %g, want %g", fable51.TotalPrice, test.wantCacheRead)
+			}
+			if math.Abs(fable51.TotalPrice*4-fable5.TotalPrice) > 1e-9 {
+				t.Fatalf("got %g for Fable 5.1 and %g for Fable 5, want a 4x split", fable51.TotalPrice, fable5.TotalPrice)
+			}
+		})
+	}
+}
+
+// OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added.
+func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
+	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:     1_000_000,
+			genai_prices.UsageCacheReadTokens: 1_000_000,
+		},
+		Model:      "~anthropic/claude-fable-latest",
+		ProviderID: "openrouter",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(calculation.TotalPrice-1) > 1e-9 {
+		t.Fatalf("got %g, want 1", calculation.TotalPrice)
+	}
+}
