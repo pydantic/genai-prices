@@ -22,6 +22,12 @@ select a tier when usage is greater than its start. Phase 2 preserves this targe
 selection semantics. If the implementation target advances beyond this object, its additional changes require the same
 audit before implementation.
 
+**The Phase 2 implementation target is Git object `da0f68d42702505a7bd5fe62152437541191b7ff`.** _(from "The first audited intervening target is Git object `af5190edb9afaf0a810b1e8a26d451f097c44072`.")_
+Relative to the first audited intervening target, this target contains one additional intentional runtime behavior
+change: xAI `response.done` realtime extraction reads billable fields from the event's top-level `usage` object rather
+than the nested `response.usage` object. Phase 2 preserves that provider-specific extraction shape. The other intervening
+changes only refine these Phase 2 specifications and do not add another Phase 1 runtime behavior to preserve.
+
 **Changes: Phase 2 is limited to versioned publication and paired runtime state.**
 This is the complete change body. Phase 2 introduces the smallest new contract and lifecycle needed for wrapped
 unit/provider updates.
