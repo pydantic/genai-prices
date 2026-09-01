@@ -7,7 +7,6 @@ import threading
 import traceback
 from collections.abc import Callable
 from decimal import Decimal
-from time import monotonic, sleep
 
 import httpx2
 import pytest
@@ -268,13 +267,19 @@ def test_overridden_fetch_drives_shared_updater(monkeypatch: pytest.MonkeyPatch)
 
 
 def test_update_prices_continues_after_interval_until_stopped():
-    update_prices = CountingNullUpdatePrices(update_interval=0.001)
-    update_prices.start(wait=True)
+    second_fetch = threading.Event()
+
+    class SecondFetchUpdatePrices(CountingNullUpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            result = super().fetch()
+            if self.count >= 2:
+                second_fetch.set()
+            return result
+
+    update_prices = SecondFetchUpdatePrices(update_interval=0.001)
+    update_prices.start()
     try:
-        deadline = monotonic() + 1
-        while update_prices.count < 2 and monotonic() < deadline:
-            sleep(0.01)
-        assert update_prices.count >= 2
+        assert second_fetch.wait(timeout=5)
     finally:
         update_prices.stop()
 
@@ -306,7 +311,8 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             stop_future = executor.submit(update_prices.stop)
             assert worker.stop_event.wait(timeout=5)
-            # stop() is blocked joining, so the shared updater is still published for this waiter.
+            # Whether this waiter catches the updater mid-stop or after cleanup, the discarded
+            # fetch must report False either way.
             wait_future = executor.submit(wait_prices_updated_sync, 5)
             allow_fetch_return.set()
             stop_future.result(timeout=5)
