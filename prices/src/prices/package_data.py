@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
 from .build import load_units
+from .go_identifiers import go_usage_key_identifier
 from .prices_types import ModelPrice, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
 
@@ -248,7 +249,7 @@ def package_go_data(provider_data: JsonData, units: Mapping[str, Mapping[str, An
     constants: list[str] = []
     entries: list[str] = []
     for usage_key, unit in sorted(units.items()):
-        identifier = _go_usage_key_identifier(usage_key)
+        identifier = go_usage_key_identifier(usage_key)
         constants.append(
             f'// {identifier} identifies the {usage_key} usage value.\n'
             f'\t{identifier} UsageKey = {json.dumps(usage_key)}'
@@ -282,18 +283,6 @@ var bundledUnits = map[UsageKey]unitDef{{
 
     print(f'Data successfully written to {prices_json.relative_to(root_dir)}')
     print(f'Data successfully written to {data_units_go.relative_to(root_dir)}')
-
-
-def _go_usage_key_identifier(usage_key: str) -> str:
-    parts: list[str] = []
-    for part in usage_key.split('_'):
-        if not part:
-            parts.append('_')
-        elif part[0].isdigit():
-            parts.append(part.upper())
-        else:
-            parts.append(part[0].upper() + part[1:])
-    return 'Usage' + ''.join(parts)
 
 
 def fix_ts_constraints(json_data: JsonData) -> None:
