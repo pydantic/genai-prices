@@ -90,7 +90,8 @@ receiver's immutable provider/registry pair.
 **Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays.**
 Python `fetch()`, JavaScript `setProviderData`, and Go `NewCalculatorFromJSON` accept either form regardless of URL or
 caller provenance. A provider array is decoded with the v2 provider contract and uses independently selected units: the
-active registry in Python and JavaScript, and bundled units in Go.
+active registry in Python and JavaScript, and bundled units in Go. Go has no process-global active registry; each
+immutable calculator owns the registry selected when it is constructed.
 
 **Provider-only inputs are an explicit exception to wrapped-pair activation.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays")_
 They cannot introduce a unit definition and therefore never replace a registry. Their selected registry must still
