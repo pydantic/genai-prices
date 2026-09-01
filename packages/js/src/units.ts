@@ -226,9 +226,14 @@ export class UnitRegistry {
 }
 
 const generatedRegistry = new UnitRegistry(unitData)
+let activeRegistry: undefined | UnitRegistry
 
 export function getActiveRegistry(): UnitRegistry {
-  return generatedRegistry
+  return activeRegistry ?? generatedRegistry
+}
+
+export function setActiveRegistry(registry?: UnitRegistry): void {
+  activeRegistry = registry
 }
 
 export function validateUnitEvolution(previous: UnitRegistry, candidate: UnitRegistry): void {

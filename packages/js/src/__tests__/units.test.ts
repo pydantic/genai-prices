@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
-import { getActiveRegistry, isCompatible, UnitRegistry, validateUnitEvolution } from '../units'
+import { calcPrice } from '../engine'
+import { getActiveRegistry, isCompatible, setActiveRegistry, UnitRegistry, validateUnitEvolution } from '../units'
+import { normalizeUsage } from '../usage'
 
 const tokenUsageKeys = [
   'input_tokens',
@@ -455,6 +457,35 @@ describe('generated unit registry', () => {
     expect(new Set(getActiveRegistry().reportedUsageKeys())).toEqual(new Set(reportableUsageKeys))
     expect(getActiveRegistry().isReportedUsageKey('web_searches')).toBe(true)
     expect(getActiveRegistry().isReportedUsageKey('requests')).toBe(false)
+  })
+
+  it('selects and restores an active replacement through existing helpers', () => {
+    const bundled = getActiveRegistry()
+    const replacement = UnitRegistry.fromUntrusted({
+      remote_events: {
+        dimensions: { family: 'remote_events' },
+        per: 1,
+        price_key: 'remote_event_price',
+      },
+    })
+
+    try {
+      setActiveRegistry(replacement)
+
+      expect(getActiveRegistry()).toBe(replacement)
+      expect(normalizeUsage({ input_tokens: 5, remote_events: 3 })).toEqual({ remote_events: 3 })
+      expect(calcPrice({ remote_events: 4 }, { remote_event_price: 2 })).toEqual({
+        input_price: 0,
+        output_price: 0,
+        total_price: 8,
+      })
+    } finally {
+      setActiveRegistry()
+    }
+
+    expect(getActiveRegistry()).toBe(bundled)
+    expect(getActiveRegistry().getUnit('input_tokens')).toBeDefined()
+    expect(getActiveRegistry().getUnit('remote_events')).toBeUndefined()
   })
 })
 
