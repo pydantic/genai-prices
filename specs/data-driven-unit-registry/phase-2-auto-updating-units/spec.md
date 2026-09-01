@@ -422,10 +422,6 @@ duplicate source-text members receive no cross-runtime guarantee beyond validati
 One fixture adds a unit absent from bundled data plus provider prices and extraction mappings that use it. Python,
 JavaScript, and Go extract and price it consistently, including use through Go's open `UsageKey` type.
 
-**A v3 slim payload is excluded.**
-Phase 2 publishes the one full payload used by automatic updates. A smaller v3 projection requires separate product and
-compatibility requirements.
-
 **Validation caches and decomposition caches are excluded.**
 Provider/model lookup caches inside a snapshot or calculator remain permitted. New pricing, validation, or decomposition
 caches require a separate specification.

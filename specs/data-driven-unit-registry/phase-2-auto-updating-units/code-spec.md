@@ -12,7 +12,7 @@ Existing matching, constraint selection, tiering, decomposition, price arithmeti
 public request/result types remain in their current modules. Phase 2 adds wire decoding, registry evolution validation,
 paired state ownership, and v3 publication around those engines.
 
-**The v3 wire types are closed except for their documented dynamic mappings.** _(implements "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them.", "Phase 2 publishes one full wrapped v3 payload.", "V3 unit definitions use the minimal runtime projection.", "V3 normalization factors fit every runtime exactly.", "The v3 provider member uses the cutover v2 provider contract.", "The initial v3 schema is permanent.", "Runtime wire validation starts from a decoded JSON value.", "A v3 slim payload is excluded.")_
+**The v3 wire types are closed except for their documented dynamic mappings.** _(implements "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them.", "Phase 2 publishes one full wrapped v3 payload.", "V3 unit definitions use the minimal runtime projection.", "V3 normalization factors fit every runtime exactly.", "The v3 provider member uses the cutover v2 provider contract.", "The initial v3 schema is permanent.", "Runtime wire validation starts from a decoded JSON value.")_
 The build, schema, and three runtime decoders share these conceptual shapes without sharing generated executable code:
 
 ```text
@@ -31,7 +31,7 @@ V3Payload = {
 `RuntimeUnitData` is the serialized projection of one source unit; consumers resolve an omitted `price_key` to the usage
 key. `V3Payload.units` preserves JSON member order as registry order. `V3Payload.providers` uses every field and value
 representation admitted by the pinned v2 provider structure, while price-map keys and extractor destinations remain
-dynamic strings checked against `units`. The wrapper and each unit reject additional members. There is no v3 slim type.
+dynamic strings checked against `units`. The wrapper and each unit reject additional members.
 
 **Source validation exposes canonical runtime and implication projections.** _(implements "Conditional rules are monotone source-only implications.", "Every source unit conforms to all conditional implications that apply to it.", "Conflict-free valid units remain valid under union.", "Conditional semantics normalize per usage key.", "Source-level validation remains the publication authority.", "Exact interval-closure validation remains publisher-only.")_
 Extend `prices/src/prices/export_validation.py` with these build-only aliases and functions:
@@ -597,6 +597,6 @@ an ungenerated `UsageKey` literal.
 
 **Phase 2 adds no persistence, mutation API, cache, or serialized control state.** _(implements "Serialized outputs remain pure data.", "Validation caches and decomposition caches are excluded.", "Fetched registry persistence is excluded.", "Arbitrary caller-defined unit semantics are unsupported.")_
 Do not add disk storage for fetched registries, public registry setters, custom-unit mutation methods, validation or
-decomposition caches, generations, trust markers, schema fingerprints, locks in generated data, a v3 slim artifact, or
-new provider structural fields. Process restart uses the bundled pair. Any future addition in those categories starts in
-the prose spec and a new compatible contract where required.
+decomposition caches, generations, trust markers, schema fingerprints, locks in generated data, or new provider
+structural fields. Process restart uses the bundled pair. Any future addition in those categories starts in the prose
+spec and a new compatible contract where required.
