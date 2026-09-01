@@ -114,11 +114,12 @@ class UpdatePrices:
             if worker is None:
                 worker = _Worker(config, self.fetch)
                 worker.claims = 1
-                # Publish before starting the thread so the worker-thread guards see it from the
-                # very first fetch.
-                _worker = worker
-                self._worker = worker
                 try:
+                    # Publish before starting the thread so the worker-thread guards see it from
+                    # the very first fetch. Inside the try so a Ctrl-C landing between publication
+                    # and launch cannot leave a published worker that never runs.
+                    _worker = worker
+                    self._worker = worker
                     worker.thread.start()
                 except BaseException:
                     # Thread.start() can be interrupted after the OS thread launches, so drain the
