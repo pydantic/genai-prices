@@ -108,7 +108,7 @@ Exact derived label wording is not a compatibility contract and may change when 
 CLI flag names and option semantics supported at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c` remain unchanged. Registry-defined fields extend the output, whose dimension-derived labels need not preserve exact baseline wording.
 
 **The existing v1 JSON artifacts remain outside Phase 1 build output.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
-Once the Phase 1 build publishes `prices/new_data/v2/data.json`, it no longer rewrites `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, or `prices/data_slim.schema.json`. Intermediate implementation slices continue regenerating the v1 artifacts until the v2 publication path exists, so current clients do not lose price updates before their replacement feed is available.
+The Phase 1 build publishes `prices/new_data/v2/data.json` and does not rewrite `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, or `prices/data_slim.schema.json`.
 
 **V1 remains an exact frozen compatibility snapshot.** _(from "The existing v1 JSON artifacts remain outside Phase 1 build output", "Phase 1 preserves supported consumer behavior")_
 Existing package versions continue using the same v1 URLs, provider-array payloads, and schemas. No build step rewrites those four artifacts, and `tests/test_frozen_v1_data.py` pins their exact bytes. Provider, model, price, schema, and vocabulary changes publish only through versioned contracts under `prices/new_data/`.
