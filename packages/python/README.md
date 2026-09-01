@@ -149,11 +149,10 @@ update_prices.stop()
 All `UpdatePrices` instances share one background thread, so libraries such as Logfire and Pydantic AI can each
 call `start()` and `stop()` without creating duplicate threads. The first `start()` launches the thread, later
 `start()` calls join it, and the last `stop()` stops it and restores the data bundled with the installed package.
-The first configuration wins: starting with a different `url`, `update_interval` or `request_timeout` than
-the running thread warns and keeps the running thread's settings. The thread reads its configuration once at
-`start()`, so changing attributes on an instance afterwards has no effect on it. The thread runs the `fetch()`
-of whichever instance started first, so if you subclass `UpdatePrices` to customize fetching, start your
-instance before other libraries start theirs.
+The thread belongs to the instance that started it: it runs that instance's `fetch()` with that instance's
+settings, exactly as if it were the only instance. Starting another instance with a different `url`,
+`update_interval` or `request_timeout` warns and keeps the first instance's settings. If you subclass
+`UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
 `stop()` never raises fetch failures and never blocks: the last `stop()` restores the bundled data

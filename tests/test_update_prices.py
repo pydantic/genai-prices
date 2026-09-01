@@ -449,19 +449,6 @@ def test_module_calls_from_fetch_during_stop_do_not_deadlock() -> None:
     assert observed == [False]
 
 
-def test_fetch_cannot_change_its_own_ownership() -> None:
-    class SelfStoppingUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            with pytest.raises(RuntimeError, match='cannot call stop from its worker'):
-                self.stop()
-            with pytest.raises(RuntimeError, match='cannot call start from its worker'):
-                self.start()
-            return None
-
-    with SelfStoppingUpdatePrices() as update_prices:
-        assert update_prices.wait(timeout=5)
-
-
 def test_fetch_cannot_wait_for_itself() -> None:
     class ReentrantWaitUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
@@ -702,99 +689,9 @@ def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.M
     update_prices.stop()
 
 
-@pytest.mark.parametrize('shared_owner', [False, True])
-def test_interrupted_claim_release_finishes_bookkeeping(shared_owner: bool) -> None:
-    class InterruptingUpdatePrices(NullUpdatePrices):
-        interrupt_release = False
-
-        def __setattr__(self, name: str, value: object) -> None:
-            super().__setattr__(name, value)
-            if name == '_worker' and value is None and self.interrupt_release:
-                self.interrupt_release = False
-                raise KeyboardInterrupt
-
-    first = NullUpdatePrices() if shared_owner else None
-    update_prices = InterruptingUpdatePrices()
-    if first is not None:
-        first.start(wait=True)
-    update_prices.start(wait=True)
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-
-    update_prices.interrupt_release = True
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    assert update_prices._worker is None
-    assert worker.claims == int(shared_owner)
-    if first is None:
-        assert update_prices_module._worker is None
-        assert worker.stop_event.is_set()
-        assert worker.ready.is_set()
-    else:
-        assert update_prices_module._worker is worker
-        assert not worker.stop_event.is_set()
-        first.stop()
-
-    worker.thread.join(timeout=5)
-    with NullUpdatePrices() as replacement:
-        assert replacement.wait(timeout=5)
-
-
-def test_interrupted_snapshot_restore_still_wakes_waiters(monkeypatch: pytest.MonkeyPatch) -> None:
-    update_prices = NullUpdatePrices()
-    update_prices.start(wait=True)
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    original_set_custom_snapshot = data_snapshot.set_custom_snapshot
-    interrupted = False
-
-    def restore_then_interrupt(snapshot: data_snapshot.DataSnapshot | None) -> None:
-        nonlocal interrupted
-        original_set_custom_snapshot(snapshot)
-        if snapshot is None and not interrupted:
-            interrupted = True
-            raise KeyboardInterrupt
-
-    monkeypatch.setattr(data_snapshot, 'set_custom_snapshot', restore_then_interrupt)
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    assert worker.ready.is_set()
-    assert data_snapshot._custom_snapshot is None
-    assert update_prices_module._worker is None
-    worker.thread.join(timeout=5)
-
-
-def test_interrupted_waiter_wakeup_still_finishes_shutdown(monkeypatch: pytest.MonkeyPatch) -> None:
-    update_prices = NullUpdatePrices()
-    update_prices.start(wait=True)
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    original_ready_set = worker.ready.set
-    interrupted = False
-
-    def wake_then_interrupt() -> None:
-        nonlocal interrupted
-        original_ready_set()
-        if not interrupted:
-            interrupted = True
-            raise KeyboardInterrupt
-
-    monkeypatch.setattr(worker.ready, 'set', wake_then_interrupt)
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    assert worker.stop_event.is_set()
-    assert worker.ready.is_set()
-    assert data_snapshot._custom_snapshot is None
-    assert update_prices_module._worker is None
-    worker.thread.join(timeout=5)
-
-
-def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: pytest.MonkeyPatch):
-    fetches: list[tuple[str, httpx2.Timeout]] = []
-    second_fetch = threading.Event()
+def test_worker_reads_owner_settings_live(monkeypatch: pytest.MonkeyPatch):
+    urls: list[str] = []
+    changed_url_fetched = threading.Event()
 
     class Response:
         content = PROVIDER_ARRAY_PAYLOAD
@@ -803,23 +700,24 @@ def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: 
             pass
 
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        fetches.append((url, timeout))
-        if len(fetches) >= 2:
-            second_fetch.set()
+        assert timeout is not None
+        urls.append(url)
+        if url == 'https://changed.test/prices.json':
+            changed_url_fetched.set()
         return Response()
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
     update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=0.001)
     update_prices.start(wait=True)
     try:
+        # The worker fetches through the instance that started it, so attribute
+        # changes take effect from the next fetch on — the same as on a single instance.
         update_prices.url = 'https://changed.test/prices.json'
-        assert second_fetch.wait(timeout=5)
+        assert changed_url_fetched.wait(timeout=5)
     finally:
         update_prices.stop()
 
-    assert {url for url, _ in fetches} == {'https://example.test/prices.json'}
-    # The worker holds a copy, so mutating the instance's timeout cannot leak into it either.
-    assert fetches[0][1] is not update_prices.request_timeout
+    assert urls[0] == 'https://example.test/prices.json'
 
 
 def test_broken_log_handler_does_not_disturb_updating():
