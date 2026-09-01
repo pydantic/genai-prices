@@ -228,7 +228,12 @@ class UpdatePrices:
 
         # Warning hooks are arbitrary application code; never call them while holding the lifecycle lock.
         if config_warning is not None:
-            warnings.warn(config_warning, stacklevel=2)
+            try:
+                warnings.warn(config_warning, stacklevel=2)
+            except BaseException:
+                # A warning promoted to an exception means start() failed; release the claim it just acquired.
+                self.stop()
+                raise
         if wait:
             worker.wait(timeout=30 if wait is True else wait)
 
