@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import threading
+import warnings
 from dataclasses import dataclass, field
 from time import time
 
@@ -20,7 +21,7 @@ __all__ = (
 
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = (
-    'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json'
+    'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v3/data.json'
 )
 _global_update_prices: UpdatePrices | None = None
 
@@ -162,13 +163,18 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+        from .provider_data import _decode_provider_data  # pyright: ignore[reportPrivateUsage]
+        from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, list):
-            raise ValueError('Expected fetched prices payload to be a provider array')
+        decoded = _decode_provider_data(raw_payload, _get_registry())
+        for message in decoded.compatibility_warnings:
+            warnings.warn(message, UserWarning, stacklevel=2)
 
-        providers = _providers_from_raw(raw_payload)
-        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+        if decoded.registry is None:
+            return data_snapshot.DataSnapshot(decoded.providers, from_auto_update=True)
+        return data_snapshot.DataSnapshot._from_wrapped(  # pyright: ignore[reportPrivateUsage]
+            decoded.providers, True, decoded.registry
+        )
