@@ -15,8 +15,9 @@ The compatibility claims in this document refer to the Python, JavaScript, and G
 Implementation starts by checking the Phase 2 branch's target object against this baseline and updating this prose spec
 for any intentional intervening behavior change; an unreviewed implementation drift does not silently become contract.
 
-**Behavior we change is limited to versioned publication and paired runtime state.**
-Phase 2 introduces the smallest new contract and lifecycle needed for wrapped unit/provider updates.
+**Changes: Phase 2 is limited to versioned publication and paired runtime state.**
+This is the complete change body. Phase 2 introduces the smallest new contract and lifecycle needed for wrapped
+unit/provider updates.
 
 **A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them.**
 A new price key or extractor destination becomes usable without another package release, and no wrapped update is
@@ -41,7 +42,7 @@ registry and every immutable calculator owns the registry selected at constructi
 The authoritative legacy-array shape is `prices/new_data/v2/data.schema.json` from the exact target-branch Git object
 used by the initial v3 compatibility check.
 
-**Phase 2 publishes one full wrapped v3 payload.** _(from "Behavior we change is limited to versioned publication and paired runtime state", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
+**Phase 2 publishes one full wrapped v3 payload.** _(from "Changes: Phase 2 is limited to versioned publication and paired runtime state", "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
 `prices/new_data/v3/data.json` has exactly two members: a usage-keyed `units` object and a `providers` array. The colocated
 `prices/new_data/v3/data.schema.json` describes the complete wire shape.
 
@@ -340,10 +341,12 @@ duplicate source-text members receive no cross-runtime guarantee beyond validati
 One fixture adds a unit absent from bundled data plus provider prices and extraction mappings that use it. Python,
 JavaScript, and Go extract and price it consistently, including use through Go's open `UsageKey` type.
 
-**Phase 2 scope exclusions reinforce the runtime-update boundary.** _(from "Behavior we change is limited to versioned publication and paired runtime state")_
+---
+
+**Scope exclusions: Phase 2 stops at the runtime-update boundary.** _(from "Changes: Phase 2 is limited to versioned publication and paired runtime state")_
 The following exclusions keep unrelated persistence, customization, and optimization work out of this change.
 
-**Arbitrary caller-defined unit semantics are unsupported.** _(from "Phase 2 scope exclusions reinforce the runtime-update boundary")_
+**Arbitrary caller-defined unit semantics are unsupported.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 Custom wrapped inputs must satisfy the frozen v3 shape and append-only checks, but runtime acceptance is not a substitute
 for source-only interval and conditional validation. Supported new unit semantics enter through this repository's
 publisher.
@@ -352,22 +355,24 @@ publisher.
 The wire projection omits the conditional implications needed to decide which intermediate dimension sets are valid, so
 runtimes do not claim to repeat that source check.
 
-**Serialized outputs remain pure data.** _(from "Phase 2 scope exclusions reinforce the runtime-update boundary")_
+**Serialized outputs remain pure data.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 V3 and generated package files contain runtime-semantic units, providers, and prices only. Trust markers, schema
 fingerprints, generations, locks, prepared validation results, and decomposition plans are not serialized.
 
-**Unrelated Python manual writes have no new global ordering guarantee.** _(from "Phase 2 scope exclusions reinforce the runtime-update boundary")_
+**Unrelated Python manual writes have no new global ordering guarantee.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 State replacement is serialized, but Phase 2 adds no process-wide generation protocol or ordering promise among
 unrelated `set_custom_snapshot(...)` calls.
 
-**Validation caches and decomposition caches are excluded.** _(from "Phase 2 scope exclusions reinforce the runtime-update boundary")_
+**Validation caches and decomposition caches are excluded.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 Provider/model lookup caches inside a snapshot or calculator remain permitted. New pricing, validation, or decomposition
 caches require a separate specification.
 
-**Fetched registry persistence is excluded.** _(from "Phase 2 scope exclusions reinforce the runtime-update boundary")_
+**Fetched registry persistence is excluded.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 Process restart uses bundled data. Persisting and authenticating a fetched registry requires a separate specification.
 
-**Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements.**
+---
+
+**Unchanged Phase 1 behavior: only the requirements below are Phase 2 compatibility requirements.**
 This final block is the complete preservation contract. Incidental Phase 1 lifecycle and API implementation details are
 not undocumented compatibility requirements.
 
