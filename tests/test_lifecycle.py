@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
 
@@ -12,8 +13,10 @@ from jsonschema.validators import validator_for
 from pydantic import TypeAdapter
 from typing_extensions import NotRequired, TypedDict
 
-from genai_prices import data as genai_data, data_units as genai_data_units
+from genai_prices import data as genai_data, data_snapshot, data_units as genai_data_units, types
 from genai_prices.data import providers
+from genai_prices.data_units import unit_data
+from genai_prices.units import UnitRegistry, _get_registry
 from prices.prices_types import providers_schema
 from prices.utils import package_dir
 
@@ -290,8 +293,8 @@ def test_get_registry_does_not_import_provider_data():
     )
 
 
-def test_generated_provider_data_import_succeeds_with_extractor_validation():
-    """Generated provider data can construct extractors while destination validation is enabled."""
+def test_generated_provider_data_import_succeeds_without_eager_extractor_validation():
+    """Generated provider data can construct extractors without consulting active unit state."""
     subprocess.run(
         [
             sys.executable,
@@ -302,3 +305,118 @@ def test_generated_provider_data_import_succeeds_with_extractor_validation():
         capture_output=True,
         text=True,
     )
+
+
+def _remote_registry() -> UnitRegistry:
+    return UnitRegistry._from_untrusted(
+        {
+            **unit_data,
+            'remote_events': {
+                'per': 1,
+                'price_key': 'remote_event_price',
+                'dimensions': {'family': 'remote_events'},
+            },
+        }
+    )
+
+
+def _remote_providers() -> list[types.Provider]:
+    return types._providers_from_raw(
+        [
+            {
+                'id': 'remote',
+                'name': 'Remote',
+                'api_pattern': 'remote',
+                'extractors': [
+                    {
+                        'root': 'usage',
+                        'mappings': [{'path': 'count', 'dest': 'remote_events'}],
+                    }
+                ],
+                'models': [
+                    {
+                        'id': 'remote-model',
+                        'match': {'equals': 'remote-model'},
+                        'prices': {'remote_event_price': 2},
+                    }
+                ],
+            }
+        ]
+    )
+
+
+def test_wrapped_snapshot_registry_is_private_and_inert_until_activation() -> None:
+    bundled_registry = _get_registry()
+    registry = _remote_registry()
+    remote_providers = _remote_providers()
+    ordinary = data_snapshot.DataSnapshot(providers=remote_providers, from_auto_update=False)
+    wrapped = data_snapshot.DataSnapshot._from_wrapped(remote_providers, True, registry)
+
+    assert ordinary._activation_registry is None
+    assert wrapped._activation_registry is registry
+    assert '_activation_registry' not in repr(wrapped)
+    with pytest.raises(TypeError, match='_activation_registry'):
+        data_snapshot.DataSnapshot(
+            providers=remote_providers,
+            from_auto_update=False,
+            _activation_registry=registry,  # pyright: ignore[reportCallIssue]
+        )
+
+    assert wrapped.find_provider(None, 'remote', None).id == 'remote'
+    with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: remote_event_price'):
+        assert wrapped.calc(types.Usage(), 'remote-model', 'remote', None, None).total_price == Decimal(0)
+    with pytest.warns(UserWarning, match='Unsupported extractor destination.*remote_events'):
+        extracted = wrapped.extract_usage(
+            {'model': 'remote-model', 'usage': {'count': 4}},
+            provider_id='remote',
+        )
+    assert extracted.usage == types.Usage()
+    assert _get_registry() is bundled_registry
+
+
+def test_wrapped_snapshot_activation_switches_the_pair_and_none_restores_bundled_state() -> None:
+    bundled_registry = _get_registry()
+    bundled_snapshot = data_snapshot.get_snapshot()
+    registry = _remote_registry()
+    wrapped = data_snapshot.DataSnapshot._from_wrapped(_remote_providers(), True, registry)
+
+    try:
+        data_snapshot.set_custom_snapshot(wrapped)
+
+        assert data_snapshot.get_snapshot() is wrapped
+        assert _get_registry() is registry
+        calculation = wrapped.calc(types.Usage(remote_events=3), 'remote-model', 'remote', None, None)
+        assert calculation.total_price == Decimal(6)
+        extracted = wrapped.extract_usage(
+            {'model': 'remote-model', 'usage': {'count': 4}},
+            provider_id='remote',
+        )
+        assert extracted.usage == types.Usage(remote_events=4)
+
+        provider_only = data_snapshot.DataSnapshot(providers=wrapped.providers, from_auto_update=False)
+        data_snapshot.set_custom_snapshot(provider_only)
+        assert data_snapshot.get_snapshot() is provider_only
+        assert _get_registry() is registry
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+    assert data_snapshot.get_snapshot() is bundled_snapshot
+    assert _get_registry() is bundled_registry
+
+
+def test_wrapped_snapshot_final_evolution_rejection_preserves_active_state() -> None:
+    bundled_registry = _get_registry()
+    previous_snapshot = data_snapshot.DataSnapshot(providers=[], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(previous_snapshot)
+    unit_items = list(unit_data.items())
+    reordered_registry = UnitRegistry._from_untrusted(dict([unit_items[1], unit_items[0], *unit_items[2:]]))
+    rejected = data_snapshot.DataSnapshot._from_wrapped([], True, reordered_registry)
+
+    try:
+        with pytest.raises(ValueError, match='Reordered published units'):
+            data_snapshot.set_custom_snapshot(rejected)
+
+        assert data_snapshot.get_snapshot() is previous_snapshot
+        assert _get_registry() is bundled_registry
+    finally:
+        data_snapshot.set_custom_snapshot(None)
