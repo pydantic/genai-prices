@@ -6,7 +6,7 @@
 This document defines files, data shapes, signatures, ownership, and call relationships only. The prose spec owns all
 behavioral decisions, and implementation planning must derive from this skeleton.
 
-**Implementation is based on the audited Phase 1 tree and preserves its shared pricing engine.** _(implements "Phase 2 ships as an independent change on top of the completed Phase 1 release.", "Phase 2 inherits the root registry semantics and terminology.", "The audited Phase 1 behavioral baseline is Git object `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa`.", "Phase 2 does not change pricing semantics.", "Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements.", "Behavior we change is limited to versioned publication and paired runtime state.")_
+**Implementation is based on the audited Phase 1 tree and preserves its shared pricing engine.** _(implements "Phase 2 ships as an independent change on top of the completed Phase 1 release.", "Phase 1 remains supported without Phase 2.", "Phase 2 inherits the root registry semantics and terminology.", "The audited Phase 1 behavioral baseline is Git object `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa`.", "Phase 2 does not change pricing semantics.", "Only the explicitly named Phase 1 behaviors below are Phase 2 compatibility requirements.", "Behavior we change is limited to versioned publication and paired runtime state.")_
 The implementation branch audits changes since `076f45bda74f18b21d7ccd9bbaf9f5c9332ab4fa` before modifying runtime code.
 Existing matching, constraint selection, tiering, decomposition, price arithmetic, extraction traversal, warning text, and
 public request/result types remain in their current modules. Phase 2 adds wire decoding, registry evolution validation,
@@ -284,7 +284,7 @@ existing `httpx2` request and `json.loads`, captures `_get_active_registry()`, c
 returns an ordinary or `_from_wrapped(...)` snapshot without activation. Transport/HTTP exceptions and
 `json.JSONDecodeError` propagate unchanged.
 
-**Python operations receive one explicit applicable registry below their public boundary.** _(implements "Python keeps snapshot extraction.", "Python lookup results are detached from a snapshot's private registry.", "Python detached operations capture one applicable registry.")_
+**Python operations receive one explicit applicable registry below their public boundary.** _(implements "Python keeps snapshot extraction.", "Python lookup methods retain their bare return types.", "Custom Python `ModelPrice` overrides retain their signature and registry ownership.", "Python lookup results are detached from a snapshot's private registry.", "Python detached operations capture one applicable registry.")_
 Add or extend these private call boundaries in `packages/python/genai_prices/types.py`:
 
 ```python
@@ -455,7 +455,7 @@ wire-to-runtime normalizer supplies the v2 defaults `"default"`, `"model"`, and 
 decoders use that normalizer; strict wrapper validation happens before defaulting, while the legacy path keeps its
 baseline tolerance for additional members.
 
-**JavaScript promise identity remains the update-ordering mechanism.** _(implements "JavaScript keeps its current non-null update ordering.", "Asynchronous JavaScript failures reject with `Error`.", "JavaScript `null` remains a no-op.", "JavaScript's promise ordering applies to complete pairs.", "A stale rejected JavaScript attempt rejects only its own promise.")_
+**JavaScript promise identity remains the update-ordering mechanism.** _(implements "JavaScript keeps its current non-null update ordering.", "Asynchronous JavaScript contract failures reject with `Error`.", "JavaScript preserves caller-supplied promise rejection reasons.", "JavaScript `null` remains a no-op.", "JavaScript's promise ordering applies to complete pairs.", "A stale rejected JavaScript attempt rejects only its own promise.")_
 Keep these boundaries and the current-attempt identity in `packages/js/src/api.ts`:
 
 ```typescript
@@ -595,7 +595,7 @@ stop/join, JavaScript null/stale rejection, and operation capture. Add one share
 and extractor destination are absent from bundled data; all three runtimes extract and price it, including Go use through
 an ungenerated `UsageKey` literal.
 
-**Phase 2 adds no persistence, mutation API, cache, or serialized control state.** _(implements "Serialized outputs remain pure data.", "Validation caches and decomposition caches are excluded.", "Fetched registry persistence is excluded.", "Arbitrary caller-defined unit semantics are unsupported.")_
+**Phase 2 adds no persistence, mutation API, cache, or serialized control state.** _(implements "Phase 2 scope exclusions reinforce the runtime-update boundary.", "Serialized outputs remain pure data.", "Validation caches and decomposition caches are excluded.", "Fetched registry persistence is excluded.", "Arbitrary caller-defined unit semantics are unsupported.")_
 Do not add disk storage for fetched registries, public registry setters, custom-unit mutation methods, validation or
 decomposition caches, generations, trust markers, schema fingerprints, locks in generated data, or new provider
 structural fields. Process restart uses the bundled pair. Any future addition in those categories starts in the prose
