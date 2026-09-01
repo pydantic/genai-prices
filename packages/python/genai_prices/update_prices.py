@@ -175,15 +175,32 @@ class UpdatePrices:
             worker = self._worker
             if worker is None:
                 return
-            self._worker = None
-            worker.claims -= 1
-            if worker.claims == 0:
-                try:
-                    worker.shutdown()
-                finally:
-                    # Clear only after the join so a reentrant worker-thread guard never reads None
+            remaining_claims = worker.claims - 1
+            shutdown_finished = remaining_claims != 0
+
+            def cleanup() -> None:
+                global _worker
+                nonlocal shutdown_finished
+
+                # Each assignment is idempotent so cleanup can resume at any bytecode boundary
+                # after Ctrl-C without losing or releasing this instance's claim twice.
+                worker.claims = remaining_claims
+                self._worker = None
+                if not shutdown_finished:
+                    try:
+                        worker.shutdown()
+                    finally:
+                        # shutdown() completes its state cleanup before re-raising an interruption;
+                        # do not repeat an intentionally abandoned join on the cleanup retry.
+                        shutdown_finished = True
+                if remaining_claims == 0:
+                    # Clear only after shutdown so a reentrant worker-thread guard never reads None
                     # mid-shutdown, but always clear so an interrupted join cannot wedge the module.
                     _worker = None
+
+            interrupted = _finish_despite_interruption(cleanup)
+            if interrupted is not None:
+                raise interrupted
 
     def __enter__(self):
         self.start()
@@ -216,6 +233,18 @@ def _check_not_worker_thread(action: str) -> None:
     worker = _worker
     if worker is not None and threading.current_thread() is worker.thread:
         raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
+
+
+def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
+    """Finish idempotent lifecycle bookkeeping before propagating an interruption."""
+    interrupted: BaseException | None = None
+    while True:
+        try:
+            action()
+        except (KeyboardInterrupt, SystemExit) as e:
+            interrupted = e
+        else:
+            return interrupted
 
 
 class _Worker:

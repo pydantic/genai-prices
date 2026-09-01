@@ -640,6 +640,43 @@ def test_interrupted_final_join_still_finishes_shutdown(monkeypatch: pytest.Monk
         assert replacement.wait(timeout=5)
 
 
+@pytest.mark.parametrize('shared_owner', [False, True])
+def test_interrupted_claim_release_finishes_bookkeeping(shared_owner: bool) -> None:
+    class InterruptingUpdatePrices(NullUpdatePrices):
+        interrupt_release = False
+
+        def __setattr__(self, name: str, value: object) -> None:
+            super().__setattr__(name, value)
+            if name == '_worker' and value is None and self.interrupt_release:
+                self.interrupt_release = False
+                raise KeyboardInterrupt
+
+    first = NullUpdatePrices() if shared_owner else None
+    update_prices = InterruptingUpdatePrices()
+    if first is not None:
+        first.start(wait=True)
+    update_prices.start(wait=True)
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+
+    update_prices.interrupt_release = True
+    with pytest.raises(KeyboardInterrupt):
+        update_prices.stop()
+
+    assert update_prices._worker is None
+    assert worker.claims == int(shared_owner)
+    if first is None:
+        assert update_prices_module._worker is None
+        assert not worker.thread.is_alive()
+    else:
+        assert update_prices_module._worker is worker
+        assert worker.thread.is_alive()
+        first.stop()
+
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+
+
 def test_broken_log_handler_does_not_disturb_updating():
     class RaisingHandler(logging.Handler):
         def emit(self, record: logging.LogRecord) -> None:
