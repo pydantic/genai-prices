@@ -294,7 +294,7 @@ behavior; contract validation itself always creates `Error` with the synchronous
 Synchronous or promise-resolved `null` performs no validation, does not replace active data, and does not supersede a
 pending non-null attempt.
 
-**Go validation failures wrap `ErrInvalidData`.** _(from "Go accepts wrapped v3 through immutable construction")_
+**Go validation failures wrap `ErrInvalidData`.** _(from "Go keeps immutable calculator construction", "Candidate preparation has no externally visible state change")_
 `NewCalculatorFromJSON(...)` returns `nil` and an error satisfying `errors.Is(err, ErrInvalidData)` for an invalid
 wrapper, units, providers, coverage, or append-only relation.
 
