@@ -839,6 +839,8 @@ def _unstarted_worker() -> tuple[UpdatePrices, update_prices_module._Worker]:
     owner = UpdatePrices()
     config = update_prices_module._Config(owner.url, owner.update_interval, httpx2.Timeout(owner.request_timeout))
     worker = update_prices_module._Worker(config, owner.fetch)
+    # Keep the built-in-fetch fork policy while making deterministic unit callbacks network-free.
+    worker.fetch = lambda: None
     worker.claims = 1
     owner._worker = worker
     return owner, worker
