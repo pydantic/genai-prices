@@ -27,6 +27,16 @@ from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
 
+
+@pytest.fixture(autouse=True)
+def drain_updater_threads():
+    # stop() never joins, so a test can leave its worker draining; join leftovers between tests.
+    yield
+    for thread in threading.enumerate():
+        if thread.name == 'genai_prices:update':  # pragma: no cover - only hit when a worker is mid-drain
+            thread.join(timeout=5)
+
+
 PROVIDER_ARRAY_PAYLOAD = (
     b'[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
     b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
@@ -284,7 +294,7 @@ def test_update_prices_continues_after_interval_until_stopped():
         update_prices.stop()
 
 
-def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_stop_discards_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
 
@@ -306,34 +316,23 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
     update_prices.start()
     assert update_prices._worker is not None
     worker = update_prices._worker
-    waiter_started = threading.Event()
-    original_wait = worker.wait
+    assert fetch_started.wait(timeout=5)
 
-    def tracked_wait(timeout: float | None) -> bool:
-        waiter_started.set()
-        return original_wait(timeout)
+    # stop() returns immediately: bundled prices are restored and waiters report no update
+    # while the fetch is still in flight.
+    update_prices.stop()
+    assert data_snapshot._custom_snapshot is None
+    assert wait_prices_updated_sync(timeout=0) is False
 
-    monkeypatch.setattr(worker, 'wait', tracked_wait)
-    try:
-        assert fetch_started.wait(timeout=5)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            stop_future = executor.submit(update_prices.stop)
-            assert worker.stop_event.wait(timeout=5)
-            wait_future = executor.submit(wait_prices_updated_sync, 5)
-            # Ensure this waiter captured the still-published worker before stop() can clear it.
-            assert waiter_started.wait(timeout=5)
-            allow_fetch_return.set()
-            stop_future.result(timeout=5)
-            # The fetch that stop() discarded was never installed, so it must not report an update.
-            assert wait_future.result(timeout=5) is False
-        assert data_snapshot._custom_snapshot is None
-    finally:
-        allow_fetch_return.set()
-        update_prices.stop()
-        data_snapshot.set_custom_snapshot(None)
+    # Once released, the fetch is discarded — neither installed nor reported — and the thread exits.
+    allow_fetch_return.set()
+    worker.thread.join(timeout=5)
+    assert not worker.thread.is_alive()
+    assert data_snapshot._custom_snapshot is None
+    assert worker.wait(timeout=0) is False
 
 
-def test_start_waits_for_in_flight_shutdown() -> None:
+def test_start_after_stop_creates_fresh_worker_while_old_drains() -> None:
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
 
@@ -348,34 +347,34 @@ def test_start_waits_for_in_flight_shutdown() -> None:
     first.start()
     assert fetch_started.wait(timeout=5)
     assert first._worker is not None
-    worker = first._worker
+    old_worker = first._worker
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-        stop_future = executor.submit(first.stop)
-        assert worker.stop_event.wait(timeout=5)
-        start_future = executor.submit(second.start)
-        allow_fetch_return.set()
-        stop_future.result(timeout=5)
-        start_future.result(timeout=5)
-
-    # The new start must have waited for shutdown and launched a fresh worker of its own.
+    first.stop()
+    # A new start need not wait for the old thread: it launches a fresh worker while the old
+    # one, still blocked in its final fetch, drains in the background.
+    second.start(wait=True)
     assert second._worker is not None
-    assert second._worker is not worker
-    assert not worker.thread.is_alive()
+    assert second._worker is not old_worker
+    assert old_worker.thread.is_alive()
+
+    allow_fetch_return.set()
+    old_worker.thread.join(timeout=5)
+    assert not old_worker.thread.is_alive()
     second.stop()
 
 
-def test_stop_does_not_deadlock_when_fetch_reenters_start() -> None:
+def test_module_calls_from_fetch_during_stop_do_not_deadlock() -> None:
     fetch_started = threading.Event()
-    allow_reentry = threading.Event()
-    other = NullUpdatePrices()
+    observed: list[bool] = []
 
     class ReentrantUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
+            worker = self._worker
+            assert worker is not None
             fetch_started.set()
-            assert allow_reentry.wait(timeout=5)
-            with pytest.raises(RuntimeError, match='cannot call start from its worker'):
-                other.start()
+            # Block until the final stop() has run; it returns without joining this thread.
+            assert worker.stop_event.wait(timeout=5)
+            observed.append(wait_prices_updated_sync(timeout=5))
             return None
 
     update_prices = ReentrantUpdatePrices()
@@ -383,33 +382,12 @@ def test_stop_does_not_deadlock_when_fetch_reenters_start() -> None:
     assert update_prices._worker is not None
     worker = update_prices._worker
     assert fetch_started.wait(timeout=5)
+    update_prices.stop()
 
-    try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            stop_future = executor.submit(update_prices.stop)
-            assert worker.stop_event.wait(timeout=5)
-            allow_reentry.set()
-            stop_future.result(timeout=5)
-
-        # The rejected re-entrant claim must not poison a normal restart after shutdown.
-        other.start(wait=True)
-    finally:
-        allow_reentry.set()
-        update_prices.stop()
-        other.stop()
-
-
-def test_fetch_cannot_change_its_own_ownership() -> None:
-    class SelfStoppingUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            with pytest.raises(RuntimeError, match='cannot call stop from its worker'):
-                self.stop()
-            with pytest.raises(RuntimeError, match='cannot call start from its worker'):
-                self.start()
-            return None
-
-    with SelfStoppingUpdatePrices() as update_prices:
-        assert update_prices.wait(timeout=5)
+    worker.thread.join(timeout=5)
+    assert not worker.thread.is_alive()
+    # The updater was already stopped and detached, so the in-fetch wait reported False.
+    assert observed == [False]
 
 
 def test_fetch_cannot_wait_for_itself() -> None:
@@ -544,14 +522,13 @@ def test_stop_wakes_waiter_before_first_fetch(monkeypatch: pytest.MonkeyPatch) -
         return original_wait(timeout)
 
     monkeypatch.setattr(worker.ready, 'wait', tracked_wait)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
         wait_future = executor.submit(update_prices.wait)
         assert waiter_started.wait(timeout=5)
-        stop_future = executor.submit(update_prices.stop)
-        assert worker.stop_event.wait(timeout=5)
-        allow_worker_run.set()
+        update_prices.stop()
         assert wait_future.result(timeout=5) is False
-        stop_future.result(timeout=5)
+    allow_worker_run.set()
+    worker.thread.join(timeout=5)
 
 
 def test_dead_worker_publishes_terminal_failure() -> None:
@@ -573,11 +550,13 @@ def test_dead_worker_publishes_terminal_failure() -> None:
         assert replacement.wait(timeout=5)
 
 
-def test_interrupted_thread_start_drains_launched_worker(monkeypatch: pytest.MonkeyPatch):
+def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
     original_start = threading.Thread.start
+    launched: list[threading.Thread] = []
 
     def start_then_interrupt(thread: threading.Thread) -> None:
         # Thread.start() can raise (e.g. Ctrl-C) after the OS thread is already running.
+        launched.append(thread)
         original_start(thread)
         raise KeyboardInterrupt
 
@@ -587,9 +566,11 @@ def test_interrupted_thread_start_drains_launched_worker(monkeypatch: pytest.Mon
         with pytest.raises(KeyboardInterrupt):
             update_prices.start()
 
-    # The launched thread was drained and ownership released, so nothing fetches and a fresh start works.
-    assert not any(thread.name == 'genai_prices:update' for thread in threading.enumerate())
+    # Ownership was released, and the launched thread, already told to stop, exits on its own.
     assert update_prices_module._worker is None
+    (launched_thread,) = launched
+    launched_thread.join(timeout=5)
+    assert not launched_thread.is_alive()
     update_prices.start(wait=True)
     update_prices.stop()
 
@@ -624,115 +605,6 @@ def test_worker_keeps_launch_configuration_after_attribute_changes(monkeypatch: 
     assert fetches[0][1] is not update_prices.request_timeout
 
 
-def test_interrupted_final_join_still_finishes_shutdown(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    update_prices = UpdatePrices()
-    update_prices.start(wait=True)
-    assert data_snapshot._custom_snapshot is not None
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    original_join = worker.thread.join
-    interrupted = False
-
-    def join_then_interrupt(timeout: float | None = None) -> None:
-        nonlocal interrupted
-        if not interrupted:
-            interrupted = True
-            raise KeyboardInterrupt
-        original_join(timeout)
-
-    monkeypatch.setattr(worker.thread, 'join', join_then_interrupt)
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    # The interruption is re-raised only after shutdown finished: worker drained, bundled prices
-    # restored, and the module released for a fresh start.
-    assert not worker.thread.is_alive()
-    assert data_snapshot._custom_snapshot is None
-    assert update_prices_module._worker is None
-    with NullUpdatePrices() as replacement:
-        assert replacement.wait(timeout=5)
-
-
-def test_interrupted_snapshot_restore_still_wakes_waiters(monkeypatch: pytest.MonkeyPatch) -> None:
-    worker_started = threading.Event()
-    allow_worker_run = threading.Event()
-    original_run = update_prices_module._Worker._run
-
-    def paused_run(worker: update_prices_module._Worker) -> None:
-        worker_started.set()
-        assert allow_worker_run.wait(timeout=5)
-        original_run(worker)
-
-    monkeypatch.setattr(update_prices_module._Worker, '_run', paused_run)
-    update_prices = NullUpdatePrices()
-    update_prices.start()
-    assert worker_started.wait(timeout=5)
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    assert not worker.ready.is_set()
-    original_set_custom_snapshot = data_snapshot.set_custom_snapshot
-    interrupted = False
-
-    def restore_then_interrupt(snapshot: data_snapshot.DataSnapshot | None) -> None:
-        nonlocal interrupted
-        original_set_custom_snapshot(snapshot)
-        if snapshot is None and not interrupted:
-            interrupted = True
-            raise KeyboardInterrupt
-
-    monkeypatch.setattr(data_snapshot, 'set_custom_snapshot', restore_then_interrupt)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-        stop_future = executor.submit(update_prices.stop)
-        assert worker.stop_event.wait(timeout=5)
-        allow_worker_run.set()
-        with pytest.raises(KeyboardInterrupt):
-            stop_future.result(timeout=5)
-
-    assert worker.ready.is_set()
-    assert data_snapshot._custom_snapshot is None
-    assert update_prices_module._worker is None
-    with NullUpdatePrices() as replacement:
-        assert replacement.wait(timeout=5)
-
-
-@pytest.mark.parametrize('shared_owner', [False, True])
-def test_interrupted_claim_release_finishes_bookkeeping(shared_owner: bool) -> None:
-    class InterruptingUpdatePrices(NullUpdatePrices):
-        interrupt_release = False
-
-        def __setattr__(self, name: str, value: object) -> None:
-            super().__setattr__(name, value)
-            if name == '_worker' and value is None and self.interrupt_release:
-                self.interrupt_release = False
-                raise KeyboardInterrupt
-
-    first = NullUpdatePrices() if shared_owner else None
-    update_prices = InterruptingUpdatePrices()
-    if first is not None:
-        first.start(wait=True)
-    update_prices.start(wait=True)
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-
-    update_prices.interrupt_release = True
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    assert update_prices._worker is None
-    assert worker.claims == int(shared_owner)
-    if first is None:
-        assert update_prices_module._worker is None
-        assert not worker.thread.is_alive()
-    else:
-        assert update_prices_module._worker is worker
-        assert worker.thread.is_alive()
-        first.stop()
-
-    with NullUpdatePrices() as replacement:
-        assert replacement.wait(timeout=5)
-
-
 def test_broken_log_handler_does_not_disturb_updating():
     class RaisingHandler(logging.Handler):
         def emit(self, record: logging.LogRecord) -> None:
@@ -749,36 +621,3 @@ def test_broken_log_handler_does_not_disturb_updating():
     finally:
         update_prices_module.logger.removeHandler(handler)
         update_prices_module.logger.setLevel(previous_level)
-
-
-def test_second_interrupt_abandons_join_without_reinstalling_prices(monkeypatch: pytest.MonkeyPatch):
-    fetch_started = threading.Event()
-    release_fetch = threading.Event()
-
-    class BlockingUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            fetch_started.set()
-            assert release_fetch.wait(timeout=5)
-            return data_snapshot.DataSnapshot([], from_auto_update=True)
-
-    update_prices = BlockingUpdatePrices()
-    update_prices.start()
-    assert update_prices._worker is not None
-    worker = update_prices._worker
-    assert fetch_started.wait(timeout=5)
-
-    def always_interrupted_join(_timeout: float | None = None) -> None:
-        raise KeyboardInterrupt
-
-    monkeypatch.setattr(worker.thread, 'join', always_interrupted_join)
-    with pytest.raises(KeyboardInterrupt):
-        update_prices.stop()
-
-    # The second interruption abandoned the join, but the module is released for a fresh start.
-    assert update_prices_module._worker is None
-    monkeypatch.undo()
-    release_fetch.set()
-    worker.thread.join(timeout=5)
-    assert not worker.thread.is_alive()
-    # The abandoned worker discarded its fetched snapshot instead of resurrecting it after stop().
-    assert data_snapshot._custom_snapshot is None

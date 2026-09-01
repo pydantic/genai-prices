@@ -34,8 +34,9 @@ class _Config(NamedTuple):
 
 
 # All instances share one worker so libraries can opt in independently without duplicate threads.
-# `_lock` guards `_worker` and is held for all of start()/stop(), including the final join, so
-# lifecycle transitions never overlap.
+# The one lock guards the worker reference, claim counts, and snapshot install/restore, and is
+# never held across anything that blocks — stop() signals the worker instead of joining it — so
+# it cannot deadlock and Ctrl-C has nothing to interrupt.
 _lock = threading.Lock()
 _worker: _Worker | None = None
 
@@ -51,9 +52,8 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False if no updater is active or the timeout elapses.
     """
-    # Not under `_lock`: the last stop() holds it while joining, so a `fetch()` override calling
-    # this would deadlock. Safe because every published worker sets `ready` on every exit path.
-    worker = _worker
+    with _lock:
+        worker = _worker
     if worker is None:
         return False
     return worker.wait(timeout)
@@ -102,7 +102,6 @@ class UpdatePrices:
         """
         global _worker
 
-        _check_not_worker_thread('start')
         with _lock:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
@@ -114,18 +113,15 @@ class UpdatePrices:
                 worker = _Worker(config, self.fetch)
                 worker.claims = 1
                 try:
-                    # Publish before starting so the worker-thread guards see it from the first
-                    # fetch; inside the try so an interrupt can't leave a published worker that never runs.
                     _worker = worker
                     self._worker = worker
                     worker.thread.start()
                 except BaseException:
-                    # Thread.start() can fail after the OS thread launched; drain it so no orphan keeps fetching.
-                    try:
-                        worker.shutdown()
-                    finally:
-                        _worker = None
-                        self._worker = None
+                    # Thread.start() can fail after the OS thread launched; a shut-down worker
+                    # exits on its own, so releasing ownership is the whole rollback.
+                    worker.shutdown()
+                    _worker = None
+                    self._worker = None
                     raise
             else:
                 if worker.dead:
@@ -161,40 +157,20 @@ class UpdatePrices:
     def stop(self):
         """Stop the background task, or release this instance's claim on it.
 
-        The last `stop()` waits for any in-flight fetch, stops the worker and restores the bundled
-        prices. Fetch failures never make `stop()` raise; they are reported by `wait()`. A Ctrl-C
-        while waiting is re-raised once shutdown finishes; a second one stops the waiting early.
+        The last `stop()` restores the bundled prices and signals the worker, which discards any
+        in-flight fetch and exits on its own; fetch failures never make `stop()` raise.
         """
         global _worker
 
-        _check_not_worker_thread('stop')
         with _lock:
             worker = self._worker
             if worker is None:
                 return
-            remaining_claims = worker.claims - 1
-            shutdown_finished = remaining_claims != 0
-
-            def cleanup() -> None:
-                global _worker
-                nonlocal shutdown_finished
-
-                # Idempotent assignments: a Ctrl-C retry can resume anywhere without double-releasing the claim.
-                worker.claims = remaining_claims
-                self._worker = None
-                if not shutdown_finished:
-                    try:
-                        worker.shutdown()
-                    finally:
-                        # shutdown() finishes its cleanup even when interrupted; never repeat an abandoned join.
-                        shutdown_finished = True
-                if remaining_claims == 0:
-                    # Clear only after shutdown so a reentrant worker-thread guard never reads None mid-join.
-                    _worker = None
-
-            interrupted = _finish_despite_interruption(cleanup)
-            if interrupted is not None:
-                raise interrupted
+            self._worker = None
+            worker.claims -= 1
+            if worker.claims == 0:
+                worker.shutdown()
+                _worker = None
 
     def __enter__(self):
         self.start()
@@ -221,26 +197,6 @@ def _fetch_prices(url: str, request_timeout: httpx2.Timeout) -> data_snapshot.Da
     return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
-def _check_not_worker_thread(action: str) -> None:
-    # start() and stop() block on `_lock`, which the last stop() holds while joining the worker,
-    # so calling them from a `fetch()` override would deadlock.
-    worker = _worker
-    if worker is not None and threading.current_thread() is worker.thread:
-        raise RuntimeError(f'UpdatePrices background task cannot call {action} from its worker')
-
-
-def _finish_despite_interruption(action: Callable[[], None]) -> BaseException | None:
-    """Finish idempotent lifecycle bookkeeping before propagating an interruption."""
-    interrupted: BaseException | None = None
-    while True:
-        try:
-            action()
-        except (KeyboardInterrupt, SystemExit) as e:
-            interrupted = e
-        else:
-            return interrupted
-
-
 class _Worker:
     """The process-wide background thread shared by all started `UpdatePrices` instances."""
 
@@ -256,66 +212,41 @@ class _Worker:
         self.claims = 0
         self.dead = False
         self.stop_event = threading.Event()
-        # Makes check-stop-then-install atomic with shutdown's restore, so a late fetch can never
-        # reinstall data after stop() cleaned up.
-        self._install_lock = threading.Lock()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
-        # The latest fetch outcome, reported to every waiter.
+        # `ready` is set once there is an outcome to report (or the worker was stopped without
+        # one); `_outcome` is a single reference so it can be published and read atomically.
         self.ready = threading.Event()
-        self._outcome_lock = threading.Lock()
-        self._error: Exception | None = None
-        self._error_traceback: TracebackType | None = None
-        self._succeeded = False
+        self._outcome: tuple[Exception | None, TracebackType | None] | None = None
 
     def wait(self, timeout: float | None) -> bool:
         if threading.current_thread() is self.thread:
             raise RuntimeError('UpdatePrices background task cannot wait for itself')
         if not self.ready.wait(timeout=timeout):
             return False
-        with self._outcome_lock:
-            error, error_traceback, succeeded = self._error, self._error_traceback, self._succeeded
+        outcome = self._outcome
+        if outcome is None:
+            # Stopped before any fetch finished.
+            return False
+        error, error_traceback = outcome
         if error is not None:
             # Re-raise with the original traceback so waiters don't accumulate each other's frames.
             raise error.with_traceback(error_traceback)
-        return succeeded
+        return True
 
     def shutdown(self) -> None:
-        """Stop the thread and restore the bundled prices, staying responsive to Ctrl-C.
+        """Discard future updates and restore the bundled prices; the thread exits on its own.
 
-        A first Ctrl-C during the join finishes the shutdown before being re-raised; a second stops
-        waiting — the daemon thread discards its result and exits on its own.
+        Runs under `_lock` and must not block: an in-flight fetch is not waited for, and its
+        result is discarded because installs check `stop_event` under the same lock.
         """
-        interrupted: BaseException | None = None
-        for _ in range(2):
-            try:
-                self.stop_event.set()
-                # There is nothing to join when Thread.start() failed before the thread ran.
-                if self.thread.is_alive():
-                    self.thread.join()
-                break
-            except (KeyboardInterrupt, SystemExit) as e:
-                interrupted = e
-
-        def cleanup() -> None:
-            # Safe even if the join was abandoned: with stop_event set, the install lock keeps a
-            # still-running fetch from reinstalling data after this restore.
-            with self._install_lock:
-                data_snapshot.set_custom_snapshot(None)
-            # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
-            self.ready.set()
-
-        cleanup_interruption = _finish_despite_interruption(cleanup)
-        if cleanup_interruption is not None:
-            interrupted = cleanup_interruption
-        if interrupted is not None:
-            raise interrupted
+        self.stop_event.set()
+        data_snapshot.set_custom_snapshot(None)
+        # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
+        self.ready.set()
 
     def _publish(self, error: Exception | None) -> None:
-        with self._outcome_lock:
-            self._error = error
-            self._error_traceback = error.__traceback__ if error is not None else None
-            self._succeeded = error is None
-            self.ready.set()
+        self._outcome = (error, error.__traceback__ if error is not None else None)
+        self.ready.set()
 
     def _run(self) -> None:
         try:
@@ -329,7 +260,7 @@ class _Worker:
                 if self.stop_event.wait(self.config.update_interval):
                     break
         except BaseException as e:
-            # Nothing above should raise this; if it does, fail waiters and joiners instead of hanging them.
+            # Nothing above should raise this; if it does, fail waiters instead of hanging them.
             self.dead = True
             error = RuntimeError('UpdatePrices background task terminated unexpectedly')
             error.__cause__ = e
@@ -346,9 +277,9 @@ class _Worker:
         else:
             _log(logger.info, 'Successfully fetched null snapshot in %.2f seconds', interval)
 
-        with self._install_lock:
+        with _lock:
             if self.stop_event.is_set():
-                # A concurrent stop() wins: its discarded fetch is not an update, so install and publish nothing.
+                # A stop() already won: its discarded fetch is not an update, so install and publish nothing.
                 return
             data_snapshot.set_custom_snapshot(snapshot)
         self._publish(None)
