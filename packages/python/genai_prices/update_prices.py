@@ -3,6 +3,7 @@ from __future__ import annotations as _annotations
 import asyncio
 import json
 import logging
+import os
 import threading
 import warnings
 from collections.abc import Callable
@@ -32,6 +33,80 @@ DEFAULT_UPDATE_URL = (
 # lifecycle calls never wait for the worker.
 _lock = threading.Lock()
 _worker: _Worker | None = None
+_fork_hooks_registered = False
+_fork_state = threading.local()
+
+
+def _register_fork_hooks() -> None:
+    """Restart an active inherited worker after ``os.fork()``."""
+    global _fork_hooks_registered
+
+    if _fork_hooks_registered or not hasattr(os, 'register_at_fork'):
+        return
+    os.register_at_fork(
+        before=_fork_before,
+        after_in_parent=_fork_after_in_parent,
+        after_in_child=_fork_after_in_child,
+    )
+    _fork_hooks_registered = True
+
+
+def _fork_before() -> None:
+    worker = _worker
+    from_worker = worker is not None and threading.current_thread() is worker.thread
+    _fork_state.from_worker = from_worker
+    # stop() never blocks under this lock, so every fork origin can inherit complete ownership.
+    _lock.acquire()
+
+
+def _fork_after_in_parent() -> None:
+    _lock.release()
+    _fork_state.from_worker = False
+
+
+def _invalidate_inherited_worker(worker: _Worker) -> None:
+    global _worker
+
+    def cleanup() -> None:
+        global _worker
+
+        worker.invalidate_after_fork()
+        data_snapshot.set_custom_snapshot(None)
+        _worker = None
+
+    _finish_despite_interruption(cleanup)
+
+
+def _fork_after_in_child() -> None:
+    global _lock, _worker
+
+    # Do not log from this callback; handler locks may have been held by threads that vanished at fork.
+    from_worker = getattr(_fork_state, 'from_worker', False)
+    _fork_state.from_worker = False
+    # The inherited lock is held by the pre-fork callback and cannot safely be reused.
+    _lock = threading.Lock()
+    worker = _worker
+    if worker is None:
+        return
+
+    if from_worker:
+        # The current _run() survives a worker-origin fork. Stop it instead of starting a second
+        # loop; the before hook already serialized its inherited ownership state.
+        _invalidate_inherited_worker(worker)
+        return
+
+    if not worker.restart_after_fork:
+        # An overridden fetch may close over application locks held by vanished threads. Only the
+        # built-in fetch has lifecycle state we can replace completely and safely.
+        _invalidate_inherited_worker(worker)
+        return
+
+    try:
+        worker.revive_after_fork()
+    except BaseException:
+        # A public instance may still point at this worker. Make that reference inert; start(),
+        # stop(), and wait() compare it with the process-global worker before using it.
+        _invalidate_inherited_worker(worker)
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -101,7 +176,10 @@ class UpdatePrices:
         config_warning: str | None = None
         with _lock:
             if self._worker is not None:
-                raise RuntimeError('UpdatePrices background task already started')
+                if self._worker is _worker:
+                    raise RuntimeError('UpdatePrices background task already started')
+                # Failed fork revival leaves inherited instance references inert in the child.
+                self._worker = None
 
             worker = _worker
             if worker is not None and worker.dead:
@@ -109,6 +187,7 @@ class UpdatePrices:
                 dead_worker_warning = True
                 worker = None
             if worker is None:
+                _register_fork_hooks()
                 worker = _Worker(self)
                 worker.ref_count = 1
                 try:
@@ -171,7 +250,7 @@ class UpdatePrices:
             True if prices were updated, False otherwise.
         """
         worker = self._worker
-        if worker is None:
+        if worker is None or worker is not _worker:
             return False
         return worker.wait(timeout)
 
@@ -187,6 +266,9 @@ class UpdatePrices:
         with _lock:
             worker = self._worker
             if worker is None:
+                return
+            if worker is not _worker:
+                self._worker = None
                 return
             remaining_references = worker.ref_count - 1
 
@@ -263,6 +345,38 @@ class _Worker:
         # one); `_outcome` is a single reference so it can be published and read atomically.
         self.ready = threading.Event()
         self._outcome: tuple[Exception | None, TracebackType | None] | None = None
+
+    @property
+    def restart_after_fork(self) -> bool:
+        return getattr(self.owner.fetch, '__func__', None) is UpdatePrices.fetch
+
+    def revive_after_fork(self) -> None:
+        """Replace inherited synchronization state and restart this worker in the child."""
+        stop_event = threading.Event()
+        thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
+        ready = threading.Event()
+
+        self.dead = False
+        self.stop_event = stop_event
+        self.thread = thread
+        self.ready = ready
+        self._outcome = None
+        try:
+            thread.start()
+        except BaseException:
+            # Thread.start() can fail after launching; signal it using only child-local primitives.
+            self.shutdown()
+            raise
+
+    def invalidate_after_fork(self) -> None:
+        """Make inherited references inert after child revival fails."""
+        self.ref_count = 0
+        self.dead = True
+        self.stop_event = threading.Event()
+        self.stop_event.set()
+        self.ready = threading.Event()
+        self.ready.set()
+        self._outcome = None
 
     def wait(self, timeout: float | None) -> bool:
         if threading.current_thread() is self.thread:

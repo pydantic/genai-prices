@@ -160,7 +160,11 @@ If a fetch fails, the failure is logged and raised by every `wait()` call until 
 `stop()` never raises fetch failures and never blocks: the last `stop()` restores the bundled data
 immediately and signals the thread, which discards any in-flight fetch and exits on its own.
 
-Start the updater only after any `os.fork()`; a child process must not inherit a running updater.
+On platforms with `os.register_at_fork`, an updater started before `os.fork()` restarts in the child while preserving
+its active references. This supports preloaded process servers such as gunicorn. Spawned processes and platforms
+without `register_at_fork` have independent interpreter state and should opt in during normal child initialization.
+An overridden `fetch()` may depend on application locks that cannot survive a multithreaded fork, so custom-fetch
+updaters are reset to idle in the child and must be started again during child initialization.
 
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 

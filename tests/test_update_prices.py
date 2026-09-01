@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+import os
 import threading
 import traceback
 import warnings
@@ -916,3 +917,284 @@ def test_worker_reads_owner_settings_live(monkeypatch: pytest.MonkeyPatch):
         update_prices.stop()
 
     assert urls[0] == 'https://example.test/prices.json'
+
+
+def test_register_fork_hooks_once_when_supported(monkeypatch: pytest.MonkeyPatch) -> None:
+    callbacks: list[dict[str, Callable[[], None]]] = []
+
+    def register_at_fork(**kwargs: Callable[[], None]) -> None:
+        callbacks.append(kwargs)
+
+    monkeypatch.setattr(update_prices_module, '_fork_hooks_registered', False)
+    monkeypatch.setattr(os, 'register_at_fork', register_at_fork)
+
+    update_prices_module._register_fork_hooks()
+    update_prices_module._register_fork_hooks()
+
+    assert callbacks == [
+        {
+            'before': update_prices_module._fork_before,
+            'after_in_parent': update_prices_module._fork_after_in_parent,
+            'after_in_child': update_prices_module._fork_after_in_child,
+        }
+    ]
+
+
+def test_register_fork_hooks_is_noop_when_unsupported(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(update_prices_module, '_fork_hooks_registered', False)
+    monkeypatch.delattr(os, 'register_at_fork')
+
+    update_prices_module._register_fork_hooks()
+
+    assert update_prices_module._fork_hooks_registered is False
+
+
+def test_fork_restart_policy_follows_live_owner_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = UpdatePrices()
+    worker = update_prices_module._Worker(owner)
+    assert worker.restart_after_fork
+
+    monkeypatch.setattr(owner, 'fetch', lambda: None)
+
+    assert not worker.restart_after_fork
+
+
+def test_fork_callbacks_freeze_parent_and_replace_child_lock(monkeypatch: pytest.MonkeyPatch) -> None:
+    parent_lock = update_prices_module._lock
+    monkeypatch.setattr(update_prices_module, '_worker', None)
+
+    update_prices_module._fork_before()
+    assert parent_lock.locked()
+    update_prices_module._fork_after_in_parent()
+    assert not parent_lock.locked()
+
+    manual_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(manual_snapshot)
+    try:
+        update_prices_module._fork_after_in_child()
+        assert update_prices_module._lock is not parent_lock
+        assert not update_prices_module._lock.locked()
+        assert data_snapshot._custom_snapshot is manual_snapshot
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
+def _unstarted_worker(monkeypatch: pytest.MonkeyPatch) -> tuple[UpdatePrices, update_prices_module._Worker]:
+    owner = UpdatePrices()
+    worker = update_prices_module._Worker(owner)
+    # Keep the built-in-fetch fork policy while making deterministic unit callbacks network-free.
+    monkeypatch.setattr(worker, '_update_prices', lambda: worker._publish(None))
+    worker.ref_count = 1
+    owner._worker = worker
+    return owner, worker
+
+
+def test_fork_child_revives_worker_with_fresh_synchronization(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner, worker = _unstarted_worker(monkeypatch)
+    inherited_stop_event = worker.stop_event
+    inherited_thread = worker.thread
+    inherited_ready = worker.ready
+    inherited_lock = update_prices_module._lock
+    worker._outcome = (RuntimeError('inherited outcome'), None)
+    monkeypatch.setattr(update_prices_module, '_worker', worker)
+
+    update_prices_module._fork_after_in_child()
+    try:
+        assert update_prices_module._lock is not inherited_lock
+        assert update_prices_module._worker is worker
+        assert owner._worker is worker
+        assert worker.ref_count == 1
+        assert worker.stop_event is not inherited_stop_event
+        assert worker.thread is not inherited_thread
+        assert worker.ready is not inherited_ready
+        assert worker.thread.is_alive()
+        assert owner.wait(timeout=5)
+    finally:
+        worker.shutdown()
+        monkeypatch.setattr(update_prices_module, '_worker', None)
+
+
+def test_failed_fork_revival_makes_inherited_references_inert(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner, worker = _unstarted_worker(monkeypatch)
+
+    def fail_revival() -> None:
+        raise RuntimeError('revival failed')
+
+    monkeypatch.setattr(worker, 'revive_after_fork', fail_revival)
+    monkeypatch.setattr(update_prices_module, '_worker', worker)
+    update_prices_module._fork_after_in_child()
+
+    assert update_prices_module._worker is None
+    assert worker.dead
+    assert worker.ref_count == 0
+    assert worker.stop_event.is_set()
+    assert worker.ready.is_set()
+    assert data_snapshot._custom_snapshot is None
+    assert owner.wait(timeout=0) is False
+    owner.stop()
+    assert owner._worker is None
+
+    # A separate inherited reference can start afresh without first calling stop().
+    owner._worker = worker
+    owner.start(wait=True)
+    try:
+        assert owner._worker is update_prices_module._worker
+        assert owner._worker is not worker
+    finally:
+        owner.stop()
+
+
+def test_fork_child_invalidates_custom_fetch_references(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = NullUpdatePrices()
+    worker = update_prices_module._Worker(owner)
+    worker.ref_count = 1
+    owner._worker = worker
+    monkeypatch.setattr(update_prices_module, '_worker', worker)
+    update_prices_module._fork_state.from_worker = False
+
+    update_prices_module._fork_after_in_child()
+
+    assert not worker.restart_after_fork
+    assert update_prices_module._worker is None
+    assert worker.dead
+    assert owner.wait(timeout=0) is False
+    owner.stop()
+    assert owner._worker is None
+
+
+def test_worker_origin_fork_serializes_and_does_not_restart(monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = NullUpdatePrices()
+    worker = update_prices_module._Worker(owner)
+    worker.ref_count = 1
+    worker.thread = threading.current_thread()
+    owner._worker = worker
+    inherited_lock = update_prices_module._lock
+    monkeypatch.setattr(update_prices_module, '_worker', worker)
+
+    update_prices_module._fork_before()
+    assert inherited_lock.locked()
+    update_prices_module._fork_after_in_child()
+
+    assert update_prices_module._worker is None
+    assert worker.stop_event.is_set()
+    assert owner.wait(timeout=0) is False
+
+
+def test_interrupted_fork_revival_drains_launched_worker(monkeypatch: pytest.MonkeyPatch) -> None:
+    _owner, worker = _unstarted_worker(monkeypatch)
+    original_start = threading.Thread.start
+
+    def start_then_interrupt(thread: threading.Thread) -> None:
+        original_start(thread)
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(threading.Thread, 'start', start_then_interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        worker.revive_after_fork()
+
+    worker.thread.join(timeout=5)
+    assert not worker.thread.is_alive()
+    assert worker.stop_event.is_set()
+    assert worker.ready.is_set()
+    assert data_snapshot._custom_snapshot is None
+
+
+@pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
+def test_forked_child_restarts_shared_worker_and_preserves_references(monkeypatch: pytest.MonkeyPatch) -> None:
+    parent_pid = os.getpid()
+    fetch_pids: list[int] = []
+
+    class Response:
+        content = PROVIDER_ARRAY_PAYLOAD
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(_url: str, timeout: httpx2.Timeout) -> Response:
+        assert timeout is not None
+        fetch_pids.append(os.getpid())
+        return Response()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    first = UpdatePrices()
+    second = UpdatePrices()
+    first.start(wait=True)
+    second.start()
+    assert first._worker is not None
+    parent_worker = first._worker
+    parent_fetches = len(fetch_pids)
+
+    try:
+        pid = os.fork()
+        if pid == 0:  # pragma: no cover
+            try:
+                revived = first._worker
+                ok = (
+                    os.getpid() != parent_pid
+                    and revived is parent_worker
+                    and second._worker is revived
+                    and update_prices_module._worker is revived
+                    and revived.ref_count == 2
+                    and revived.thread.is_alive()
+                    and first.wait(timeout=5)
+                    and len(fetch_pids) > parent_fetches
+                    and fetch_pids[-1] == os.getpid()
+                )
+                first.stop()
+                ok = ok and second.wait(timeout=0)
+                second.stop()
+                ok = ok and update_prices_module._worker is None
+                os._exit(0 if ok else 1)
+            except BaseException:
+                os._exit(2)
+
+        _, status = os.waitpid(pid, 0)
+        assert os.waitstatus_to_exitcode(status) == 0
+    finally:
+        first.stop()
+        second.stop()
+
+
+@pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
+def test_fork_from_custom_fetch_during_stop_does_not_deadlock() -> None:
+    child_pid: int | None = None
+    fetch_started = threading.Event()
+    allow_fork = threading.Event()
+    forked = threading.Event()
+
+    class ForkingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            nonlocal child_pid
+            fetch_started.set()
+            assert allow_fork.wait(timeout=5)
+            pid = os.fork()
+            if pid == 0:  # pragma: no cover
+                try:
+                    ok = update_prices_module._worker is None and self.wait(timeout=0) is False
+                    self.stop()
+                    ok = ok and self._worker is None
+                    os._exit(0 if ok else 1)
+                except BaseException:
+                    os._exit(2)
+            child_pid = pid
+            forked.set()
+            return None
+
+    update_prices = ForkingUpdatePrices()
+    update_prices.start()
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+    try:
+        assert fetch_started.wait(timeout=5)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            stop_future = executor.submit(update_prices.stop)
+            assert worker.stop_event.wait(timeout=5)
+            allow_fork.set()
+            stop_future.result(timeout=5)
+        assert forked.wait(timeout=5)
+        assert child_pid is not None
+        _, status = os.waitpid(child_pid, 0)
+        assert os.waitstatus_to_exitcode(status) == 0
+    finally:
+        allow_fork.set()
+        update_prices.stop()
