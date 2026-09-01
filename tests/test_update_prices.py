@@ -306,14 +306,22 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
     update_prices.start()
     assert update_prices._worker is not None
     worker = update_prices._worker
+    waiter_started = threading.Event()
+    original_wait = worker.wait
+
+    def tracked_wait(timeout: float | None) -> bool:
+        waiter_started.set()
+        return original_wait(timeout)
+
+    monkeypatch.setattr(worker, 'wait', tracked_wait)
     try:
         assert fetch_started.wait(timeout=5)
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             stop_future = executor.submit(update_prices.stop)
             assert worker.stop_event.wait(timeout=5)
-            # Whether this waiter catches the updater mid-stop or after cleanup, the discarded
-            # fetch must report False either way.
             wait_future = executor.submit(wait_prices_updated_sync, 5)
+            # Ensure this waiter captured the still-published worker before stop() can clear it.
+            assert waiter_started.wait(timeout=5)
             allow_fetch_return.set()
             stop_future.result(timeout=5)
             # The fetch that stop() discarded was never installed, so it must not report an update.
@@ -640,6 +648,48 @@ def test_interrupted_final_join_still_finishes_shutdown(monkeypatch: pytest.Monk
     # The interruption is re-raised only after shutdown finished: worker drained, bundled prices
     # restored, and the module released for a fresh start.
     assert not worker.thread.is_alive()
+    assert data_snapshot._custom_snapshot is None
+    assert update_prices_module._worker is None
+    with NullUpdatePrices() as replacement:
+        assert replacement.wait(timeout=5)
+
+
+def test_interrupted_snapshot_restore_still_wakes_waiters(monkeypatch: pytest.MonkeyPatch) -> None:
+    worker_started = threading.Event()
+    allow_worker_run = threading.Event()
+    original_run = update_prices_module._Worker._run
+
+    def paused_run(worker: update_prices_module._Worker) -> None:
+        worker_started.set()
+        assert allow_worker_run.wait(timeout=5)
+        original_run(worker)
+
+    monkeypatch.setattr(update_prices_module._Worker, '_run', paused_run)
+    update_prices = NullUpdatePrices()
+    update_prices.start()
+    assert worker_started.wait(timeout=5)
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+    assert not worker.ready.is_set()
+    original_set_custom_snapshot = data_snapshot.set_custom_snapshot
+    interrupted = False
+
+    def restore_then_interrupt(snapshot: data_snapshot.DataSnapshot | None) -> None:
+        nonlocal interrupted
+        original_set_custom_snapshot(snapshot)
+        if snapshot is None and not interrupted:
+            interrupted = True
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(data_snapshot, 'set_custom_snapshot', restore_then_interrupt)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        stop_future = executor.submit(update_prices.stop)
+        assert worker.stop_event.wait(timeout=5)
+        allow_worker_run.set()
+        with pytest.raises(KeyboardInterrupt):
+            stop_future.result(timeout=5)
+
+    assert worker.ready.is_set()
     assert data_snapshot._custom_snapshot is None
     assert update_prices_module._worker is None
     with NullUpdatePrices() as replacement:

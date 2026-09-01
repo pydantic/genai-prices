@@ -303,12 +303,18 @@ class _Worker:
                 break
             except (KeyboardInterrupt, SystemExit) as e:
                 interrupted = e
-        # Safe even if the join was abandoned: once stop_event is set the worker discards fetched
-        # state, and the install lock covers the last fetch that raced the stop request.
-        with self._install_lock:
-            data_snapshot.set_custom_snapshot(None)
-        # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
-        self.ready.set()
+
+        def cleanup() -> None:
+            # Safe even if the join was abandoned: once stop_event is set the worker discards fetched
+            # state, and the install lock covers the last fetch that raced the stop request.
+            with self._install_lock:
+                data_snapshot.set_custom_snapshot(None)
+            # Wake any waiter still blocked before the first fetch finished; with no outcome, wait() returns False.
+            self.ready.set()
+
+        cleanup_interruption = _finish_despite_interruption(cleanup)
+        if cleanup_interruption is not None:
+            interrupted = cleanup_interruption
         if interrupted is not None:
             raise interrupted
 
