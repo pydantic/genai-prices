@@ -75,7 +75,7 @@ Provider and model entries and their admitted values may change within the froze
 A later publication cannot remove an existing usage key or change its resolved `price_key`, `per`, or complete
 `dimensions` mapping.
 
-**Existing usage-key order is stable and new units append.** _(from "An existing v3 unit's runtime definition never changes")_
+**Existing usage-key order is stable and new units append.**
 The relative object-member order of every already published usage key remains unchanged, because registry iteration
 affects extraction output, warning presentation, and accumulation order. Every newly published key follows all existing
 keys; multiple new keys retain their source order. Publisher and wrapped-runtime append-only validation enforce this.
