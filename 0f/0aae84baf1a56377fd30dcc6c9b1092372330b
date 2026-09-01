@@ -1,0 +1,41 @@
+prices/src/prices/v3_compatibility.py
+  s_319e04081d82e0::t_269df66742b5f9 68,129-131,133,141
+prices/src/prices/package_data.py
+  s_319e04081d82e0::t_269df66742b5f9 10,22-25
+prices/src/prices/build.py
+  s_319e04081d82e0::t_269df66742b5f9 14-20,22-23,99-101,105-114,117,225,227-239
+  s_319e04081d82e0::t_981dc859bb3b6d 6,119,219,221,223,226
+prices/src/prices/__main__.py
+  s_319e04081d82e0::t_269df66742b5f9 43-45
+tests/test_v3_compatibility.py
+  s_319e04081d82e0::t_e51b1f84661cb9 298-305
+Makefile
+  s_319e04081d82e0::t_981dc859bb3b6d 31
+  s_319e04081d82e0::t_269df66742b5f9 32,35,39
+tests/test_maintenance_commands.py
+  s_319e04081d82e0::t_e51b1f84661cb9 208-221,238
+.gitattributes
+  s_319e04081d82e0::t_269df66742b5f9 16-17
+tests/test_pipeline_build.py
+  s_319e04081d82e0::t_0c7e2079a77139 55-64,68,75-87,92,99-101,109-112,117-120,123-166,607-608,610,613
+prices/new_data/v3/data.json
+  s_319e04081d82e0::t_bbd4bc1358b097 1
+prices/new_data/v3/data.schema.json
+  s_319e04081d82e0::t_cdb40673403396 1-823
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "0f0aae84baf1a56377fd30dcc6c9b1092372330b",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
