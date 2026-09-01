@@ -536,6 +536,150 @@ def test_validate_runtime_unit_projection_ignores_extensions_and_does_not_requir
     assert registry.ancestor_usage_keys('special_batch_events') == frozenset({'events'})
 
 
+def test_python_untrusted_unit_registry_preserves_order_core_and_immutability() -> None:
+    raw_units = {
+        'events': {
+            'per': 1,
+            'dimensions': {'family': 'events'},
+            'future_extension': {'enabled': True},
+            'dimension_requirements': {'kind': {'family': 'events'}},
+        },
+        'special_events': {
+            'per': 1,
+            'price_key': 'special_events',
+            'dimensions': {'family': 'events', 'kind': 'special'},
+        },
+        'batch_events': {
+            'per': 1,
+            'price_key': 'batch_event_price',
+            'dimensions': {'family': 'events', 'mode': 'batch'},
+        },
+        'special_batch_events': {
+            'per': 1,
+            'dimensions': {'family': 'events', 'kind': 'special', 'mode': 'batch'},
+        },
+        'maximum_items': {
+            'per': 9_007_199_254_740_991,
+            'dimensions': {'family': 'maximum_items'},
+        },
+    }
+
+    registry = UnitRegistry._from_untrusted(raw_units)
+
+    assert list(registry.units) == list(raw_units)
+    assert registry.units['events'].price_key == 'events'
+    assert registry.units['special_events'].price_key == 'special_events'
+    assert registry.units['maximum_items'].per == 9_007_199_254_740_991
+    assert (
+        registry.find_join(registry.units['special_events'], registry.units['batch_events'])
+        is registry.units['special_batch_events']
+    )
+    assert not hasattr(registry.units['events'], 'future_extension')
+    assert not hasattr(registry.units['events'], 'dimension_requirements')
+    with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
+        cast(dict[str, UnitDef], registry.units)['other'] = registry.units['events']
+    with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
+        cast(dict[str, str], registry.units['events'].dimensions)['kind'] = 'changed'
+
+
+def test_python_untrusted_unit_registry_does_not_claim_interval_validation() -> None:
+    registry = UnitRegistry._from_untrusted(
+        {
+            'events': {'per': 1, 'dimensions': {'family': 'events'}},
+            'special_batch_events': {
+                'per': 1,
+                'dimensions': {'family': 'events', 'kind': 'special', 'mode': 'batch'},
+            },
+        }
+    )
+
+    assert registry.ancestor_usage_keys('special_batch_events') == frozenset({'events'})
+
+
+def test_python_untrusted_unit_registry_uses_post_decode_duplicate_member_policy() -> None:
+    raw_units = json.loads(
+        '{"events":{"per":1,"dimensions":{"family":"old"}},"events":{"per":2,"dimensions":{"family":"new"}}}'
+    )
+
+    registry = UnitRegistry._from_untrusted(raw_units)
+
+    assert registry.units['events'].per == 2
+    assert registry.units['events'].dimensions == {'family': 'new'}
+
+
+@pytest.mark.parametrize(
+    ('raw_units', 'message'),
+    [
+        ([], 'Invalid units: expected an object'),
+        ({1: {'per': 1, 'dimensions': {'family': 'events'}}}, 'usage key.*is not a string'),
+        ({'bad-name': {'per': 1, 'dimensions': {'family': 'events'}}}, 'not a public identifier'),
+        ({'constructor': {'per': 1, 'dimensions': {'family': 'events'}}}, 'is reserved'),
+        ({'class': {'per': 1, 'dimensions': {'family': 'events'}}}, 'is reserved'),
+        ({'events': []}, 'Invalid unit events: expected an object'),
+        ({'events': {'dimensions': {'family': 'events'}}}, 'Missing per for unit events'),
+        ({'events': {'per': False, 'dimensions': {'family': 'events'}}}, 'expected a positive integer'),
+        ({'events': {'per': 1.5, 'dimensions': {'family': 'events'}}}, 'expected a positive integer'),
+        ({'events': {'per': 0, 'dimensions': {'family': 'events'}}}, 'expected a positive integer'),
+        (
+            {'events': {'per': 9_007_199_254_740_992, 'dimensions': {'family': 'events'}}},
+            'expected a positive integer',
+        ),
+        ({'events': {'per': 1, 'price_key': 1, 'dimensions': {'family': 'events'}}}, 'expected a string'),
+        ({'events': {'per': 1, 'price_key': 'bad-key', 'dimensions': {'family': 'events'}}}, 'public identifier'),
+        ({'events': {'per': 1, 'price_key': 'await', 'dimensions': {'family': 'events'}}}, 'is reserved'),
+        ({'events': {'per': 1}}, 'Missing dimensions for unit events'),
+        ({'events': {'per': 1, 'dimensions': []}}, 'dimensions.*expected an object'),
+        ({'events': {'per': 1, 'dimensions': {1: 'events'}}}, 'keys must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'': 'events'}}}, 'keys must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'family': 1}}}, 'values must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'family': ''}}}, 'values must be non-empty strings'),
+        ({'events': {'per': 1, 'dimensions': {'kind': 'special'}}}, 'Missing required family dimension'),
+    ],
+)
+def test_python_untrusted_unit_registry_rejects_malformed_core(raw_units: object, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        UnitRegistry._from_untrusted(raw_units)
+
+
+def test_python_untrusted_unit_registry_rejects_identity_family_and_join_conflicts() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit price key: events and special_events use event_price'):
+        UnitRegistry._from_untrusted(
+            {
+                'events': {'per': 1, 'price_key': 'event_price', 'dimensions': {'family': 'events'}},
+                'special_events': {
+                    'per': 1,
+                    'price_key': 'event_price',
+                    'dimensions': {'family': 'events', 'kind': 'special'},
+                },
+            }
+        )
+
+    with pytest.raises(ValueError, match='Duplicate unit dimensions: events and event_count'):
+        UnitRegistry._from_untrusted(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'event_count': {'per': 1, 'dimensions': {'family': 'events'}},
+            }
+        )
+
+    with pytest.raises(ValueError, match='Inconsistent per for family dimension events'):
+        UnitRegistry._from_untrusted(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'special_events': {'per': 1_000, 'dimensions': {'family': 'events', 'kind': 'special'}},
+            }
+        )
+
+    with pytest.raises(ValueError, match='Missing join unit dimensions between special_events and batch_events'):
+        UnitRegistry._from_untrusted(
+            {
+                'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+                'batch_events': {'per': 1, 'dimensions': {'family': 'events', 'mode': 'batch'}},
+            }
+        )
+
+
 def _published_evolution_source() -> dict[str, dict[str, Any]]:
     return {
         'events': {'per': 1, 'dimensions': {'family': 'events'}},
