@@ -148,7 +148,7 @@ def test_gpt_5_6_cache_write_price_context_boundary(
     short_write_rate: Decimal,
     long_write_rate: Decimal,
 ):
-    for tokens, rate in ((272_000, short_write_rate), (272_001, long_write_rate)):
+    for tokens, rate in ((271_999, short_write_rate), (272_000, long_write_rate)):
         price = calc_price(
             Usage(input_tokens=tokens, cache_write_tokens=tokens),
             model_ref=model_ref,
@@ -233,10 +233,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=272_000, price=Decimal('12.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272_000, price=Decimal('1'))]),
-                output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272_000, price=Decimal('45'))]),
+                input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271_999, price=Decimal('10'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=271_999, price=Decimal('12.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=271_999, price=Decimal('1'))]),
+                output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=271_999, price=Decimal('45'))]),
             ),
         ),
         (
@@ -245,10 +245,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272_000, price=Decimal('8'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272_000, price=Decimal('0.8'))]),
-                output_mtok=TieredPrices(base=Decimal('20'), tiers=[Tier(start=272_000, price=Decimal('30'))]),
+                input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=271_999, price=Decimal('8'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271_999, price=Decimal('10'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=271_999, price=Decimal('0.8'))]),
+                output_mtok=TieredPrices(base=Decimal('20'), tiers=[Tier(start=271_999, price=Decimal('30'))]),
             ),
         ),
         (
@@ -257,10 +257,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
-                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272_000, price=Decimal('9'))]),
+                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271_999, price=Decimal('2'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=271_999, price=Decimal('2.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=271_999, price=Decimal('0.2'))]),
+                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=271_999, price=Decimal('9'))]),
             ),
         ),
         (
@@ -269,10 +269,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
-                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272_000, price=Decimal('1.8'))]),
+                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=271_999, price=Decimal('0.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=271_999, price=Decimal('0.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=271_999, price=Decimal('0.04'))]),
+                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=271_999, price=Decimal('1.8'))]),
             ),
         ),
         (
@@ -281,12 +281,12 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271_999, price=Decimal('5'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
+                    base=Decimal('3.125'), tiers=[Tier(start=271_999, price=Decimal('6.25'))]
                 ),
-                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
-                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272_000, price=Decimal('22.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=271_999, price=Decimal('0.5'))]),
+                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=271_999, price=Decimal('22.5'))]),
             ),
         ),
         (
@@ -295,10 +295,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
-                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272_000, price=Decimal('18'))]),
+                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=271_999, price=Decimal('4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271_999, price=Decimal('5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=271_999, price=Decimal('0.4'))]),
+                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=271_999, price=Decimal('18'))]),
             ),
         ),
     ],
@@ -1950,8 +1950,13 @@ def test_price_deepseek_v4_before_repricing(
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
-        ('gpt-5.5', 272_001, Decimal('5'), Decimal('10')),
-        ('gpt-5.5-pro', 272_001, Decimal('30'), Decimal('60')),
+        ('gpt-5.4', 272_000, Decimal('2.5'), Decimal('5')),
+        ('gpt-5.4-pro', 272_000, Decimal('30'), Decimal('60')),
+        ('gpt-5.5', 272_000, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_000, Decimal('30'), Decimal('60')),
+        ('gpt-5.6-luna', 272_000, Decimal('0.2'), Decimal('0.4')),
+        ('gpt-5.6-sol', 272_000, Decimal('4'), Decimal('8')),
+        ('gpt-5.6-terra', 272_000, Decimal('2'), Decimal('4')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):

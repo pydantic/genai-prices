@@ -195,8 +195,8 @@ def test_openai_gpt_5_4_tiered_pricing_below_threshold():
     """Test GPT-5.4 with 200,000 input tokens (below 272K threshold).
 
     Pricing structure (threshold-based):
-    - Base: $2.5/MTok for requests with <= 272K tokens
-    - Tier: $5/MTok for requests with > 272K tokens (applies to ALL tokens)
+    - Base: $2.5/MTok for requests with < 272K tokens
+    - Tier: $5/MTok for requests with >= 272K tokens (applies to ALL tokens)
 
     Calculation for 200,000 tokens:
     - All tokens at base price: (2.5 * 200,000) / 1,000,000 = $0.50
@@ -214,8 +214,8 @@ def test_openai_gpt_5_4_tiered_pricing_above_threshold():
     """Test GPT-5.4 with 500,000 input tokens (above 272K threshold).
 
     Pricing structure (threshold-based):
-    - Base: $2.5/MTok for requests with <= 272K tokens
-    - Tier: $5/MTok for requests with > 272K tokens (applies to ALL tokens)
+    - Base: $2.5/MTok for requests with < 272K tokens
+    - Tier: $5/MTok for requests with >= 272K tokens (applies to ALL tokens)
 
     Calculation for 500,000 tokens:
     - ALL tokens at tier price: (5 * 500,000) / 1,000,000 = $2.50
@@ -240,8 +240,8 @@ def test_openai_gpt_5_4_tiered_pricing_with_output():
     - Output base: $15/MTok, tier: $22.5/MTok (threshold at 272K)
 
     Calculation:
-    - Input: 300K > 272K, so tier rate applies to ALL: (5 * 300,000) / 1,000,000 = $1.50
-    - Output: tier determined by input (300K > 272K), so tier rate: (22.5 * 100,000) / 1,000,000 = $2.25
+    - Input: 300K >= 272K, so tier rate applies to ALL: (5 * 300,000) / 1,000,000 = $1.50
+    - Output: tier determined by input (300K >= 272K), so tier rate: (22.5 * 100,000) / 1,000,000 = $2.25
     - Total: $1.50 + $2.25 = $3.75
     """
     price = calc_price(
