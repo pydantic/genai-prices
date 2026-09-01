@@ -1,0 +1,21 @@
+tests/test_update_prices.py
+  s_319e04081d82e0::t_d8a5a4759f44fe 24,317-373
+  s_319e04081d82e0::t_33ffa911bbe3e7 374-376
+  s_319e04081d82e0::t_48844b6c3c92d9 377-379
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "142d9d9480d41665c55899352c1259748faabd04",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
