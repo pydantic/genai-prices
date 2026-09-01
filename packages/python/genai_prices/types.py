@@ -5,7 +5,7 @@ import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
 from copy import copy
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from numbers import Integral
@@ -15,10 +15,9 @@ import pydantic
 from typing_extensions import Self, TypedDict
 
 from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
-from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
-    from genai_prices.units import UnitDef
+    from genai_prices.units import UnitDef, UnitRegistry
 
 __all__ = (
     'ProviderID',
@@ -483,23 +482,6 @@ class UsageExtractor:
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
-    _registry: InitVar[UnitRegistry | None] = None
-    _reported_usage_keys: frozenset[str] = field(init=False, repr=False, compare=False)
-
-    def __post_init__(self, _registry: UnitRegistry | None) -> None:
-        reported_usage_keys = (
-            _registry._reported_usage_keys if _registry is not None else _reported_usage_keys()  # pyright: ignore[reportPrivateUsage]
-        )
-        object.__setattr__(self, '_reported_usage_keys', reported_usage_keys)
-
-        invalid_destinations = {mapping.dest for mapping in self.mappings} - reported_usage_keys
-        if invalid_destinations:
-            bad_keys = ', '.join(sorted(invalid_destinations))
-            warnings.warn(
-                f'Unsupported extractor destination for standard extraction: {bad_keys}',
-                UserWarning,
-                stacklevel=2,
-            )
 
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
@@ -513,6 +495,16 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        reported_usage_keys = _reported_usage_keys()
+        invalid_destinations = {mapping.dest for mapping in self.mappings} - reported_usage_keys
+        if invalid_destinations:
+            bad_keys = ', '.join(sorted(invalid_destinations))
+            warnings.warn(
+                f'Unsupported extractor destination for standard extraction: {bad_keys}',
+                UserWarning,
+                stacklevel=2,
+            )
+
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
@@ -525,7 +517,7 @@ class UsageExtractor:
         values_set = False
         supported_mappings = 0
         for mapping in self.mappings:
-            if mapping.dest not in self._reported_usage_keys:
+            if mapping.dest not in reported_usage_keys:
                 continue
             supported_mappings += 1
             value = _extract_path(mapping.path, usage_obj, (Integral, float, Decimal), mapping.required, root)
@@ -1151,38 +1143,9 @@ _providers_schema = pydantic.TypeAdapter(
 )
 
 
-def _providers_from_raw(raw_providers: Any, registry: UnitRegistry | None = None) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+def _providers_from_raw(raw_providers: Any) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
     normalized = _normalize_model_prices(raw_providers)
-    if registry is not None:
-        normalized = _inject_extractor_registry(normalized, registry)
     return _providers_schema.validate_python(normalized)
-
-
-def _inject_extractor_registry(raw_providers: Any, registry: UnitRegistry) -> Any:
-    if not isinstance(raw_providers, list):
-        return raw_providers
-
-    providers: list[Any] = []
-    for raw_provider in cast(list[Any], raw_providers):
-        if not isinstance(raw_provider, Mapping):
-            providers.append(raw_provider)
-            continue
-
-        provider = dict(cast(Mapping[str, Any], raw_provider))
-        raw_extractors = provider.get('extractors')
-        if isinstance(raw_extractors, list):
-            extractors: list[Any] = []
-            for raw_extractor in cast(list[Any], raw_extractors):
-                if isinstance(raw_extractor, Mapping):
-                    extractor = dict(cast(Mapping[str, Any], raw_extractor))
-                    extractor['_registry'] = registry
-                    extractors.append(extractor)
-                else:
-                    extractors.append(raw_extractor)
-            provider['extractors'] = extractors
-        providers.append(provider)
-
-    return providers
 
 
 def _normalize_model_prices(value: Any) -> Any:

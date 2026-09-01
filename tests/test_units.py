@@ -1378,26 +1378,6 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     }
 
 
-def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
-    from genai_prices import types as runtime_types
-
-    registry = UnitRegistry({})
-    invalid_provider = object()
-    invalid_extractor = object()
-    raw_providers: list[Any] = [
-        invalid_provider,
-        {'id': 'without-extractors'},
-        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
-    ]
-
-    assert runtime_types._inject_extractor_registry({}, registry) == {}
-    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
-    assert injected[0] is invalid_provider
-    assert injected[1] == {'id': 'without-extractors'}
-    assert injected[2]['extractors'][0] is invalid_extractor
-    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
-
-
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -1418,7 +1398,7 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
 
-    def fail_runtime_provider_validation(_provider_data: Any, _registry: UnitRegistry) -> list[runtime_types.Provider]:
+    def fail_runtime_provider_validation(_provider_data: Any) -> list[runtime_types.Provider]:
         raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
 
     monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
@@ -1430,18 +1410,9 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     assert 'transient_tokens' not in bundled_registry.units
 
 
-def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
+def test_runtime_provider_parsing_defers_extractor_destination_validation() -> None:
     from genai_prices import types as runtime_types
 
-    registry = UnitRegistry(
-        {
-            'transient_tokens': {
-                'per': 1_000_000,
-                'price_key': 'transient_mtok',
-                'dimensions': {'family': 'transient'},
-            },
-        }
-    )
     provider = runtime_types._providers_from_raw(
         [
             {
@@ -1455,12 +1426,12 @@ def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
                     },
                 ],
             },
-        ],
-        registry,
+        ]
     )[0]
 
     assert provider.extractors is not None
-    assert provider.extractors[0]._reported_usage_keys == frozenset({'transient_tokens'})
+    with pytest.warns(UserWarning, match='Unsupported extractor destination for standard extraction: transient_tokens'):
+        assert provider.extractors[0].extract({'usage': {'value': 3}}) == (None, Usage())
 
 
 def test_package_ts_data_accepts_separated_inputs_without_units_yml(
