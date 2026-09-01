@@ -221,13 +221,17 @@ def test_distinct_instances_share_ownership(monkeypatch: pytest.MonkeyPatch):
         pytest.param(lambda: UpdatePrices(request_timeout=httpx2.Timeout(1)), id='request-timeout'),
     ],
 )
-def test_different_configuration_is_rejected(
+def test_different_configuration_warns_and_joins(
     monkeypatch: pytest.MonkeyPatch, make_update_prices: Callable[[], UpdatePrices]
 ):
     _mock_update_prices_get(monkeypatch)
-    with UpdatePrices():
-        with pytest.raises(RuntimeError, match='already started with different configuration'):
-            make_update_prices().start()
+    with UpdatePrices() as first:
+        second = make_update_prices()
+        with pytest.warns(UserWarning, match='already running with different configuration; keeping'):
+            second.start()
+        # The first configuration wins: the second instance joins the running worker unchanged.
+        assert second._worker is first._worker
+        second.stop()
 
 
 def test_same_instance_cannot_start_twice():
@@ -592,23 +596,30 @@ def test_stop_suppresses_in_flight_terminal_failure() -> None:
     assert worker.wait(timeout=0) is False
 
 
-def test_dead_worker_publishes_terminal_failure() -> None:
+def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch: pytest.MonkeyPatch) -> None:
     class DeadUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
             raise KeyboardInterrupt
 
-    update_prices = DeadUpdatePrices()
-    update_prices.start()
-    try:
-        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
-            update_prices.wait(timeout=5)
-        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
-            NullUpdatePrices().start()
-    finally:
-        update_prices.stop()
+    _mock_update_prices_get(monkeypatch)
+    dead = DeadUpdatePrices()
+    dead.start()
+    with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+        dead.wait(timeout=5)
 
-    with NullUpdatePrices() as replacement:
-        assert replacement.wait(timeout=5)
+    # The next start replaces the dead worker instead of raising.
+    replacement = UpdatePrices()
+    replacement.start(wait=True)
+    assert replacement._worker is not dead._worker
+    assert data_snapshot._custom_snapshot is not None
+
+    # Releasing the stale claim must not disturb the replacement or its data.
+    dead.stop()
+    assert update_prices_module._worker is replacement._worker
+    assert data_snapshot._custom_snapshot is not None
+
+    replacement.stop()
+    assert data_snapshot._custom_snapshot is None
 
 
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
@@ -694,6 +705,32 @@ def test_interrupted_snapshot_restore_still_wakes_waiters(monkeypatch: pytest.Mo
     with pytest.raises(KeyboardInterrupt):
         update_prices.stop()
 
+    assert worker.ready.is_set()
+    assert data_snapshot._custom_snapshot is None
+    assert update_prices_module._worker is None
+    worker.thread.join(timeout=5)
+
+
+def test_interrupted_waiter_wakeup_still_finishes_shutdown(monkeypatch: pytest.MonkeyPatch) -> None:
+    update_prices = NullUpdatePrices()
+    update_prices.start(wait=True)
+    assert update_prices._worker is not None
+    worker = update_prices._worker
+    original_ready_set = worker.ready.set
+    interrupted = False
+
+    def wake_then_interrupt() -> None:
+        nonlocal interrupted
+        original_ready_set()
+        if not interrupted:
+            interrupted = True
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(worker.ready, 'set', wake_then_interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        update_prices.stop()
+
+    assert worker.stop_event.is_set()
     assert worker.ready.is_set()
     assert data_snapshot._custom_snapshot is None
     assert update_prices_module._worker is None
