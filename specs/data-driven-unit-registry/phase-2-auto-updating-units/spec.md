@@ -100,8 +100,9 @@ remain dynamically keyed strings resolved against the adjacent units. Later sche
 structural variants without removing or redefining the core forms older clients understand.
 
 **Unknown object members are ignorable v3 extensions.** _(from "New v3 features degrade locally on older clients")_
-Wrapper, unit, provider, model, extractor, match, constraint, and price objects validate every recognized member while
-ignoring unrecognized members. An added field alone never rejects a candidate.
+An added field alone never rejects a candidate. Recognized wrapper and unit members are validated during candidate
+preparation; recognized provider, model, extractor, match, constraint, and price members retain each runtime's existing
+decoding or use-time validation boundary.
 
 **Unsupported structural variants skip only their containing capability.** _(from "New v3 features degrade locally on older clients", "Partial v3 support is explicit")_
 For example, an unknown extractor variant skips that extractor while other extractors, models, prices, and providers
@@ -175,8 +176,9 @@ with bundled units before constructing a calculator. A candidate that removes, r
 ancestor of a known unit is rejected. Legacy provider arrays are exempt because they carry no units.
 
 **Candidate preparation has no externally visible state change.**
-A runtime constructs and validates the complete candidate before activation or Go constructor return. Any failure leaves
-the Python or JavaScript pair unchanged and returns no Go calculator.
+A runtime validates the replacement registry and performs its baseline provider-data preparation before activation or
+Go constructor return. Any failure detected at that stage leaves the Python or JavaScript pair unchanged and returns no
+Go calculator.
 
 **Runtime unit validation enforces every understood invariant in the v3 projection.** _(from "Unknown object members are ignorable v3 extensions")_
 It validates the recognized wrapper and unit core, unsafe public keys, normalization, price and dimension identities,
@@ -188,29 +190,29 @@ Python and Go decode bytes internally, while JavaScript normally receives an obj
 Phase 2 validates the resulting value consistently and does not promise detection of duplicate source-text object member
 names that a standard decoder has already collapsed.
 
-**Runtime provider validation uses the understood v3 provider projection and candidate registry.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "The v3 provider member begins with the cutover v2 provider contract and evolves additively", "Unsupported structural variants skip only their containing capability")_
-Dynamic price keys and extractor destinations are resolved against the understood candidate units. Every retained model
-price has complete ancestor and join coverage before activation or Go constructor return. Unsupported price entries or
-extractor mappings are warned and omitted without discarding understood siblings.
+**Wrapped provider data retains each runtime's existing validation timing.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "The v3 provider member begins with the cutover v2 provider contract and evolves additively", "Unsupported structural variants skip only their containing capability")_
+Wrapping provider data does not introduce an exhaustive provider scan. Python and JavaScript retain their existing
+wire decoding and normalization, while registry membership, ancestor coverage, and join coverage remain deferred until
+a selected price is calculated. Python moves extractor-destination checks to extraction; JavaScript retains its current
+preparation warning and checks again during extraction. Go retains full validation during immutable calculator
+construction.
 
-**Wrapped v3 candidates eagerly validate their understood projection in every runtime.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change", "New v3 features degrade locally on older clients")_
-Before Python or JavaScript activation or a Go constructor return, every retained unit, provider structure, price value,
-registry relationship, model price, and extractor destination is checked against one candidate registry. Unsupported
-extensions are warned and removed during preparation; the remaining pair activates or returns atomically.
+**Unsupported additions do not make understood provider data invalid.** _(from "Wrapped provider data retains each runtime's existing validation timing", "New v3 features degrade locally on older clients")_
+An unsupported extension follows the warning-and-omit path at the client's normal decoding or use boundary. Malformed
+recognized data follows that client's existing error timing; an unused invalid model does not gain a new whole-update
+failure mode in Python or JavaScript.
 
-**Recognized malformed v3 data still fails atomically.** _(from "Candidate preparation has no externally visible state change", "New v3 features degrade locally on older clients")_
-An unknown extension follows the warning-and-omit path, but an invalid value or shape for a construct the client claims
-to support is a contract error. That distinction prevents forward compatibility from hiding corruption in known data.
-
-**Python and JavaScript activate one paired state reference.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change")_
-After final validation, activation replaces one process-global reference containing registry and providers. Standard
-pricing, matching, and extraction capture that reference once per operation.
+**Python and JavaScript activate providers and units through their existing global update boundaries.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Candidate preparation has no externally visible state change")_
+The Python snapshot setter and JavaScript provider-data setter install the replacement registry and providers during the
+same activation call. Existing operations continue reading process-global providers and the process-global registry;
+Phase 2 adds no operation-scoped context or provider provenance mechanism.
 
 **Runtime ingestion tests cover both accepted root shapes.** _(from "Every data-ingestion API shape-detects wrapped v3 objects and legacy provider arrays", "The v2 provider contract is pinned at the Phase 2 cutover")_
 Each runtime exercises wrapped v3 objects and legacy provider arrays.
 
-**Runtime atomicity tests reject invalid candidates without state change.** _(from "Candidate preparation has no externally visible state change", "Wrapped v3 candidates eagerly validate their understood projection in every runtime", "Recognized malformed v3 data still fails atomically")_
-Coverage includes invalid units, providers, price coverage, extractor destinations, and append-only relationships.
+**Runtime atomicity tests cover preparation-time failures without state change.** _(from "Candidate preparation has no externally visible state change", "Wrapped provider data retains each runtime's existing validation timing")_
+Coverage includes invalid wrappers and units, append-only failures, and the provider structures each runtime already
+rejects during preparation. Use-time provider failures remain outside activation atomicity in Python and JavaScript.
 
 **Forward-compatibility tests retain the understood projection.** _(from "New v3 features degrade locally on older clients", "Partial v3 support is explicit", "Unknown object members are ignorable v3 extensions", "Unsupported structural variants skip only their containing capability", "Behavior-changing extensions must be distinguishable from existing forms")_
 Each runtime ignores added object members, warns and skips an unsupported extractor or price variant, and still activates
@@ -303,66 +305,80 @@ old-implication preservation, removal rejection, and new-ancestor rejection.
 
 ---
 
-**Changes — Python: wrapped snapshots activate providers and units as one pair.** _(from "Python and JavaScript activate one paired state reference")_
-This subsection defines Python decoding, snapshot ownership, activation, operation capture, and failure behavior.
+**Changes — Python: wrapped snapshots carry units to the existing activation boundary.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries")_
+This subsection defines Python decoding, snapshot ownership, customization, activation, and failure behavior.
 
 **Python decoded-contract failures are `ValueError`.**
-Invalid wrapper, unit, provider, coverage, or append-only data raises `ValueError`.
+Invalid wrapper or unit data, a provider structure rejected by Python's existing decoder, or an append-only failure
+raises `ValueError`. Registry membership and coverage checks retain their existing calculation-time behavior.
 
 **Python decoded-contract errors identify the failing data.** _(from "Python decoded-contract failures are `ValueError`")_
 The error includes a member path or provider/model context sufficient to locate the invalid input.
 
-**Python activation races fail atomically.** _(from "Every wrapped runtime candidate is append-only relative to its compatibility registry", "Candidate preparation has no externally visible state change")_
-Activation rechecks append-only compatibility and raises `ValueError` without changing state if the active registry
-advanced incompatibly after preparation.
+**Python activation rechecks only registry evolution.** _(from "Every wrapped runtime candidate is append-only relative to its compatibility registry", "Candidate preparation has no externally visible state change")_
+Immediately before installing a fetched wrapped snapshot, `set_custom_snapshot(...)` repeats the append-only registry
+comparison. It does not traverse or validate the snapshot's providers.
 
-**A fetched Python v3 snapshot privately owns its candidate registry.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Python and JavaScript activate one paired state reference")_
-Its calculation and extraction methods use that registry before activation. The registry association is private to a
-fetched wrapped snapshot; a provider-array snapshot has no replacement registry and uses the active one.
+**A fetched Python v3 snapshot carries its candidate registry only for activation.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them", "Python and JavaScript activate providers and units through their existing global update boundaries")_
+The association is private activation data, not a snapshot-local calculation context. Before activation, snapshot
+pricing and extraction use the process's active registry like every other Python operation. A provider-array snapshot
+has no replacement registry.
 
-**A caller-constructed Python snapshot changes providers only.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "A fetched Python v3 snapshot privately owns its candidate registry")_
+**A caller-constructed Python snapshot changes providers only.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
 Activating a `DataSnapshot` without a validated wrapped registry retains the active registry.
 
-**Python lookup results are detached from a snapshot's private registry.** _(from "A fetched Python v3 snapshot privately owns its candidate registry")_
-Snapshot lookup results carry no registry provenance. Calling their methods directly uses the active registry, so a
-fetched-only unit is usable through snapshot `calc(...)` and `extract_usage(...)` before activation but not through a
-detached lookup result until that snapshot has been activated.
+**Python provider customization remains lazy after fetch.** _(from "A fetched Python v3 snapshot carries its candidate registry only for activation", "Wrapped provider data retains each runtime's existing validation timing")_
+The fetched snapshot remains mutable. A caller may add or replace custom prices, models, providers, and extractors before
+activation. Activation rechecks only registry evolution and does not rescan the mutable provider graph; custom price and
+extractor errors or unsupported names are discovered when the selected price is calculated or extractor is used.
 
-**Python background activation installs the fetched pair after `fetch()` returns.** _(from "A fetched Python v3 snapshot privately owns its candidate registry", "Python and JavaScript activate one paired state reference")_
+**Background customization continues through `UpdatePrices.fetch()` overrides.** _(from "Python provider customization remains lazy after fetch")_
+A subclass may call `super().fetch()`, mutate the returned snapshot, and return that same snapshot. Because the worker
+calls the override for every refresh, those custom prices and extractors are reapplied to each download without a new
+overlay API. Mutating one fetched snapshot outside that override remains temporary and may be replaced by the next
+background refresh.
+
+**Python background activation installs the fetched pair after `fetch()` returns.** _(from "A fetched Python v3 snapshot carries its candidate registry only for activation", "Python and JavaScript activate providers and units through their existing global update boundaries")_
 The worker uses the same activation operation as `set_custom_snapshot(...)` after candidate preparation succeeds.
 
-**Clearing Python state intentionally keeps the latest registry.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "Every wrapped runtime candidate is append-only relative to its compatibility registry")_
-Bundled providers are restored against the active append-only superset so detached objects using fetched units remain
-usable. Process restart restores the fully bundled pair.
+**Clearing Python state restores the complete bundled pair.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
+Passing `None` to `set_custom_snapshot(...)` restores bundled providers with bundled units. No fetched registry remains
+active after an explicit clear or updater stop.
 
-**Stopping Python cannot reinstall an in-flight fetched pair.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Clearing Python state intentionally keeps the latest registry")_
-`stop()` signals and joins the worker before restoring bundled providers.
+**Stopping Python cannot reinstall an in-flight fetched pair.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Clearing Python state restores the complete bundled pair")_
+`stop()` signals and joins the worker before restoring the bundled pair.
 
-**Python detached operations capture one applicable registry.** _(from "Python and JavaScript activate one paired state reference", "A fetched Python v3 snapshot privately owns its candidate registry")_
-`DataSnapshot` methods use their private registry when present. Base `ModelInfo.calc_price(...)`, base
-`ModelPrice.calc_price(...)`, and standalone `Usage` operations otherwise capture the active registry once at entry.
+**Every Python operation uses the process's active registry.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
+`DataSnapshot` methods, bare provider/model methods, base `ModelPrice.calc_price(...)`, and standalone `Usage` operations
+continue resolving the process-global registry through the existing registry accessor. No operation consults a
+snapshot-local registry.
 
-**Python snapshot tests cover paired state behavior.** _(from "A fetched Python v3 snapshot privately owns its candidate registry", "A caller-constructed Python snapshot changes providers only", "Python lookup results are detached from a snapshot's private registry", "Clearing Python state intentionally keeps the latest registry")_
-Coverage includes fetch, activation, lookup provenance, caller-constructed snapshots, and clearing.
+**Python custom extractors resolve destinations when used.** _(from "Python provider customization remains lazy after fetch", "Every Python operation uses the process's active registry")_
+A `UsageExtractor` does not validate or permanently cache supported destinations during construction. Each extraction
+checks mappings against the then-active registry, warns with `UserWarning` for unsupported destinations, omits those
+mappings, and continues with supported siblings. An extractor added before activation can therefore use the fetched
+snapshot's new units after activation.
+
+**Python snapshot tests cover activation-only registry ownership and customization.** _(from "A fetched Python v3 snapshot carries its candidate registry only for activation", "A caller-constructed Python snapshot changes providers only", "Python provider customization remains lazy after fetch", "Background customization continues through `UpdatePrices.fetch()` overrides", "Python custom extractors resolve destinations when used", "Clearing Python state restores the complete bundled pair")_
+Coverage includes pre-activation use of the active registry, custom prices and extractors added after fetch, repeated
+subclassed background refreshes, activation, caller-constructed snapshots, and complete clearing.
 
 **Python background tests cover paired activation and stopping.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Stopping Python cannot reinstall an in-flight fetched pair.")_
 Coverage includes worker activation, stop signaling, join ordering, and bundled-provider restoration.
 
-**Python contract-error tests cover decoded failures and activation races.** _(from "Python decoded-contract failures are `ValueError`", "Python decoded-contract errors identify the failing data", "Python activation races fail atomically")_
-They pin `ValueError` context and prove a failed final append-only check leaves the active pair unchanged.
-
-**Python operation-capture tests prevent mixed-registry reads.** _(from "Python detached operations capture one applicable registry")_
-They exercise activation races across matching, extraction, usage inference, decomposition, and pricing.
+**Python contract-error tests cover decoded and final registry failures.** _(from "Python decoded-contract failures are `ValueError`", "Python decoded-contract errors identify the failing data", "Python activation rechecks only registry evolution")_
+They pin `ValueError` context and prove a failed final append-only check leaves active providers and units unchanged.
 
 ---
 
-**Changes — JavaScript: provider-data updates activate complete pairs.** _(from "Python and JavaScript activate one paired state reference")_
-This subsection defines JavaScript decoding, update ordering, operation capture, and failure behavior.
+**Changes — JavaScript: provider-data updates activate providers and units together.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries")_
+This subsection defines JavaScript decoding, global activation, update ordering, and failure behavior.
 
 **Synchronous JavaScript validation failures throw `Error` synchronously.**
-A non-promise invalid wrapper, unit set, provider set, coverage relation, or append-only comparison throws from
-`setProviderData(...)` and leaves the active pair and current update promise unchanged. New contract errors use the
-stable prefix `genai-prices: invalid data:` followed by path or provider/model context.
+A non-promise invalid wrapper or unit set, provider structure rejected by JavaScript's existing preparation path, or
+append-only comparison throws from `setProviderData(...)` and leaves the active pair and current update promise
+unchanged. New contract errors use the stable prefix `genai-prices: invalid data:` followed by path or provider/model
+context. Selected-price validation retains its existing use-time behavior.
 
 **Asynchronous JavaScript contract failures reject with `Error`.** _(from "Synchronous JavaScript validation failures throw `Error` synchronously.")_
 An invalid resolved candidate rejects `waitForUpdate()`, emits the existing fire-and-forget warning, and leaves the
@@ -370,25 +386,21 @@ active pair unchanged. Contract validation creates `Error` with the synchronous 
 
 **JavaScript widens `setProviderData` with the wrapped shape.** _(from "A wrapped v3 publication and activation always keep unit definitions with the provider fields that depend on them")_
 The accepted non-null value becomes `Provider[] | { units, providers }`, synchronously or through a promise. A provider
-array changes providers only; a wrapped value can replace the pair after complete validation.
+array changes providers only; a wrapped value can replace the pair after registry validation and baseline provider
+preparation.
 
-**JavaScript's promise ordering applies to complete pairs.** _(from "JavaScript widens `setProviderData` with the wrapped shape", "Python and JavaScript activate one paired state reference")_
+**JavaScript's promise ordering applies to complete pairs.** _(from "JavaScript widens `setProviderData` with the wrapped shape", "Python and JavaScript activate providers and units through their existing global update boundaries")_
 An older pending wrapped or provider-only update cannot overwrite a newer non-null update.
 
-**JavaScript operations capture one applicable registry.** _(from "Python and JavaScript activate one paired state reference", "JavaScript widens `setProviderData` with the wrapped shape")_
-Standard entry points pass the registry captured with active providers through matching, extraction, and pricing. Direct
-helpers without an explicit registry capture the active registry once at entry. `extractUsage(...)` uses the registry
-recorded by standard active lookup for its provider; a detached caller-supplied provider captures the active registry
-when extraction starts.
+**JavaScript operations use the process's active registry.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "JavaScript widens `setProviderData` with the wrapped shape")_
+Standard pricing and extraction continue resolving the process-global registry through the existing accessor. A
+provider returned earlier or supplied directly has no separate registry provenance.
 
 **JavaScript pair-ordering tests cover non-null attempts.** _(from "JavaScript's promise ordering applies to complete pairs")_
 Coverage includes synchronous and promised candidates plus current and stale non-null attempts.
 
 **JavaScript contract-validation tests cover error timing.** _(from "Synchronous JavaScript validation failures throw `Error` synchronously.", "Asynchronous JavaScript contract failures reject with `Error`.")_
 They distinguish invalid direct candidates from invalid promised candidates and pin the contract-error prefix.
-
-**JavaScript operation-capture tests prevent mixed-registry reads.** _(from "JavaScript operations capture one applicable registry")_
-They exercise activation races across matching, extraction, usage inference, decomposition, and pricing.
 
 ---
 
@@ -444,9 +456,13 @@ runtimes do not claim to repeat that source check.
 V3 and generated package files contain runtime-semantic units, providers, and prices only. Trust markers, schema
 fingerprints, generations, locks, prepared validation results, and decomposition plans are not serialized.
 
-**Unrelated Python manual writes have no new global ordering guarantee.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
-State replacement is serialized, but Phase 2 adds no process-wide generation protocol or ordering promise among
-unrelated `set_custom_snapshot(...)` calls.
+**Concurrent mutable-client operations gain no new consistency guarantee.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
+Phase 2 adds no locks, generations, operation-scoped registry context, provider provenance, or ordering promise among
+concurrent Python or JavaScript reads and writes. Sequential activation remains the supported update model.
+
+**A persistent custom-provider overlay is excluded.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary", "Background customization continues through `UpdatePrices.fetch()` overrides")_
+Phase 2 does not add a second provider store or automatically merge one-time custom mutations into later downloads.
+Callers that need custom prices or extractors on every Python refresh reapply them in a `fetch()` override.
 
 **Validation caches and decomposition caches are excluded.** _(from "Scope exclusions: Phase 2 stops at the runtime-update boundary")_
 Provider/model lookup caches inside a snapshot or calculator remain permitted. New pricing, validation, or decomposition
@@ -576,13 +592,14 @@ members. Go retains its constructor-time decode and full validation, including i
 object members. All three continue decoding every structural and representation form admitted by the pinned v2 schema,
 then apply their baseline semantic checks at the times specified below.
 
-**Legacy arrays retain each runtime's baseline registry-validation timing.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "Legacy arrays retain each runtime's baseline structural tolerance")_
-Python and JavaScript warn about unsupported extractor destinations while preparing the array, but defer unknown price
-keys, invalid price values, and ancestor/join coverage checks until a selected model price is calculated. Go validates
-every recognized model price and coverage relationship in `NewCalculatorFromJSON`; unknown price keys remain tolerated
-and omitted from pricing, and unsupported extractor destinations remain warnings produced during extraction.
+**Legacy arrays retain each runtime's baseline provider-validation timing.** _(from "Provider-only inputs are an explicit exception to wrapped-pair activation", "Legacy arrays retain each runtime's baseline structural tolerance")_
+Python retains its existing wire-value decoding and JavaScript retains its existing normalization; both defer unknown
+price keys and ancestor/join coverage until a selected model price is calculated. Go validates every recognized model
+price and coverage relationship in `NewCalculatorFromJSON`; unknown price keys remain tolerated and omitted from
+pricing. Python's extractor-destination timing deliberately changes under "Python custom extractors resolve
+destinations when used"; JavaScript and Go retain their existing extractor-warning timing.
 
-**Unknown registry names retain baseline tolerance outside wrapped v3 candidates.** _(from "Phase 2 inherits the root registry semantics and terminology", "Legacy arrays retain each runtime's baseline registry-validation timing")_
+**Unknown registry names retain baseline tolerance outside wrapped v3 candidates.** _(from "Phase 2 inherits the root registry semantics and terminology", "Legacy arrays retain each runtime's baseline provider-validation timing")_
 In legacy arrays, detached providers, and caller usage, unsupported price keys, extractor destinations, and usage keys
 produce the baseline deterministic warning or result-warning and are omitted from standard calculation or extraction.
 
@@ -622,7 +639,7 @@ unchanged, and neither payload receives a new price key or extractor destination
 **Go generation tests preserve identifier spelling.** _(from "Generated Go unit identifiers retain their deterministic transformation")_
 They pin representative underscores, digit-leading parts, and empty parts against the existing transformation.
 
-**Legacy-array compatibility tests cover preserved v2 behavior.** _(from "Legacy arrays accept every representation admitted by the pinned v2 schema", "Legacy arrays retain semantic validation beyond structural schema checks", "Legacy price-constraint shapes retain their meanings", "Legacy arrays retain each runtime's baseline structural tolerance", "Legacy arrays retain each runtime's baseline registry-validation timing", "Unknown registry names retain baseline tolerance outside wrapped v3 candidates")_
+**Legacy-array compatibility tests cover preserved v2 behavior.** _(from "Legacy arrays accept every representation admitted by the pinned v2 schema", "Legacy arrays retain semantic validation beyond structural schema checks", "Legacy price-constraint shapes retain their meanings", "Legacy arrays retain each runtime's baseline structural tolerance", "Legacy arrays retain each runtime's baseline provider-validation timing", "Unknown registry names retain baseline tolerance outside wrapped v3 candidates")_
 Each runtime covers admitted representations, both constraint shapes, baseline semantic checks, structural tolerance,
 validation timing, and unsupported-name behavior.
 
