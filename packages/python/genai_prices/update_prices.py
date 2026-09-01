@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import threading
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from time import time
@@ -50,7 +51,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False if no updater is active or the timeout elapses.
+        True if prices were updated, False otherwise.
     """
     with _lock:
         worker = _worker
@@ -68,7 +69,7 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False if no updater is active or the timeout elapses.
+        True if prices were updated, False otherwise.
     """
     return await asyncio.to_thread(wait_prices_updated_sync, timeout)
 
@@ -77,10 +78,10 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 class UpdatePrices:
     """Update prices in the background using a shared daemon thread.
 
-    All instances share one process-wide worker: the first `start()` launches it, later compatible
-    `start()` calls join it, and the last `stop()` shuts it down and restores the bundled prices.
-    Starting with different configuration than the running worker raises `RuntimeError`. The worker
-    captures `url` and `request_timeout` at `start()`; changing them afterwards has no effect on it.
+    All instances share one process-wide worker: the first `start()` launches it, later `start()`
+    calls join it, and the last `stop()` shuts it down and restores the bundled prices. The first
+    configuration wins: joining with a different one warns and keeps the running worker's settings,
+    which are captured at `start()` — changing attributes afterwards has no effect on it.
 
     Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
     """
@@ -109,6 +110,10 @@ class UpdatePrices:
             # Copy the mutable Timeout so the worker's configuration is frozen at launch.
             config = _Config(self.url, self.update_interval, httpx2.Timeout(self.request_timeout))
             worker = _worker
+            if worker is not None and worker.dead:
+                # Don't join a worker that died unexpectedly; start a replacement.
+                _log(logger.warning, 'UpdatePrices background task terminated unexpectedly; starting a new one')
+                worker = None
             if worker is None:
                 worker = _Worker(config, self.fetch)
                 worker.claims = 1
@@ -124,13 +129,12 @@ class UpdatePrices:
                     self._worker = None
                     raise
             else:
-                if worker.dead:
-                    raise RuntimeError('UpdatePrices background task terminated unexpectedly')
                 if worker.config != config:
-                    raise RuntimeError(
-                        'UpdatePrices background task already started with different configuration: '
+                    warnings.warn(
+                        'UpdatePrices background task is already running with different configuration; keeping '
                         f'url={worker.config.url!r}, update_interval={worker.config.update_interval!r}, '
-                        f'request_timeout={worker.config.request_timeout!r}'
+                        f'request_timeout={worker.config.request_timeout!r}',
+                        stacklevel=2,
                     )
                 worker.claims += 1
                 self._worker = worker
@@ -147,7 +151,7 @@ class UpdatePrices:
             timeout: The maximum time to wait for the prices to be updated in seconds.
 
         Returns:
-            True if prices were updated, False if this instance is not started or the timeout elapses.
+            True if prices were updated, False otherwise.
         """
         worker = self._worker
         if worker is None:
@@ -170,7 +174,11 @@ class UpdatePrices:
             worker.claims -= 1
             if worker.claims == 0:
                 worker.shutdown()
-                _worker = None
+                if _worker is worker:
+                    # A dead worker may already have been replaced; only the current worker's
+                    # retirement restores the bundled prices.
+                    _worker = None
+                    data_snapshot.set_custom_snapshot(None)
 
     def __enter__(self):
         self.start()
@@ -234,13 +242,12 @@ class _Worker:
         return True
 
     def shutdown(self) -> None:
-        """Discard future updates and restore the bundled prices; the thread exits on its own.
+        """Discard future updates; the thread exits on its own.
 
         Runs under `_lock` and must not block: an in-flight fetch is not waited for, and its
         result is discarded because installs check `stop_event` under the same lock.
         """
         self.stop_event.set()
-        data_snapshot.set_custom_snapshot(None)
         # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
         self.ready.set()
 
