@@ -3,9 +3,9 @@
 **This prose spec is the complete Phase 2 source of truth.**
 No code-level document may introduce Phase 2 behavior or expand its scope.
 
-**The existing Phase 2 code spec must be rewritten before implementation.** _(from "This prose spec is the complete Phase 2 source of truth")_
-Context: [code-spec.md](code-spec.md) predates the completed Phase 1 implementation and the Go package, so it is
-supporting research rather than current implementation guidance.
+**Code-level architecture is in [code-spec](code-spec.md).** _(from "This prose spec is the complete Phase 2 source of truth")_
+The code spec derives file, type, signature, and call-boundary decisions from this document without adding product
+behavior.
 
 **Phase 2 ships as an independent change on top of the completed Phase 1 release.**
 Phase 1 remains a supported static-registry release without any Phase 2 code or artifact.
