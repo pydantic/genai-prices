@@ -27,7 +27,7 @@ DEFAULT_UPDATE_URL = (
 )
 
 # All instances share one worker so libraries can opt in independently without duplicate threads.
-# The one lock guards the worker reference, claim counts, and snapshot install/restore, and is
+# The one lock guards the worker reference, its reference count, and snapshot install/restore, and is
 # never held across anything that blocks — stop() signals the worker instead of joining it — so
 # lifecycle calls never wait for the worker.
 _lock = threading.Lock()
@@ -110,7 +110,7 @@ class UpdatePrices:
                 worker = None
             if worker is None:
                 worker = _Worker(self)
-                worker.claims = 1
+                worker.ref_count = 1
                 try:
                     _worker = worker
                     self._worker = worker
@@ -139,7 +139,7 @@ class UpdatePrices:
                         f'url={owner.url!r}, update_interval={owner.update_interval!r}, '
                         f'request_timeout={owner.request_timeout!r}'
                     )
-                worker.claims += 1
+                worker.ref_count += 1
                 self._worker = worker
 
         # Logging and warning hooks are arbitrary application code; never call them while holding the lock.
@@ -153,7 +153,7 @@ class UpdatePrices:
             try:
                 warnings.warn(config_warning, stacklevel=2)
             except BaseException:
-                # A warning promoted to an exception means start() failed; release the claim it just acquired.
+                # A warning promoted to an exception means start() failed; release the reference it just took.
                 self.stop()
                 raise
         if wait:
@@ -176,7 +176,7 @@ class UpdatePrices:
         return worker.wait(timeout)
 
     def stop(self):
-        """Stop the background task, or release this instance's claim on it.
+        """Stop the background task, or release this instance's reference to it.
 
         The last `stop()` restores the bundled prices and signals the worker, which discards any
         in-flight fetch and exits on its own; fetch failures never make `stop()` raise.
@@ -188,15 +188,15 @@ class UpdatePrices:
             worker = self._worker
             if worker is None:
                 return
-            remaining_claims = worker.claims - 1
+            remaining_references = worker.ref_count - 1
 
             def cleanup() -> None:
                 global _worker
 
                 # Fixed target values make retries idempotent at every interruption point.
-                worker.claims = remaining_claims
+                worker.ref_count = remaining_references
                 self._worker = None
-                if remaining_claims == 0:
+                if remaining_references == 0:
                     try:
                         worker.shutdown()
                     finally:
@@ -253,9 +253,9 @@ class _Worker:
     """The process-wide background thread shared by all started `UpdatePrices` instances."""
 
     def __init__(self, owner: UpdatePrices) -> None:
-        # The worker fetches through the instance that started it; other instances only hold claims.
+        # The worker fetches through the instance that started it; later instances only add references.
         self.owner = owner
-        self.claims = 0
+        self.ref_count = 0
         self.dead = False
         self.stop_event = threading.Event()
         self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
@@ -314,7 +314,7 @@ class _Worker:
                 if self.stop_event.wait(self.owner.update_interval):
                     break
         except BaseException as e:
-            # Serialize terminal publication with new claims; a stop that already won suppresses it.
+            # Serialize terminal publication with new references; a stop that already won suppresses it.
             with _lock:
                 if self.stop_event.is_set():
                     return

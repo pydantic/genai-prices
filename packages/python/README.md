@@ -113,17 +113,19 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` periodically updates the price data by downloading it from GitHub.
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub.
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the v2 `data.json` file downloaded is around 51KB when compressed, so is generally very
-quick to download. By default the first fetch happens immediately in the background, then every hour after that.
+At the time of writing, the v2 `data.json` file downloaded by `UpdatePrices` is around 51KB when compressed, so is
+generally very quick to download.
 
-Usage as a context manager:
+By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
+
+Usage with `UpdatePrices` as a context manager:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
@@ -134,16 +136,16 @@ with UpdatePrices() as update_prices:
     print(p)
 ```
 
-Or by calling `start()` / `stop()` yourself:
+Usage with `UpdatePrices` as a simple class:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
 
 update_prices = UpdatePrices()
-update_prices.start(wait=True)  # optionally wait for the first update
+update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
 p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
 print(p)
-update_prices.stop()
+update_prices.stop()  # stop updating prices
 ```
 
 All `UpdatePrices` instances share one background thread, so libraries such as Logfire and Pydantic AI can each
@@ -158,14 +160,9 @@ If a fetch fails, the failure is logged and raised by every `wait()` call until 
 `stop()` never raises fetch failures and never blocks: the last `stop()` restores the bundled data
 immediately and signals the thread, which discards any in-flight fetch and exits on its own.
 
-`start()` doesn't wait for the download: until the first fetch completes, `calc_price` uses the bundled data,
-which may be missing recently released models. If you need fresh prices before calculating, pass `wait` to
-`start()` or use the wait functions below.
-
 Start the updater only after any `os.fork()`; a child process must not inherit a running updater.
 
-You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
-`wait_prices_updated_sync`:
+If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
 ```py
 from genai_prices import wait_prices_updated_sync
