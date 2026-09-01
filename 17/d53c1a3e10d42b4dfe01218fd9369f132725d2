@@ -1,0 +1,22 @@
+packages/python/genai_prices/units.py
+  s_319e04081d82e0::t_2d23ab60d72a02 334,340-341,349-354
+tests/test_units.py
+  s_319e04081d82e0::t_2d23ab60d72a02 19,799-831
+  s_319e04081d82e0::t_dd761dac06b7e5 832-833
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "17d53c1a3e10d42b4dfe01218fd9369f132725d2",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
