@@ -16,7 +16,7 @@ from genai_prices.types import (
     _collect_resolved_model_prices,
     _compute_registry_priced_counts,
 )
-from genai_prices.units import UnitDef, UnitRegistry, _get_registry
+from genai_prices.units import UnitDef, UnitRegistry, _get_registry, _validate_unit_evolution
 from prices import package_data, prices_types as build_types
 from prices.build import load_units
 from prices.export_validation import (
@@ -678,6 +678,122 @@ def test_python_untrusted_unit_registry_rejects_identity_family_and_join_conflic
                 'batch_events': {'per': 1, 'dimensions': {'family': 'events', 'mode': 'batch'}},
             }
         )
+
+
+def _python_published_registry() -> UnitRegistry:
+    return UnitRegistry._from_untrusted(
+        {
+            'events': {'per': 1, 'dimensions': {'family': 'events'}},
+            'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+        }
+    )
+
+
+def test_python_unit_evolution_accepts_appended_descendants_intersections_and_families() -> None:
+    previous = _python_published_registry()
+    candidate = UnitRegistry._from_untrusted(
+        {
+            'events': {'per': 1, 'dimensions': {'family': 'events'}},
+            'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+            'vip_events': {'per': 1, 'dimensions': {'family': 'events', 'audience': 'vip'}},
+            'vip_special_events': {
+                'per': 1,
+                'dimensions': {'family': 'events', 'kind': 'special', 'audience': 'vip'},
+            },
+            'seconds': {'per': 1, 'dimensions': {'family': 'durations'}},
+        }
+    )
+
+    _validate_unit_evolution(previous, candidate)
+
+    assert list(previous.units) == ['events', 'special_events']
+    assert list(candidate.units)[-3:] == ['vip_events', 'vip_special_events', 'seconds']
+
+
+def test_python_unit_evolution_rejects_removal_reordering_and_insertion_without_mutation() -> None:
+    previous = _python_published_registry()
+    cases = [
+        (
+            UnitRegistry._from_untrusted({'events': {'per': 1, 'dimensions': {'family': 'events'}}}),
+            'Removed published unit: special_events',
+        ),
+        (
+            UnitRegistry._from_untrusted(
+                {
+                    'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+                    'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                }
+            ),
+            'Reordered published units',
+        ),
+        (
+            UnitRegistry._from_untrusted(
+                {
+                    'events': {'per': 1, 'dimensions': {'family': 'events'}},
+                    'seconds': {'per': 1, 'dimensions': {'family': 'durations'}},
+                    'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+                }
+            ),
+            'New unit seconds must be appended',
+        ),
+    ]
+
+    for candidate, message in cases:
+        previous_order = list(previous.units)
+        candidate_order = list(candidate.units)
+        with pytest.raises(ValueError, match=message):
+            _validate_unit_evolution(previous, candidate)
+        assert list(previous.units) == previous_order
+        assert list(candidate.units) == candidate_order
+
+
+@pytest.mark.parametrize(
+    ('field', 'replacement'),
+    [
+        ('per', 2),
+        ('price_key', 'replacement_price'),
+        ('dimensions', {'family': 'events', 'kind': 'corrected'}),
+    ],
+)
+def test_python_unit_evolution_rejects_redefinitions(field: str, replacement: object) -> None:
+    previous_raw: dict[str, object] = {
+        'per': 1,
+        'price_key': 'published_price',
+        'dimensions': {'family': 'events', 'kind': 'original'},
+    }
+    candidate_raw = dict(previous_raw)
+    candidate_raw[field] = replacement
+    previous = UnitRegistry._from_untrusted({'published_events': previous_raw})
+    candidate = UnitRegistry._from_untrusted({'published_events': candidate_raw})
+
+    with pytest.raises(ValueError, match='Redefined published unit: published_events'):
+        _validate_unit_evolution(previous, candidate)
+
+
+def test_python_unit_evolution_rejects_new_ancestors_and_allows_additive_replacements() -> None:
+    previous = UnitRegistry._from_untrusted(
+        {'mistaken_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'mistaken'}}}
+    )
+    corrected = UnitRegistry._from_untrusted(
+        {
+            'mistaken_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'mistaken'}},
+            'corrected_events': {
+                'per': 1,
+                'dimensions': {'family': 'events', 'kind': 'mistaken', 'correction': 'v2'},
+            },
+        }
+    )
+
+    _validate_unit_evolution(previous, corrected)
+
+    ancestor = UnitRegistry._from_untrusted(
+        {
+            'mistaken_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'mistaken'}},
+            'events': {'per': 1, 'dimensions': {'family': 'events'}},
+        }
+    )
+    with pytest.raises(ValueError, match='New unit events is an ancestor.*mistaken_events'):
+        _validate_unit_evolution(previous, ancestor)
 
 
 def _published_evolution_source() -> dict[str, dict[str, Any]]:

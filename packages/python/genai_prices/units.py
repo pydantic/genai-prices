@@ -182,6 +182,36 @@ class UnitRegistry:
         return self._units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
 
 
+def _validate_unit_evolution(  # pyright: ignore[reportUnusedFunction]
+    previous: UnitRegistry, candidate: UnitRegistry
+) -> None:
+    """Require a candidate registry to append without changing published unit semantics."""
+    previous_order = list(previous.units)
+    candidate_order = list(candidate.units)
+    for usage_key in previous_order:
+        if usage_key not in candidate.units:
+            raise ValueError(f'Removed published unit: {usage_key}')
+
+    candidate_old_order = [usage_key for usage_key in candidate_order if usage_key in previous.units]
+    if candidate_old_order != previous_order:
+        raise ValueError(f'Reordered published units: expected {previous_order!r}, got {candidate_old_order!r}')
+    if candidate_order[: len(previous_order)] != previous_order:
+        first_inserted = next(usage_key for usage_key in candidate_order if usage_key not in previous.units)
+        raise ValueError(f'New unit {first_inserted} must be appended after all published units')
+
+    for usage_key, previous_unit in previous.units.items():
+        if candidate.units[usage_key] != previous_unit:
+            raise ValueError(f'Redefined published unit: {usage_key}')
+
+    for new_usage_key in candidate_order[len(previous_order) :]:
+        new_unit = candidate.units[new_usage_key]
+        for old_usage_key, old_unit in previous.units.items():
+            if new_unit.dimensions.items() < old_unit.dimensions.items():
+                raise ValueError(
+                    f'New unit {new_usage_key} is an ancestor or intermediate of published unit {old_usage_key}'
+                )
+
+
 def _unit_display_name(unit: UnitDef) -> str:  # pyright: ignore[reportUnusedFunction]
     dimensions = unit.dimensions
     family = dimensions.get('family')
