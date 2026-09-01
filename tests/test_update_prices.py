@@ -264,6 +264,31 @@ def test_configuration_warning_hook_runs_outside_lifecycle_lock(monkeypatch: pyt
     assert update_prices_module._worker is None
 
 
+def test_configuration_warning_as_error_releases_claim(monkeypatch: pytest.MonkeyPatch) -> None:
+    _mock_update_prices_get(monkeypatch)
+    first = UpdatePrices()
+    second = UpdatePrices(update_interval=1)
+    first.start(wait=True)
+
+    try:
+        with (
+            warnings.catch_warnings(),
+            pytest.raises(UserWarning, match='already running with different configuration'),
+        ):
+            warnings.simplefilter('error')
+            second.start()
+
+        assert second._worker is None
+        worker = first._worker
+        assert worker is update_prices_module._worker
+        assert worker is not None
+        assert worker.claims == 1
+    finally:
+        first.stop()
+
+    assert update_prices_module._worker is None
+
+
 def test_same_instance_cannot_start_twice():
     update_prices = NullUpdatePrices()
     update_prices.start(wait=True)
