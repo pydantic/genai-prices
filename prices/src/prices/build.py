@@ -14,7 +14,7 @@ from pydantic import ValidationError
 from pydantic.main import IncEx
 
 from genai_prices.units import UnitDef
-from prices.export_validation import validate_export_payload, validate_units
+from prices.export_validation import runtime_unit_projection, validate_export_payload, validate_units
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
@@ -33,6 +33,63 @@ def load_units() -> dict[str, Any]:
         units = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
     return units
+
+
+def v3_data_schema() -> dict[str, Any]:
+    """Build the wrapped v3 schema with dynamic price and extractor destination keys."""
+    provider_array_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
+    definitions = cast(dict[str, Any], provider_array_schema.pop('$defs'))
+    provider_items = cast(dict[str, Any], provider_array_schema['items'])
+    definitions['RuntimeUnitData'] = {
+        'additionalProperties': False,
+        'properties': {
+            'per': {
+                'maximum': 9_007_199_254_740_991,
+                'minimum': 1,
+                'type': 'integer',
+            },
+            'price_key': {
+                'pattern': r'^[A-Za-z][A-Za-z0-9_]*$',
+                'type': 'string',
+            },
+            'dimensions': {
+                'additionalProperties': {'minLength': 1, 'type': 'string'},
+                'minProperties': 1,
+                'properties': {'family': {'minLength': 1, 'type': 'string'}},
+                'propertyNames': {'minLength': 1, 'type': 'string'},
+                'required': ['family'],
+                'type': 'object',
+            },
+        },
+        'required': ['per', 'dimensions'],
+        'type': 'object',
+    }
+    return {
+        '$defs': definitions,
+        'additionalProperties': False,
+        'properties': {
+            'units': {
+                'additionalProperties': {'$ref': '#/$defs/RuntimeUnitData'},
+                'propertyNames': {'pattern': r'^[A-Za-z][A-Za-z0-9_]*$'},
+                'type': 'object',
+            },
+            'providers': {'items': provider_items, 'type': 'array'},
+        },
+        'required': ['units', 'providers'],
+        'type': 'object',
+    }
+
+
+def prepare_v3_data(providers: list[Provider], raw_units: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Prepare a validated v3 schema and wrapped payload without writing artifacts."""
+    validate_export_payload(providers, raw_units)
+    schema = v3_data_schema()
+    provider_data = providers_schema.dump_python(providers, mode='json', by_alias=True, exclude_none=True)
+    payload = {
+        'units': runtime_unit_projection(raw_units),
+        'providers': provider_data,
+    }
+    return schema, payload
 
 
 def build():

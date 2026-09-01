@@ -1,13 +1,18 @@
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 from pathlib import Path
+from typing import Any, cast
 
+import jsonschema
 import pytest
+from jsonschema.validators import validator_for
 
 from genai_prices import types as runtime_types
 from prices import build, package_data
+from prices.prices_types import Provider
 
 UNITS_YAML = """\
 input_tokens:
@@ -278,6 +283,128 @@ def test_build_reports_invalid_units(
 
     with pytest.raises(ValueError, match=message):
         build.build()
+
+
+def _v3_test_provider(*, price_key: str = 'input_mtok', extractor_dest: str = 'input_tokens') -> Provider:
+    return Provider.model_validate(
+        {
+            'id': 'testing',
+            'name': 'Testing',
+            'api_pattern': 'testing',
+            'extractors': [
+                {
+                    'root': 'usage',
+                    'mappings': [{'path': 'count', 'dest': extractor_dest}],
+                }
+            ],
+            'models': [
+                {
+                    'id': 'model',
+                    'match': {'equals': 'model'},
+                    'prices': {price_key: 1},
+                }
+            ],
+        }
+    )
+
+
+def test_prepare_v3_data_builds_a_runtime_only_wrapper_with_dynamic_unit_keys() -> None:
+    raw_units: dict[str, Any] = {
+        'future_events': {
+            'per': 1,
+            'price_key': 'future_event_price',
+            'dimensions': {'family': 'events', 'kind': 'future'},
+            'dimension_requirements': {'kind': {'family': 'events'}},
+            'source_annotation': 'publisher only',
+        }
+    }
+    schema, payload = build.prepare_v3_data(
+        [_v3_test_provider(price_key='future_event_price', extractor_dest='future_events')], raw_units
+    )
+    validator_cls = validator_for(schema, default=jsonschema.Draft202012Validator)
+    validator_cls.check_schema(schema)
+    validator_cls(schema).validate(payload)
+
+    assert list(payload['units']) == ['future_events']
+    assert payload['units'] == {
+        'future_events': {
+            'per': 1,
+            'price_key': 'future_event_price',
+            'dimensions': {'family': 'events', 'kind': 'future'},
+        }
+    }
+    assert 'enum' not in schema['$defs']['UsageExtractorMapping']['properties']['dest']
+    assert isinstance(schema['$defs']['ModelPrice']['additionalProperties'], dict)
+
+
+@pytest.mark.parametrize('mutation', ['zero per', 'missing dimensions', 'invalid family', 'missing provider name'])
+def test_v3_schema_rejects_malformed_stable_core(mutation: str) -> None:
+    raw_units = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
+    schema, payload = build.prepare_v3_data([_v3_test_provider()], raw_units)
+    unit = cast(dict[str, Any], payload['units']['input_tokens'])
+    provider = cast(dict[str, Any], payload['providers'][0])
+    if mutation == 'zero per':
+        unit['per'] = 0
+    elif mutation == 'missing dimensions':
+        unit.pop('dimensions')
+    elif mutation == 'invalid family':
+        cast(dict[str, Any], unit['dimensions'])['family'] = 1
+    else:
+        provider.pop('name')
+
+    validator_cls = validator_for(schema, default=jsonschema.Draft202012Validator)
+    assert not validator_cls(schema).is_valid(payload)
+
+
+def test_prepare_v3_data_rejects_unsafe_normalization() -> None:
+    with pytest.raises(ValueError, match='expected a positive integer from 1 to 9007199254740991'):
+        build.prepare_v3_data(
+            [_v3_test_provider(price_key='event_price', extractor_dest='events')],
+            {
+                'events': {
+                    'per': 9_007_199_254_740_992,
+                    'price_key': 'event_price',
+                    'dimensions': {'family': 'events'},
+                }
+            },
+        )
+
+
+def test_v3_behavior_changing_variant_remains_distinguishable_when_extended() -> None:
+    raw_units = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
+    schema, payload = build.prepare_v3_data([_v3_test_provider()], raw_units)
+    extended_schema = copy.deepcopy(schema)
+    extended_schema['$defs']['ClauseGlob'] = {
+        'additionalProperties': False,
+        'properties': {'glob': {'type': 'string'}},
+        'required': ['glob'],
+        'type': 'object',
+    }
+    match_variants = cast(
+        list[dict[str, object]], extended_schema['$defs']['ModelInfo']['properties']['match']['oneOf']
+    )
+    match_variants.append({'$ref': '#/$defs/ClauseGlob'})
+
+    model = payload['providers'][0]['models'][0]
+    model['match'] = {'glob': 'model-*'}
+    validator_cls = validator_for(extended_schema, default=jsonschema.Draft202012Validator)
+    validator = validator_cls(extended_schema)
+    assert validator.is_valid(payload)
+
+    model['match'] = {}
+    assert not validator.is_valid(payload)
 
 
 @pytest.mark.parametrize(
