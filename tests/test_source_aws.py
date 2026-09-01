@@ -183,7 +183,8 @@ def test_main_does_not_write_an_empty_catalog(monkeypatch: pytest.MonkeyPatch) -
     install_clients(monkeypatch, FakePricingClient([]), FakeBedrockClient([]))
     monkeypatch.setattr(source_aws, 'get_providers_yaml', lambda: {'aws': provider_yaml})
 
-    source_aws.main()
+    with pytest.raises(SystemExit, match='Bedrock returned no priced models'):
+        source_aws.main()
 
     assert not provider_yaml.saved
 

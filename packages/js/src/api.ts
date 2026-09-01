@@ -12,6 +12,7 @@ import type {
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchProvider, resolveModelWithFallback } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
+import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
@@ -228,8 +229,22 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const { model, priceProvider } = resolvedModel
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
+  let billedUsage = usage
+  if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
+    billedUsage = { ...usage }
+    const audioSeconds = billedUsage.audio_seconds
+    const inputAudioSeconds = billedUsage.input_audio_seconds
+    if (audioSeconds !== undefined) validateUsageValue('audio_seconds', audioSeconds)
+    if (inputAudioSeconds !== undefined) validateUsageValue('input_audio_seconds', inputAudioSeconds)
+    const reportedSeconds = audioSeconds === 0 ? inputAudioSeconds : (audioSeconds ?? inputAudioSeconds)
+    if (reportedSeconds !== undefined) {
+      const billedSeconds = reportedSeconds > 0 ? Math.max(reportedSeconds, 10) : 0
+      billedUsage.audio_seconds = billedSeconds
+      billedUsage.input_audio_seconds = billedSeconds
+    }
+  }
   // OpenAI and xAI apply the higher tier when input reaches the threshold.
-  const priceResult = calcPriceInternal(usage, modelPrice, undefined, priceProvider.id === 'openai' || priceProvider.id === 'x-ai')
+  const priceResult = calcPriceInternal(billedUsage, modelPrice, undefined, priceProvider.id === 'openai' || priceProvider.id === 'x-ai')
   return {
     auto_update_timestamp: undefined,
     model,

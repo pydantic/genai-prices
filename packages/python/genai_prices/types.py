@@ -5,6 +5,7 @@ import inspect
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
+from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -356,6 +357,28 @@ def _reported_overlap_keys_for_join(
     return None
 
 
+_COMPACT_DATE_RE = re.compile(r'(-)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?=-|:|$)')
+
+
+def _normalize_compact_dated_ref(model_ref: str) -> str:
+    """Rewrite a compact date suffix like ``-20251211`` to the canonical ``-2025-12-11`` form.
+
+    LiteLLM and OpenRouter emit compact dated model refs (e.g. ``gpt-5.2-20251211``) that don't
+    match the dashed aliases used in the price data. This is only applied as a fallback when a ref
+    doesn't otherwise match, so models that match on the compact date form are left untouched.
+    """
+
+    def replace(match: re.Match[str]) -> str:
+        year, month, day = (int(match.group(index)) for index in range(2, 5))
+        try:
+            date(year, month, day)
+        except ValueError:
+            return match.group(0)
+        return f'{match.group(1)}{year:04d}-{month:02d}-{day:02d}'
+
+    return _COMPACT_DATE_RE.sub(replace, model_ref)
+
+
 @dataclass
 class Provider:
     """Information about an LLM inference provider"""
@@ -389,6 +412,16 @@ class Provider:
 
     def find_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         model_ref = model_ref.lower()
+        if model := self._match_model(model_ref, all_providers=all_providers):
+            return model
+        # LiteLLM/OpenRouter emit compact dated refs like `gpt-5.2-20251211`; retry with the
+        # canonical dashed form if the ref didn't match as-is.
+        normalized = _normalize_compact_dated_ref(model_ref)
+        if normalized != model_ref:
+            return self._match_model(normalized, all_providers=all_providers)
+        return None
+
+    def _match_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         for model in self.models:
             if model.is_match(model_ref):
                 return model
@@ -397,7 +430,7 @@ class Provider:
                 provider = next((p for p in all_providers if p.id == provider_id), None)
                 if provider:
                     # don't pass all_providers when falling back, so we can only have one step of fallback
-                    if model := provider.find_model(model_ref):
+                    if model := provider._match_model(model_ref):
                         return model
         return None
 
@@ -711,6 +744,13 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
+        if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
+            usage = copy(Usage.from_raw(usage))
+            reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')
+            if reported_seconds is not None:
+                billed_seconds = max(reported_seconds, 10) if reported_seconds > 0 else 0
+                usage.audio_seconds = billed_seconds
+                usage.input_audio_seconds = billed_seconds
         price_provider = price_provider or provider
         # OpenAI and xAI apply the higher tier when input reaches the threshold.
         inclusive_tier_boundary = price_provider.id in {'openai', 'x-ai'}

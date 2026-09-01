@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Direct Providers'
-description: 'Check ten direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
+description: 'Check fourteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
 on:
   workflow_dispatch:
   schedule: weekly on monday
@@ -70,10 +70,16 @@ network:
     - api.cerebras.ai
     - platform.minimax.io
     - platform.moonshot.ai
+    - platform.kimi.ai
     - avian.io
     - docs.perplexity.ai
     - cohere.com
     - docs.voyageai.com
+    - developers.cloudflare.com
+    - cursor.com
+    - docs.arcee.ai
+    - docs.baseten.co
+    - www.baseten.co
 ---
 
 # Price Check: Direct Providers
@@ -142,5 +148,5 @@ If any price change, new model, potential removal, unchecked field, or unreadabl
 Use tables and one row per finding. End with `Checked YYYY-MM-DD.` using the run date.
 
 Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
-checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all ten
+checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all fourteen
 direct providers match.

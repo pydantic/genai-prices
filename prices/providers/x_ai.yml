@@ -49,6 +49,33 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
+  # https://docs.x.ai/developers/rest-api-reference/inference/voice#response.done
+  - api_flavor: realtime
+    root: [response, usage]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
+      - path: [output_token_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_token_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: billable_audio_seconds
+        dest: audio_seconds
+      - path: input_text_messages
+        dest: input_text_messages
+        required: false
 
 models:
   - id: grok-2-1212
@@ -237,11 +264,29 @@ models:
       low hallucination rates with strict prompt adherence.
     match:
       equals: grok-4.20
-    prices_checked: 2026-06-09
+    context_window: 1000000
+    price_comments: >-
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's boundary is inclusive: its
+      table columns read "< 200k prompt tokens" and ">= 200k prompt tokens", so the tier
+      starts at the published 200000-token boundary. Ref: https://docs.x.ai/docs/models
+    prices_checked: 2026-09-01
     prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.2
-      output_mtok: 2.5
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 200000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 2.5
+        tiers:
+          - start: 200000
+            price: 5
 
   - id: grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
@@ -250,6 +295,7 @@ models:
       operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
     match:
       equals: grok-4.20-multi-agent
+    context_window: 1000000
     prices_checked: 2026-06-09
     prices:
       input_mtok: 2
@@ -270,11 +316,28 @@ models:
         - regex: ^x-ai/grok-4\.3-\d{8}$
         - equals: grok-4.3-latest
     context_window: 1000000
-    prices_checked: 2026-05-12
+    price_comments: >-
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's boundary is inclusive: its
+      table columns read "< 200k prompt tokens" and ">= 200k prompt tokens", so the tier
+      starts at the published 200000-token boundary. Ref: https://docs.x.ai/docs/models
+    prices_checked: 2026-09-01
     prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.2
-      output_mtok: 2.5
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 200000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 2.5
+        tiers:
+          - start: 200000
+            price: 5
 
   - id: grok-4.5
     name: Grok 4.5
@@ -290,11 +353,65 @@ models:
         - equals: grok-4.5-latest
         - equals: grok-latest
     context_window: 500000
-    prices_checked: 2026-07-08
+    price_comments: >-
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's boundary is inclusive: its
+      table columns read "< 200k prompt tokens" and ">= 200k prompt tokens", so the tier
+      starts at the published 200000-token boundary. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6's.
+      Ref: https://docs.x.ai/docs/models/grok-4.5
+    prices_checked: 2026-09-01
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 6
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.3
+        tiers:
+          - start: 200000
+            price: 0.6
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+
+  - id: grok-4.6
+    name: Grok 4.6
+    description: >-
+      xAI's latest flagship model, released 2026-08-12. Supports text and image inputs with text
+      outputs, function calling, structured outputs, and reasoning, over a 500k-token context window.
+    match:
+      or:
+        - equals: grok-4.6
+        - regex: ^grok-4\.6-\d{8}$
+        - equals: x-ai/grok-4.6
+        - regex: ^x-ai/grok-4\.6-\d{8}$
+        - equals: grok-4.6-latest
+    context_window: 500000
+    price_comments: >-
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's boundary is inclusive: its
+      table columns read "< 200k prompt tokens" and ">= 200k prompt tokens", so the tier
+      starts at the published 200000-token boundary. Ref: https://docs.x.ai/docs/models/grok-4.6
+    prices_checked: 2026-09-01
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
 
   - id: grok-build-0.1
     name: Grok Build 0.1
@@ -303,11 +420,29 @@ models:
       text and image inputs with text output, and is optimized for interactive coding.
     match:
       equals: grok-build-0.1
-    prices_checked: 2026-06-09
+    context_window: 256000
+    price_comments: >-
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's boundary is inclusive: its
+      table columns read "< 200k prompt tokens" and ">= 200k prompt tokens", so the tier
+      starts at the published 200000-token boundary. Ref: https://docs.x.ai/docs/models
+    prices_checked: 2026-09-01
     prices:
-      input_mtok: 1
-      cache_read_mtok: 0.2
-      output_mtok: 2
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 200000
+            price: 2
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
 
   - id: grok-code-fast-1
     name: Grok Code Fast 1
@@ -324,3 +459,41 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 1.5
+
+  - id: grok-voice-latest
+    name: Grok Voice
+    match:
+      equals: grok-voice-latest
+    prices_checked: 2026-08-24
+    price_comments: >-
+      See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.
+    prices:
+      - prices:
+          audio_hours: 3
+          input_text_messages_kcount: 4
+      - constraint:
+          start_date: 2026-08-05
+        prices:
+          audio_hours: 4.8
+          input_text_messages_kcount: 4
+
+  - id: grok-voice-think-fast-1.0
+    name: Grok Voice Think Fast 1.0
+    match:
+      equals: grok-voice-think-fast-1.0
+    deprecated: true
+    prices_checked: 2026-08-24
+    price_comments: See https://docs.x.ai/developers/pricing#voice-pricing.
+    prices:
+      audio_hours: 3
+      input_text_messages_kcount: 4
+
+  - id: grok-voice-think-fast-2.0
+    name: Grok Voice Think Fast 2.0
+    match:
+      equals: grok-voice-think-fast-2.0
+    prices_checked: 2026-08-24
+    price_comments: See https://docs.x.ai/developers/pricing#voice-pricing.
+    prices:
+      audio_hours: 4.8
+      input_text_messages_kcount: 4

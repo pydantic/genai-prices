@@ -18,3 +18,5 @@ packages/python/genai_prices/data.py linguist-generated=true
 packages/python/genai_prices/data_units.py linguist-generated=true
 packages/js/src/data.ts linguist-generated=true
 packages/js/src/dataUnits.ts linguist-generated=true
+packages/go/data_units.go linguist-generated=true
+packages/go/internal/data/prices.json linguist-generated=true

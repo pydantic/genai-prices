@@ -84,6 +84,7 @@ make litellm-get                       # Get LiteLLM prices
 make simonw-prices-get                 # Get Simon Willison's prices
 make huggingface-get                   # Get HuggingFace prices
 make ovhcloud-get                      # Get OVHcloud AI Endpoints prices
+make quicksilverpro-get                # Get QuickSilver Pro prices
 make get-update-price-discrepancies    # Download and update price discrepancies
 make check-for-price-discrepancies     # Check for price discrepancies
 make detect-deprecated                 # Detect models that may be deprecated or removed
@@ -92,7 +93,10 @@ make collapse-models                   # Collapse duplicate similar models
 
 `make help` lists every target. These importers run against live third-party APIs and nothing in CI
 exercises them, so they break silently when an upstream schema changes — if one returns suspiciously
-little, suspect the importer before the data.
+little, suspect the importer before the data. The importers that rewrite tracked `prices/providers/*.yml`
+(`huggingface-get`, `ovhcloud-get`, `quicksilverpro-get`) exit non-zero instead of writing when the upstream
+catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard.py`); set
+`PRICES_ALLOW_MODEL_COUNT_DROP=1` to override a genuine catalog cut.
 
 ## Important Notes
 
@@ -192,6 +196,13 @@ it does not catch constraint-resolution, matching, warning or error-shape diverg
 - Code formatted with ruff (single quotes, 120 char line length)
 - Type checking with basedpyright in strict mode
 - Follow existing patterns in the codebase
+
+## Releasing
+
+Create a GitHub release with a `vX.Y.Z` tag; CI publishes both packages from it. The version lives
+only in the tag - `packages/python/pyproject.toml` is `dynamic` (uv-dynamic-versioning) and the
+`0.0.0` in `packages/js/package.json` is a placeholder the release job overwrites. Never add a
+version bump to a PR. See `RELEASE.md`.
 
 ## Pull Requests
 

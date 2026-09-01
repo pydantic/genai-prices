@@ -1,0 +1,84 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - docs.arcee.ai
+      user-agent:
+      - python-httpx2/2.2.0
+    method: GET
+    uri: https://docs.arcee.ai/get-started/pricing.md
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAA/3WTa2/TMBSGv+dXHA0kmETi9AYVlEoVCGnSChV0nyakufVpYtWXyPa6ll/PyaXD
+        gZIv9pu8fs7NmcMX6yCUCFurK4UBQdjto0YTeJDWgDQCj2/AI8K9Utpn4Rh+vi5DqPx7xsjrM+62
+        iBmX7Pz9OoMld3thnwwc0HnieLC7v8gVL9ADdwj8wKXiG4WwOQGvKjRCmgIeMi0eINjGCXffb/0H
+        ylT6VtP65xz3cH8O+b/sCgypD9wFFKxyckshKMB1liQvYNXqJFk/8ytnD1JQhp2XOrGzTre50w4W
+        NRgWN688aCtQUYmme7lSPNTmDBZKNYCuUmng7sfnOiQ9sMZjgGVzNklWratCB4MlrO0ejSfjLNQF
+        zmc0Ii5ocfUWnqQI5cerUT7JhtPBcHI1bzDwlWucsVDWpvmNqR7Ds/r2GGL5iW9LFK1kNZWdI2ys
+        OHWBxFwgVjT7PTtv0sM43Snuy5RqRF8DReN8mWeDcayG01jlZ9kE6+jBSSPDiVCuwJRma/bU6R5k
+        Eqtp3kO+vUDsGJrKkwY9I6lIp15zpeLTk4g1yIY98iD/l3yxE3RJYsq7qAGjbNxrwPAC8xeXqXUF
+        K5ROaZIxahwlNO4pQl0oXFv6yUob6KLvpZbpfhSnksfFTnoyz0ZxZqybP2vvXfIbmYlqhCEEAAA=
+    headers:
+      age:
+      - '33047'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a3228bd91aebf5b5-AMS
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-security-policy:
+      - 'default-src ''self'' *; script-src ''self'' ''unsafe-inline'' ''unsafe-eval''
+        *; style-src ''self'' ''unsafe-inline'' blob: *; img-src * ''self'' blob:
+        data:; connect-src *; font-src *; frame-src *; object-src ''none''; base-uri
+        ''self'' https://static-2v.gitbook.com; form-action ''self'' https://static-2v.gitbook.com
+        *; frame-ancestors https: ;'
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Fri, 28 Aug 2026 10:13:57 GMT
+      referrer-policy:
+      - no-referrer-when-downgrade
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=31536000
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch,
+        Accept, accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-gitbook-route-site:
+      - docs.arcee.ai/
+      x-gitbook-route-type:
+      - static
+      x-gitbook-target:
+      - 2v
+      x-matched-path:
+      - /sites/static/[mode]/[siteURL]/[siteData]/~gitbook/markdown/[pagePath]
+      x-robots-tag:
+      - noindex
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - fra1::iad1::55ksn-1787912037320-d777bd485794
+    status:
+      code: 200
+      message: OK
+version: 1
