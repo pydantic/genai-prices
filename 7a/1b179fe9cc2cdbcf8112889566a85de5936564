@@ -1,0 +1,39 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_9e90b85cb22fb5::t_725cacfae34722 459-472,475-477
+  s_9e90b85cb22fb5::t_af97722db48175 505,515,521-533,540-541
+  s_9e90b85cb22fb5::t_3190c8fd3b3c16 116-117,123-130,134-140
+  s_9e90b85cb22fb5::t_99081f371497ec 407,420-422
+  s_9e90b85cb22fb5::t_6729690b0f31a9 212-213,223-241,247-248,254-260
+  s_9e90b85cb22fb5::t_0926effe34567f 83,88-100
+  s_9e90b85cb22fb5::t_6d76880479e2cf 453-456
+  s_9e90b85cb22fb5::t_1b6c279718bfb1 554-565
+  s_9e90b85cb22fb5::t_766ddc41b14774 143-147
+  s_9e90b85cb22fb5::t_4494c8e4dd2c0e 413,423-425
+  s_9e90b85cb22fb5::t_627a215e71f9f6 378-380
+  s_9e90b85cb22fb5::t_2045609a0382b0 332-337,345-346,355-371
+  s_7b73f057628ed9::t_4f4ea3714e187e 372
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "7a1b179fe9cc2cdbcf8112889566a85de5936564",
+  "prompts": {},
+  "sessions": {
+    "s_7b73f057628ed9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05caf-e28c-7b81-9240-7dd1d3b3e73b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_9e90b85cb22fb5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05ca6-b0ea-7ef1-b948-77019eaf6e36",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
