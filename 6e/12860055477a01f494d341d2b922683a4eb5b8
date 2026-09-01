@@ -1,0 +1,28 @@
+packages/go/types.go
+  s_319e04081d82e0::t_81902c4813d4e9 96-109,116-126,380-386,393-407
+  s_319e04081d82e0::t_d55682e04f5590 408
+packages/go/provider_data.go
+  s_319e04081d82e0::t_0b39f269803e0b 267
+  s_319e04081d82e0::t_a7bd537d9bb609 395
+  s_319e04081d82e0::t_37640a0accd155 1-266,268-394,396-750
+packages/go/provider_data_internal_test.go
+  s_319e04081d82e0::t_a7bd537d9bb609 17-18,29
+  s_319e04081d82e0::t_d287fc6811f1fe 1-16,19-28,30-149,151-227
+  s_319e04081d82e0::t_0b39f269803e0b 150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "6e12860055477a01f494d341d2b922683a4eb5b8",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
