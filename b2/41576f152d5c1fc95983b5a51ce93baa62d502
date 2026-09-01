@@ -1,0 +1,37 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_9e90b85cb22fb5::t_c04f57772206e8 9,15,119,163,262,458,481,588
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_9e90b85cb22fb5::t_c4c10d300d568d 45,47-59
+  s_9e90b85cb22fb5::t_f690b03d940f3c 389-392,413-415,449-461,478-479
+  s_9e90b85cb22fb5::t_b6a7aae05eb16b 174
+  s_9e90b85cb22fb5::t_91f701d2bbf2c6 269
+  s_9e90b85cb22fb5::t_9ffe8ceefe5935 443
+  s_9e90b85cb22fb5::t_652c79cd690dbb 481,485
+  s_9e90b85cb22fb5::t_e6f7539f10b616 26,38
+  s_9e90b85cb22fb5::t_82759e31bf51ee 136-140,147-154
+  s_9e90b85cb22fb5::t_667e58ee6aad96 30,446-448
+  s_9e90b85cb22fb5::t_0ba3585dacae10 131
+  s_9e90b85cb22fb5::t_07b793fd6c4cf1 336
+  s_9e90b85cb22fb5::t_7bca63ab03259e 291-310
+  s_9e90b85cb22fb5::t_b000594a978021 183-187,202
+  s_9e90b85cb22fb5::t_c5cecd7852b0a2 272-276
+  s_9e90b85cb22fb5::t_93073fc6ce2031 359-361,363-383
+  s_9e90b85cb22fb5::t_7ea06eaabce30a 155
+  s_9e90b85cb22fb5::t_a6536f3b71ffe8 480
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "b241576f152d5c1fc95983b5a51ce93baa62d502",
+  "prompts": {},
+  "sessions": {
+    "s_9e90b85cb22fb5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05ca6-b0ea-7ef1-b948-77019eaf6e36",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
