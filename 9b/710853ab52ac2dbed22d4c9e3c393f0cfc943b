@@ -1,0 +1,29 @@
+packages/js/src/api.ts
+  s_319e04081d82e0::t_510de4932cb4ce 13-14,18,21,24,35-38,57-60,64-69,72-76,79-80,120
+packages/js/src/__tests__/providerArrayIntegration.test.ts
+  s_319e04081d82e0::t_975cb767612498 9,12,81-83,98,124
+packages/js/src/types.ts
+  s_319e04081d82e0::t_510de4932cb4ce 131-136
+packages/js/src/__tests__/providerActivation.test.ts
+  s_319e04081d82e0::t_975cb767612498 3,7-8,11,59,73,192-360,363-369,394-405
+  s_319e04081d82e0::t_62dbd0b2fcd2fc 361-362
+  s_319e04081d82e0::t_440d138aa481f0 406-407
+packages/js/src/__tests__/updatePricesUrl.test.ts
+  s_319e04081d82e0::t_975cb767612498 6,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "9b710853ab52ac2dbed22d4c9e3c393f0cfc943b",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
