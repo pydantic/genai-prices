@@ -132,6 +132,31 @@ func TestDecodeWrappedProvidersProjectsUnsupportedCapabilitiesAndRetainsSiblings
 	}
 }
 
+func TestDecodeWrappedProvidersDropsEmptyProjectedPrices(t *testing.T) {
+	decoded, err := decodeWrappedProviders(json.RawMessage(`[
+		{
+			"id":"testing","name":"Testing","api_pattern":"testing",
+			"models":[
+				{"id":"empty","match":{"equals":"empty"},"prices":{"input_mtok":{"type":"future-price"}}},
+				{"id":"fallback","match":{"equals":"fallback"},"prices":[
+					{"prices":{"input_mtok":1}},
+					{"constraint":{"start_date":"2026-01-01"},"prices":{"input_mtok":{"type":"future-price"}}}
+				]}
+			]
+		}
+	]`), newUnitRegistry(bundledUnits, bundledUnitOrder))
+	if err != nil {
+		t.Fatal(err)
+	}
+	models := decoded.Values[0].Models
+	if len(models) != 1 || models[0].ID != "fallback" || len(models[0].Prices.conditional) != 1 {
+		t.Fatalf("unexpected projected models: %#v", models)
+	}
+	if models[0].Prices.conditional[0].Prices["input_mtok"].base != 1 {
+		t.Fatalf("fallback price was not retained: %#v", models[0].Prices)
+	}
+}
+
 func TestDecodeWrappedProvidersRejectsMalformedRecognizedData(t *testing.T) {
 	tests := []struct {
 		name    string

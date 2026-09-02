@@ -514,10 +514,28 @@ func (projector *providerProjector) projectModel(
 	if err := validateModelMetadata(fields, path); err != nil {
 		return nil, false, err
 	}
-	fields["prices"], err = projector.projectPrices(fields["prices"], path+".prices", context)
+	projectedPrices, err := projector.projectPrices(fields["prices"], path+".prices", context)
 	if err != nil {
 		return nil, false, err
 	}
+	var projectedPriceCount int
+	if rawKind(projectedPrices) == '{' {
+		projectedPriceMap, err := rawObject(projectedPrices, path+".prices")
+		if err != nil {
+			return nil, false, err
+		}
+		projectedPriceCount = len(projectedPriceMap)
+	} else if rawKind(projectedPrices) == '[' {
+		projectedPriceList, err := rawArray(projectedPrices, path+".prices")
+		if err != nil {
+			return nil, false, err
+		}
+		projectedPriceCount = len(projectedPriceList)
+	}
+	if projectedPriceCount == 0 {
+		return nil, false, nil
+	}
+	fields["prices"] = projectedPrices
 	return marshalRawObject(fields)
 }
 
@@ -561,10 +579,18 @@ func (projector *providerProjector) projectPrices(
 				}
 				fields["constraint"] = projected
 			}
-			fields["prices"], err = projector.projectPriceMap(rawPriceMap, pricePath+".prices", context)
+			projectedPriceMap, err := projector.projectPriceMap(rawPriceMap, pricePath+".prices", context)
 			if err != nil {
 				return nil, err
 			}
+			projectedPriceFields, err := rawObject(projectedPriceMap, pricePath+".prices")
+			if err != nil {
+				return nil, err
+			}
+			if len(projectedPriceFields) == 0 {
+				continue
+			}
+			fields["prices"] = projectedPriceMap
 			encoded, err := json.Marshal(fields)
 			if err != nil {
 				return nil, err
