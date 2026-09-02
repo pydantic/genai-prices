@@ -359,9 +359,9 @@ active after an explicit clear. Whether stopping an updater clears active state 
 
 **Python updater coordination remains independent of Phase 2.** _(from "Python background activation installs the fetched pair after `fetch()` returns.")_
 The shared-updater behavior owns instance sharing, worker lifetime, wait-result publication, failure retention, stop
-blocking, and post-stop state retention. Phase 2 neither changes nor duplicates those rules. Its only background
-integration requirement is that a successful refresh activates the fetched providers and their candidate registry
-together after `fetch()` returns.
+blocking, and post-stop state retention. Phase 2 neither changes nor duplicates those rules. Its background integration
+requirements are that every refresh calls the selected `fetch()` override and that a successful refresh activates the
+fetched providers and their candidate registry together after `fetch()` returns.
 
 **Every Python operation uses the process's active registry.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
 `DataSnapshot` methods, bare provider/model methods, base `ModelPrice.calc_price(...)`, and standalone `Usage` operations
