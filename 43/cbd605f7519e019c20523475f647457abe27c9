@@ -1,0 +1,27 @@
+specs/forward-compatible-provider-decoding/spec.md
+  s_b8bc48238df5fe::t_cb32a65e31e5db 80-83,85,125-128
+  s_b8bc48238df5fe::t_e1f5627f64f13b 169-170,185-194
+  s_b8bc48238df5fe::t_ea33b165f339c3 200,203,210
+  s_b8bc48238df5fe::t_849371084eb511 24-27,33,43-48,53-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "43cbd605f7519e019c20523475f647457abe27c9",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b8bc48238df5fe": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a061f7-2025-7311-b0de-0c0fdc550e63",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
