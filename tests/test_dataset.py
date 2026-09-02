@@ -12,8 +12,11 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
+
+from genai_prices.types import Provider, UsageExtractor, UsageExtractorMapping
 
 DATASET_DIR = Path(__file__).parent / 'dataset'
 
@@ -35,6 +38,84 @@ def test_usages_dataset_is_up_to_date(extract_usages_module: object) -> None:
         'usages.json is stale. Run `python tests/dataset/extract_usages.py` to regenerate it, check the '
         'diff, and commit it - the JS suite asserts against this file.'
     )
+
+
+def test_rebuild_usages_falls_back_to_current_dataset(
+    extract_usages_module: object, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+    (tmp_path / 'usages.json').write_text('[]')
+    monkeypatch.setattr(extract_usages, 'this_dir', tmp_path)
+    monkeypatch.setattr(extract_usages, 'raw_bodies_path', tmp_path / 'missing-raw-bodies.json')
+
+    assert extract_usages.rebuild_usages() == ([], [])
+
+
+def test_usage_consistency_accepts_contained_and_overlapping_details(extract_usages_module: object) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+
+    extract_usages.check_usage_consistency(
+        {
+            'input_tokens': 10,
+            'input_text_tokens': 6,
+            'input_audio_tokens': 4,
+            'cache_read_tokens': 7,
+            'cache_audio_read_tokens': 4,
+        }
+    )
+
+
+def test_usage_consistency_rejects_missing_aggregate(extract_usages_module: object) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+
+    with pytest.raises(AssertionError, match=r'output_reasoning_tokens \(6\) is missing aggregate output_tokens'):
+        extract_usages.check_usage_consistency({'output_reasoning_tokens': 6})
+
+
+def test_usage_consistency_rejects_descendant_greater_than_aggregate(extract_usages_module: object) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+
+    with pytest.raises(
+        AssertionError,
+        match=r'output_reasoning_tokens \(6\) cannot exceed output_tokens \(5\)',
+    ):
+        extract_usages.check_usage_consistency({'output_tokens': 5, 'output_reasoning_tokens': 6})
+
+
+def test_usage_consistency_rejects_mutually_exclusive_details_over_aggregate(
+    extract_usages_module: object,
+) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+
+    with pytest.raises(
+        AssertionError,
+        match=r'mutually exclusive token_type usage .* totals 11, which exceeds output_tokens \(10\)',
+    ):
+        extract_usages.check_usage_consistency(
+            {'output_tokens': 10, 'output_reasoning_tokens': 6, 'output_citation_tokens': 5}
+        )
+
+
+def test_extract_and_check_reports_inconsistent_usage_context(extract_usages_module: object) -> None:
+    extract_usages = cast(Any, extract_usages_module)
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+            UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens'),
+        ],
+    )
+    provider = Provider(name='Test', id='test', api_pattern='test', extractors=[extractor])
+    body = {'file': 'recorded-response.yaml', 'usage': {'output_tokens': 5, 'reasoning_tokens': 6}}
+
+    with pytest.raises(
+        AssertionError,
+        match=(
+            r'Inconsistent extracted usage for test/default in recorded-response.yaml: '
+            r'output_reasoning_tokens \(6\) cannot exceed output_tokens \(5\)'
+        ),
+    ):
+        extract_usages.extract_and_check(body, extractor, provider)
 
 
 def test_main_reports_current_dataset(
