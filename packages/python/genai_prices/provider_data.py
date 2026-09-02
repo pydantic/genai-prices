@@ -234,7 +234,11 @@ class _ProviderProjector:
                 ) or not ({'start_date', 'start_time', 'end_time'} & constraint_mapping.keys()):
                     self._warn('constraint', f'{price_path}.constraint', context)
                     continue
-            conditional['prices'] = self._project_prices(conditional['prices'], f'{price_path}.prices', context)
+            raw_conditional_prices = conditional['prices']
+            projected_prices = self._project_prices(raw_conditional_prices, f'{price_path}.prices', context)
+            if isinstance(raw_conditional_prices, Mapping) and raw_conditional_prices and projected_prices == {}:
+                continue
+            conditional['prices'] = projected_prices
             prices.append(conditional)
         return prices
 
