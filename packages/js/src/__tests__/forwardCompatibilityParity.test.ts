@@ -70,6 +70,7 @@ describe('forward-compatible shared fixture', () => {
 
     const invalidConstraint = structuredClone(wrapped)
     defined(defined(defined(invalidConstraint.providers[0]).models[0]).prices[2]).constraint = malformed.constraint
+    // The unsupported future constraint at prices[1] is projected out, so this entry is baseline-validated at index 1.
     expect(() => {
       updatePrices(({ setProviderData }) => {
         setProviderData(invalidConstraint as unknown as WrappedProviderData)
