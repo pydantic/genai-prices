@@ -424,6 +424,18 @@ def _compare_additional_properties(
     if new_value is True:
         return
     old_schema = _schema_mapping(old_value, f'{path}.additionalProperties')
+    previous_property_names = set(_optional_schema_map(previous.get('properties'), f'{path}.properties'))
+    candidate_properties = _optional_schema_map(candidate.get('properties'), f'{path}.properties')
+    for property_name, candidate_property in candidate_properties.items():
+        if property_name not in previous_property_names:
+            _compare_schema(
+                old_schema,
+                candidate_property,
+                previous_root,
+                candidate_root,
+                f'{path}.properties.{property_name}',
+                set(seen_refs),
+            )
     new_schema = _schema_mapping(new_value, f'{path}.additionalProperties')
     _compare_schema(old_schema, new_schema, previous_root, candidate_root, f'{path}.additionalProperties', seen_refs)
 

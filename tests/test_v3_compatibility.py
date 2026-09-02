@@ -148,6 +148,21 @@ def test_validate_v3_schema_evolution_rejects_removed_enum_values() -> None:
         validate_v3_schema_evolution(previous, candidate)
 
 
+def test_validate_v3_schema_evolution_checks_new_properties_against_previous_catchall() -> None:
+    previous: dict[str, JsonData] = {'additionalProperties': {'type': 'string'}, 'type': 'object'}
+    compatible: dict[str, JsonData] = {
+        'additionalProperties': {'type': 'string'},
+        'properties': {'future': {'type': 'string'}},
+        'type': 'object',
+    }
+    narrowed = copy.deepcopy(compatible)
+    cast(dict[str, JsonData], narrowed['properties'])['future'] = {'type': 'integer'}
+
+    validate_v3_schema_evolution(previous, compatible)
+    with pytest.raises(ValueError, match=r'properties\.future.*narrowed type'):
+        validate_v3_schema_evolution(previous, narrowed)
+
+
 def test_validate_v3_schema_evolution_rejects_ambiguous_behavior_changing_variant() -> None:
     previous = v3_data_schema()
     candidate = copy.deepcopy(previous)
