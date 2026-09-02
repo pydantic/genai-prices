@@ -26,12 +26,12 @@ DEFAULT_UPDATE_URL = (
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
-    """Synchronously wait for prices to be updated by the shared background updater.
+    """Wait for an update from the shared background task.
 
-    A fetch failure is raised to every waiter until a later fetch succeeds.
+    If the latest fetch failed, this raises its error while at least one instance is started.
 
     Args:
-        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
+        timeout: Maximum wait in seconds, or `None` to wait indefinitely.
 
     Returns:
         True if prices were updated, False otherwise.
@@ -43,12 +43,12 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
-    """Asynchronously wait for prices to be updated by the shared background updater.
+    """Wait asynchronously for an update from the shared background task.
 
-    A fetch failure is raised to every waiter until a later fetch succeeds.
+    If the latest fetch failed, this raises its error while at least one instance is started.
 
     Args:
-        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
+        timeout: Maximum wait in seconds, or `None` to wait indefinitely.
 
     Returns:
         True if prices were updated, False otherwise.
@@ -58,14 +58,13 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 
 @dataclass
 class UpdatePrices:
-    """Update prices using one background task shared by all instances.
+    """Update prices in one background task shared by all instances.
 
-    Calling `start()` on an instance that is not already started starts the task if needed, keeps
-    it running, and makes future fetches use that instance's settings and `fetch()` method. When no
-    instances remain started, any current fetch finishes and the task exits unless another instance
-    calls `start()` first. Fetched prices stay in use after `stop()`.
+    Each instance keeps the task running from `start()` until `stop()`. When an instance starts, it
+    supplies the settings and `fetch()` method for future fetches. Calling `start()` while it is
+    already started only waits if requested. Fetched prices stay in use.
 
-    Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
+    Use this as a context manager or call `start()` and `stop()` yourself.
     """
 
     update_interval: float = 3600
@@ -75,20 +74,16 @@ class UpdatePrices:
     request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
     _started: bool = field(default=False, init=False, repr=False, compare=False)
-    """Whether this instance currently counts towards keeping the shared thread running."""
+    """Whether this instance keeps the task running."""
 
     def start(self, *, wait: bool | float = False):
-        """Start updating prices in the background.
+        """Start this instance and keep the background task running.
 
-        If this instance is not already started, calling this method starts the task if needed,
-        keeps it running, and makes future fetches use this instance's settings and `fetch()` method.
-
-        Calling this again on an instance that is already started does not keep the task running
-        an extra time or apply its settings again, but still waits if `wait` is passed.
+        Future fetches use this instance's settings and `fetch()` method. Calling `start()` while
+        it is already started only waits if requested.
 
         Args:
-            wait: Whether to wait for the prices to be updated before returning, if an int is passed
-                wait for that many seconds, if `True` wait for 30 seconds.
+            wait: `True` to wait up to 30 seconds, a number to wait that many seconds, or `False` to return at once.
         """
         with _shared_updater.lock:
             if not self._started:
@@ -98,12 +93,12 @@ class UpdatePrices:
             _shared_updater.wait(timeout=30 if wait is True else wait)
 
     def wait(self, timeout: float | None = None) -> bool:
-        """Wait for the prices to be updated in the background task.
+        """Wait for a background price update.
 
-        A fetch failure is raised to every waiter until a later fetch succeeds.
+        If the latest fetch failed, this raises its error while this instance is started.
 
         Args:
-            timeout: The maximum time to wait for the prices to be updated in seconds.
+            timeout: Maximum wait in seconds, or `None` to wait indefinitely.
 
         Returns:
             True if prices were updated, False otherwise.
@@ -115,13 +110,9 @@ class UpdatePrices:
     def stop(self):
         """Stop this instance from keeping the background task running.
 
-        Every call, including the last one, returns without waiting for the background task. When
-        no instances remain started, any fetch already in progress finishes in the background and
-        any prices it returns are used. The task then exits unless another instance calls `start()`
-        first.
-
-        Fetched prices stay in use after `stop()`. Fetch failures are not raised. Calling `stop()`
-        on an instance that is not started does nothing.
+        `stop()` does not wait for the task or raise fetch failures. The task exits when no instances
+        are started and any current fetch is finished. Any prices returned by that fetch are used.
+        Fetched prices stay in use. Calling `stop()` on an instance that is not started does nothing.
         """
         with _shared_updater.lock:
             if not self._started:
@@ -137,7 +128,7 @@ class UpdatePrices:
         self.stop()
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
-        """Fetches the latest provider data from the configured URL."""
+        """Fetch the latest prices from the configured URL."""
         from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
 
         r = httpx2.get(self.url, timeout=self.request_timeout)
@@ -152,28 +143,24 @@ class UpdatePrices:
 
 @dataclass
 class _SharedUpdater:
-    """The one background updater shared by every `UpdatePrices` instance in the process.
-
-    The thread runs while `ref_count` is above zero and uses `fetcher`, the instance started most
-    recently. `lock` guards that state and is never held across anything that blocks.
-    """
+    """Manage the background thread shared by all `UpdatePrices` instances."""
 
     lock: threading.Lock = field(default_factory=threading.Lock)
     ref_count: int = 0
-    """How many instances are started."""
+    """Number of started instances."""
     fetcher: UpdatePrices | None = None
-    """The instance whose settings and `fetch()` the thread uses; None once no instance is started."""
+    """Instance used for future fetches, or `None` if none are started."""
     thread: threading.Thread | None = None
-    """The thread doing the work, if any."""
+    """Current worker thread."""
     wake: threading.Event = field(default_factory=threading.Event)
-    """Set by the last `stop()` so a sleeping thread notices it is no longer needed."""
+    """Signals the thread after the last instance stops."""
     ready: threading.Event = field(default_factory=threading.Event)
-    """Set once the thread has an outcome to report, or exited without one."""
+    """Signals that `wait()` can return or raise."""
     outcome: tuple[Exception | None, TracebackType | None] | None = None
-    """A single reference so it can be published and read atomically."""
+    """`None` before the first outcome; otherwise `(error, traceback)`, both `None` on success."""
 
     def acquire(self, instance: UpdatePrices) -> None:
-        """Count `instance` in and use its settings; launch the thread if none is running. Caller holds `lock`."""
+        """Add `instance`, use it for fetches, and start the thread if needed. Caller holds `lock`."""
         previous = self.fetcher
         if previous is not None and (instance.url, instance.update_interval, instance.request_timeout) != (
             previous.url,
@@ -205,7 +192,7 @@ class _SharedUpdater:
                 raise
 
     def release(self) -> None:
-        """Count one instance out; the thread exits on its own once none are left. Caller holds `lock`."""
+        """Remove one started instance. Caller holds `lock`."""
         self.ref_count -= 1
         if self.ref_count == 0:
             self.fetcher = None
@@ -233,7 +220,7 @@ class _SharedUpdater:
         self.ready.set()
 
     def _run(self) -> None:
-        """The thread body: fetch while any instance is started, then exit."""
+        """Fetch until no instance is started, finishing the current fetch first."""
         me = threading.current_thread()
         try:
             logger.info('Starting genai-prices background task')

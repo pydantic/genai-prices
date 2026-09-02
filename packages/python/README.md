@@ -148,17 +148,17 @@ print(p)
 update_prices.stop()  # stop updating prices
 ```
 
-All `UpdatePrices` instances use one background task, so libraries such as Logfire and Pydantic AI can each call
-`start()` and `stop()` without creating duplicate tasks. Calling `start()` on an instance that is not already
-started starts the task if needed, keeps it running, and makes future fetches use that instance's settings and
-`fetch()` method. When no instances remain started, any current fetch finishes and the task exits unless another
-instance calls `start()` first. If you subclass `UpdatePrices` to customize fetching, start your instance after
-other libraries start theirs. Fetched prices stay in use after `stop()`; they never revert to the data bundled with
-the package.
+All `UpdatePrices` instances use one background task. Each instance keeps the task running from `start()` until
+`stop()`. When an instance starts, it supplies the settings and `fetch()` method for future fetches. Calling `start()`
+again while that instance remains started has no effect unless `wait` is set. This lets libraries such as Logfire and
+Pydantic AI update prices without creating duplicate tasks. If you customize `fetch()`, start your instance after
+other libraries start theirs.
 
-If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
-Every `stop()` call, including the last one, returns without waiting for the background task or raising a fetch
-failure. If a fetch is already in progress, it finishes in the background and any prices it returns are used.
+Fetch failures are logged. If the latest fetch failed, `wait()` raises its error while its instance is started. The
+global wait functions raise it while any instance is started.
+`stop()` does not wait for the task or raise fetch failures. The task exits when no instances are started and any
+current fetch is finished. Any prices returned by that fetch are used. Fetched prices stay in use; they never revert
+to the data bundled with the package.
 
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
