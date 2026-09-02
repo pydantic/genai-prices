@@ -12,8 +12,8 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
-// RemoteDataURL is the current v2 provider-data feed.
-const RemoteDataURL = "https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json"
+// RemoteDataURL is the current v3 provider-data feed.
+const RemoteDataURL = "https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v3/data.json"
 
 var (
 	// ErrProviderNotFound means no provider matched the request.
@@ -33,6 +33,18 @@ type UsageKey string
 
 // Usage contains the values reported for one API call.
 type Usage map[UsageKey]float64
+
+type wireUnitDef struct {
+	PriceKey   string
+	Per        uint64
+	Dimensions map[string]string
+}
+
+type orderedWireUnits struct {
+	Order                 []UsageKey
+	Values                map[UsageKey]wireUnitDef
+	CompatibilityWarnings []string
+}
 
 // PriceRequest describes one price calculation.
 type PriceRequest struct {
@@ -81,10 +93,35 @@ type provider struct {
 	apiRegex               *regexp2.Regexp
 }
 
+type wireProvider struct {
+	ID                     string               `json:"id"`
+	Name                   string               `json:"name"`
+	PricingURLs            []string             `json:"pricing_urls"`
+	APIPattern             string               `json:"api_pattern"`
+	Description            *string              `json:"description"`
+	PriceComments          *string              `json:"price_comments"`
+	ModelMatch             *matchLogic          `json:"model_match"`
+	ProviderMatch          *matchLogic          `json:"provider_match"`
+	Extractors             []wireUsageExtractor `json:"extractors"`
+	FallbackModelProviders []string             `json:"fallback_model_providers"`
+	Models                 []wireModel          `json:"models"`
+}
+
 type model struct {
 	ID     string      `json:"id"`
 	Match  matchLogic  `json:"match"`
 	Prices modelPrices `json:"prices"`
+}
+
+type wireModel struct {
+	ID            string          `json:"id"`
+	Name          *string         `json:"name"`
+	Description   *string         `json:"description"`
+	Match         matchLogic      `json:"match"`
+	ContextWindow json.RawMessage `json:"context_window"`
+	PriceComments *string         `json:"price_comments"`
+	Prices        modelPrices     `json:"prices"`
+	Deprecated    *bool           `json:"deprecated"`
 }
 
 type modelPrices struct {
@@ -340,10 +377,33 @@ type usageExtractor struct {
 	Mappings  []usageExtractorMapping `json:"mappings"`
 }
 
+type wireUsageExtractor struct {
+	Root      extractPath                 `json:"root"`
+	Mappings  []wireUsageExtractorMapping `json:"mappings"`
+	APIFLavor json.RawMessage             `json:"api_flavor"`
+	ModelPath json.RawMessage             `json:"model_path"`
+}
+
 type usageExtractorMapping struct {
 	Path     extractPath `json:"path"`
 	Dest     UsageKey    `json:"dest"`
 	Required bool        `json:"required"`
+}
+
+type wireUsageExtractorMapping struct {
+	Path     extractPath     `json:"path"`
+	Dest     UsageKey        `json:"dest"`
+	Required json.RawMessage `json:"required"`
+}
+
+type wrappedProviderData struct {
+	Units     orderedWireUnits `json:"units"`
+	Providers json.RawMessage  `json:"providers"`
+}
+
+type decodedProviders struct {
+	Values                []provider
+	CompatibilityWarnings []string
 }
 
 type extractPath []pathStep

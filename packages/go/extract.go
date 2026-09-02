@@ -159,6 +159,7 @@ func (calculator *Calculator) ExtractUsage(request ExtractRequest) (ExtractedUsa
 			"Unsupported extractor destination for standard extraction: " + strings.Join(destinations, ", "),
 		}
 	}
+	warnings = append(warnings, calculator.compatibilityWarnings...)
 	return ExtractedUsage{Usage: usage, Model: modelID, ProviderID: selected.ID, Warnings: warnings}, nil
 }
 

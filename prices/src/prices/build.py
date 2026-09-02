@@ -1,22 +1,27 @@
 from __future__ import annotations
 
 import copy
-import difflib
-import gzip
-import io
 from decimal import Decimal
 from operator import attrgetter
+from pathlib import Path
 from typing import Any, cast
 
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
-from pydantic.main import IncEx
 
 from genai_prices.units import UnitDef
-from prices.export_validation import validate_export_payload, validate_units
+from prices.export_validation import (
+    normalize_conditional_implications,
+    public_unit_key_schema,
+    runtime_unit_projection,
+    validate_export_payload,
+    validate_units,
+)
+from prices.frozen_v2 import validate_frozen_v2_artifacts
 from prices.prices_types import Provider, providers_schema
-from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
+from prices.utils import package_dir, root_dir, simplify_json_schema
+from prices.v3_compatibility import resolve_compatibility_target, validate_v3_compatibility
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -35,9 +40,87 @@ def load_units() -> dict[str, Any]:
     return units
 
 
-def build():
-    """Validate the publication inputs and build the provider schema and v2 data."""
+def v3_data_schema() -> dict[str, Any]:
+    """Build the wrapped v3 schema with dynamic price and extractor destination keys."""
+    provider_array_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
+    definitions = cast(dict[str, Any], provider_array_schema.pop('$defs'))
+    provider_items = cast(dict[str, Any], provider_array_schema['items'])
+    definitions['RuntimeUnitData'] = {
+        'additionalProperties': False,
+        'properties': {
+            'per': {
+                'maximum': 9_007_199_254_740_991,
+                'minimum': 1,
+                'type': 'integer',
+            },
+            'price_key': {
+                **public_unit_key_schema(),
+            },
+            'dimensions': {
+                'additionalProperties': {'minLength': 1, 'type': 'string'},
+                'minProperties': 1,
+                'properties': {'family': {'minLength': 1, 'type': 'string'}},
+                'propertyNames': {'minLength': 1, 'type': 'string'},
+                'required': ['family'],
+                'type': 'object',
+            },
+        },
+        'required': ['per', 'dimensions'],
+        'type': 'object',
+    }
+    return {
+        '$defs': definitions,
+        'additionalProperties': False,
+        'properties': {
+            'units': {
+                'additionalProperties': {'$ref': '#/$defs/RuntimeUnitData'},
+                'propertyNames': public_unit_key_schema(),
+                'type': 'object',
+            },
+            'providers': {'items': provider_items, 'type': 'array'},
+        },
+        'required': ['units', 'providers'],
+        'type': 'object',
+    }
+
+
+def prepare_v3_data(providers: list[Provider], raw_units: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Prepare a validated v3 schema and wrapped payload without writing artifacts."""
+    validate_export_payload(providers, raw_units)
+    schema = v3_data_schema()
+    provider_data = providers_schema.dump_python(providers, mode='json', by_alias=True, exclude_none=True)
+    payload = {
+        'units': runtime_unit_projection(raw_units),
+        'providers': provider_data,
+    }
+    return schema, payload
+
+
+def build(compatibility_target_oid: str | None = None) -> None:
+    """Validate the complete candidate before publishing the provider schema and v3 data."""
+    target_oid = resolve_compatibility_target(compatibility_target_oid)
     units = load_units()
+    providers = load_providers()
+    prepare_providers_for_export(providers)
+    candidate_schema, candidate_payload = prepare_v3_data(providers, units)
+    provider_schema = _provider_yaml_schema(units)
+    validate_frozen_v2_artifacts()
+    validate_v3_compatibility(
+        target_oid,
+        candidate_runtime_units=runtime_unit_projection(units),
+        candidate_implications=normalize_conditional_implications(units),
+        candidate_schema=candidate_schema,
+        candidate_payload=candidate_payload,
+    )
+
+    schema_json_path = package_dir / 'providers' / '.schema.json'
+    schema_json_path.write_bytes(pydantic_core.to_json(provider_schema, indent=2) + b'\n')
+    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+    write_v3_data(providers, units, prepared=(candidate_schema, candidate_payload))
+
+
+def load_providers() -> list[Provider]:
+    """Load and validate provider YAML without applying export-time mutations."""
     providers: list[Provider] = []
 
     providers_dir = package_dir / 'providers'
@@ -56,16 +139,7 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    prepare_providers_for_export(providers)
-    validate_export_payload(providers, units)
-
-    schema_json_path = package_dir / 'providers' / '.schema.json'
-    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
-    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
-    write_prices(providers, units, 'new_data/v2/data.json')
-    for provider in providers:
-        provider.exclude_free()
-    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
+    return providers
 
 
 def prepare_providers_for_export(providers: list[Provider]) -> None:
@@ -142,81 +216,27 @@ def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -
     return schema
 
 
-def write_prices(
+def write_v3_data(
     providers: list[Provider],
-    units: dict[str, Any],
-    prices_file: str,
+    raw_units: dict[str, Any],
     *,
-    slim: bool = False,
+    prepared: tuple[dict[str, Any], dict[str, Any]] | None = None,
 ) -> None:
-    print('')
-    prices_json_path = package_dir / prices_file
-    prices_json_path.parent.mkdir(parents=True, exist_ok=True)
-
-    providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
-    data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
-
-    if slim:
-        provider_properties = cast(dict[str, Any], data_json_schema['$defs']['Provider']['properties'])
-        provider_properties.pop('pricing_urls')
-        provider_properties.pop('description')
-        provider_properties.pop('price_comments')
-        model_properties = cast(dict[str, Any], data_json_schema['$defs']['ModelInfo']['properties'])
-        model_properties.pop('name')
-        model_properties.pop('description')
-        model_properties.pop('price_comments')
-
-    prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
-    prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
-    print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
-
-    exclude: IncEx | None = None
-    if slim:
-        exclude = {
-            '__all__': {
-                'pricing_urls': True,
-                'description': True,
-                'price_comments': True,
-                'models': {'__all__': {'name', 'description', 'price_comments'}},
-            }
-        }
-
-    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
-    current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
-    if json_data != current_data:
-        if current_data is not None:
-            diff = difflib.unified_diff(
-                pretty_providers_json(current_data),
-                pretty_providers_json(json_data),
-                fromfile='current_prices',
-                tofile='new_prices',
-            )
-            diff_str = ''.join(diff)
-            if diff_str:
-                print('Prices have the following changes:')
-                print('=' * 80)
-                print(diff_str)
-                print('=' * 80)
-            else:
-                print('Prices have whitespace/dict ordering changes')
-
-        prices_json_path.write_bytes(json_data)
-        action = 'updated'
-    else:
-        action = 'unchanged'
-
-    buffer = io.BytesIO()
-    with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
-        f.write(json_data)
-    gz_len = len(buffer.getvalue())
-    print(
-        f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
-        f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
-    )
+    """Write the validated wrapped v3 schema and payload."""
+    schema, payload = prepared if prepared is not None else prepare_v3_data(providers, raw_units)
+    output_dir = package_dir / 'new_data' / 'v3'
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _write_generated_json(output_dir / 'data.schema.json', schema, indent=2)
+    _write_generated_json(output_dir / 'data.json', payload)
 
 
-def pretty_providers_json(compact_json: bytes) -> list[str]:
-    return pydantic_core.to_json(pydantic_core.from_json(compact_json), indent=2).decode().splitlines(keepends=True)
+def _write_generated_json(path: Path, value: object, *, indent: int | None = None) -> None:
+    encoded = pydantic_core.to_json(value, indent=indent) + b'\n'
+    current = path.read_bytes() if path.exists() else None
+    action = 'unchanged' if current == encoded else 'updated'
+    if current != encoded:
+        path.write_bytes(encoded)
+    print(f'Generated {path.relative_to(root_dir)} {action}')
 
 
 if __name__ == '__main__':

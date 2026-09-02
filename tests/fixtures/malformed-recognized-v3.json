@@ -1,0 +1,9 @@
+{
+  "constraint": {
+    "start_date": "not-a-date"
+  },
+  "extractor": {
+    "root": "usage",
+    "mappings": "not-an-array"
+  }
+}

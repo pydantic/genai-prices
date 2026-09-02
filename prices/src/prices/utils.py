@@ -8,15 +8,6 @@ package_dir = Path(__file__).parent.parent.parent
 root_dir = package_dir.parent
 
 
-def pretty_size(size: int) -> str:
-    if size < 1024:
-        return f'{size} bytes'
-    elif size < 1024 * 1024:  # pragma: no cover - reaching this branch requires an inflated generated-data fixture
-        return f'{size / 1024:.2f} KB'
-    else:  # pragma: no cover - reaching this branch requires a generated-data fixture larger than 1 MiB
-        return f'{size / (1024 * 1024):.2f} MB'
-
-
 def mtok(v: Decimal | None) -> Decimal | None:
     """Convert a token price to mtok."""
     if v is None or v == 0:

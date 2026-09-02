@@ -4,10 +4,13 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import cache
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 from . import types
+
+if TYPE_CHECKING:
+    from .units import UnitRegistry
 
 __all__ = 'DataSnapshot', 'set_custom_snapshot'
 
@@ -31,8 +34,23 @@ def _bundled_snapshot() -> DataSnapshot:
     )
 
 
-def set_custom_snapshot(snapshot: DataSnapshot | None):
+def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
+    from .units import (
+        _get_registry,  # pyright: ignore[reportPrivateUsage]
+        _set_active_registry,  # pyright: ignore[reportPrivateUsage]
+        _validate_unit_evolution,  # pyright: ignore[reportPrivateUsage]
+    )
+
     global _custom_snapshot
+    if snapshot is None:
+        _set_active_registry(None)
+        _custom_snapshot = None
+        return
+
+    candidate_registry = snapshot._activation_registry  # pyright: ignore[reportPrivateUsage]
+    if candidate_registry is not None:
+        _validate_unit_evolution(_get_registry(), candidate_registry)
+    _set_active_registry(candidate_registry)
     _custom_snapshot = snapshot
 
 
@@ -48,6 +66,19 @@ class DataSnapshot:
     )
     _provider_misses: set[tuple[str | None, str | None, str | None]] = field(default_factory=set, init=False)
     timestamp: datetime = field(default_factory=datetime.now)
+    _activation_registry: UnitRegistry | None = field(default=None, init=False, repr=False, compare=False)
+
+    @classmethod
+    def _from_wrapped(
+        cls,
+        providers: list[types.Provider],
+        from_auto_update: bool,
+        registry: UnitRegistry,
+    ) -> DataSnapshot:
+        """Construct a snapshot carrying a registry only for later activation."""
+        snapshot = cls(providers=providers, from_auto_update=from_auto_update)
+        snapshot._activation_registry = registry
+        return snapshot
 
     def active(self, ttl: timedelta) -> bool:
         """Check if the snapshot is "active" (e.g. hasn't expired) based on a time to live."""

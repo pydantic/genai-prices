@@ -1336,13 +1336,34 @@ def test_google_anthropic():
 
 @pytest.mark.parametrize('dest', ['imaginary_tokens', 'input_mtok', 'requests'])
 def test_extractor_warns_and_skips_invalid_destination_string(dest: str) -> None:
-    with pytest.warns(UserWarning, match=f'Unsupported extractor destination for standard extraction: {dest}'):
-        extractor = UsageExtractor(
-            root='usage',
-            mappings=[UsageExtractorMapping(path='missing_tokens', dest=dest)],
-        )
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='missing_tokens', dest=dest)],
+    )
 
-    assert extractor.extract({'model': 'test-model', 'usage': {}}) == ('test-model', Usage())
+    with pytest.warns(UserWarning, match=f'Unsupported extractor destination for standard extraction: {dest}'):
+        assert extractor.extract({'model': 'test-model', 'usage': {}}) == ('test-model', Usage())
+
+
+def test_extractor_warns_once_for_sorted_unsupported_destinations_and_keeps_supported_siblings() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='z', dest='z_unknown'),
+            UsageExtractorMapping(path='input', dest='input_tokens'),
+            UsageExtractorMapping(path='a', dest='a_unknown'),
+        ],
+    )
+
+    with pytest.warns(UserWarning) as warnings_info:
+        result = extractor.extract({'model': 'test-model', 'usage': {'input': 7}})
+        repeated_result = extractor.extract({'model': 'test-model', 'usage': {'input': 7}})
+
+    assert [str(warning.message) for warning in warnings_info] == [
+        'Unsupported extractor destination for standard extraction: a_unknown, z_unknown'
+    ]
+    assert result == ('test-model', Usage(input_tokens=7))
+    assert repeated_result == result
 
 
 def test_extractor_accumulates_by_destination_string() -> None:
@@ -1375,12 +1396,18 @@ def test_runtime_extractor_uses_active_global_registry(monkeypatch: pytest.Monke
             },
         }
     )
-    monkeypatch.setattr('genai_prices.units._get_registry', lambda: registry)
-
     extractor = UsageExtractor(
         root='usage',
         mappings=[UsageExtractorMapping(path='sausage_tokens', dest='sausage_tokens')],
     )
+
+    with pytest.warns(UserWarning, match='Unsupported extractor destination for standard extraction: sausage_tokens'):
+        assert extractor.extract({'model': 'test-model', 'usage': {'sausage_tokens': 7}}) == (
+            'test-model',
+            Usage(),
+        )
+
+    monkeypatch.setattr('genai_prices.units._get_registry', lambda: registry)
 
     assert extractor.extract({'model': 'test-model', 'usage': {'sausage_tokens': 7}}) == (
         'test-model',

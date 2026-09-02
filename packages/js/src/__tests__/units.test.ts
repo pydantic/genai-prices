@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
-import { getActiveRegistry, isCompatible, UnitRegistry } from '../units'
+import { calcPrice } from '../engine'
+import { getActiveRegistry, isCompatible, setActiveRegistry, UnitRegistry, validateUnitEvolution } from '../units'
+import { normalizeUsage } from '../usage'
 
 const tokenUsageKeys = [
   'input_tokens',
@@ -268,7 +270,203 @@ describe('UnitRegistry', () => {
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
     expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
   })
+
+  it('constructs an ordered frozen projection from untrusted unit data', () => {
+    const raw = {
+      first_events: {
+        dimension_requirements: { ignored: true },
+        dimensions: { family: 'first_events' },
+        future_member: 'ignored',
+        per: 1,
+      },
+      last_events: {
+        dimensions: { family: 'last_events' },
+        per: Number.MAX_SAFE_INTEGER,
+        price_key: 'last_event_price',
+      },
+    }
+
+    const registry = UnitRegistry.fromUntrusted(raw)
+    raw.first_events.dimensions.family = 'changed'
+    raw.first_events.per = 2
+
+    expect([...registry.reportedUsageKeys()]).toEqual(['first_events', 'last_events'])
+    expect(registry.getUnit('first_events')).toEqual({
+      dimensions: { family: 'first_events' },
+      per: 1,
+      priceKey: 'first_events',
+      usageKey: 'first_events',
+    })
+    expect(registry.getUnit('last_events')?.per).toBe(Number.MAX_SAFE_INTEGER)
+    expect(registry.getUnit('last_events')).not.toHaveProperty('dimension_requirements')
+    expect(Object.isFrozen(registry.getUnit('first_events'))).toBe(true)
+    expect(Object.isFrozen(registry.getUnit('first_events')?.dimensions)).toBe(true)
+  })
+
+  it('uses locale-independent dimension ordering for joins', () => {
+    const registry = UnitRegistry.fromUntrusted({
+      composed_events: { dimensions: { Å: 'ring', Å: 'precomposed', family: 'events' }, per: 1 },
+      precomposed_events: { dimensions: { Å: 'precomposed', family: 'events' }, per: 1 },
+      ring_events: { dimensions: { Å: 'ring', family: 'events' }, per: 1 },
+    })
+    const precomposed = registry.getUnit('precomposed_events')
+    const ring = registry.getUnit('ring_events')
+
+    expect(precomposed).toBeDefined()
+    expect(ring).toBeDefined()
+    if (!precomposed || !ring) throw new Error('Expected complete event units')
+    expect(registry.findJoin(precomposed, ring)).toBe(registry.getUnit('composed_events'))
+    expect(registry.findJoin(ring, precomposed)).toBe(registry.getUnit('composed_events'))
+  })
+
+  it.each([null, [], 'units', 1, true])('rejects a non-object untrusted root: %j', (raw) => {
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow('genai-prices: invalid data: units must be an object')
+  })
+
+  it.each([
+    [{ events: null }, 'unit "events" must be an object'],
+    [{ events: [] }, 'unit "events" must be an object'],
+    [{ events: { dimensions: { family: 'events' } } }, 'unit "events" is missing per'],
+    [{ events: { dimensions: { family: 'events' }, per: 0 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: -1 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: 1.5 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: true } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: Number.MAX_SAFE_INTEGER + 1 } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: Number.NaN } }, 'safe positive integer'],
+    [{ events: { dimensions: { family: 'events' }, per: 1, price_key: null } }, 'price_key must be a string'],
+    [{ events: { per: 1 } }, 'dimensions must be an object'],
+    [{ events: { dimensions: [], per: 1 } }, 'dimensions must be an object'],
+    [{ events: { dimensions: {}, per: 1 } }, 'missing the family dimension'],
+    [{ events: { dimensions: { family: '' }, per: 1 } }, 'non-empty string keys and values'],
+    [{ events: { dimensions: { family: 'events', type: 1 }, per: 1 } }, 'non-empty string keys and values'],
+  ])('rejects malformed recognized unit fields: %j', (raw, message) => {
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow('genai-prices: invalid data:')
+    expect(() => UnitRegistry.fromUntrusted(raw)).toThrow(message)
+  })
+
+  it.each(['_private', 'two words', 'class', 'constructor', 'prototype'])('rejects unsafe usage key %j', (usageKey) => {
+    expect(() => UnitRegistry.fromUntrusted({ [usageKey]: { dimensions: { family: 'events' }, per: 1 } })).toThrow(
+      'genai-prices: invalid data: unit usage key'
+    )
+  })
+
+  it.each(['_private', 'two words', 'await', 'constructor', 'prototype'])('rejects unsafe price key %j', (priceKey) => {
+    expect(() => UnitRegistry.fromUntrusted({ events: { dimensions: { family: 'events' }, per: 1, price_key: priceKey } })).toThrow(
+      'genai-prices: invalid data: unit price key'
+    )
+  })
+
+  it('rejects duplicate price and dimension identities', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        first_events: { dimensions: { family: 'first' }, per: 1, price_key: 'event_price' },
+        second_events: { dimensions: { family: 'second' }, per: 1, price_key: 'event_price' },
+      })
+    ).toThrow('units "first_events" and "second_events" use price key event_price')
+
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        first_events: { dimensions: { family: 'events' }, per: 1 },
+        second_events: { dimensions: { family: 'events' }, per: 1 },
+      })
+    ).toThrow('units "first_events" and "second_events" use identical dimensions')
+  })
+
+  it('normalizes each family to one exact factor', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        input_events: { dimensions: { direction: 'input', family: 'events' }, per: 1 },
+        output_events: { dimensions: { direction: 'output', family: 'events' }, per: 2 },
+      })
+    ).toThrow('per 2 differs from 1 for family "events"')
+  })
+
+  it('requires every compatible dimension join and accepts a complete join', () => {
+    const incomplete = {
+      input_events: { dimensions: { direction: 'input', family: 'events' }, per: 1 },
+      special_events: { dimensions: { event_type: 'special', family: 'events' }, per: 1 },
+    }
+    expect(() => UnitRegistry.fromUntrusted(incomplete)).toThrow('missing join unit dimensions between input_events and special_events')
+
+    const registry = UnitRegistry.fromUntrusted({
+      ...incomplete,
+      input_special_events: {
+        dimensions: { direction: 'input', event_type: 'special', family: 'events' },
+        per: 1,
+      },
+    })
+    const inputEvents = registry.getUnit('input_events')
+    const specialEvents = registry.getUnit('special_events')
+    expect(inputEvents).toBeDefined()
+    expect(specialEvents).toBeDefined()
+    if (!inputEvents || !specialEvents) throw new Error('Expected complete event units')
+    expect(registry.findJoin(inputEvents, specialEvents)).toBe(registry.getUnit('input_special_events'))
+  })
+
+  it('treats inherited object properties as absent dimensions', () => {
+    const incomplete = {
+      constructor_events: { dimensions: { constructor: 'custom', family: 'events' }, per: 1 },
+      special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+    }
+    expect(() => UnitRegistry.fromUntrusted(incomplete)).toThrow(
+      'missing join unit dimensions between constructor_events and special_events'
+    )
+
+    const registry = UnitRegistry.fromUntrusted({
+      ...incomplete,
+      constructor_special_events: {
+        dimensions: { constructor: 'custom', family: 'events', kind: 'special' },
+        per: 1,
+      },
+    })
+    const constructorEvents = registry.getUnit('constructor_events')
+    const specialEvents = registry.getUnit('special_events')
+    expect(constructorEvents).toBeDefined()
+    expect(specialEvents).toBeDefined()
+    if (!constructorEvents || !specialEvents) throw new Error('Expected complete event units')
+    expect(isCompatible(constructorEvents, specialEvents)).toBe(true)
+    expect(registry.findJoin(constructorEvents, specialEvents)).toBe(registry.getUnit('constructor_special_events'))
+  })
+
+  it('scales validation across large disjoint families', () => {
+    const units: RawUnitsDict = {}
+    for (let index = 0; index < 4096; index++) {
+      units[`unit_${String(index)}`] = { dimensions: { family: `family_${String(index)}` }, per: 1 }
+    }
+
+    const registry = UnitRegistry.fromUntrusted(units)
+
+    expect(registry.getAllUsageKeys()).toHaveLength(4096)
+    units.one_too_many = { dimensions: { family: 'one_too_many' }, per: 1 }
+    expect(() => UnitRegistry.fromUntrusted(units)).toThrow('units must contain at most 4096 entries')
+  })
+
+  it('accepts the last member retained by standard JSON duplicate decoding', () => {
+    const decoded: unknown = JSON.parse(
+      '{"events":{"per":0,"dimensions":{"family":"bad"}},"events":{"per":2,"per":1,"dimensions":{"family":"events"}}}'
+    )
+
+    const registry = UnitRegistry.fromUntrusted(decoded)
+
+    expect(registry.getUnit('events')?.per).toBe(1)
+    expect(registry.getUnit('events')?.dimensions.family).toBe('events')
+  })
+
+  it('retains a dimension named __proto__', () => {
+    const decoded: unknown = JSON.parse('{"events":{"dimensions":{"__proto__":"special","family":"events"},"per":1}}')
+
+    const dimensions = registryDimensions(UnitRegistry.fromUntrusted(decoded), 'events')
+
+    expect(Object.prototype.hasOwnProperty.call(dimensions, '__proto__')).toBe(true)
+    expect(Reflect.get(dimensions, '__proto__')).toBe('special')
+  })
 })
+
+function registryDimensions(registry: UnitRegistry, usageKey: string): Readonly<Record<string, string>> {
+  const unit = registry.getUnit(usageKey)
+  if (!unit) throw new Error(`Expected unit ${usageKey}`)
+  return unit.dimensions
+}
 
 describe('generated unit registry', () => {
   it('initializes from generated unit data', () => {
@@ -329,4 +527,134 @@ describe('generated unit registry', () => {
     expect(getActiveRegistry().isReportedUsageKey('web_searches')).toBe(true)
     expect(getActiveRegistry().isReportedUsageKey('requests')).toBe(false)
   })
+
+  it('selects and restores an active replacement through existing helpers', () => {
+    const bundled = getActiveRegistry()
+    const replacement = UnitRegistry.fromUntrusted({
+      remote_events: {
+        dimensions: { family: 'remote_events' },
+        per: 1,
+        price_key: 'remote_event_price',
+      },
+    })
+
+    try {
+      setActiveRegistry(replacement)
+
+      expect(getActiveRegistry()).toBe(replacement)
+      expect(normalizeUsage({ input_tokens: 5, remote_events: 3 })).toEqual({ remote_events: 3 })
+      expect(calcPrice({ remote_events: 4 }, { remote_event_price: 2 })).toEqual({
+        input_price: 0,
+        output_price: 0,
+        total_price: 8,
+      })
+    } finally {
+      setActiveRegistry()
+    }
+
+    expect(getActiveRegistry()).toBe(bundled)
+    expect(getActiveRegistry().getUnit('input_tokens')).toBeDefined()
+    expect(getActiveRegistry().getUnit('remote_events')).toBeUndefined()
+  })
 })
+
+/* eslint-disable perfectionist/sort-objects -- Unit evolution tests intentionally exercise object-member order. */
+function publishedRegistry(): UnitRegistry {
+  return UnitRegistry.fromUntrusted({
+    events: { dimensions: { family: 'events' }, per: 1 },
+    special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+  })
+}
+
+describe('validateUnitEvolution', () => {
+  it('accepts appended descendants, intersections, and new families', () => {
+    const previous = publishedRegistry()
+    const candidate = UnitRegistry.fromUntrusted({
+      events: { dimensions: { family: 'events' }, per: 1 },
+      special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+      vip_events: { dimensions: { audience: 'vip', family: 'events' }, per: 1 },
+      vip_special_events: { dimensions: { audience: 'vip', family: 'events', kind: 'special' }, per: 1 },
+      seconds: { dimensions: { family: 'durations' }, per: 1 },
+    })
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).not.toThrow()
+    expect([...previous.reportedUsageKeys()]).toEqual(['events', 'special_events'])
+    expect([...candidate.reportedUsageKeys()].slice(-3)).toEqual(['vip_events', 'vip_special_events', 'seconds'])
+  })
+
+  it.each([
+    [UnitRegistry.fromUntrusted({ events: { dimensions: { family: 'events' }, per: 1 } }), 'removed published unit'],
+    [
+      UnitRegistry.fromUntrusted({
+        special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+        events: { dimensions: { family: 'events' }, per: 1 },
+      }),
+      'reordered published units',
+    ],
+    [
+      UnitRegistry.fromUntrusted({
+        events: { dimensions: { family: 'events' }, per: 1 },
+        seconds: { dimensions: { family: 'durations' }, per: 1 },
+        special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+      }),
+      'new unit seconds must be appended',
+    ],
+  ])('rejects removal, reorder, or insertion without mutation', (candidate, message) => {
+    const previous = publishedRegistry()
+    const previousOrder = [...previous.reportedUsageKeys()]
+    const candidateOrder = [...candidate.reportedUsageKeys()]
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).toThrow(`genai-prices: invalid data: ${message}`)
+    expect([...previous.reportedUsageKeys()]).toEqual(previousOrder)
+    expect([...candidate.reportedUsageKeys()]).toEqual(candidateOrder)
+  })
+
+  it.each([
+    { dimensions: { family: 'events', kind: 'original' }, per: 2, price_key: 'published_price' },
+    { dimensions: { family: 'events', kind: 'original' }, per: 1, price_key: 'replacement_price' },
+    { dimensions: { family: 'events', kind: 'corrected' }, per: 1, price_key: 'published_price' },
+  ])('rejects an old definition change', (candidateDefinition) => {
+    const previous = UnitRegistry.fromUntrusted({
+      published_events: {
+        dimensions: { family: 'events', kind: 'original' },
+        per: 1,
+        price_key: 'published_price',
+      },
+    })
+    const candidate = UnitRegistry.fromUntrusted({ published_events: candidateDefinition })
+
+    expect(() => {
+      validateUnitEvolution(previous, candidate)
+    }).toThrow('genai-prices: invalid data: redefined published unit: published_events')
+    expect(previous.getUnit('published_events')?.per).toBe(1)
+    expect(candidate.getUnit('published_events')).toBeDefined()
+  })
+
+  it('allows additive correction descendants but rejects new ancestors', () => {
+    const previous = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+    })
+    const corrected = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+      corrected_events: { dimensions: { correction: 'v2', family: 'events', kind: 'mistaken' }, per: 1 },
+    })
+    expect(() => {
+      validateUnitEvolution(previous, corrected)
+    }).not.toThrow()
+
+    const ancestor = UnitRegistry.fromUntrusted({
+      mistaken_events: { dimensions: { family: 'events', kind: 'mistaken' }, per: 1 },
+      events: { dimensions: { family: 'events' }, per: 1 },
+    })
+    expect(() => {
+      validateUnitEvolution(previous, ancestor)
+    }).toThrow('genai-prices: invalid data: new unit events is an ancestor or intermediate of published unit mistaken_events')
+    expect([...previous.reportedUsageKeys()]).toEqual(['mistaken_events'])
+    expect([...ancestor.reportedUsageKeys()]).toEqual(['mistaken_events', 'events'])
+  })
+})
+/* eslint-enable perfectionist/sort-objects */
