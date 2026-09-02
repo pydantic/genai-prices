@@ -222,6 +222,8 @@ func TestDecodeWrappedProvidersRejectsMalformedRecognizedData(t *testing.T) {
 		{name: "multiple match operations", data: providerWithModel(`"match":{"equals":"model","contains":"model"},`, true), message: "exactly one operation"},
 		{name: "constraint", data: providerWithPrices(`[{"prices":{"input_mtok":1}},{"constraint":{"start_date":"bad"},"prices":{"input_mtok":2}}]`), message: "start-date"},
 		{name: "tiered price", data: providerWithPrices(`{"input_mtok":{"tiers":[]}}`), message: "must contain base and tiers"},
+		{name: "malformed prices", data: providerWithPrices(`null`), message: "prices must be an object or array"},
+		{name: "empty conditional prices", data: providerWithPrices(`[]`), message: "has no conditional prices"},
 	}
 	registry := newUnitRegistry(bundledUnits, bundledUnitOrder)
 	for _, test := range tests {

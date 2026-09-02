@@ -578,25 +578,34 @@ func (projector *providerProjector) projectModel(
 	if err := validateModelMetadata(fields, path); err != nil {
 		return nil, false, err
 	}
-	projectedPrices, err := projector.projectPrices(fields["prices"], path+".prices", context)
+	rawPrices := fields["prices"]
+	projectedPrices, err := projector.projectPrices(rawPrices, path+".prices", context)
 	if err != nil {
 		return nil, false, err
 	}
-	var projectedPriceCount int
-	if rawKind(projectedPrices) == '{' {
+	projectedAway := false
+	if rawKind(rawPrices) == '{' && rawKind(projectedPrices) == '{' {
+		rawPriceMap, err := rawObject(rawPrices, path+".prices")
+		if err != nil {
+			return nil, false, err
+		}
 		projectedPriceMap, err := rawObject(projectedPrices, path+".prices")
 		if err != nil {
 			return nil, false, err
 		}
-		projectedPriceCount = len(projectedPriceMap)
-	} else if rawKind(projectedPrices) == '[' {
+		projectedAway = len(rawPriceMap) > 0 && len(projectedPriceMap) == 0
+	} else if rawKind(rawPrices) == '[' && rawKind(projectedPrices) == '[' {
+		rawPriceList, err := rawArray(rawPrices, path+".prices")
+		if err != nil {
+			return nil, false, err
+		}
 		projectedPriceList, err := rawArray(projectedPrices, path+".prices")
 		if err != nil {
 			return nil, false, err
 		}
-		projectedPriceCount = len(projectedPriceList)
+		projectedAway = len(rawPriceList) > 0 && len(projectedPriceList) == 0
 	}
-	if projectedPriceCount == 0 {
+	if projectedAway {
 		return nil, false, nil
 	}
 	fields["prices"] = projectedPrices
