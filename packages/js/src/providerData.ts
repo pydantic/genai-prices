@@ -189,7 +189,19 @@ class ProviderProjector {
       }
       model.match = projected.value
     }
-    if ('prices' in model) model.prices = this.projectPrices(model.prices, `${path}.prices`, context)
+    if ('prices' in model) {
+      const rawPrices = model.prices
+      const projectedPrices = this.projectPrices(rawPrices, `${path}.prices`, context)
+      if (
+        isRecord(rawPrices) &&
+        Object.keys(rawPrices).length > 0 &&
+        isRecord(projectedPrices) &&
+        Object.keys(projectedPrices).length === 0
+      ) {
+        return undefined
+      }
+      model.prices = projectedPrices
+    }
     return model
   }
 
