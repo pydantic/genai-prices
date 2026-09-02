@@ -260,6 +260,9 @@ function modelContext(model: Record<string, unknown>, index: number): string {
 
 function normalizeConditionalPrice(raw: unknown, providerId: string, modelId: string, path: string): ConditionalPrice {
   if (!isRecord(raw)) throw invalidData(`${path} must be an object for provider '${providerId}' model '${modelId}'`)
+  if (!isRecord(raw.prices)) {
+    throw invalidData(`${path}.prices must be an object for provider '${providerId}' model '${modelId}'`)
+  }
   const constraint = raw.constraint
   const prices = raw.prices as ConditionalPrice['prices']
   if (constraint === undefined) return { prices }

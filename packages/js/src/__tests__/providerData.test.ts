@@ -222,6 +222,16 @@ describe('decodeProviderData', () => {
     )
   })
 
+  it('rejects a conditional price whose prices member is not an object', () => {
+    const provider = providerFixture()
+    const models = provider.models as Record<string, unknown>[]
+    defined(models[0]).prices = [{ constraint: { start_date: '2026-01-01' }, prices: 1 }]
+
+    expect(() => decodeProviderData(wrappedFixture(provider), getActiveRegistry())).toThrow(
+      "genai-prices: invalid data: providers[0].models[0].prices[0].prices must be an object for provider 'remote' model 'model-a'"
+    )
+  })
+
   it.each([
     ['non-object', 'not-an-object'],
     ['bad start date', { start_date: 'not-a-date' }],
