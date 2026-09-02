@@ -1080,7 +1080,7 @@ def test_normalize_conditional_implications_rejects_conflicts() -> None:
 @pytest.mark.parametrize(
     ('usage_key', 'price_key', 'message'),
     [
-        ('_private_name', 'private_mtok', 'must not start'),
+        ('_private_name', 'private_mtok', 'is not a public identifier'),
         ('$input_tokens', 'input_mtok', 'is not a public identifier'),
         ('class', 'class_mtok', 'is a reserved keyword'),
         ('valid_usage', 'function', 'is a reserved keyword'),
