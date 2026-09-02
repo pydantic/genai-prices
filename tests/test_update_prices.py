@@ -57,15 +57,13 @@ def _remote_provider() -> dict[str, object]:
     }
 
 
-def _wrapped_provider_data(*, providers: list[object] | None = None, unit_name: str = 'remote_events') -> bytes:
+def _wrapped_provider_data(*, providers: list[object] | None = None) -> bytes:
     units = deepcopy(unit_data)
-    units[unit_name] = {
+    units['remote_events'] = {
         'per': 1,
-        'price_key': f'{unit_name.removesuffix("s")}_price',
-        'dimensions': {'family': unit_name},
+        'price_key': 'remote_event_price',
+        'dimensions': {'family': 'remote_events'},
     }
-    if unit_name == 'remote_events':
-        units[unit_name]['price_key'] = 'remote_event_price'
     return json.dumps({'units': units, 'providers': providers or [_remote_provider()]}).encode()
 
 
