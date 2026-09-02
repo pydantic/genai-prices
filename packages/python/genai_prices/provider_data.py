@@ -169,7 +169,10 @@ class _ProviderProjector:
                 return None
             model['match'] = projected
         if 'prices' in model:
-            model['prices'] = self._project_prices(model['prices'], f'{path}.prices', context)
+            projected_prices = self._project_prices(model['prices'], f'{path}.prices', context)
+            if isinstance(model['prices'], list) and model['prices'] and projected_prices == []:
+                return None
+            model['prices'] = projected_prices
         return model
 
     def _project_match(self, raw: object, path: str) -> tuple[bool, object]:

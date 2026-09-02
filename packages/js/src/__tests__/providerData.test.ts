@@ -169,6 +169,19 @@ describe('decodeProviderData', () => {
     ])
   })
 
+  it('drops a model whose conditional prices only contain future variants', () => {
+    const provider = providerFixture()
+    const models = provider.models as Record<string, unknown>[]
+    defined(models[0]).prices = [{ constraint: { type: 'weekday' }, prices: { input_mtok: 99 } }]
+
+    const decoded = decodeProviderData(wrappedFixture(provider), getActiveRegistry())
+
+    expect(decoded.providers[0]?.models.map(({ id }) => id)).toEqual(['model-b'])
+    expect(decoded.compatibilityWarnings).toEqual([
+      "Unsupported constraint variant at providers[0].models[0].prices[0].constraint for provider 'remote', model 'model-a'; upgrade genai-prices for full support",
+    ])
+  })
+
   it('projects unsupported extractor paths, mappings, and conditional price entries', () => {
     const provider = providerFixture()
     provider.extractors = [

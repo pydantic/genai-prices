@@ -200,6 +200,9 @@ class ProviderProjector {
       ) {
         return undefined
       }
+      if (Array.isArray(rawPrices) && rawPrices.length > 0 && Array.isArray(projectedPrices) && projectedPrices.length === 0) {
+        return undefined
+      }
       model.prices = projectedPrices
     }
     return model
