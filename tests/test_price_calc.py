@@ -389,9 +389,15 @@ def test_aws_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, e
 @pytest.mark.parametrize(
     ('model_ref', 'short_input_rate', 'long_input_rate'),
     [
-        ('openai.gpt-5.6-sol', Decimal('5.5'), Decimal('11')),
+        ('openai.gpt-5.6-sol', Decimal('4.4'), Decimal('8.8')),
         ('openai.gpt-5.6-terra', Decimal('2.2'), Decimal('4.4')),
         ('openai.gpt-5.6-luna', Decimal('0.22'), Decimal('0.44')),
+        ('global.openai.gpt-5.6-sol', Decimal('4'), Decimal('8')),
+        ('global.openai.gpt-5.6-terra', Decimal('2'), Decimal('4')),
+        ('global.openai.gpt-5.6-luna', Decimal('0.2'), Decimal('0.4')),
+        ('us.openai.gpt-5.6-sol', Decimal('4.4'), Decimal('8.8')),
+        ('us.openai.gpt-5.6-terra', Decimal('2.2'), Decimal('4.4')),
+        ('in.openai.gpt-5.6-luna', Decimal('0.22'), Decimal('0.44')),
     ],
 )
 def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal, long_input_rate: Decimal) -> None:
