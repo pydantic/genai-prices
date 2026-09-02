@@ -421,6 +421,9 @@ func (projector *providerProjector) projectExtractor(
 			projectedMappings = append(projectedMappings, projected)
 		}
 	}
+	if len(projectedMappings) == 0 {
+		return nil, false, nil
+	}
 	fields["mappings"], err = json.Marshal(projectedMappings)
 	if err != nil {
 		return nil, false, err

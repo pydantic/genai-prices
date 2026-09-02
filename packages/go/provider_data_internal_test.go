@@ -157,6 +157,22 @@ func TestDecodeWrappedProvidersDropsEmptyProjectedPrices(t *testing.T) {
 	}
 }
 
+func TestDecodeWrappedProvidersDropsExtractorWithoutUsableMappings(t *testing.T) {
+	decoded, err := decodeWrappedProviders(json.RawMessage(`[
+		{
+			"id":"testing","name":"Testing","api_pattern":"testing",
+			"extractors":[{"root":"usage","mappings":[{"path":[{"type":"future-path"}],"dest":"input_tokens"}]}],
+			"models":[]
+		}
+	]`), newUnitRegistry(bundledUnits, bundledUnitOrder))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(decoded.Values[0].Extractors) != 0 {
+		t.Fatalf("unsupported extractor was retained: %#v", decoded.Values[0].Extractors)
+	}
+}
+
 func TestDecodeWrappedProvidersRejectsMalformedRecognizedData(t *testing.T) {
 	tests := []struct {
 		name    string
