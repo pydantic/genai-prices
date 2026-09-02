@@ -11,9 +11,10 @@ _GO_DECLARATION_PATTERN = re.compile(
     r'^(?:const|type|var)\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b'
 )
 _GO_FUNCTION_PATTERN = re.compile(r'^func\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]+\]\s*)?\(')
-_GO_BLOCK_PATTERN = re.compile(r'^(?:const|type|var)\s*\($')
+_GO_BLOCK_PATTERN = re.compile(r'^(const|type|var)\s*\($')
 _GO_BLOCK_MEMBER_PATTERN = re.compile(r'^([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b')
 _GENERATED_UNIT_CONSTANT_PATTERN = re.compile(r'^(Usage[A-Za-z0-9_]*)\s+UsageKey\s*=\s*"[A-Za-z][A-Za-z0-9_]*"$')
+_GO_NON_CODE_PATTERN = re.compile(r'//[^\n]*|/\*.*?\*/|`[^`]*`|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', re.DOTALL)
 _GO_KEYWORDS = frozenset(
     {
         'break',
@@ -97,26 +98,40 @@ def go_package_level_identifiers() -> frozenset[str]:
 
 def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) -> set[str]:
     identifiers: set[str] = set()
-    in_declaration_block = False
-    for line in source.splitlines():
+    declaration_block_kind: str | None = None
+    brace_depth = 0
+    source_lines = source.splitlines()
+    code_lines = _go_source_without_comments_and_literals(source).splitlines()
+    for line_index, line in enumerate(code_lines):
         stripped = line.strip()
-        if in_declaration_block:
-            if stripped == ')':
-                in_declaration_block = False
+        if declaration_block_kind is not None:
+            if brace_depth == 0 and stripped == ')':
+                declaration_block_kind = None
                 continue
-            if match := _GO_BLOCK_MEMBER_PATTERN.match(stripped):
-                if exclude_generated and _GENERATED_UNIT_CONSTANT_PATTERN.fullmatch(stripped):
+            if brace_depth == 0 and (match := _GO_BLOCK_MEMBER_PATTERN.match(stripped)):
+                original = source_lines[line_index].strip()
+                if exclude_generated and _GENERATED_UNIT_CONSTANT_PATTERN.fullmatch(original):
                     continue
-                identifiers.update(name.strip() for name in match.group(1).split(','))
+                names = [name.strip() for name in match.group(1).split(',')]
+                identifiers.update(names[:1] if declaration_block_kind == 'type' else names)
+            brace_depth += line.count('{') - line.count('}')
             continue
 
-        if line != line.lstrip():
+        if brace_depth != 0:
+            brace_depth += line.count('{') - line.count('}')
             continue
-        declaration = stripped.partition('//')[0].rstrip()
-        if _GO_BLOCK_PATTERN.fullmatch(declaration):
-            in_declaration_block = True
-        elif match := _GO_DECLARATION_PATTERN.match(declaration):
+        if match := _GO_BLOCK_PATTERN.fullmatch(stripped):
+            declaration_block_kind = match.group(1)
+        elif match := _GO_DECLARATION_PATTERN.match(stripped):
             identifiers.update(name.strip() for name in match.group(1).split(','))
-        elif match := _GO_FUNCTION_PATTERN.match(declaration):
+        elif match := _GO_FUNCTION_PATTERN.match(stripped):
             identifiers.add(match.group(1))
+        brace_depth += line.count('{') - line.count('}')
     return identifiers
+
+
+def _go_source_without_comments_and_literals(source: str) -> str:
+    """Blank comments and literals while retaining newlines and Go scope punctuation."""
+    return _GO_NON_CODE_PATTERN.sub(
+        lambda match: ''.join('\n' if char == '\n' else ' ' for char in match.group()), source
+    )

@@ -94,6 +94,60 @@ const (
     assert {'Existing', 'UsageFoo', 'Other', 'UsageBar', 'BlockExisting', 'UsageBaz'} <= identifiers
 
 
+def test_go_file_package_level_identifiers_track_scope_instead_of_indentation() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+    var UsagePackage = 1
+func example() {
+var UsageLocal = 2
+}
+""",
+        exclude_generated=False,
+    )
+
+    assert identifiers == {'UsagePackage', 'example'}
+
+
+def test_go_file_package_level_identifiers_ignore_type_block_fields() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+type (
+    UsageStruct struct {
+        UsageField, Other int
+    }
+    UsageInterface interface {
+        UsageMethod()
+    }
+)
+""",
+        exclude_generated=False,
+    )
+
+    assert {'UsageStruct', 'UsageInterface'} <= identifiers
+    assert not {'UsageField', 'Other', 'UsageMethod'} & identifiers
+
+
+def test_go_file_package_level_identifiers_accept_function_comments_and_ignore_literal_braces() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+var interpreted = "}"
+var raw = `}`
+/* multiline comment
+} */
+func UsageFuture /* comment with } */ () {}
+""",
+        exclude_generated=False,
+    )
+
+    assert {'UsageFuture', 'interpreted', 'raw'} <= identifiers
+
+
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
     go_identifiers.validate_go_usage_key_identifiers(load_units())
 
