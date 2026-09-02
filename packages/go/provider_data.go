@@ -505,7 +505,7 @@ func (projector *providerProjector) projectExtractPath(data json.RawMessage, pat
 		encoded, err := json.Marshal(projected)
 		return encoded, true, err
 	default:
-		return data, true, nil
+		return nil, false, fmt.Errorf("%s extract path must be a string or array", path)
 	}
 }
 
