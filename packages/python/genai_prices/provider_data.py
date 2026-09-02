@@ -109,8 +109,10 @@ class _ProviderProjector:
 
         raw_mappings = extractor.get('mappings')
         if isinstance(raw_mappings, list):
+            typed_raw_mappings = cast(list[object], raw_mappings)
+            original_mapping_count = len(typed_raw_mappings)
             mappings: list[object] = []
-            for mapping_index, raw_mapping in enumerate(cast(list[object], raw_mappings)):
+            for mapping_index, raw_mapping in enumerate(typed_raw_mappings):
                 mapping_path = f'{path}.mappings[{mapping_index}]'
                 if isinstance(raw_mapping, Mapping):
                     mapping = dict(cast(Mapping[str, Any], raw_mapping))
@@ -127,6 +129,8 @@ class _ProviderProjector:
                     mappings.append(mapping)
                 else:
                     mappings.append(raw_mapping)
+            if original_mapping_count > 0 and not mappings:
+                return None
             extractor['mappings'] = mappings
         return extractor
 
