@@ -369,6 +369,9 @@ def test_background_update_retains_first_unconsumed_failure_across_later_outcome
     updater.start()
     try:
         assert three_attempts.wait(timeout=5)
+        assert updater._thread is not None
+        updater._thread.join(timeout=5)
+        assert not updater._thread.is_alive()
         with pytest.raises(RuntimeError) as exc_info:
             updater.wait(timeout=5)
         assert exc_info.value is first_failure
