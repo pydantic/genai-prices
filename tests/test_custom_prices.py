@@ -116,11 +116,8 @@ def test_alt_source():
         assert price.auto_update_timestamp is None
 
     # Fetched prices stay in use after stop().
-    try:
-        price = calc_price(Usage(input_tokens=1_000_000), model_ref='foobar', provider_id='testing')
-        assert price.total_price == snapshot(Decimal('1'))
-    finally:
-        set_custom_snapshot(None)
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref='foobar', provider_id='testing')
+    assert price.total_price == snapshot(Decimal('1'))
 
 
 def test_alt_source_sausage():

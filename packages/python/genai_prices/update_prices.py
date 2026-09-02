@@ -4,7 +4,6 @@ import asyncio
 import json
 import logging
 import threading
-import warnings
 from dataclasses import dataclass, field
 from time import time
 from types import TracebackType
@@ -25,12 +24,22 @@ DEFAULT_UPDATE_URL = (
     'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json'
 )
 
-# All instances share one worker so libraries can opt in independently without duplicate threads.
-# The one lock guards the worker reference, its reference count, and snapshot install, and is
-# never held across anything that blocks — stop() signals the worker instead of joining it — so
-# it cannot deadlock and Ctrl-C has nothing to interrupt.
+# All instances share one background thread, so libraries can opt in independently without duplicate
+# threads. The thread runs while any instance is started and uses the settings and `fetch()` of the
+# last one started. The one lock guards this state and is never held across anything that blocks.
 _lock = threading.Lock()
-_shared_worker: _Worker | None = None
+_ref_count = 0
+"""How many instances are started."""
+_fetcher: UpdatePrices | None = None
+"""The instance whose settings and `fetch()` the thread uses; None once no instance is started."""
+_thread: threading.Thread | None = None
+"""The thread doing the work, if any."""
+_wake = threading.Event()
+"""Set by the last `stop()` so a sleeping thread notices it is no longer needed."""
+_ready = threading.Event()
+"""Set once the thread has an outcome to report, or exited without one."""
+_outcome: tuple[Exception | None, TracebackType | None] | None = None
+"""A single reference so it can be published and read atomically."""
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -45,10 +54,9 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         True if prices were updated, False otherwise.
     """
     with _lock:
-        worker = _shared_worker
-    if worker is None:
-        return False
-    return worker.wait(timeout)
+        if _ref_count == 0:
+            return False
+    return _wait(timeout)
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
@@ -69,11 +77,10 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 class UpdatePrices:
     """Update prices in the background using a shared daemon thread.
 
-    All instances share one process-wide worker: the first `start()` launches it, later `start()`
-    calls join it, and the last `stop()` shuts it down; prices already fetched stay in use. The worker
-    fetches through the instance that started it — using its settings and `fetch()` exactly as if
-    it were the only instance — so joining with different settings warns and keeps the first
-    instance's.
+    All instances share one process-wide thread. It runs while any instance is started: the first
+    `start()` launches it, later `start()` calls join it, and the last `stop()` lets it exit. It uses
+    the settings and `fetch()` of the instance started most recently, from the next fetch on.
+    Prices already fetched stay in use after `stop()`.
 
     Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
     """
@@ -84,59 +91,55 @@ class UpdatePrices:
     """The URL to fetch prices from."""
     request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
-    _worker: _Worker | None = field(default=None, init=False, repr=False)
+    _started: bool = field(default=False, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
-        """Start the background task, or join the one already running.
+        """Start the background task, or join the one already running with this instance's settings.
 
         Args:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
                 wait for that many seconds, if `True` wait for 30 seconds.
         """
-        global _shared_worker
+        global _ref_count, _fetcher, _thread, _outcome
 
         with _lock:
-            if self._worker is not None:
+            if self._started:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            worker = _shared_worker
-            if worker is not None and worker.dead:
-                # Don't join a worker that died unexpectedly; start a replacement.
-                logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
-                worker = None
-            if worker is None:
-                worker = _Worker(self)
-                worker.ref_count = 1
+            previous = _fetcher
+            if previous is not None and (self.url, self.update_interval, self.request_timeout) != (
+                previous.url,
+                previous.update_interval,
+                previous.request_timeout,
+            ):
+                logger.info(
+                    'genai-prices background task now using url=%r, update_interval=%r, request_timeout=%r',
+                    self.url,
+                    self.update_interval,
+                    self.request_timeout,
+                )
+            _fetcher = self
+            self._started = True
+            _ref_count += 1
+
+            if _thread is None:
+                # A new run: waiters see only what this thread reports.
+                _outcome = None
+                _ready.clear()
+                _thread = threading.Thread(target=_run, daemon=True, name='genai_prices:update')
                 try:
-                    _shared_worker = worker
-                    self._worker = worker
-                    worker.thread.start()
+                    _thread.start()
                 except BaseException:
-                    # Thread.start() can fail after the OS thread launched; a shut-down worker
-                    # exits on its own, so releasing ownership is the whole rollback.
-                    worker.shutdown()
-                    _shared_worker = None
-                    self._worker = None
+                    # Thread.start() can fail after the OS thread launched; it exits on its own once
+                    # it sees it is not the current thread.
+                    _thread = None
+                    _fetcher = previous
+                    self._started = False
+                    _ref_count -= 1
                     raise
-            else:
-                owner = worker.owner
-                if (self.url, self.update_interval, self.request_timeout) != (
-                    owner.url,
-                    owner.update_interval,
-                    owner.request_timeout,
-                ):
-                    warnings.warn(
-                        'UpdatePrices background task is already running with different configuration; keeping '
-                        f'url={owner.url!r}, update_interval={owner.update_interval!r}, '
-                        f'request_timeout={owner.request_timeout!r}',
-                        UserWarning,
-                        stacklevel=2,
-                    )
-                worker.ref_count += 1
-                self._worker = worker
 
         if wait:
-            worker.wait(timeout=30 if wait is True else wait)
+            self.wait(timeout=30 if wait is True else wait)
 
     def wait(self, timeout: float | None = None) -> bool:
         """Wait for the prices to be updated in the background task.
@@ -149,31 +152,28 @@ class UpdatePrices:
         Returns:
             True if prices were updated, False otherwise.
         """
-        worker = self._worker
-        if worker is None:
+        if not self._started:
             return False
-        return worker.wait(timeout)
+        return _wait(timeout)
 
     def stop(self):
         """Stop the background task, or release this instance's reference to it.
 
-        The last `stop()` signals the worker, which discards any in-flight fetch and exits on its
-        own. Prices already fetched stay in use; they never revert to the bundled data. Fetch
-        failures never make `stop()` raise, and `stop()` on a never-started instance does nothing.
+        The last `stop()` never blocks: the thread finishes any in-flight fetch, whose prices are
+        used, and exits on its own.
+        Prices already fetched stay in use; they never revert to the bundled data. Fetch failures
+        never make `stop()` raise, and `stop()` on a never-started instance does nothing.
         """
-        global _shared_worker
+        global _ref_count, _fetcher
 
         with _lock:
-            worker = self._worker
-            if worker is None:
+            if not self._started:
                 return
-            self._worker = None
-            worker.ref_count -= 1
-            if worker.ref_count == 0:
-                worker.shutdown()
-                if _shared_worker is worker:
-                    # A dead worker may already have been replaced by a newer one; leave that one in place.
-                    _shared_worker = None
+            self._started = False
+            _ref_count -= 1
+            if _ref_count == 0:
+                _fetcher = None
+                _wake.set()
 
     def __enter__(self):
         self.start()
@@ -196,82 +196,73 @@ class UpdatePrices:
         return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
-class _Worker:
-    """The process-wide background thread shared by all started `UpdatePrices` instances."""
+def _wait(timeout: float | None) -> bool:
+    if threading.current_thread() is _thread:
+        raise RuntimeError('UpdatePrices background task cannot wait for itself')
+    if not _ready.wait(timeout=timeout):
+        return False
+    outcome = _outcome
+    if outcome is None:
+        # Stopped before any fetch finished.
+        return False
+    error, error_traceback = outcome
+    if error is not None:
+        # Re-raise with the original traceback so waiters don't accumulate each other's frames.
+        raise error.with_traceback(error_traceback)
+    return True
 
-    def __init__(self, owner: UpdatePrices) -> None:
-        # The worker fetches through the instance that started it; later instances only add references.
-        self.owner = owner
-        self.ref_count = 0
-        self.dead = False
-        self.stop_event = threading.Event()
-        self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
-        # `ready` is set once there is an outcome to report (or the worker was stopped without
-        # one); `_outcome` is a single reference so it can be published and read atomically.
-        self.ready = threading.Event()
-        self._outcome: tuple[Exception | None, TracebackType | None] | None = None
 
-    def wait(self, timeout: float | None) -> bool:
-        if threading.current_thread() is self.thread:
-            raise RuntimeError('UpdatePrices background task cannot wait for itself')
-        if not self.ready.wait(timeout=timeout):
-            return False
-        outcome = self._outcome
-        if outcome is None:
-            # Stopped before any fetch finished.
-            return False
-        error, error_traceback = outcome
-        if error is not None:
-            # Re-raise with the original traceback so waiters don't accumulate each other's frames.
-            raise error.with_traceback(error_traceback)
-        return True
+def _publish(error: Exception | None) -> None:
+    global _outcome
+    _outcome = (error, error.__traceback__ if error is not None else None)
+    _ready.set()
 
-    def shutdown(self) -> None:
-        """Discard future updates; the thread exits on its own.
 
-        Runs under `_lock` and must not block: an in-flight fetch is not waited for, and its
-        result is discarded because installs check `stop_event` under the same lock.
-        """
-        self.stop_event.set()
-        # Wake any waiter still blocked before the first fetch; with no outcome, wait() returns False.
-        self.ready.set()
+def _run() -> None:
+    """The shared background thread: fetch while any instance is started, then exit."""
+    global _thread
 
-    def _publish(self, error: Exception | None) -> None:
-        self._outcome = (error, error.__traceback__ if error is not None else None)
-        self.ready.set()
-
-    def _run(self) -> None:
-        try:
-            logger.info('Starting genai-prices background task')
-            while not self.stop_event.is_set():
-                try:
-                    self._update_prices()
-                except Exception as e:
-                    self._publish(e)
-                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                if self.stop_event.wait(self.owner.update_interval):
-                    break
-        except BaseException as e:
-            # Nothing above should raise this; if it does, fail waiters instead of hanging them.
-            self.dead = True
-            error = RuntimeError('UpdatePrices background task terminated unexpectedly')
-            error.__cause__ = e
-            self._publish(error)
-        finally:
-            logger.info('genai-prices background task stopped')
-
-    def _update_prices(self) -> None:
-        start = time()
-        snapshot = self.owner.fetch()
-        interval = time() - start
-        if snapshot:
-            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
-        else:
-            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
-
+    me = threading.current_thread()
+    try:
+        logger.info('Starting genai-prices background task')
+        while True:
+            with _lock:
+                if _thread is not me:
+                    # This launch was interrupted and another thread does the work now.
+                    return
+                fetcher = _fetcher
+                if fetcher is None:
+                    _thread = None
+                    # Release any waiter still blocked before the first fetch; with no outcome, wait() returns False.
+                    _ready.set()
+                    return
+                _wake.clear()
+            try:
+                _update_prices(fetcher)
+            except Exception as e:
+                _publish(e)
+                logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+            _wake.wait(fetcher.update_interval)
+    except BaseException as e:
+        # Nothing above should raise this; if it does, fail waiters instead of hanging them.
         with _lock:
-            if self.stop_event.is_set():
-                # A stop() already won; discard the result so it cannot overwrite what a newer thread installs.
-                return
-            data_snapshot.set_custom_snapshot(snapshot)
-        self._publish(None)
+            if _thread is me:  # pragma: no branch - a superseded launch exits before it can raise
+                _thread = None
+        error = RuntimeError('UpdatePrices background task terminated unexpectedly')
+        error.__cause__ = e
+        _publish(error)
+    finally:
+        logger.info('genai-prices background task stopped')
+
+
+def _update_prices(fetcher: UpdatePrices) -> None:
+    start = time()
+    snapshot = fetcher.fetch()
+    interval = time() - start
+    if snapshot:
+        logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+    else:
+        logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
+
+    data_snapshot.set_custom_snapshot(snapshot)
+    _publish(None)
