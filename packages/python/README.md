@@ -113,7 +113,7 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub.
 
 Please note:
 
@@ -125,7 +125,7 @@ generally very quick to download.
 
 By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
 
-Usage with `UpdatePrices` as as context manager:
+Usage with `UpdatePrices` as a context manager:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
@@ -148,7 +148,17 @@ print(p)
 update_prices.stop()  # stop updating prices
 ```
 
-Only one `UpdatePrices` instance can be running at a time.
+All `UpdatePrices` instances use one background task. Each instance keeps the task running from `start()` until
+`stop()`. When an instance starts, it supplies the settings and `fetch()` method for future fetches. Calling `start()`
+again while that instance remains started has no effect unless `wait` is set. This lets libraries such as Logfire and
+Pydantic AI update prices without creating duplicate tasks. If you customize `fetch()`, start your instance after
+other libraries start theirs.
+
+Fetch failures are logged. If the latest fetch failed, `wait()` raises its error while its instance is started. The
+global wait functions raise it while any instance is started.
+`stop()` does not wait for the task or raise fetch failures. The task exits when no instances are started and any
+current fetch is finished. Any prices returned by that fetch are used. Fetched prices stay in use; they never revert
+to the data bundled with the package.
 
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
@@ -159,7 +169,7 @@ wait_prices_updated_sync()
 ...
 ```
 
-Or it's async variant, `wait_prices_updated_async`.
+Or its async variant, `wait_prices_updated_async`.
 
 ### CLI Usage
 
