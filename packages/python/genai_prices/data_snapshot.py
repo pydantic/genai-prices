@@ -47,9 +47,10 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
         _custom_snapshot = None
         return
 
-    if (candidate_registry := snapshot._activation_registry) is not None:  # pyright: ignore[reportPrivateUsage]
+    candidate_registry = snapshot._activation_registry  # pyright: ignore[reportPrivateUsage]
+    if candidate_registry is not None:
         _validate_unit_evolution(_get_registry(), candidate_registry)
-        _set_active_registry(candidate_registry)
+    _set_active_registry(candidate_registry)
     _custom_snapshot = snapshot
 
 

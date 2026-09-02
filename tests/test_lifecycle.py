@@ -507,6 +507,24 @@ def test_wrapped_snapshot_registry_is_private_and_inert_until_activation() -> No
     assert _get_registry() is bundled_registry
 
 
+def test_legacy_snapshot_activation_restores_the_bundled_registry() -> None:
+    bundled_registry = _get_registry()
+    registry = _remote_registry()
+    wrapped = data_snapshot.DataSnapshot._from_wrapped(_remote_providers(), True, registry)
+    legacy = data_snapshot.DataSnapshot(providers=_remote_providers(), from_auto_update=True)
+
+    try:
+        data_snapshot.set_custom_snapshot(wrapped)
+        assert _get_registry() is registry
+
+        data_snapshot.set_custom_snapshot(legacy)
+
+        assert data_snapshot.get_snapshot() is legacy
+        assert _get_registry() is bundled_registry
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
 def test_wrapped_snapshot_activation_switches_the_pair_and_none_restores_bundled_state() -> None:
     bundled_registry = _get_registry()
     bundled_snapshot = data_snapshot.get_snapshot()
@@ -529,7 +547,7 @@ def test_wrapped_snapshot_activation_switches_the_pair_and_none_restores_bundled
         provider_only = data_snapshot.DataSnapshot(providers=wrapped.providers, from_auto_update=False)
         data_snapshot.set_custom_snapshot(provider_only)
         assert data_snapshot.get_snapshot() is provider_only
-        assert _get_registry() is registry
+        assert _get_registry() is bundled_registry
     finally:
         data_snapshot.set_custom_snapshot(None)
 
