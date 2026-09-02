@@ -317,11 +317,11 @@ function validatePublicKey(kind: 'price' | 'usage', key: string): void {
 }
 
 function dimensionsCompatible(left: Readonly<Record<string, string>>, right: Readonly<Record<string, string>>): boolean {
-  return Object.entries(left).every(([key, value]) => right[key] === undefined || right[key] === value)
+  return Object.entries(left).every(([key, value]) => !hasOwn(right, key) || right[key] === value)
 }
 
 function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
-  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
+  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => hasOwn(unit.dimensions, key) && unit.dimensions[key] === value)
 }
 
 function unitDefinitionsEqual(left: UnitDef, right: UnitDef): boolean {
@@ -338,5 +338,5 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 }
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
+  return Object.entries(left.dimensions).every(([key, value]) => !hasOwn(right.dimensions, key) || right.dimensions[key] === value)
 }
