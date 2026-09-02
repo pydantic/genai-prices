@@ -196,6 +196,22 @@ describe('UnitRegistry', () => {
     )
   })
 
+  it('uses locale-independent dimension ordering for joins', () => {
+    const registry = new UnitRegistry({
+      composed_events: { dimensions: { Å: 'ring', Å: 'precomposed', family: 'events' }, per: 1 },
+      precomposed_events: { dimensions: { Å: 'precomposed', family: 'events' }, per: 1 },
+      ring_events: { dimensions: { Å: 'ring', family: 'events' }, per: 1 },
+    })
+    const precomposed = registry.getUnit('precomposed_events')
+    const ring = registry.getUnit('ring_events')
+
+    expect(precomposed).toBeDefined()
+    expect(ring).toBeDefined()
+    if (!precomposed || !ring) throw new Error('Expected complete event units')
+    expect(registry.findJoin(precomposed, ring)).toBe(registry.getUnit('composed_events'))
+    expect(registry.findJoin(ring, precomposed)).toBe(registry.getUnit('composed_events'))
+  })
+
   it('treats inherited object properties as absent dimensions', () => {
     const registry = new UnitRegistry({
       constructor_events: { dimensions: { constructor: 'custom', family: 'events' }, per: 1 },

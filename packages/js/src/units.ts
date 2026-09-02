@@ -96,7 +96,7 @@ export function getActiveRegistry(): UnitRegistry {
 }
 
 function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
-  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
+  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0)))
 }
 
 function hasOwn(value: object, key: string): boolean {
