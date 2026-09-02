@@ -90,6 +90,7 @@ class UpdatePrices:
         _global_update_prices = self
         self._prices_updated.clear()
         self._stop_event.clear()
+        self._background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
         if wait:
@@ -138,9 +139,9 @@ class UpdatePrices:
                 try:
                     self._update_prices()
                     self._prices_updated.set()
+                    self._background_exc = None
                 except Exception as e:
-                    if self._background_exc is None:
-                        self._background_exc = e
+                    self._background_exc = e
                     self._prices_updated.set()
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 if self._stop_event.wait(self.update_interval):

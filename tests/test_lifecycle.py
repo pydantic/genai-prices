@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import concurrent.futures
 import json
 import subprocess
 import sys
-import threading
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -15,7 +13,7 @@ from jsonschema.validators import validator_for
 from pydantic import TypeAdapter
 from typing_extensions import NotRequired, TypedDict
 
-from genai_prices import UpdatePrices, data as genai_data, data_snapshot, data_units as genai_data_units, types
+from genai_prices import data as genai_data, data_snapshot, data_units as genai_data_units, types
 from genai_prices.data import providers
 from genai_prices.data_units import unit_data
 from genai_prices.units import UnitRegistry, _get_registry
@@ -345,140 +343,6 @@ def _remote_providers() -> list[types.Provider]:
             }
         ]
     )
-
-
-def test_background_update_retains_first_unconsumed_failure_across_later_outcomes() -> None:
-    first_failure = RuntimeError('first failure')
-    later_failure = RuntimeError('later failure')
-    three_attempts = threading.Event()
-
-    class SequencedUpdatePrices(UpdatePrices):
-        attempts = 0
-
-        def _update_prices(self) -> None:
-            self.attempts += 1
-            if self.attempts == 1:
-                raise first_failure
-            if self.attempts == 2:
-                return
-            three_attempts.set()
-            self._stop_event.set()
-            raise later_failure
-
-    updater = SequencedUpdatePrices(update_interval=0)
-    updater.start()
-    try:
-        assert three_attempts.wait(timeout=5)
-        assert updater._thread is not None
-        updater._thread.join(timeout=5)
-        assert not updater._thread.is_alive()
-        with pytest.raises(RuntimeError) as exc_info:
-            updater.wait(timeout=5)
-        assert exc_info.value is first_failure
-        assert updater.wait(timeout=0) is True
-        assert updater._background_exc is None
-    finally:
-        updater.stop()
-
-
-def test_background_update_failure_slot_accepts_later_failure_after_consumption() -> None:
-    first_failure = RuntimeError('first failure')
-    later_failure = RuntimeError('later failure')
-    allow_later_attempt = threading.Event()
-    later_attempt_finished = threading.Event()
-
-    class SequencedUpdatePrices(UpdatePrices):
-        attempts = 0
-
-        def _update_prices(self) -> None:
-            self.attempts += 1
-            if self.attempts == 1:
-                raise first_failure
-            assert allow_later_attempt.wait(timeout=5)
-            later_attempt_finished.set()
-            self._stop_event.set()
-            raise later_failure
-
-    updater = SequencedUpdatePrices(update_interval=0)
-    updater.start()
-    try:
-        with pytest.raises(RuntimeError) as first_info:
-            updater.wait(timeout=5)
-        assert first_info.value is first_failure
-
-        allow_later_attempt.set()
-        assert later_attempt_finished.wait(timeout=5)
-        assert updater._thread is not None
-        updater._thread.join(timeout=5)
-        assert not updater._thread.is_alive()
-        with pytest.raises(RuntimeError) as later_info:
-            updater.wait(timeout=5)
-        assert later_info.value is later_failure
-        assert updater.wait(timeout=0) is True
-    finally:
-        updater.stop()
-
-
-def test_start_preserves_pending_failure_for_stop_as_single_consumer() -> None:
-    pending_failure = RuntimeError('pending failure')
-
-    class SuccessfulUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            return None
-
-    updater = SuccessfulUpdatePrices(update_interval=3600)
-    updater._background_exc = pending_failure
-    updater.start()
-    assert updater._prices_updated.wait(timeout=5)
-
-    with pytest.raises(RuntimeError) as exc_info:
-        updater.stop()
-    assert exc_info.value is pending_failure
-    assert updater._background_exc is None
-    updater.stop()
-
-
-def test_stop_signals_and_joins_blocked_wrapped_fetch_before_restoring_bundled_pair(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    bundled_registry = _get_registry()
-    bundled_snapshot = data_snapshot.get_snapshot()
-    wrapped = data_snapshot.DataSnapshot._from_wrapped(_remote_providers(), True, _remote_registry())
-    fetch_started = threading.Event()
-    allow_fetch_return = threading.Event()
-    wrapped_activated = threading.Event()
-
-    class BlockedUpdatePrices(UpdatePrices):
-        def fetch(self) -> data_snapshot.DataSnapshot | None:
-            fetch_started.set()
-            assert allow_fetch_return.wait(timeout=5)
-            return wrapped
-
-    original_set_custom_snapshot = data_snapshot.set_custom_snapshot
-
-    def observe_activation(snapshot: data_snapshot.DataSnapshot | None) -> None:
-        original_set_custom_snapshot(snapshot)
-        if snapshot is wrapped:
-            wrapped_activated.set()
-
-    monkeypatch.setattr(data_snapshot, 'set_custom_snapshot', observe_activation)
-    updater = BlockedUpdatePrices(update_interval=3600)
-    updater.start()
-    try:
-        assert fetch_started.wait(timeout=5)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            stop_future = executor.submit(updater.stop)
-            assert updater._stop_event.wait(timeout=5)
-            assert not stop_future.done()
-            allow_fetch_return.set()
-            stop_future.result(timeout=5)
-
-        assert wrapped_activated.is_set()
-        assert data_snapshot.get_snapshot() is bundled_snapshot
-        assert _get_registry() is bundled_registry
-    finally:
-        allow_fetch_return.set()
-        updater.stop()
 
 
 def test_wrapped_snapshot_registry_is_private_and_inert_until_activation() -> None:

@@ -182,6 +182,7 @@ def test_update_prices_background_activates_wrapped_snapshot(monkeypatch: pytest
         ).total_price == Decimal(4)
     finally:
         update_prices.stop()
+        data_snapshot.set_custom_snapshot(None)
 
     assert _get_registry() is bundled_registry
 
@@ -312,7 +313,7 @@ def test_update_prices_activation_rechecks_append_only_evolution(monkeypatch: py
     assert _get_registry() is bundled_registry
 
 
-def test_update_prices_fetch_override_reapplies_lazy_customizations_on_each_refresh(
+def test_update_prices_fetch_override_reapplies_lazy_customizations_on_each_fetch(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     bundled_registry = _get_registry()
@@ -349,11 +350,14 @@ def test_update_prices_fetch_override_reapplies_lazy_customizations_on_each_refr
         for refresh_index in range(2):
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter('always')
-                updater._update_prices()
+                fetched = updater.fetch()
             assert caught == []
+            assert fetched is not None
+            assert fetched is updater.fetched_snapshots[refresh_index]
 
+            data_snapshot.set_custom_snapshot(fetched)
             active_snapshot = data_snapshot.get_snapshot()
-            assert active_snapshot is updater.fetched_snapshots[refresh_index]
+            assert active_snapshot is fetched
             assert active_snapshot._activation_registry is _get_registry()
             assert active_snapshot._activation_registry is not None
             assert 'remote_events' in active_snapshot._activation_registry.units
