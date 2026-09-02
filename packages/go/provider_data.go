@@ -81,7 +81,11 @@ func decodeWrappedProviders(data json.RawMessage, registry *unitRegistry) (decod
 }
 
 func decodeLegacyProviders(data json.RawMessage, registry *unitRegistry) (decodedProviders, error) {
-	decoded, err := decodeWireProviders(data, registry)
+	legacyData, err := projectLegacyProviderArray(data)
+	if err != nil {
+		return decodedProviders{}, err
+	}
+	decoded, err := decodeWireProviders(legacyData, registry)
 	if err != nil {
 		return decodedProviders{}, err
 	}
@@ -89,6 +93,63 @@ func decodeLegacyProviders(data json.RawMessage, registry *unitRegistry) (decode
 		return decodedProviders{}, err
 	}
 	return decoded, nil
+}
+
+func projectLegacyProviderArray(data json.RawMessage) (json.RawMessage, error) {
+	providers, err := rawArray(data, "providers")
+	if err != nil {
+		return nil, err
+	}
+	projected := make([]json.RawMessage, 0, len(providers))
+	for index, rawProvider := range providers {
+		if rawKind(rawProvider) != '{' {
+			projected = append(projected, rawProvider)
+			continue
+		}
+		providerPath := fmt.Sprintf("providers[%d]", index)
+		fields, err := rawObject(rawProvider, providerPath)
+		if err != nil {
+			return nil, err
+		}
+		for _, key := range []string{"description", "price_comments", "pricing_urls"} {
+			delete(fields, key)
+		}
+		if rawModels, found := fields["models"]; found && rawKind(rawModels) == '[' {
+			models, err := rawArray(rawModels, providerPath+".models")
+			if err != nil {
+				return nil, err
+			}
+			projectedModels := make([]json.RawMessage, 0, len(models))
+			for modelIndex, rawModel := range models {
+				if rawKind(rawModel) != '{' {
+					projectedModels = append(projectedModels, rawModel)
+					continue
+				}
+				modelFields, err := rawObject(rawModel, fmt.Sprintf("%s.models[%d]", providerPath, modelIndex))
+				if err != nil {
+					return nil, err
+				}
+				for _, key := range []string{"context_window", "deprecated", "description", "name", "price_comments"} {
+					delete(modelFields, key)
+				}
+				encoded, err := json.Marshal(modelFields)
+				if err != nil {
+					return nil, err
+				}
+				projectedModels = append(projectedModels, encoded)
+			}
+			fields["models"], err = json.Marshal(projectedModels)
+			if err != nil {
+				return nil, err
+			}
+		}
+		encoded, err := json.Marshal(fields)
+		if err != nil {
+			return nil, err
+		}
+		projected = append(projected, encoded)
+	}
+	return json.Marshal(projected)
 }
 
 func decodeWireProviders(data json.RawMessage, registry *unitRegistry) (decodedProviders, error) {

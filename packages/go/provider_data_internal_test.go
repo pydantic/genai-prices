@@ -212,7 +212,7 @@ func TestDecodeLegacyProvidersKeepsSeparateToleranceAndDefaults(t *testing.T) {
 	registry := newUnitRegistry(bundledUnits, bundledUnitOrder)
 	decoded, err := decodeLegacyProviders(json.RawMessage(`[
 		{
-			"id":"testing","name":"Testing","api_pattern":"testing","description":null,"future_provider":true,
+			"id":"testing","name":"Testing","api_pattern":"testing","description":null,"pricing_urls":1,"future_provider":true,
 			"extractors":[{"root":"usage","mappings":[{"path":"future","dest":"future_events"}]}],
 			"models":[]
 		}
