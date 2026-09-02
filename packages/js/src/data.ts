@@ -7697,6 +7697,38 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gemini-3.8-flash',
+        name: 'Gemini 3.8 Flash',
+        description:
+          "Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows.",
+        match: {
+          starts_with: 'gemini-3.8-flash',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 7.5,
+            },
+          },
+        ],
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
