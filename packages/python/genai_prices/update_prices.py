@@ -58,12 +58,12 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 
 @dataclass
 class UpdatePrices:
-    """Update prices in the background using a shared daemon thread.
+    """Update prices using one background task shared by all instances.
 
-    All instances share one process-wide thread. It runs while any instance is started: the first
-    `start()` launches it, later `start()` calls join it, and the last `stop()` lets it exit. It uses
-    the settings and `fetch()` of the instance started most recently, from the next fetch on.
-    Prices already fetched stay in use after `stop()`.
+    Calling `start()` on an instance that is not already started starts the task if needed, keeps
+    it running, and makes future fetches use that instance's settings and `fetch()` method. When no
+    instances remain started, any current fetch finishes and the task exits unless another instance
+    calls `start()` first. Fetched prices stay in use after `stop()`.
 
     Can be used either as a context manager or as a simple class, where you'll need to call start() and stop() manually.
     """
@@ -78,10 +78,13 @@ class UpdatePrices:
     """Whether this instance currently counts towards keeping the shared thread running."""
 
     def start(self, *, wait: bool | float = False):
-        """Start the background task, or join the one already running with this instance's settings.
+        """Start updating prices in the background.
 
-        Calling this again on an instance that is already started does not count it again, but
-        still waits if `wait` is passed.
+        If this instance is not already started, calling this method starts the task if needed,
+        keeps it running, and makes future fetches use this instance's settings and `fetch()` method.
+
+        Calling this again on an instance that is already started does not keep the task running
+        an extra time or apply its settings again, but still waits if `wait` is passed.
 
         Args:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
@@ -110,12 +113,15 @@ class UpdatePrices:
         return _shared_updater.wait(timeout)
 
     def stop(self):
-        """Stop the background task, or release this instance's reference to it.
+        """Stop this instance from keeping the background task running.
 
-        The last `stop()` never blocks: the thread finishes any in-flight fetch, whose prices are
-        used, and exits on its own. Prices already fetched stay in use; they never revert to the
-        bundled data. Fetch failures never make `stop()` raise, and `stop()` on a never-started
-        instance does nothing.
+        Every call, including the last one, returns without waiting for the background task. When
+        no instances remain started, any fetch already in progress finishes in the background and
+        any prices it returns are used. The task then exits unless another instance calls `start()`
+        first.
+
+        Fetched prices stay in use after `stop()`. Fetch failures are not raised. Calling `stop()`
+        on an instance that is not started does nothing.
         """
         with _shared_updater.lock:
             if not self._started:

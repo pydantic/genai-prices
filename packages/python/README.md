@@ -148,16 +148,17 @@ print(p)
 update_prices.stop()  # stop updating prices
 ```
 
-All `UpdatePrices` instances share one background thread, so libraries such as Logfire and Pydantic AI can each
-call `start()` and `stop()` without creating duplicate threads. The thread runs while any instance is started:
-the first `start()` launches it, later `start()` calls join it, and the last `stop()` lets it exit. It uses the
-settings and `fetch()` of the instance started most recently, from the next fetch on, so if you subclass
-`UpdatePrices` to customize fetching, start your instance after other libraries start theirs. Prices already
-fetched stay in use after `stop()`; they never revert to the data bundled with the package.
+All `UpdatePrices` instances use one background task, so libraries such as Logfire and Pydantic AI can each call
+`start()` and `stop()` without creating duplicate tasks. Calling `start()` on an instance that is not already
+started starts the task if needed, keeps it running, and makes future fetches use that instance's settings and
+`fetch()` method. When no instances remain started, any current fetch finishes and the task exits unless another
+instance calls `start()` first. If you subclass `UpdatePrices` to customize fetching, start your instance after
+other libraries start theirs. Fetched prices stay in use after `stop()`; they never revert to the data bundled with
+the package.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
-`stop()` never raises fetch failures and never blocks: the thread finishes any in-flight fetch and exits on
-its own.
+Every `stop()` call, including the last one, returns without waiting for the background task or raising a fetch
+failure. If a fetch is already in progress, it finishes in the background and any prices it returns are used.
 
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
