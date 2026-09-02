@@ -182,6 +182,19 @@ describe('decodeProviderData', () => {
     ])
   })
 
+  it('drops a model whose conditional price maps only contain future variants', () => {
+    const provider = providerFixture()
+    const models = provider.models as Record<string, unknown>[]
+    defined(models[0]).prices = [{ prices: { input_mtok: { type: 'future-price' } } }]
+
+    const decoded = decodeProviderData(wrappedFixture(provider), getActiveRegistry())
+
+    expect(decoded.providers[0]?.models.map(({ id }) => id)).toEqual(['model-b'])
+    expect(decoded.compatibilityWarnings).toEqual([
+      "Unsupported price variant at providers[0].models[0].prices[0].prices.input_mtok for provider 'remote', model 'model-a'; upgrade genai-prices for full support",
+    ])
+  })
+
   it('projects unsupported extractor paths, mappings, and conditional price entries', () => {
     const provider = providerFixture()
     provider.extractors = [

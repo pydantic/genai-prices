@@ -244,9 +244,12 @@ class ProviderProjector {
         }
         conditionalPrice.constraint = projected.value
       }
-      conditionalPrice.prices = isRecord(conditionalPrice.prices)
-        ? this.projectPriceMap(conditionalPrice.prices, `${pricePath}.prices`, context)
-        : conditionalPrice.prices
+      if (isRecord(conditionalPrice.prices)) {
+        const rawPriceCount = Object.keys(conditionalPrice.prices).length
+        const projectedPrices = this.projectPriceMap(conditionalPrice.prices, `${pricePath}.prices`, context)
+        if (rawPriceCount > 0 && Object.keys(projectedPrices).length === 0) continue
+        conditionalPrice.prices = projectedPrices
+      }
       prices.push(conditionalPrice)
     }
     return prices
