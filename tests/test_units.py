@@ -413,8 +413,10 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
     [
         ('_private_name', 'private_mtok', 'must not start'),
         ('$input_tokens', 'input_mtok', 'is not a public identifier'),
-        ('class', 'class_mtok', 'is a reserved keyword'),
-        ('valid_usage', 'function', 'is a reserved keyword'),
+        ('class', 'class_mtok', 'is reserved'),
+        ('valid_usage', 'function', 'is reserved'),
+        ('range', 'range_mtok', 'is reserved'),
+        ('key', 'key_mtok', 'is reserved'),
     ],
 )
 def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
@@ -425,6 +427,28 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
                     'per': 1_000_000,
                     'price_key': price_key,
                     'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    ('dimension_key', 'message'),
+    [
+        (1, 'is not a public identifier'),
+        ('Å', 'is not a public identifier'),
+        ('constructor', 'is reserved'),
+        ('range', 'is reserved'),
+    ],
+)
+def test_validate_units_rejects_unsafe_dimension_keys(dimension_key: object, message: str) -> None:
+    dimensions: dict[Any, str] = {'family': 'events', dimension_key: 'value'}
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                'events': {
+                    'per': 1,
+                    'dimensions': dimensions,
                 },
             }
         )
