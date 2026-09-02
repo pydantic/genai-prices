@@ -427,8 +427,6 @@ def _compare_additional_properties(
         if new_value is not True:
             _incompatible(path, 'added a schema restriction for additional properties')
         return
-    if new_value is True:
-        return
     old_schema = _schema_mapping(old_value, f'{path}.additionalProperties')
     previous_property_names = set(_optional_schema_map(previous.get('properties'), f'{path}.properties'))
     candidate_properties = _optional_schema_map(candidate.get('properties'), f'{path}.properties')
@@ -442,6 +440,8 @@ def _compare_additional_properties(
                 f'{path}.properties.{property_name}',
                 set(seen_refs),
             )
+    if new_value is True:
+        return
     new_schema = _schema_mapping(new_value, f'{path}.additionalProperties')
     _compare_schema(old_schema, new_schema, previous_root, candidate_root, f'{path}.additionalProperties', seen_refs)
 

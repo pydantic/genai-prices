@@ -266,6 +266,20 @@ def test_validate_v3_schema_evolution_accepts_supported_schema_widening() -> Non
         validate_v3_schema_evolution(previous, candidate)
 
 
+def test_validate_v3_schema_evolution_checks_new_properties_when_additional_schema_is_widened() -> None:
+    previous: dict[str, Any] = {'additionalProperties': {'type': 'string'}, 'type': 'object'}
+
+    validate_v3_schema_evolution(
+        previous,
+        {'additionalProperties': True, 'properties': {'extension': {}}, 'type': 'object'},
+    )
+    with pytest.raises(ValueError, match=r'properties.extension.*narrowed type'):
+        validate_v3_schema_evolution(
+            previous,
+            {'additionalProperties': True, 'properties': {'extension': {'type': 'number'}}, 'type': 'object'},
+        )
+
+
 def test_validate_v3_schema_evolution_accepts_reordered_and_disjoint_variants() -> None:
     string_variant = {'type': 'string'}
     integer_variant = {'type': 'integer'}
