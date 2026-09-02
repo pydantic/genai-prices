@@ -54,6 +54,23 @@ func TestNewUntrustedUnitRegistryRejectsMalformedUnits(t *testing.T) {
 	}
 }
 
+func TestNewUntrustedUnitRegistryRejectsPythonOnlyReservedPublicKeys(t *testing.T) {
+	for _, key := range []string{"False", "None", "True", "and", "as", "assert", "async"} {
+		t.Run(key+" usage key", func(t *testing.T) {
+			_, err := unitRegistryFromJSON(`{"` + key + `":{"dimensions":{"family":"events"},"per":1}}`)
+			if err == nil || !strings.Contains(err.Error(), "reserved") {
+				t.Fatalf("got %v, want reserved-key error", err)
+			}
+		})
+		t.Run(key+" price key", func(t *testing.T) {
+			_, err := unitRegistryFromJSON(`{"events":{"dimensions":{"family":"events"},"per":1,"price_key":"` + key + `"}}`)
+			if err == nil || !strings.Contains(err.Error(), "reserved") {
+				t.Fatalf("got %v, want reserved-key error", err)
+			}
+		})
+	}
+}
+
 func TestOrderedWireUnitsPreserveOrderAndIgnoreExtensions(t *testing.T) {
 	var units orderedWireUnits
 	err := json.Unmarshal([]byte(`{

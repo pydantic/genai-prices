@@ -16,8 +16,9 @@ const maxSafeUnitPer = uint64(9_007_199_254_740_991)
 var (
 	publicUnitKeyPattern   = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]*$`)
 	reservedPublicUnitKeys = map[string]struct{}{
-		"__proto__": {}, "arguments": {}, "await": {}, "break": {}, "case": {}, "catch": {}, "class": {},
-		"const": {}, "constructor": {}, "continue": {}, "debugger": {}, "def": {}, "default": {}, "del": {},
+		"__proto__": {}, "False": {}, "None": {}, "True": {}, "and": {}, "arguments": {}, "as": {}, "assert": {},
+		"async": {}, "await": {}, "break": {}, "case": {}, "catch": {}, "class": {}, "const": {}, "constructor": {},
+		"continue": {}, "debugger": {}, "def": {}, "default": {}, "del": {},
 		"delete": {}, "do": {}, "elif": {}, "else": {}, "enum": {}, "eval": {}, "except": {}, "export": {},
 		"extends": {}, "false": {}, "finally": {}, "for": {}, "from": {}, "function": {}, "global": {}, "if": {},
 		"implements": {}, "import": {}, "in": {}, "instanceof": {}, "interface": {}, "is": {}, "lambda": {},
