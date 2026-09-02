@@ -7,10 +7,12 @@ from .utils import root_dir
 
 _GO_IDENTIFIER_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 _GO_PACKAGE_PATTERN = re.compile(r'^package\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?://.*)?$', re.MULTILINE)
-_GO_DECLARATION_PATTERN = re.compile(r'^(?:const|type|var)\s+([A-Za-z_][A-Za-z0-9_]*)\b')
+_GO_DECLARATION_PATTERN = re.compile(
+    r'^(?:const|type|var)\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b'
+)
 _GO_FUNCTION_PATTERN = re.compile(r'^func\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]+\]\s*)?\(')
 _GO_BLOCK_PATTERN = re.compile(r'^(?:const|type|var)\s*\($')
-_GO_BLOCK_MEMBER_PATTERN = re.compile(r'^([A-Za-z_][A-Za-z0-9_]*)\b')
+_GO_BLOCK_MEMBER_PATTERN = re.compile(r'^([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b')
 _GENERATED_UNIT_CONSTANT_PATTERN = re.compile(r'^(Usage[A-Za-z0-9_]*)\s+UsageKey\s*=\s*"[A-Za-z][A-Za-z0-9_]*"$')
 _GO_KEYWORDS = frozenset(
     {
@@ -105,7 +107,7 @@ def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) 
             if match := _GO_BLOCK_MEMBER_PATTERN.match(stripped):
                 if exclude_generated and _GENERATED_UNIT_CONSTANT_PATTERN.fullmatch(stripped):
                     continue
-                identifiers.add(match.group(1))
+                identifiers.update(name.strip() for name in match.group(1).split(','))
             continue
 
         if line != line.lstrip():
@@ -114,7 +116,7 @@ def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) 
         if _GO_BLOCK_PATTERN.fullmatch(declaration):
             in_declaration_block = True
         elif match := _GO_DECLARATION_PATTERN.match(declaration):
-            identifiers.add(match.group(1))
+            identifiers.update(name.strip() for name in match.group(1).split(','))
         elif match := _GO_FUNCTION_PATTERN.match(declaration):
             identifiers.add(match.group(1))
     return identifiers

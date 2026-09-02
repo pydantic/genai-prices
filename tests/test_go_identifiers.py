@@ -77,6 +77,23 @@ def test_go_package_pattern_accepts_import_comments() -> None:
     assert match.group(1) == 'genai_prices'
 
 
+def test_go_file_package_level_identifiers_parse_identifier_lists() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+const Existing, UsageFoo = 0, 1
+var Other, UsageBar int
+const (
+    BlockExisting, UsageBaz = 2, 3
+)
+""",
+        exclude_generated=False,
+    )
+
+    assert {'Existing', 'UsageFoo', 'Other', 'UsageBar', 'BlockExisting', 'UsageBaz'} <= identifiers
+
+
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
     go_identifiers.validate_go_usage_key_identifiers(load_units())
 
