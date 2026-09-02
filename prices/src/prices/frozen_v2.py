@@ -7,9 +7,9 @@ from typing import Final
 from .utils import root_dir
 
 V2_ARTIFACT_SHA256: Final[Mapping[str, str]] = {
-    'prices/new_data/v2/data.json': 'a774b91f8b60e3c93f6001470451eab04d6c23dbaa145f517b9e0857d56c4bbd',
+    'prices/new_data/v2/data.json': '06f100aaacf6ebaa76a536587fa5356e4ef21a0ba088dca2d5f5d78f15a9e88e',
     'prices/new_data/v2/data.schema.json': '74cd799c1fa1f06f0e8a043196569ecd28f90acb775b31cc44b84add77a953c7',
-    'prices/new_data/v2/data_slim.json': '15d0b12f2bb3a6a949d2ac7902d5bcc8bbc8db40b964283f4243e1c1e68c8baf',
+    'prices/new_data/v2/data_slim.json': '59a2baa1a14a1c63bceec347c8cf7647f1df5c06a5809e24e0623246f3322de5',
     'prices/new_data/v2/data_slim.schema.json': 'aa36a263543092a2eb76cd07342fe32bd6b8143112f37d1d33d7be6dce63d89d',
 }
 
