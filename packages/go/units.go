@@ -87,6 +87,7 @@ func (units *orderedWireUnits) UnmarshalJSON(data []byte) error {
 	order := make([]UsageKey, 0)
 	values := make(map[UsageKey]wireUnitDef)
 	seen := make(map[UsageKey]struct{})
+	decodedEntries := 0
 	for decoder.More() {
 		token, err = decoder.Token()
 		if err != nil {
@@ -96,6 +97,10 @@ func (units *orderedWireUnits) UnmarshalJSON(data []byte) error {
 		if !ok {
 			return errors.New("unit usage key must be a string")
 		}
+		if decodedEntries >= maxUnitCount {
+			return fmt.Errorf("units must contain at most %d entries", maxUnitCount)
+		}
+		decodedEntries++
 		var rawUnit json.RawMessage
 		if err := decoder.Decode(&rawUnit); err != nil {
 			return err

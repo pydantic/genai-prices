@@ -154,6 +154,24 @@ func TestNewUntrustedUnitRegistryRejectsIdentityFamilyAndJoinConflicts(t *testin
 	}
 }
 
+func TestOrderedWireUnitsRejectCountBeforeDecodingOverflowEntry(t *testing.T) {
+	var payload strings.Builder
+	payload.WriteByte('{')
+	for index := range maxUnitCount {
+		if index > 0 {
+			payload.WriteByte(',')
+		}
+		fmt.Fprintf(&payload, `"unit_%d":{"dimensions":{"family":"family_%d"},"per":1}`, index, index)
+	}
+	payload.WriteString(`,"overflow":null}`)
+
+	var units orderedWireUnits
+	err := json.Unmarshal([]byte(payload.String()), &units)
+	if err == nil || !strings.Contains(err.Error(), "at most 4096") {
+		t.Fatalf("got %v, want streaming unit-count limit error", err)
+	}
+}
+
 func TestNewUntrustedUnitRegistryKeepsDelimiterLikeDimensionsDistinct(t *testing.T) {
 	_, err := unitRegistryFromJSON(`{
 		"left":{"dimensions":{"a=b":"c","family":"events"},"per":1},
