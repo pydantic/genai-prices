@@ -1,0 +1,21 @@
+prices/pyproject.toml
+  s_319e04081d82e0::t_efc9e645f60e67 13
+uv.lock
+  s_319e04081d82e0::t_255fd202d8c6a5 742,750
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "926697fa39787bd2d5e164e75d55999f7f465265",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
