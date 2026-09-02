@@ -303,6 +303,22 @@ describe('UnitRegistry', () => {
     expect(Object.isFrozen(registry.getUnit('first_events')?.dimensions)).toBe(true)
   })
 
+  it('uses locale-independent dimension ordering for joins', () => {
+    const registry = UnitRegistry.fromUntrusted({
+      composed_events: { dimensions: { Å: 'ring', Å: 'precomposed', family: 'events' }, per: 1 },
+      precomposed_events: { dimensions: { Å: 'precomposed', family: 'events' }, per: 1 },
+      ring_events: { dimensions: { Å: 'ring', family: 'events' }, per: 1 },
+    })
+    const precomposed = registry.getUnit('precomposed_events')
+    const ring = registry.getUnit('ring_events')
+
+    expect(precomposed).toBeDefined()
+    expect(ring).toBeDefined()
+    if (!precomposed || !ring) throw new Error('Expected complete event units')
+    expect(registry.findJoin(precomposed, ring)).toBe(registry.getUnit('composed_events'))
+    expect(registry.findJoin(ring, precomposed)).toBe(registry.getUnit('composed_events'))
+  })
+
   it.each([null, [], 'units', 1, true])('rejects a non-object untrusted root: %j', (raw) => {
     expect(() => UnitRegistry.fromUntrusted(raw)).toThrow('genai-prices: invalid data: units must be an object')
   })

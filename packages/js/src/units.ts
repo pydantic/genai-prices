@@ -284,7 +284,7 @@ export function validateUnitEvolution(previous: UnitRegistry, candidate: UnitReg
 }
 
 function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
-  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
+  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0)))
 }
 
 function arraysEqual(left: readonly string[], right: readonly string[]): boolean {
