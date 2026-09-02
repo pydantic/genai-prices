@@ -1,0 +1,30 @@
+packages/go/forward_compatibility_test.go
+  s_319e04081d82e0::t_77aa032afc7d3f 1-144
+tests/fixtures/malformed-recognized-v3.json
+  s_319e04081d82e0::t_aeaf228b633693 1-9
+tests/fixtures/forward-compatible-v3.json
+  s_319e04081d82e0::t_252fbe089cea2a 1-389
+tests/test_forward_compatibility_parity.py
+  s_319e04081d82e0::t_2057e68b9bb5bf 1-127
+  s_319e04081d82e0::t_5ccfa22275dbf8 128-130
+packages/js/src/__tests__/forwardCompatibilityParity.test.ts
+  s_319e04081d82e0::t_dfe568599e6da2 12,14-15,37-41,48,63-72,75,83,93-95,98-101,103
+  s_319e04081d82e0::t_c912a79d4ea977 1-11,13,16-36,42-47,49-62,73-74,76-79,81-82,84-92,96-97,102
+  s_319e04081d82e0::t_3e2a4703003826 80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "28ac910b9c5affa614d762a48c43f8d2498ab99d",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
