@@ -74,7 +74,7 @@ class UpdatePrices:
     request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
     _started: bool = field(default=False, init=False, repr=False, compare=False)
-    """Whether this instance keeps the task running."""
+    """Whether this instance currently counts towards keeping the shared thread running."""
 
     def start(self, *, wait: bool | float = False):
         """Start this instance and keep the background task running.
@@ -128,7 +128,7 @@ class UpdatePrices:
         self.stop()
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
-        """Fetch the latest prices from the configured URL."""
+        """Fetches the latest provider data from the configured URL."""
         from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
 
         r = httpx2.get(self.url, timeout=self.request_timeout)
@@ -143,24 +143,28 @@ class UpdatePrices:
 
 @dataclass
 class _SharedUpdater:
-    """Manage the background thread shared by all `UpdatePrices` instances."""
+    """The one background updater shared by every `UpdatePrices` instance in the process.
+
+    The thread runs while `ref_count` is above zero and uses `fetcher`, the instance started most
+    recently. `lock` guards that state and is never held across anything that blocks.
+    """
 
     lock: threading.Lock = field(default_factory=threading.Lock)
     ref_count: int = 0
-    """Number of started instances."""
+    """How many instances are started."""
     fetcher: UpdatePrices | None = None
-    """Instance used for future fetches, or `None` if none are started."""
+    """The instance whose settings and `fetch()` the thread uses; None once no instance is started."""
     thread: threading.Thread | None = None
-    """Current worker thread."""
+    """The thread doing the work, if any."""
     wake: threading.Event = field(default_factory=threading.Event)
-    """Signals the thread after the last instance stops."""
+    """Set by the last `stop()` so a sleeping thread notices it is no longer needed."""
     ready: threading.Event = field(default_factory=threading.Event)
-    """Signals that `wait()` can return or raise."""
+    """Set once the thread has an outcome to report, or exited without one."""
     outcome: tuple[Exception | None, TracebackType | None] | None = None
-    """`None` before the first outcome; otherwise `(error, traceback)`, both `None` on success."""
+    """A single reference so it can be published and read atomically."""
 
     def acquire(self, instance: UpdatePrices) -> None:
-        """Add `instance`, use it for fetches, and start the thread if needed. Caller holds `lock`."""
+        """Count `instance` in and use its settings; launch the thread if none is running. Caller holds `lock`."""
         previous = self.fetcher
         if previous is not None and (instance.url, instance.update_interval, instance.request_timeout) != (
             previous.url,
@@ -192,7 +196,7 @@ class _SharedUpdater:
                 raise
 
     def release(self) -> None:
-        """Remove one started instance. Caller holds `lock`."""
+        """Count one instance out; the thread exits on its own once none are left. Caller holds `lock`."""
         self.ref_count -= 1
         if self.ref_count == 0:
             self.fetcher = None
@@ -220,7 +224,7 @@ class _SharedUpdater:
         self.ready.set()
 
     def _run(self) -> None:
-        """Fetch until no instance is started, finishing the current fetch first."""
+        """The thread body: fetch while any instance is started, then exit."""
         me = threading.current_thread()
         try:
             logger.info('Starting genai-prices background task')
