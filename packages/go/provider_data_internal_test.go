@@ -166,6 +166,7 @@ func TestDecodeWrappedProvidersRejectsMalformedRecognizedData(t *testing.T) {
 		{name: "provider", data: `[3]`, message: "providers[0] must be an object"},
 		{name: "missing models", data: `[{"id":"testing","name":"Testing","api_pattern":"testing"}]`, message: ".models is required"},
 		{name: "metadata", data: `[{"id":"testing","name":"Testing","api_pattern":"testing","description":null,"models":[]}]`, message: ".description must be a string"},
+		{name: "metadata array item", data: `[{"id":"testing","name":"Testing","api_pattern":"testing","fallback_model_providers":[null],"models":[]}]`, message: ".fallback_model_providers must be an array of strings"},
 		{name: "model metadata", data: providerWithModel(`"context_window":1.5,`), message: ".context_window must be an integer"},
 		{name: "extractor requirement", data: providerWithExtractor(`{"mappings":[]}`), message: "requires root and mappings"},
 		{name: "mapping requirement", data: providerWithExtractor(`{"root":"usage","mappings":[{"path":"input"}]}`), message: "requires path and dest"},

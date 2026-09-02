@@ -807,9 +807,14 @@ func validateOptionalStringArray(fields map[string]json.RawMessage, key, path st
 	if rawKind(value) != '[' {
 		return fmt.Errorf("%s.%s must be an array of strings", path, key)
 	}
-	var decoded []string
+	var decoded []json.RawMessage
 	if err := json.Unmarshal(value, &decoded); err != nil {
 		return fmt.Errorf("%s.%s must be an array of strings: %w", path, key, err)
+	}
+	for _, item := range decoded {
+		if rawKind(item) != '"' {
+			return fmt.Errorf("%s.%s must be an array of strings", path, key)
+		}
 	}
 	return nil
 }
