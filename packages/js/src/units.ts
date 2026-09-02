@@ -96,15 +96,11 @@ export function getActiveRegistry(): UnitRegistry {
 }
 
 function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
-  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0)))
-}
-
-function hasOwn(value: object, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(value, key)
+  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
 }
 
 function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
-  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => hasOwn(unit.dimensions, key) && unit.dimensions[key] === value)
+  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
 }
 
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
@@ -112,5 +108,5 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 }
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  return Object.entries(left.dimensions).every(([key, value]) => !hasOwn(right.dimensions, key) || right.dimensions[key] === value)
+  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
 }
