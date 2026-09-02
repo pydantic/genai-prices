@@ -21,6 +21,7 @@ JsonData: TypeAlias = 'None | int | float | str | list[JsonData] | dict[str, Jso
 def package_data():
     provider_data = _load_provider_data(this_package_dir / 'new_data' / 'v2' / 'data.json')
     units = load_units()
+    validate_go_usage_key_identifiers(units)
     package_python_data(provider_data, units)
     package_go_data(provider_data, units)
     package_ts_data(provider_data, units)
@@ -239,7 +240,6 @@ def _runtime_unit_data(units: Mapping[str, Mapping[str, Any]]) -> dict[str, dict
 
 def package_go_data(provider_data: JsonData, units: Mapping[str, Mapping[str, Any]]) -> None:
     """Generate the data bundled by the Go package."""
-    validate_go_usage_key_identifiers(units)
     go_package_dir = root_dir / 'packages' / 'go'
     go_data_dir = go_package_dir / 'internal' / 'data'
     go_data_dir.mkdir(parents=True, exist_ok=True)

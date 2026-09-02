@@ -198,11 +198,21 @@ def test_validate_go_usage_key_identifiers_rejects_keywords(monkeypatch: pytest.
         go_identifiers.validate_go_usage_key_identifiers(['events'])
 
 
-def test_package_go_data_validates_identifiers_before_writing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
-    monkeypatch.setattr(go_identifiers, 'root_dir', tmp_path)
+def test_package_data_validates_identifiers_before_generating(monkeypatch: pytest.MonkeyPatch) -> None:
+    def empty_provider_data(_path: Path) -> list[package_data.JsonData]:
+        return []
+
+    monkeypatch.setattr(package_data, '_load_provider_data', empty_provider_data)
+    monkeypatch.setattr(
+        package_data,
+        'load_units',
+        lambda: {'bad-name': {'dimensions': {'family': 'events'}, 'per': 1}},
+    )
+
+    def unexpected_generation(_provider_data: object, _units: object) -> None:
+        raise AssertionError('generation started before Go identifiers were validated')
+
+    monkeypatch.setattr(package_data, 'package_python_data', unexpected_generation)
 
     with pytest.raises(ValueError, match="Invalid generated Go identifier 'UsageBad-name'"):
-        package_data.package_go_data([], {'bad-name': {'dimensions': {'family': 'events'}, 'per': 1}})
-
-    assert not (tmp_path / 'packages').exists()
+        package_data.package_data()
