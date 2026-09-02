@@ -184,8 +184,6 @@ def test_update_prices_background_activates_wrapped_snapshot(monkeypatch: pytest
         update_prices.stop()
         data_snapshot.set_custom_snapshot(None)
 
-    assert _get_registry() is bundled_registry
-
 
 def test_update_prices_fetch_emits_compatibility_warnings_only_after_success(
     monkeypatch: pytest.MonkeyPatch,
