@@ -153,6 +153,17 @@ func TestNewUntrustedUnitRegistryRejectsIdentityFamilyAndJoinConflicts(t *testin
 	}
 }
 
+func TestNewUntrustedUnitRegistryKeepsDelimiterLikeDimensionsDistinct(t *testing.T) {
+	_, err := unitRegistryFromJSON(`{
+		"left":{"dimensions":{"a=b":"c","family":"events"},"per":1},
+		"right":{"dimensions":{"a":"b=c","family":"events"},"per":1},
+		"joined":{"dimensions":{"a":"b=c","a=b":"c","family":"events"},"per":1}
+	}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestValidateUnitEvolution(t *testing.T) {
 	previous := mustUnitRegistryFromJSON(t, `{
 		"base":{"dimensions":{"family":"events"},"per":1},

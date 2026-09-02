@@ -8,6 +8,7 @@ import (
 	"math"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -304,10 +305,13 @@ func dimensionKey(dimensions map[string]string) string {
 	sort.Strings(keys)
 	var builder strings.Builder
 	for _, key := range keys {
+		value := dimensions[key]
+		builder.WriteString(strconv.Itoa(len(key)))
+		builder.WriteByte(':')
 		builder.WriteString(key)
-		builder.WriteByte('=')
-		builder.WriteString(dimensions[key])
-		builder.WriteByte(0)
+		builder.WriteString(strconv.Itoa(len(value)))
+		builder.WriteByte(':')
+		builder.WriteString(value)
 	}
 	return builder.String()
 }
