@@ -412,6 +412,17 @@ describe('UnitRegistry', () => {
     expect(registry.findJoin(constructorEvents, specialEvents)).toBe(registry.getUnit('constructor_special_events'))
   })
 
+  it('scales validation across large disjoint families', () => {
+    const units: RawUnitsDict = {}
+    for (let index = 0; index < 20_000; index++) {
+      units[`unit_${String(index)}`] = { dimensions: { family: `family_${String(index)}` }, per: 1 }
+    }
+
+    const registry = UnitRegistry.fromUntrusted(units)
+
+    expect(registry.getAllUsageKeys()).toHaveLength(20_000)
+  })
+
   it('accepts the last member retained by standard JSON duplicate decoding', () => {
     const decoded: unknown = JSON.parse(
       '{"events":{"per":0,"dimensions":{"family":"bad"}},"events":{"per":2,"per":1,"dimensions":{"family":"events"}}}'

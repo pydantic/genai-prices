@@ -88,6 +88,7 @@ export class UnitRegistry {
     this.#units = new Map()
     this.#unitsByDimension = new Map()
     this.#unitsByPriceKey = new Map()
+    const unitsByFamily = new Map<string, UnitDef[]>()
 
     for (const [usageKey, rawUnit] of Object.entries(raw)) {
       const priceKey = rawUnit.price_key ?? usageKey
@@ -103,13 +104,21 @@ export class UnitRegistry {
       this.#units.set(usageKey, unit)
       this.#unitsByPriceKey.set(priceKey, unit)
       this.#unitsByDimension.set(dimensionKey(unit.dimensions), unit)
+      const family = unit.dimensions.family
+      if (family !== undefined) {
+        const familyUnits = unitsByFamily.get(family)
+        if (familyUnits) familyUnits.push(unit)
+        else unitsByFamily.set(family, [unit])
+      }
     }
 
     for (const [usageKey, unit] of this.#units) {
+      const family = unit.dimensions.family
+      const familyUnits = family === undefined ? [] : (unitsByFamily.get(family) ?? [])
       this.#ancestorUsageKeysByUsageKey.set(
         usageKey,
         new Set(
-          [...this.#units.values()]
+          familyUnits
             .filter((maybeAncestor) => maybeAncestor !== unit && isDimensionSubset(maybeAncestor, unit))
             .map((maybeAncestor) => maybeAncestor.usageKey)
         )
@@ -293,19 +302,28 @@ function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 function validateJoinAvailability(rawUnits: RawUnitsDict, usageKeyByDimensions: ReadonlyMap<string, string>): void {
-  const entries = Object.entries(rawUnits)
-  for (let leftIndex = 0; leftIndex < entries.length; leftIndex++) {
-    const leftEntry = entries[leftIndex]
-    if (!leftEntry) continue
-    const [leftUsageKey, left] = leftEntry
-    for (let rightIndex = leftIndex + 1; rightIndex < entries.length; rightIndex++) {
-      const rightEntry = entries[rightIndex]
-      if (!rightEntry) continue
-      const [rightUsageKey, right] = rightEntry
-      if (!dimensionsCompatible(left.dimensions, right.dimensions)) continue
-      const joinedDimensions = { ...left.dimensions, ...right.dimensions }
-      if (!usageKeyByDimensions.has(dimensionKey(joinedDimensions))) {
-        throw invalidData(`missing join unit dimensions between ${leftUsageKey} and ${rightUsageKey}`)
+  const entriesByFamily = new Map<string, [string, RawUnitsDict[string]][]>()
+  for (const entry of Object.entries(rawUnits)) {
+    const family = entry[1].dimensions.family
+    if (family === undefined) throw invalidData(`unit ${JSON.stringify(entry[0])} is missing the family dimension`)
+    const familyEntries = entriesByFamily.get(family)
+    if (familyEntries) familyEntries.push(entry)
+    else entriesByFamily.set(family, [entry])
+  }
+  for (const entries of entriesByFamily.values()) {
+    for (let leftIndex = 0; leftIndex < entries.length; leftIndex++) {
+      const leftEntry = entries[leftIndex]
+      if (!leftEntry) continue
+      const [leftUsageKey, left] = leftEntry
+      for (let rightIndex = leftIndex + 1; rightIndex < entries.length; rightIndex++) {
+        const rightEntry = entries[rightIndex]
+        if (!rightEntry) continue
+        const [rightUsageKey, right] = rightEntry
+        if (!dimensionsCompatible(left.dimensions, right.dimensions)) continue
+        const joinedDimensions = { ...left.dimensions, ...right.dimensions }
+        if (!usageKeyByDimensions.has(dimensionKey(joinedDimensions))) {
+          throw invalidData(`missing join unit dimensions between ${leftUsageKey} and ${rightUsageKey}`)
+        }
       }
     }
   }
