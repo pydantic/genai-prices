@@ -113,10 +113,13 @@ class UnitRegistry:
             self._units_by_price_key[unit.price_key] = unit
             self._units_by_dimension[dimension_set] = unit
 
+        units_by_family: dict[str, list[UnitDef]] = {}
+        for unit in units.values():
+            units_by_family.setdefault(unit.dimensions['family'], []).append(unit)
         for usage_key, unit in units.items():
             self._ancestor_usage_keys[usage_key] = frozenset(
                 maybe_ancestor.usage_key
-                for maybe_ancestor in units.values()
+                for maybe_ancestor in units_by_family[unit.dimensions['family']]
                 if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
 
@@ -322,15 +325,17 @@ def _validate_join_closedness(
     units: Mapping[str, Mapping[str, Any]],
     usage_key_by_dimensions: Mapping[frozenset[tuple[str, str]], str],
 ) -> None:
-    unit_dimensions = [
-        (usage_key, cast(Mapping[str, str], raw_unit['dimensions'])) for usage_key, raw_unit in units.items()
-    ]
-    for (left_key, left), (right_key, right) in combinations(unit_dimensions, 2):
-        if any(right.get(key, value) != value for key, value in left.items()):
-            continue
-        joined_dimensions = frozenset(left.items() | right.items())
-        if joined_dimensions not in usage_key_by_dimensions:
-            raise ValueError(f'Missing join unit dimensions between {left_key} and {right_key}')
+    dimensions_by_family: dict[str, list[tuple[str, Mapping[str, str]]]] = {}
+    for usage_key, raw_unit in units.items():
+        dimensions = cast(Mapping[str, str], raw_unit['dimensions'])
+        dimensions_by_family.setdefault(dimensions['family'], []).append((usage_key, dimensions))
+    for unit_dimensions in dimensions_by_family.values():
+        for (left_key, left), (right_key, right) in combinations(unit_dimensions, 2):
+            if any(right.get(key, value) != value for key, value in left.items()):
+                continue
+            joined_dimensions = frozenset(left.items() | right.items())
+            if joined_dimensions not in usage_key_by_dimensions:
+                raise ValueError(f'Missing join unit dimensions between {left_key} and {right_key}')
 
 
 _bundled_registry: UnitRegistry | None = None

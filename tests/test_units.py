@@ -817,6 +817,15 @@ def test_python_unit_evolution_scales_across_disjoint_families() -> None:
     _validate_unit_evolution(previous, candidate)
 
 
+def test_python_unit_registry_scales_across_disjoint_families() -> None:
+    unit_count = 20_000
+    registry = UnitRegistry._from_untrusted(
+        {f'unit_{index}': {'per': 1, 'dimensions': {'family': f'family_{index}'}} for index in range(unit_count)}
+    )
+
+    assert len(registry.units) == unit_count
+
+
 def test_python_active_registry_replacement_and_restoration_preserve_bundled_identity() -> None:
     bundled = _get_registry()
     replacement = UnitRegistry._from_untrusted(
