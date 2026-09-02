@@ -68,6 +68,15 @@ const ( // package constants
     assert {'Existing', 'UsageFoo'} <= identifiers
 
 
+def test_go_package_pattern_accepts_import_comments() -> None:
+    match = go_identifiers._GO_PACKAGE_PATTERN.search(
+        'package genai_prices // import "github.com/pydantic/genai-prices/packages/go"\n'
+    )
+
+    assert match is not None
+    assert match.group(1) == 'genai_prices'
+
+
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
     go_identifiers.validate_go_usage_key_identifiers(load_units())
 

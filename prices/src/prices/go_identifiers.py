@@ -6,7 +6,7 @@ from collections.abc import Iterable
 from .utils import root_dir
 
 _GO_IDENTIFIER_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
-_GO_PACKAGE_PATTERN = re.compile(r'^package\s+([A-Za-z_][A-Za-z0-9_]*)\s*$', re.MULTILINE)
+_GO_PACKAGE_PATTERN = re.compile(r'^package\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?://.*)?$', re.MULTILINE)
 _GO_DECLARATION_PATTERN = re.compile(r'^(?:const|type|var)\s+([A-Za-z_][A-Za-z0-9_]*)\b')
 _GO_FUNCTION_PATTERN = re.compile(r'^func\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]+\]\s*)?\(')
 _GO_BLOCK_PATTERN = re.compile(r'^(?:const|type|var)\s*\($')
