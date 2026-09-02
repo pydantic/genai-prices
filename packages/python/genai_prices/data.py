@@ -1075,6 +1075,74 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.openai.gpt-5.6-luna',
+                match=ClauseContains(contains='global.openai.gpt-5.6-luna'),
+                name='GPT-5.6 Luna (global)',
+                context_window=1000000,
+                price_comments="Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens input and cache are 2x and output 1.5x. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('1.8'))]),
+                ),
+            ),
+            ModelInfo(
+                id='global.openai.gpt-5.6-sol',
+                match=ClauseContains(contains='global.openai.gpt-5.6-sol'),
+                name='GPT-5.6 Sol (global)',
+                context_window=1000000,
+                price_comments="Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens input and cache are 2x and output 1.5x. OpenAI cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21; the announcement quotes the global rates ($4 input, $20 output). The unconstrained entry keeps the rates that applied over the four days between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='global.openai.gpt-5.6-terra',
+                match=ClauseContains(contains='global.openai.gpt-5.6-terra'),
+                name='GPT-5.6 Terra (global)',
+                context_window=1000000,
+                price_comments="Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens input and cache are 2x and output 1.5x. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('18'))]),
+                ),
+            ),
+            ModelInfo(
                 id='google.gemma-3-12b-it',
                 match=ClauseContains(contains='google.gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -1299,91 +1367,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('33')
                 ),
-            ),
-            ModelInfo(
-                id='openai.gpt-5.6-luna',
-                match=ClauseEquals(equals='openai.gpt-5.6-luna'),
-                name='GPT-5.6 Luna',
-                context_window=1000000,
-                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('1.1'),
-                            cache_write_mtok=Decimal('1.375'),
-                            cache_read_mtok=Decimal('0.11'),
-                            output_mtok=Decimal('6.6'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
-                        prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
-                            ),
-                            cache_write_mtok=TieredPrices(
-                                base=Decimal('0.275'), tiers=[Tier(start=272000, price=Decimal('0.55'))]
-                            ),
-                            cache_read_mtok=TieredPrices(
-                                base=Decimal('0.022'), tiers=[Tier(start=272000, price=Decimal('0.044'))]
-                            ),
-                            output_mtok=TieredPrices(
-                                base=Decimal('1.32'), tiers=[Tier(start=272000, price=Decimal('1.98'))]
-                            ),
-                        ),
-                    ),
-                ],
-            ),
-            ModelInfo(
-                id='openai.gpt-5.6-sol',
-                match=ClauseEquals(equals='openai.gpt-5.6-sol'),
-                name='GPT-5.6 Sol',
-                context_window=1000000,
-                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. Sol pricing is unchanged since Bedrock GA (2026-07-13). The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('11'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.875'), tiers=[Tier(start=272000, price=Decimal('13.75'))]
-                    ),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.55'), tiers=[Tier(start=272000, price=Decimal('1.1'))]
-                    ),
-                    output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=272000, price=Decimal('49.5'))]),
-                ),
-            ),
-            ModelInfo(
-                id='openai.gpt-5.6-terra',
-                match=ClauseEquals(equals='openai.gpt-5.6-terra'),
-                name='GPT-5.6 Terra',
-                context_window=1000000,
-                price_comments='Cache writes (30m TTL) are billed at 1.25x the input rate. AWS reduced Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates, derived from the announced cut applied to the current published rates. The long-context tier (>272K input tokens: 2x input/cache, 1.5x output) arrived with the 1M context window on 2026-08-03; the launch entry stays flat because >272K requests were not possible before then. Refs: https://aws.amazon.com/bedrock/pricing/, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2.75'),
-                            cache_write_mtok=Decimal('3.4375'),
-                            cache_read_mtok=Decimal('0.275'),
-                            output_mtok=Decimal('16.5'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
-                        prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('2.2'), tiers=[Tier(start=272000, price=Decimal('4.4'))]
-                            ),
-                            cache_write_mtok=TieredPrices(
-                                base=Decimal('2.75'), tiers=[Tier(start=272000, price=Decimal('5.5'))]
-                            ),
-                            cache_read_mtok=TieredPrices(
-                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
-                            ),
-                            output_mtok=TieredPrices(
-                                base=Decimal('13.2'), tiers=[Tier(start=272000, price=Decimal('19.8'))]
-                            ),
-                        ),
-                    ),
-                ],
             ),
             ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
@@ -1813,6 +1796,133 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.22'),
                     output_mtok=Decimal('11'),
                 ),
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-5.6-luna',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-5.6-luna'),
+                        ClauseContains(contains='us.openai.gpt-5.6-luna'),
+                        ClauseContains(contains='in.openai.gpt-5.6-luna'),
+                    ]
+                ),
+                name='GPT-5.6 Luna (regional)',
+                context_window=1000000,
+                price_comments='In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens input and cache are 2x, output 1.5x. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.1'),
+                            cache_write_mtok=Decimal('1.375'),
+                            cache_read_mtok=Decimal('0.11'),
+                            output_mtok=Decimal('6.6'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.275'), tiers=[Tier(start=272000, price=Decimal('0.55'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.022'), tiers=[Tier(start=272000, price=Decimal('0.044'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('1.32'), tiers=[Tier(start=272000, price=Decimal('1.98'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-5.6-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-5.6-sol'),
+                        ClauseContains(contains='us.openai.gpt-5.6-sol'),
+                    ]
+                ),
+                name='GPT-5.6 Sol (regional)',
+                context_window=1000000,
+                price_comments='In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens input and cache are 2x, output 1.5x. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('11'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.875'), tiers=[Tier(start=272000, price=Decimal('13.75'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.55'), tiers=[Tier(start=272000, price=Decimal('1.1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('33'), tiers=[Tier(start=272000, price=Decimal('49.5'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('4.4'), tiers=[Tier(start=272000, price=Decimal('8.8'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('11'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.44'), tiers=[Tier(start=272000, price=Decimal('0.88'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('22'), tiers=[Tier(start=272000, price=Decimal('33'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-5.6-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-5.6-terra'),
+                        ClauseContains(contains='us.openai.gpt-5.6-terra'),
+                        ClauseContains(contains='in.openai.gpt-5.6-terra'),
+                    ]
+                ),
+                name='GPT-5.6 Terra (regional)',
+                context_window=1000000,
+                price_comments='In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens input and cache are 2x, output 1.5x. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.75'),
+                            cache_write_mtok=Decimal('3.4375'),
+                            cache_read_mtok=Decimal('0.275'),
+                            output_mtok=Decimal('16.5'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('2.2'), tiers=[Tier(start=272000, price=Decimal('4.4'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.75'), tiers=[Tier(start=272000, price=Decimal('5.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('13.2'), tiers=[Tier(start=272000, price=Decimal('19.8'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='writer.palmyra-x4-v1:0',
