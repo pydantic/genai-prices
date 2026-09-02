@@ -240,7 +240,7 @@ class _ProviderProjector:
     def _project_price_map(self, raw: Mapping[str, object], path: str, context: str) -> dict[str, object]:
         prices: dict[str, object] = {}
         for price_key, value in raw.items():
-            if isinstance(value, Mapping) and not ({'base', 'tiers'} & value.keys()):
+            if isinstance(value, Mapping) and ('type' in value or not ({'base', 'tiers'} & value.keys())):
                 self._warn('price', f'{path}.{price_key}', context)
                 continue
             prices[price_key] = value

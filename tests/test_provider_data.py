@@ -204,6 +204,26 @@ def test_decode_wrapped_provider_data_projects_typed_future_constraint_with_know
     )
 
 
+def test_decode_wrapped_provider_data_projects_typed_future_price_with_known_fields() -> None:
+    provider = _provider()
+    models = provider['models']
+    assert isinstance(models, list)
+    model = cast(dict[str, object], models[0])
+    model['prices'] = [
+        {'prices': {'input_mtok': {'type': 'future-price', 'base': 99}, 'output_mtok': 2}},
+    ]
+
+    decoded = _decode_provider_data(_wrapped(provider), _registry())
+
+    prices = decoded.providers[0].models[0].prices
+    assert isinstance(prices, list)
+    assert prices[0].prices.__dict__ == {'output_mtok': Decimal('2')}
+    assert decoded.compatibility_warnings == (
+        "Unsupported price variant at providers[0].models[0].prices[0].prices.input_mtok for provider 'testing', "
+        "model 'model-a'; upgrade genai-prices for full support",
+    )
+
+
 def test_decode_wrapped_provider_data_drops_model_with_only_future_conditional_prices() -> None:
     provider = _provider()
     models = provider['models']
