@@ -2,6 +2,7 @@ package genai_prices
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -161,6 +162,27 @@ func TestNewUntrustedUnitRegistryKeepsDelimiterLikeDimensionsDistinct(t *testing
 	}`)
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestNewUntrustedUnitRegistryScalesAcrossDisjointFamilies(t *testing.T) {
+	const unitCount = 100_000
+	wireUnits := orderedWireUnits{
+		Order:  make([]UsageKey, 0, unitCount),
+		Values: make(map[UsageKey]wireUnitDef, unitCount),
+	}
+	for index := range unitCount {
+		usageKey := UsageKey(fmt.Sprintf("unit_%d", index))
+		wireUnits.Order = append(wireUnits.Order, usageKey)
+		wireUnits.Values[usageKey] = wireUnitDef{Dimensions: map[string]string{"family": fmt.Sprintf("family_%d", index)}, Per: 1}
+	}
+
+	registry, err := newUntrustedUnitRegistry(wireUnits)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(registry.units) != unitCount {
+		t.Fatalf("got %d units, want %d", len(registry.units), unitCount)
 	}
 }
 

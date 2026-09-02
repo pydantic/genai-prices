@@ -148,11 +148,16 @@ func newUnitRegistry(units map[UsageKey]unitDef, order []UsageKey) *unitRegistry
 		registry.byPriceKey[unit.priceKey] = &unit
 		registry.byDimensions[dimensionKey(unit.dimensions)] = &unit
 	}
+	unitsByFamily := make(map[string][]*unitDef)
+	for _, unit := range registry.units {
+		family := unit.dimensions["family"]
+		unitsByFamily[family] = append(unitsByFamily[family], unit)
+	}
 	for key, unit := range registry.units {
 		ancestors := make(map[UsageKey]struct{})
-		for candidateKey, candidate := range registry.units {
+		for _, candidate := range unitsByFamily[unit.dimensions["family"]] {
 			if candidate != unit && isDimensionSubset(candidate, unit) {
-				ancestors[candidateKey] = struct{}{}
+				ancestors[candidate.usageKey] = struct{}{}
 			}
 		}
 		registry.ancestors[key] = ancestors
@@ -356,19 +361,31 @@ func validateUnitJoins(
 	order []UsageKey,
 	usageByDimensions map[string]UsageKey,
 ) error {
-	for leftIndex, leftUsageKey := range order {
-		left := units[leftUsageKey]
-		for _, rightUsageKey := range order[leftIndex+1:] {
-			right := units[rightUsageKey]
-			if !dimensionsCompatible(left.dimensions, right.dimensions) {
-				continue
-			}
-			joined := cloneDimensions(left.dimensions)
-			for key, value := range right.dimensions {
-				joined[key] = value
-			}
-			if _, found := usageByDimensions[dimensionKey(joined)]; !found {
-				return fmt.Errorf("missing join unit dimensions between %s and %s", leftUsageKey, rightUsageKey)
+	orderByFamily := make(map[string][]UsageKey)
+	familyOrder := make([]string, 0)
+	for _, usageKey := range order {
+		family := units[usageKey].dimensions["family"]
+		if _, found := orderByFamily[family]; !found {
+			familyOrder = append(familyOrder, family)
+		}
+		orderByFamily[family] = append(orderByFamily[family], usageKey)
+	}
+	for _, family := range familyOrder {
+		familyOrder := orderByFamily[family]
+		for leftIndex, leftUsageKey := range familyOrder {
+			left := units[leftUsageKey]
+			for _, rightUsageKey := range familyOrder[leftIndex+1:] {
+				right := units[rightUsageKey]
+				if !dimensionsCompatible(left.dimensions, right.dimensions) {
+					continue
+				}
+				joined := cloneDimensions(left.dimensions)
+				for key, value := range right.dimensions {
+					joined[key] = value
+				}
+				if _, found := usageByDimensions[dimensionKey(joined)]; !found {
+					return fmt.Errorf("missing join unit dimensions between %s and %s", leftUsageKey, rightUsageKey)
+				}
 			}
 		}
 	}
