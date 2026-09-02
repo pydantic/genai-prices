@@ -286,6 +286,14 @@ def test_validate_v3_schema_evolution_accepts_reordered_and_disjoint_variants() 
     validate_v3_schema_evolution({'oneOf': [old_tagged]}, {'oneOf': [old_tagged, new_tagged]})
 
 
+def test_validate_v3_schema_evolution_rejects_widening_oneof_variants_into_overlap() -> None:
+    previous: dict[str, Any] = {'oneOf': [{'type': 'string'}, {'type': 'number'}]}
+    candidate: dict[str, Any] = {'oneOf': [{}, {'type': 'number'}]}
+
+    with pytest.raises(ValueError, match='made oneOf variants 0 and 1 overlap'):
+        validate_v3_schema_evolution(previous, candidate)
+
+
 @pytest.mark.parametrize(
     ('previous', 'candidate', 'message'),
     [

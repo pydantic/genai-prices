@@ -494,6 +494,7 @@ def _compare_variants(
     old_variants = _schema_sequence(old_value, f'{path}.{key}')
     new_variants = _schema_sequence(new_value, f'{path}.{key}')
     used_candidate_indexes: set[int] = set()
+    paired_candidate_indexes: list[int] = []
     for old_index, old_variant in enumerate(old_variants):
         for new_index, new_variant in enumerate(new_variants):
             if new_index in used_candidate_indexes:
@@ -510,6 +511,7 @@ def _compare_variants(
             except ValueError:
                 continue
             used_candidate_indexes.add(new_index)
+            paired_candidate_indexes.append(new_index)
             break
         else:
             _incompatible(path, f'removed or narrowed {key} variant {old_index}')
@@ -519,6 +521,45 @@ def _compare_variants(
             continue
         if not _variant_is_distinguishable(new_variant, old_variants, previous_root, candidate_root):
             _incompatible(path, f'added ambiguous behavior-changing {key} variant {new_index}')
+
+    if key == 'oneOf':
+        for left_index, old_left in enumerate(old_variants):
+            for right_index in range(left_index + 1, len(old_variants)):
+                old_right = old_variants[right_index]
+                if not _variants_are_provably_disjoint(old_left, old_right, previous_root, previous_root):
+                    continue
+                new_left = new_variants[paired_candidate_indexes[left_index]]
+                new_right = new_variants[paired_candidate_indexes[right_index]]
+                if not _variants_are_provably_disjoint(new_left, new_right, candidate_root, candidate_root):
+                    _incompatible(path, f'made {key} variants {left_index} and {right_index} overlap')
+
+
+def _variants_are_provably_disjoint(
+    left: Mapping[str, JsonData],
+    right: Mapping[str, JsonData],
+    left_root: Mapping[str, JsonData],
+    right_root: Mapping[str, JsonData],
+) -> bool:
+    left_resolved = _resolve_schema(left, left_root)
+    right_resolved = _resolve_schema(right, right_root)
+    left_values = _literal_values(left_resolved)
+    right_values = _literal_values(right_resolved)
+    if left_values is not None and right_values is not None and left_values.isdisjoint(right_values):
+        return True
+
+    left_types = _schema_types(left_resolved.get('type'), 'variant type')
+    right_types = _schema_types(right_resolved.get('type'), 'variant type')
+    if (
+        left_types is not None
+        and right_types is not None
+        and not any(_types_overlap(left_type, right_type) for left_type in left_types for right_type in right_types)
+    ):
+        return True
+
+    shared_required = _string_set(left_resolved.get('required', []), 'variant required') & _string_set(
+        right_resolved.get('required', []), 'variant required'
+    )
+    return _has_disjoint_discriminator(left_resolved, right_resolved, shared_required)
 
 
 def _variant_is_distinguishable(
