@@ -161,7 +161,7 @@ export class UnitRegistry {
       if (!hasOwn(rawUnitValue, 'dimensions') || !isObject(rawUnitValue.dimensions)) {
         throw invalidData(`unit ${JSON.stringify(usageKey)} dimensions must be an object`)
       }
-      const dimensions: Record<string, string> = {}
+      const dimensions = Object.create(null) as Record<string, string>
       for (const [key, value] of Object.entries(rawUnitValue.dimensions)) {
         if (key.length === 0 || typeof value !== 'string' || value.length === 0) {
           throw invalidData(`unit ${JSON.stringify(usageKey)} dimensions must use non-empty string keys and values`)

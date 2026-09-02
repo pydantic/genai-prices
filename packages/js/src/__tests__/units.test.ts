@@ -451,7 +451,22 @@ describe('UnitRegistry', () => {
     expect(registry.getUnit('events')?.per).toBe(1)
     expect(registry.getUnit('events')?.dimensions.family).toBe('events')
   })
+
+  it('retains a dimension named __proto__', () => {
+    const decoded: unknown = JSON.parse('{"events":{"dimensions":{"__proto__":"special","family":"events"},"per":1}}')
+
+    const dimensions = registryDimensions(UnitRegistry.fromUntrusted(decoded), 'events')
+
+    expect(Object.prototype.hasOwnProperty.call(dimensions, '__proto__')).toBe(true)
+    expect(Reflect.get(dimensions, '__proto__')).toBe('special')
+  })
 })
+
+function registryDimensions(registry: UnitRegistry, usageKey: string): Readonly<Record<string, string>> {
+  const unit = registry.getUnit(usageKey)
+  if (!unit) throw new Error(`Expected unit ${usageKey}`)
+  return unit.dimensions
+}
 
 describe('generated unit registry', () => {
   it('initializes from generated unit data', () => {
