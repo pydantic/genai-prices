@@ -386,6 +386,39 @@ def test_validate_v3_compatibility_compares_later_target_artifacts(
         )
 
 
+def test_validate_v3_compatibility_rejects_reordered_target_payload_units(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    source_units: dict[str, dict[str, object]] = {
+        'events': {'per': 1, 'dimensions': {'family': 'events'}},
+        'special_events': {'per': 1, 'dimensions': {'family': 'events', 'kind': 'special'}},
+    }
+    units_yaml = """\
+events:
+  per: 1
+  dimensions: {family: events}
+special_events:
+  per: 1
+  dimensions: {family: events, kind: special}
+"""
+    repo, _ = _init_git_repo(tmp_path, units_yaml)
+    runtime_units, payload = _candidate(source_units)
+    payload['units'] = dict(reversed(list(runtime_units.items())))
+    _write_v3_artifacts(repo, payload, v3_data_schema())
+    _git(repo, 'add', 'prices/new_data/v3/data.json', 'prices/new_data/v3/data.schema.json')
+    _git(repo, 'commit', '-m', 'publish reordered v3 units')
+    monkeypatch.setattr(v3_compatibility, 'root_dir', repo)
+
+    with pytest.raises(ValueError, match='published units do not match target source units'):
+        validate_v3_compatibility(
+            'HEAD',
+            candidate_runtime_units=runtime_units,
+            candidate_implications=normalize_conditional_implications(source_units),
+            candidate_schema=v3_data_schema(),
+            candidate_payload=cast(JsonData, {'units': dict(runtime_units), 'providers': []}),
+        )
+
+
 @pytest.mark.parametrize(
     ('baseline_kind', 'message'),
     [

@@ -85,7 +85,7 @@ def validate_v3_compatibility(
         previous_schema = _load_target_json(resolved_target_oid, _V3_SCHEMA_PATH)
         previous_runtime_units = _payload_runtime_units(previous_payload, 'target v3 payload')
         _validate_payload(previous_schema, previous_payload, 'target v3 payload')
-        if previous_runtime_units != target_source_projection:
+        if list(previous_runtime_units.items()) != list(target_source_projection.items()):
             raise ValueError(
                 f'Invalid v3 compatibility baseline at {resolved_target_oid}: '
                 'published units do not match target source units'
@@ -95,7 +95,7 @@ def validate_v3_compatibility(
 
     validate_runtime_unit_projection(candidate_runtime_units)
     candidate_payload_units = _payload_runtime_units(candidate_payload, 'candidate v3 payload')
-    if candidate_payload_units != runtime_unit_projection(candidate_runtime_units):
+    if list(candidate_payload_units.items()) != list(runtime_unit_projection(candidate_runtime_units).items()):
         raise ValueError('Invalid candidate v3 payload: units do not match the supplied in-memory candidate')
     _validate_payload(candidate_schema, candidate_payload, 'candidate v3 payload')
 
