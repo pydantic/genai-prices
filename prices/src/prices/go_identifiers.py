@@ -1,20 +1,16 @@
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 from collections.abc import Iterable
+from pathlib import Path
+from typing import TypedDict, cast
 
 from .utils import root_dir
 
 _GO_IDENTIFIER_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
-_GO_PACKAGE_PATTERN = re.compile(r'^package\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?://.*)?$', re.MULTILINE)
-_GO_DECLARATION_PATTERN = re.compile(
-    r'^(?:const|type|var)\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b'
-)
-_GO_FUNCTION_PATTERN = re.compile(r'^func\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]+\]\s*)?\(')
-_GO_BLOCK_PATTERN = re.compile(r'^(const|type|var)\s*\($')
-_GO_BLOCK_MEMBER_PATTERN = re.compile(r'^([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*)\b')
-_GENERATED_UNIT_CONSTANT_PATTERN = re.compile(r'^(Usage[A-Za-z0-9_]*)\s+UsageKey\s*=\s*"[A-Za-z][A-Za-z0-9_]*"$')
-_GO_NON_CODE_PATTERN = re.compile(r'//[^\n]*|/\*.*?\*/|`[^`]*`|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', re.DOTALL)
+_GO_AST_HELPER = Path(__file__).with_name('go_identifiers_ast.go')
 _GO_KEYWORDS = frozenset(
     {
         'break',
@@ -44,6 +40,12 @@ _GO_KEYWORDS = frozenset(
         'var',
     }
 )
+
+
+class _GoDeclaration(TypedDict):
+    path: str
+    kind: str
+    name: str
 
 
 def go_usage_key_identifier(usage_key: str) -> str:
@@ -84,56 +86,18 @@ def validate_go_usage_key_identifiers(usage_keys: Iterable[str]) -> None:
 
 
 def go_package_level_identifiers() -> frozenset[str]:
-    """Read non-generated package-level identifiers from the Go package."""
-    identifiers: set[str] = set()
-    go_package_dir = root_dir / 'packages' / 'go'
-    for path in sorted(go_package_dir.glob('*.go')):
-        source = path.read_text()
-        package_match = _GO_PACKAGE_PATTERN.search(source)
-        if package_match is None or package_match.group(1) != 'genai_prices':
-            continue
-        identifiers.update(_go_file_package_level_identifiers(source, exclude_generated=path.name == 'data_units.go'))
-    return frozenset(identifiers)
-
-
-def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) -> set[str]:
-    identifiers: set[str] = set()
-    declaration_block_kind: str | None = None
-    brace_depth = 0
-    parenthesis_depth = 0
-    source_lines = source.splitlines()
-    code_lines = _go_source_without_comments_and_literals(source).splitlines()
-    for line_index, line in enumerate(code_lines):
-        stripped = line.strip()
-        if declaration_block_kind is not None:
-            if brace_depth == 0 and parenthesis_depth == 0 and stripped == ')':
-                declaration_block_kind = None
-                continue
-            if brace_depth == 0 and parenthesis_depth == 0 and (match := _GO_BLOCK_MEMBER_PATTERN.match(stripped)):
-                original = source_lines[line_index].strip()
-                if exclude_generated and _GENERATED_UNIT_CONSTANT_PATTERN.fullmatch(original):
-                    continue
-                names = [name.strip() for name in match.group(1).split(',')]
-                identifiers.update(names[:1] if declaration_block_kind == 'type' else names)
-            brace_depth += line.count('{') - line.count('}')
-            parenthesis_depth += line.count('(') - line.count(')')
-            continue
-
-        if brace_depth != 0:
-            brace_depth += line.count('{') - line.count('}')
-            continue
-        if match := _GO_BLOCK_PATTERN.fullmatch(stripped):
-            declaration_block_kind = match.group(1)
-        elif match := _GO_DECLARATION_PATTERN.match(stripped):
-            identifiers.update(name.strip() for name in match.group(1).split(','))
-        elif match := _GO_FUNCTION_PATTERN.match(stripped):
-            identifiers.add(match.group(1))
-        brace_depth += line.count('{') - line.count('}')
-    return identifiers
-
-
-def _go_source_without_comments_and_literals(source: str) -> str:
-    """Blank comments and literals while retaining newlines and Go scope punctuation."""
-    return _GO_NON_CODE_PATTERN.sub(
-        lambda match: ''.join('\n' if char == '\n' else ' ' for char in match.group()), source
+    """Read non-generated package-level identifiers from the Go package using Go's parser."""
+    go_paths = sorted((root_dir / 'packages' / 'go').glob('*.go'))
+    result = subprocess.run(
+        ['go', 'run', str(_GO_AST_HELPER), '--', *(str(path) for path in go_paths)],
+        cwd=root_dir,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    declarations = cast(list[_GoDeclaration], json.loads(result.stdout))
+    return frozenset(
+        declaration['name']
+        for declaration in declarations
+        if not (Path(declaration['path']).name == 'data_units.go' and declaration['kind'] == 'const')
     )

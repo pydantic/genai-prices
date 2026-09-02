@@ -34,143 +34,87 @@ def test_go_package_level_identifiers_find_real_declarations_and_exclude_generat
     assert 'UnmarshalJSON' not in identifiers
 
 
-def test_go_file_package_level_identifiers_ignore_function_local_declarations() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
+def test_go_package_level_identifiers_use_go_syntax(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    go_package_dir = tmp_path / 'packages' / 'go'
+    go_package_dir.mkdir(parents=True)
+    (go_package_dir / 'declarations.go').write_text(
         """
-package genai_prices
+package /* import comment */ genai_prices
 
 var PackageValue = 1
 
 func example() {
-    var UsageFoo = 1
-    const (
-        UsageBar = 2
-    )
+    var UsageLocal = 1
+    _ = UsageLocal
 }
-""",
-        exclude_generated=False,
-    )
 
-    assert identifiers == {'PackageValue', 'example'}
+func UsageGeneric[
+    T any,
+](
+    UsageParameter T,
+) {}
 
+type Receiver struct{}
 
-def test_go_file_package_level_identifiers_parse_commented_declaration_blocks() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
-        """
-package genai_prices
+func (Receiver) UsageMethod() {}
 
-const ( // package constants
-    Existing = 1
-    UsageFoo = 2
+const /* declaration comment */ (
+    UsageExisting = 1
 )
-""",
-        exclude_generated=False,
-    )
-
-    assert {'Existing', 'UsageFoo'} <= identifiers
-
-
-def test_go_package_pattern_accepts_import_comments() -> None:
-    match = go_identifiers._GO_PACKAGE_PATTERN.search(
-        'package genai_prices // import "github.com/pydantic/genai-prices/packages/go"\n'
-    )
-
-    assert match is not None
-    assert match.group(1) == 'genai_prices'
-
-
-def test_go_file_package_level_identifiers_parse_identifier_lists() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
-        """
-package genai_prices
-
-const Existing, UsageFoo = 0, 1
-var Other, UsageBar int
-const (
-    BlockExisting, UsageBaz = 2, 3
-)
-""",
-        exclude_generated=False,
-    )
-
-    assert {'Existing', 'UsageFoo', 'Other', 'UsageBar', 'BlockExisting', 'UsageBaz'} <= identifiers
-
-
-def test_go_file_package_level_identifiers_track_scope_instead_of_indentation() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
-        """
-package genai_prices
-
-    var UsagePackage = 1
-func example() {
-var UsageLocal = 2
-}
-""",
-        exclude_generated=False,
-    )
-
-    assert identifiers == {'UsagePackage', 'example'}
-
-
-def test_go_file_package_level_identifiers_ignore_type_block_fields() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
-        """
-package genai_prices
-
-type (
-    UsageStruct struct {
-        UsageField, Other int
-    }
-    UsageInterface interface {
-        UsageMethod()
-    }
-)
-""",
-        exclude_generated=False,
-    )
-
-    assert {'UsageStruct', 'UsageInterface'} <= identifiers
-    assert not {'UsageField', 'Other', 'UsageMethod'} & identifiers
-
-
-def test_go_file_package_level_identifiers_ignore_multiline_function_parameters() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
-        """
-package genai_prices
 
 type (
     UsageHandler func(
         UsageTypeParameter int,
     ) error
 )
+
 var (
+    UsageExpression = other +
+        UsageContinuation
     UsageCallback = func(
         UsageVarParameter int,
     ) {}
 )
-""",
-        exclude_generated=False,
+"""
     )
-
-    assert {'UsageHandler', 'UsageCallback'} <= identifiers
-    assert not {'UsageTypeParameter', 'UsageVarParameter'} & identifiers
-
-
-def test_go_file_package_level_identifiers_accept_function_comments_and_ignore_literal_braces() -> None:
-    identifiers = go_identifiers._go_file_package_level_identifiers(
+    (go_package_dir / 'data_units.go').write_text(
         """
 package genai_prices
 
-var interpreted = "}"
-var raw = `}`
-/* multiline comment
-} */
-func UsageFuture /* comment with } */ () {}
-""",
-        exclude_generated=False,
-    )
+const UsageGenerated UsageKey = "generated"
 
-    assert {'UsageFuture', 'interpreted', 'raw'} <= identifiers
+var bundledUnits = map[UsageKey]int{}
+"""
+    )
+    (go_package_dir / 'other.go').write_text('package other\n\nvar UsageOther = 1\n')
+    monkeypatch.setattr(go_identifiers, 'root_dir', tmp_path)
+
+    identifiers = go_identifiers.go_package_level_identifiers()
+
+    assert {
+        'PackageValue',
+        'example',
+        'UsageGeneric',
+        'Receiver',
+        'UsageExisting',
+        'UsageHandler',
+        'UsageExpression',
+        'UsageCallback',
+        'bundledUnits',
+    } <= identifiers
+    assert (
+        not {
+            'UsageLocal',
+            'UsageParameter',
+            'UsageMethod',
+            'UsageTypeParameter',
+            'UsageContinuation',
+            'UsageVarParameter',
+            'UsageGenerated',
+            'UsageOther',
+        }
+        & identifiers
+    )
 
 
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
