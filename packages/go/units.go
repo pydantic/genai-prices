@@ -12,7 +12,10 @@ import (
 	"strings"
 )
 
-const maxSafeUnitPer = uint64(9_007_199_254_740_991)
+const (
+	maxSafeUnitPer = uint64(9_007_199_254_740_991)
+	maxUnitCount   = 4096
+)
 
 var (
 	publicUnitKeyPattern   = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]*$`)
@@ -171,6 +174,9 @@ func newUntrustedUnitRegistry(wireUnits orderedWireUnits) (*unitRegistry, error)
 	}
 	if len(wireUnits.Order) != len(wireUnits.Values) {
 		return nil, errors.New("unit order must contain every decoded unit exactly once")
+	}
+	if len(wireUnits.Order) > maxUnitCount {
+		return nil, fmt.Errorf("units must contain at most %d entries", maxUnitCount)
 	}
 
 	units := make(map[UsageKey]unitDef, len(wireUnits.Values))

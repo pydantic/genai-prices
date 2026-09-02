@@ -166,7 +166,7 @@ func TestNewUntrustedUnitRegistryKeepsDelimiterLikeDimensionsDistinct(t *testing
 }
 
 func TestNewUntrustedUnitRegistryScalesAcrossDisjointFamilies(t *testing.T) {
-	const unitCount = 100_000
+	const unitCount = maxUnitCount
 	wireUnits := orderedWireUnits{
 		Order:  make([]UsageKey, 0, unitCount),
 		Values: make(map[UsageKey]wireUnitDef, unitCount),
@@ -183,6 +183,12 @@ func TestNewUntrustedUnitRegistryScalesAcrossDisjointFamilies(t *testing.T) {
 	}
 	if len(registry.units) != unitCount {
 		t.Fatalf("got %d units, want %d", len(registry.units), unitCount)
+	}
+	usageKey := UsageKey("one_too_many")
+	wireUnits.Order = append(wireUnits.Order, usageKey)
+	wireUnits.Values[usageKey] = wireUnitDef{Dimensions: map[string]string{"family": "one_too_many"}, Per: 1}
+	if _, err := newUntrustedUnitRegistry(wireUnits); err == nil || !strings.Contains(err.Error(), "at most 4096") {
+		t.Fatalf("got %v, want unit-count limit error", err)
 	}
 }
 

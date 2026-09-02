@@ -3,6 +3,7 @@ import type { RawUnitsDict, UnitDef } from './types'
 import { unitData } from './dataUnits'
 
 const invalidDataPrefix = 'genai-prices: invalid data:'
+const maxUnitCount = 4096
 const publicKeyPattern = /^[A-Za-z][A-Za-z0-9_]*$/
 const reservedPublicKeys = new Set([
   '__proto__',
@@ -131,6 +132,7 @@ export class UnitRegistry {
 
   static fromUntrusted(rawUnits: unknown): UnitRegistry {
     if (!isObject(rawUnits)) throw invalidData('units must be an object')
+    if (Object.keys(rawUnits).length > maxUnitCount) throw invalidData(`units must contain at most ${String(maxUnitCount)} entries`)
 
     const canonicalUnits: RawUnitsDict = {}
     const usageKeyByDimensions = new Map<string, string>()

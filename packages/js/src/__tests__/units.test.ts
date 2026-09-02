@@ -414,13 +414,15 @@ describe('UnitRegistry', () => {
 
   it('scales validation across large disjoint families', () => {
     const units: RawUnitsDict = {}
-    for (let index = 0; index < 20_000; index++) {
+    for (let index = 0; index < 4096; index++) {
       units[`unit_${String(index)}`] = { dimensions: { family: `family_${String(index)}` }, per: 1 }
     }
 
     const registry = UnitRegistry.fromUntrusted(units)
 
-    expect(registry.getAllUsageKeys()).toHaveLength(20_000)
+    expect(registry.getAllUsageKeys()).toHaveLength(4096)
+    units.one_too_many = { dimensions: { family: 'one_too_many' }, per: 1 }
+    expect(() => UnitRegistry.fromUntrusted(units)).toThrow('units must contain at most 4096 entries')
   })
 
   it('accepts the last member retained by standard JSON duplicate decoding', () => {

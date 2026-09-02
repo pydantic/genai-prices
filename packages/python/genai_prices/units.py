@@ -9,6 +9,7 @@ from types import MappingProxyType
 from typing import Any, cast
 
 _MAX_SAFE_INTEGER = 9_007_199_254_740_991
+_MAX_UNIT_COUNT = 4096
 _PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
 _JAVASCRIPT_KEYWORDS = frozenset(
@@ -133,6 +134,8 @@ class UnitRegistry:
     def _from_untrusted(cls, raw_units: object) -> UnitRegistry:
         """Validate and construct the understood projection of decoded v3 unit data."""
         raw_units_mapping = _object_mapping(raw_units, 'Invalid units: expected an object')
+        if len(raw_units_mapping) > _MAX_UNIT_COUNT:
+            raise ValueError(f'Invalid units: expected at most {_MAX_UNIT_COUNT} entries')
         canonical_units: dict[str, dict[str, Any]] = {}
         usage_key_by_price_key: dict[str, str] = {}
         usage_key_by_dimensions: dict[frozenset[tuple[str, str]], str] = {}
