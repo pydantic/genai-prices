@@ -1,6 +1,8 @@
+from pathlib import Path
+
 import pytest
 
-from prices import go_identifiers
+from prices import go_identifiers, package_data
 from prices.build import load_units
 
 
@@ -171,3 +173,13 @@ def test_validate_go_usage_key_identifiers_rejects_keywords(monkeypatch: pytest.
 
     with pytest.raises(ValueError, match="identifier 'var'.*is a keyword"):
         go_identifiers.validate_go_usage_key_identifiers(['events'])
+
+
+def test_package_go_data_validates_identifiers_before_writing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+    monkeypatch.setattr(go_identifiers, 'root_dir', tmp_path)
+
+    with pytest.raises(ValueError, match="Invalid generated Go identifier 'UsageBad-name'"):
+        package_data.package_go_data([], {'bad-name': {'dimensions': {'family': 'events'}, 'per': 1}})
+
+    assert not (tmp_path / 'packages').exists()

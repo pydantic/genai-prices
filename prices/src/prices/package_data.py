@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
 from .build import load_units
-from .go_identifiers import go_usage_key_identifier
+from .go_identifiers import go_usage_key_identifier, validate_go_usage_key_identifiers
 from .prices_types import ModelPrice, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
 
@@ -239,6 +239,7 @@ def _runtime_unit_data(units: Mapping[str, Mapping[str, Any]]) -> dict[str, dict
 
 def package_go_data(provider_data: JsonData, units: Mapping[str, Mapping[str, Any]]) -> None:
     """Generate the data bundled by the Go package."""
+    validate_go_usage_key_identifiers(units)
     go_package_dir = root_dir / 'packages' / 'go'
     go_data_dir = go_package_dir / 'internal' / 'data'
     go_data_dir.mkdir(parents=True, exist_ok=True)
