@@ -215,9 +215,14 @@ class _ProviderProjector:
                 self._warn('price', price_path, context)
                 continue
             constraint = conditional.get('constraint')
-            if isinstance(constraint, Mapping) and not ({'start_date', 'start_time', 'end_time'} & constraint.keys()):
-                self._warn('constraint', f'{price_path}.constraint', context)
-                continue
+            if isinstance(constraint, Mapping):
+                constraint_mapping = cast(Mapping[str, object], constraint)
+                constraint_type = constraint_mapping.get('type')
+                if ('type' in constraint_mapping and constraint_type not in {'start_date', 'time_of_date'}) or not (
+                    {'start_date', 'start_time', 'end_time'} & constraint_mapping.keys()
+                ):
+                    self._warn('constraint', f'{price_path}.constraint', context)
+                    continue
             conditional['prices'] = self._project_prices(conditional['prices'], f'{price_path}.prices', context)
             prices.append(conditional)
         return prices
