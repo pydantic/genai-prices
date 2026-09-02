@@ -314,6 +314,20 @@ def test_decode_wrapped_provider_data_skips_empty_match_signature() -> None:
     assert len(decoded.compatibility_warnings) == 1
 
 
+@pytest.mark.parametrize('target', ['provider', 'model'])
+def test_decode_wrapped_provider_data_rejects_ambiguous_recognized_matches(target: str) -> None:
+    provider = _provider()
+    ambiguous_match = {'contains': 'model', 'equals': 'model'}
+    if target == 'provider':
+        provider['provider_match'] = ambiguous_match
+    else:
+        model = cast(dict[str, object], cast(list[object], provider['models'])[0])
+        model['match'] = ambiguous_match
+
+    with pytest.raises(ValueError, match='exactly one recognized discriminator'):
+        _decode_provider_data(_wrapped(provider), _registry())
+
+
 def _malformed_extractor(provider: dict[str, object]) -> None:
     provider['extractors'] = [{'root': 3, 'mappings': []}]
 

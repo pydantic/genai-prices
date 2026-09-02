@@ -182,9 +182,12 @@ class _ProviderProjector:
         if not match:
             return False, cast(object, raw)
         known_discriminators = {'starts_with', 'ends_with', 'contains', 'regex', 'equals', 'or', 'and'}
-        discriminator = next((key for key in match if key in known_discriminators), None)
-        if discriminator is None:
+        discriminators = [key for key in match if key in known_discriminators]
+        if not discriminators:
             return False, cast(object, raw)
+        if len(discriminators) != 1:
+            raise ValueError(f'Invalid match at {path}: expected exactly one recognized discriminator')
+        discriminator = discriminators[0]
         projected_match = {discriminator: match[discriminator]}
         projected_match.update((key, value) for key, value in match.items() if key != discriminator)
         if discriminator not in {'or', 'and'} or not isinstance(match[discriminator], list):
