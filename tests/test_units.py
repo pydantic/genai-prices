@@ -796,6 +796,27 @@ def test_python_unit_evolution_rejects_new_ancestors_and_allows_additive_replace
         _validate_unit_evolution(previous, ancestor)
 
 
+def test_python_unit_evolution_scales_across_disjoint_families() -> None:
+    unit_count = 20_000
+    previous_units = {
+        f'old_{index}': UnitDef(f'old_{index}', f'old_{index}', 1, {'family': f'old_family_{index}'})
+        for index in range(unit_count)
+    }
+    candidate_units = {
+        **previous_units,
+        **{
+            f'new_{index}': UnitDef(f'new_{index}', f'new_{index}', 1, {'family': f'new_family_{index}'})
+            for index in range(unit_count)
+        },
+    }
+    previous = UnitRegistry.__new__(UnitRegistry)
+    previous.units = previous_units
+    candidate = UnitRegistry.__new__(UnitRegistry)
+    candidate.units = candidate_units
+
+    _validate_unit_evolution(previous, candidate)
+
+
 def test_python_active_registry_replacement_and_restoration_preserve_bundled_identity() -> None:
     bundled = _get_registry()
     replacement = UnitRegistry._from_untrusted(

@@ -203,12 +203,15 @@ def _validate_unit_evolution(  # pyright: ignore[reportUnusedFunction]
         if candidate.units[usage_key] != previous_unit:
             raise ValueError(f'Redefined published unit: {usage_key}')
 
+    previous_units_by_family: dict[str, list[UnitDef]] = {}
+    for old_unit in previous.units.values():
+        previous_units_by_family.setdefault(old_unit.dimensions['family'], []).append(old_unit)
     for new_usage_key in candidate_order[len(previous_order) :]:
         new_unit = candidate.units[new_usage_key]
-        for old_usage_key, old_unit in previous.units.items():
+        for old_unit in previous_units_by_family.get(new_unit.dimensions['family'], []):
             if new_unit.dimensions.items() < old_unit.dimensions.items():
                 raise ValueError(
-                    f'New unit {new_usage_key} is an ancestor or intermediate of published unit {old_usage_key}'
+                    f'New unit {new_usage_key} is an ancestor or intermediate of published unit {old_unit.usage_key}'
                 )
 
 
