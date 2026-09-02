@@ -639,11 +639,17 @@ def _json_identity(value: JsonData) -> str:
 
 
 def _hashable_json_value(value: JsonData) -> object:
+    if value is None:
+        return ('null',)
+    if isinstance(value, bool):
+        return ('boolean', value)
+    if isinstance(value, int | float):
+        return ('number', value)
+    if isinstance(value, str):
+        return ('string', value)
     if isinstance(value, list):
-        return tuple(_hashable_json_value(item) for item in value)
-    if isinstance(value, dict):
-        return tuple(sorted((key, _hashable_json_value(item)) for key, item in value.items()))
-    return value
+        return ('array', tuple(_hashable_json_value(item) for item in value))
+    return ('object', tuple(sorted((key, _hashable_json_value(item)) for key, item in value.items())))
 
 
 def _number(value: JsonData, label: str) -> float:
