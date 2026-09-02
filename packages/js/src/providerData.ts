@@ -136,21 +136,25 @@ class ProviderProjector {
 
   private projectExtractPath(raw: unknown, path: string): Projection {
     if (typeof raw === 'string') return { supported: true, value: raw }
-    if (!Array.isArray(raw)) return { supported: !isRecord(raw), value: raw }
+    if (!Array.isArray(raw)) {
+      if (isRecord(raw)) return { supported: false, value: raw }
+      throw invalidData(`${path} must be a string or array`)
+    }
 
     const steps: unknown[] = []
     for (const [index, step] of raw.entries()) {
-      if (!isRecord(step)) {
+      if (typeof step === 'string') {
         steps.push(step)
         continue
       }
+      if (!isRecord(step)) throw invalidData(`${path}[${String(index)}] must be a string or object`)
       if (step.type !== 'array-match') return { supported: false, value: raw }
       const arrayMatch = { ...step }
-      if ('match' in arrayMatch) {
-        const projected = this.projectMatch(arrayMatch.match, `${path}[${String(index)}].match`)
-        if (!projected.supported) return { supported: false, value: raw }
-        arrayMatch.match = projected.value
-      }
+      if (typeof arrayMatch.field !== 'string') throw invalidData(`${path}[${String(index)}].field must be a string`)
+      if (!('match' in arrayMatch)) throw invalidData(`${path}[${String(index)}].match is required`)
+      const projected = this.projectMatch(arrayMatch.match, `${path}[${String(index)}].match`)
+      if (!projected.supported) return { supported: false, value: raw }
+      arrayMatch.match = projected.value
       steps.push(arrayMatch)
     }
     return { supported: true, value: steps }

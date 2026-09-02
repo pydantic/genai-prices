@@ -187,6 +187,17 @@ describe('decodeProviderData', () => {
   })
 
   it.each([
+    [null, 'providers[0].extractors[0].root must be a string or array'],
+    [['items', null, 'count'], 'providers[0].extractors[0].root[1] must be a string or object'],
+    [['items', { field: 'kind', type: 'array-match' }, 'count'], 'providers[0].extractors[0].root[1].match is required'],
+  ])('rejects malformed recognized extractor path %j', (root, message) => {
+    const provider = providerFixture()
+    provider.extractors = [{ mappings: [], root }]
+
+    expect(() => decodeProviderData(wrappedFixture(provider), getActiveRegistry())).toThrow(`genai-prices: invalid data: ${message}`)
+  })
+
+  it.each([
     [[3], 'providers[0] must be an object'],
     [[{ ...providerFixture(), models: {} }], 'providers[0].models must be an array'],
     [[{ ...providerFixture(), extractors: {} }], 'providers[0].extractors must be an array'],
