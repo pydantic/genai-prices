@@ -120,7 +120,7 @@ distinguishably future. An untyped object containing exactly one of `base` and `
 tiered-price representation and remains malformed. Unknown members on an untyped object containing both `base` and
 `tiers` do not affect recognition.
 
-**Conditional-price recognition requires its existing `prices` field.** _(from "Malformed recognized data in a retained capability must still fail")_
+**Conditional-price recognition requires its existing `prices` field.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail", "Unsupported owners short-circuit descendant traversal")_
 A conditional-price entry must be an object containing `prices`; missing `prices`, a non-object entry, and a `prices`
 value that is not an object are projection-level malformed errors. Projection validates this entry shell before
 classifying an optional constraint. An unsupported constraint then short-circuits only the contents of the already
@@ -133,10 +133,11 @@ constraint; an object containing none is distinguishably future. With `type`, th
 `time_of_date` select the corresponding current representation; any other value is distinguishably future regardless
 of the presence of structural constraint fields. Once selected, the allowed member sets are exactly `start_date`;
 `start_time` plus `end_time`; `type: start_date` plus `start_date`; or `type: time_of_date` plus `start_time` and
-`end_time`, respectively. Missing, mixed, extra, or invalid members are malformed, as is a non-object constraint.
-Projection preserves a recognized constraint unchanged for baseline normalization. Requiring exact member sets is an
-intentional common validation rule; it preserves the existing JavaScript and Go behavior and makes Python reject the
-same ambiguous extensions rather than silently dropping them.
+`end_time`, respectively. Projection classifies missing, mixed, extra, or non-string date/time members as malformed, as
+it does a non-object constraint. Projection validates only those member sets and JSON kinds, then preserves a recognized
+constraint unchanged. Each existing decoder continues to own the accepted calendar-date and offset-time syntax and
+semantic validity. Requiring exact member sets is an intentional common validation rule; it preserves the existing
+JavaScript and Go behavior and makes Python reject the same ambiguous extensions rather than silently dropping them.
 
 **Unsupported prices preserve usable siblings.** _(from "Distinguishable future provider capabilities", "Price maps distinguish future price objects", "Constraint recognition accepts the two existing structural or typed representations")_
 An unsupported price value removes only its price-map key. An unsupported constraint removes its whole conditional
@@ -202,10 +203,19 @@ Separate focused cases in each runtime cover every malformed-versus-future class
 short-circuit, both permutations of mixed malformed/unsupported composites, warning-context fallback, exact warning
 paths and original indices, price-key ordering, non-mutation, and cascading removal rules.
 
+**Focused observability tests pin each runtime's warning channel.** _(from "Every skipped future capability must be observable", "Warnings are published only after the projected payload passes baseline decoding")_
+Python tests assert the exact ordered `UserWarning` messages appear only after successful `_providers_from_raw` decoding.
+JavaScript tests spy on `console.warn` and assert emission occurs after normalization succeeds and before the projected
+array becomes active. Go tests assert `Calculator.CompatibilityWarnings()` returns a defensive copy and that the same
+ordered sequence precedes existing warnings in successful calculation and extraction results. Each runtime also tests a
+future capability followed by an unrelated baseline failure, asserting no compatibility warning becomes observable and
+the prior active state remains unchanged.
+
 **The pinned current-data fixtures produce no projection warnings.** _(from "Currently published provider data must retain exactly its existing behavior", "Every skipped future capability must be observable")_
-Each runtime projects the two exact base-revision payloads named above, asserts byte-for-byte-equivalent parsed data and
-zero warnings, and then decodes them through the new boundary. Existing dataset and price suites pin downstream
-matching, extraction, and calculation results.
+Each runtime projects the two exact base-revision payloads named above, asserts exact structural deep equality with the
+parsed input including array order and object key/value associations, and asserts zero warnings before decoding them
+through the new boundary. Existing dataset and price suites pin downstream matching, extraction, and calculation
+results.
 
 **Failed decoding preserves the prior active state.** _(from "Currently published provider data must retain exactly its existing behavior", "Projection runs before each runtime's existing provider-array decoder")_
 Context: Python's shared updater installs only a returned `DataSnapshot`; JavaScript's `activateProviderData` assigns
