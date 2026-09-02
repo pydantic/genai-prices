@@ -308,6 +308,9 @@ function normalizeModel(raw: unknown, providerId: string, providerIndex: number,
   const path = `providers[${String(providerIndex)}].models[${String(modelIndex)}]`
   if (!isRecord(raw)) throw invalidData(`${path} must be an object`)
   if (!('match' in raw)) throw invalidData(`${path}.match is required`)
+  if (!isRecord(raw.prices) && !Array.isArray(raw.prices)) {
+    throw invalidData(`${path}.prices must be an object or array`)
+  }
   const modelId = typeof raw.id === 'string' ? raw.id : String(modelIndex)
   return {
     ...raw,

@@ -200,6 +200,17 @@ describe('decodeProviderData', () => {
     expect(() => decodeProviderData(raw, getActiveRegistry())).toThrow(`genai-prices: invalid data: ${message}`)
   })
 
+  it.each([undefined, 1])('rejects wrapped models with malformed prices: %j', (prices) => {
+    const provider = providerFixture()
+    const models = provider.models as Record<string, unknown>[]
+    if (prices === undefined) Reflect.deleteProperty(defined(models[0]), 'prices')
+    else defined(models[0]).prices = prices
+
+    expect(() => decodeProviderData(wrappedFixture(provider), getActiveRegistry())).toThrow(
+      'genai-prices: invalid data: providers[0].models[0].prices must be an object or array'
+    )
+  })
+
   it.each([
     ['non-object', 'not-an-object'],
     ['bad start date', { start_date: 'not-a-date' }],
