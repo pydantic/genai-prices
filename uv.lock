@@ -739,6 +739,7 @@ dependencies = [
     { name = "httpx2" },
     { name = "pydantic" },
     { name = "ruamel-yaml" },
+    { name = "typing-extensions" },
 ]
 
 [package.metadata]
@@ -746,6 +747,7 @@ requires-dist = [
     { name = "httpx2", specifier = ">=2.0" },
     { name = "pydantic", specifier = ">=2.10" },
     { name = "ruamel-yaml", specifier = ">=0.18.14" },
+    { name = "typing-extensions" },
 ]
 
 [[package]]
