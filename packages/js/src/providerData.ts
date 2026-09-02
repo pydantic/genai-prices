@@ -90,6 +90,8 @@ class ProviderProjector {
       this.warn('extractor', path, context)
       return undefined
     }
+    if (!('root' in extractor)) throw invalidData(`${path}.root is required`)
+    if (!('mappings' in extractor)) throw invalidData(`${path}.mappings is required`)
 
     for (const field of ['root', 'model_path'] as const) {
       if (field in extractor) {
