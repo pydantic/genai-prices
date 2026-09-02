@@ -13,7 +13,7 @@ from jsonschema.validators import validator_for
 
 from genai_prices import types as runtime_types
 from prices import build, package_data
-from prices.export_validation import runtime_unit_projection
+from prices.export_validation import runtime_unit_projection, validate_runtime_unit_projection
 from prices.go_identifiers import go_usage_key_identifier
 from prices.prices_types import Provider
 
@@ -438,6 +438,31 @@ def test_v3_schema_rejects_malformed_stable_core(mutation: str) -> None:
 
     validator_cls = validator_for(schema, default=jsonschema.Draft202012Validator)
     assert not validator_cls(schema).is_valid(payload)
+
+
+def test_v3_schema_unit_key_constraints_match_runtime_validation() -> None:
+    schema = build.v3_data_schema()
+    validator_cls = validator_for(schema, default=jsonschema.Draft202012Validator)
+    validator = validator_cls(schema)
+    payload: dict[str, Any] = {
+        'providers': [],
+        'units': {'events': {'dimensions': {'_internal': 'allowed', 'family': 'events'}, 'per': 1}},
+    }
+    validator.validate(payload)
+
+    for invalid_key in ['_internal', 'await', 'class', 'constructor', '__proto__', 'valid-key', 'valid\n']:
+        invalid_usage_payload = copy.deepcopy(payload)
+        unit = cast(dict[str, Any], invalid_usage_payload['units']).pop('events')
+        cast(dict[str, Any], invalid_usage_payload['units'])[invalid_key] = unit
+        assert not validator.is_valid(invalid_usage_payload)
+        with pytest.raises(ValueError, match='Invalid unit usage key'):
+            validate_runtime_unit_projection(cast(dict[str, dict[str, object]], invalid_usage_payload['units']))
+
+        invalid_price_payload = copy.deepcopy(payload)
+        cast(dict[str, Any], invalid_price_payload['units']['events'])['price_key'] = invalid_key
+        assert not validator.is_valid(invalid_price_payload)
+        with pytest.raises(ValueError, match='Invalid unit price key'):
+            validate_runtime_unit_projection(cast(dict[str, dict[str, object]], invalid_price_payload['units']))
 
 
 def test_prepare_v3_data_rejects_unsafe_normalization() -> None:

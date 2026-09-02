@@ -765,7 +765,93 @@
           "type": "integer"
         },
         "price_key": {
-          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "allOf": [
+            {
+              "pattern": "^[A-Za-z]"
+            },
+            {
+              "not": {
+                "pattern": "[^A-Za-z0-9_]"
+              }
+            },
+            {
+              "not": {
+                "enum": [
+                  "False",
+                  "None",
+                  "True",
+                  "__proto__",
+                  "and",
+                  "arguments",
+                  "as",
+                  "assert",
+                  "async",
+                  "await",
+                  "break",
+                  "case",
+                  "catch",
+                  "class",
+                  "const",
+                  "constructor",
+                  "continue",
+                  "debugger",
+                  "def",
+                  "default",
+                  "del",
+                  "delete",
+                  "do",
+                  "elif",
+                  "else",
+                  "enum",
+                  "eval",
+                  "except",
+                  "export",
+                  "extends",
+                  "false",
+                  "finally",
+                  "for",
+                  "from",
+                  "function",
+                  "global",
+                  "if",
+                  "implements",
+                  "import",
+                  "in",
+                  "instanceof",
+                  "interface",
+                  "is",
+                  "lambda",
+                  "let",
+                  "new",
+                  "nonlocal",
+                  "not",
+                  "null",
+                  "or",
+                  "package",
+                  "pass",
+                  "private",
+                  "protected",
+                  "prototype",
+                  "public",
+                  "raise",
+                  "return",
+                  "static",
+                  "super",
+                  "switch",
+                  "this",
+                  "throw",
+                  "true",
+                  "try",
+                  "typeof",
+                  "var",
+                  "void",
+                  "while",
+                  "with",
+                  "yield"
+                ]
+              }
+            }
+          ],
           "type": "string"
         },
         "dimensions": {
@@ -804,7 +890,94 @@
         "$ref": "#/$defs/RuntimeUnitData"
       },
       "propertyNames": {
-        "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        "allOf": [
+          {
+            "pattern": "^[A-Za-z]"
+          },
+          {
+            "not": {
+              "pattern": "[^A-Za-z0-9_]"
+            }
+          },
+          {
+            "not": {
+              "enum": [
+                "False",
+                "None",
+                "True",
+                "__proto__",
+                "and",
+                "arguments",
+                "as",
+                "assert",
+                "async",
+                "await",
+                "break",
+                "case",
+                "catch",
+                "class",
+                "const",
+                "constructor",
+                "continue",
+                "debugger",
+                "def",
+                "default",
+                "del",
+                "delete",
+                "do",
+                "elif",
+                "else",
+                "enum",
+                "eval",
+                "except",
+                "export",
+                "extends",
+                "false",
+                "finally",
+                "for",
+                "from",
+                "function",
+                "global",
+                "if",
+                "implements",
+                "import",
+                "in",
+                "instanceof",
+                "interface",
+                "is",
+                "lambda",
+                "let",
+                "new",
+                "nonlocal",
+                "not",
+                "null",
+                "or",
+                "package",
+                "pass",
+                "private",
+                "protected",
+                "prototype",
+                "public",
+                "raise",
+                "return",
+                "static",
+                "super",
+                "switch",
+                "this",
+                "throw",
+                "true",
+                "try",
+                "typeof",
+                "var",
+                "void",
+                "while",
+                "with",
+                "yield"
+              ]
+            }
+          }
+        ],
+        "type": "string"
       },
       "type": "object"
     },

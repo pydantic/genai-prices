@@ -15,7 +15,7 @@ ImplicationTriple = tuple[str, str, str]
 NormalizedImplications = dict[str, tuple[ImplicationTriple, ...]]
 
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
-_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
 _MAX_SAFE_INTEGER = 9_007_199_254_740_991
 _JAVASCRIPT_KEYWORDS = frozenset(
     {
@@ -70,6 +70,18 @@ _JAVASCRIPT_KEYWORDS = frozenset(
     }
 )
 _RESERVED_KEYWORDS = frozenset(keyword.kwlist) | _JAVASCRIPT_KEYWORDS
+
+
+def public_unit_key_schema() -> dict[str, Any]:
+    """Return the JSON Schema shared by runtime unit usage and price keys."""
+    return {
+        'allOf': [
+            {'pattern': r'^[A-Za-z]'},
+            {'not': {'pattern': r'[^A-Za-z0-9_]'}},
+            {'not': {'enum': sorted(_RESERVED_KEYWORDS | _RESERVED_PUBLIC_KEYS)}},
+        ],
+        'type': 'string',
+    }
 
 
 def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
@@ -253,8 +265,6 @@ def _validate_public_key(kind: str, key: str) -> None:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is not a public identifier')
     if key in _RESERVED_KEYWORDS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is a reserved keyword')
-    if key.startswith('_'):
-        raise ValueError(f'Invalid unit {kind} key: {key!r} must not start with "_"')
     if key in _RESERVED_PUBLIC_KEYS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
 

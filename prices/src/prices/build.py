@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from genai_prices.units import UnitDef
 from prices.export_validation import (
     normalize_conditional_implications,
+    public_unit_key_schema,
     runtime_unit_projection,
     validate_export_payload,
     validate_units,
@@ -53,8 +54,7 @@ def v3_data_schema() -> dict[str, Any]:
                 'type': 'integer',
             },
             'price_key': {
-                'pattern': r'^[A-Za-z][A-Za-z0-9_]*$',
-                'type': 'string',
+                **public_unit_key_schema(),
             },
             'dimensions': {
                 'additionalProperties': {'minLength': 1, 'type': 'string'},
@@ -74,7 +74,7 @@ def v3_data_schema() -> dict[str, Any]:
         'properties': {
             'units': {
                 'additionalProperties': {'$ref': '#/$defs/RuntimeUnitData'},
-                'propertyNames': {'pattern': r'^[A-Za-z][A-Za-z0-9_]*$'},
+                'propertyNames': public_unit_key_schema(),
                 'type': 'object',
             },
             'providers': {'items': provider_items, 'type': 'array'},
