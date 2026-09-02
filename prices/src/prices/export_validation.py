@@ -14,21 +14,26 @@ RuntimeUnitProjection = dict[str, dict[str, object]]
 ImplicationTriple = tuple[str, str, str]
 NormalizedImplications = dict[str, tuple[ImplicationTriple, ...]]
 
-_RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
-_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
+_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 _MAX_SAFE_INTEGER = 9_007_199_254_740_991
-_JAVASCRIPT_KEYWORDS = frozenset(
+# Usage, price, and dimension keys cross all three runtimes, so keep one shared blacklist.
+_RESERVED_PUBLIC_KEYS = frozenset(
     {
+        *keyword.kwlist,
+        '__proto__',
         'arguments',
         'await',
         'break',
         'case',
         'catch',
+        'chan',
         'class',
         'const',
+        'constructor',
         'continue',
         'debugger',
         'default',
+        'defer',
         'delete',
         'do',
         'else',
@@ -37,30 +42,41 @@ _JAVASCRIPT_KEYWORDS = frozenset(
         'export',
         'extends',
         'false',
+        'fallthrough',
         'finally',
         'for',
         'function',
+        'func',
+        'go',
+        'goto',
         'if',
         'implements',
         'import',
         'in',
         'instanceof',
         'interface',
+        'key',  # The Go generator would emit UsageKey, which is the public key type.
         'let',
+        'map',
         'new',
         'null',
         'package',
         'private',
+        'prototype',
         'protected',
         'public',
+        'range',
         'return',
+        'select',
         'static',
+        'struct',
         'super',
         'switch',
         'this',
         'throw',
         'true',
         'try',
+        'type',
         'typeof',
         'var',
         'void',
@@ -69,7 +85,6 @@ _JAVASCRIPT_KEYWORDS = frozenset(
         'yield',
     }
 )
-_RESERVED_KEYWORDS = frozenset(keyword.kwlist) | _JAVASCRIPT_KEYWORDS
 
 
 def public_unit_key_schema() -> dict[str, Any]:
@@ -78,7 +93,7 @@ def public_unit_key_schema() -> dict[str, Any]:
         'allOf': [
             {'pattern': r'^[A-Za-z]'},
             {'not': {'pattern': r'[^A-Za-z0-9_]'}},
-            {'not': {'enum': sorted(_RESERVED_KEYWORDS | _RESERVED_PUBLIC_KEYS)}},
+            {'not': {'enum': sorted(_RESERVED_PUBLIC_KEYS)}},
         ],
         'type': 'string',
     }
@@ -166,8 +181,11 @@ def validate_runtime_unit_projection(raw_units: Mapping[str, Mapping[str, object
 
         dimensions: dict[str, str] = {}
         for raw_dimension_key, raw_dimension_value in cast(Mapping[object, object], raw_dimensions).items():
-            if not isinstance(raw_dimension_key, str) or not raw_dimension_key:
+            if not isinstance(raw_dimension_key, str):
+                raise ValueError(f'Invalid unit dimension key: {raw_dimension_key!r} is not a public identifier')
+            if not raw_dimension_key:
                 raise ValueError(f'Invalid dimensions for unit {usage_key}: keys must be non-empty strings')
+            _validate_public_key('dimension', raw_dimension_key)
             if not isinstance(raw_dimension_value, str) or not raw_dimension_value:
                 raise ValueError(f'Invalid dimensions for unit {usage_key}: values must be non-empty strings')
             dimensions[raw_dimension_key] = raw_dimension_value
@@ -263,8 +281,8 @@ def validate_export_payload(providers: list[Provider], units: Mapping[str, Mappi
 def _validate_public_key(kind: str, key: str) -> None:
     if not _PUBLIC_KEY_PATTERN.fullmatch(key):
         raise ValueError(f'Invalid unit {kind} key: {key!r} is not a public identifier')
-    if key in _RESERVED_KEYWORDS:
-        raise ValueError(f'Invalid unit {kind} key: {key!r} is a reserved keyword')
+    if key.startswith('_'):
+        raise ValueError(f'Invalid unit {kind} key: {key!r} must not start with "_"')
     if key in _RESERVED_PUBLIC_KEYS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
 

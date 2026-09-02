@@ -469,7 +469,6 @@ def test_validate_runtime_unit_projection_rejects_invalid_normalization(per: Any
         ({'events': {'per': 1, 'price_key': 1, 'dimensions': {'family': 'events'}}}, 'price key.*expected a string'),
         ({'events': {'per': 1}}, 'Missing dimensions for unit events'),
         ({'events': {'per': 1, 'dimensions': []}}, 'dimensions.*expected a mapping'),
-        ({'events': {'per': 1, 'dimensions': {1: 'events'}}}, 'keys must be non-empty strings'),
         ({'events': {'per': 1, 'dimensions': {'': 'events'}}}, 'keys must be non-empty strings'),
         ({'events': {'per': 1, 'dimensions': {'family': 1}}}, 'values must be non-empty strings'),
         ({'events': {'per': 1, 'dimensions': {'family': ''}}}, 'values must be non-empty strings'),
@@ -1080,10 +1079,12 @@ def test_normalize_conditional_implications_rejects_conflicts() -> None:
 @pytest.mark.parametrize(
     ('usage_key', 'price_key', 'message'),
     [
-        ('_private_name', 'private_mtok', 'is not a public identifier'),
+        ('_private_name', 'private_mtok', 'must not start'),
         ('$input_tokens', 'input_mtok', 'is not a public identifier'),
-        ('class', 'class_mtok', 'is a reserved keyword'),
-        ('valid_usage', 'function', 'is a reserved keyword'),
+        ('class', 'class_mtok', 'is reserved'),
+        ('valid_usage', 'function', 'is reserved'),
+        ('range', 'range_mtok', 'is reserved'),
+        ('key', 'key_mtok', 'is reserved'),
     ],
 )
 def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
@@ -1094,6 +1095,28 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
                     'per': 1_000_000,
                     'price_key': price_key,
                     'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    ('dimension_key', 'message'),
+    [
+        (1, 'is not a public identifier'),
+        ('Å', 'is not a public identifier'),
+        ('constructor', 'is reserved'),
+        ('range', 'is reserved'),
+    ],
+)
+def test_validate_units_rejects_unsafe_dimension_keys(dimension_key: object, message: str) -> None:
+    dimensions: dict[Any, str] = {'family': 'events', dimension_key: 'value'}
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                'events': {
+                    'per': 1,
+                    'dimensions': dimensions,
                 },
             }
         )

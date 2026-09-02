@@ -351,6 +351,7 @@ models:
             'Inconsistent per for family dimension tokens',
         ),
         ('constructor:\n  per: 1\n  dimensions: {family: tokens}\n', 'is reserved'),
+        ('tokens:\n  per: 1\n  dimensions: {family: tokens, Å: ring}\n', 'Invalid unit dimension key'),
     ],
 )
 def test_build_reports_invalid_units(
