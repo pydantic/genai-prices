@@ -1838,6 +1838,7 @@ providers: list[Provider] = [
         api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com|services\\.ai\\.azure\\.com)',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
         price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
+        provider_match=ClauseEquals(equals='azure-responses'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -4808,6 +4809,7 @@ providers: list[Provider] = [
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
         pricing_urls=['https://console.groq.com/docs/models'],
+        provider_match=ClauseEquals(equals='gateway/groq'),
         extractors=[
             UsageExtractor(
                 root='usage',

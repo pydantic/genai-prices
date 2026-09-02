@@ -4,6 +4,9 @@ id: azure
 pricing_urls:
   - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing
 api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com|services\.ai\.azure\.com)
+# `azure-responses` is Pydantic AI's model-id prefix for Azure's Responses API; exact spelling only.
+provider_match:
+  equals: azure-responses
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.
   Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models

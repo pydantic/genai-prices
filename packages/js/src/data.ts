@@ -2929,6 +2929,9 @@ export const data: Provider[] = [
       '(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com|services\\.ai\\.azure\\.com)',
     price_comments:
       'These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
+    provider_match: {
+      equals: 'azure-responses',
+    },
     extractors: [
       {
         api_flavor: 'chat',
@@ -7994,6 +7997,9 @@ export const data: Provider[] = [
     name: 'Groq',
     pricing_urls: ['https://console.groq.com/docs/models'],
     api_pattern: 'https://api\\.groq\\.com',
+    provider_match: {
+      equals: 'gateway/groq',
+    },
     extractors: [
       {
         api_flavor: 'default',

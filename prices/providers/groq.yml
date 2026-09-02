@@ -4,6 +4,10 @@ id: groq
 pricing_urls:
   - https://console.groq.com/docs/models
 api_pattern: 'https://api\.groq\.com'
+# `gateway/groq` is Pydantic AI's model-id prefix for Groq via Pydantic AI Gateway; exact spelling only,
+# so `huggingface/groq` keeps resolving to the Hugging Face reseller record.
+provider_match:
+  equals: gateway/groq
 
 # https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
 extractors:

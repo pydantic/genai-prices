@@ -95,6 +95,9 @@ def test_mistral_model_matching_preserves_native_aliases_without_claiming_qualif
         ('mistral_ai', snapshot('mistral')),
         ('openrouter', snapshot('openrouter')),
         ('azure', snapshot('azure')),
+        ('azure-responses', snapshot('azure')),
+        ('gateway/groq', snapshot('groq')),
+        ('huggingface/groq', snapshot('huggingface_groq')),
         ('gcp.vertex.agent', snapshot('google')),
         ('perplexity', snapshot('perplexity')),
         ('Google', snapshot('google')),
@@ -113,3 +116,8 @@ def test_provider_matching(provider_ref: str, provider_id: str):
     result = find_provider_by_id(providers, provider_ref)
     assert result is not None
     assert result.id == provider_id
+
+
+@pytest.mark.parametrize('provider_ref', ['azure-responses-other', 'gateway/groq-other'])
+def test_pydantic_ai_provider_matches_are_exact(provider_ref: str):
+    assert find_provider_by_id(providers, provider_ref) is None
