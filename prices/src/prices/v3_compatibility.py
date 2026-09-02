@@ -562,8 +562,12 @@ def _has_disjoint_discriminator(
     previous_properties = _optional_schema_map(previous.get('properties'), 'variant properties')
     candidate_properties = _optional_schema_map(candidate.get('properties'), 'variant properties')
     for property_name in shared_required:
-        old_values = _literal_values(previous_properties[property_name])
-        new_values = _literal_values(candidate_properties[property_name])
+        previous_property = previous_properties.get(property_name)
+        candidate_property = candidate_properties.get(property_name)
+        if previous_property is None or candidate_property is None:
+            continue
+        old_values = _literal_values(previous_property)
+        new_values = _literal_values(candidate_property)
         if old_values is not None and new_values is not None and old_values.isdisjoint(new_values):
             return True
     return False

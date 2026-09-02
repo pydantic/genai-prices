@@ -160,6 +160,10 @@ def test_validate_v3_schema_evolution_distinguishes_boolean_and_numeric_enum_val
     validate_v3_schema_evolution({'enum': [1]}, {'enum': [1.0]})
 
 
+def test_disjoint_discriminator_ignores_required_names_without_property_schemas() -> None:
+    assert not v3_compatibility._has_disjoint_discriminator({'required': ['kind']}, {'required': ['kind']}, {'kind'})
+
+
 def test_validate_v3_schema_evolution_checks_new_properties_against_previous_catchall() -> None:
     previous: dict[str, JsonData] = {'additionalProperties': {'type': 'string'}, 'type': 'object'}
     compatible: dict[str, JsonData] = {
