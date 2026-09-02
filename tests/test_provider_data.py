@@ -256,6 +256,26 @@ def test_decode_wrapped_provider_data_projects_unsupported_extractor_paths_and_p
     ]
 
 
+def test_decode_wrapped_provider_data_projects_typed_future_mapping_with_known_fields() -> None:
+    provider = _provider()
+    provider['extractors'] = [
+        {
+            'root': 'usage',
+            'mappings': [
+                {'type': 'future-mapping', 'path': 'input_tokens', 'dest': 'input_tokens'},
+                {'path': 'output_tokens', 'dest': 'output_tokens'},
+            ],
+        }
+    ]
+
+    decoded = _decode_provider_data(_wrapped(provider), _registry())
+
+    extractors = decoded.providers[0].extractors
+    assert extractors is not None
+    assert [mapping.dest for mapping in extractors[0].mappings] == ['output_tokens']
+    assert len(decoded.compatibility_warnings) == 1
+
+
 def test_decode_wrapped_provider_data_skips_extractors_with_unsupported_root_or_array_match() -> None:
     provider = _provider()
     provider['extractors'] = [

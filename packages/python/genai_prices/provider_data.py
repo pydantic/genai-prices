@@ -114,7 +114,7 @@ class _ProviderProjector:
                 mapping_path = f'{path}.mappings[{mapping_index}]'
                 if isinstance(raw_mapping, Mapping):
                     mapping = dict(cast(Mapping[str, Any], raw_mapping))
-                    if not ({'path', 'dest'} & mapping.keys()):
+                    if 'type' in mapping or not ({'path', 'dest'} & mapping.keys()):
                         self._warn('extractor mapping', mapping_path, context)
                         continue
                     if 'path' in mapping:
