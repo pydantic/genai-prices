@@ -237,6 +237,24 @@ describe('provider activation', () => {
     expect(findProvider({ providerId: 'stable-wrapped-provider' })?.id).toBe('stable-wrapped-provider')
   })
 
+  it('rejects a wrapped model missing match without changing the active pair', () => {
+    updatePrices(({ setProviderData }) => {
+      setProviderData(wrappedFixture('stable-wrapped-provider'))
+    })
+    const stableRegistry = getActiveRegistry()
+    const invalid = wrappedFixture('invalid-provider')
+    const invalidProvider = invalid.providers[0] as unknown as Record<string, unknown>
+    invalidProvider.models = [{ id: 'broken-model', prices: { remote_event_price: 1 } }]
+
+    expect(() => {
+      updatePrices(({ setProviderData }) => {
+        setProviderData(invalid)
+      })
+    }).toThrow('genai-prices: invalid data: providers[0].models[0].match is required')
+    expect(getActiveRegistry()).toBe(stableRegistry)
+    expect(findProvider({ providerId: 'stable-wrapped-provider' })?.id).toBe('stable-wrapped-provider')
+  })
+
   it('leaves the active pair unchanged after an asynchronous contract failure', async () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(wrappedFixture('stable-wrapped-provider'))

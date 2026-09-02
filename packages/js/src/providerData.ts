@@ -305,6 +305,7 @@ function normalizeExtractor(raw: unknown, path: string): unknown {
 function normalizeModel(raw: unknown, providerId: string, providerIndex: number, modelIndex: number): unknown {
   const path = `providers[${String(providerIndex)}].models[${String(modelIndex)}]`
   if (!isRecord(raw)) throw invalidData(`${path} must be an object`)
+  if (!('match' in raw)) throw invalidData(`${path}.match is required`)
   const modelId = typeof raw.id === 'string' ? raw.id : String(modelIndex)
   return {
     ...raw,
