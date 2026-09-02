@@ -21,14 +21,16 @@ descendants are opaque and are not classified or validated. These are intentiona
 interpret the interior of an explicitly future representation.
 
 **Every skipped future capability must be observable.**
-Successful decoding reports one compatibility warning for the boundary at which each future capability was skipped.
-This is an independent product requirement rather than a consequence of projection.
+Successful decoding records one compatibility warning for the boundary at which each future capability was skipped.
+Python and JavaScript emit those messages during successful activation. Go exposes them on the constructed calculator
+and repeats them on later successful calculation and extraction results. This is an independent product requirement
+rather than a consequence of projection.
 
 **Python, JavaScript, and Go must retain the same projection.**
 Given the same JSON provider array, all three runtimes retain and remove the same providers, models, extractors,
 mappings, matches, conditional prices, and price-map entries.
 
-**Projection runs before each runtime's existing provider-array decoder.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
+**Projection runs before each runtime's existing provider-array decoder.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail", "Python, JavaScript, and Go must retain the same projection")_
 Python projects the parsed list inside `packages/python/genai_prices/update_prices.py::UpdatePrices.fetch` before
 `types._providers_from_raw`. JavaScript projects a non-null array inside
 `packages/js/src/api.ts::activateProviderData` before its existing normalization. Go projects the top-level array in
@@ -38,14 +40,21 @@ itself validates every malformed-versus-future boundary specified below, includi
 not otherwise validate matches, extract paths, mappings, or prices. The existing decoders continue to own defaults,
 validation outside those enumerated boundaries, and construction of runtime objects.
 
+**Projection is lossless and does not mutate its input.** _(from "Currently published provider data must retain exactly its existing behavior", "Distinguishable future provider capabilities")_
+Every retained array item, object member, key, and value is preserved unchanged and in source order except for the exact
+owner removals enumerated below. Projection returns a separate result and does not mutate caller-owned input, including
+the provider arrays and nested objects passed to JavaScript activation. Implementations may share untouched immutable
+substructures internally only when the caller cannot observe mutation through the projected result.
+
 **Provider and model object requirements remain baseline validation concerns.** _(from "Projection runs before each runtime's existing provider-array decoder")_
 Projection traverses `model_match`, `provider_match`, `extractors`, `models`, model `match`, and model `prices` only when
 their enclosing values have the object/array kind required for traversal. A non-object provider/model, non-array
 extractors/models/prices list, missing fields, or invalid metadata on a retained provider or model is left to the
-existing decoder and retains that runtime's existing result. A model removed because its match is unsupported or its
-originally non-empty prices become empty is opaque as a whole, so unrelated malformed or missing model metadata can no
-longer affect decoding. This is an intentional exception to baseline validation because the removed model cannot
-participate in matching or pricing.
+existing decoder and retains that runtime's existing result. A model removed because its match is unsupported is opaque
+before price traversal. When an originally non-empty price collection becomes empty, projection has already classified
+the model's earlier match and every required price sibling under the traversal rules below; only unrelated model
+metadata then becomes opaque and cannot affect decoding. Both cases are intentional exceptions to baseline validation
+because the removed model cannot participate in matching or pricing.
 
 **Unsupported owners short-circuit descendant traversal.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
 An explicitly unsupported extractor is removed without inspecting its root, model path, or mappings. An unsupported
@@ -68,12 +77,12 @@ short-circuits them; any malformed visited entry fails the payload and discards 
 The recognized keys are `and`, `or`, `contains`, `ends_with`, `equals`, `regex`, and `starts_with`. A non-object match is
 malformed. An object with no recognized key is distinguishably future and unsupported. An object with more than one
 recognized key is malformed. The presence of `contains`, `ends_with`, `equals`, `regex`, or `starts_with` selects that
-recognized primitive form regardless of its value's JSON kind; a non-string value is retained and rejected by baseline
-validation. The presence of `and` or `or` similarly selects the recognized boolean form; a non-array value is malformed.
-Array children are classified recursively, and one unsupported child makes the entire enclosing boolean match
-unsupported because retaining a subset could change its meaning.
+recognized primitive form; projection classifies a non-string operand as malformed. The presence of `and` or `or`
+similarly selects the recognized boolean form; projection classifies a non-array operand as malformed. Array children
+are classified recursively, and one unsupported child makes the entire enclosing boolean match unsupported when none
+is malformed because retaining a subset could change its meaning.
 
-**Unsupported matches are removed only at a semantic owner boundary.** _(from "Match recognition uses the seven existing structural discriminators")_
+**Unsupported matches are removed only at a semantic owner boundary.** _(from "Distinguishable future provider capabilities", "Unsupported owners short-circuit descendant traversal", "Match recognition uses the seven existing structural discriminators")_
 An unsupported `model_match` or `provider_match` removes that provider-level field. An unsupported model `match`
 removes that model. An unsupported match nested in an array-match extract-path step makes that path unsupported and is
 handled by the path's extractor or mapping owner. No additional warning is emitted for the nested match itself.
@@ -113,7 +122,10 @@ tiered-price representation and remains malformed. Unknown members on an untyped
 
 **Conditional-price recognition requires its existing `prices` field.** _(from "Malformed recognized data in a retained capability must still fail")_
 A conditional-price entry must be an object containing `prices`; missing `prices`, a non-object entry, and a `prices`
-value that is not an object remain malformed. Projection applies price-map recognition within each entry.
+value that is not an object are projection-level malformed errors. Projection validates this entry shell before
+classifying an optional constraint. An unsupported constraint then short-circuits only the contents of the already
+validated price-map object. Thus a future constraint cannot hide a missing or non-object `prices` field, while it does
+make malformed nested price values opaque. Projection applies price-map recognition within every retained entry.
 
 **Constraint recognition accepts the two existing structural or typed representations.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail", "Python, JavaScript, and Go must retain the same projection")_
 Without `type`, an object containing any of `start_date`, `start_time`, or `end_time` selects the current structural
@@ -154,7 +166,8 @@ The exact warning boundary mapping is:
 - A future constraint reports capability `constraint` at `providers[i].models[j].prices[k].constraint`.
 
 Because valid price-map keys use the ASCII grammar above, `<key>` is appended verbatim after a dot and requires no
-escaping. Lexical price-key order means ascending unsigned ASCII-byte order, which is identical in all three runtimes.
+escaping. Every `i`, `j`, and `k` is the item's index in its original raw source array before any projection removals.
+Lexical price-key order means ascending unsigned ASCII-byte order, which is identical in all three runtimes.
 
 **Warning order follows a fixed depth-first traversal.** _(from "Each unsupported boundary has one capability and owner path", "Python, JavaScript, and Go must retain the same projection")_
 Providers use source-array order. Within each retained provider, projection visits `model_match`, `provider_match`,
@@ -169,23 +182,32 @@ conditional list, price map, or model adds no warning beyond the warnings for th
 If recognized data anywhere in the payload is invalid, provisional projection warnings are discarded. Python emits
 the ordered messages as `UserWarning` after `_providers_from_raw` succeeds. JavaScript calls `console.warn` only after
 normalization succeeds and immediately before activation. Go stores warnings only on a successfully constructed
-calculator and appends them before existing calculation/extraction warnings in both result types.
+calculator, returns a defensive copy from `Calculator.CompatibilityWarnings()`, and appends them before existing
+calculation/extraction warnings in both result types.
+
+**Malformed projection errors add no cross-runtime diagnostic contract.** _(from "Malformed recognized data in a retained capability must still fail", "Warnings are published only after the projected payload passes baseline decoding")_
+On encountering malformed data required by the rules above, projection aborts with that runtime's existing invalid-data
+error mechanism. Error type wrapping that already exists remains intact, but exact messages, paths, and aggregation are
+runtime-specific and are not part of this extraction's compatibility contract. Implementations may stop after finding
+any malformed value, except that they must fully classify a boolean match or extract-path composite as required for
+malformed-over-unsupported precedence. Tests assert failure, discarded provisional warnings, and preserved active state
+rather than common diagnostics.
 
 **A compact shared integration fixture proves cross-runtime future projection.** _(from "Python, JavaScript, and Go must retain the same projection", "Warning order follows a fixed depth-first traversal")_
 One provider-array fixture contains understood siblings plus one future match, extractor, mapping/path, price value, and
 constraint. Each runtime asserts the exact retained raw/runtime shape, warning sequence, extraction result, and price.
 
-**Focused tests pin every classification and removal boundary.** _(from "Malformed recognized data in a retained capability must still fail", "Malformed dominates unsupported within one composite value", "Match recognition uses the seven existing structural discriminators", "Extractor recognition distinguishes explicitly typed additions from malformed current extractors", "Extractor mappings use `path` and `dest` as their recognized structural fields", "Extract paths recognize strings and arrays of string or `array-match` steps", "Price maps distinguish future price objects from malformed tiered prices", "Constraint recognition accepts the two existing structural or typed representations", "Unsupported owners short-circuit descendant traversal", "Unsupported prices preserve usable siblings", "Each unsupported boundary has one capability and owner path")_
+**Focused tests pin every classification and removal boundary.** _(from "Malformed recognized data in a retained capability must still fail", "Projection is lossless and does not mutate its input", "Malformed dominates unsupported within one composite value", "Match recognition uses the seven existing structural discriminators", "Extractor recognition distinguishes explicitly typed additions from malformed current extractors", "Extractor mappings use `path` and `dest` as their recognized structural fields", "Extract paths recognize strings and arrays of string or `array-match` steps", "Price maps distinguish future price objects from malformed tiered prices", "Constraint recognition accepts the two existing structural or typed representations", "Unsupported owners short-circuit descendant traversal", "Unsupported prices preserve usable siblings", "Each unsupported boundary has one capability and owner path", "Malformed projection errors add no cross-runtime diagnostic contract")_
 Separate focused cases in each runtime cover every malformed-versus-future classifier, explicit-`type` precedence,
 short-circuit, both permutations of mixed malformed/unsupported composites, warning-context fallback, exact warning
-paths, price-key ordering, and cascading removal rules.
+paths and original indices, price-key ordering, non-mutation, and cascading removal rules.
 
 **The pinned current-data fixtures produce no projection warnings.** _(from "Currently published provider data must retain exactly its existing behavior", "Every skipped future capability must be observable")_
 Each runtime projects the two exact base-revision payloads named above, asserts byte-for-byte-equivalent parsed data and
 zero warnings, and then decodes them through the new boundary. Existing dataset and price suites pin downstream
 matching, extraction, and calculation results.
 
-**Failed decoding preserves the prior active state.** _(from "Currently published provider data must retain exactly its existing behavior", "Warnings are published only after the projected payload passes baseline decoding")_
+**Failed decoding preserves the prior active state.** _(from "Currently published provider data must retain exactly its existing behavior", "Projection runs before each runtime's existing provider-array decoder")_
 Context: Python's shared updater installs only a returned `DataSnapshot`; JavaScript's `activateProviderData` assigns
 only after normalization; Go constructs immutable calculators. The extraction retains those transaction boundaries:
 Python returns no replacement snapshot, JavaScript retains the previously active provider array, and Go returns no
