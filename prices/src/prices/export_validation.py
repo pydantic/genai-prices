@@ -10,20 +10,25 @@ from genai_prices.units import UnitDef, UnitRegistry
 
 from .prices_types import Provider
 
-_RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
 _PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
-_JAVASCRIPT_KEYWORDS = frozenset(
+# Usage, price, and dimension keys cross all three runtimes, so keep one shared blacklist.
+_RESERVED_PUBLIC_KEYS = frozenset(
     {
+        *keyword.kwlist,
+        '__proto__',
         'arguments',
         'await',
         'break',
         'case',
         'catch',
+        'chan',
         'class',
         'const',
+        'constructor',
         'continue',
         'debugger',
         'default',
+        'defer',
         'delete',
         'do',
         'else',
@@ -32,30 +37,41 @@ _JAVASCRIPT_KEYWORDS = frozenset(
         'export',
         'extends',
         'false',
+        'fallthrough',
         'finally',
         'for',
         'function',
+        'func',
+        'go',
+        'goto',
         'if',
         'implements',
         'import',
         'in',
         'instanceof',
         'interface',
+        'key',  # The Go generator would emit UsageKey, which is the public key type.
         'let',
+        'map',
         'new',
         'null',
         'package',
         'private',
+        'prototype',
         'protected',
         'public',
+        'range',
         'return',
+        'select',
         'static',
+        'struct',
         'super',
         'switch',
         'this',
         'throw',
         'true',
         'try',
+        'type',
         'typeof',
         'var',
         'void',
@@ -64,7 +80,6 @@ _JAVASCRIPT_KEYWORDS = frozenset(
         'yield',
     }
 )
-_RESERVED_KEYWORDS = frozenset(keyword.kwlist) | _JAVASCRIPT_KEYWORDS
 
 
 def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
@@ -92,6 +107,8 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
             raise ValueError(f'Invalid per for unit {usage_key}: expected a positive integer, got {per!r}')
 
         dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
+        for dimension_key in dimensions:
+            _validate_public_key('dimension', dimension_key)
         family_value = dimensions.get('family')
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
@@ -135,8 +152,6 @@ def validate_export_payload(providers: list[Provider], units: Mapping[str, Mappi
 def _validate_public_key(kind: str, key: str) -> None:
     if not _PUBLIC_KEY_PATTERN.fullmatch(key):
         raise ValueError(f'Invalid unit {kind} key: {key!r} is not a public identifier')
-    if key in _RESERVED_KEYWORDS:
-        raise ValueError(f'Invalid unit {kind} key: {key!r} is a reserved keyword')
     if key.startswith('_'):
         raise ValueError(f'Invalid unit {kind} key: {key!r} must not start with "_"')
     if key in _RESERVED_PUBLIC_KEYS:
