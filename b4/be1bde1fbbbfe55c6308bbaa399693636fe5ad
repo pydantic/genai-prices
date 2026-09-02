@@ -1,0 +1,24 @@
+specs/forward-compatible-provider-decoding/spec.md
+  s_b8bc48238df5fe::t_b926fd8a03c3e1 4-9,15-21,31,45-53,56-60,67,69-77,80,86,91-97,99,103,106-110,112,122-124,127-135,141,144-147,150-152,177
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "b4be1bde1fbbbfe55c6308bbaa399693636fe5ad",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b8bc48238df5fe": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a061f7-2025-7311-b0de-0c0fdc550e63",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
