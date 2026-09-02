@@ -36,10 +36,10 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False otherwise.
     """
-    with _shared.lock:
-        if _shared.ref_count == 0:
+    with _shared_updater.lock:
+        if _shared_updater.ref_count == 0:
             return False
-    return _shared.wait(timeout)
+    return _shared_updater.wait(timeout)
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
@@ -86,12 +86,12 @@ class UpdatePrices:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
                 wait for that many seconds, if `True` wait for 30 seconds.
         """
-        with _shared.lock:
+        with _shared_updater.lock:
             if not self._started:
-                _shared.acquire(self)
+                _shared_updater.acquire(self)
                 self._started = True
         if wait:
-            _shared.wait(timeout=30 if wait is True else wait)
+            _shared_updater.wait(timeout=30 if wait is True else wait)
 
     def wait(self, timeout: float | None = None) -> bool:
         """Wait for the prices to be updated in the background task.
@@ -106,7 +106,7 @@ class UpdatePrices:
         """
         if not self._started:
             return False
-        return _shared.wait(timeout)
+        return _shared_updater.wait(timeout)
 
     def stop(self):
         """Stop the background task, or release this instance's reference to it.
@@ -116,11 +116,11 @@ class UpdatePrices:
         bundled data. Fetch failures never make `stop()` raise, and `stop()` on a never-started
         instance does nothing.
         """
-        with _shared.lock:
+        with _shared_updater.lock:
             if not self._started:
                 return
             self._started = False
-            _shared.release()
+            _shared_updater.release()
 
     def __enter__(self):
         self.start()
@@ -143,27 +143,27 @@ class UpdatePrices:
         return data_snapshot.DataSnapshot(providers, from_auto_update=True)
 
 
-class _Shared:
+@dataclass
+class _SharedUpdater:
     """The one background updater shared by every `UpdatePrices` instance in the process.
 
     The thread runs while `ref_count` is above zero and uses `fetcher`, the instance started most
     recently. `lock` guards that state and is never held across anything that blocks.
     """
 
-    def __init__(self) -> None:
-        self.lock = threading.Lock()
-        self.ref_count = 0
-        """How many instances are started."""
-        self.fetcher: UpdatePrices | None = None
-        """The instance whose settings and `fetch()` the thread uses; None once no instance is started."""
-        self.thread: threading.Thread | None = None
-        """The thread doing the work, if any."""
-        self.wake = threading.Event()
-        """Set by the last `stop()` so a sleeping thread notices it is no longer needed."""
-        self.ready = threading.Event()
-        """Set once the thread has an outcome to report, or exited without one."""
-        self.outcome: tuple[Exception | None, TracebackType | None] | None = None
-        """A single reference so it can be published and read atomically."""
+    lock: threading.Lock = field(default_factory=threading.Lock)
+    ref_count: int = 0
+    """How many instances are started."""
+    fetcher: UpdatePrices | None = None
+    """The instance whose settings and `fetch()` the thread uses; None once no instance is started."""
+    thread: threading.Thread | None = None
+    """The thread doing the work, if any."""
+    wake: threading.Event = field(default_factory=threading.Event)
+    """Set by the last `stop()` so a sleeping thread notices it is no longer needed."""
+    ready: threading.Event = field(default_factory=threading.Event)
+    """Set once the thread has an outcome to report, or exited without one."""
+    outcome: tuple[Exception | None, TracebackType | None] | None = None
+    """A single reference so it can be published and read atomically."""
 
     def acquire(self, instance: UpdatePrices) -> None:
         """Count `instance` in and use its settings; launch the thread if none is running. Caller holds `lock`."""
@@ -270,4 +270,4 @@ class _Shared:
         self._publish(None)
 
 
-_shared = _Shared()
+_shared_updater = _SharedUpdater()
