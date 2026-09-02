@@ -52,6 +52,22 @@ func example() {
     assert identifiers == {'PackageValue', 'example'}
 
 
+def test_go_file_package_level_identifiers_parse_commented_declaration_blocks() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+const ( // package constants
+    Existing = 1
+    UsageFoo = 2
+)
+""",
+        exclude_generated=False,
+    )
+
+    assert {'Existing', 'UsageFoo'} <= identifiers
+
+
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
     go_identifiers.validate_go_usage_key_identifiers(load_units())
 

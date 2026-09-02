@@ -110,10 +110,11 @@ def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) 
 
         if line != line.lstrip():
             continue
-        if _GO_BLOCK_PATTERN.fullmatch(stripped):
+        declaration = stripped.partition('//')[0].rstrip()
+        if _GO_BLOCK_PATTERN.fullmatch(declaration):
             in_declaration_block = True
-        elif match := _GO_DECLARATION_PATTERN.match(stripped):
+        elif match := _GO_DECLARATION_PATTERN.match(declaration):
             identifiers.add(match.group(1))
-        elif match := _GO_FUNCTION_PATTERN.match(stripped):
+        elif match := _GO_FUNCTION_PATTERN.match(declaration):
             identifiers.add(match.group(1))
     return identifiers
