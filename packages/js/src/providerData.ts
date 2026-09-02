@@ -304,6 +304,9 @@ function normalizeExtractor(raw: unknown, path: string): unknown {
     api_flavor: extractor.api_flavor ?? 'default',
     mappings: extractor.mappings.map((mapping, index) => {
       if (!isRecord(mapping)) throw invalidData(`${path}.mappings[${String(index)}] must be an object`)
+      if (!('path' in mapping) || !('dest' in mapping)) {
+        throw invalidData(`${path}.mappings[${String(index)}] must include path and dest`)
+      }
       const wireMapping: WireExtractorMapping = mapping
       return { ...wireMapping, required: wireMapping.required ?? true }
     }),

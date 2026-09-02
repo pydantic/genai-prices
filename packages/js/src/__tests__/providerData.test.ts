@@ -232,6 +232,15 @@ describe('decodeProviderData', () => {
     )
   })
 
+  it('rejects a recognized extractor mapping missing a required core field', () => {
+    const provider = providerFixture()
+    provider.extractors = [{ mappings: [{ dest: 'input_tokens' }], root: 'usage' }]
+
+    expect(() => decodeProviderData(wrappedFixture(provider), getActiveRegistry())).toThrow(
+      'genai-prices: invalid data: providers[0].extractors[0].mappings[0] must include path and dest'
+    )
+  })
+
   it.each([
     ['non-object', 'not-an-object'],
     ['bad start date', { start_date: 'not-a-date' }],
