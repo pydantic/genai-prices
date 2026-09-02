@@ -33,14 +33,19 @@ Python projects the parsed list inside `packages/python/genai_prices/update_pric
 `types._providers_from_raw`. JavaScript projects a non-null array inside
 `packages/js/src/api.ts::activateProviderData` before its existing normalization. Go projects the top-level array in
 `packages/go/calculator.go::NewCalculatorFromJSON` before unmarshalling to `[]provider` and calling
-`Calculator.validate`. Projection returns raw projected data and ordered warnings; those existing decoders continue to
-own defaults, recognized-value validation, and construction of runtime objects.
+`Calculator.validate`. Projection returns raw projected data and ordered warnings or a classification error. Projection
+itself validates every malformed-versus-future boundary specified below, including in JavaScript where activation does
+not otherwise validate matches, extract paths, mappings, or prices. The existing decoders continue to own defaults,
+validation outside those enumerated boundaries, and construction of runtime objects.
 
 **Provider and model object requirements remain baseline validation concerns.** _(from "Projection runs before each runtime's existing provider-array decoder")_
 Projection traverses `model_match`, `provider_match`, `extractors`, `models`, model `match`, and model `prices` only when
 their enclosing values have the object/array kind required for traversal. A non-object provider/model, non-array
-extractors/models/prices list, missing provider/model fields, or invalid metadata is left to the existing decoder and
-therefore fails exactly where that runtime currently rejects it.
+extractors/models/prices list, missing fields, or invalid metadata on a retained provider or model is left to the
+existing decoder and retains that runtime's existing result. A model removed because its match is unsupported or its
+originally non-empty prices become empty is opaque as a whole, so unrelated malformed or missing model metadata can no
+longer affect decoding. This is an intentional exception to baseline validation because the removed model cannot
+participate in matching or pricing.
 
 **Unsupported owners short-circuit descendant traversal.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
 An explicitly unsupported extractor is removed without inspecting its root, model path, or mappings. An unsupported
@@ -50,7 +55,16 @@ that match field; an unsupported model match removes the model without inspectin
 conditional constraint removes its entry without inspecting the nested price map. Each case emits only the owner-level
 warning specified below. Retained owners continue traversal, so malformed recognized descendants still fail.
 
-**Match recognition uses the seven existing structural discriminators.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
+**Malformed dominates unsupported within one composite value.** _(from "Malformed recognized data in a retained capability must still fail", "Unsupported owners short-circuit descendant traversal")_
+Projection classifies every child of a boolean `and`/`or` match and every step of one extract-path array before deciding
+the composite result. If any child or step is malformed, the composite is malformed even when another is unsupported,
+independent of their source order. Otherwise, one or more unsupported children make the composite unsupported. This
+full classification happens inside the composite only; after the composite makes its semantic owner unsupported, the
+owner's other fields remain opaque under the short-circuit rule. Price-map entries and conditional-price entries are
+separate siblings rather than one semantic expression, so projection visits all entries unless an owner-level rule
+short-circuits them; any malformed visited entry fails the payload and discards all provisional warnings.
+
+**Match recognition uses the seven existing structural discriminators.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail", "Malformed dominates unsupported within one composite value")_
 The recognized keys are `and`, `or`, `contains`, `ends_with`, `equals`, `regex`, and `starts_with`. A non-object match is
 malformed. An object with no recognized key is distinguishably future and unsupported. An object with more than one
 recognized key is malformed. The presence of `contains`, `ends_with`, `equals`, `regex`, or `starts_with` selects that
@@ -77,7 +91,7 @@ distinguishably future and is removed. An untyped object containing neither `pat
 future. An untyped object containing exactly one of `path` and `dest` is malformed. A non-object mapping is malformed.
 Unknown members on a recognized mapping do not affect recognition.
 
-**Extract paths recognize strings and arrays of string or `array-match` steps.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
+**Extract paths recognize strings and arrays of string or `array-match` steps.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail", "Malformed dominates unsupported within one composite value")_
 A path that is a string is recognized. A path array is recognized when every step is a string or an object whose
 `type` is exactly `array-match`; an object step with another or missing `type` makes the path distinguishably future.
 An `array-match` step remains malformed if `field` is not a string, `match` is missing, or its recognized match is
@@ -89,12 +103,13 @@ mapping. When an extractor originally has one or more mappings and all are remov
 that cascading removal emits no additional warning. A recognized empty mapping list remains empty.
 
 **Price maps distinguish future price objects from malformed tiered prices.** _(from "Distinguishable future provider capabilities", "Malformed recognized data in a retained capability must still fail")_
-A JSON number selects the recognized scalar-price representation and remains baseline-decoded. `null`, booleans,
-strings, and arrays are malformed. An object value containing `type`, regardless of that member's value or the presence
-of `base` or `tiers`, is distinguishably future and its price key is removed. An untyped object containing neither
-`base` nor `tiers` is also distinguishably future. An untyped object containing exactly one of `base` and `tiers`
-selects the recognized tiered-price representation and remains malformed. Unknown members on an untyped object
-containing both `base` and `tiers` do not affect recognition.
+Every price-map key must match the ASCII grammar `^[a-z][a-z0-9_]*$`; another key is malformed. A JSON number selects
+the recognized scalar-price representation and remains baseline-decoded. `null`, booleans, strings, and arrays are
+malformed. An object value containing `type`, regardless of that member's value or the presence of `base` or `tiers`,
+is distinguishably future and its price key is removed. An untyped object containing neither `base` nor `tiers` is also
+distinguishably future. An untyped object containing exactly one of `base` and `tiers` selects the recognized
+tiered-price representation and remains malformed. Unknown members on an untyped object containing both `base` and
+`tiers` do not affect recognition.
 
 **Conditional-price recognition requires its existing `prices` field.** _(from "Malformed recognized data in a retained capability must still fail")_
 A conditional-price entry must be an object containing `prices`; missing `prices`, a non-object entry, and a `prices`
@@ -104,10 +119,12 @@ value that is not an object remain malformed. Projection applies price-map recog
 Without `type`, an object containing any of `start_date`, `start_time`, or `end_time` selects the current structural
 constraint; an object containing none is distinguishably future. With `type`, the string values `start_date` and
 `time_of_date` select the corresponding current representation; any other value is distinguishably future regardless
-of the presence of structural constraint fields. Once a representation is selected, missing required fields, mixed
-start-date/time fields, and invalid values are malformed. A non-object constraint is malformed. A recognized constraint
-is reduced to `type`, `start_date`, `start_time`, and `end_time` before baseline decoding so extension members cannot
-create cross-runtime strictness differences.
+of the presence of structural constraint fields. Once selected, the allowed member sets are exactly `start_date`;
+`start_time` plus `end_time`; `type: start_date` plus `start_date`; or `type: time_of_date` plus `start_time` and
+`end_time`, respectively. Missing, mixed, extra, or invalid members are malformed, as is a non-object constraint.
+Projection preserves a recognized constraint unchanged for baseline normalization. Requiring exact member sets is an
+intentional common validation rule; it preserves the existing JavaScript and Go behavior and makes Python reject the
+same ambiguous extensions rather than silently dropping them.
 
 **Unsupported prices preserve usable siblings.** _(from "Distinguishable future provider capabilities", "Price maps distinguish future price objects", "Constraint recognition accepts the two existing structural or typed representations")_
 An unsupported price value removes only its price-map key. An unsupported constraint removes its whole conditional
@@ -123,7 +140,23 @@ followed for model-owned capabilities by `, model "<id>"` or `, model index <n>`
 matching the ASCII pattern `^[A-Za-z0-9._:/-]+$`; it is quoted verbatim. Any missing, non-string, or other string ID
 uses the index form, avoiding runtime-specific string escaping.
 
-**Warning order follows a fixed depth-first traversal.** _(from "Warnings use one exact contextual template", "Python, JavaScript, and Go must retain the same projection")_
+**Each unsupported boundary has one capability and owner path.** _(from "Warnings use one exact contextual template", "Unsupported matches are removed only at a semantic owner boundary", "Unsupported extractor paths are removed at the smallest safe owner", "Unsupported prices preserve usable siblings")_
+The exact warning boundary mapping is:
+
+- A provider `model_match` or `provider_match`, including a future nested child, reports capability `match` at
+  `providers[i].model_match` or `providers[i].provider_match`.
+- A model match, including a future nested child, reports capability `match` at `providers[i].models[j].match`.
+- A future extractor object, root, or model path reports capability `extractor` at `providers[i].extractors[j]`.
+- A future mapping object or mapping path reports capability `extractor mapping` at
+  `providers[i].extractors[j].mappings[k]`.
+- A future direct price value reports capability `price` at `providers[i].models[j].prices.<key>`; a future conditional
+  price value reports it at `providers[i].models[j].prices[k].prices.<key>`.
+- A future constraint reports capability `constraint` at `providers[i].models[j].prices[k].constraint`.
+
+Because valid price-map keys use the ASCII grammar above, `<key>` is appended verbatim after a dot and requires no
+escaping. Lexical price-key order means ascending unsigned ASCII-byte order, which is identical in all three runtimes.
+
+**Warning order follows a fixed depth-first traversal.** _(from "Each unsupported boundary has one capability and owner path", "Python, JavaScript, and Go must retain the same projection")_
 Providers use source-array order. Within each retained provider, projection visits `model_match`, `provider_match`,
 extractors in source order, then models in source order. Within each retained extractor it visits `root`, `model_path`,
 then mappings in source order. Within each retained model it visits `match`, then prices. Direct price-map keys use
@@ -142,9 +175,10 @@ calculator and appends them before existing calculation/extraction warnings in b
 One provider-array fixture contains understood siblings plus one future match, extractor, mapping/path, price value, and
 constraint. Each runtime asserts the exact retained raw/runtime shape, warning sequence, extraction result, and price.
 
-**Focused tests pin every classification and removal boundary.** _(from "Malformed recognized data in a retained capability must still fail", "Match recognition uses the seven existing structural discriminators", "Extractor recognition distinguishes explicitly typed additions from malformed current extractors", "Extractor mappings use `path` and `dest` as their recognized structural fields", "Extract paths recognize strings and arrays of string or `array-match` steps", "Price maps distinguish future price objects from malformed tiered prices", "Constraint recognition accepts the two existing structural or typed representations", "Unsupported owners short-circuit descendant traversal", "Unsupported prices preserve usable siblings")_
+**Focused tests pin every classification and removal boundary.** _(from "Malformed recognized data in a retained capability must still fail", "Malformed dominates unsupported within one composite value", "Match recognition uses the seven existing structural discriminators", "Extractor recognition distinguishes explicitly typed additions from malformed current extractors", "Extractor mappings use `path` and `dest` as their recognized structural fields", "Extract paths recognize strings and arrays of string or `array-match` steps", "Price maps distinguish future price objects from malformed tiered prices", "Constraint recognition accepts the two existing structural or typed representations", "Unsupported owners short-circuit descendant traversal", "Unsupported prices preserve usable siblings", "Each unsupported boundary has one capability and owner path")_
 Separate focused cases in each runtime cover every malformed-versus-future classifier, explicit-`type` precedence,
-short-circuit, warning-context fallback, and cascading removal rule.
+short-circuit, both permutations of mixed malformed/unsupported composites, warning-context fallback, exact warning
+paths, price-key ordering, and cascading removal rules.
 
 **The pinned current-data fixtures produce no projection warnings.** _(from "Currently published provider data must retain exactly its existing behavior", "Every skipped future capability must be observable")_
 Each runtime projects the two exact base-revision payloads named above, asserts byte-for-byte-equivalent parsed data and
@@ -178,5 +212,6 @@ No generated data, generated schema, package registry, default URL, frozen-artif
 Python retains the fetch/root checks and shared-updater ownership in `packages/python/genai_prices/update_prices.py`;
 JavaScript retains null/rejection/promise ordering in `packages/js/src/api.ts`; Go retains immutable construction and
 `ErrInvalidData` wrapping in `packages/go/calculator.go`. Provider/model matching, extractor defaults, conditional-price
-normalization, and error timing remain owned by the existing decoders. Only values classified above as
-distinguishably future take the new skip-and-warn path.
+normalization, and validation outside the projection boundaries remain owned by the existing decoders. The common
+projection validation and removed-model opacity are the explicit exceptions described above. Only values classified
+above as distinguishably future take the new skip-and-warn path.
