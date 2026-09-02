@@ -4,11 +4,12 @@ import argparse
 import json
 import subprocess
 from collections.abc import Mapping, Sequence
-from typing import Never, TypeAlias, cast
+from typing import TypeAlias, cast
 
 import jsonschema
 import ruamel.yaml
 from jsonschema.validators import validator_for
+from typing_extensions import Never
 
 from .export_validation import (
     NormalizedImplications,
