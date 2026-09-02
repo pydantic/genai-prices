@@ -1,0 +1,28 @@
+packages/js/src/units.ts
+  s_b8bc48238df5fe::t_234442d5c0c4d7 102-105,107
+  s_b8bc48238df5fe::t_0a4991af1c65fb 115
+packages/js/src/__tests__/units.test.ts
+  s_b8bc48238df5fe::t_234442d5c0c4d7 199-216
+  s_b8bc48238df5fe::t_12c22acc8db922 217
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "cf0802ec42b504f9f8ae8862d70a9f85a2817e9e",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b8bc48238df5fe": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a061f7-2025-7311-b0de-0c0fdc550e63",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
