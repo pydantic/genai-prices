@@ -435,18 +435,20 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
 @pytest.mark.parametrize(
     ('dimension_key', 'message'),
     [
+        (1, 'is not a public identifier'),
         ('Å', 'is not a public identifier'),
         ('constructor', 'is reserved'),
         ('range', 'is reserved'),
     ],
 )
-def test_validate_units_rejects_unsafe_dimension_keys(dimension_key: str, message: str) -> None:
+def test_validate_units_rejects_unsafe_dimension_keys(dimension_key: object, message: str) -> None:
+    dimensions: dict[Any, str] = {'family': 'events', dimension_key: 'value'}
     with pytest.raises(ValueError, match=message):
         validate_units(
             {
                 'events': {
                     'per': 1,
-                    'dimensions': {'family': 'events', dimension_key: 'value'},
+                    'dimensions': dimensions,
                 },
             }
         )

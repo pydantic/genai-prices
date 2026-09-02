@@ -106,9 +106,12 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         if isinstance(per, bool) or not isinstance(per, int) or per <= 0:
             raise ValueError(f'Invalid per for unit {usage_key}: expected a positive integer, got {per!r}')
 
-        dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
-        for dimension_key in dimensions:
+        dimensions: dict[str, str] = {}
+        for dimension_key, dimension_value in cast(Mapping[object, str], raw_unit.get('dimensions', {})).items():
+            if not isinstance(dimension_key, str):
+                raise ValueError(f'Invalid unit dimension key: {dimension_key!r} is not a public identifier')
             _validate_public_key('dimension', dimension_key)
+            dimensions[dimension_key] = dimension_value
         family_value = dimensions.get('family')
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
