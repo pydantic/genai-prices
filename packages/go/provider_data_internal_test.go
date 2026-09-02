@@ -6,6 +6,37 @@ import (
 	"testing"
 )
 
+func TestProjectConstraintVariants(t *testing.T) {
+	tests := []struct {
+		name      string
+		data      string
+		expected  string
+		supported bool
+	}{
+		{name: "non-object", data: `null`, expected: `null`, supported: true},
+		{name: "non-string type", data: `{"type":[]}`, expected: `{"type":[]}`, supported: true},
+		{
+			name:      "recognized type",
+			data:      `{"future":true,"start_date":"2026-01-01","type":"start_date"}`,
+			expected:  `{"start_date":"2026-01-01","type":"start_date"}`,
+			supported: true,
+		},
+		{name: "legacy end time", data: `{"end_time":"12:00"}`, expected: `{"end_time":"12:00"}`, supported: true},
+		{name: "empty object", data: `{}`, supported: false},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			projected, supported, err := projectConstraint(json.RawMessage(test.data))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if supported != test.supported || string(projected) != test.expected {
+				t.Fatalf("got (%s, %v), want (%s, %v)", projected, supported, test.expected, test.supported)
+			}
+		})
+	}
+}
+
 func TestDecodeWrappedProvidersDefaultsMetadataConstraintsAndExtensions(t *testing.T) {
 	decoded, err := decodeWrappedProviders(json.RawMessage(`[
 		{
