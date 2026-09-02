@@ -312,10 +312,28 @@ models:
       cache_read_mtok: 1.0
       cache_write_mtok: 12.5
       output_mtok: 50
-    prices_checked: 2026-06-09
+    prices_checked: 2026-09-01
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
+  - id: anthropic/claude-fable-5.1
+    match:
+      or:
+        - equals: anthropic/claude-fable-5.1
+        - equals: anthropic/claude-fable-5.1:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 0.25
+      cache_write_mtok: 12.5
+      output_mtok: 50
+    prices_checked: 2026-09-01
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Cache-read rate confirmed via https://openrouter.ai/api/v1/models
 
   - id: anthropic/claude-haiku-4.5
     match:

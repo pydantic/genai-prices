@@ -409,7 +409,9 @@ models:
   - id: claude-fable-5
     canonical_model: anthropic/claude-fable-5
     match:
-      contains: claude-fable-5
+      or:
+        - ends_with: claude-fable-5
+        - contains: claude-fable-5@
     context_window: 1000000
     prices_checked: 2026-06-09
     price_comments: >-
@@ -418,6 +420,26 @@ models:
     prices:
       input_mtok: 10
       cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+
+  - id: claude-fable-5-1
+    canonical_model: anthropic/claude-fable-5-1
+    match:
+      or:
+        - ends_with: claude-fable-5-1
+        - contains: claude-fable-5-1@
+    context_window: 1000000
+    prices_checked: 2026-09-01
+    price_comments: >-
+      Flat pricing across full 1M context window. Global endpoint; regional and
+      multi-region endpoints add a 10% premium.
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 0.25
       cache_write_mtok: 12.5
       output_mtok: 50
 

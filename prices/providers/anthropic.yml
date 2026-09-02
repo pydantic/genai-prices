@@ -196,11 +196,13 @@ models:
 
   - id: claude-fable-5
     name: Claude Fable 5
-    description: Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work
+    description: For demanding reasoning and long-horizon agentic work
     match:
-      starts_with: claude-fable-5
+      or:
+        - equals: claude-fable-5
+        - regex: ^claude-fable-5-\d{8}$
     context_window: 1000000
-    prices_checked: 2026-07-29
+    prices_checked: 2026-09-01
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -208,6 +210,28 @@ models:
     prices:
       input_mtok: 10
       cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      output_mtok: 50
+      web_searches_kcount: 10
+
+  - id: claude-fable-5-1
+    name: Claude Fable 5.1
+    description: Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work
+    match:
+      or:
+        - equals: claude-fable-5-1
+        - regex: ^claude-fable-5-1-\d{8}$
+    context_window: 1000000
+    prices_checked: 2026-09-01
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 0.25
       cache_write_mtok: 12.5
       cache_write_1h_mtok: 20
       output_mtok: 50

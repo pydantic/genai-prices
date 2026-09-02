@@ -265,9 +265,16 @@ export const data: Provider[] = [
       {
         id: 'claude-fable-5',
         name: 'Claude Fable 5',
-        description: "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+        description: 'For demanding reasoning and long-horizon agentic work',
         match: {
-          starts_with: 'claude-fable-5',
+          or: [
+            {
+              equals: 'claude-fable-5',
+            },
+            {
+              regex: '^claude-fable-5-\\d{8}$',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -276,6 +283,32 @@ export const data: Provider[] = [
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
+          output_mtok: 50,
+          cache_write_1h_mtok: 20,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-fable-5-1',
+        name: 'Claude Fable 5.1',
+        description: "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+        match: {
+          or: [
+            {
+              equals: 'claude-fable-5-1',
+            },
+            {
+              regex: '^claude-fable-5-1-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 0.25,
           output_mtok: 50,
           cache_write_1h_mtok: 20,
           web_searches_kcount: 10,
@@ -1424,9 +1457,38 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-fable-5-1-v1:0',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-fable-5-1',
+            },
+            {
+              contains: 'global.anthropic.claude-fable-5-1-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'global.anthropic.claude-fable-5-v1:0',
         match: {
-          contains: 'global.anthropic.claude-fable-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'global.anthropic.claude-fable-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -2313,26 +2375,63 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-fable-5-1-v1:0',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-fable-5-1',
+            },
+            {
+              equals: 'claude-fable-5-1',
+            },
+            {
+              starts_with: 'anthropic.claude-fable-5-1-v1',
+            },
+            {
+              starts_with: 'claude-fable-5-1-v1',
+            },
+            {
+              contains: 'us.anthropic.claude-fable-5-1-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+        prices: {
+          input_mtok: 11,
+          cache_write_mtok: 13.75,
+          cache_read_mtok: 0.275,
+          output_mtok: 55,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-fable-5-v1:0',
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-fable-5',
+              equals: 'anthropic.claude-fable-5',
             },
             {
-              starts_with: 'claude-fable-5',
+              equals: 'claude-fable-5',
             },
             {
-              contains: 'us.anthropic.claude-fable-5',
+              starts_with: 'anthropic.claude-fable-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-fable-5',
+              starts_with: 'claude-fable-5-v1',
             },
             {
-              contains: 'eu.anthropic.claude-fable-5',
+              contains: 'us.anthropic.claude-fable-5-v1',
             },
             {
-              contains: 'jp.anthropic.claude-fable-5',
+              contains: 'au.anthropic.claude-fable-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-fable-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-fable-5-v1',
             },
           ],
         },
@@ -6675,7 +6774,14 @@ export const data: Provider[] = [
       {
         id: 'claude-fable-5',
         match: {
-          contains: 'claude-fable-5',
+          or: [
+            {
+              ends_with: 'claude-fable-5',
+            },
+            {
+              contains: 'claude-fable-5@',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -6684,6 +6790,28 @@ export const data: Provider[] = [
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
+        id: 'claude-fable-5-1',
+        match: {
+          or: [
+            {
+              ends_with: 'claude-fable-5-1',
+            },
+            {
+              contains: 'claude-fable-5-1@',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 0.25,
           output_mtok: 50,
         },
       },
@@ -17725,6 +17853,28 @@ export const data: Provider[] = [
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
+        id: 'anthropic/claude-fable-5.1',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-fable-5.1',
+            },
+            {
+              equals: 'anthropic/claude-fable-5.1:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 0.25,
           output_mtok: 50,
         },
       },
