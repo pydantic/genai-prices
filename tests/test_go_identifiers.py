@@ -133,6 +133,29 @@ type (
     assert not {'UsageField', 'Other', 'UsageMethod'} & identifiers
 
 
+def test_go_file_package_level_identifiers_ignore_multiline_function_parameters() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+type (
+    UsageHandler func(
+        UsageTypeParameter int,
+    ) error
+)
+var (
+    UsageCallback = func(
+        UsageVarParameter int,
+    ) {}
+)
+""",
+        exclude_generated=False,
+    )
+
+    assert {'UsageHandler', 'UsageCallback'} <= identifiers
+    assert not {'UsageTypeParameter', 'UsageVarParameter'} & identifiers
+
+
 def test_go_file_package_level_identifiers_accept_function_comments_and_ignore_literal_braces() -> None:
     identifiers = go_identifiers._go_file_package_level_identifiers(
         """

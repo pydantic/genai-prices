@@ -100,21 +100,23 @@ def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) 
     identifiers: set[str] = set()
     declaration_block_kind: str | None = None
     brace_depth = 0
+    parenthesis_depth = 0
     source_lines = source.splitlines()
     code_lines = _go_source_without_comments_and_literals(source).splitlines()
     for line_index, line in enumerate(code_lines):
         stripped = line.strip()
         if declaration_block_kind is not None:
-            if brace_depth == 0 and stripped == ')':
+            if brace_depth == 0 and parenthesis_depth == 0 and stripped == ')':
                 declaration_block_kind = None
                 continue
-            if brace_depth == 0 and (match := _GO_BLOCK_MEMBER_PATTERN.match(stripped)):
+            if brace_depth == 0 and parenthesis_depth == 0 and (match := _GO_BLOCK_MEMBER_PATTERN.match(stripped)):
                 original = source_lines[line_index].strip()
                 if exclude_generated and _GENERATED_UNIT_CONSTANT_PATTERN.fullmatch(original):
                     continue
                 names = [name.strip() for name in match.group(1).split(',')]
                 identifiers.update(names[:1] if declaration_block_kind == 'type' else names)
             brace_depth += line.count('{') - line.count('}')
+            parenthesis_depth += line.count('(') - line.count(')')
             continue
 
         if brace_depth != 0:
