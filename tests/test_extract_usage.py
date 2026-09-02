@@ -1357,11 +1357,13 @@ def test_extractor_warns_once_for_sorted_unsupported_destinations_and_keeps_supp
 
     with pytest.warns(UserWarning) as warnings_info:
         result = extractor.extract({'model': 'test-model', 'usage': {'input': 7}})
+        repeated_result = extractor.extract({'model': 'test-model', 'usage': {'input': 7}})
 
     assert [str(warning.message) for warning in warnings_info] == [
         'Unsupported extractor destination for standard extraction: a_unknown, z_unknown'
     ]
     assert result == ('test-model', Usage(input_tokens=7))
+    assert repeated_result == result
 
 
 def test_extractor_accumulates_by_destination_string() -> None:

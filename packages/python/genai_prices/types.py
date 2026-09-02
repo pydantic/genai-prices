@@ -2,7 +2,9 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
+import threading
 import warnings
+import weakref
 from collections.abc import Iterator, Mapping, Sequence
 from copy import copy
 from dataclasses import dataclass
@@ -18,6 +20,8 @@ from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_dec
 
 if TYPE_CHECKING:
     from genai_prices.units import UnitDef, UnitRegistry
+
+_extractor_warning_lock = threading.Lock()
 
 __all__ = (
     'ProviderID',
@@ -495,15 +499,29 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        reported_usage_keys = _reported_usage_keys()
+        from genai_prices.units import (
+            UnitRegistry as RuntimeUnitRegistry,
+            _get_registry,  # pyright: ignore[reportPrivateUsage]
+        )
+
+        registry = _get_registry()
+        reported_usage_keys = registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
         invalid_destinations = {mapping.dest for mapping in self.mappings} - reported_usage_keys
-        if invalid_destinations:
-            bad_keys = ', '.join(sorted(invalid_destinations))
-            warnings.warn(
-                f'Unsupported extractor destination for standard extraction: {bad_keys}',
-                UserWarning,
-                stacklevel=2,
+        with _extractor_warning_lock:
+            warning_cache = cast(
+                weakref.WeakKeyDictionary[RuntimeUnitRegistry, frozenset[str]],
+                self.__dict__.setdefault('_warning_cache', weakref.WeakKeyDictionary()),
             )
+            frozen_invalid_destinations = frozenset(invalid_destinations)
+            if warning_cache.get(registry) != frozen_invalid_destinations:
+                if invalid_destinations:
+                    bad_keys = ', '.join(sorted(invalid_destinations))
+                    warnings.warn(
+                        f'Unsupported extractor destination for standard extraction: {bad_keys}',
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                warning_cache[registry] = frozen_invalid_destinations
 
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
