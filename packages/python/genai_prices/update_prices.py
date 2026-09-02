@@ -129,6 +129,7 @@ class UpdatePrices:
                         'UpdatePrices background task is already running with different configuration; keeping '
                         f'url={owner.url!r}, update_interval={owner.update_interval!r}, '
                         f'request_timeout={owner.request_timeout!r}',
+                        UserWarning,
                         stacklevel=2,
                     )
                 worker.ref_count += 1
