@@ -1,0 +1,21 @@
+prices/src/prices/v3_compatibility.py
+  s_319e04081d82e0::t_485d29e7942fd6 565-570
+tests/test_v3_compatibility.py
+  s_319e04081d82e0::t_485d29e7942fd6 163-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "624eb3ed869ef584b7a3ab8def761b7013c14c2b",
+  "prompts": {},
+  "sessions": {
+    "s_319e04081d82e0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05e4b-02b7-7f73-9764-4587623e3093",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
