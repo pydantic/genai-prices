@@ -148,6 +148,11 @@ def test_validate_v3_schema_evolution_rejects_removed_enum_values() -> None:
         validate_v3_schema_evolution(previous, candidate)
 
 
+def test_validate_v3_schema_evolution_preserves_large_integer_bound_precision() -> None:
+    with pytest.raises(ValueError, match='narrowed lower bound'):
+        validate_v3_schema_evolution({'minimum': 9_007_199_254_740_992}, {'minimum': 9_007_199_254_740_993})
+
+
 def test_validate_v3_schema_evolution_distinguishes_boolean_and_numeric_enum_values() -> None:
     with pytest.raises(ValueError, match='removed enum values'):
         validate_v3_schema_evolution({'enum': [1]}, {'enum': [True]})

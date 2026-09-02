@@ -652,10 +652,10 @@ def _hashable_json_value(value: JsonData) -> object:
     return ('object', tuple(sorted((key, _hashable_json_value(item)) for key, item in value.items())))
 
 
-def _number(value: JsonData, label: str) -> float:
+def _number(value: JsonData, label: str) -> int | float:
     if isinstance(value, bool) or not isinstance(value, int | float):
         raise ValueError(f'Invalid {label}: expected a number')
-    return float(value)
+    return value
 
 
 def _resolve_ref(reference: str, root: Mapping[str, JsonData], label: str) -> Mapping[str, JsonData]:
