@@ -196,6 +196,25 @@ describe('UnitRegistry', () => {
     )
   })
 
+  it('treats inherited object properties as absent dimensions', () => {
+    const registry = new UnitRegistry({
+      constructor_events: { dimensions: { constructor: 'custom', family: 'events' }, per: 1 },
+      constructor_special_events: {
+        dimensions: { constructor: 'custom', family: 'events', kind: 'special' },
+        per: 1,
+      },
+      special_events: { dimensions: { family: 'events', kind: 'special' }, per: 1 },
+    })
+    const constructorEvents = registry.getUnit('constructor_events')
+    const specialEvents = registry.getUnit('special_events')
+
+    expect(constructorEvents).toBeDefined()
+    expect(specialEvents).toBeDefined()
+    if (!constructorEvents || !specialEvents) throw new Error('Expected complete event units')
+    expect(isCompatible(constructorEvents, specialEvents)).toBe(true)
+    expect(registry.findJoin(constructorEvents, specialEvents)).toBe(registry.getUnit('constructor_special_events'))
+  })
+
   it('rejects joins between distinct token types', () => {
     const registry = new UnitRegistry(unitData)
     const cacheRead = registry.getUnit('cache_read_tokens')
