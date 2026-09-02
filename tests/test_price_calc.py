@@ -431,6 +431,16 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
             datetime(2027, 1, 1, tzinfo=timezone.utc),
             ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
         ),
+        (
+            'gemini-3.8-flash',
+            datetime(2026, 12, 31, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+        ),
+        (
+            'gemini-3.8-flash',
+            datetime(2027, 1, 1, tzinfo=timezone.utc),
+            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+        ),
     ],
 )
 def test_gemini_flash_introductory_price_expiry(
