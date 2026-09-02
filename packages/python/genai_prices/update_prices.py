@@ -216,7 +216,9 @@ class _SharedUpdater:
             return False
         error, error_traceback = outcome
         if error is not None:
-            # Re-raise with the original traceback so waiters don't accumulate each other's frames.
+            # The same error is raised to every waiter until a fetch succeeds, and each raise appends the
+            # raiser's frames to the error's traceback. Reset it so every waiter sees the fetch's frames
+            # plus its own, not those of everyone who waited before it.
             raise error.with_traceback(error_traceback)
         return True
 
