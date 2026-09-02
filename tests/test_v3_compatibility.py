@@ -316,6 +316,42 @@ def test_validate_v3_schema_evolution_rejects_widening_literal_oneof_variants_in
         validate_v3_schema_evolution(previous, candidate)
 
 
+def test_validate_v3_schema_evolution_rejects_widening_closed_object_oneof_variants_into_overlap() -> None:
+    left: dict[str, Any] = {
+        'additionalProperties': False,
+        'properties': {'left': {'type': 'string'}},
+        'required': ['left'],
+        'type': 'object',
+    }
+    right: dict[str, Any] = {
+        'additionalProperties': False,
+        'properties': {'right': {'type': 'string'}},
+        'required': ['right'],
+        'type': 'object',
+    }
+    widened_left = copy.deepcopy(left)
+    widened_left['properties']['right'] = {'type': 'string'}
+    widened_right = copy.deepcopy(right)
+    widened_right['properties']['left'] = {'type': 'string'}
+
+    with pytest.raises(ValueError, match='made oneOf variants 0 and 1 overlap'):
+        validate_v3_schema_evolution(
+            {'oneOf': [left, right]},
+            {'oneOf': [widened_left, widened_right]},
+        )
+
+
+def test_validate_v3_schema_evolution_rejects_new_oneof_variant_overlapping_widened_pair() -> None:
+    previous: dict[str, Any] = {'oneOf': [{'type': 'string'}]}
+    candidate: dict[str, Any] = {'oneOf': [{}, {'type': 'object'}]}
+
+    with pytest.raises(ValueError, match='added overlapping oneOf variant 1 with variant 0'):
+        validate_v3_schema_evolution(previous, candidate)
+
+    unchanged_overlap: dict[str, Any] = {'oneOf': [{}, {}]}
+    validate_v3_schema_evolution(unchanged_overlap, copy.deepcopy(unchanged_overlap))
+
+
 @pytest.mark.parametrize(
     ('previous', 'candidate', 'message'),
     [

@@ -523,15 +523,43 @@ def _compare_variants(
             _incompatible(path, f'added ambiguous behavior-changing {key} variant {new_index}')
 
     if key == 'oneOf':
-        for left_index, old_left in enumerate(old_variants):
-            for right_index in range(left_index + 1, len(old_variants)):
-                old_right = old_variants[right_index]
-                if not _variants_are_provably_disjoint(old_left, old_right, previous_root, previous_root):
-                    continue
-                new_left = new_variants[paired_candidate_indexes[left_index]]
-                new_right = new_variants[paired_candidate_indexes[right_index]]
-                if not _variants_are_provably_disjoint(new_left, new_right, candidate_root, candidate_root):
-                    _incompatible(path, f'made {key} variants {left_index} and {right_index} overlap')
+        _compare_one_of_exclusivity(
+            old_variants,
+            new_variants,
+            paired_candidate_indexes,
+            used_candidate_indexes,
+            previous_root,
+            candidate_root,
+            path,
+        )
+
+
+def _compare_one_of_exclusivity(
+    old_variants: Sequence[Mapping[str, JsonData]],
+    new_variants: Sequence[Mapping[str, JsonData]],
+    paired_candidate_indexes: Sequence[int],
+    used_candidate_indexes: set[int],
+    previous_root: Mapping[str, JsonData],
+    candidate_root: Mapping[str, JsonData],
+    path: str,
+) -> None:
+    for left_index, old_left in enumerate(old_variants):
+        for right_index in range(left_index + 1, len(old_variants)):
+            old_right = old_variants[right_index]
+            if not _variants_are_provably_disjoint(old_left, old_right, previous_root, previous_root):
+                continue
+            new_left = new_variants[paired_candidate_indexes[left_index]]
+            new_right = new_variants[paired_candidate_indexes[right_index]]
+            if not _variants_are_provably_disjoint(new_left, new_right, candidate_root, candidate_root):
+                _incompatible(path, f'made oneOf variants {left_index} and {right_index} overlap')
+    for new_index in set(range(len(new_variants))) - used_candidate_indexes:
+        for other_index, other_variant in enumerate(new_variants):
+            if other_index == new_index:
+                continue
+            if not _variants_are_provably_disjoint(
+                new_variants[new_index], other_variant, candidate_root, candidate_root
+            ):
+                _incompatible(path, f'added overlapping oneOf variant {new_index} with variant {other_index}')
 
 
 def _variants_are_provably_disjoint(
@@ -555,6 +583,18 @@ def _variants_are_provably_disjoint(
         and not any(_types_overlap(left_type, right_type) for left_type in left_types for right_type in right_types)
     ):
         return True
+
+    if left_types == {'object'} and right_types == {'object'}:
+        left_required = _string_set(left_resolved.get('required', []), 'variant required')
+        right_required = _string_set(right_resolved.get('required', []), 'variant required')
+        left_properties = set(_optional_schema_map(left_resolved.get('properties'), 'variant properties'))
+        right_properties = set(_optional_schema_map(right_resolved.get('properties'), 'variant properties'))
+        for required, other_properties, other_additional in (
+            (left_required, right_properties, right_resolved.get('additionalProperties', True)),
+            (right_required, left_properties, left_resolved.get('additionalProperties', True)),
+        ):
+            if other_additional is False and required - other_properties:
+                return True
 
     shared_required = _string_set(left_resolved.get('required', []), 'variant required') & _string_set(
         right_resolved.get('required', []), 'variant required'
