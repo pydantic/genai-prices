@@ -32,6 +32,26 @@ def test_go_package_level_identifiers_find_real_declarations_and_exclude_generat
     assert 'UnmarshalJSON' not in identifiers
 
 
+def test_go_file_package_level_identifiers_ignore_function_local_declarations() -> None:
+    identifiers = go_identifiers._go_file_package_level_identifiers(
+        """
+package genai_prices
+
+var PackageValue = 1
+
+func example() {
+    var UsageFoo = 1
+    const (
+        UsageBar = 2
+    )
+}
+""",
+        exclude_generated=False,
+    )
+
+    assert identifiers == {'PackageValue', 'example'}
+
+
 def test_validate_go_usage_key_identifiers_accepts_current_vocabulary() -> None:
     go_identifiers.validate_go_usage_key_identifiers(load_units())
 

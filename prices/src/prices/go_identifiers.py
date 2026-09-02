@@ -108,6 +108,8 @@ def _go_file_package_level_identifiers(source: str, *, exclude_generated: bool) 
                 identifiers.add(match.group(1))
             continue
 
+        if line != line.lstrip():
+            continue
         if _GO_BLOCK_PATTERN.fullmatch(stripped):
             in_declaration_block = True
         elif match := _GO_DECLARATION_PATTERN.match(stripped):
