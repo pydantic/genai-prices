@@ -294,6 +294,14 @@ def test_validate_v3_schema_evolution_rejects_widening_oneof_variants_into_overl
         validate_v3_schema_evolution(previous, candidate)
 
 
+def test_validate_v3_schema_evolution_rejects_widening_literal_oneof_variants_into_overlap() -> None:
+    previous: dict[str, Any] = {'oneOf': [{'const': None}, {'const': 'value'}]}
+    candidate: dict[str, Any] = {'oneOf': [{}, {'const': 'value'}]}
+
+    with pytest.raises(ValueError, match='made oneOf variants 0 and 1 overlap'):
+        validate_v3_schema_evolution(previous, candidate)
+
+
 @pytest.mark.parametrize(
     ('previous', 'candidate', 'message'),
     [
