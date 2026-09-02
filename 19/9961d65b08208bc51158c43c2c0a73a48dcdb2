@@ -1,0 +1,27 @@
+prices/src/prices/package_data.py
+  s_b8bc48238df5fe::t_0567a8f789bcf3 24
+tests/test_go_identifiers.py
+  s_b8bc48238df5fe::t_a0bf961ccbbeae 202-205
+  s_b8bc48238df5fe::t_0567a8f789bcf3 201,206-210,212-213,215-218
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "199961d65b08208bc51158c43c2c0a73a48dcdb2",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b8bc48238df5fe": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a061f7-2025-7311-b0de-0c0fdc550e63",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
