@@ -106,6 +106,7 @@ class ProviderProjector {
     }
 
     if (Array.isArray(extractor.mappings)) {
+      const originalMappingCount = extractor.mappings.length
       const mappings: unknown[] = []
       for (const [index, rawMapping] of extractor.mappings.entries()) {
         if (!isRecord(rawMapping)) {
@@ -129,6 +130,7 @@ class ProviderProjector {
         }
         mappings.push(mapping)
       }
+      if (originalMappingCount > 0 && mappings.length === 0) return undefined
       extractor.mappings = mappings
     }
     return extractor

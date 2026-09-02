@@ -212,6 +212,20 @@ describe('decodeProviderData', () => {
     ])
   })
 
+  it('drops an extractor when every mapping is a future variant', () => {
+    const provider = providerFixture()
+    const extractors = provider.extractors as unknown[]
+    extractors.unshift({ mappings: [{ type: 'future-mapping' }], root: 'usage' })
+
+    const decoded = decodeProviderData(wrappedFixture(provider), getActiveRegistry())
+
+    expect(decoded.providers[0]?.extractors).toHaveLength(1)
+    expect(decoded.providers[0]?.extractors?.[0]?.mappings[0]?.dest).toBe('input_tokens')
+    expect(decoded.compatibilityWarnings).toEqual([
+      "Unsupported extractor mapping variant at providers[0].extractors[0].mappings[0] for provider 'remote'; upgrade genai-prices for full support",
+    ])
+  })
+
   it.each([
     [null, 'providers[0].extractors[0].root must be a string or array'],
     [['items', null, 'count'], 'providers[0].extractors[0].root[1] must be a string or object'],
