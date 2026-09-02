@@ -235,14 +235,14 @@ def test_later_start_switches_settings_from_the_next_fetch(monkeypatch: pytest.M
         second.stop()
 
 
-def test_same_instance_cannot_start_twice():
+def test_starting_a_started_instance_again_does_nothing():
     update_prices = NullUpdatePrices()
     update_prices.start(wait=True)
-    try:
-        with pytest.raises(RuntimeError, match='background task already started'):
-            update_prices.start()
-    finally:
-        update_prices.stop()
+    update_prices.start()
+    assert len(_updater_threads()) == 1
+    # The instance was counted once, so one stop() is enough.
+    update_prices.stop()
+    assert wait_prices_updated_sync(timeout=0) is False
 
 
 def test_thread_start_failure_does_not_acquire_ownership(monkeypatch: pytest.MonkeyPatch):

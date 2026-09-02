@@ -80,15 +80,16 @@ class UpdatePrices:
     def start(self, *, wait: bool | float = False):
         """Start the background task, or join the one already running with this instance's settings.
 
+        Calling this again on an instance that is already started does nothing.
+
         Args:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
                 wait for that many seconds, if `True` wait for 30 seconds.
         """
         with _shared.lock:
-            if self._started:
-                raise RuntimeError('UpdatePrices background task already started')
-            _shared.acquire(self)
-            self._started = True
+            if not self._started:
+                _shared.acquire(self)
+                self._started = True
         if wait:
             _shared.wait(timeout=30 if wait is True else wait)
 
