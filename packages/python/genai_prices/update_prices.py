@@ -30,7 +30,7 @@ DEFAULT_UPDATE_URL = (
 # never held across anything that blocks — stop() signals the worker instead of joining it — so
 # it cannot deadlock and Ctrl-C has nothing to interrupt.
 _lock = threading.Lock()
-_worker: _Worker | None = None
+_shared_worker: _Worker | None = None
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -45,7 +45,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         True if prices were updated, False otherwise.
     """
     with _lock:
-        worker = _worker
+        worker = _shared_worker
     if worker is None:
         return False
     return worker.wait(timeout)
@@ -93,13 +93,13 @@ class UpdatePrices:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
                 wait for that many seconds, if `True` wait for 30 seconds.
         """
-        global _worker
+        global _shared_worker
 
         with _lock:
             if self._worker is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            worker = _worker
+            worker = _shared_worker
             if worker is not None and worker.dead:
                 # Don't join a worker that died unexpectedly; start a replacement.
                 logger.warning('UpdatePrices background task terminated unexpectedly; starting a new one')
@@ -108,14 +108,14 @@ class UpdatePrices:
                 worker = _Worker(self)
                 worker.ref_count = 1
                 try:
-                    _worker = worker
+                    _shared_worker = worker
                     self._worker = worker
                     worker.thread.start()
                 except BaseException:
                     # Thread.start() can fail after the OS thread launched; a shut-down worker
                     # exits on its own, so releasing ownership is the whole rollback.
                     worker.shutdown()
-                    _worker = None
+                    _shared_worker = None
                     self._worker = None
                     raise
             else:
@@ -158,9 +158,10 @@ class UpdatePrices:
         """Stop the background task, or release this instance's reference to it.
 
         The last `stop()` restores the bundled prices and signals the worker, which discards any
-        in-flight fetch and exits on its own; fetch failures never make `stop()` raise.
+        in-flight fetch and exits on its own; fetch failures never make `stop()` raise. An instance
+        that was never started holds no reference, so its `stop()` does nothing.
         """
-        global _worker
+        global _shared_worker
 
         with _lock:
             worker = self._worker
@@ -170,10 +171,10 @@ class UpdatePrices:
             worker.ref_count -= 1
             if worker.ref_count == 0:
                 worker.shutdown()
-                if _worker is worker:
+                if _shared_worker is worker:
                     # A dead worker may already have been replaced; only the current worker's
                     # retirement restores the bundled prices.
-                    _worker = None
+                    _shared_worker = None
                     data_snapshot.set_custom_snapshot(None)
 
     def __enter__(self):

@@ -27,13 +27,17 @@ from genai_prices.update_prices import DEFAULT_UPDATE_URL
 pytestmark = pytest.mark.anyio
 
 
+def _updater_threads() -> list[threading.Thread]:
+    return [thread for thread in threading.enumerate() if thread.name == 'genai_prices:update']
+
+
 @pytest.fixture(autouse=True)
 def drain_updater_threads():
-    # stop() never joins, so a test can leave its worker draining; join leftovers between tests.
+    # stop() never joins; the worker normally exits before teardown, so this only joins a worker
+    # still draining an in-flight fetch, keeping it out of the next test.
     yield
-    for thread in threading.enumerate():
-        if thread.name == 'genai_prices:update':  # pragma: no cover - only hit when a worker is mid-drain
-            thread.join(timeout=5)
+    for thread in _updater_threads():  # pragma: no cover - only hit when a fetch is still draining
+        thread.join(timeout=5)
 
 
 PROVIDER_ARRAY_PAYLOAD = (
@@ -224,12 +228,12 @@ def test_different_configuration_warns_and_joins(
     monkeypatch: pytest.MonkeyPatch, make_update_prices: Callable[[], UpdatePrices]
 ):
     _mock_update_prices_get(monkeypatch)
-    with UpdatePrices() as first:
+    with UpdatePrices():
         second = make_update_prices()
         with pytest.warns(UserWarning, match='already running with different configuration; keeping'):
             second.start()
-        # The first configuration wins: the second instance joins the running worker unchanged.
-        assert second._worker is first._worker
+        # The first configuration wins: the second instance joins the running thread unchanged.
+        assert len(_updater_threads()) == 1
         second.stop()
 
 
@@ -406,6 +410,35 @@ def test_fetch_cannot_wait_for_itself() -> None:
         assert update_prices.wait(timeout=5)
 
 
+def test_failure_is_raised_until_a_later_fetch_succeeds() -> None:
+    failure_observed = threading.Event()
+    third_fetch_started = threading.Event()
+
+    class RecoveringUpdatePrices(CountingNullUpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            super().fetch()
+            if self.count == 1:
+                raise httpx2.ConnectError('down')
+            if self.count == 2:
+                assert failure_observed.wait(timeout=5)
+            if self.count == 3:
+                third_fetch_started.set()
+            return None
+
+    update_prices = RecoveringUpdatePrices(update_interval=0.001)
+    update_prices.start()
+    try:
+        with pytest.raises(httpx2.ConnectError):
+            update_prices.wait(timeout=5)
+        failure_observed.set()
+        # The third fetch starting means the second fetch's success has been published.
+        assert third_fetch_started.wait(timeout=5)
+        assert update_prices.wait(timeout=0) is True
+        assert wait_prices_updated_sync(timeout=0) is True
+    finally:
+        update_prices.stop()
+
+
 def test_all_owners_observe_failure_and_stop_is_non_raising(monkeypatch: pytest.MonkeyPatch) -> None:
     error = httpx2.ConnectError('down')
 
@@ -545,15 +578,14 @@ def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch
     with pytest.raises(RuntimeError, match='terminated unexpectedly'):
         dead.wait(timeout=5)
 
-    # The next start replaces the dead worker instead of raising.
+    # The next start replaces the dead worker instead of raising or joining it.
     replacement = UpdatePrices()
     replacement.start(wait=True)
-    assert replacement._worker is not dead._worker
     assert data_snapshot._custom_snapshot is not None
 
     # Releasing the stale reference must not disturb the replacement or its data.
     dead.stop()
-    assert update_prices_module._worker is replacement._worker
+    assert wait_prices_updated_sync(timeout=0) is True
     assert data_snapshot._custom_snapshot is not None
 
     replacement.stop()
@@ -577,7 +609,7 @@ def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.M
             update_prices.start()
 
     # Ownership was released, and the launched thread, already told to stop, exits on its own.
-    assert update_prices_module._worker is None
+    assert update_prices_module._shared_worker is None
     (launched_thread,) = launched
     launched_thread.join(timeout=5)
     assert not launched_thread.is_alive()

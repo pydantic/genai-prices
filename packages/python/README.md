@@ -153,7 +153,8 @@ call `start()` and `stop()` without creating duplicate threads. The first `start
 `start()` calls join it, and the last `stop()` stops it and restores the data bundled with the installed package.
 The thread belongs to the instance that started it: it runs that instance's `fetch()` with that instance's
 settings, exactly as if it were the only instance. Starting another instance with a different `url`,
-`update_interval` or `request_timeout` warns and keeps the first instance's settings. If you subclass
+`update_interval` or `request_timeout` warns (a `UserWarning`, so with warnings as errors it raises and that
+instance stays unstarted) and keeps the first instance's settings. If you subclass
 `UpdatePrices` to customize fetching, start your instance before other libraries start theirs.
 
 If a fetch fails, the failure is logged and raised by every `wait()` call until a later fetch succeeds.
