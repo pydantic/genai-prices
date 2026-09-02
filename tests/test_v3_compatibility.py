@@ -163,6 +163,23 @@ def test_validate_v3_schema_evolution_checks_new_properties_against_previous_cat
         validate_v3_schema_evolution(previous, narrowed)
 
 
+@pytest.mark.parametrize(
+    ('previous', 'candidate'),
+    [
+        ({}, {'default': None}),
+        ({'default': None}, {}),
+        ({'default': 1}, {'default': True}),
+    ],
+)
+def test_validate_v3_schema_evolution_compares_default_presence_and_json_identity(
+    previous: dict[str, JsonData], candidate: dict[str, JsonData]
+) -> None:
+    with pytest.raises(ValueError, match='changed default'):
+        validate_v3_schema_evolution(previous, candidate)
+
+    validate_v3_schema_evolution({'default': {'a': 1, 'b': 2}}, {'default': {'b': 2, 'a': 1}})
+
+
 def test_validate_v3_schema_evolution_rejects_ambiguous_behavior_changing_variant() -> None:
     previous = v3_data_schema()
     candidate = copy.deepcopy(previous)

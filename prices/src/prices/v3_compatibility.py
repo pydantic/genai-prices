@@ -341,8 +341,14 @@ def _compare_types(previous: Mapping[str, JsonData], candidate: Mapping[str, Jso
 
 
 def _compare_default(previous: Mapping[str, JsonData], candidate: Mapping[str, JsonData], path: str) -> None:
-    if ('default' in previous or 'default' in candidate) and previous.get('default') != candidate.get('default'):
-        _incompatible(path, f'changed default from {previous.get("default")!r} to {candidate.get("default")!r}')
+    previous_has_default = 'default' in previous
+    candidate_has_default = 'default' in candidate
+    if previous_has_default != candidate_has_default:
+        previous_default = previous['default'] if previous_has_default else '<missing>'
+        candidate_default = candidate['default'] if candidate_has_default else '<missing>'
+        _incompatible(path, f'changed default from {previous_default!r} to {candidate_default!r}')
+    if previous_has_default and _json_identity(previous['default']) != _json_identity(candidate['default']):
+        _incompatible(path, f'changed default from {previous["default"]!r} to {candidate["default"]!r}')
 
 
 def _compare_enum(previous: Mapping[str, JsonData], candidate: Mapping[str, JsonData], path: str) -> None:
@@ -626,6 +632,10 @@ def _json_value_set(value: JsonData, label: str) -> set[object]:
     if not isinstance(value, list):
         raise ValueError(f'Invalid {label}: expected an array')
     return {_hashable_json_value(item) for item in value}
+
+
+def _json_identity(value: JsonData) -> str:
+    return json.dumps(value, ensure_ascii=False, separators=(',', ':'), sort_keys=True)
 
 
 def _hashable_json_value(value: JsonData) -> object:
