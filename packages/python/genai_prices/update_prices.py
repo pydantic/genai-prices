@@ -26,7 +26,7 @@ DEFAULT_UPDATE_URL = (
 )
 
 # All instances share one worker so libraries can opt in independently without duplicate threads.
-# The one lock guards the worker reference, its reference count, and snapshot install/restore, and is
+# The one lock guards the worker reference, its reference count, and snapshot install, and is
 # never held across anything that blocks — stop() signals the worker instead of joining it — so
 # it cannot deadlock and Ctrl-C has nothing to interrupt.
 _lock = threading.Lock()
@@ -70,7 +70,7 @@ class UpdatePrices:
     """Update prices in the background using a shared daemon thread.
 
     All instances share one process-wide worker: the first `start()` launches it, later `start()`
-    calls join it, and the last `stop()` shuts it down and restores the bundled prices. The worker
+    calls join it, and the last `stop()` shuts it down; prices already fetched stay in use. The worker
     fetches through the instance that started it — using its settings and `fetch()` exactly as if
     it were the only instance — so joining with different settings warns and keeps the first
     instance's.
@@ -157,9 +157,9 @@ class UpdatePrices:
     def stop(self):
         """Stop the background task, or release this instance's reference to it.
 
-        The last `stop()` restores the bundled prices and signals the worker, which discards any
-        in-flight fetch and exits on its own; fetch failures never make `stop()` raise. An instance
-        that was never started holds no reference, so its `stop()` does nothing.
+        The last `stop()` signals the worker, which discards any in-flight fetch and exits on its
+        own. Prices already fetched stay in use; they never revert to the bundled data. Fetch
+        failures never make `stop()` raise, and `stop()` on a never-started instance does nothing.
         """
         global _shared_worker
 
@@ -172,10 +172,8 @@ class UpdatePrices:
             if worker.ref_count == 0:
                 worker.shutdown()
                 if _shared_worker is worker:
-                    # A dead worker may already have been replaced; only the current worker's
-                    # retirement restores the bundled prices.
+                    # A dead worker may already have been replaced by a newer one; leave that one in place.
                     _shared_worker = None
-                    data_snapshot.set_custom_snapshot(None)
 
     def __enter__(self):
         self.start()
@@ -273,7 +271,7 @@ class _Worker:
 
         with _lock:
             if self.stop_event.is_set():
-                # A stop() already won: its discarded fetch is not an update, so install and publish nothing.
+                # A stop() already won; discard the result so it cannot overwrite what a newer thread installs.
                 return
             data_snapshot.set_custom_snapshot(snapshot)
         self._publish(None)

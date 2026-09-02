@@ -34,10 +34,12 @@ def _updater_threads() -> list[threading.Thread]:
 @pytest.fixture(autouse=True)
 def drain_updater_threads():
     # stop() never joins; the worker normally exits before teardown, so this only joins a worker
-    # still draining an in-flight fetch, keeping it out of the next test.
+    # still draining an in-flight fetch, keeping it out of the next test. Fetched prices survive
+    # stop(), so reset them too.
     yield
     for thread in _updater_threads():  # pragma: no cover - only hit when a fetch is still draining
         thread.join(timeout=5)
+    data_snapshot.set_custom_snapshot(None)
 
 
 PROVIDER_ARRAY_PAYLOAD = (
@@ -166,7 +168,7 @@ def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_mod
     assert model.id == 'unused-invalid-price'
 
 
-def test_update_prices_context_manager_updates_and_restores_snapshot(monkeypatch: pytest.MonkeyPatch):
+def test_update_prices_context_manager_updates_and_keeps_snapshot_after_stop(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     assert data_snapshot._custom_snapshot is None
 
@@ -176,7 +178,9 @@ def test_update_prices_context_manager_updates_and_restores_snapshot(monkeypatch
         assert price.total_price == snapshot(Decimal('0.0035'))
         assert price.auto_update_timestamp is not None
 
-    assert data_snapshot._custom_snapshot is None
+    # Fetched prices stay in use after stop() instead of reverting to the bundled data.
+    assert data_snapshot._custom_snapshot is not None
+    assert calc_price(Usage(input_tokens=1000), model_ref='gpt-4o', provider_id='openai').auto_update_timestamp
 
 
 def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
@@ -212,8 +216,6 @@ def test_distinct_instances_share_ownership(monkeypatch: pytest.MonkeyPatch):
     finally:
         first.stop()
         second.stop()
-
-    assert data_snapshot._custom_snapshot is None
 
 
 @pytest.mark.parametrize(
@@ -325,8 +327,8 @@ def test_stop_discards_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     worker = update_prices._worker
     assert fetch_started.wait(timeout=5)
 
-    # stop() returns immediately: bundled prices are restored and waiters report no update
-    # while the fetch is still in flight.
+    # stop() returns immediately while the fetch is still in flight; nothing has been installed
+    # and waiters report no update.
     update_prices.stop()
     assert data_snapshot._custom_snapshot is None
     assert wait_prices_updated_sync(timeout=0) is False
@@ -589,7 +591,6 @@ def test_dead_worker_publishes_failure_and_is_replaced_on_next_start(monkeypatch
     assert data_snapshot._custom_snapshot is not None
 
     replacement.stop()
-    assert data_snapshot._custom_snapshot is None
 
 
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):

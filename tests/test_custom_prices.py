@@ -5,7 +5,6 @@ from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
 
-import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, data, types
@@ -116,12 +115,12 @@ def test_alt_source():
         assert price.provider.id == snapshot('testing')
         assert price.auto_update_timestamp is None
 
-    with pytest.raises(LookupError, match="Unable to find provider provider_id='testing'"):
-        calc_price(
-            Usage(input_tokens=1_000_000, output_tokens=1_000_000),
-            model_ref='foobar',
-            provider_id='testing',
-        )
+    # Fetched prices stay in use after stop().
+    try:
+        price = calc_price(Usage(input_tokens=1_000_000), model_ref='foobar', provider_id='testing')
+        assert price.total_price == snapshot(Decimal('1'))
+    finally:
+        set_custom_snapshot(None)
 
 
 def test_alt_source_sausage():
