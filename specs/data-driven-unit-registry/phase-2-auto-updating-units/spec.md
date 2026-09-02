@@ -317,7 +317,8 @@ old-implication preservation, removal rejection, and new-ancestor rejection.
 ---
 
 **Changes — Python: wrapped snapshots carry units to the existing activation boundary.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries")_
-This subsection defines Python decoding, snapshot ownership, customization, activation, and failure behavior.
+This subsection defines Python decoding, snapshot ownership, customization, and paired activation. Background-updater
+coordination and outcome retention are owned by the independent shared-updater change rather than Phase 2.
 
 **Python decoded-contract failures are `ValueError`.**
 Invalid wrapper or unit data, a provider structure rejected by Python's existing decoder, or an append-only failure
@@ -354,10 +355,13 @@ The worker uses the same activation operation as `set_custom_snapshot(...)` afte
 
 **Clearing Python state restores the complete bundled pair.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
 Passing `None` to `set_custom_snapshot(...)` restores bundled providers with bundled units. No fetched registry remains
-active after an explicit clear or updater stop.
+active after an explicit clear. Whether stopping an updater clears active state is outside Phase 2.
 
-**Stopping Python cannot reinstall an in-flight fetched pair.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Clearing Python state restores the complete bundled pair")_
-`stop()` signals and joins the worker before restoring the bundled pair.
+**Python updater coordination remains independent of Phase 2.** _(from "Python background activation installs the fetched pair after `fetch()` returns.")_
+The shared-updater behavior owns instance sharing, worker lifetime, wait-result publication, failure retention, stop
+blocking, and post-stop state retention. Phase 2 neither changes nor duplicates those rules. Its only background
+integration requirement is that a successful refresh activates the fetched providers and their candidate registry
+together after `fetch()` returns.
 
 **Every Python operation uses the process's active registry.** _(from "Python and JavaScript activate providers and units through their existing global update boundaries", "A fetched Python v3 snapshot carries its candidate registry only for activation")_
 `DataSnapshot` methods, bare provider/model methods, base `ModelPrice.calc_price(...)`, and standalone `Usage` operations
@@ -371,11 +375,12 @@ mappings, and continues with supported siblings. An extractor added before activ
 snapshot's new units after activation.
 
 **Python snapshot tests cover activation-only registry ownership and customization.** _(from "A fetched Python v3 snapshot carries its candidate registry only for activation", "A caller-constructed Python snapshot changes providers only", "Python provider customization remains lazy after fetch", "Background customization continues through `UpdatePrices.fetch()` overrides", "Python custom extractors resolve destinations when used", "Clearing Python state restores the complete bundled pair")_
-Coverage includes pre-activation use of the active registry, custom prices and extractors added after fetch, repeated
-subclassed background refreshes, activation, caller-constructed snapshots, and complete clearing.
+Coverage includes pre-activation use of the active registry, custom prices and extractors added by repeated subclassed
+fetches, activation, caller-constructed snapshots, and complete explicit clearing.
 
-**Python background tests cover paired activation and stopping.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Stopping Python cannot reinstall an in-flight fetched pair.")_
-Coverage includes worker activation, stop signaling, join ordering, and bundled-provider restoration.
+**Python updater integration tests cover paired activation only.** _(from "Python background activation installs the fetched pair after `fetch()` returns.", "Python updater coordination remains independent of Phase 2.")_
+Coverage proves a successful updater refresh activates providers and units together without pinning thread ownership,
+wait-result retention, failure consumption, stop ordering, or post-stop state.
 
 **Python contract-error tests cover decoded and final registry failures.** _(from "Python decoded-contract failures are `ValueError`", "Python decoded-contract errors identify the failing data", "Python activation rechecks only registry evolution")_
 They pin `ValueError` context and prove a failed final append-only check leaves active providers and units unchanged.
@@ -526,9 +531,9 @@ Recognition continues to distinguish invalid supported data from unsupported nam
 Every release contains generated providers and matching units. Python and JavaScript use that pair until activation;
 each Go calculator constructed from bundled data owns the pair permanently.
 
-**Each runtime retains its Phase 1 lifecycle model.**
+**Phase 2 does not change calculation-state ownership.**
 Python and JavaScript continue using mutable process state, while every Go `Calculator` remains immutable after
-construction.
+construction. Python background-updater coordination may evolve independently without changing this ownership model.
 
 **Python `UpdatePrices.fetch()` remains side-effect-free.**
 It returns `DataSnapshot | None`, raises on download or decode failure, and never changes process-global providers or
@@ -541,10 +546,6 @@ units. Callers decide separately whether to activate the returned snapshot with 
 **Python custom-snapshot activation remains explicit.**
 `set_custom_snapshot(snapshot)` activates a caller-selected snapshot. `set_custom_snapshot(None)` returns standard entry
 points to bundled providers.
-
-**Python's background updater remains singular.**
-At most one background `UpdatePrices` instance is active. `start()` starts its worker, `wait()` reports or raises the
-current attempt's outcome, and `stop()` joins the worker and restores bundled providers.
 
 **JavaScript keeps one storage-factory update API.**
 `updatePrices(factory)` supplies `onCalc`, `remoteDataUrl`, and `setProviderData`; `calcPrice(...)` remains the standard
@@ -621,10 +622,6 @@ Emitting the deterministic warning does not activate or partially install candid
 Network and HTTP failures remain the corresponding `httpx2` exceptions, and malformed JSON remains
 `json.JSONDecodeError`; Phase 2 does not wrap them as data-contract errors.
 
-**Python background failures have one consumer.** _(from "Python's background updater remains singular")_
-A background exception is stored, raised by the next `wait()` or `stop()`, and then cleared so the same exception is not
-raised twice.
-
 **JavaScript preserves caller-supplied promise rejection reasons.** _(from "JavaScript keeps its current non-null update ordering")_
 A rejected input promise rejects `waitForUpdate()` with its original reason, including a non-`Error` reason, emits the
 existing fire-and-forget warning, and leaves active state unchanged.
@@ -654,8 +651,9 @@ They pin representative underscores, digit-leading parts, and empty parts agains
 Each runtime covers admitted representations, both constraint shapes, baseline semantic checks, structural tolerance,
 validation timing, and unsupported-name behavior.
 
-**Python compatibility tests cover preserved failure behavior.** _(from "Python unsupported-name warnings remain `UserWarning` and preserve state", "Python fetch preserves transport and JSON exceptions", "Python background failures have one consumer")_
-They pin warning class and state, transport and malformed-JSON exception identity, and single-consumer background errors.
+**Python compatibility tests cover fetch and warning behavior.** _(from "Python unsupported-name warnings remain `UserWarning` and preserve state", "Python fetch preserves transport and JSON exceptions")_
+They pin warning class and state plus transport and malformed-JSON exception identity. Shared-updater failure and stop
+semantics are tested by the independent updater change, not Phase 2.
 
 **JavaScript compatibility tests cover preserved update outcomes.** _(from "JavaScript `waitForUpdate()` remains provider-only", "JavaScript preserves caller-supplied promise rejection reasons", "JavaScript `null` remains a no-op", "A stale rejected JavaScript attempt rejects only its own promise")_
 They cover provider-only results, caller rejection identity, direct and promised `null`, and stale rejection isolation.
