@@ -719,7 +719,7 @@ func projectConstraint(data json.RawMessage) (json.RawMessage, bool, error) {
 	}
 	if rawType, found := fields["type"]; found {
 		if rawKind(rawType) != '"' {
-			return data, true, nil
+			return nil, false, nil
 		}
 		typeName := rawString(rawType)
 		if typeName != "start_date" && typeName != "time_of_date" {

@@ -14,7 +14,7 @@ func TestProjectConstraintVariants(t *testing.T) {
 		supported bool
 	}{
 		{name: "non-object", data: `null`, expected: `null`, supported: true},
-		{name: "non-string type", data: `{"type":[]}`, expected: `{"type":[]}`, supported: true},
+		{name: "non-string type", data: `{"type":[]}`, supported: false},
 		{
 			name:      "recognized type",
 			data:      `{"future":true,"start_date":"2026-01-01","type":"start_date"}`,
