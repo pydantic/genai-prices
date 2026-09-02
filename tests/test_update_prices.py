@@ -372,7 +372,7 @@ def test_module_calls_from_fetch_during_stop_do_not_deadlock() -> None:
         def fetch(self) -> data_snapshot.DataSnapshot | None:
             fetch_started.set()
             # Block until the final stop() has run; it returns without joining this thread.
-            assert update_prices_module._wake.wait(timeout=5)
+            assert update_prices_module._shared.wake.wait(timeout=5)
             observed.append(wait_prices_updated_sync(timeout=5))
             return None
 
@@ -473,14 +473,14 @@ async def test_cancelled_async_wait_does_not_consume_failure(monkeypatch: pytest
 
     update_prices = FailingUpdatePrices()
     update_prices.start()
-    original_wait = update_prices_module._ready.wait
+    original_wait = update_prices_module._shared.ready.wait
 
     def tracked_wait(timeout: float | None = None) -> bool:
         waiter_started.set()
         return original_wait(timeout)
 
     # Cancellation matters only after asyncio.to_thread has entered the blocking wait.
-    monkeypatch.setattr(update_prices_module._ready, 'wait', tracked_wait)
+    monkeypatch.setattr(update_prices_module._shared.ready, 'wait', tracked_wait)
     task = asyncio.create_task(wait_prices_updated_async())
     try:
         assert await asyncio.to_thread(fetch_started.wait, 5)
@@ -526,7 +526,7 @@ def test_stop_before_first_fetch_releases_waiter_with_false(monkeypatch: pytest.
     thread_started = threading.Event()
     allow_thread_run = threading.Event()
     waiter_started = threading.Event()
-    original_run = update_prices_module._run
+    original_run = update_prices_module._shared._run
 
     # Pause before the thread body so stop() wins before the first fetch.
     def paused_run() -> None:
@@ -534,17 +534,17 @@ def test_stop_before_first_fetch_releases_waiter_with_false(monkeypatch: pytest.
         assert allow_thread_run.wait(timeout=5)
         original_run()
 
-    monkeypatch.setattr(update_prices_module, '_run', paused_run)
+    monkeypatch.setattr(update_prices_module._shared, '_run', paused_run)
     update_prices = NullUpdatePrices()
     update_prices.start()
     assert thread_started.wait(timeout=5)
-    original_wait = update_prices_module._ready.wait
+    original_wait = update_prices_module._shared.ready.wait
 
     def tracked_wait(timeout: float | None = None) -> bool:
         waiter_started.set()
         return original_wait(timeout)
 
-    monkeypatch.setattr(update_prices_module._ready, 'wait', tracked_wait)
+    monkeypatch.setattr(update_prices_module._shared.ready, 'wait', tracked_wait)
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
         wait_future = executor.submit(update_prices.wait)
         assert waiter_started.wait(timeout=5)
