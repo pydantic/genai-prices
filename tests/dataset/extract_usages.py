@@ -50,7 +50,24 @@ registry = _get_registry()
 
 
 def get_direct_refinement_groups() -> dict[str, dict[str, tuple[str, ...]]]:
-    """Group mutually exclusive direct refinements by ancestor and added dimension."""
+    """Find groups of usage units that form partial partitions of an aggregate unit.
+
+    A unit is a descendant of another unit when its dimensions are a strict superset of the
+    ancestor's dimensions. A *direct refinement* adds exactly one dimension. For example,
+    ``output_reasoning_tokens`` and ``output_citation_tokens`` both directly refine
+    ``output_tokens`` by adding different values of the ``token_type`` dimension. Those values are
+    mutually exclusive, so their reported counts can be added and compared with the aggregate
+    output count.
+
+    The returned mapping is keyed first by the aggregate usage key and then by the dimension that
+    partitions it. Groups with only one registered value are omitted because the ordinary
+    descendant-versus-ancestor check already covers them.
+
+    Refinements that add different dimensions are deliberately kept in separate groups. For
+    example, ``cache_read_tokens`` adds ``token_type`` while ``input_audio_tokens`` adds
+    ``modality``; the same token can belong to both, so adding those counts would double-count their
+    overlap.
+    """
     result: dict[str, dict[str, tuple[str, ...]]] = {}
     for ancestor_key, ancestor in registry.units.items():
         groups: defaultdict[str, list[str]] = defaultdict(list)
@@ -70,7 +87,30 @@ direct_refinement_groups = get_direct_refinement_groups()
 
 
 def check_usage_consistency(usage_values: Mapping[str, UsageValue]) -> None:
-    """Check necessary containment constraints for positive extracted usage values."""
+    """Validate necessary containment constraints for one extractor's positive usage values.
+
+    ``extract_and_check`` removes zero values before calling this function, so every key here
+    represents usage the provider actually reported. The registry's dimensions define which units
+    contain other units. This function checks two consequences of that model:
+
+    1. Every reported descendant has all of its aggregate ancestors, and cannot be greater than any
+       of them. For example, positive ``output_reasoning_tokens`` requires ``output_tokens`` and
+       cannot exceed it.
+    2. Direct refinements with different values of the same dimension are mutually exclusive, so
+       their sum cannot exceed their aggregate. For example, reasoning and citation output tokens
+       cannot collectively exceed total output tokens.
+
+    These are necessary checks, not a proof that extraction matches every provider's accounting
+    semantics. In particular, values refined along different dimensions may overlap, and an absent
+    intersection is treated as unknown rather than zero. The check also cannot detect a
+    numerically plausible aggregate that omitted some usage; that needs provider-specific
+    reconciliation against fields such as ``total_tokens``. Keeping this validation in the real
+    response dataset catches impossible normalized usage without adding runtime validation for
+    caller-supplied ``Usage`` objects.
+
+    Raises:
+        AssertionError: If the extracted values violate a registry-defined containment constraint.
+    """
     for usage_key, value in usage_values.items():
         for ancestor_key in registry.ancestor_usage_keys(usage_key):
             ancestor_value = usage_values.get(ancestor_key)
