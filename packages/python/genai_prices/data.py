@@ -9826,6 +9826,26 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-astra',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-astra'), ClauseRegex(regex='^gpt-6-astra-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6 Astra',
+                description='Our most capable model, built for the hardest end-to-end work.',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('20'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('12.5'), tiers=[Tier(start=271999, price=Decimal('25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271999, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=271999, price=Decimal('75'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-audio',
                 match=ClauseOr(
                     or_=[

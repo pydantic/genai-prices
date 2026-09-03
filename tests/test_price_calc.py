@@ -314,6 +314,39 @@ def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expec
     assert price.model_price == expected_prices
 
 
+def test_gpt_6_astra_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
+        model_ref='gpt-6-astra-2026-09-04',
+        provider_id='openai',
+    )
+
+    assert price.model.id == 'gpt-6-astra'
+    assert price.input_price == Decimal('0.0091')
+    assert price.output_price == Decimal('0.005')
+    assert price.total_price == Decimal('0.0141')
+
+
+def test_gpt_6_astra_long_context_boundary():
+    standard = calc_price(
+        Usage(input_tokens=271_999, output_tokens=1_000),
+        model_ref='gpt-6-astra',
+        provider_id='openai',
+    )
+    assert standard.input_price == Decimal('2.71999')
+    assert standard.output_price == Decimal('0.05')
+    assert standard.total_price == Decimal('2.76999')
+
+    long_context = calc_price(
+        Usage(input_tokens=272_000, output_tokens=1_000),
+        model_ref='gpt-6-astra',
+        provider_id='openai',
+    )
+    assert long_context.input_price == Decimal('5.44')
+    assert long_context.output_price == Decimal('0.075')
+    assert long_context.total_price == Decimal('5.515')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'request_timestamp', 'expected_prices'),
     [

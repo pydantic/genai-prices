@@ -1200,6 +1200,46 @@ models:
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
 
+  - id: gpt-6-astra
+    name: GPT-6 Astra
+    description: Our most capable model, built for the hardest end-to-end work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-astra
+        - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-09-03
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
+      input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as
+      271999 because the pricing engines select a tier when the token count is greater than start. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6-astra,
+      https://developers.openai.com/api/docs/pricing
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 271999
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 271999
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 271999
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 271999
+            price: 75
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
   - id: gpt-audio
     name: GPT Audio
     description: >-
