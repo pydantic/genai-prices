@@ -1,0 +1,550 @@
+# yaml-language-server: $schema=.schema.json
+id: github-copilot
+name: GitHub Copilot
+description: >-
+  OpenAI, Anthropic, Google, xAI, Moonshot AI and Microsoft models served through GitHub Copilot's
+  OpenAI-compatible API at api.githubcopilot.com.
+pricing_urls:
+  - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+  - https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals
+api_pattern: 'https://api\.githubcopilot\.com'
+provider_match:
+  contains: copilot
+price_comments: >-
+  Copilot meters token usage in AI credits, where 1 credit = $0.01; the rates recorded here are the
+  published per-model USD rates from the models-and-pricing page. Every response also carries a
+  `copilot_usage.token_details[].cost_per_batch` figure in nano-credits, which agreed with the
+  published rate for each of the nine priced models reachable on the plan used to check them on 2026-09-03.
+  Long-context tiers reprice the whole request once the prompt crosses the threshold.
+  Not represented: embedding models and Copilot-internal agent models, which have no published rate,
+  and `gpt-4`, which Copilot routes to GPT-4.1 and bills at a rate the pricing page does not list.
+  Catalog membership varies by subscription and by API integrator, so this is not the union of every
+  plan's models.
+
+# Copilot's `/chat/completions` and `/responses` bodies are shaped like OpenAI's, so these mirror
+# openai.yml. `copilot_usage` is a third, Copilot-specific block that reports rates rather than a
+# usage breakdown the unit registry can price, so it is not mapped.
+extractors:
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+
+# Context windows are Copilot's own `max_context_window_tokens` from GET /models, which are narrower
+# than several of the upstream vendors' published windows.
+#
+# OpenAI-vendor ids also match a dated snapshot suffix: a `/responses` call for `gpt-5.4` comes back
+# with `"model": "gpt-5.4-2026-03-05"`. The other vendors returned the requested id unchanged.
+#
+# Long-context tier starts are the threshold itself, not threshold-1. GitHub's rows read `<= 272K` and
+# `> 272K`, so a prompt of exactly the threshold stays on the default rate, which is what the engines
+# do for a tier whose `start` equals it. OpenAI's own page puts its standard rate at `< 272K` instead,
+# which is why openai.yml encodes 271999.
+models:
+  - id: claude-fable-5
+    name: Claude Fable 5
+    match:
+      equals: claude-fable-5
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1
+      cache_write_mtok: 12.50
+      output_mtok: 50
+
+  - id: claude-fable-5.1
+    name: Claude Fable 5.1
+    # A separate model in Copilot's catalog that happens to share Fable 5's rates.
+    collapse: false
+    match:
+      equals: claude-fable-5.1
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1
+      cache_write_mtok: 12.50
+      output_mtok: 50
+
+  - id: claude-haiku-4.5
+    name: Claude Haiku 4.5
+    match:
+      equals: claude-haiku-4.5
+    context_window: 144000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.10
+      cache_write_mtok: 1.25
+      output_mtok: 5
+
+  - id: claude-opus-4.7
+    name: Claude Opus 4.7
+    match:
+      equals: claude-opus-4.7
+    context_window: 264000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
+  - id: claude-opus-4.8
+    name: Claude Opus 4.8
+    match:
+      equals: claude-opus-4.8
+    context_window: 264000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
+  - id: claude-opus-4.8-fast
+    name: Claude Opus 4.8 (fast mode)
+    match:
+      equals: claude-opus-4.8-fast
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: Fast mode is priced at 2x the standard Opus 4.8 rates.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1
+      cache_write_mtok: 12.50
+      output_mtok: 50
+
+  - id: claude-opus-5
+    name: Claude Opus 5
+    match:
+      equals: claude-opus-5
+    context_window: 264000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
+  - id: claude-sonnet-5
+    name: Claude Sonnet 5
+    match:
+      equals: claude-sonnet-5
+    context_window: 264000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.20
+      cache_write_mtok: 2.50
+      output_mtok: 10
+
+  - id: gemini-3.5-flash
+    name: Gemini 3.5 Flash
+    match:
+      equals: gemini-3.5-flash
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: Copilot does not charge for cache writes on the Gemini models.
+    prices:
+      input_mtok: 1.50
+      cache_read_mtok: 0.15
+      output_mtok: 9
+
+  - id: gemini-3.6-flash
+    name: Gemini 3.6 Flash
+    match:
+      equals: gemini-3.6-flash
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: Copilot does not charge for cache writes on the Gemini models.
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
+
+  - id: gemini-3.7-flash
+    name: Gemini 3.7 Flash
+    match:
+      equals: gemini-3.7-flash
+    context_window: 264000
+    prices_checked: 2026-09-03
+    price_comments: Copilot does not charge for cache writes on the Gemini models.
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
+
+  - id: gemini-3.8-flash
+    name: Gemini 3.8 Flash
+    match:
+      equals: gemini-3.8-flash
+    context_window: 265536
+    prices_checked: 2026-09-03
+    price_comments: Copilot does not charge for cache writes on the Gemini models.
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
+
+  - id: gpt-3.5-turbo
+    name: GPT 3.5 Turbo
+    match:
+      or:
+        - equals: gpt-3.5-turbo
+        - equals: gpt-3.5-turbo-0613
+    context_window: 16384
+    prices_checked: 2026-09-03
+    price_comments: >-
+      Included in the subscription: the pricing page lists no rate, and a live request reported a
+      zero token cost on 2026-09-03.
+    prices: {}
+
+  - id: gpt-4.1
+    name: GPT-4.1
+    match:
+      or:
+        - equals: gpt-4.1
+        - equals: gpt-4.1-2025-04-14
+    context_window: 128000
+    prices_checked: 2026-09-03
+    price_comments: >-
+      Included in the subscription: the pricing page lists no rate, and a live request reported a
+      zero token cost on 2026-09-03.
+    prices: {}
+
+  - id: gpt-4o
+    name: GPT-4o
+    match:
+      or:
+        - equals: gpt-4o
+        - equals: gpt-4o-2024-05-13
+        - equals: gpt-4o-2024-08-06
+        - equals: gpt-4o-2024-11-20
+        - equals: gpt-4-o-preview
+    context_window: 128000
+    prices_checked: 2026-09-03
+    price_comments: >-
+      Included in the subscription: the pricing page lists no rate, and a live request reported a
+      zero token cost on 2026-09-03.
+    prices: {}
+
+  - id: gpt-4o-mini
+    name: GPT-4o mini
+    # A separate model in Copilot's catalog; both are included in the subscription, so their prices match.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-4o-mini
+        - equals: gpt-4o-mini-2024-07-18
+    context_window: 128000
+    prices_checked: 2026-09-03
+    price_comments: >-
+      Included in the subscription: the pricing page lists no rate, and a live request reported a
+      zero token cost on 2026-09-03.
+    prices: {}
+
+  - id: gpt-5-mini
+    name: GPT-5 mini
+    match:
+      or:
+        - equals: gpt-5-mini
+        - regex: '^gpt-5-mini-\d{4}-\d{2}-\d{2}$'
+    context_window: 264000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
+
+  - id: gpt-5.3-codex
+    name: GPT-5.3-Codex
+    match:
+      or:
+        - equals: gpt-5.3-codex
+        - regex: '^gpt-5\.3-codex-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+
+  - id: gpt-5.4
+    name: GPT-5.4
+    match:
+      or:
+        - equals: gpt-5.4
+        - regex: '^gpt-5\.4-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2.50
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.50
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.50
+
+  - id: gpt-5.4-mini
+    name: GPT-5.4 mini
+    match:
+      or:
+        - equals: gpt-5.4-mini
+        - regex: '^gpt-5\.4-mini-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.50
+
+  - id: gpt-5.5
+    name: GPT-5.5
+    match:
+      or:
+        - equals: gpt-5.5
+        - regex: '^gpt-5\.5-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
+
+  - id: gpt-5.6-luna
+    name: GPT-5.6 Luna
+    match:
+      or:
+        - equals: gpt-5.6-luna
+        - regex: '^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$'
+    context_window: 328000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 0.20
+        tiers:
+          - start: 200000
+            price: 0.40
+      cache_read_mtok:
+        base: 0.02
+        tiers:
+          - start: 200000
+            price: 0.04
+      cache_write_mtok:
+        base: 0.25
+        tiers:
+          - start: 200000
+            price: 0.50
+      output_mtok:
+        base: 1.20
+        tiers:
+          - start: 200000
+            price: 1.80
+
+  - id: gpt-5.6-sol
+    name: GPT-5.6 Sol
+    match:
+      or:
+        - equals: gpt-5.6-sol
+        - regex: '^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 4
+        tiers:
+          - start: 272000
+            price: 8
+      cache_read_mtok:
+        base: 0.40
+        tiers:
+          - start: 272000
+            price: 0.80
+      cache_write_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      output_mtok:
+        base: 20
+        tiers:
+          - start: 272000
+            price: 30
+
+  - id: gpt-5.6-terra
+    name: GPT-5.6 Terra
+    match:
+      or:
+        - equals: gpt-5.6-terra
+        - regex: '^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_read_mtok:
+        base: 0.20
+        tiers:
+          - start: 272000
+            price: 0.40
+      cache_write_mtok:
+        base: 2.50
+        tiers:
+          - start: 272000
+            price: 5
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 272000
+            price: 18
+
+  - id: grok-4.5
+    name: Grok 4.5
+    match:
+      equals: grok-4.5
+    context_window: 328000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+
+  - id: grok-4.6
+    name: Grok 4.6
+    match:
+      equals: grok-4.6
+    context_window: 328000
+    prices_checked: 2026-09-03
+    price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+
+  - id: kimi-k2.7-code
+    name: Kimi K2.7 Code
+    match:
+      equals: kimi-k2.7-code
+    context_window: 256000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.19
+      output_mtok: 4
+
+  - id: kimi-k3
+    name: Kimi K3
+    match:
+      equals: kimi-k3
+    context_window: 1048576
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.30
+      output_mtok: 15
+
+  - id: mai-code-1-flash-picker
+    name: MAI-Code-1-Flash
+    match:
+      equals: mai-code-1-flash-picker
+    context_window: 256000
+    prices_checked: 2026-09-03
+    price_comments: The catalog id carries a `-picker` suffix; the pricing page names it MAI-Code-1-Flash.
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.50
+
+  - id: mai-code-1.1-flash
+    name: MAI-Code-1.1-Flash
+    match:
+      equals: mai-code-1.1-flash
+    context_window: 256000
+    prices_checked: 2026-09-03
+    prices:
+      input_mtok: 0.20
+      cache_read_mtok: 0.02
+      output_mtok: 1.20

@@ -10,6 +10,7 @@ const anthropicProvider: Provider = data.find((provider) => provider.id === 'ant
 const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
 const basetenProvider: Provider = data.find((provider) => provider.id === 'baseten')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
+const githubCopilotProvider: Provider = data.find((provider) => provider.id === 'github-copilot')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
   extractors: [
@@ -60,6 +61,62 @@ describe('extractUsage', () => {
       expect(price?.input_price).toBeCloseTo(0.00051, 8)
       expect(price?.output_price).toBeCloseTo(0.00048, 8)
       expect(price?.total_price).toBeCloseTo(0.00099, 8)
+    })
+
+    it('should extract GitHub Copilot chat usage', () => {
+      // Recorded from POST https://api.githubcopilot.com/chat/completions on 2026-09-03.
+      const responseData = {
+        model: 'claude-haiku-4.5',
+        usage: {
+          completion_tokens: 8,
+          prompt_tokens: 15,
+          prompt_tokens_details: { cached_tokens: 4 },
+          total_tokens: 23,
+        },
+      }
+
+      const { model, usage } = extractUsage(githubCopilotProvider, responseData, 'chat')
+
+      expect(model).toBe('claude-haiku-4.5')
+      expect(usage).toEqual({
+        cache_read_tokens: 4,
+        input_tokens: 15,
+        output_tokens: 8,
+      })
+
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      expect(price?.total_price).toBeCloseTo(0.0000514, 10)
+    })
+
+    it('should extract GitHub Copilot responses usage', () => {
+      // Recorded from POST https://api.githubcopilot.com/responses on 2026-09-03, which answers a
+      // `gpt-5.4` request with the dated snapshot ID.
+      const responseData = {
+        model: 'gpt-5.4-2026-03-05',
+        object: 'response',
+        usage: {
+          input_tokens: 7,
+          input_tokens_details: { cache_write_tokens: 2, cached_tokens: 3 },
+          output_tokens: 11,
+          output_tokens_details: { reasoning_tokens: 4 },
+          total_tokens: 18,
+        },
+      }
+
+      const { model, usage } = extractUsage(githubCopilotProvider, responseData, 'responses')
+
+      expect(model).toBe('gpt-5.4-2026-03-05')
+      expect(usage).toEqual({
+        cache_read_tokens: 3,
+        cache_write_tokens: 2,
+        input_tokens: 7,
+        output_reasoning_tokens: 4,
+        output_tokens: 11,
+      })
+
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      expect(price?.model.id).toBe('gpt-5.4')
+      expect(price?.total_price).toBeCloseTo(0.00017575, 10)
     })
 
     it.each(['default', 'chat'])('should extract Arcee %s usage', (apiFlavor) => {

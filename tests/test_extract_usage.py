@@ -49,6 +49,55 @@ def test_cursor_usage_event():
     assert extracted.calc_price().total_price == Decimal('0.00099')
 
 
+def test_github_copilot_chat_usage() -> None:
+    # Recorded from POST https://api.githubcopilot.com/chat/completions on 2026-09-03.
+    response_data = {
+        'model': 'claude-haiku-4.5',
+        'usage': {
+            'completion_tokens': 8,
+            'prompt_tokens': 15,
+            'prompt_tokens_details': {'cached_tokens': 4},
+            'total_tokens': 23,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='github-copilot', api_flavor='chat')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'claude-haiku-4.5'
+    assert extracted.usage == Usage(input_tokens=15, cache_read_tokens=4, output_tokens=8)
+    assert extracted.calc_price().total_price == Decimal('0.0000514')
+
+
+def test_github_copilot_responses_usage() -> None:
+    # Recorded from POST https://api.githubcopilot.com/responses on 2026-09-03, which answers a
+    # `gpt-5.4` request with the dated snapshot ID.
+    response_data = {
+        'model': 'gpt-5.4-2026-03-05',
+        'object': 'response',
+        'usage': {
+            'input_tokens': 7,
+            'input_tokens_details': {'cache_write_tokens': 2, 'cached_tokens': 3},
+            'output_tokens': 11,
+            'output_tokens_details': {'reasoning_tokens': 4},
+            'total_tokens': 18,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='github-copilot', api_flavor='responses')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'gpt-5.4'
+    assert extracted.usage == Usage(
+        input_tokens=7,
+        cache_read_tokens=3,
+        cache_write_tokens=2,
+        output_tokens=11,
+        output_reasoning_tokens=4,
+    )
+    assert extracted.calc_price().total_price == Decimal('0.00017575')
+
+
 @pytest.mark.parametrize('api_flavor', ['default', 'chat'])
 def test_arcee_chat_usage(api_flavor: str) -> None:
     response_data = {

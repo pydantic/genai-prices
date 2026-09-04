@@ -50,6 +50,11 @@ describe('Provider Matching', () => {
     it('does not claim third-party model namespaces for Baseten', () => {
       expect(matchProvider(actualProviders, { modelId: 'zai-org/GLM-5.3' })?.id).not.toBe('baseten')
     })
+
+    it('does not claim the vendor namespaces GitHub Copilot resells', () => {
+      expect(matchProvider(actualProviders, { modelId: 'claude-haiku-4.5' })?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, { modelId: 'gemini-3.6-flash' })?.id).toBe('google')
+    })
   })
 
   describe('matchProvider with providerId', () => {
@@ -60,6 +65,7 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'arcee' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerId: 'baseten' })?.id).toBe('baseten')
       expect(matchProvider(actualProviders, { providerId: 'cursor' })?.id).toBe('cursor')
+      expect(matchProvider(actualProviders, { providerId: 'github-copilot' })?.id).toBe('github-copilot')
     })
 
     it('should find providers by provider_match logic', () => {
@@ -68,6 +74,7 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'gemini' })?.id).toBe('google')
       expect(matchProvider(actualProviders, { providerId: 'mistral' })?.id).toBe('mistral')
       expect(matchProvider(actualProviders, { providerId: 'mistralai' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { providerId: 'copilot' })?.id).toBe('github-copilot')
       expect(matchProvider(actualProviders, { providerId: 'anthropic' })?.id).toBe('anthropic')
       expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
     })
@@ -112,6 +119,9 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.arcee.ai/api/v1/chat/completions' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://inference.baseten.co/v1/chat/completions' })?.id).toBe('baseten')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.cursor.com/v1/agents' })?.id).toBe('cursor')
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.githubcopilot.com/chat/completions' })?.id).toBe(
+        'github-copilot'
+      )
     })
 
     it('should not match a provider embedded later in the URL', () => {

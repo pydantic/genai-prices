@@ -119,6 +119,33 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
+    { expectedTotalPrice: 61, model: 'claude-opus-4.8-fast' },
+    { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
+    { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
+    { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
+    { expectedTotalPrice: 18.3, model: 'kimi-k3' },
+    { expectedTotalPrice: 1.42, model: 'mai-code-1.1-flash' },
+  ])('prices GitHub Copilot $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'github-copilot',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
+    { expectedTotalPrice: 0.04125, inputTokens: 200_000 },
+    { expectedTotalPrice: 0.0819004, inputTokens: 200_001 },
+  ])('prices GitHub Copilot GPT-5.6 Luna at the 200K long-context boundary', ({ expectedTotalPrice, inputTokens }) => {
+    const result = calcPrice({ cache_write_tokens: 1_000, input_tokens: inputTokens, output_tokens: 1_000 }, 'gpt-5.6-luna', {
+      providerId: 'github-copilot',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
     { expectedTotalPrice: 0.68, model: 'zai-org/GLM-5.3-Flash', providerId: 'baseten' },
     { expectedTotalPrice: 0.448, model: 'deepseek/deepseek-v4-flash-latest' },
     { expectedTotalPrice: 5.42, model: 'deepseek/deepseek-v4-pro' },
