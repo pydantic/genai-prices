@@ -4,7 +4,7 @@ import { getActiveRegistry } from './units'
 import { normalizeUsage, validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
-interface ExtractedUsage {
+export interface ExtractedUsage {
   model: null | string
   usage: Usage
 }
@@ -147,6 +147,7 @@ function extractArrayMatch(finder: ArrayMatch, items: unknown[]): Record<string,
       }
     }
   }
+  return undefined
 }
 
 function asArray(v: ExtractPath): (ArrayMatch | string)[] {

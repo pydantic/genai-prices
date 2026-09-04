@@ -186,7 +186,7 @@ describe('extractUsage', () => {
         usage: { first_seconds: 0.1, second_seconds: 0.2 },
       })
 
-      expect(usage.audio_seconds).toBeCloseTo(0.3, 15)
+      expect(usage['audio_seconds']).toBeCloseTo(0.3, 15)
     })
 
     it('should preserve optional structural probing for non-number leaves', () => {

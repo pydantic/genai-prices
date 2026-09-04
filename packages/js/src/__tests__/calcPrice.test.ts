@@ -60,7 +60,7 @@ describe('collectResolvedModelPrices', () => {
 
   it('rejects invalid recognized flat price values', () => {
     for (const price of [Number.NaN, Number.POSITIVE_INFINITY, -1, null, '1']) {
-      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+      expect(() => collectResolvedModelPrices({ input_mtok: price }, registry)).toThrow(
         'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
       )
     }
@@ -74,7 +74,7 @@ describe('collectResolvedModelPrices', () => {
       { base: 1, tiers: [{ price: 2, start: 1.5 }] },
       { base: 1, tiers: [{ price: Number.POSITIVE_INFINITY, start: 100 }] },
     ]) {
-      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+      expect(() => collectResolvedModelPrices({ input_mtok: price }, registry)).toThrow(
         'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
       )
     }
@@ -274,7 +274,7 @@ describe('Core Price Calculation Function', () => {
 
     calcPrice(usage, { input_mtok: 1 })
     calcPrice(usage, { input_mtok: 1 })
-    usage.later_tokens = 200
+    usage['later_tokens'] = 200
     calcPrice(usage, { input_mtok: 1 })
 
     expect(warn).toHaveBeenCalledTimes(2)

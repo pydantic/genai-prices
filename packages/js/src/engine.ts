@@ -22,7 +22,7 @@ export type ResolvedPrice = Readonly<{
   unit: UnitDef
 }>
 
-export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: UnitRegistry): ResolvedPrice[] {
+export function collectResolvedModelPrices(modelPrice: Record<string, unknown>, registry: UnitRegistry): ResolvedPrice[] {
   const resolvedPrices: ResolvedPrice[] = []
   const unsupportedPriceKeys: string[] = []
   for (const [priceKey, price] of Object.entries(modelPrice)) {
@@ -43,12 +43,12 @@ export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: Uni
 
 function validatePriceValue(priceKey: string, price: unknown): number | TieredPrices {
   if (isValidPriceNumber(price)) return price
-  if (!isRecord(price) || !isValidPriceNumber(price.base) || !Array.isArray(price.tiers)) {
+  if (!isRecord(price) || !isValidPriceNumber(price['base']) || !Array.isArray(price['tiers'])) {
     throw invalidPriceValueError(priceKey)
   }
 
   const tiers: Tier[] = []
-  for (const tier of price.tiers) {
+  for (const tier of price['tiers']) {
     if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
     const { price: tierPrice, start } = tier
     if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || !isValidPriceNumber(tierPrice)) {
@@ -57,7 +57,7 @@ function validatePriceValue(priceKey: string, price: unknown): number | TieredPr
     tiers.push({ price: tierPrice, start })
   }
 
-  return new TieredPrices({ base: price.base, tiers })
+  return new TieredPrices({ base: price['base'], tiers })
 }
 
 function invalidPriceValueError(priceKey: string): Error {
@@ -127,14 +127,14 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRe
   const pricedUsageKeys = new Set(resolvedPrices.filter(({ unit }) => unit.usageKey !== 'requests').map(({ unit }) => unit.usageKey))
   const leafValues = computeLeafValues(pricedUsageKeys, usage, registry)
   if (resolvedPrices.some(({ unit }) => unit.usageKey === 'requests')) {
-    leafValues.requests = 1
+    leafValues['requests'] = 1
   }
 
   for (const { price, unit } of resolvedPrices) {
     const unitPrice = calcUnitPrice(price, leafValues[unit.usageKey] ?? 0, totalInputTokens, unit.per)
-    if (unit.dimensions.direction === 'input') {
+    if (unit.dimensions['direction'] === 'input') {
       inputPrice += unitPrice
-    } else if (unit.dimensions.direction === 'output') {
+    } else if (unit.dimensions['direction'] === 'output') {
       outputPrice += unitPrice
     } else {
       totalOnlyPrice += unitPrice
@@ -167,8 +167,8 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
   }
   // Conditional prices: last active wins
   for (let i = model.prices.length - 1; i >= 0; i--) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
+    const cond = model.prices[i]
+    if (cond === undefined) continue
     const constraint = cond.constraint
 
     if (constraint === undefined) {
@@ -212,8 +212,11 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
     }
   }
   // Fallback to first
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  const firstPrice = model.prices[0]
+  if (firstPrice === undefined) {
+    throw new Error(`No prices defined for model '${model.id}'`)
+  }
+  return firstPrice.prices
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {
@@ -263,6 +266,7 @@ export function matchProvider(providers: Provider[], { modelId, providerApiUrl, 
   if (modelId) {
     return providers.find((p) => p.model_match && matchLogic(p.model_match, modelId))
   }
+  return undefined
 }
 
 export function matchModel(models: ModelInfo[], modelId: string): ModelInfo | undefined {

@@ -68,6 +68,7 @@ quote-style = "single"
 
 [tool.pytest.ini_options]
 testpaths = "tests"
+pythonpath = [".github/scripts"]
 xfail_strict = true
 filterwarnings = ["error"]
 markers = [
@@ -80,12 +81,14 @@ source = [
     "prices/src/prices",
     "packages/python",
     "tests",
+    ".github/scripts",
 ]
-# Both run only in a subprocess, so the tracer never sees them. `source` reports unimported files
+# These run only in a subprocess, so the tracer never sees them. `source` reports unimported files
 # (unlike `include`, which silently omits them), so they have to be named here.
 omit = [
     "packages/python/genai_prices/__main__.py",
     "tests/cli_missing_dependency_import.py",
+    ".github/scripts/check_version_not_downgraded.py",
 ]
 branch = true
 
@@ -125,7 +128,7 @@ venv = ".venv"
 venvPath = "."
 # `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
 # directory on the path.
-executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = ["tests/dataset"] }]
+executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = ["tests/dataset", ".github/scripts"] }]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file

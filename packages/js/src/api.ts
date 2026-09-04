@@ -1,5 +1,4 @@
 import type {
-  ConditionalPrice,
   PriceCalculationResult,
   PriceOptions,
   Provider,
@@ -11,7 +10,7 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
-import { utcTimeOfDaySeconds } from './timeOfDay'
+import { parseProviderData } from './providerData'
 import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
@@ -55,141 +54,18 @@ function setProviderData(data: ProviderDataPayload) {
   }
 }
 
-function activateProviderData(data: Provider[]): Provider[] {
-  if (!Array.isArray(data)) {
-    throw new Error('Expected null or Provider[]')
-  }
-
-  const normalizedData = data.map(normalizeProvider)
+export function activateProviderData(data: unknown): Provider[] {
+  const normalizedData = parseProviderData(data)
   warnUnsupportedExtractorDestinations(normalizedData)
   providerData = normalizedData
   return normalizedData
-}
-
-function normalizeProvider(provider: Provider): Provider {
-  return {
-    ...provider,
-    models: provider.models.map((model) => ({
-      ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
-    })),
-  }
-}
-
-/**
- * Convert a wire-format conditional price into the internal discriminated
- * representation `engine.ts` relies on.
- *
- * The wire format (the published v2 feed) identifies a constraint structurally
- * (`start_date`, or `start_time`/`end_time`) rather than with the `type`
- * discriminator the internal `ConditionalPrice` uses, so the input's
- * constraint is typed as `unknown` here rather than as the internal union.
- *
- * Already-discriminated constraints (bundled data re-activated at runtime) are
- * validated and passed through unchanged. This is the runtime half of the
- * wire-to-internal translation; the code generator producing the bundled
- * `data.ts` is the build-time half, and the two must stay in agreement.
- * See `normalizeProvider` for the traversal that applies this per model.
- */
-function normalizeConditionalPrice(
-  conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
-  providerId: string,
-  modelId: string
-): ConditionalPrice {
-  const constraint: unknown = conditionalPrice.constraint
-  if (constraint === undefined) {
-    return { prices: conditionalPrice.prices }
-  }
-  if (!isRecord(constraint)) {
-    throw invalidConstraintError(constraint, providerId, modelId)
-  }
-  if (constraint.type !== undefined) {
-    // Already in the internal discriminated form; validate rather than rebuild.
-    if (
-      (constraint.type === 'start_date' && hasExactKeys(constraint, ['start_date', 'type']) && isValidStartDate(constraint.start_date)) ||
-      (constraint.type === 'time_of_date' &&
-        hasExactKeys(constraint, ['end_time', 'start_time', 'type']) &&
-        isValidTimeOfDay(constraint.start_time) &&
-        isValidTimeOfDay(constraint.end_time))
-    ) {
-      return conditionalPrice as ConditionalPrice
-    }
-    throw invalidConstraintError(constraint, providerId, modelId)
-  }
-  if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
-    return {
-      constraint: { start_date: constraint.start_date, type: 'start_date' },
-      prices: conditionalPrice.prices,
-    }
-  }
-  if (
-    hasExactKeys(constraint, ['end_time', 'start_time']) &&
-    isValidTimeOfDay(constraint.start_time) &&
-    isValidTimeOfDay(constraint.end_time)
-  ) {
-    return {
-      constraint: {
-        end_time: constraint.end_time,
-        start_time: constraint.start_time,
-        type: 'time_of_date',
-      },
-      prices: conditionalPrice.prices,
-    }
-  }
-  throw invalidConstraintError(constraint, providerId, modelId)
-}
-
-function invalidConstraintError(constraint: unknown, providerId: string, modelId: string): Error {
-  return new Error(
-    `Expected a start-date or time-of-day price constraint for provider '${providerId}' model '${modelId}', got: ${JSON.stringify(constraint)}`
-  )
-}
-
-// Strict ISO calendar date: correct shape and a real date (rejects e.g.
-// '2025-02-30', which Date would silently roll over to March 2). Years start
-// at 1, matching the feed's source `date` type (Python), which cannot
-// represent year zero.
-function isValidStartDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false
-  }
-  const parsed = new Date(`${value}T00:00:00Z`)
-  return !Number.isNaN(parsed.getTime()) && parsed.getUTCFullYear() >= 1 && parsed.toISOString().startsWith(value)
-}
-
-// Reject constraints carrying keys outside the expected shape, so a mixed or
-// misspelled constraint fails activation instead of silently losing fields.
-function hasExactKeys(value: Record<string, unknown>, keys: string[]): boolean {
-  const actual = Object.keys(value)
-  return actual.length === keys.length && actual.every((key) => keys.includes(key))
-}
-
-// Reuse the engine's parser so normalization accepts exactly what price
-// calculation can later evaluate.
-function isValidTimeOfDay(value: unknown): value is string {
-  if (typeof value !== 'string') {
-    return false
-  }
-  try {
-    utcTimeOfDaySeconds(value)
-    return true
-  } catch {
-    return false
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 function onCalc(cb: () => void) {
   autoUpdateCb = cb
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function updatePrices(factory: (options: StorageFactoryParams) => any): void {
+export function updatePrices(factory: (options: StorageFactoryParams) => void): void {
   factory({
     onCalc,
     remoteDataUrl: REMOTE_DATA_JSON_URL,
@@ -218,11 +94,16 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     }
   }
 
-  // Caller-supplied providers bypass activation, so normalize them here to
-  // give them the same constraint handling as downloaded/bundled data.
-  const provider = options?.provider
-    ? normalizeProvider(options.provider)
-    : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
+  let provider: Provider | undefined
+  if (options?.provider) {
+    provider = parseProviderData([options.provider])[0]
+  } else {
+    provider = matchProvider(providerData, {
+      modelId: lowerModelId,
+      ...(options?.providerApiUrl === undefined ? {} : { providerApiUrl: options.providerApiUrl }),
+      ...(providerId === undefined ? {} : { providerId }),
+    })
+  }
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
@@ -231,20 +112,19 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }
-    const audioSeconds = billedUsage.audio_seconds
-    const inputAudioSeconds = billedUsage.input_audio_seconds
+    const audioSeconds = billedUsage['audio_seconds']
+    const inputAudioSeconds = billedUsage['input_audio_seconds']
     if (audioSeconds !== undefined) validateUsageValue('audio_seconds', audioSeconds)
     if (inputAudioSeconds !== undefined) validateUsageValue('input_audio_seconds', inputAudioSeconds)
     const reportedSeconds = audioSeconds === 0 ? inputAudioSeconds : (audioSeconds ?? inputAudioSeconds)
     if (reportedSeconds !== undefined) {
       const billedSeconds = reportedSeconds > 0 ? Math.max(reportedSeconds, 10) : 0
-      billedUsage.audio_seconds = billedSeconds
-      billedUsage.input_audio_seconds = billedSeconds
+      billedUsage['audio_seconds'] = billedSeconds
+      billedUsage['input_audio_seconds'] = billedSeconds
     }
   }
   const priceResult = calcPriceInternal(billedUsage, modelPrice)
   return {
-    auto_update_timestamp: undefined,
     model,
     model_price: modelPrice,
     provider,

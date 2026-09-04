@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/index.d.ts",
+  "newlineKind": "lf",
+  "apiReport": {
+    "enabled": true,
+    "reportFileName": "genai-prices",
+    "reportFolder": "<projectFolder>/api-report",
+    "reportTempFolder": "<projectFolder>/node_modules/.api-report-temp"
+  },
+  "docModel": {
+    "enabled": false
+  },
+  "dtsRollup": {
+    "enabled": false
+  },
+  "tsdocMetadata": {
+    "enabled": false
+  },
+  "messages": {
+    "extractorMessageReporting": {
+      "ae-forgotten-export": {
+        "logLevel": "error"
+      },
+      "ae-missing-release-tag": {
+        "logLevel": "none"
+      }
+    }
+  }
+}

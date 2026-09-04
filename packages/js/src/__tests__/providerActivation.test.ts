@@ -4,6 +4,7 @@ import type { Provider, ProviderDataValue } from '../types'
 
 import { findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { parseProviderData } from '../providerData'
 import { getActiveRegistry } from '../units'
 
 afterEach(() => {
@@ -44,32 +45,47 @@ describe('provider activation', () => {
     expect(getActiveRegistry()).toBe(registry)
   })
 
-  it('rejects invalid synchronous provider data without changing active providers', () => {
+  it('rejects invalid synchronous provider data through the public setter without changing active providers', () => {
     const stableProvider = providerFixture('stable-provider')
     updatePrices(({ setProviderData }) => {
       setProviderData([stableProvider])
     })
+    const invalidProvider = providerFixture('invalid-provider')
+    invalidProvider.models = [
+      {
+        id: 'invalid-model',
+        match: { regex: '(' },
+        prices: { input_mtok: 1 },
+      },
+    ]
 
     expect(() => {
       updatePrices(({ setProviderData }) => {
-        setProviderData('garbage' as unknown as ProviderDataValue)
+        setProviderData([invalidProvider])
       })
-    }).toThrow('Expected null or Provider[]')
+    }).toThrow('providers[0].models[0].match.regex must be a valid regular expression')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
   })
 
   it('rejects invalid asynchronous provider data without changing active providers', async () => {
     const stableProvider = providerFixture('stable-provider')
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     updatePrices(({ setProviderData }) => {
       setProviderData([stableProvider])
     })
 
-    updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve('garbage' as unknown as ProviderDataValue))
-    })
+    try {
+      const invalidData: Promise<unknown> = Promise.resolve('garbage')
+      updatePrices(({ setProviderData }) => {
+        setProviderData(invalidData.then(parseProviderData))
+      })
 
-    await expect(waitForUpdate()).rejects.toThrow('Expected null or Provider[]')
-    expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+      await expect(waitForUpdate()).rejects.toThrow('Expected provider data to be an array')
+      expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('keeping previously active data'))
+    } finally {
+      warn.mockRestore()
+    }
   })
 
   it('keeps active providers when an asynchronous update returns null', async () => {

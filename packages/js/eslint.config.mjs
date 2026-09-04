@@ -22,10 +22,18 @@ export default tseslint.config(
     },
   },
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+  },
+  {
     plugins: {
       turbo: turboPlugin,
     },
     rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
       'perfectionist/sort-modules': 'off',
       'turbo/no-undeclared-env-vars': 'off',
     },
@@ -34,7 +42,9 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['scripts/*.mjs', 'test-d/*.ts'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
