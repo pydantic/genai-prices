@@ -82,6 +82,80 @@ def test_cursor_provider_inference():
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
+        ('claude-haiku-4.5', Decimal('6.10')),
+        ('claude-opus-4.8-fast', Decimal('61')),
+        ('claude-sonnet-5', Decimal('12.2')),
+        ('gemini-3.6-flash', Decimal('4.575')),
+        ('gpt-5-mini', Decimal('2.275')),
+        ('kimi-k3', Decimal('18.3')),
+        ('mai-code-1.1-flash', Decimal('1.42')),
+    ],
+)
+def test_github_copilot_model_prices(model_ref: str, expected_total_price: Decimal):
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='github-copilot',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    ('input_tokens', 'expected_total_price'),
+    [
+        (200_000, Decimal('0.04125')),
+        (200_001, Decimal('0.0819004')),
+    ],
+)
+def test_github_copilot_long_context_tier(input_tokens: int, expected_total_price: Decimal):
+    """Copilot's long-context rates reprice the whole request once the prompt crosses the threshold."""
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_write_tokens=1_000, output_tokens=1_000),
+        model_ref='gpt-5.6-luna',
+        provider_id='github-copilot',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+def test_github_copilot_included_model_is_free():
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='gpt-4.1-2025-04-14',
+        provider_id='github-copilot',
+    )
+
+    assert price.model.id == 'gpt-4.1'
+    assert price.model.context_window == 128000
+    assert price.total_price == Decimal(0)
+
+
+def test_github_copilot_provider_inference():
+    by_alias = calc_price(Usage(input_tokens=1), model_ref='claude-haiku-4.5', provider_id='copilot')
+    by_api_url = calc_price(
+        Usage(input_tokens=1),
+        model_ref='gpt-5.4-2026-03-05',
+        provider_api_url='https://api.githubcopilot.com/responses',
+    )
+
+    assert by_alias.provider.id == 'github-copilot'
+    assert by_alias.model.id == 'claude-haiku-4.5'
+    assert by_api_url.provider.id == 'github-copilot'
+    assert by_api_url.model.id == 'gpt-5.4'
+
+
+def test_github_copilot_does_not_claim_vendor_namespaces():
+    """Copilot resells IDs that other providers own, so it must never win a bare model lookup."""
+    snapshot_data = get_snapshot()
+
+    assert snapshot_data.find_provider('claude-haiku-4.5', None, None).id == 'anthropic'
+    assert snapshot_data.find_provider('gemini-3.6-flash', None, None).id == 'google'
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
         ('deepseek/deepseek-v4-flash-latest', Decimal('0.448')),
         ('deepseek/deepseek-v4-pro', Decimal('5.42')),
         ('moonshotai/kimi-k3', Decimal('18.3')),

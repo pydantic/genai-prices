@@ -136,3 +136,16 @@ providers:
       input, cached-input, and output token rates. Match the two tables by their Model API links; some pricing links use short
       aliases while the docs table publishes qualified model IDs. A missing cached-input value is intentional only when the
       pricing table displays a dash. Do not treat third-party namespaces as Baseten provider ownership.
+
+  - name: GitHub Copilot
+    file: prices/providers/github_copilot.yml
+    scope: Chat models named on GitHub's Copilot models-and-pricing page.
+    sources:
+      - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+    notes: >-
+      The page prices models in USD per million tokens; compare Input, Cached input, Cache write, and Output with input_mtok,
+      cache_read_mtok, cache_write_mtok, and output_mtok. A Default/Long context pair is one model whose long-context row is the
+      YAML tier; those rows read `<= N` and `> N`, so the YAML tier `start` is exactly N, because the engines apply a tier only
+      above `start`. A row that names several versions covers each of them. Report a range, not a single number, as a range
+      rather than a discrepancy. The page is a pricing table, not a catalog, so do not infer removals from it, and do not compare
+      plan allowances, the AI-credit conversion, or the zero-priced models the YAML records with empty prices.
