@@ -139,6 +139,24 @@ jobs:
           working-directory: packages/go
       - run: make test-go
 
+  triage-pilot-pydantic-harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24.x
+          package-manager-cache: false
+      - name: Install triage-pilot action helpers
+        uses: github/gh-aw-actions/setup@30aadb1626371455f145991c6385924babda2d04 # v0.86.3
+        with:
+          destination: ${{ runner.temp }}/gh-aw/actions
+      - run: node .github/scripts/test-triage-pilot-pydantic-harness.cjs
+        env:
+          GH_AW_ACTIONS_DIR: ${{ runner.temp }}/gh-aw/actions
+
   # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
   v2-schema-frozen:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -165,7 +183,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, test-go, v2-schema-frozen]
+    needs: [pre-commit, test-python, coverage, test-js, test-go, triage-pilot-pydantic-harness, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
