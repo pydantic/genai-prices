@@ -15,6 +15,9 @@ const harness = workflow.match(
   /cat <<'GHAW_HARNESS_SCRIPT_3c7b9f1a_EOF' > "\$\{RUNNER_TEMP\}\/gh-aw\/actions\/pydantic-ai_harness\.cjs"\n(?<script>[\s\S]*?)\n          GHAW_HARNESS_SCRIPT_3c7b9f1a_EOF/,
 )
 assert(harness?.groups?.script, 'could not extract the generated Pydantic AI harness')
+const harnessScript = harness.groups.script.replace(/^ {10}/gm, '')
+assert.match(harnessScript, /^const \{ spawnSync \} = require\("child_process"\);$/m)
+assert.match(harnessScript, /^const AGENT_MODULE = `from pathlib import Path$/m)
 
 const expectedSetupPin = '30aadb1626371455f145991c6385924babda2d04'
 const ciWorkflow = readFileSync('.github/workflows/ci.yml', 'utf8')
@@ -40,8 +43,9 @@ try {
   mkdirSync(join(homeDir, '.local', 'bin'), { recursive: true })
   mkdirSync(pythonBin, { recursive: true })
   mkdirSync(workspace, { recursive: true })
-  writeFileSync(join(helperDir, 'pydantic-ai_harness.cjs'), harness.groups.script)
+  writeFileSync(join(helperDir, 'pydantic-ai_harness.cjs'), harnessScript)
   writeFileSync(prompt, 'triage the issue')
+  // The helper reads this sandbox alias to select the host-side api-proxy bridge.
   writeFileSync(hostAliases, 'api-proxy 127.0.0.1\n')
   writeFileSync(join(pythonBin, 'python3'), '#!/bin/sh\nexit 0\n', { mode: 0o755 })
   writeFileSync(
