@@ -164,6 +164,82 @@ models:
     prices:
       input_mtok: 2
 
+  - id: gpt-6-astra
+    canonical_model: openai/gpt-6-astra
+    name: GPT-6 Astra
+    description: OpenAI frontier model available through Microsoft Foundry.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-astra
+        - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
+    prices_checked: 2026-09-08
+    price_comments: >-
+      Standard Global pricing from Microsoft's GPT-6 Astra GA announcement. Microsoft lists short-context and
+      long-context prices; the long-context rates begin at exactly 272K input tokens, matching OpenAI's threshold. Tier
+      starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start.
+      Ref: https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 271999
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 271999
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 271999
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 271999
+            price: 75
+
+  - id: gpt-6-astra-us-data-zone
+    canonical_model: openai/gpt-6-astra
+    name: GPT-6 Astra (US Data Zone)
+    description: OpenAI frontier model available through Microsoft Foundry in the Standard Data Zone (US) deployment.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-astra-us-data-zone
+        - equals: gpt-6-astra-data-zone-us
+        - equals: gpt-6-astra-datazone-us
+        - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}-us-data-zone$
+    prices_checked: 2026-09-08
+    price_comments: >-
+      Standard Data Zone (US) pricing from Microsoft's GPT-6 Astra GA announcement. Microsoft lists short-context and
+      long-context prices; the long-context rates begin at exactly 272K input tokens, matching OpenAI's threshold. Tier
+      starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start.
+      Ref: https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/
+    prices:
+      input_mtok:
+        base: 11
+        tiers:
+          - start: 271999
+            price: 22
+      cache_write_mtok:
+        base: 13.75
+        tiers:
+          - start: 271999
+            price: 27.5
+      cache_read_mtok:
+        base: 1.1
+        tiers:
+          - start: 271999
+            price: 2.2
+      output_mtok:
+        base: 55
+        tiers:
+          - start: 271999
+            price: 82.5
+
   - id: mai-ds-r1:free
     name: MAI DS R1 (free)
     description: >-

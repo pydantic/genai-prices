@@ -421,6 +421,52 @@ def test_gpt_6_astra_long_context_boundary():
     assert long_context.total_price == Decimal('5.515')
 
 
+def test_azure_gpt_6_astra_global_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
+        model_ref='gpt-6-astra-2026-09-04',
+        provider_id='azure',
+    )
+
+    assert price.model.id == 'gpt-6-astra'
+    assert price.input_price == Decimal('0.0091')
+    assert price.output_price == Decimal('0.005')
+    assert price.total_price == Decimal('0.0141')
+
+
+def test_azure_gpt_6_astra_us_data_zone_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_write_tokens=100, cache_read_tokens=100, output_tokens=100),
+        model_ref='gpt-6-astra-us-data-zone',
+        provider_id='azure',
+    )
+
+    assert price.model.id == 'gpt-6-astra-us-data-zone'
+    assert price.input_price == Decimal('0.010285')
+    assert price.output_price == Decimal('0.0055')
+    assert price.total_price == Decimal('0.015785')
+
+
+def test_azure_gpt_6_astra_us_data_zone_long_context_boundary():
+    standard = calc_price(
+        Usage(input_tokens=271_999, output_tokens=1_000),
+        model_ref='gpt-6-astra-us-data-zone',
+        provider_id='azure',
+    )
+    assert standard.input_price == Decimal('2.991989')
+    assert standard.output_price == Decimal('0.055')
+    assert standard.total_price == Decimal('3.046989')
+
+    long_context = calc_price(
+        Usage(input_tokens=272_000, output_tokens=1_000),
+        model_ref='gpt-6-astra-us-data-zone',
+        provider_id='azure',
+    )
+    assert long_context.input_price == Decimal('5.984')
+    assert long_context.output_price == Decimal('0.0825')
+    assert long_context.total_price == Decimal('6.0665')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'request_timestamp', 'expected_prices'),
     [
