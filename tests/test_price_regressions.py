@@ -643,3 +643,25 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
     )
 
     assert price.total_price == Decimal('1')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected'),
+    [
+        ('eu.anthropic.claude-fable-5', '80.85'),
+        ('us.anthropic.claude-fable-5', '80.85'),
+        ('anthropic.claude-fable-5', '80.85'),
+        ('global.anthropic.claude-fable-5', '73.5'),
+    ],
+    ids=['eu', 'us', 'unprefixed', 'global'],
+)
+def test_aws_fable_5_model_ids_preserve_regional_and_global_rates(model_ref: str, expected: str) -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=3_000_000, output_tokens=1_000_000, cache_read_tokens=1_000_000, cache_write_tokens=1_000_000
+        ),
+        model_ref=model_ref,
+        provider_id='aws',
+    )
+    assert price.provider.id == 'aws'
+    assert price.total_price == Decimal(expected)
