@@ -1992,6 +1992,47 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2')),
             ),
             ModelInfo(
+                id='gpt-6-astra',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-astra'), ClauseRegex(regex='^gpt-6-astra-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6 Astra',
+                description='OpenAI frontier model available through Microsoft Foundry.',
+                context_window=1050000,
+                price_comments="Standard Global pricing from Microsoft's GPT-6 Astra GA announcement. Microsoft lists short-context and long-context prices; the long-context rates begin at exactly 272K input tokens, matching OpenAI's threshold. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('20'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('12.5'), tiers=[Tier(start=271999, price=Decimal('25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271999, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=271999, price=Decimal('75'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-6-astra-us-data-zone',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-6-astra-us-data-zone'),
+                        ClauseEquals(equals='gpt-6-astra-data-zone-us'),
+                        ClauseEquals(equals='gpt-6-astra-datazone-us'),
+                        ClauseRegex(regex='^gpt-6-astra-\\d{4}-\\d{2}-\\d{2}-us-data-zone$'),
+                    ]
+                ),
+                name='GPT-6 Astra (US Data Zone)',
+                description='OpenAI frontier model available through Microsoft Foundry in the Standard Data Zone (US) deployment.',
+                context_window=1050000,
+                price_comments="Standard Data Zone (US) pricing from Microsoft's GPT-6 Astra GA announcement. Microsoft lists short-context and long-context prices; the long-context rates begin at exactly 272K input tokens, matching OpenAI's threshold. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('11'), tiers=[Tier(start=271999, price=Decimal('22'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('13.75'), tiers=[Tier(start=271999, price=Decimal('27.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1.1'), tiers=[Tier(start=271999, price=Decimal('2.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('55'), tiers=[Tier(start=271999, price=Decimal('82.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='mai-ds-r1:free',
                 match=ClauseEquals(equals='mai-ds-r1:free'),
                 name='MAI DS R1 (free)',

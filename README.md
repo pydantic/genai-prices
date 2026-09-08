@@ -37,7 +37,7 @@ The following providers are currently supported:
 - [Arcee](prices/providers/arcee.yml) - 6 models
 - [Avian](prices/providers/avian.yml) - 17 models
 - [AWS Bedrock](prices/providers/aws.yml) - 88 models
-- [Microsoft Azure](prices/providers/azure.yml) - 23 models
+- [Microsoft Azure](prices/providers/azure.yml) - 25 models
 - [Baseten](prices/providers/baseten.yml) - 15 models
 - [Cerebras](prices/providers/cerebras.yml) - 7 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models

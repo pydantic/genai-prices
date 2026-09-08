@@ -438,6 +438,8 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.2-20251211', snapshot(('openai', 'gpt-5.2'))),
     ('openai', 'gpt-5-2-20251211', snapshot(('openai', 'gpt-5.2'))),
     ('azure', 'gpt-4.1-20250414', snapshot(('azure', 'gpt-4.1'))),
+    ('azure', 'gpt-6-astra-2026-09-04', snapshot(('azure', 'gpt-6-astra'))),
+    ('azure', 'gpt-6-astra-us-data-zone', snapshot(('azure', 'gpt-6-astra-us-data-zone'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
     pytest.param('bedrock', 'writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
     pytest.param('bedrock', 'us.writer.palmyra-x4-v1:0', snapshot(('aws', 'writer.palmyra-x4-v1:0'))),
@@ -775,6 +777,7 @@ def test_litellm_provider_id():
         # "128K" resolves to 131,072 per Microsoft's own config.json (max_position_embeddings)
         ('azure', 'phi-4', 'azure', 'phi-4', 16_384),
         ('azure', 'phi-4-mini-instruct', 'azure', 'phi-4-mini-instruct', 131_072),
+        ('azure', 'gpt-6-astra', 'azure', 'gpt-6-astra', 1_050_000),
         ('azure', 'mai-ds-r1:free', 'azure', 'mai-ds-r1:free', 163_840),
         # withdrawn by Microsoft in April 2024; no Microsoft statement of its window survives
         ('azure', 'wizardlm-2-8x22b', 'azure', 'wizardlm-2-8x22b', None),
