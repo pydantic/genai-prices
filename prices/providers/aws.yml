@@ -913,6 +913,8 @@ models:
     match:
       or:
         - equals: anthropic.claude-fable-5
+        - equals: eu.anthropic.claude-fable-5
+        - equals: us.anthropic.claude-fable-5
         - equals: claude-fable-5
         - starts_with: anthropic.claude-fable-5-v1
         - starts_with: claude-fable-5-v1

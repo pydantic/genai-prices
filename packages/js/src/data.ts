@@ -2413,6 +2413,12 @@ export const data: Provider[] = [
               equals: 'anthropic.claude-fable-5',
             },
             {
+              equals: 'eu.anthropic.claude-fable-5',
+            },
+            {
+              equals: 'us.anthropic.claude-fable-5',
+            },
+            {
               equals: 'claude-fable-5',
             },
             {
