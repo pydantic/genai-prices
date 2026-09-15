@@ -200,7 +200,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                         'glm-4.6v',
                         'gpt-oss:20b',
                         'models/gemini-2.5-pro',
-                        'openai.gpt-5.6-luna',
                         'openai.gpt-oss-120b',
                         'openai.gpt-oss-safeguard-20b',
                         'openai/gpt-5-mini-2025-08-07',
