@@ -1802,6 +1802,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='openai.gpt-5.6-luna'),
+                        ClauseStartsWith(starts_with='gpt-5.6-luna'),
                         ClauseContains(contains='us.openai.gpt-5.6-luna'),
                         ClauseContains(contains='in.openai.gpt-5.6-luna'),
                     ]
@@ -1842,6 +1843,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='openai.gpt-5.6-sol'),
+                        ClauseStartsWith(starts_with='gpt-5.6-sol'),
                         ClauseContains(contains='us.openai.gpt-5.6-sol'),
                     ]
                 ),
@@ -1889,6 +1891,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='openai.gpt-5.6-terra'),
+                        ClauseStartsWith(starts_with='gpt-5.6-terra'),
                         ClauseContains(contains='us.openai.gpt-5.6-terra'),
                         ClauseContains(contains='in.openai.gpt-5.6-terra'),
                     ]

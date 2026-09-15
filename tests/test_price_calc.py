@@ -505,6 +505,9 @@ def test_aws_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, e
         ('us.openai.gpt-5.6-sol', Decimal('4.4'), Decimal('8.8')),
         ('us.openai.gpt-5.6-terra', Decimal('2.2'), Decimal('4.4')),
         ('in.openai.gpt-5.6-luna', Decimal('0.22'), Decimal('0.44')),
+        ('gpt-5.6-sol', Decimal('4.4'), Decimal('8.8')),
+        ('gpt-5.6-terra', Decimal('2.2'), Decimal('4.4')),
+        ('gpt-5.6-luna', Decimal('0.22'), Decimal('0.44')),
     ],
 )
 def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal, long_input_rate: Decimal) -> None:

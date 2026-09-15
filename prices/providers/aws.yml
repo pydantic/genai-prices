@@ -1174,6 +1174,7 @@ models:
     match:
       or:
         - starts_with: openai.gpt-5.6-luna
+        - starts_with: gpt-5.6-luna
         - contains: us.openai.gpt-5.6-luna
         - contains: in.openai.gpt-5.6-luna
     context_window: 1000000
@@ -1223,6 +1224,7 @@ models:
     match:
       or:
         - starts_with: openai.gpt-5.6-sol
+        - starts_with: gpt-5.6-sol
         - contains: us.openai.gpt-5.6-sol
     context_window: 1000000
     prices_checked: 2026-09-02
@@ -1288,6 +1290,7 @@ models:
     match:
       or:
         - starts_with: openai.gpt-5.6-terra
+        - starts_with: gpt-5.6-terra
         - contains: us.openai.gpt-5.6-terra
         - contains: in.openai.gpt-5.6-terra
     context_window: 1000000

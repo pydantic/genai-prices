@@ -2916,6 +2916,9 @@ export const data: Provider[] = [
               starts_with: 'openai.gpt-5.6-luna',
             },
             {
+              starts_with: 'gpt-5.6-luna',
+            },
+            {
               contains: 'us.openai.gpt-5.6-luna',
             },
             {
@@ -2988,6 +2991,9 @@ export const data: Provider[] = [
           or: [
             {
               starts_with: 'openai.gpt-5.6-sol',
+            },
+            {
+              starts_with: 'gpt-5.6-sol',
             },
             {
               contains: 'us.openai.gpt-5.6-sol',
@@ -3091,6 +3097,9 @@ export const data: Provider[] = [
           or: [
             {
               starts_with: 'openai.gpt-5.6-terra',
+            },
+            {
+              starts_with: 'gpt-5.6-terra',
             },
             {
               contains: 'us.openai.gpt-5.6-terra',
