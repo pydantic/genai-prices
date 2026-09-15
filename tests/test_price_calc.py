@@ -494,6 +494,30 @@ def test_aws_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, e
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'request_timestamp', 'input_rate', 'output_rate'),
+    [
+        ('openai.gpt-5.6-sol', datetime(2026, 8, 20, tzinfo=timezone.utc), Decimal('5.5'), Decimal('33')),
+        ('openai.gpt-5.6-sol', datetime(2026, 8, 21, tzinfo=timezone.utc), Decimal('4.4'), Decimal('22')),
+        ('global.openai.gpt-5.6-sol', datetime(2026, 8, 20, tzinfo=timezone.utc), Decimal('5'), Decimal('30')),
+        ('global.openai.gpt-5.6-sol', datetime(2026, 8, 21, tzinfo=timezone.utc), Decimal('4'), Decimal('20')),
+    ],
+)
+def test_aws_gpt_5_6_sol_price_cut(
+    model_ref: str, request_timestamp: datetime, input_rate: Decimal, output_rate: Decimal
+) -> None:
+    """AWS cut Sol prices on 2026-08-21; the regional and global entries both carry the dated change."""
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=1_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.input_price == input_rate / 1_000
+    assert price.output_price == output_rate / 1_000
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'short_input_rate', 'long_input_rate'),
     [
         ('openai.gpt-5.6-sol', Decimal('4.4'), Decimal('8.8')),
