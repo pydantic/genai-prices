@@ -42,6 +42,14 @@ models:
         - starts_with: deepseek-chat
         - equals: deepseek-chat-v3-0324
     context_window: 64000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -67,6 +75,14 @@ models:
         - starts_with: deepseek-r1
         - equals: deepseek-r1-0528
     context_window: 64000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -130,6 +146,14 @@ models:
       or:
         - starts_with: deepseek-v4-flash
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     price_comments: >-
       From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
       "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that
@@ -178,6 +202,14 @@ models:
       or:
         - starts_with: deepseek-v4-pro
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     price_comments: >-
       From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
       "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that

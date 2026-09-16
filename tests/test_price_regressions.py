@@ -10,6 +10,8 @@ from genai_prices.types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
+    ReasoningCapabilities,
+    SamplingCapabilities,
     StartDateConstraint,
     Tier,
     TieredPrices,
@@ -39,6 +41,37 @@ def test_gemini_25_flash_context_window() -> None:
     price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
 
     assert price.model.context_window == 1_048_576
+
+
+def test_gpt_6_astra_capabilities() -> None:
+    price = calc_price(Usage(), model_ref='gpt-6-astra', provider_id='openai')
+
+    capabilities = price.model.capabilities
+    assert capabilities is not None
+    assert capabilities.reasoning is not None
+    assert capabilities.reasoning.always_on
+    assert capabilities.reasoning.cross_turn_context
+    assert capabilities.reasoning.effort_levels == ['low', 'medium', 'high']
+    assert capabilities.reasoning.modes == ['standard', 'pro']
+    assert capabilities.sampling is not None and not capabilities.sampling.temperature
+    assert capabilities.verbosity_levels == ['low', 'medium', 'high']
+
+
+def test_claude_haiku_4_5_capabilities() -> None:
+    price = calc_price(Usage(), model_ref='claude-haiku-4-5', provider_id='anthropic')
+
+    capabilities = price.model.capabilities
+    assert capabilities is not None
+    assert capabilities.reasoning == ReasoningCapabilities(token_budget=True)
+    assert capabilities.sampling == SamplingCapabilities(temperature=True, top_p=True, top_k=True)
+
+
+def test_gpt_4o_reports_no_reasoning() -> None:
+    price = calc_price(Usage(), model_ref='gpt-4o', provider_id='openai')
+
+    capabilities = price.model.capabilities
+    assert capabilities is not None
+    assert capabilities.reasoning == ReasoningCapabilities(supported=False)
 
 
 @pytest.mark.parametrize(

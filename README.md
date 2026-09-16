@@ -22,6 +22,8 @@
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
 - support for [identifying price discrepancies](prices/README.md) from other sources
+- model metadata alongside prices: `context_window`, and `capabilities` describing which request
+  parameters a model accepts (see [Model capabilities](#model-capabilities))
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - Go package
@@ -111,6 +113,36 @@ longer receive provider, model or price updates. Use the v2 files above for anyt
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
+
+### Model capabilities
+
+A model record may carry a `capabilities` block describing which request parameters the provider
+accepts for it. The facts are stated in the provider's own vocabulary, so clients map them to their
+own settings. Every field is optional; a missing block means "unknown", not "unsupported".
+
+```yaml
+capabilities:
+  reasoning:
+    supported: true # false means none of the other reasoning fields apply
+    always_on: true # reasoning cannot be turned off
+    effort_levels: [low, medium, high] # accepted effort values
+    modes: [standard, pro]
+    summary_levels: [auto, concise, detailed]
+    cross_turn_context: true # earlier turns' reasoning can be carried into later requests
+    token_budget: false # an explicit reasoning token budget is accepted
+    adaptive: false # the provider decides per request whether and how much to reason
+  sampling:
+    temperature: false # rejected by most reasoning-only models
+    top_p: false
+    top_k: false
+    seed: false
+  service_tiers: [auto, default, flex, priority]
+  verbosity_levels: [low, medium, high]
+  max_output_tokens: 128000
+```
+
+Like `context_window`, a `capabilities` block is inherited through `canonical_model` when a provider
+offering does not set its own.
 
 ### API
 

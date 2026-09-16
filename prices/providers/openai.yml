@@ -362,6 +362,14 @@ models:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2
@@ -432,6 +440,14 @@ models:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
     context_window: 128000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5
@@ -608,6 +624,17 @@ models:
         - equals: gpt-5-chat-latest
         - equals: gpt-5-codex
     context_window: 400000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
     prices:
       input_mtok: 1.25
@@ -643,6 +670,17 @@ models:
         - equals: gpt-5-mini
         - equals: gpt-5-mini-2025-08-07
     context_window: 400000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
     prices:
       input_mtok: 0.25
@@ -661,6 +699,17 @@ models:
         - equals: gpt-5-nano
         - starts_with: gpt-5-nano-
     context_window: 400000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
     prices:
       input_mtok: 0.05
@@ -702,6 +751,17 @@ models:
         - equals: gpt-5-1-chat
         - equals: gpt-5-1-chat-latest
     context_window: 400000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
     prices:
       input_mtok: 1.25
@@ -744,6 +804,17 @@ models:
         - equals: gpt-5.2-codex
         - equals: gpt-5-2-codex
     context_window: 400000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2025-12-11
     prices:
       input_mtok: 1.75
@@ -812,6 +883,18 @@ models:
         - equals: gpt-5-4
         - equals: gpt-5-4-2026-03-05
     context_window: 1050000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
     price_comments: >-
       OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
@@ -937,6 +1020,18 @@ models:
         - equals: gpt-5.5-codex
         - equals: gpt-5-5-codex
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, minimal, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
     price_comments: >-
       OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
@@ -1003,6 +1098,19 @@ models:
         - regex: ^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-luna-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        modes: [standard, pro]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
@@ -1073,6 +1181,19 @@ models:
         - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        modes: [standard, pro]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
@@ -1143,6 +1264,19 @@ models:
         - regex: ^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-terra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: false
+        effort_levels: [none, low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        modes: [standard, pro]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
@@ -1209,6 +1343,19 @@ models:
         - equals: gpt-6-astra
         - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [low, medium, high]
+        summary_levels: [auto, concise, detailed]
+        modes: [standard, pro]
+        cross_turn_context: true
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
+      verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-03
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
@@ -1560,6 +1707,16 @@ models:
         - equals: o3-2025-04-16
     # https://developers.openai.com/api/docs/models/o3
     context_window: 200000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -1632,6 +1789,16 @@ models:
         - equals: o4-mini
     # https://developers.openai.com/api/docs/models/o4-mini
     context_window: 200000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        always_on: true
+        effort_levels: [low, medium, high]
+        summary_levels: [auto, concise, detailed]
+      sampling:
+        temperature: false
+        top_p: false
+      service_tiers: [auto, default, flex, priority]
     prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1

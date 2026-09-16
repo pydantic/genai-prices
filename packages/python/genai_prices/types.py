@@ -29,6 +29,9 @@ __all__ = (
     'UsageExtractorMapping',
     'UsageExtractor',
     'ModelInfo',
+    'ModelCapabilities',
+    'ReasoningCapabilities',
+    'SamplingCapabilities',
     'ModelPrice',
     'TieredPrices',
     'Tier',
@@ -685,6 +688,54 @@ def _raw_usage_value(obj: object, key: str) -> UsageValue | None:
 
 
 @dataclass
+class ReasoningCapabilities:
+    """How a model exposes reasoning (also called thinking), in the provider's own terms."""
+
+    supported: bool = True
+    """Whether the model can reason at all. `False` means the other fields do not apply."""
+    always_on: bool = False
+    """Whether reasoning cannot be turned off."""
+    effort_levels: list[str] | None = None
+    """Accepted effort values, in the provider's vocabulary, e.g. `[none, low, medium, high, xhigh]`."""
+    modes: list[str] | None = None
+    """Accepted reasoning modes, e.g. `[standard, pro]`."""
+    summary_levels: list[str] | None = None
+    """Accepted values for a reasoning summary in the response, e.g. `[auto, concise, detailed]`."""
+    cross_turn_context: bool | None = None
+    """Whether reasoning from earlier turns can be carried into later requests."""
+    token_budget: bool | None = None
+    """Whether the request may set an explicit reasoning token budget."""
+    adaptive: bool | None = None
+    """Whether the provider can decide per request whether and how much to reason."""
+
+
+@dataclass
+class SamplingCapabilities:
+    """Which sampling parameters the provider accepts for this model."""
+
+    temperature: bool = True
+    top_p: bool = True
+    top_k: bool = False
+    seed: bool = False
+
+
+@dataclass
+class ModelCapabilities:
+    """Request parameters a model accepts. Facts about the provider's API, not any client's settings."""
+
+    reasoning: ReasoningCapabilities | None = None
+    """Reasoning support and the knobs that control it."""
+    sampling: SamplingCapabilities | None = None
+    """Which sampling parameters are accepted."""
+    service_tiers: list[str] | None = None
+    """Accepted service tier values, e.g. `[auto, default, flex, priority]`."""
+    verbosity_levels: list[str] | None = None
+    """Accepted output verbosity values, e.g. `[low, medium, high]`."""
+    max_output_tokens: int | None = None
+    """Largest number of output tokens a single request may produce."""
+
+
+@dataclass
 class ModelInfo:
     """Information about an LLM model"""
 
@@ -698,6 +749,8 @@ class ModelInfo:
     """Description of the model"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
+    capabilities: ModelCapabilities | None = None
+    """Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits."""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     deprecated: bool | None = None

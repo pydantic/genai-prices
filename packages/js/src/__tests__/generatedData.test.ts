@@ -192,6 +192,27 @@ describe('generated data split', () => {
     expect(result?.model.context_window).toBe(contextWindow)
   })
 
+  it('exposes model capabilities from the published data', () => {
+    const astra = calcPrice({ input_tokens: 1 }, 'gpt-6-astra', { providerId: 'openai' })
+    expect(astra?.model.capabilities?.reasoning).toEqual({
+      always_on: true,
+      cross_turn_context: true,
+      effort_levels: ['low', 'medium', 'high'],
+      modes: ['standard', 'pro'],
+      summary_levels: ['auto', 'concise', 'detailed'],
+      supported: true,
+    })
+    expect(astra?.model.capabilities?.sampling?.temperature).toBe(false)
+    expect(astra?.model.capabilities?.verbosity_levels).toEqual(['low', 'medium', 'high'])
+
+    const haiku = calcPrice({ input_tokens: 1 }, 'claude-haiku-4-5', { providerId: 'anthropic' })
+    expect(haiku?.model.capabilities?.reasoning).toEqual({ always_on: false, supported: true, token_budget: true })
+    expect(haiku?.model.capabilities?.sampling?.top_k).toBe(true)
+
+    const gpt4o = calcPrice({ input_tokens: 1 }, 'gpt-4o', { providerId: 'openai' })
+    expect(gpt4o?.model.capabilities?.reasoning?.supported).toBe(false)
+  })
+
   it.each(['claude-sonnet-4-0', 'anthropic/claude-sonnet-4'])('keeps the Google Claude Sonnet 4 alias $model on Google', (model) => {
     const result = calcPrice({ input_tokens: 1 }, model, { providerId: 'google' })
 
