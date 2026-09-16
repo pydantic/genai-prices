@@ -22,6 +22,7 @@ from pydantic import (
     WithJsonSchema,
     WrapSerializer,
     field_validator,
+    model_validator,
 )
 
 from .utils import check_unique
@@ -168,6 +169,62 @@ def serialize_prices(
     return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
 
 
+class ReasoningCapabilities(_Model):
+    """How a model exposes reasoning (also called thinking), in the provider's own terms."""
+
+    supported: bool | None = None
+    """Whether the model can reason at all. `False` means the other fields do not apply."""
+    always_on: bool | None = None
+    """Whether reasoning cannot be turned off."""
+    effort_levels: list[str] | None = None
+    """Accepted effort values, in the provider's vocabulary, e.g. `[none, low, medium, high, xhigh]`."""
+    modes: list[str] | None = None
+    """Accepted reasoning modes, e.g. `[standard, pro]`."""
+    summary_levels: list[str] | None = None
+    """Accepted values for a reasoning summary in the response, e.g. `[auto, concise, detailed]`."""
+    cross_turn_context: bool | None = None
+    """Whether reasoning from earlier turns can be carried into later requests."""
+    token_budget: bool | None = None
+    """Whether the request may set an explicit reasoning token budget."""
+    adaptive: bool | None = None
+    """Whether the provider can decide per request whether and how much to reason."""
+
+    @model_validator(mode='after')
+    def _unsupported_has_no_details(self) -> ReasoningCapabilities:
+        if self.supported is False:
+            details = {name for name in self.model_fields_set if name != 'supported'}
+            if details:
+                raise ValueError(f'reasoning.supported is false, so these fields must be omitted: {sorted(details)}')
+        return self
+
+
+class SamplingCapabilities(_Model):
+    """Which sampling parameters the provider accepts for this model. An omitted field is unknown."""
+
+    temperature: bool | None = None
+    top_p: bool | None = None
+    top_k: bool | None = None
+    seed: bool | None = None
+
+
+class ModelCapabilities(_Model):
+    """Request parameters a model accepts. Facts about the provider's API, not any client's settings.
+
+    Every field is optional and an omitted field means unknown, never a default.
+    """
+
+    reasoning: ReasoningCapabilities | None = None
+    """Reasoning support and the knobs that control it."""
+    sampling: SamplingCapabilities | None = None
+    """Which sampling parameters are accepted."""
+    service_tiers: list[str] | None = None
+    """Accepted service tier values, e.g. `[auto, default, flex, priority]`."""
+    verbosity_levels: list[str] | None = None
+    """Accepted output verbosity values, e.g. `[low, medium, high]`."""
+    max_output_tokens: int | None = None
+    """Largest number of output tokens a single request may produce."""
+
+
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
@@ -182,12 +239,14 @@ class ModelInfo(_Model):
     canonical_model: ModelRefField | None = Field(default=None, exclude=True)
     """The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.
 
-    The build copies missing metadata (currently only `context_window`) from that record; an explicit
-    value on this record wins. Only set this when the value holds for every model this record matches.
-    Not included in published data.
+    The build copies missing metadata (`context_window` and `capabilities`) from that record; an
+    explicit value on this record wins. Only set this when the value holds for every model this record
+    matches. Not included in published data.
     """
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
+    capabilities: ModelCapabilities | None = None
+    """Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits."""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]

@@ -22,6 +22,8 @@
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
 - support for [identifying price discrepancies](prices/README.md) from other sources
+- model metadata alongside prices: `context_window`, and `capabilities` describing which request
+  parameters a model accepts (see [Model capabilities](#model-capabilities))
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - Go package
@@ -43,7 +45,7 @@ The following providers are currently supported:
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 6 models
-- [Deepseek](prices/providers/deepseek.yml) - 7 models
+- [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 20 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 30 models
@@ -65,7 +67,7 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 91 models
+- [OpenAI](prices/providers/openai.yml) - 92 models
 - [OpenRouter](prices/providers/openrouter.yml) - 696 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
@@ -111,6 +113,38 @@ longer receive provider, model or price updates. Use the v2 files above for anyt
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
+
+### Model capabilities
+
+A model record may carry a `capabilities` block describing which request parameters the provider
+accepts for it. The facts are stated in the provider's own vocabulary, so clients map them to their
+own settings. Every field is optional, and an omitted field at any level means "unknown", never a
+default: a missing block, a missing `sampling` section, or a missing `temperature` flag all say
+nothing about the model. Only an explicit `false` says the provider rejects something.
+
+```yaml
+capabilities:
+  reasoning:
+    supported: true # false means none of the other reasoning fields apply
+    always_on: true # whether reasoning can be turned off; true means it cannot
+    effort_levels: [low, medium, high] # accepted effort values
+    modes: [standard, pro]
+    summary_levels: [auto, concise, detailed]
+    cross_turn_context: true # whether earlier turns' reasoning can be carried into later requests
+    token_budget: false # whether an explicit reasoning token budget is accepted
+    adaptive: false # whether the provider decides per request whether and how much to reason
+  sampling:
+    temperature: false # rejected by most reasoning-only models
+    top_p: false
+    top_k: false
+    seed: false
+  service_tiers: [auto, default, flex, priority]
+  verbosity_levels: [low, medium, high]
+  max_output_tokens: 128000
+```
+
+Like `context_window`, a `capabilities` block is inherited through `canonical_model` when a provider
+offering does not set its own.
 
 ### API
 

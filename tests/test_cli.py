@@ -264,7 +264,7 @@ def test_list_provider(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['--plain', 'list', 'deepseek']) == 0
     out, err = capsys.readouterr()
     assert out == snapshot("""\
-Deepseek: (7 models)
+Deepseek: (8 models)
   deepseek:deepseek-chat: DeepSeek Chat
   deepseek:deepseek-reasoner: Deepseek R1
   deepseek:deepseek-v3.1-terminus: DeepSeek V3.1 Terminus
@@ -272,6 +272,7 @@ Deepseek: (7 models)
   deepseek:deepseek-v3.2-exp: DeepSeek V3.2 Exp
   deepseek:deepseek-v4-flash: DeepSeek V4 Flash
   deepseek:deepseek-v4-pro: DeepSeek V4 Pro
+  deepseek:deepseek-v4.1-flash: DeepSeek V4.1 Flash
 """)
     assert err == ''
 

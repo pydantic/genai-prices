@@ -335,6 +335,18 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         price_comments:
           'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
@@ -425,6 +437,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max'],
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         price_comments:
           'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
@@ -611,6 +636,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
@@ -672,6 +711,18 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         price_comments:
           'One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers describe historical usage from before retirement. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
         prices: {
@@ -828,6 +879,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
@@ -1504,6 +1569,18 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
@@ -1517,6 +1594,19 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-5',
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max'],
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1569,6 +1659,20 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-5',
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -1595,6 +1699,18 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
@@ -1621,6 +1737,20 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-5',
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
         prices: {
@@ -2490,6 +2620,18 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 1.1,
           cache_write_mtok: 1.375,
@@ -2604,6 +2746,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max'],
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -2744,6 +2899,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
         prices: {
@@ -2822,6 +2991,18 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
@@ -2898,6 +3079,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
         prices: {
@@ -3554,6 +3749,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+        },
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -3592,6 +3800,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+        },
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.28,
@@ -5357,6 +5578,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 64000,
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
+        },
         prices: [
           {
             prices: {
@@ -5398,6 +5629,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 64000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+        },
         prices: [
           {
             prices: {
@@ -5476,6 +5717,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         price_comments:
           'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
         prices: [
@@ -5536,6 +5787,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         price_comments:
           'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
         prices: [
@@ -5579,6 +5840,65 @@ export const data: Provider[] = [
               input_mtok: 1.32,
               cache_read_mtok: 0.044,
               output_mtok: 3.96,
+            },
+          },
+        ],
+      },
+      {
+        id: 'deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        description:
+          'DeepSeek-V4.1-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4.1-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
+        price_comments:
+          'Off-peak rate is the unconstrained first price; the two weekday peak windows ("UTC 01:00-04:00" and "UTC 06:00-10:00") come last so they win during peak hours, matching the V4 layout. Weekends are off-peak all day, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound (https://github.com/pydantic/genai-prices/issues/582). Prices taken from OpenRouter\'s DeepSeek-hosted route (https://openrouter.ai/deepseek/deepseek-v4.1-flash), which mirrors DeepSeek\'s own schedule including the peak overrides; DeepSeek\'s pricing page is rendered client-side and could not be scraped.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
             },
           },
         ],
@@ -6008,6 +6328,16 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/models/deepseek-v4-pro',
         },
         context_window: 1048576,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         prices: {
           input_mtok: 1.74,
           cache_read_mtok: 0.145,
@@ -7996,6 +8326,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
+            token_budget: false,
+            adaptive: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+            top_k: false,
+          },
+        },
         price_comments:
           'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
         prices: {
@@ -8018,6 +8362,18 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            token_budget: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            top_k: true,
+          },
+        },
         price_comments:
           'Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
         prices: {
@@ -15385,6 +15741,16 @@ export const data: Provider[] = [
         match: {
           equals: 'kimi-k2',
         },
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
+        },
         prices: {
           input_mtok: 0.57,
           output_mtok: 2.3,
@@ -15431,6 +15797,12 @@ export const data: Provider[] = [
           equals: 'kimi-k2-thinking',
         },
         context_window: 262144,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+          },
+        },
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.15,
@@ -15479,6 +15851,12 @@ export const data: Provider[] = [
           starts_with: 'kimi-k2.5',
         },
         context_window: 262144,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+        },
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.1,
@@ -15494,6 +15872,12 @@ export const data: Provider[] = [
           starts_with: 'kimi-k2.6',
         },
         context_window: 262144,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+        },
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -15541,6 +15925,12 @@ export const data: Provider[] = [
           equals: 'kimi-k3',
         },
         context_window: 1048576,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+          },
+        },
         price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
         prices: {
           input_mtok: 3,
@@ -16574,6 +16964,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
+        },
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -16661,6 +17061,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
+        },
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
@@ -16873,17 +17283,58 @@ export const data: Provider[] = [
               equals: 'gpt-5-2025-08-07',
             },
             {
-              equals: 'gpt-5-chat',
-            },
-            {
-              equals: 'gpt-5-chat-latest',
-            },
-            {
               equals: 'gpt-5-codex',
             },
           ],
         },
         context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['minimal', 'low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-5-chat',
+        name: 'GPT-5 Chat',
+        description: 'The non-reasoning chat variant of GPT-5, priced the same as GPT-5.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5-chat',
+            },
+            {
+              equals: 'gpt-5-chat-latest',
+            },
+          ],
+        },
+        context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
+        },
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
@@ -16931,6 +17382,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['minimal', 'low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -16954,6 +17419,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['minimal', 'low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         prices: {
           input_mtok: 0.05,
           cache_read_mtok: 0.005,
@@ -17027,6 +17506,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
@@ -17100,6 +17593,20 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
@@ -17207,6 +17714,21 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
@@ -17405,6 +17927,21 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
         prices: {
@@ -17506,6 +18043,22 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+            modes: ['standard', 'pro'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
         prices: [
@@ -17626,6 +18179,22 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+            modes: ['standard', 'pro'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
         prices: [
@@ -17740,6 +18309,22 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+            modes: ['standard', 'pro'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
         prices: [
@@ -17848,6 +18433,22 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['low', 'medium', 'high', 'xhigh', 'max'],
+            modes: ['standard', 'pro'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+            cross_turn_context: true,
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+          verbosity_levels: ['low', 'medium', 'high'],
+        },
         price_comments:
           'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
@@ -18289,6 +18890,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+        },
         prices: [
           {
             prices: {
@@ -18397,6 +19011,19 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+            effort_levels: ['low', 'medium', 'high'],
+            summary_levels: ['auto', 'concise', 'detailed'],
+          },
+          sampling: {
+            temperature: false,
+            top_p: false,
+          },
+          service_tiers: ['auto', 'default', 'flex', 'priority'],
+        },
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
@@ -30066,6 +30693,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         prices: {
           input_mtok: 1.4,
           cache_read_mtok: 0.26,
@@ -30088,6 +30725,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         prices: {
           input_mtok: 1.4,
           cache_read_mtok: 0.26,
@@ -30110,6 +30757,16 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: true,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
         price_comments:
           'Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
         prices: {
