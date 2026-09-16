@@ -5844,6 +5844,65 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        description:
+          'DeepSeek-V4.1-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4.1-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+          },
+        },
+        price_comments:
+          'Off-peak rate is the unconstrained first price; the two weekday peak windows ("UTC 01:00-04:00" and "UTC 06:00-10:00") come last so they win during peak hours, matching the V4 layout. Weekends are off-peak all day, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound (https://github.com/pydantic/genai-prices/issues/582). Prices taken from OpenRouter\'s DeepSeek-hosted route (https://openrouter.ai/deepseek/deepseek-v4.1-flash), which mirrors DeepSeek\'s own schedule including the peak overrides; DeepSeek\'s pricing page is rendered client-side and could not be scraped.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+        ],
+      },
     ],
   },
   {
@@ -15813,6 +15872,12 @@ export const data: Provider[] = [
           starts_with: 'kimi-k2.6',
         },
         context_window: 262144,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+        },
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,

@@ -3489,6 +3489,43 @@ providers: list[Provider] = [
                     ),
                 ],
             ),
+            ModelInfo(
+                id='deepseek-v4.1-flash',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='deepseek-v4.1-flash')]),
+                name='DeepSeek V4.1 Flash',
+                description='DeepSeek-V4.1-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+                context_window=1000000,
+                price_comments='Off-peak rate is the unconstrained first price; the two weekday peak windows ("UTC 01:00-04:00" and "UTC 06:00-10:00") come last so they win during peak hours, matching the V4 layout. Weekends are off-peak all day, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound (https://github.com/pydantic/genai-prices/issues/582). Prices taken from OpenRouter\'s DeepSeek-hosted route (https://openrouter.ai/deepseek/deepseek-v4.1-flash), which mirrors DeepSeek\'s own schedule including the peak overrides; DeepSeek\'s pricing page is rendered client-side and could not be scraped.',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.6')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=TimeOfDateConstraint(
+                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                        ),
+                    ),
+                ],
+            ),
         ],
     ),
     Provider(
@@ -9250,6 +9287,7 @@ providers: list[Provider] = [
                 name='Kimi K2.6',
                 description="Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=False)),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
                 ),

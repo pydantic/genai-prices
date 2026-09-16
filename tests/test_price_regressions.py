@@ -1,5 +1,5 @@
 from copy import copy
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 
 import pytest
@@ -82,6 +82,42 @@ def test_deepseek_reasoner_rejects_sampling() -> None:
     assert capabilities is not None
     assert capabilities.reasoning == ReasoningCapabilities(supported=True, always_on=True)
     assert capabilities.sampling == SamplingCapabilities(temperature=False, top_p=False)
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id'),
+    [
+        ('deepseek-v4-flash-0731', 'deepseek-v4-flash'),
+        ('deepseek-v4-pro-0831', 'deepseek-v4-pro'),
+        ('deepseek-v4.1-flash', 'deepseek-v4.1-flash'),
+        ('kimi-k2.6', 'kimi-k2.6'),
+    ],
+)
+def test_dated_and_point_releases_carry_switchable_reasoning(model_ref: str, model_id: str) -> None:
+    provider_id = 'moonshotai' if model_ref.startswith('kimi') else 'deepseek'
+    price = calc_price(Usage(), model_ref=model_ref, provider_id=provider_id)
+
+    assert price.model.id == model_id
+    assert price.model.capabilities is not None
+    assert price.model.capabilities.reasoning == ReasoningCapabilities(supported=True, always_on=False)
+
+
+def test_deepseek_v4_1_flash_prices() -> None:
+    off_peak = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='deepseek-v4.1-flash',
+        provider_id='deepseek',
+        genai_request_timestamp=datetime(2026, 9, 16, 12, 0, tzinfo=timezone.utc),
+    )
+    peak = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='deepseek-v4.1-flash',
+        provider_id='deepseek',
+        genai_request_timestamp=datetime(2026, 9, 16, 2, 0, tzinfo=timezone.utc),
+    )
+
+    assert off_peak.total_price == Decimal('0.603')
+    assert peak.total_price == Decimal('1.206')
 
 
 def test_models_without_capabilities_report_none() -> None:
