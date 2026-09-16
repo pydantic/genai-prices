@@ -44,7 +44,7 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
-- [Doubleword](prices/providers/doubleword.yml) - 20 models
+- [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 30 models
 - [Google](prices/providers/google.yml) - 55 models
