@@ -3471,6 +3471,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.74'), output_mtok=Decimal('3.48')),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                name='DeepSeek V4.1 Flash',
+                price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
                 id='google/gemma-4-31B-it',
                 match=ClauseEquals(equals='google/gemma-4-31B-it'),
                 name='Gemma 4 31B IT',
