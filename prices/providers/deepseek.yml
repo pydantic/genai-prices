@@ -78,11 +78,11 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
       sampling:
-        temperature: true
-        top_p: true
-        seed: true
+        temperature: false
+        top_p: false
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -149,11 +149,11 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
       sampling:
         temperature: true
         top_p: true
-        seed: true
     price_comments: >-
       From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
       "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that
@@ -205,11 +205,11 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
       sampling:
         temperature: true
         top_p: true
-        seed: true
     price_comments: >-
       From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
       "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that

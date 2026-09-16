@@ -691,9 +691,9 @@ def _raw_usage_value(obj: object, key: str) -> UsageValue | None:
 class ReasoningCapabilities:
     """How a model exposes reasoning (also called thinking), in the provider's own terms."""
 
-    supported: bool = True
+    supported: bool | None = None
     """Whether the model can reason at all. `False` means the other fields do not apply."""
-    always_on: bool = False
+    always_on: bool | None = None
     """Whether reasoning cannot be turned off."""
     effort_levels: list[str] | None = None
     """Accepted effort values, in the provider's vocabulary, e.g. `[none, low, medium, high, xhigh]`."""
@@ -711,17 +711,20 @@ class ReasoningCapabilities:
 
 @dataclass
 class SamplingCapabilities:
-    """Which sampling parameters the provider accepts for this model."""
+    """Which sampling parameters the provider accepts for this model. An omitted field is unknown."""
 
-    temperature: bool = True
-    top_p: bool = True
-    top_k: bool = False
-    seed: bool = False
+    temperature: bool | None = None
+    top_p: bool | None = None
+    top_k: bool | None = None
+    seed: bool | None = None
 
 
 @dataclass
 class ModelCapabilities:
-    """Request parameters a model accepts. Facts about the provider's API, not any client's settings."""
+    """Request parameters a model accepts. Facts about the provider's API, not any client's settings.
+
+    Every field is optional and an omitted field means unknown, never a default.
+    """
 
     reasoning: ReasoningCapabilities | None = None
     """Reasoning support and the knobs that control it."""
@@ -749,12 +752,12 @@ class ModelInfo:
     """Description of the model"""
     context_window: int | None = None
     """Maximum number of input tokens allowed for this model"""
-    capabilities: ModelCapabilities | None = None
-    """Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits."""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     deprecated: bool | None = None
     """Flag indicating this model is deprecated by the provider but still functional."""
+    capabilities: ModelCapabilities | None = None
+    """Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits."""
 
     prices: ModelPrice | list[ConditionalPrice] = dataclasses.field(default_factory=list)
     """Set of prices for using this model.

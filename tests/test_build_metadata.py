@@ -36,7 +36,7 @@ def make_model(
 
 
 REASONER = ModelCapabilities(
-    reasoning=ReasoningCapabilities(always_on=True, effort_levels=['low', 'medium', 'high']),
+    reasoning=ReasoningCapabilities(supported=True, always_on=True, effort_levels=['low', 'medium', 'high']),
     sampling=SamplingCapabilities(temperature=False, top_p=False),
     service_tiers=['auto', 'default'],
 )
@@ -65,16 +65,24 @@ def test_capabilities_round_trip_to_runtime_types():
     serialized = providers_schema.dump_python(providers, mode='json', exclude_none=True)
     assert serialized[0]['models'][0]['capabilities'] == {
         'reasoning': {'supported': True, 'always_on': True, 'effort_levels': ['low', 'medium', 'high']},
-        'sampling': {'temperature': False, 'top_p': False, 'top_k': False, 'seed': False},
+        'sampling': {'temperature': False, 'top_p': False},
         'service_tiers': ['auto', 'default'],
     }
 
     runtime = runtime_types._providers_from_raw(serialized)[0].models[0]
     assert runtime.capabilities == runtime_types.ModelCapabilities(
-        reasoning=runtime_types.ReasoningCapabilities(always_on=True, effort_levels=['low', 'medium', 'high']),
+        reasoning=runtime_types.ReasoningCapabilities(
+            supported=True, always_on=True, effort_levels=['low', 'medium', 'high']
+        ),
         sampling=runtime_types.SamplingCapabilities(temperature=False, top_p=False),
         service_tiers=['auto', 'default'],
     )
+
+
+def test_omitted_capability_fields_stay_unknown():
+    reasoning = ReasoningCapabilities.model_validate({'effort_levels': ['low']})
+    assert reasoning.supported is None and reasoning.always_on is None
+    assert SamplingCapabilities.model_validate({}).temperature is None
 
 
 def test_capabilities_reject_unknown_fields():

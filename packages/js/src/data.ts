@@ -345,7 +345,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         price_comments:
@@ -442,14 +441,13 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high'],
+            effort_levels: ['low', 'medium', 'high', 'max'],
             token_budget: true,
           },
           sampling: {
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         price_comments:
@@ -642,7 +640,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -650,7 +648,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -724,7 +721,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         price_comments:
@@ -887,7 +883,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -895,7 +891,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -1584,7 +1579,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -1604,14 +1598,13 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high'],
+            effort_levels: ['low', 'medium', 'high', 'max'],
             token_budget: true,
           },
           sampling: {
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -1670,7 +1663,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -1678,7 +1671,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         prices: {
@@ -1717,7 +1709,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -1750,7 +1741,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -1758,7 +1749,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -2640,7 +2630,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -2761,14 +2750,13 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high'],
+            effort_levels: ['low', 'medium', 'high', 'max'],
             token_budget: true,
           },
           sampling: {
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -2915,7 +2903,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -2923,7 +2911,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -3014,7 +3001,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         prices: {
@@ -3097,7 +3083,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -3105,7 +3091,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -3774,8 +3759,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
         },
@@ -3827,8 +3810,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
         },
@@ -5600,12 +5581,10 @@ export const data: Provider[] = [
         capabilities: {
           reasoning: {
             supported: false,
-            always_on: false,
           },
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
             seed: true,
           },
         },
@@ -5656,10 +5635,8 @@ export const data: Provider[] = [
             always_on: true,
           },
           sampling: {
-            temperature: true,
-            top_p: true,
-            top_k: false,
-            seed: true,
+            temperature: false,
+            top_p: false,
           },
         },
         prices: [
@@ -5748,8 +5725,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         price_comments:
@@ -5820,8 +5795,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         price_comments:
@@ -6304,8 +6277,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         prices: {
@@ -8300,7 +8271,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['low', 'medium', 'high', 'xhigh'],
+            effort_levels: ['low', 'medium', 'high', 'max', 'xhigh'],
             token_budget: false,
             adaptive: true,
           },
@@ -8308,7 +8279,6 @@ export const data: Provider[] = [
             temperature: false,
             top_p: false,
             top_k: false,
-            seed: false,
           },
         },
         price_comments:
@@ -8343,7 +8313,6 @@ export const data: Provider[] = [
             temperature: true,
             top_p: true,
             top_k: true,
-            seed: false,
           },
         },
         price_comments:
@@ -15716,12 +15685,10 @@ export const data: Provider[] = [
         capabilities: {
           reasoning: {
             supported: false,
-            always_on: false,
           },
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
             seed: true,
           },
         },
@@ -15779,8 +15746,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         prices: {
@@ -15839,8 +15804,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         prices: {
@@ -15908,13 +15871,11 @@ export const data: Provider[] = [
         capabilities: {
           reasoning: {
             supported: true,
-            always_on: false,
+            always_on: true,
           },
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: true,
           },
         },
         price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
@@ -16953,12 +16914,10 @@ export const data: Provider[] = [
         capabilities: {
           reasoning: {
             supported: false,
-            always_on: false,
           },
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
             seed: true,
           },
         },
@@ -17052,12 +17011,10 @@ export const data: Provider[] = [
         capabilities: {
           reasoning: {
             supported: false,
-            always_on: false,
           },
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
             seed: true,
           },
         },
@@ -17294,8 +17251,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17357,8 +17312,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17396,8 +17349,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17485,8 +17436,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17574,8 +17523,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17698,8 +17645,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17913,8 +17858,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18032,8 +17975,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18170,8 +18111,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18302,8 +18241,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18428,8 +18365,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18885,8 +18820,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
         },
@@ -19008,8 +18941,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: false,
             top_p: false,
-            top_k: false,
-            seed: false,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
         },
@@ -30690,8 +30621,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: false,
           },
         },
         prices: {
@@ -30724,8 +30653,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: false,
           },
         },
         prices: {
@@ -30758,8 +30685,6 @@ export const data: Provider[] = [
           sampling: {
             temperature: true,
             top_p: true,
-            top_k: false,
-            seed: false,
           },
         },
         price_comments:

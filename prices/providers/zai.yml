@@ -36,6 +36,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
       sampling:
         temperature: true
@@ -60,6 +61,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
       sampling:
         temperature: true
@@ -83,6 +85,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
       sampling:
         temperature: true

@@ -225,7 +225,7 @@
     },
     "ModelCapabilities": {
       "additionalProperties": false,
-      "description": "Request parameters a model accepts. Facts about the provider's API, not any client's settings.",
+      "description": "Request parameters a model accepts. Facts about the provider's API, not any client's settings.\n\nEvery field is optional and an omitted field means unknown, never a default.",
       "properties": {
         "reasoning": {
           "$ref": "#/$defs/ReasoningCapabilities",
@@ -1210,16 +1210,14 @@
       "description": "How a model exposes reasoning (also called thinking), in the provider's own terms.",
       "properties": {
         "supported": {
-          "default": true,
+          "type": "boolean",
           "description": "Whether the model can reason at all. `False` means the other fields do not apply.",
-          "title": "Supported",
-          "type": "boolean"
+          "title": "Supported"
         },
         "always_on": {
-          "default": false,
+          "type": "boolean",
           "description": "Whether reasoning cannot be turned off.",
-          "title": "Always On",
-          "type": "boolean"
+          "title": "Always On"
         },
         "effort_levels": {
           "items": {
@@ -1266,27 +1264,23 @@
     },
     "SamplingCapabilities": {
       "additionalProperties": false,
-      "description": "Which sampling parameters the provider accepts for this model.",
+      "description": "Which sampling parameters the provider accepts for this model. An omitted field is unknown.",
       "properties": {
         "temperature": {
-          "default": true,
-          "title": "Temperature",
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Temperature"
         },
         "top_p": {
-          "default": true,
-          "title": "Top P",
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Top P"
         },
         "top_k": {
-          "default": false,
-          "title": "Top K",
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Top K"
         },
         "seed": {
-          "default": false,
-          "title": "Seed",
-          "type": "boolean"
+          "type": "boolean",
+          "title": "Seed"
         }
       },
       "title": "SamplingCapabilities",

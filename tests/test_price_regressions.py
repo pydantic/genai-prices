@@ -62,7 +62,7 @@ def test_claude_haiku_4_5_capabilities() -> None:
 
     capabilities = price.model.capabilities
     assert capabilities is not None
-    assert capabilities.reasoning == ReasoningCapabilities(token_budget=True)
+    assert capabilities.reasoning == ReasoningCapabilities(supported=True, always_on=False, token_budget=True)
     assert capabilities.sampling == SamplingCapabilities(temperature=True, top_p=True, top_k=True)
 
 
@@ -72,6 +72,22 @@ def test_gpt_4o_reports_no_reasoning() -> None:
     capabilities = price.model.capabilities
     assert capabilities is not None
     assert capabilities.reasoning == ReasoningCapabilities(supported=False)
+    assert capabilities.sampling == SamplingCapabilities(temperature=True, top_p=True, seed=True)
+
+
+def test_deepseek_reasoner_rejects_sampling() -> None:
+    price = calc_price(Usage(), model_ref='deepseek-reasoner', provider_id='deepseek')
+
+    capabilities = price.model.capabilities
+    assert capabilities is not None
+    assert capabilities.reasoning == ReasoningCapabilities(supported=True, always_on=True)
+    assert capabilities.sampling == SamplingCapabilities(temperature=False, top_p=False)
+
+
+def test_models_without_capabilities_report_none() -> None:
+    price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
+
+    assert price.model.capabilities is None
 
 
 @pytest.mark.parametrize(

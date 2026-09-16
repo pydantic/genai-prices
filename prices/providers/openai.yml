@@ -627,6 +627,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -673,6 +674,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -702,6 +704,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -754,6 +757,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -807,6 +811,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -886,6 +891,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1023,6 +1029,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1101,6 +1108,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1184,6 +1192,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1267,6 +1276,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: false
         effort_levels: [none, low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1346,6 +1356,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1710,6 +1721,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [low, medium, high]
         summary_levels: [auto, concise, detailed]
@@ -1792,6 +1804,7 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
         always_on: true
         effort_levels: [low, medium, high]
         summary_levels: [auto, concise, detailed]

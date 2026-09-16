@@ -118,7 +118,9 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 A model record may carry a `capabilities` block describing which request parameters the provider
 accepts for it. The facts are stated in the provider's own vocabulary, so clients map them to their
-own settings. Every field is optional; a missing block means "unknown", not "unsupported".
+own settings. Every field is optional, and an omitted field at any level means "unknown", never a
+default: a missing block, a missing `sampling` section, or a missing `temperature` flag all say
+nothing about the model. Only an explicit `false` says the provider rejects something.
 
 ```yaml
 capabilities:

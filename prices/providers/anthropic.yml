@@ -250,6 +250,8 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
+        always_on: false
         token_budget: true
       sampling:
         temperature: true
@@ -341,8 +343,10 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
+        always_on: false
         token_budget: true
-        effort_levels: [low, medium, high]
+        effort_levels: [low, medium, high, max]
       sampling:
         temperature: true
         top_p: true
@@ -473,8 +477,10 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
+        always_on: false
         token_budget: false
-        effort_levels: [low, medium, high, xhigh]
+        effort_levels: [low, medium, high, max, xhigh]
         adaptive: true
       sampling:
         temperature: false
@@ -528,6 +534,8 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
+        always_on: false
         token_budget: true
       sampling:
         temperature: true
@@ -632,8 +640,10 @@ models:
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
     capabilities:
       reasoning:
+        supported: true
+        always_on: false
         token_budget: false
-        effort_levels: [low, medium, high, xhigh]
+        effort_levels: [low, medium, high, max, xhigh]
         adaptive: true
       sampling:
         temperature: false
