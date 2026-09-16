@@ -17283,12 +17283,6 @@ export const data: Provider[] = [
               equals: 'gpt-5-2025-08-07',
             },
             {
-              equals: 'gpt-5-chat',
-            },
-            {
-              equals: 'gpt-5-chat-latest',
-            },
-            {
               equals: 'gpt-5-codex',
             },
           ],
@@ -17307,6 +17301,39 @@ export const data: Provider[] = [
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-5-chat',
+        name: 'GPT-5 Chat',
+        description: 'The non-reasoning chat variant of GPT-5, priced the same as GPT-5.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5-chat',
+            },
+            {
+              equals: 'gpt-5-chat-latest',
+            },
+          ],
+        },
+        context_window: 400000,
+        capabilities: {
+          reasoning: {
+            supported: false,
+          },
+          sampling: {
+            temperature: true,
+            top_p: true,
+            seed: true,
+          },
         },
         prices: {
           input_mtok: 1.25,
@@ -17487,8 +17514,8 @@ export const data: Provider[] = [
             summary_levels: ['auto', 'concise', 'detailed'],
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17574,8 +17601,8 @@ export const data: Provider[] = [
             summary_levels: ['auto', 'concise', 'detailed'],
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17696,8 +17723,8 @@ export const data: Provider[] = [
             cross_turn_context: true,
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -17909,8 +17936,8 @@ export const data: Provider[] = [
             cross_turn_context: true,
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18026,8 +18053,8 @@ export const data: Provider[] = [
             cross_turn_context: true,
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18162,8 +18189,8 @@ export const data: Provider[] = [
             cross_turn_context: true,
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],
@@ -18292,8 +18319,8 @@ export const data: Provider[] = [
             cross_turn_context: true,
           },
           sampling: {
-            temperature: false,
-            top_p: false,
+            temperature: true,
+            top_p: true,
           },
           service_tiers: ['auto', 'default', 'flex', 'priority'],
           verbosity_levels: ['low', 'medium', 'high'],

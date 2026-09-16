@@ -120,6 +120,28 @@ def test_deepseek_v4_1_flash_prices() -> None:
     assert peak.total_price == Decimal('1.206')
 
 
+@pytest.mark.parametrize('model_ref', ['gpt-5-chat', 'gpt-5-chat-latest'])
+def test_gpt_5_chat_is_priced_like_gpt_5_without_reasoning(model_ref: str) -> None:
+    chat = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id='openai')
+    reasoner = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref='gpt-5', provider_id='openai'
+    )
+
+    assert chat.model.id == 'gpt-5-chat'
+    assert chat.total_price == reasoner.total_price
+    assert chat.model.capabilities is not None
+    assert chat.model.capabilities.reasoning == ReasoningCapabilities(supported=False)
+
+
+def test_gpt_5_6_accepts_sampling_when_reasoning_is_off() -> None:
+    price = calc_price(Usage(), model_ref='gpt-5.6-sol', provider_id='openai')
+
+    capabilities = price.model.capabilities
+    assert capabilities is not None and capabilities.reasoning is not None
+    assert 'none' in (capabilities.reasoning.effort_levels or [])
+    assert capabilities.sampling == SamplingCapabilities(temperature=True, top_p=True)
+
+
 def test_models_without_capabilities_report_none() -> None:
     price = calc_price(Usage(), model_ref='gemini-2.5-flash', provider_id='google')
 

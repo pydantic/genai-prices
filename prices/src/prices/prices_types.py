@@ -22,6 +22,7 @@ from pydantic import (
     WithJsonSchema,
     WrapSerializer,
     field_validator,
+    model_validator,
 )
 
 from .utils import check_unique
@@ -187,6 +188,14 @@ class ReasoningCapabilities(_Model):
     """Whether the request may set an explicit reasoning token budget."""
     adaptive: bool | None = None
     """Whether the provider can decide per request whether and how much to reason."""
+
+    @model_validator(mode='after')
+    def _unsupported_has_no_details(self) -> ReasoningCapabilities:
+        if self.supported is False:
+            details = {name for name in self.model_fields_set if name != 'supported'}
+            if details:
+                raise ValueError(f'reasoning.supported is false, so these fields must be omitted: {sorted(details)}')
+        return self
 
 
 class SamplingCapabilities(_Model):

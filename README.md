@@ -67,7 +67,7 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 91 models
+- [OpenAI](prices/providers/openai.yml) - 92 models
 - [OpenRouter](prices/providers/openrouter.yml) - 696 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
@@ -126,13 +126,13 @@ nothing about the model. Only an explicit `false` says the provider rejects some
 capabilities:
   reasoning:
     supported: true # false means none of the other reasoning fields apply
-    always_on: true # reasoning cannot be turned off
+    always_on: true # whether reasoning can be turned off; true means it cannot
     effort_levels: [low, medium, high] # accepted effort values
     modes: [standard, pro]
     summary_levels: [auto, concise, detailed]
-    cross_turn_context: true # earlier turns' reasoning can be carried into later requests
-    token_budget: false # an explicit reasoning token budget is accepted
-    adaptive: false # the provider decides per request whether and how much to reason
+    cross_turn_context: true # whether earlier turns' reasoning can be carried into later requests
+    token_budget: false # whether an explicit reasoning token budget is accepted
+    adaptive: false # whether the provider decides per request whether and how much to reason
   sampling:
     temperature: false # rejected by most reasoning-only models
     top_p: false

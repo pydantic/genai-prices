@@ -85,6 +85,12 @@ def test_omitted_capability_fields_stay_unknown():
     assert SamplingCapabilities.model_validate({}).temperature is None
 
 
+def test_unsupported_reasoning_rejects_details():
+    assert ReasoningCapabilities.model_validate({'supported': False}).supported is False
+    with pytest.raises(ValueError, match=r"must be omitted: \['always_on', 'effort_levels'\]"):
+        ReasoningCapabilities.model_validate({'supported': False, 'always_on': True, 'effort_levels': ['low']})
+
+
 def test_capabilities_reject_unknown_fields():
     with pytest.raises(ValueError, match='extra_forbidden'):
         ReasoningCapabilities.model_validate({'supports_reasoning': True})

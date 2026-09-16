@@ -620,8 +620,6 @@ models:
       or:
         - equals: gpt-5
         - equals: gpt-5-2025-08-07
-        - equals: gpt-5-chat
-        - equals: gpt-5-chat-latest
         - equals: gpt-5-codex
     context_window: 400000
     # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
@@ -637,6 +635,31 @@ models:
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-5-chat
+    name: GPT-5 Chat
+    description: The non-reasoning chat variant of GPT-5, priced the same as GPT-5.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5-chat
+        - equals: gpt-5-chat-latest
+    context_window: 400000
+    # split from the gpt-5 record so capabilities can differ; prices are identical
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
+    prices_checked: 2026-09-16
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -762,8 +785,9 @@ models:
         effort_levels: [none, minimal, low, medium, high]
         summary_levels: [auto, concise, detailed]
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2025-11-13
@@ -816,8 +840,9 @@ models:
         effort_levels: [none, minimal, low, medium, high, xhigh]
         summary_levels: [auto, concise, detailed]
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2025-12-11
@@ -897,8 +922,9 @@ models:
         summary_levels: [auto, concise, detailed]
         cross_turn_context: true
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
@@ -1035,8 +1061,9 @@ models:
         summary_levels: [auto, concise, detailed]
         cross_turn_context: true
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
@@ -1115,8 +1142,9 @@ models:
         modes: [standard, pro]
         cross_turn_context: true
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
@@ -1199,8 +1227,9 @@ models:
         modes: [standard, pro]
         cross_turn_context: true
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
@@ -1283,8 +1312,9 @@ models:
         modes: [standard, pro]
         cross_turn_context: true
       sampling:
-        temperature: false
-        top_p: false
+        # accepted when reasoning effort is none; rejected while reasoning is active
+        temperature: true
+        top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
     prices_checked: 2026-09-01
