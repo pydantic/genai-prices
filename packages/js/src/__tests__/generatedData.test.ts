@@ -197,7 +197,7 @@ describe('generated data split', () => {
     expect(astra?.model.capabilities?.reasoning).toEqual({
       always_on: true,
       cross_turn_context: true,
-      effort_levels: ['low', 'medium', 'high'],
+      effort_levels: ['low', 'medium', 'high', 'xhigh', 'max'],
       modes: ['standard', 'pro'],
       summary_levels: ['auto', 'concise', 'detailed'],
       supported: true,

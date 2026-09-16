@@ -9208,10 +9208,7 @@ providers: list[Provider] = [
                 description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
                 context_window=262144,
                 deprecated=True,
-                capabilities=ModelCapabilities(
-                    reasoning=ReasoningCapabilities(supported=True, always_on=True),
-                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
-                ),
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=True)),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -9244,10 +9241,7 @@ providers: list[Provider] = [
                 name='Kimi K2.5',
                 description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
-                capabilities=ModelCapabilities(
-                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
-                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
-                ),
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=False)),
                 prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
@@ -9287,10 +9281,7 @@ providers: list[Provider] = [
                 description="Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
                 context_window=1048576,
                 price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
-                capabilities=ModelCapabilities(
-                    reasoning=ReasoningCapabilities(supported=True, always_on=True),
-                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
-                ),
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=True)),
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
@@ -10233,7 +10224,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'minimal', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
                         summary_levels=['auto', 'concise', 'detailed'],
                     ),
                     sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
@@ -10313,7 +10304,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'minimal', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,
                     ),
@@ -10428,7 +10419,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'minimal', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,
                     ),
@@ -10483,7 +10474,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
                         modes=['standard', 'pro'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,
@@ -10548,7 +10539,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
                         modes=['standard', 'pro'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,
@@ -10611,7 +10602,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=False,
-                        effort_levels=['none', 'low', 'medium', 'high'],
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
                         modes=['standard', 'pro'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,
@@ -10671,7 +10662,7 @@ providers: list[Provider] = [
                     reasoning=ReasoningCapabilities(
                         supported=True,
                         always_on=True,
-                        effort_levels=['low', 'medium', 'high'],
+                        effort_levels=['low', 'medium', 'high', 'xhigh', 'max'],
                         modes=['standard', 'pro'],
                         summary_levels=['auto', 'concise', 'detailed'],
                         cross_turn_context=True,

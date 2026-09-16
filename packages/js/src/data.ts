@@ -15743,10 +15743,6 @@ export const data: Provider[] = [
             supported: true,
             always_on: true,
           },
-          sampling: {
-            temperature: true,
-            top_p: true,
-          },
         },
         prices: {
           input_mtok: 0.6,
@@ -15800,10 +15796,6 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-          },
-          sampling: {
-            temperature: true,
-            top_p: true,
           },
         },
         prices: {
@@ -15872,10 +15864,6 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: true,
-          },
-          sampling: {
-            temperature: true,
-            top_p: true,
           },
         },
         price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
@@ -17517,7 +17505,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'minimal', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
             summary_levels: ['auto', 'concise', 'detailed'],
           },
           sampling: {
@@ -17638,7 +17626,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'minimal', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,
           },
@@ -17851,7 +17839,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'minimal', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,
           },
@@ -17967,7 +17955,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
             modes: ['standard', 'pro'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,
@@ -18103,7 +18091,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
             modes: ['standard', 'pro'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,
@@ -18233,7 +18221,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: false,
-            effort_levels: ['none', 'low', 'medium', 'high'],
+            effort_levels: ['none', 'low', 'medium', 'high', 'xhigh', 'max'],
             modes: ['standard', 'pro'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,
@@ -18357,7 +18345,7 @@ export const data: Provider[] = [
           reasoning: {
             supported: true,
             always_on: true,
-            effort_levels: ['low', 'medium', 'high'],
+            effort_levels: ['low', 'medium', 'high', 'xhigh', 'max'],
             modes: ['standard', 'pro'],
             summary_levels: ['auto', 'concise', 'detailed'],
             cross_turn_context: true,

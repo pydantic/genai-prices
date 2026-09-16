@@ -813,7 +813,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, minimal, low, medium, high]
+        effort_levels: [none, minimal, low, medium, high, xhigh]
         summary_levels: [auto, concise, detailed]
       sampling:
         temperature: false
@@ -893,7 +893,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, minimal, low, medium, high]
+        effort_levels: [none, minimal, low, medium, high, xhigh]
         summary_levels: [auto, concise, detailed]
         cross_turn_context: true
       sampling:
@@ -1031,7 +1031,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, minimal, low, medium, high]
+        effort_levels: [none, minimal, low, medium, high, xhigh]
         summary_levels: [auto, concise, detailed]
         cross_turn_context: true
       sampling:
@@ -1110,7 +1110,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, low, medium, high]
+        effort_levels: [none, low, medium, high, xhigh, max]
         summary_levels: [auto, concise, detailed]
         modes: [standard, pro]
         cross_turn_context: true
@@ -1194,7 +1194,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, low, medium, high]
+        effort_levels: [none, low, medium, high, xhigh, max]
         summary_levels: [auto, concise, detailed]
         modes: [standard, pro]
         cross_turn_context: true
@@ -1278,7 +1278,7 @@ models:
       reasoning:
         supported: true
         always_on: false
-        effort_levels: [none, low, medium, high]
+        effort_levels: [none, low, medium, high, xhigh, max]
         summary_levels: [auto, concise, detailed]
         modes: [standard, pro]
         cross_turn_context: true
@@ -1358,7 +1358,7 @@ models:
       reasoning:
         supported: true
         always_on: true
-        effort_levels: [low, medium, high]
+        effort_levels: [low, medium, high, xhigh, max]
         summary_levels: [auto, concise, detailed]
         modes: [standard, pro]
         cross_turn_context: true

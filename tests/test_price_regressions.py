@@ -51,7 +51,7 @@ def test_gpt_6_astra_capabilities() -> None:
     assert capabilities.reasoning is not None
     assert capabilities.reasoning.always_on
     assert capabilities.reasoning.cross_turn_context
-    assert capabilities.reasoning.effort_levels == ['low', 'medium', 'high']
+    assert capabilities.reasoning.effort_levels == ['low', 'medium', 'high', 'xhigh', 'max']
     assert capabilities.reasoning.modes == ['standard', 'pro']
     assert capabilities.sampling is not None and not capabilities.sampling.temperature
     assert capabilities.verbosity_levels == ['low', 'medium', 'high']

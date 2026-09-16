@@ -103,9 +103,6 @@ models:
       reasoning:
         supported: true
         always_on: true
-      sampling:
-        temperature: true
-        top_p: true
     # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
     # prices kept for historical usage.
     deprecated: true
@@ -163,9 +160,6 @@ models:
       reasoning:
         supported: true
         always_on: false
-      sampling:
-        temperature: true
-        top_p: true
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -232,9 +226,6 @@ models:
       reasoning:
         supported: true
         always_on: true
-      sampling:
-        temperature: true
-        top_p: true
     prices_checked: "2026-07-16"
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
     prices:
