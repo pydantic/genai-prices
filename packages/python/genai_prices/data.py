@@ -16951,6 +16951,17 @@ providers: list[Provider] = [
         price_comments='TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.',
         model_match=ClauseStartsWith(starts_with='jev-'),
         provider_match=ClauseContains(contains='typesafe'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='jev-1.13.0',

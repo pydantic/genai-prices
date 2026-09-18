@@ -8,6 +8,15 @@ model_match:
   starts_with: "jev-"
 provider_match:
   contains: typesafe
+extractors:
+  # https://docs.typesafe.ai/api: `POST /v1/systemone` answers with `model` and `usage.input_tokens` / `usage.output_tokens`
+  - root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
 price_comments: >-
   TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
   move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.
