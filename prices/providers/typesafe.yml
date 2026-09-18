@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=.schema.json
+name: TypeSafe
+id: typesafe
+pricing_urls:
+  - https://docs.typesafe.ai/models
+api_pattern: 'https://api\.typesafe\.ai'
+model_match:
+  starts_with: "jev-"
+provider_match:
+  contains: typesafe
+price_comments: >-
+  TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
+  move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.
+
+models:
+  - id: jev-1.13.0
+    name: Jev 1.13.0
+    match:
+      or:
+        - equals: jev-1.13.0
+        - equals: jev-latest
+        - equals: jev-preview
+    prices_checked: 2026-09-18
+    prices:
+      input_mtok: 0.042
