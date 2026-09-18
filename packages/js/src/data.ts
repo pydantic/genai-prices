@@ -29022,6 +29022,61 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'typesafe',
+    name: 'TypeSafe',
+    pricing_urls: ['https://docs.typesafe.ai/models'],
+    api_pattern: 'https://api\\.typesafe\\.ai',
+    price_comments:
+      'TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.',
+    model_match: {
+      starts_with: 'jev-',
+    },
+    provider_match: {
+      contains: 'typesafe',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'jev-1.13.0',
+        name: 'Jev 1.13.0',
+        match: {
+          or: [
+            {
+              equals: 'jev-1.13.0',
+            },
+            {
+              equals: 'jev-latest',
+            },
+            {
+              equals: 'jev-preview',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.042,
+        },
+      },
+    ],
+  },
+  {
     id: 'voyageai',
     name: 'Voyage AI',
     pricing_urls: ['https://docs.voyageai.com/docs/pricing'],

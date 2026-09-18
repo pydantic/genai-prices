@@ -84,6 +84,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -185,6 +189,10 @@
             "input_price": "0.0634728",
             "output_price": "0.006336",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -279,6 +287,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -374,6 +386,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -469,6 +485,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -564,6 +584,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -659,6 +683,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -753,6 +781,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -847,6 +879,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -942,6 +978,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1037,6 +1077,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1131,6 +1175,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1225,6 +1273,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1319,6 +1371,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1413,6 +1469,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1507,6 +1567,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1601,6 +1665,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1696,6 +1764,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1791,6 +1863,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1886,6 +1962,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -1980,6 +2060,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2074,6 +2158,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2168,6 +2256,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2262,6 +2354,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2357,6 +2453,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2451,6 +2551,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2545,6 +2649,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2639,6 +2747,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2733,6 +2845,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2827,6 +2943,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -2921,6 +3041,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -3016,6 +3140,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -3904,6 +4032,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -5348,6 +5480,10 @@
             "input_price": "0.0259416",
             "output_price": "0.007728",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -6215,6 +6351,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -6314,6 +6454,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -16599,6 +16743,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -16693,6 +16841,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -16804,6 +16956,10 @@
             "input_price": "0.000052",
             "output_price": "0.00088",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -16906,6 +17062,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17016,6 +17176,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17180,6 +17344,10 @@
             "input_price": "0.00478",
             "output_price": "0.00121",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17274,6 +17442,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17368,6 +17540,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17462,6 +17638,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17556,6 +17736,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17653,6 +17837,10 @@
             "input_price": "0.000124",
             "output_price": "0.0006",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17748,6 +17936,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17873,6 +18065,10 @@
             "input_price": "0.000432",
             "output_price": "0.000096",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -17967,6 +18163,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18061,6 +18261,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18168,6 +18372,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18275,6 +18483,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18372,6 +18584,10 @@
             "input_price": "0.000056",
             "output_price": "0.0001",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18466,6 +18682,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18560,6 +18780,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18655,6 +18879,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18756,6 +18984,10 @@
             "input_price": "0.025176",
             "output_price": "0.005628",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18860,6 +19092,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -18954,6 +19190,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19048,6 +19288,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19142,6 +19386,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19236,6 +19484,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19328,6 +19580,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19425,6 +19681,10 @@
             "input_price": "0.000056",
             "output_price": "0.0001",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19520,6 +19780,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19619,6 +19883,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19718,6 +19986,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19828,6 +20100,10 @@
             "input_price": "0.0003264",
             "output_price": "0.000192",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -19926,6 +20202,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20020,6 +20300,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20114,6 +20398,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20208,6 +20496,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20302,6 +20594,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20396,6 +20692,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20490,6 +20790,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20584,6 +20888,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20678,6 +20986,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20772,6 +21084,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20866,6 +21182,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -20991,6 +21311,10 @@
             "input_price": "0.000528",
             "output_price": "0.000096",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21101,6 +21425,10 @@
             "input_price": "0.0005736",
             "output_price": "0.00012",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21252,6 +21580,10 @@
             "input_price": "0.004834",
             "output_price": "0.00133",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21367,6 +21699,10 @@
             "input_price": "0.002622",
             "output_price": "0.00016",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21462,6 +21798,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21556,6 +21896,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21664,6 +22008,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21815,6 +22163,10 @@
             "input_price": "0.004964",
             "output_price": "0.00166",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -21919,6 +22271,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22031,6 +22387,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22141,6 +22501,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22238,6 +22602,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22332,6 +22700,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22426,6 +22798,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22520,6 +22896,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22582,6 +22962,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22713,6 +23097,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22821,6 +23209,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -22929,6 +23321,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23037,6 +23433,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23132,6 +23532,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23227,6 +23631,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23335,6 +23743,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23430,6 +23842,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23525,6 +23941,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23625,6 +24045,10 @@
             "input_price": "0.000052",
             "output_price": "0.00022",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23777,6 +24201,10 @@
             "input_price": "0.0115848",
             "output_price": "0.00114",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23878,6 +24306,10 @@
             "input_price": "0.0112608",
             "output_price": "0.001272",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -23979,6 +24411,10 @@
             "input_price": "0.011256",
             "output_price": "0.001236",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -24073,6 +24509,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -24135,6 +24575,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -24771,6 +25215,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -25997,6 +26445,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -26091,6 +26543,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -26691,6 +27147,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -26792,6 +27252,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -27299,6 +27763,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -27391,6 +27859,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -28003,6 +28475,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -31928,6 +32404,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -32061,6 +32541,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -32155,6 +32639,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -32249,6 +32737,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -32570,6 +33062,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -33044,6 +33540,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -33390,6 +33890,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -33994,6 +34498,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -34105,6 +34613,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -34193,6 +34705,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -34303,6 +34819,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -34397,6 +34917,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -35331,6 +35855,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -35393,6 +35921,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -35527,6 +36059,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -36864,6 +37400,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -36959,6 +37499,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -37665,6 +38209,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -37766,6 +38314,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39203,6 +39755,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39295,6 +39851,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39357,6 +39917,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39673,6 +40237,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39735,6 +40303,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39866,6 +40438,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -39928,6 +40504,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -41438,6 +42018,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -41533,6 +42117,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -41628,6 +42216,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -42733,6 +43325,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -42828,6 +43424,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -43504,6 +44104,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -43598,6 +44202,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -46135,6 +46743,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -46639,6 +47251,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -46733,6 +47349,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -46857,6 +47477,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -47440,6 +48064,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -47535,6 +48163,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -47630,6 +48262,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -47725,6 +48361,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -48560,6 +49200,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -48654,6 +49298,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -49699,6 +50347,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -49761,6 +50413,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -50984,6 +51640,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -51517,6 +52177,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -51611,6 +52275,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -51949,6 +52617,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -52043,6 +52715,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -52196,6 +52872,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -52291,6 +52971,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -52526,6 +53210,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -55161,6 +55849,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -55306,6 +55998,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -55401,6 +56097,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -55496,6 +56196,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -55591,6 +56295,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -57885,6 +58593,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -57986,6 +58698,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -58087,6 +58803,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -60006,6 +60726,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -61012,6 +61736,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -61074,6 +61802,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -62017,6 +62749,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -62079,6 +62815,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -66121,6 +66861,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -66222,6 +66966,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -67586,6 +68334,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -67942,6 +68694,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68037,6 +68793,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68132,6 +68892,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68224,6 +68988,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68286,6 +69054,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68634,6 +69406,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68696,6 +69472,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -68913,6 +69693,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69007,6 +69791,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69069,6 +69857,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69170,6 +69962,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69798,6 +70594,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69893,6 +70693,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -69988,6 +70792,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -70080,6 +70888,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -70622,6 +71434,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -70764,6 +71580,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -72690,6 +73510,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -72785,6 +73609,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -72996,6 +73824,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -73097,6 +73929,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -74236,6 +75072,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -74331,6 +75171,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -75190,6 +76034,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -75252,6 +76100,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -75987,6 +76839,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -76049,6 +76905,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -76262,6 +77122,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -76357,6 +77221,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -76452,6 +77320,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -77416,6 +78288,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -77508,6 +78384,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -77570,6 +78450,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -79531,6 +80415,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -79626,6 +80514,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -79965,6 +80857,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -83895,6 +84791,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -83996,6 +84896,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -84295,6 +85199,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -84640,6 +85548,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -84937,6 +85849,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -85038,6 +85954,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -86600,6 +87520,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92286,6 +93210,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92373,6 +93301,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92460,6 +93392,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92547,6 +93483,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92610,6 +93550,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92730,6 +93674,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92797,6 +93745,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92893,6 +93845,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -92985,6 +93941,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -93095,6 +94055,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -94957,6 +95921,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -95585,6 +96553,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -101368,6 +102340,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -105917,6 +106893,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -108472,6 +109452,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -109084,6 +110068,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -110191,6 +111179,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -113308,6 +114300,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -113642,6 +114638,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -113789,6 +114789,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -113881,6 +114885,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -113944,6 +114952,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114073,6 +115085,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114165,6 +115181,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114257,6 +115277,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114348,6 +115372,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114410,6 +115438,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114509,6 +115541,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114640,6 +115676,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114730,6 +115770,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114792,6 +115836,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114891,6 +115939,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -114982,6 +116034,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115127,6 +116183,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115219,6 +116279,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115281,6 +116345,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115380,6 +116448,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115509,6 +116581,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115601,6 +116677,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115684,6 +116764,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115775,6 +116859,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115867,6 +116955,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -115921,6 +117013,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116068,6 +117164,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116151,6 +117251,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116204,6 +117308,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116321,6 +117429,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116420,6 +117532,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116549,6 +117665,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116641,6 +117761,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116724,6 +117848,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116815,6 +117943,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116898,6 +118030,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -116989,6 +118125,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117072,6 +118212,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117163,6 +118307,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117225,6 +118373,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117354,6 +118506,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117451,6 +118607,10 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117513,6 +118673,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117612,6 +118776,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117711,6 +118879,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117840,6 +119012,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -117932,6 +119108,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118024,6 +119204,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118114,6 +119298,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118206,6 +119394,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118298,6 +119490,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118390,6 +119586,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118482,6 +119682,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118579,6 +119783,10 @@
             "input_price": "0.006196",
             "output_price": "0.00072",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118641,6 +119849,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118770,6 +119982,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118862,6 +120078,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -118954,6 +120174,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119046,6 +120270,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119100,6 +120328,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119209,6 +120441,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119356,6 +120592,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119448,6 +120688,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119540,6 +120784,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119632,6 +120880,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119686,6 +120938,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119795,6 +121051,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -119942,6 +121202,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120034,6 +121298,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120099,6 +121367,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120246,6 +121518,10 @@
             "input_price": "0.0001008",
             "output_price": "0.003492",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120308,6 +121584,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120407,6 +121687,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120534,6 +121818,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120596,6 +121884,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120695,6 +121987,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120822,6 +122118,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -120912,6 +122212,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121004,6 +122308,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121058,6 +122366,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121202,6 +122514,10 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121264,6 +122580,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121355,6 +122675,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121462,6 +122786,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121593,6 +122921,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121685,6 +123017,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121768,6 +123104,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121859,6 +123199,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -121951,6 +123295,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122043,6 +123391,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122135,6 +123487,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122227,6 +123583,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122319,6 +123679,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122411,6 +123775,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122465,6 +123833,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122612,6 +123984,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122702,6 +124078,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122794,6 +124174,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122886,6 +124270,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -122978,6 +124366,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123040,6 +124432,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123139,6 +124535,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123268,6 +124668,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123360,6 +124764,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123452,6 +124860,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123544,6 +124956,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123634,6 +125050,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123726,6 +125146,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123818,6 +125242,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -123910,6 +125338,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124007,6 +125439,10 @@
             "input_price": "0.000056",
             "output_price": "0.000288",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124104,6 +125540,10 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124200,6 +125640,10 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124292,6 +125736,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {}
@@ -124381,6 +125829,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124473,6 +125925,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124565,6 +126021,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124658,6 +126118,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124720,6 +126184,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124819,6 +126287,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -124948,6 +126420,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125040,6 +126516,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125123,6 +126603,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125214,6 +126698,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125276,6 +126764,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125403,6 +126895,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125495,6 +126991,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125557,6 +127057,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125656,6 +127160,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -125784,6 +127292,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -133296,6 +134808,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -145297,6 +146813,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -152889,6 +154409,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -153241,6 +154765,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157042,6 +158570,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157134,6 +158666,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157226,6 +158762,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157395,6 +158935,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157490,6 +159034,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157585,6 +159133,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157677,6 +159229,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157769,6 +159325,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157864,6 +159424,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -157959,6 +159523,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158054,6 +159622,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158149,6 +159721,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158244,6 +159820,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158358,6 +159938,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158470,6 +160054,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158649,6 +160237,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158741,6 +160333,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158833,6 +160429,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -158928,6 +160528,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -159023,6 +160627,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161201,6 +162809,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161291,6 +162903,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161381,6 +162997,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161444,6 +163064,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161576,6 +163200,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161669,6 +163297,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161732,6 +163364,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161864,6 +163500,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -161961,6 +163601,10 @@
             "input_price": "0.0023328",
             "output_price": "0.000744",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162058,6 +163702,10 @@
             "input_price": "0.0025344",
             "output_price": "0.000432",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162150,6 +163798,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162242,6 +163894,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162337,6 +163993,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162432,6 +164092,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162531,6 +164195,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162626,6 +164294,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162689,6 +164361,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162821,6 +164497,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -162914,6 +164594,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163006,6 +164690,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163098,6 +164786,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163190,6 +164882,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163667,6 +165363,10 @@
             "input_price": "0.0038256",
             "output_price": "0.001584",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163764,6 +165464,10 @@
             "input_price": "0.002292",
             "output_price": "0.000696",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163857,6 +165561,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -163950,6 +165658,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164047,6 +165759,10 @@
             "input_price": "0.0027576",
             "output_price": "0.000696",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164144,6 +165860,10 @@
             "input_price": "0.0029496",
             "output_price": "0.000528",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164209,6 +165929,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164347,6 +166071,10 @@
             "input_price": "0.00204",
             "output_price": "0.00048",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164448,6 +166176,10 @@
             "input_price": "0.0038256",
             "output_price": "0.001584",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164545,6 +166277,10 @@
             "input_price": "0.002292",
             "output_price": "0.000672",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164638,6 +166374,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164731,6 +166471,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164826,6 +166570,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -164921,6 +166669,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165016,6 +166768,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165111,6 +166867,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165206,6 +166966,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165301,6 +167065,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165396,6 +167164,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165491,6 +167263,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165586,6 +167362,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165681,6 +167461,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -165776,6 +167560,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -166096,6 +167884,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -166188,6 +167980,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -166250,6 +168046,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -166381,6 +168181,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -166471,6 +168275,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -167440,6 +169248,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -167547,6 +169359,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -167654,6 +169470,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -167761,6 +169581,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -168912,6 +170736,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -169019,6 +170847,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -169126,6 +170958,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -169233,6 +171069,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -169340,6 +171180,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -169447,6 +171291,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -170615,6 +172463,10 @@
             "input_price": "0.000012",
             "output_price": "0.00489",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -170752,6 +172604,10 @@
             "input_price": "0.000008",
             "output_price": "0.0029",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -170883,6 +172739,10 @@
             "input_price": "0.000024",
             "output_price": "0.002532",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171014,6 +172874,10 @@
             "input_price": "0.0000096",
             "output_price": "0.001872",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171151,6 +173015,10 @@
             "input_price": "0.000032",
             "output_price": "0.00344",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171288,6 +173156,10 @@
             "input_price": "0.000008",
             "output_price": "0.0029",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171419,6 +173291,10 @@
             "input_price": "0.0000096",
             "output_price": "0.002316",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171550,6 +173426,10 @@
             "input_price": "0.0000096",
             "output_price": "0.001872",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171625,6 +173505,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171763,6 +173647,10 @@
             "input_price": "0.0113448",
             "output_price": "0.003336",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171864,6 +173752,10 @@
             "input_price": "0.0113352",
             "output_price": "0.0033",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -171965,6 +173857,10 @@
             "input_price": "0.01302",
             "output_price": "0.003432",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -172116,6 +174012,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -172170,6 +174070,10 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -172287,6 +174191,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -172425,6 +174333,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -177780,6 +179692,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
@@ -177873,6 +179789,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "typesafe"
           }
         ],
         "usage": {
