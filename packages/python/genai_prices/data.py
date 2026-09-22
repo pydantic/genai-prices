@@ -16953,6 +16953,40 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='typesafe',
+        name='TypeSafe',
+        api_pattern='https://api\\.typesafe\\.ai',
+        pricing_urls=['https://docs.typesafe.ai/models'],
+        price_comments='TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.',
+        model_match=ClauseStartsWith(starts_with='jev-'),
+        provider_match=ClauseContains(contains='typesafe'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='jev-1.13.0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='jev-1.13.0'),
+                        ClauseEquals(equals='jev-latest'),
+                        ClauseEquals(equals='jev-preview'),
+                    ]
+                ),
+                name='Jev 1.13.0',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
+            )
+        ],
+    ),
+    Provider(
         id='voyageai',
         name='Voyage AI',
         api_pattern='https://api\\.voyageai\\.com',

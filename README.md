@@ -71,6 +71,7 @@ The following providers are currently supported:
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models
 - [Together AI](prices/providers/together.yml) - 72 models
+- [TypeSafe](prices/providers/typesafe.yml) - 1 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 21 models
 - [Z.AI](prices/providers/zai.yml) - 3 models
