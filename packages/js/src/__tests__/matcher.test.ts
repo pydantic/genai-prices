@@ -434,6 +434,10 @@ describe('Claude Opus 5 vs 5.5', () => {
     ['aws', 'global.anthropic.claude-opus-5-5', 24.2],
     ['aws', 'us.anthropic.claude-opus-5-5', 26.62],
     ['aws', 'eu.anthropic.claude-opus-5-5-v1:0', 26.62],
+    ['aws', 'eu.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'au.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'jp.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'anthropic.claude-opus-5-5', 26.62],
     ['openrouter', 'anthropic/claude-opus-5.5', 24.2],
   ])('prices %s %s at the Opus 5.5 rates', (providerId, modelRef, expected) => {
     const price = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {

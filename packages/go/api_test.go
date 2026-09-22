@@ -326,6 +326,10 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 		{"aws", "global.anthropic.claude-opus-5-v1:0", "global.anthropic.claude-opus-5-5-v1:0", 0.2},
 		{"aws", "us.anthropic.claude-opus-5", "us.anthropic.claude-opus-5-5", 0.22},
 		{"aws", "us.anthropic.claude-opus-5-v1:0", "us.anthropic.claude-opus-5-5-v1:0", 0.22},
+		{"aws", "eu.anthropic.claude-opus-5", "eu.anthropic.claude-opus-5-5", 0.22},
+		{"aws", "au.anthropic.claude-opus-5", "au.anthropic.claude-opus-5-5", 0.22},
+		{"aws", "jp.anthropic.claude-opus-5", "jp.anthropic.claude-opus-5-5", 0.22},
+		{"aws", "anthropic.claude-opus-5", "anthropic.claude-opus-5-5", 0.22},
 		{"openrouter", "anthropic/claude-opus-5", "anthropic/claude-opus-5.5", 0.2},
 	}
 	usage := genai_prices.Usage{

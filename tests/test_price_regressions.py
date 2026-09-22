@@ -682,6 +682,10 @@ def test_claude_opus_5_5_does_not_use_opus_5_prices(provider_id: str, opus_5_ref
         ('aws', 'global.anthropic.claude-opus-5-5', '24.2'),
         ('aws', 'us.anthropic.claude-opus-5-5', '26.62'),
         ('aws', 'eu.anthropic.claude-opus-5-5-v1:0', '26.62'),
+        ('aws', 'eu.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'au.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'jp.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'anthropic.claude-opus-5-5', '26.62'),
         ('openrouter', 'anthropic/claude-opus-5.5', '24.2'),
     ],
 )
