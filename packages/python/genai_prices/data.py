@@ -14371,6 +14371,30 @@ providers: list[Provider] = [
                         base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('0.75'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-luna:batch',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6-luna:batch'),
+                        ClauseEquals(equals='openai/gpt-6-luna-pro:batch'),
+                    ]
+                ),
+                name='GPT-6 Luna Batch',
+                context_window=1050000,
+                price_comments="OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.0625'), tiers=[Tier(start=272000, price=Decimal('0.125'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.005'), tiers=[Tier(start=272000, price=Decimal('0.01'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.375'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -14390,6 +14414,28 @@ providers: list[Provider] = [
                     cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-sol:batch',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6-sol:batch'),
+                        ClauseEquals(equals='openai/gpt-6-sol-pro:batch'),
+                    ]
+                ),
+                name='GPT-6 Sol Batch',
+                context_window=1050000,
+                price_comments="OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(

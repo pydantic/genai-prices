@@ -2584,13 +2584,45 @@ def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
 )
 def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
     for input_tokens in (200_000, 272_000, 272_001, 300_000):
-        usage = Usage(input_tokens=input_tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000)
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
         price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
         direct_price = calc_price(usage, model_ref=openai_model, provider_id='openai')
 
         assert price.model.id == f'openai/{openai_model}'
         assert price.model.context_window == 1_050_000
         assert price.total_price == direct_price.total_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'base_model', 'batch_model'),
+    [
+        ('openai/gpt-6-sol:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6-sol-pro:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6-luna:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+        ('openai/gpt-6-luna-pro:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+    ],
+)
+def test_openrouter_gpt_6_sol_luna_batch_prices(model_ref: str, base_model: str, batch_model: str):
+    for input_tokens in (200_000, 272_000, 272_001, 300_000):
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
+        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        standard = calc_price(usage, model_ref=base_model, provider_id='openrouter')
+
+        assert price.model.id == batch_model
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == (standard.total_price - Decimal('0.01')) / 2 + Decimal('0.01')
 
 
 @pytest.mark.parametrize(

@@ -24691,6 +24691,63 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-luna:batch',
+        name: 'GPT-6 Luna Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna:batch',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.0625,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.125,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.005,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.01,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.375,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
         },
       },
       {
@@ -24749,6 +24806,63 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol:batch',
+        name: 'GPT-6 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
         },
       },
       {
