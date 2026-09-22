@@ -495,6 +495,24 @@ models:
       Fast mode premium pricing, applies across the full context window.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
 
+  - id: anthropic/claude-opus-5.5
+    match:
+      or:
+        - equals: anthropic/claude-opus-5.5
+        - equals: anthropic/claude-opus-5.5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.2
+      cache_write_mtok: 5
+      output_mtok: 20
+    prices_checked: 2026-09-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Cache-read rate confirmed via https://openrouter.ai/api/v1/models
+
   - id: anthropic/claude-sonnet-4
     # No context_window: endpoints range from 200,000 to 1,000,000: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-4/endpoints
     name: Claude Sonnet 4
@@ -5961,11 +5979,21 @@ models:
     name: Claude Opus Latest
     match:
       equals: ~anthropic/claude-opus-latest
+    prices_checked: 2026-09-22
     prices:
-      input_mtok: 5
-      cache_write_mtok: 6.25
-      cache_read_mtok: 0.5
-      output_mtok: 25
+      - prices:
+          input_mtok: 5
+          cache_write_mtok: 6.25
+          cache_read_mtok: 0.5
+          output_mtok: 25
+      - constraint:
+          # The alias moved to Claude Opus 5.5 on its release: https://openrouter.ai/api/v1/models
+          start_date: 2026-09-22
+        prices:
+          input_mtok: 4
+          cache_write_mtok: 5
+          cache_read_mtok: 0.2
+          output_mtok: 20
     context_window: 1000000
 
   - id: ~anthropic/claude-sonnet-latest

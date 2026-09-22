@@ -307,3 +307,83 @@ func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
 		t.Fatalf("got %g, want 1", calculation.TotalPrice)
 	}
 }
+
+// Opus 5.5 caches reads at 0.05x of a $4 base input; Opus 5 at 0.1x of $5. The Opus 5 records
+// matched by prefix, so `claude-opus-5-5` silently resolved to Opus 5 and was priced 2.5x too
+// high on cache reads instead of failing.
+func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
+	tests := []struct {
+		providerID string
+		opus5      string
+		opus55     string
+		wantPrice  float64
+	}{
+		{"anthropic", "claude-opus-5", "claude-opus-5-5", 0.2},
+		{"anthropic", "claude-opus-5-20260901", "claude-opus-5-5-20260922", 0.2},
+		{"google", "claude-opus-5", "claude-opus-5-5", 0.2},
+		{"google", "claude-opus-5@20260901", "claude-opus-5-5@20260922", 0.2},
+		{"aws", "global.anthropic.claude-opus-5", "global.anthropic.claude-opus-5-5", 0.2},
+		{"aws", "global.anthropic.claude-opus-5-v1:0", "global.anthropic.claude-opus-5-5-v1:0", 0.2},
+		{"aws", "us.anthropic.claude-opus-5", "us.anthropic.claude-opus-5-5", 0.22},
+		{"aws", "us.anthropic.claude-opus-5-v1:0", "us.anthropic.claude-opus-5-5-v1:0", 0.22},
+		{"openrouter", "anthropic/claude-opus-5", "anthropic/claude-opus-5.5", 0.2},
+	}
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     1_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.opus55, func(t *testing.T) {
+			opus5, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: usage, Model: test.opus5, ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			opus55, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: usage, Model: test.opus55, ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if opus5.ModelID == opus55.ModelID {
+				t.Fatalf("Opus 5.5 resolved to the Opus 5 record %q", opus55.ModelID)
+			}
+			if math.Abs(opus55.TotalPrice-test.wantPrice) > 1e-9 {
+				t.Fatalf("got cache-read price %g, want %g", opus55.TotalPrice, test.wantPrice)
+			}
+			if math.Abs(opus55.TotalPrice*2.5-opus5.TotalPrice) > 1e-9 {
+				t.Fatalf("got %g for Opus 5.5 and %g for Opus 5, want a 2.5x split", opus55.TotalPrice, opus5.TotalPrice)
+			}
+		})
+	}
+}
+
+// OpenRouter's family-level alias moved to Opus 5.5 on release; earlier requests keep the Opus 5 rate.
+func TestOpenRouterClaudeOpusLatestMovesToOpus55(t *testing.T) {
+	tests := []struct {
+		timestamp time.Time
+		want      float64
+	}{
+		{time.Date(2026, 9, 21, 23, 59, 0, 0, time.UTC), 25.5},
+		{time.Date(2026, 9, 22, 0, 0, 0, 0, time.UTC), 20.2},
+	}
+	for _, test := range tests {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     1_000_000,
+				genai_prices.UsageCacheReadTokens: 1_000_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+			},
+			Model:      "~anthropic/claude-opus-latest",
+			ProviderID: "openrouter",
+			Timestamp:  test.timestamp,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
+		}
+	}
+}
