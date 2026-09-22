@@ -10382,7 +10382,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-6-luna',
-                match=ClauseEquals(equals='gpt-6-luna'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-luna'), ClauseRegex(regex='^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
                 name='GPT-6 Luna',
                 description='Efficient model for focused, high-volume tasks.',
                 context_window=1050000,
@@ -10402,7 +10404,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-6-sol',
-                match=ClauseEquals(equals='gpt-6-sol'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-sol'), ClauseRegex(regex='^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
                 name='GPT-6 Sol',
                 description='Model for complex coding and agentic workflows.',
                 context_window=1050000,
