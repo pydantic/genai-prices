@@ -236,6 +236,25 @@ def test_gpt_5_6_cache_write_price_context_boundary(
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'short_total', 'long_total'),
+    [
+        ('gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
+        ('gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+    ],
+)
+def test_gpt_6_sol_luna_prices(model_ref: str, short_total: Decimal, long_total: Decimal):
+    for input_tokens, expected_total in ((200_000, short_total), (300_000, long_total)):
+        price = calc_price(
+            Usage(input_tokens=input_tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
     [
         ('gpt-5.6-sol', Decimal('8'), Decimal('10'), Decimal('0.8'), Decimal('30')),
