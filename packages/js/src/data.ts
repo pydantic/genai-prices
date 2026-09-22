@@ -597,7 +597,10 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
+            },
+            {
+              regex: '^claude-opus-5-\\d{8}$',
             },
             {
               starts_with: 'claude-opus-5.0',
@@ -619,6 +622,41 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 25,
           cache_write_1h_mtok: 10,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        name: 'Claude Opus 5.5',
+        description: 'For long-running agentic coding and knowledge work',
+        match: {
+          or: [
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              regex: '^claude-opus-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-opus-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-opus',
+            },
+            {
+              starts_with: 'claude-5.5-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
           web_searches_kcount: 10,
         },
       },
@@ -1566,7 +1604,14 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-opus-5',
         match: {
-          contains: 'global.anthropic.claude-opus-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -1574,6 +1619,29 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -2724,22 +2792,40 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-opus-5',
+              equals: 'anthropic.claude-opus-5',
             },
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
             },
             {
-              contains: 'us.anthropic.claude-opus-5',
+              starts_with: 'anthropic.claude-opus-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-opus-5',
+              starts_with: 'claude-opus-5-v1',
             },
             {
-              contains: 'eu.anthropic.claude-opus-5',
+              equals: 'us.anthropic.claude-opus-5',
             },
             {
-              contains: 'jp.anthropic.claude-opus-5',
+              equals: 'au.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-v1',
             },
           ],
         },
@@ -2751,6 +2837,59 @@ export const data: Provider[] = [
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-opus-5-5-v1',
+            },
+            {
+              starts_with: 'claude-opus-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 4.4,
+          cache_write_mtok: 5.5,
+          cache_read_mtok: 0.22,
+          output_mtok: 22,
+          cache_write_1h_mtok: 8.8,
         },
       },
       {
@@ -7998,7 +8137,10 @@ export const data: Provider[] = [
               contains: 'claude-5-opus',
             },
             {
-              contains: 'claude-opus-5',
+              ends_with: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-opus-5@',
             },
             {
               contains: 'claude-5.0-opus',
@@ -8016,6 +8158,37 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-5-opus',
+            },
+            {
+              ends_with: 'claude-opus-5-5',
+            },
+            {
+              contains: 'claude-opus-5-5@',
+            },
+            {
+              contains: 'claude-5.5-opus',
+            },
+            {
+              contains: 'claude-opus-5.5',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview",
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
         },
       },
       {
@@ -19388,6 +19561,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-5.5',
+            },
+            {
+              equals: 'anthropic/claude-opus-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'anthropic/claude-sonnet-4',
         name: 'Claude Sonnet 4',
         match: {
@@ -27344,12 +27539,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-opus-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-22',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.2,
+              output_mtok: 20,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-sonnet-latest',
