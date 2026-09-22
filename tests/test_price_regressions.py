@@ -647,13 +647,11 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
 
 _OPUS_5_5_REFS = [
     ('anthropic', 'claude-opus-5', 'claude-opus-5-5'),
-    ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'),
     ('google', 'claude-opus-5', 'claude-opus-5-5'),
-    ('google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'),
+    ('google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'),
     ('aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'),
-    ('aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'),
     ('aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'),
-    ('aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'),
+    ('aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'),
     ('openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'),
 ]
 
@@ -681,7 +679,6 @@ def test_claude_opus_5_5_does_not_use_opus_5_prices(provider_id: str, opus_5_ref
         ('google', 'claude-opus-5-5', '24.2'),
         ('aws', 'global.anthropic.claude-opus-5-5', '24.2'),
         ('aws', 'us.anthropic.claude-opus-5-5', '26.62'),
-        ('aws', 'eu.anthropic.claude-opus-5-5-v1:0', '26.62'),
         ('aws', 'eu.anthropic.claude-opus-5-5', '26.62'),
         ('aws', 'au.anthropic.claude-opus-5-5', '26.62'),
         ('aws', 'jp.anthropic.claude-opus-5-5', '26.62'),
@@ -698,6 +695,23 @@ def test_claude_opus_5_5_prices(provider_id: str, model_ref: str, expected_price
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref'),
+    [
+        ('anthropic', 'claude-opus-5-5-20260922'),
+        ('google', 'claude-opus-5-5@20260922'),
+        ('aws', 'us.anthropic.claude-opus-5-5-v1:0'),
+    ],
+)
+def test_unpublished_claude_opus_5_5_ids_are_not_priced_as_opus_5(provider_id: str, model_ref: str) -> None:
+    """Forms Anthropic and the clouds don't publish for Opus 5.5 get no price rather than Opus 5's.
+
+    Before the Opus 5 matchers were tightened, each of these resolved to Opus 5 by prefix.
+    """
+    with pytest.raises(LookupError):
+        calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
 
 
 @pytest.mark.parametrize(

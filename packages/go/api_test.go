@@ -319,13 +319,10 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 		wantPrice  float64
 	}{
 		{"anthropic", "claude-opus-5", "claude-opus-5-5", 0.2},
-		{"anthropic", "claude-opus-5-20260901", "claude-opus-5-5-20260922", 0.2},
 		{"google", "claude-opus-5", "claude-opus-5-5", 0.2},
-		{"google", "claude-opus-5@20260901", "claude-opus-5-5@20260922", 0.2},
+		{"google", "publishers/anthropic/models/claude-opus-5", "publishers/anthropic/models/claude-opus-5-5", 0.2},
 		{"aws", "global.anthropic.claude-opus-5", "global.anthropic.claude-opus-5-5", 0.2},
-		{"aws", "global.anthropic.claude-opus-5-v1:0", "global.anthropic.claude-opus-5-5-v1:0", 0.2},
 		{"aws", "us.anthropic.claude-opus-5", "us.anthropic.claude-opus-5-5", 0.22},
-		{"aws", "us.anthropic.claude-opus-5-v1:0", "us.anthropic.claude-opus-5-5-v1:0", 0.22},
 		{"aws", "eu.anthropic.claude-opus-5", "eu.anthropic.claude-opus-5-5", 0.22},
 		{"aws", "au.anthropic.claude-opus-5", "au.anthropic.claude-opus-5-5", 0.22},
 		{"aws", "jp.anthropic.claude-opus-5", "jp.anthropic.claude-opus-5-5", 0.22},
@@ -360,6 +357,21 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 				t.Fatalf("got %g for Opus 5.5 and %g for Opus 5, want a 2.5x split", opus55.TotalPrice, opus5.TotalPrice)
 			}
 		})
+	}
+}
+
+// Forms Anthropic and the clouds don't publish for Opus 5.5 get no price rather than Opus 5's.
+func TestUnpublishedClaudeOpus55IDsAreNotPricedAsOpus5(t *testing.T) {
+	for _, test := range []struct{ providerID, model string }{
+		{"anthropic", "claude-opus-5-5-20260922"},
+		{"google", "claude-opus-5-5@20260922"},
+		{"aws", "us.anthropic.claude-opus-5-5-v1:0"},
+	} {
+		if calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, Model: test.model, ProviderID: test.providerID,
+		}); err == nil {
+			t.Fatalf("%s/%s resolved to %q, want no match", test.providerID, test.model, calculation.ModelID)
+		}
 	}
 }
 

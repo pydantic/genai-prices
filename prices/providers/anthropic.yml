@@ -472,12 +472,8 @@ models:
     name: Claude Opus 5.5
     description: For long-running agentic coding and knowledge work
     match:
-      or:
-        - equals: claude-opus-5-5
-        - regex: ^claude-opus-5-5-\d{8}$
-        - starts_with: claude-opus-5.5
-        - starts_with: claude-5-5-opus
-        - starts_with: claude-5.5-opus
+      # Anthropic documents `claude-opus-5-5` as a fixed ID with no dated snapshot.
+      equals: claude-opus-5-5
     context_window: 1000000
     prices_checked: 2026-09-22
     price_comments: >-

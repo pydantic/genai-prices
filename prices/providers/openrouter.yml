@@ -497,9 +497,7 @@ models:
 
   - id: anthropic/claude-opus-5.5
     match:
-      or:
-        - equals: anthropic/claude-opus-5.5
-        - equals: anthropic/claude-opus-5.5:beta
+      equals: anthropic/claude-opus-5.5
     context_window: 1000000
     prices:
       input_mtok: 4

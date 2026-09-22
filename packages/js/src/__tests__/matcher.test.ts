@@ -412,13 +412,11 @@ describe('Claude Opus 5 vs 5.5', () => {
 
   it.each([
     ['anthropic', 'claude-opus-5', 'claude-opus-5-5'],
-    ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'],
     ['google', 'claude-opus-5', 'claude-opus-5-5'],
-    ['google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'],
+    ['google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'],
     ['aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'],
-    ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'],
     ['aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'],
-    ['aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'],
+    ['aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'],
     ['openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'],
   ])('keeps %s Opus 5.5 off Opus 5 prices', (providerId, opus5Ref, opus55Ref) => {
     const opus5 = calcPrice(usage, opus5Ref, { providerId })
@@ -433,7 +431,6 @@ describe('Claude Opus 5 vs 5.5', () => {
     ['google', 'claude-opus-5-5', 24.2],
     ['aws', 'global.anthropic.claude-opus-5-5', 24.2],
     ['aws', 'us.anthropic.claude-opus-5-5', 26.62],
-    ['aws', 'eu.anthropic.claude-opus-5-5-v1:0', 26.62],
     ['aws', 'eu.anthropic.claude-opus-5-5', 26.62],
     ['aws', 'au.anthropic.claude-opus-5-5', 26.62],
     ['aws', 'jp.anthropic.claude-opus-5-5', 26.62],
@@ -445,6 +442,14 @@ describe('Claude Opus 5 vs 5.5', () => {
     })
 
     expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it.each([
+    ['anthropic', 'claude-opus-5-5-20260922'],
+    ['google', 'claude-opus-5-5@20260922'],
+    ['aws', 'us.anthropic.claude-opus-5-5-v1:0'],
+  ])('leaves the unpublished %s id %s unpriced rather than on Opus 5', (providerId, modelRef) => {
+    expect(calcPrice(usage, modelRef, { providerId })).toBeNull()
   })
 
   it.each([

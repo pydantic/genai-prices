@@ -428,15 +428,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-opus-5-5',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='claude-opus-5-5'),
-                        ClauseRegex(regex='^claude-opus-5-5-\\d{8}$'),
-                        ClauseStartsWith(starts_with='claude-opus-5.5'),
-                        ClauseStartsWith(starts_with='claude-5-5-opus'),
-                        ClauseStartsWith(starts_with='claude-5.5-opus'),
-                    ]
-                ),
+                match=ClauseEquals(equals='claude-opus-5-5'),
                 name='Claude Opus 5.5',
                 description='For long-running agentic coding and knowledge work',
                 context_window=1000000,
@@ -1061,12 +1053,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-5-5',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEndsWith(ends_with='global.anthropic.claude-opus-5-5'),
-                        ClauseContains(contains='global.anthropic.claude-opus-5-5-v1'),
-                    ]
-                ),
+                match=ClauseEndsWith(ends_with='global.anthropic.claude-opus-5-5'),
                 context_window=1000000,
                 price_comments='Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
                 prices=ModelPrice(
@@ -1767,17 +1754,10 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic.claude-opus-5-5'),
-                        ClauseEquals(equals='claude-opus-5-5'),
-                        ClauseStartsWith(starts_with='anthropic.claude-opus-5-5-v1'),
-                        ClauseStartsWith(starts_with='claude-opus-5-5-v1'),
                         ClauseEquals(equals='us.anthropic.claude-opus-5-5'),
-                        ClauseEquals(equals='au.anthropic.claude-opus-5-5'),
                         ClauseEquals(equals='eu.anthropic.claude-opus-5-5'),
                         ClauseEquals(equals='jp.anthropic.claude-opus-5-5'),
-                        ClauseContains(contains='us.anthropic.claude-opus-5-5-v1'),
-                        ClauseContains(contains='au.anthropic.claude-opus-5-5-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-opus-5-5-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-opus-5-5-v1'),
+                        ClauseEquals(equals='au.anthropic.claude-opus-5-5'),
                     ]
                 ),
                 context_window=1000000,
@@ -4860,15 +4840,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-opus-5-5',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEndsWith(ends_with='claude-opus-5-5'),
-                        ClauseContains(contains='claude-opus-5-5@'),
-                        ClauseContains(contains='claude-opus-5.5'),
-                        ClauseContains(contains='claude-5-5-opus'),
-                        ClauseContains(contains='claude-5.5-opus'),
-                    ]
-                ),
+                match=ClauseEndsWith(ends_with='claude-opus-5-5'),
                 context_window=1000000,
                 price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview",
                 prices=ModelPrice(
@@ -11337,12 +11309,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='anthropic/claude-opus-5.5',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='anthropic/claude-opus-5.5'),
-                        ClauseEquals(equals='anthropic/claude-opus-5.5:beta'),
-                    ]
-                ),
+                match=ClauseEquals(equals='anthropic/claude-opus-5.5'),
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(
