@@ -445,6 +445,15 @@ describe('Claude Opus 5 vs 5.5', () => {
   })
 
   it.each([
+    ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5'],
+    ['google', 'claude-opus-5@20260901', 'claude-opus-5'],
+    ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5'],
+    ['aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'],
+  ])('keeps the %s Opus 5 form %s on Opus 5', (providerId, modelRef, modelId) => {
+    expect(calcPrice(usage, modelRef, { providerId })!.model.id).toBe(modelId)
+  })
+
+  it.each([
     ['anthropic', 'claude-opus-5-5-20260922'],
     ['google', 'claude-opus-5-5@20260922'],
     ['aws', 'us.anthropic.claude-opus-5-5-v1:0'],

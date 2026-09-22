@@ -698,6 +698,22 @@ def test_claude_opus_5_5_prices(provider_id: str, model_ref: str, expected_price
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id'),
+    [
+        ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5'),
+        ('google', 'claude-opus-5@20260901', 'claude-opus-5'),
+        ('aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5'),
+        ('aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'),
+    ],
+)
+def test_tightened_claude_opus_5_matchers_keep_existing_forms(provider_id: str, model_ref: str, model_id: str) -> None:
+    """The Opus 5 clauses were tightened to stop at Opus 5; its dated and `-v1:0` forms must still resolve."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
+
+    assert price.model.id == model_id
+
+
+@pytest.mark.parametrize(
     ('provider_id', 'model_ref'),
     [
         ('anthropic', 'claude-opus-5-5-20260922'),

@@ -360,6 +360,26 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 	}
 }
 
+// The Opus 5 clauses were tightened to stop at Opus 5; its dated and `-v1:0` forms must still resolve.
+func TestTightenedClaudeOpus5MatchersKeepExistingForms(t *testing.T) {
+	for _, test := range []struct{ providerID, model, wantModelID string }{
+		{"anthropic", "claude-opus-5-20260901", "claude-opus-5"},
+		{"google", "claude-opus-5@20260901", "claude-opus-5"},
+		{"aws", "global.anthropic.claude-opus-5-v1:0", "global.anthropic.claude-opus-5"},
+		{"aws", "us.anthropic.claude-opus-5-v1:0", "regional.anthropic.claude-opus-5"},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, Model: test.model, ProviderID: test.providerID,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ModelID != test.wantModelID {
+			t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+		}
+	}
+}
+
 // Forms Anthropic and the clouds don't publish for Opus 5.5 get no price rather than Opus 5's.
 func TestUnpublishedClaudeOpus55IDsAreNotPricedAsOpus5(t *testing.T) {
 	for _, test := range []struct{ providerID, model string }{
