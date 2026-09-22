@@ -406,7 +406,10 @@ providers: list[Provider] = [
                 id='claude-opus-5',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='claude-opus-5'),
+                        ClauseEquals(equals='claude-opus-5'),
+                        ClauseEquals(equals='claude-opus-5-latest'),
+                        ClauseRegex(regex='^claude-opus-5[-@]\\d{8}$'),
+                        ClauseRegex(regex='^claude-opus-5-\\d{4}-\\d{2}-\\d{2}$'),
                         ClauseStartsWith(starts_with='claude-opus-5.0'),
                         ClauseStartsWith(starts_with='claude-5-opus'),
                         ClauseStartsWith(starts_with='claude-5.0-opus'),
@@ -422,6 +425,28 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
                     cache_write_1h_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-opus-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-5-5'),
+                        ClauseStartsWith(starts_with='claude-opus-5.5'),
+                        ClauseStartsWith(starts_with='claude-5-5-opus'),
+                        ClauseStartsWith(starts_with='claude-5.5-opus'),
+                    ]
+                ),
+                name='Claude Opus 5.5',
+                context_window=1000000,
+                price_comments='Standard rates with no long-context premium. Cache reads cost 5% of base input; five-minute cache writes cost 1.25x input and one-hour writes cost 2x input. The older Opus 5 match is restricted to its own IDs so it cannot capture Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_write_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                    cache_write_1h_mtok=Decimal('8'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -10368,14 +10393,52 @@ providers: list[Provider] = [
                 name='GPT-6 Astra',
                 description='Our most capable model, built for the hardest end-to-end work.',
                 context_window=1050000,
-                price_comments='Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+                price_comments='Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('20'))]),
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
                     cache_write_mtok=TieredPrices(
-                        base=Decimal('12.5'), tiers=[Tier(start=271999, price=Decimal('25'))]
+                        base=Decimal('12.5'), tiers=[Tier(start=272000, price=Decimal('25'))]
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271999, price=Decimal('2'))]),
-                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=271999, price=Decimal('75'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-6-luna',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-luna'), ClauseRegex(regex='^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6 Luna',
+                context_window=1050000,
+                price_comments='Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('0.75'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-6-sol',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6-sol'), ClauseRegex(regex='^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6 Sol',
+                context_window=1050000,
+                price_comments='Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),

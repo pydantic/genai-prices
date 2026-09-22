@@ -597,7 +597,16 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
+            },
+            {
+              equals: 'claude-opus-5-latest',
+            },
+            {
+              regex: '^claude-opus-5[-@]\\d{8}$',
+            },
+            {
+              regex: '^claude-opus-5-\\d{4}-\\d{2}-\\d{2}$',
             },
             {
               starts_with: 'claude-opus-5.0',
@@ -619,6 +628,37 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 25,
           cache_write_1h_mtok: 10,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        name: 'Claude Opus 5.5',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-5-5',
+            },
+            {
+              starts_with: 'claude-opus-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-opus',
+            },
+            {
+              starts_with: 'claude-5.5-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Standard rates with no long-context premium. Cache reads cost 5% of base input; five-minute cache writes cost 1.25x input and one-hour writes cost 2x input. The older Opus 5 match is restricted to its own IDs so it cannot capture Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
           web_searches_kcount: 10,
         },
       },
@@ -17862,13 +17902,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+          'Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 10,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 20,
               },
             ],
@@ -17877,7 +17917,7 @@ export const data: Provider[] = [
             base: 12.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 25,
               },
             ],
@@ -17886,7 +17926,7 @@ export const data: Provider[] = [
             base: 1,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 2,
               },
             ],
@@ -17895,8 +17935,122 @@ export const data: Provider[] = [
             base: 50,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-luna',
+            },
+            {
+              regex: '^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-sol',
+            },
+            {
+              regex: '^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
               },
             ],
           },
