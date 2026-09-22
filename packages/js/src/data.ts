@@ -630,7 +630,23 @@ export const data: Provider[] = [
         name: 'Claude Opus 5.5',
         description: 'For long-running agentic coding and knowledge work',
         match: {
-          equals: 'claude-opus-5-5',
+          or: [
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              regex: '^claude-opus-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-opus-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-opus',
+            },
+            {
+              starts_with: 'claude-5.5-opus',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -1608,7 +1624,14 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-opus-5-5',
         match: {
-          ends_with: 'global.anthropic.claude-opus-5-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -2824,7 +2847,19 @@ export const data: Provider[] = [
               equals: 'anthropic.claude-opus-5-5',
             },
             {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-opus-5-5-v1',
+            },
+            {
+              starts_with: 'claude-opus-5-5-v1',
+            },
+            {
               equals: 'us.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-opus-5-5',
             },
             {
               equals: 'eu.anthropic.claude-opus-5-5',
@@ -2833,7 +2868,16 @@ export const data: Provider[] = [
               equals: 'jp.anthropic.claude-opus-5-5',
             },
             {
-              equals: 'au.anthropic.claude-opus-5-5',
+              contains: 'us.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-5-v1',
             },
           ],
         },
@@ -8119,7 +8163,23 @@ export const data: Provider[] = [
       {
         id: 'claude-opus-5-5',
         match: {
-          ends_with: 'claude-opus-5-5',
+          or: [
+            {
+              contains: 'claude-5-5-opus',
+            },
+            {
+              ends_with: 'claude-opus-5-5',
+            },
+            {
+              contains: 'claude-opus-5-5@',
+            },
+            {
+              contains: 'claude-5.5-opus',
+            },
+            {
+              contains: 'claude-opus-5.5',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -19387,7 +19447,14 @@ export const data: Provider[] = [
       {
         id: 'anthropic/claude-opus-5.5',
         match: {
-          equals: 'anthropic/claude-opus-5.5',
+          or: [
+            {
+              equals: 'anthropic/claude-opus-5.5',
+            },
+            {
+              equals: 'anthropic/claude-opus-5.5:beta',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:

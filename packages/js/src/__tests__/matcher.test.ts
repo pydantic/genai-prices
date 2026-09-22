@@ -412,10 +412,14 @@ describe('Claude Opus 5 vs 5.5', () => {
 
   it.each([
     ['anthropic', 'claude-opus-5', 'claude-opus-5-5'],
+    ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'],
     ['google', 'claude-opus-5', 'claude-opus-5-5'],
+    ['google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'],
     ['google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'],
     ['aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'],
+    ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'],
     ['aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'],
+    ['aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'],
     ['aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'],
     ['openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'],
   ])('keeps %s Opus 5.5 off Opus 5 prices', (providerId, opus5Ref, opus55Ref) => {
@@ -451,14 +455,6 @@ describe('Claude Opus 5 vs 5.5', () => {
     ['aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'],
   ])('keeps the %s Opus 5 form %s on Opus 5', (providerId, modelRef, modelId) => {
     expect(calcPrice(usage, modelRef, { providerId })!.model.id).toBe(modelId)
-  })
-
-  it.each([
-    ['anthropic', 'claude-opus-5-5-20260922'],
-    ['google', 'claude-opus-5-5@20260922'],
-    ['aws', 'us.anthropic.claude-opus-5-5-v1:0'],
-  ])('leaves the unpublished %s id %s unpriced rather than on Opus 5', (providerId, modelRef) => {
-    expect(calcPrice(usage, modelRef, { providerId })).toBeNull()
   })
 
   it.each([

@@ -647,10 +647,14 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
 
 _OPUS_5_5_REFS = [
     ('anthropic', 'claude-opus-5', 'claude-opus-5-5'),
+    ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'),
     ('google', 'claude-opus-5', 'claude-opus-5-5'),
+    ('google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'),
     ('google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'),
     ('aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'),
+    ('aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'),
     ('aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'),
+    ('aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'),
     ('aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'),
     ('openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'),
 ]
@@ -711,23 +715,6 @@ def test_tightened_claude_opus_5_matchers_keep_existing_forms(provider_id: str, 
     price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
 
     assert price.model.id == model_id
-
-
-@pytest.mark.parametrize(
-    ('provider_id', 'model_ref'),
-    [
-        ('anthropic', 'claude-opus-5-5-20260922'),
-        ('google', 'claude-opus-5-5@20260922'),
-        ('aws', 'us.anthropic.claude-opus-5-5-v1:0'),
-    ],
-)
-def test_unpublished_claude_opus_5_5_ids_are_not_priced_as_opus_5(provider_id: str, model_ref: str) -> None:
-    """Forms Anthropic and the clouds don't publish for Opus 5.5 get no price rather than Opus 5's.
-
-    Before the Opus 5 matchers were tightened, each of these resolved to Opus 5 by prefix.
-    """
-    with pytest.raises(LookupError):
-        calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
 
 
 @pytest.mark.parametrize(
