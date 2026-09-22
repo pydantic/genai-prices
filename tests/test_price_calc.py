@@ -258,6 +258,23 @@ def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decim
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'standard_total', 'long_total'),
+    [
+        ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
+        ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
+    ],
+)
+def test_gpt_6_sol_luna_long_context_boundary(model_ref: str, standard_total: Decimal, long_total: Decimal):
+    for tokens, expected_total in ((272_000, standard_total), (272_001, long_total)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
     [
         ('gpt-5.6-sol', Decimal('8'), Decimal('10'), Decimal('0.8'), Decimal('30')),

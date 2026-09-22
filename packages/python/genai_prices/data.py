@@ -10388,16 +10388,16 @@ providers: list[Provider] = [
                 name='GPT-6 Luna',
                 description='Efficient model for focused, high-volume tasks.',
                 context_window=1050000,
-                price_comments='Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+                price_comments='Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=271999, price=Decimal('0.2'))]),
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
                     cache_write_mtok=TieredPrices(
-                        base=Decimal('0.125'), tiers=[Tier(start=271999, price=Decimal('0.25'))]
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
                     ),
                     cache_read_mtok=TieredPrices(
-                        base=Decimal('0.01'), tiers=[Tier(start=271999, price=Decimal('0.02'))]
+                        base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
                     ),
-                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=271999, price=Decimal('0.75'))]),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('0.75'))]),
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
@@ -10410,12 +10410,12 @@ providers: list[Provider] = [
                 name='GPT-6 Sol',
                 description='Model for complex coding and agentic workflows.',
                 context_window=1050000,
-                price_comments='Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+                price_comments='Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=271999, price=Decimal('4'))]),
-                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271999, price=Decimal('5'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=271999, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('15'))]),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),

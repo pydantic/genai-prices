@@ -1251,30 +1251,30 @@ models:
     context_window: 1050000
     prices_checked: 2026-09-22
     price_comments: >-
-      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens
-      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
       engines select a tier when token count exceeds start. Ref:
       https://developers.openai.com/api/docs/models/gpt-6-luna
     prices:
       input_mtok:
         base: 0.1
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.2
       cache_write_mtok:
         base: 0.125
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.25
       cache_read_mtok:
         base: 0.01
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.02
       output_mtok:
         base: 0.5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.75
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
@@ -1290,30 +1290,30 @@ models:
     context_window: 1050000
     prices_checked: 2026-09-22
     price_comments: >-
-      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens
-      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
       engines select a tier when token count exceeds start. Ref:
       https://developers.openai.com/api/docs/models/gpt-6-sol
     prices:
       input_mtok:
         base: 2
         tiers:
-          - start: 271999
+          - start: 272000
             price: 4
       cache_write_mtok:
         base: 2.5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 5
       cache_read_mtok:
         base: 0.2
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.4
       output_mtok:
         base: 10
         tiers:
-          - start: 271999
+          - start: 272000
             price: 15
       web_searches_kcount: 10
       storage_searches_kcount: 2.5

@@ -17920,13 +17920,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
         prices: {
           input_mtok: {
             base: 0.1,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.2,
               },
             ],
@@ -17935,7 +17935,7 @@ export const data: Provider[] = [
             base: 0.125,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.25,
               },
             ],
@@ -17944,7 +17944,7 @@ export const data: Provider[] = [
             base: 0.01,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.02,
               },
             ],
@@ -17953,7 +17953,7 @@ export const data: Provider[] = [
             base: 0.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.75,
               },
             ],
@@ -17978,13 +17978,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with at least 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 271999 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 4,
               },
             ],
@@ -17993,7 +17993,7 @@ export const data: Provider[] = [
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -18002,7 +18002,7 @@ export const data: Provider[] = [
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -18011,7 +18011,7 @@ export const data: Provider[] = [
             base: 10,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 15,
               },
             ],
