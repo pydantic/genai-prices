@@ -5797,6 +5797,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'google/gemma-4-31B-it',
         name: 'Gemma 4 31B IT',
         match: {
