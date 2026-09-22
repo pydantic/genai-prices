@@ -24636,6 +24636,122 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro',
+            },
+            {
+              regex: '^openai/gpt-6-luna-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6-sol-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-audio',
         name: 'GPT Audio',
         match: {

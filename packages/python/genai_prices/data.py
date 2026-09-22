@@ -14351,6 +14351,48 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='openai/gpt-6-luna',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6-luna'),
+                        ClauseEquals(equals='openai/gpt-6-luna-pro'),
+                        ClauseRegex(regex='^openai/gpt-6-luna-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-6 Luna',
+                context_window=1050000,
+                price_comments='OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('0.75'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6-sol'),
+                        ClauseEquals(equals='openai/gpt-6-sol-pro'),
+                        ClauseRegex(regex='^openai/gpt-6-sol-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-6 Sol',
+                context_window=1050000,
+                price_comments='OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='openai/gpt-audio',
                 match=ClauseEquals(equals='openai/gpt-audio'),
                 name='GPT Audio',
