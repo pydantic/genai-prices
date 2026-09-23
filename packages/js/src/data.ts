@@ -600,7 +600,13 @@ export const data: Provider[] = [
               equals: 'claude-opus-5',
             },
             {
-              regex: '^claude-opus-5-\\d{8}$',
+              equals: 'claude-opus-5-latest',
+            },
+            {
+              regex: '^claude-opus-5[-@]\\d{8}$',
+            },
+            {
+              regex: '^claude-opus-5-\\d{4}-\\d{2}-\\d{2}$',
             },
             {
               starts_with: 'claude-opus-5.0',
@@ -18359,13 +18365,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+          'Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 10,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 20,
               },
             ],
@@ -18374,7 +18380,7 @@ export const data: Provider[] = [
             base: 12.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 25,
               },
             ],
@@ -18383,7 +18389,7 @@ export const data: Provider[] = [
             base: 1,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 2,
               },
             ],
@@ -18392,7 +18398,7 @@ export const data: Provider[] = [
             base: 50,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 75,
               },
             ],

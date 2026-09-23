@@ -442,22 +442,22 @@ def test_gpt_6_astra_price():
 
 def test_gpt_6_astra_long_context_boundary():
     standard = calc_price(
-        Usage(input_tokens=271_999, output_tokens=1_000),
-        model_ref='gpt-6-astra',
-        provider_id='openai',
-    )
-    assert standard.input_price == Decimal('2.71999')
-    assert standard.output_price == Decimal('0.05')
-    assert standard.total_price == Decimal('2.76999')
-
-    long_context = calc_price(
         Usage(input_tokens=272_000, output_tokens=1_000),
         model_ref='gpt-6-astra',
         provider_id='openai',
     )
-    assert long_context.input_price == Decimal('5.44')
+    assert standard.input_price == Decimal('2.72')
+    assert standard.output_price == Decimal('0.05')
+    assert standard.total_price == Decimal('2.77')
+
+    long_context = calc_price(
+        Usage(input_tokens=272_001, output_tokens=1_000),
+        model_ref='gpt-6-astra',
+        provider_id='openai',
+    )
+    assert long_context.input_price == Decimal('5.44002')
     assert long_context.output_price == Decimal('0.075')
-    assert long_context.total_price == Decimal('5.515')
+    assert long_context.total_price == Decimal('5.51502')
 
 
 @pytest.mark.parametrize(

@@ -1,5 +1,5 @@
 from copy import copy
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -643,6 +643,106 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
     )
 
     assert price.total_price == Decimal('1')
+
+
+@pytest.mark.parametrize('suffix', ['', '-2026-09-22'])
+@pytest.mark.parametrize('input_tokens', [271_999, 272_000, 272_001, 1_000_000])
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'read_rate', 'write_rate', 'output_rate'),
+    [
+        ('gpt-6-astra', '10', '1', '12.5', '50'),
+        ('gpt-6-sol', '2', '0.2', '2.5', '10'),
+        ('gpt-6-luna', '0.1', '0.01', '0.125', '0.5'),
+    ],
+)
+def test_gpt_6_cached_request_context_boundary(
+    model_ref: str,
+    input_rate: str,
+    read_rate: str,
+    write_rate: str,
+    output_rate: str,
+    input_tokens: int,
+    suffix: str,
+) -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=20_000,
+            cache_write_tokens=10_000,
+            output_tokens=1_000,
+            output_reasoning_tokens=700,
+        ),
+        model_ref=model_ref + suffix,
+        provider_id='openai',
+    )
+    input_multiplier = Decimal(2 if input_tokens > 272_000 else 1)
+    output_multiplier = Decimal('1.5') if input_tokens > 272_000 else Decimal(1)
+    expected_input = input_multiplier * (
+        mtok(input_rate, input_tokens - 30_000) + mtok(read_rate, 20_000) + mtok(write_rate, 10_000)
+    )
+    expected_output = output_multiplier * mtok(output_rate, 1_000)
+    assert price.model.id == model_ref
+    assert price.input_price == expected_input
+    assert price.output_price == expected_output
+    assert price.total_price == expected_input + expected_output
+
+
+@pytest.mark.parametrize('model_ref', ['claude-opus-5-5', 'claude-opus-5-5-20260922', 'claude-opus-5.5'])
+@pytest.mark.parametrize('input_tokens', [100_000, 1_000_000])
+def test_opus_5_5_specific_matching_and_cache_duration(model_ref: str, input_tokens: int) -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=50_000,
+            cache_write_tokens=50_000,
+            cache_write_5m_tokens=40_000,
+            cache_write_1h_tokens=10_000,
+            output_tokens=1_000,
+        ),
+        model_ref=model_ref,
+        provider_id='anthropic',
+    )
+    expected_input = mtok('4', input_tokens - 100_000) + mtok('0.2', 50_000) + mtok('5', 40_000) + mtok('8', 10_000)
+    assert price.model.id == 'claude-opus-5-5'
+    assert price.input_price == expected_input
+    assert price.output_price == mtok('20', 1_000)
+    assert price.total_price == expected_input + mtok('20', 1_000)
+
+
+@pytest.mark.parametrize('model_ref', ['gemini-3.7-flash', 'gemini-3.8-flash'])
+@pytest.mark.parametrize('after_boundary', [False, True])
+def test_latest_gemini_flash_promo_request_boundary(model_ref: str, after_boundary: bool) -> None:
+    boundary = datetime(2027, 1, 1, tzinfo=timezone.utc)
+    timestamp = boundary if after_boundary else boundary - timedelta(microseconds=1)
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=100_000),
+        model_ref=model_ref,
+        provider_id='google',
+        genai_request_timestamp=timestamp,
+    )
+    factor = Decimal(2 if after_boundary else 1)
+    assert price.input_price == factor * (mtok('0.75', 900_000) + mtok('0.075', 100_000))
+    assert price.output_price == factor * mtok('3.75', 100_000)
+
+
+@pytest.mark.parametrize(
+    'model_ref',
+    [
+        'claude-opus-5',
+        'claude-opus-5-latest',
+        'claude-opus-5-20260729',
+        'claude-opus-5-2026-07-29',
+        'claude-opus-5@20260729',
+        'claude-opus-5.0',
+        'claude-5-opus',
+        'claude-5.0-opus',
+    ],
+)
+def test_older_opus_5_aliases_keep_their_original_price(model_ref: str) -> None:
+    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref, provider_id='anthropic')
+    assert price.model.id == 'claude-opus-5'
+    assert price.input_price == Decimal('5')
+    assert price.output_price == Decimal('25')
 
 
 _OPUS_5_5_REFS = [
