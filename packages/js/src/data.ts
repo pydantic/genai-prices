@@ -1898,7 +1898,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html",
+          "Global cross-Region inference at OpenAI's own list price; In-Region and Geo add 10% on top of it. Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html",
         prices: {
           input_mtok: {
             base: 10,
@@ -3522,11 +3522,14 @@ export const data: Provider[] = [
             {
               contains: 'us.openai.gpt-6-luna',
             },
+            {
+              contains: 'in.openai.gpt-6-luna',
+            },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`) inference, 10% above global. AWS had not yet published a model card or rate table for Luna; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Luna; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
         prices: {
           input_mtok: {
             base: 0.11,
@@ -3580,11 +3583,14 @@ export const data: Provider[] = [
             {
               contains: 'us.openai.gpt-6-sol',
             },
+            {
+              contains: 'in.openai.gpt-6-sol',
+            },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`) inference, 10% above global. AWS had not yet published a model card or rate table for Sol; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Sol; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
         prices: {
           input_mtok: {
             base: 2.2,
