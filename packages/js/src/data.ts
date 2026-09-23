@@ -634,10 +634,14 @@ export const data: Provider[] = [
       {
         id: 'claude-opus-5-5',
         name: 'Claude Opus 5.5',
+        description: 'For long-running agentic coding and knowledge work',
         match: {
           or: [
             {
-              starts_with: 'claude-opus-5-5',
+              equals: 'claude-opus-5-5',
+            },
+            {
+              regex: '^claude-opus-5-5-\\d{8}$',
             },
             {
               starts_with: 'claude-opus-5.5',
@@ -652,7 +656,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Standard rates with no long-context premium. Cache reads cost 5% of base input; five-minute cache writes cost 1.25x input and one-hour writes cost 2x input. The older Opus 5 match is restricted to its own IDs so it cannot capture Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 4,
           cache_write_mtok: 5,
@@ -1606,7 +1610,14 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-opus-5',
         match: {
-          contains: 'global.anthropic.claude-opus-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -1614,6 +1625,29 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -1857,6 +1891,150 @@ export const data: Provider[] = [
               {
                 start: 271999,
                 price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-astra',
+        name: 'GPT-6 Astra (global)',
+        match: {
+          contains: 'global.openai.gpt-6-astra',
+        },
+        context_window: 1050000,
+        price_comments:
+          "Global cross-Region inference at OpenAI's own list price; In-Region and Geo add 10% on top of it. Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html",
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-luna',
+        name: 'GPT-6 Luna (global)',
+        match: {
+          contains: 'global.openai.gpt-6-luna',
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Luna, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-luna",
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-sol',
+        name: 'GPT-6 Sol (global)',
+        match: {
+          contains: 'global.openai.gpt-6-sol',
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Sol, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-sol",
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
               },
             ],
           },
@@ -2764,22 +2942,40 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-opus-5',
+              equals: 'anthropic.claude-opus-5',
             },
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
             },
             {
-              contains: 'us.anthropic.claude-opus-5',
+              starts_with: 'anthropic.claude-opus-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-opus-5',
+              starts_with: 'claude-opus-5-v1',
             },
             {
-              contains: 'eu.anthropic.claude-opus-5',
+              equals: 'us.anthropic.claude-opus-5',
             },
             {
-              contains: 'jp.anthropic.claude-opus-5',
+              equals: 'au.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-v1',
             },
           ],
         },
@@ -2791,6 +2987,59 @@ export const data: Provider[] = [
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-opus-5-5-v1',
+            },
+            {
+              starts_with: 'claude-opus-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 4.4,
+          cache_write_mtok: 5.5,
+          cache_read_mtok: 0.22,
+          output_mtok: 22,
+          cache_write_1h_mtok: 8.8,
         },
       },
       {
@@ -3206,6 +3455,186 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'regional.openai.gpt-6-astra',
+        name: 'GPT-6 Astra (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-astra',
+            },
+            {
+              starts_with: 'gpt-6-astra',
+            },
+            {
+              contains: 'us.openai.gpt-6-astra',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html',
+        prices: {
+          input_mtok: {
+            base: 11,
+            tiers: [
+              {
+                start: 272000,
+                price: 22,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 13.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 27.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 55,
+            tiers: [
+              {
+                start: 272000,
+                price: 82.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'regional.openai.gpt-6-luna',
+        name: 'GPT-6 Luna (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-luna',
+            },
+            {
+              starts_with: 'gpt-6-luna',
+            },
+            {
+              contains: 'us.openai.gpt-6-luna',
+            },
+            {
+              contains: 'in.openai.gpt-6-luna',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Luna; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+        prices: {
+          input_mtok: {
+            base: 0.11,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.22,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.1375,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.275,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.011,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.022,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.825,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'regional.openai.gpt-6-sol',
+        name: 'GPT-6 Sol (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-sol',
+            },
+            {
+              starts_with: 'gpt-6-sol',
+            },
+            {
+              contains: 'us.openai.gpt-6-sol',
+            },
+            {
+              contains: 'in.openai.gpt-6-sol',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Sol; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+        prices: {
+          input_mtok: {
+            base: 2.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4.4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 5.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.22,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.44,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 11,
+            tiers: [
+              {
+                start: 272000,
+                price: 16.5,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'writer.palmyra-x4-v1:0',
@@ -8038,7 +8467,10 @@ export const data: Provider[] = [
               contains: 'claude-5-opus',
             },
             {
-              contains: 'claude-opus-5',
+              ends_with: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-opus-5@',
             },
             {
               contains: 'claude-5.0-opus',
@@ -8056,6 +8488,37 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-5-opus',
+            },
+            {
+              ends_with: 'claude-opus-5-5',
+            },
+            {
+              contains: 'claude-opus-5-5@',
+            },
+            {
+              contains: 'claude-5.5-opus',
+            },
+            {
+              contains: 'claude-opus-5.5',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview",
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
         },
       },
       {
@@ -17947,6 +18410,7 @@ export const data: Provider[] = [
       {
         id: 'gpt-6-luna',
         name: 'GPT-6 Luna',
+        description: 'Efficient model for focused, high-volume tasks.',
         match: {
           or: [
             {
@@ -17959,7 +18423,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
         prices: {
           input_mtok: {
             base: 0.1,
@@ -18004,6 +18468,7 @@ export const data: Provider[] = [
       {
         id: 'gpt-6-sol',
         name: 'GPT-6 Sol',
+        description: 'Model for complex coding and agentic workflows.',
         match: {
           or: [
             {
@@ -18016,7 +18481,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start. EU data residency is available only with Standard processing. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
         prices: {
           input_mtok: {
             base: 2,
@@ -19423,6 +19888,28 @@ export const data: Provider[] = [
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-5.5',
+            },
+            {
+              equals: 'anthropic/claude-opus-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
         },
       },
       {
@@ -24674,6 +25161,236 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro',
+            },
+            {
+              regex: '^openai/gpt-6-luna-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-luna:batch',
+        name: 'GPT-6 Luna Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna:batch',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.0625,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.125,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.005,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.01,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.375,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6-sol-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol:batch',
+        name: 'GPT-6 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
         id: 'openai/gpt-audio',
         name: 'GPT Audio',
         match: {
@@ -27152,12 +27869,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-opus-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-22',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.2,
+              output_mtok: 20,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-sonnet-latest',

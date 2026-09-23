@@ -472,21 +472,24 @@ models:
 
   - id: claude-opus-5-5
     name: Claude Opus 5.5
+    description: For long-running agentic coding and knowledge work
     match:
       or:
-        - starts_with: claude-opus-5-5
+        - equals: claude-opus-5-5
+        - regex: ^claude-opus-5-5-\d{8}$
         - starts_with: claude-opus-5.5
         - starts_with: claude-5-5-opus
         - starts_with: claude-5.5-opus
     context_window: 1000000
     prices_checked: 2026-09-22
     price_comments: >-
-      Standard rates with no long-context premium. Cache reads cost 5% of base input; five-minute cache writes
-      cost 1.25x input and one-hour writes cost 2x input. The older Opus 5 match is restricted to its own IDs so it cannot capture Opus 5.5.
-      Ref: https://platform.claude.com/docs/en/about-claude/pricing
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
     prices:
       input_mtok: 4
-      cache_read_mtok: 0.2
+      cache_read_mtok: 0.20
       cache_write_mtok: 5
       cache_write_1h_mtok: 8
       output_mtok: 20

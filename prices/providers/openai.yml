@@ -1209,7 +1209,7 @@ models:
         - equals: gpt-6-astra
         - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-09-22
+    prices_checked: 2026-09-23
     price_comments: >-
       Cache writes cost 1.25x uncached input. Prompts with more than 272K input tokens have 2x input/cache and
       1.5x output rates for the full request. Tier starts are 272000 because the pricing engines use tokens > start.
@@ -1241,6 +1241,8 @@ models:
 
   - id: gpt-6-luna
     name: GPT-6 Luna
+    description: Efficient model for focused, high-volume tasks.
+    collapse: false
     match:
       or:
         - equals: gpt-6-luna
@@ -1248,10 +1250,10 @@ models:
     context_window: 1050000
     prices_checked: 2026-09-22
     price_comments: >-
-      Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than
-      272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000
-      because the pricing engines use tokens > start. EU data residency is available only with Standard processing.
-      Ref: https://developers.openai.com/api/docs/models/gpt-6-luna
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-luna
     prices:
       input_mtok:
         base: 0.1
@@ -1278,6 +1280,8 @@ models:
 
   - id: gpt-6-sol
     name: GPT-6 Sol
+    description: Model for complex coding and agentic workflows.
+    collapse: false
     match:
       or:
         - equals: gpt-6-sol
@@ -1285,10 +1289,10 @@ models:
     context_window: 1050000
     prices_checked: 2026-09-22
     price_comments: >-
-      Standard USD rates per million tokens. Cache writes cost 1.25x uncached input. Prompts with more than
-      272K input tokens have 2x input/cache and 1.5x output rates for the full request. Tier starts are 272000
-      because the pricing engines use tokens > start. EU data residency is available only with Standard processing.
-      Ref: https://developers.openai.com/api/docs/models/gpt-6-sol
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-sol
     prices:
       input_mtok:
         base: 2

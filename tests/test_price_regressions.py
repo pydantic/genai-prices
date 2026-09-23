@@ -743,3 +743,91 @@ def test_older_opus_5_aliases_keep_their_original_price(model_ref: str) -> None:
     assert price.model.id == 'claude-opus-5'
     assert price.input_price == Decimal('5')
     assert price.output_price == Decimal('25')
+
+
+_OPUS_5_5_REFS = [
+    ('anthropic', 'claude-opus-5', 'claude-opus-5-5'),
+    ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'),
+    ('google', 'claude-opus-5', 'claude-opus-5-5'),
+    ('google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'),
+    ('google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'),
+    ('aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'),
+    ('aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'),
+    ('aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'),
+    ('aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'),
+    ('aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'),
+    ('openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'),
+]
+
+
+@pytest.mark.parametrize(('provider_id', 'opus_5_ref', 'opus_5_5_ref'), _OPUS_5_5_REFS)
+def test_claude_opus_5_5_does_not_use_opus_5_prices(provider_id: str, opus_5_ref: str, opus_5_5_ref: str) -> None:
+    """Opus 5.5 caches reads at 0.05x of a $4 base input; Opus 5 at 0.1x of $5.
+
+    The Opus 5 records matched by prefix, so `claude-opus-5-5` silently resolved to Opus 5 and
+    was priced 2.5x too high on cache reads (and 1.25x on everything else) instead of failing.
+    """
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000)
+
+    opus_5 = calc_price(usage, model_ref=opus_5_ref, provider_id=provider_id)
+    opus_5_5 = calc_price(usage, model_ref=opus_5_5_ref, provider_id=provider_id)
+
+    assert opus_5.model.id != opus_5_5.model.id
+    assert opus_5_5.total_price * Decimal('2.5') == opus_5.total_price
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'expected_price'),
+    [
+        ('anthropic', 'claude-opus-5-5', '24.2'),
+        ('google', 'claude-opus-5-5', '24.2'),
+        ('aws', 'global.anthropic.claude-opus-5-5', '24.2'),
+        ('aws', 'us.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'eu.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'au.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'jp.anthropic.claude-opus-5-5', '26.62'),
+        ('aws', 'anthropic.claude-opus-5-5', '26.62'),
+        ('openrouter', 'anthropic/claude-opus-5.5', '24.2'),
+    ],
+)
+def test_claude_opus_5_5_prices(provider_id: str, model_ref: str, expected_price: str) -> None:
+    """$4 input, $0.20 cache read and $20 output per MTok globally; Bedrock regional adds 10%."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id'),
+    [
+        ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5'),
+        ('google', 'claude-opus-5@20260901', 'claude-opus-5'),
+        ('aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5'),
+        ('aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'),
+    ],
+)
+def test_tightened_claude_opus_5_matchers_keep_existing_forms(provider_id: str, model_ref: str, model_id: str) -> None:
+    """The Opus 5 clauses were tightened to stop at Opus 5; its dated and `-v1:0` forms must still resolve."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
+
+    assert price.model.id == model_id
+
+
+@pytest.mark.parametrize(
+    ('timestamp', 'expected_price'),
+    [(datetime(2026, 9, 21, 23, 59), '25.5'), (datetime(2026, 9, 22), '20.2')],
+)
+def test_openrouter_claude_opus_latest_moves_to_opus_5_5(timestamp: datetime, expected_price: str) -> None:
+    """OpenRouter's family-level alias moved to Opus 5.5 on release; earlier requests keep the Opus 5 rate."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='~anthropic/claude-opus-latest',
+        provider_id='openrouter',
+        genai_request_timestamp=timestamp,
+    )
+
+    assert price.total_price == Decimal(expected_price)

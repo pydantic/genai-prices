@@ -403,3 +403,69 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(price!.total_price).toBeCloseTo(1, 10)
   })
 })
+
+describe('Claude Opus 5 vs 5.5', () => {
+  // Opus 5.5 caches reads at 0.05x of a $4 base input; Opus 5 at 0.1x of $5. The Opus 5 records
+  // matched by prefix, so `claude-opus-5-5` silently resolved to Opus 5 and was priced 2.5x too
+  // high on cache reads instead of failing.
+  const usage = { cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }
+
+  it.each([
+    ['anthropic', 'claude-opus-5', 'claude-opus-5-5'],
+    ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'],
+    ['google', 'claude-opus-5', 'claude-opus-5-5'],
+    ['google', 'claude-opus-5@20260901', 'claude-opus-5-5@20260922'],
+    ['google', 'publishers/anthropic/models/claude-opus-5', 'publishers/anthropic/models/claude-opus-5-5'],
+    ['aws', 'global.anthropic.claude-opus-5', 'global.anthropic.claude-opus-5-5'],
+    ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5-5-v1:0'],
+    ['aws', 'us.anthropic.claude-opus-5', 'us.anthropic.claude-opus-5-5'],
+    ['aws', 'us.anthropic.claude-opus-5-v1:0', 'us.anthropic.claude-opus-5-5-v1:0'],
+    ['aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'],
+    ['openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'],
+  ])('keeps %s Opus 5.5 off Opus 5 prices', (providerId, opus5Ref, opus55Ref) => {
+    const opus5 = calcPrice(usage, opus5Ref, { providerId })
+    const opus55 = calcPrice(usage, opus55Ref, { providerId })
+
+    expect(opus55!.model.id).not.toBe(opus5!.model.id)
+    expect(opus55!.total_price * 2.5).toBeCloseTo(opus5!.total_price, 10)
+  })
+
+  it.each([
+    ['anthropic', 'claude-opus-5-5', 24.2],
+    ['google', 'claude-opus-5-5', 24.2],
+    ['aws', 'global.anthropic.claude-opus-5-5', 24.2],
+    ['aws', 'us.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'eu.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'au.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'jp.anthropic.claude-opus-5-5', 26.62],
+    ['aws', 'anthropic.claude-opus-5-5', 26.62],
+    ['openrouter', 'anthropic/claude-opus-5.5', 24.2],
+  ])('prices %s %s at the Opus 5.5 rates', (providerId, modelRef, expected) => {
+    const price = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {
+      providerId,
+    })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it.each([
+    ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5'],
+    ['google', 'claude-opus-5@20260901', 'claude-opus-5'],
+    ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5'],
+    ['aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'],
+  ])('keeps the %s Opus 5 form %s on Opus 5', (providerId, modelRef, modelId) => {
+    expect(calcPrice(usage, modelRef, { providerId })!.model.id).toBe(modelId)
+  })
+
+  it.each([
+    ['2026-09-21T23:59:00Z', 25.5],
+    ['2026-09-22T00:00:00Z', 20.2],
+  ])('moves the OpenRouter family-level alias to Opus 5.5 at %s', (timestamp, expected) => {
+    const price = calcPrice({ ...usage, output_tokens: 1_000_000 }, '~anthropic/claude-opus-latest', {
+      providerId: 'openrouter',
+      timestamp: new Date(timestamp),
+    })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+})

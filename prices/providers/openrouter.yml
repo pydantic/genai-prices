@@ -495,6 +495,24 @@ models:
       Fast mode premium pricing, applies across the full context window.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
 
+  - id: anthropic/claude-opus-5.5
+    match:
+      or:
+        - equals: anthropic/claude-opus-5.5
+        - equals: anthropic/claude-opus-5.5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.2
+      cache_write_mtok: 5
+      output_mtok: 20
+    prices_checked: 2026-09-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Cache-read rate confirmed via https://openrouter.ai/api/v1/models
+
   - id: anthropic/claude-sonnet-4
     # No context_window: endpoints range from 200,000 to 1,000,000: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-4/endpoints
     name: Claude Sonnet 4
@@ -4185,6 +4203,146 @@ models:
             price: 18
     prices_checked: 2026-08-27
 
+  - id: openai/gpt-6-luna
+    name: GPT-6 Luna
+    match:
+      or:
+        - equals: openai/gpt-6-luna
+        - equals: openai/gpt-6-luna-pro
+        - regex: ^openai/gpt-6-luna-\d{8}$
+    context_window: 1050000
+    price_comments: >-
+      OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
+      tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models
+      (pricing.overrides).
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 0.75
+      web_searches_kcount: 10
+    prices_checked: 2026-09-22
+
+  - id: openai/gpt-6-luna:batch
+    name: GPT-6 Luna Batch
+    match:
+      or:
+        - equals: openai/gpt-6-luna:batch
+        - equals: openai/gpt-6-luna-pro:batch
+    context_window: 1050000
+    price_comments: >-
+      OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates;
+      web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.
+    prices:
+      input_mtok:
+        base: 0.05
+        tiers:
+          - start: 272000
+            price: 0.1
+      cache_read_mtok:
+        base: 0.005
+        tiers:
+          - start: 272000
+            price: 0.01
+      cache_write_mtok:
+        base: 0.0625
+        tiers:
+          - start: 272000
+            price: 0.125
+      output_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.375
+      web_searches_kcount: 10
+    prices_checked: 2026-09-22
+
+  - id: openai/gpt-6-sol
+    name: GPT-6 Sol
+    match:
+      or:
+        - equals: openai/gpt-6-sol
+        - equals: openai/gpt-6-sol-pro
+        - regex: ^openai/gpt-6-sol-\d{8}$
+    context_window: 1050000
+    price_comments: >-
+      OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
+      tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models
+      (pricing.overrides).
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+    prices_checked: 2026-09-22
+
+  - id: openai/gpt-6-sol:batch
+    name: GPT-6 Sol Batch
+    match:
+      or:
+        - equals: openai/gpt-6-sol:batch
+        - equals: openai/gpt-6-sol-pro:batch
+    context_window: 1050000
+    price_comments: >-
+      OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates;
+      web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 7.5
+      web_searches_kcount: 10
+    prices_checked: 2026-09-22
+
   - id: openai/gpt-audio
     name: GPT Audio
     match:
@@ -5961,11 +6119,21 @@ models:
     name: Claude Opus Latest
     match:
       equals: ~anthropic/claude-opus-latest
+    prices_checked: 2026-09-22
     prices:
-      input_mtok: 5
-      cache_write_mtok: 6.25
-      cache_read_mtok: 0.5
-      output_mtok: 25
+      - prices:
+          input_mtok: 5
+          cache_write_mtok: 6.25
+          cache_read_mtok: 0.5
+          output_mtok: 25
+      - constraint:
+          # The alias moved to Claude Opus 5.5 on its release: https://openrouter.ai/api/v1/models
+          start_date: 2026-09-22
+        prices:
+          input_mtok: 4
+          cache_write_mtok: 5
+          cache_read_mtok: 0.2
+          output_mtok: 20
     context_window: 1000000
 
   - id: ~anthropic/claude-sonnet-latest

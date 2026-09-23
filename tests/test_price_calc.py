@@ -236,6 +236,45 @@ def test_gpt_5_6_cache_write_price_context_boundary(
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'short_total', 'long_total'),
+    [
+        ('gpt-6-sol', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
+        ('gpt-6-sol-2026-09-22', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
+        ('gpt-6-luna', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+        ('gpt-6-luna-2026-09-22', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+    ],
+)
+def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decimal, long_total: Decimal):
+    for input_tokens, expected_total in ((200_000, short_total), (300_000, long_total)):
+        price = calc_price(
+            Usage(input_tokens=input_tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+
+        assert price.model.id == model_id
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'standard_total', 'long_total'),
+    [
+        ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
+        ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
+    ],
+)
+def test_gpt_6_sol_luna_long_context_boundary(model_ref: str, standard_total: Decimal, long_total: Decimal):
+    for tokens, expected_total in ((272_000, standard_total), (272_001, long_total)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
     [
         ('gpt-5.6-sol', Decimal('8'), Decimal('10'), Decimal('0.8'), Decimal('30')),
@@ -546,6 +585,32 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
         assert price.input_price == expected_input_price
         assert price.output_price == Decimal(0)
         assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'short_input_rate', 'long_input_rate'),
+    [
+        ('global.openai.gpt-6-astra', 'global.openai.gpt-6-astra', Decimal('10'), Decimal('20')),
+        ('global.openai.gpt-6-sol', 'global.openai.gpt-6-sol', Decimal('2'), Decimal('4')),
+        ('global.openai.gpt-6-luna', 'global.openai.gpt-6-luna', Decimal('0.1'), Decimal('0.2')),
+        ('us.openai.gpt-6-astra', 'regional.openai.gpt-6-astra', Decimal('11'), Decimal('22')),
+        ('us.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('us.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('in.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('in.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+    ],
+)
+def test_aws_gpt_6_context_boundary(
+    model_ref: str, model_id: str, short_input_rate: Decimal, long_input_rate: Decimal
+) -> None:
+    """AWS bills 272K input tokens or fewer at the short-context rate."""
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
+        price = calc_price(Usage(input_tokens=tokens), model_ref=model_ref, provider_id='aws')
+
+        assert price.model.id == model_id
+        assert price.input_price == rate * tokens / 1_000_000
 
 
 @pytest.mark.parametrize(
@@ -2521,6 +2586,8 @@ def test_gemma_4_31b_prices():
         ('openai/gpt-5.3-codex-20260224', 'openai/gpt-5.3-codex'),
         ('openai/gpt-5.4-20260305', 'openai/gpt-5.4'),
         ('openai/gpt-5.6-sol-20260901', 'openai/gpt-5.6-sol'),
+        ('openai/gpt-6-sol-20260922', 'openai/gpt-6-sol'),
+        ('openai/gpt-6-luna-20260922', 'openai/gpt-6-luna'),
     ],
 )
 def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
@@ -2528,6 +2595,60 @@ def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
     price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='openrouter')
 
     assert price.model.id == expected_model_id
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'openai_model'),
+    [
+        ('openai/gpt-6-sol', 'gpt-6-sol'),
+        ('openai/gpt-6-sol-pro', 'gpt-6-sol'),
+        ('openai/gpt-6-sol-20260922', 'gpt-6-sol'),
+        ('openai/gpt-6-luna', 'gpt-6-luna'),
+        ('openai/gpt-6-luna-pro', 'gpt-6-luna'),
+        ('openai/gpt-6-luna-20260922', 'gpt-6-luna'),
+    ],
+)
+def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
+    for input_tokens in (200_000, 272_000, 272_001, 300_000):
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
+        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        direct_price = calc_price(usage, model_ref=openai_model, provider_id='openai')
+
+        assert price.model.id == f'openai/{openai_model}'
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == direct_price.total_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'base_model', 'batch_model'),
+    [
+        ('openai/gpt-6-sol:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6-sol-pro:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6-luna:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+        ('openai/gpt-6-luna-pro:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+    ],
+)
+def test_openrouter_gpt_6_sol_luna_batch_prices(model_ref: str, base_model: str, batch_model: str):
+    for input_tokens in (200_000, 272_000, 272_001, 300_000):
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
+        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        standard = calc_price(usage, model_ref=base_model, provider_id='openrouter')
+
+        assert price.model.id == batch_model
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == (standard.total_price - Decimal('0.01')) / 2 + Decimal('0.01')
 
 
 @pytest.mark.parametrize(
