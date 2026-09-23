@@ -588,6 +588,32 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'short_input_rate', 'long_input_rate'),
+    [
+        ('global.openai.gpt-6-astra', 'global.openai.gpt-6-astra', Decimal('10'), Decimal('20')),
+        ('global.openai.gpt-6-sol', 'global.openai.gpt-6-sol', Decimal('2'), Decimal('4')),
+        ('global.openai.gpt-6-luna', 'global.openai.gpt-6-luna', Decimal('0.1'), Decimal('0.2')),
+        ('us.openai.gpt-6-astra', 'regional.openai.gpt-6-astra', Decimal('11'), Decimal('22')),
+        ('us.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('us.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('in.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('in.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+    ],
+)
+def test_aws_gpt_6_context_boundary(
+    model_ref: str, model_id: str, short_input_rate: Decimal, long_input_rate: Decimal
+) -> None:
+    """AWS bills 272K input tokens or fewer at the short-context rate."""
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
+        price = calc_price(Usage(input_tokens=tokens), model_ref=model_ref, provider_id='aws')
+
+        assert price.model.id == model_id
+        assert price.input_price == rate * tokens / 1_000_000
+
+
+@pytest.mark.parametrize(
     'model_ref,request_timestamp,expected_prices',
     [
         (

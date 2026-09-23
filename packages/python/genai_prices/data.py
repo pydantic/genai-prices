@@ -1191,6 +1191,51 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.openai.gpt-6-astra',
+                match=ClauseContains(contains='global.openai.gpt-6-astra'),
+                name='GPT-6 Astra (global)',
+                context_window=1050000,
+                price_comments="Global cross-Region inference at OpenAI's own list price; In-Region and Geo add 10% on top of it. Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('12.5'), tiers=[Tier(start=272000, price=Decimal('25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]),
+                ),
+            ),
+            ModelInfo(
+                id='global.openai.gpt-6-luna',
+                match=ClauseContains(contains='global.openai.gpt-6-luna'),
+                name='GPT-6 Luna (global)',
+                context_window=1000000,
+                price_comments="Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Luna, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-luna",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('0.75'))]),
+                ),
+            ),
+            ModelInfo(
+                id='global.openai.gpt-6-sol',
+                match=ClauseContains(contains='global.openai.gpt-6-sol'),
+                name='GPT-6 Sol (global)',
+                context_window=1000000,
+                price_comments="Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Sol, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-sol",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='google.gemma-3-12b-it',
                 match=ClauseContains(contains='google.gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -2008,6 +2053,75 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-6-astra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-6-astra'),
+                        ClauseStartsWith(starts_with='gpt-6-astra'),
+                        ClauseContains(contains='us.openai.gpt-6-astra'),
+                    ]
+                ),
+                name='GPT-6 Astra (regional)',
+                context_window=1050000,
+                price_comments='In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('11'), tiers=[Tier(start=272000, price=Decimal('22'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('13.75'), tiers=[Tier(start=272000, price=Decimal('27.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1.1'), tiers=[Tier(start=272000, price=Decimal('2.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('55'), tiers=[Tier(start=272000, price=Decimal('82.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-6-luna',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-6-luna'),
+                        ClauseStartsWith(starts_with='gpt-6-luna'),
+                        ClauseContains(contains='us.openai.gpt-6-luna'),
+                        ClauseContains(contains='in.openai.gpt-6-luna'),
+                    ]
+                ),
+                name='GPT-6 Luna (regional)',
+                context_window=1000000,
+                price_comments='In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Luna; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.11'), tiers=[Tier(start=272000, price=Decimal('0.22'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.1375'), tiers=[Tier(start=272000, price=Decimal('0.275'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.011'), tiers=[Tier(start=272000, price=Decimal('0.022'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=272000, price=Decimal('0.825'))]),
+                ),
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-6-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-6-sol'),
+                        ClauseStartsWith(starts_with='gpt-6-sol'),
+                        ClauseContains(contains='us.openai.gpt-6-sol'),
+                        ClauseContains(contains='in.openai.gpt-6-sol'),
+                    ]
+                ),
+                name='GPT-6 Sol (regional)',
+                context_window=1000000,
+                price_comments='In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Sol; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=272000, price=Decimal('4.4'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('2.75'), tiers=[Tier(start=272000, price=Decimal('5.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.22'), tiers=[Tier(start=272000, price=Decimal('0.44'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('11'), tiers=[Tier(start=272000, price=Decimal('16.5'))]),
+                ),
             ),
             ModelInfo(
                 id='writer.palmyra-x4-v1:0',
