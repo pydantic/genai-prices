@@ -23,6 +23,26 @@ export interface ConditionalPrice {
   prices: ModelPrice
 }
 
+/**
+ * What the caller knows about how a request was served, used to select a `PriceVariant`.
+ *
+ * Keys and values use the provider's own field names and values, e.g. `{service_tier: 'flex'}` for an OpenAI
+ * response whose `service_tier` is `flex`. A null value, as SDKs report an absent field, matches no variant.
+ */
+export type PriceContext = Record<string, null | string | undefined>
+
+/** Prices that replace the standard ones for requests made under a particular pricing context. */
+export interface PriceVariant {
+  constraint?: StartDateConstraint | TimeOfDateConstraint
+  prices: ModelPrice
+  /**
+   * Pricing context this variant applies to, e.g. `{service_tier: 'flex'}`. Every entry must match the caller's
+   * `PriceContext`; a list matches any of its values. Values of any other type come from a newer data format and
+   * never match.
+   */
+  when: Record<string, unknown>
+}
+
 export interface StartDateConstraint {
   start_date: string // ISO date string
   type: 'start_date'
@@ -87,6 +107,7 @@ export interface ModelInfo {
   match: MatchLogic
   name?: string
   price_comments?: string
+  price_variants?: PriceVariant[]
   prices: ConditionalPrice[] | ModelPrice
 }
 
@@ -116,6 +137,8 @@ export interface PriceCalculation {
   model: ModelInfo
   model_price: ModelPrice
   output_price: number
+  /** The price variant laid over the model's standard prices, absent when the standard prices were charged. */
+  price_variant?: PriceVariant
   provider: Provider
   total_price: number
 }
@@ -144,6 +167,12 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  /**
+   * How the request was served, e.g. `{service_tier: 'flex'}`, see `PriceContext`. Pass the value the provider
+   * reported in its response rather than the one requested, since the provider may serve a request on a different
+   * tier. When the model has no prices for the context, the standard prices are charged.
+   */
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

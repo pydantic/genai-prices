@@ -62,6 +62,12 @@ models:
   - id: parent:matching
     match: {equals: parent:matching}
     prices: {input_mtok: 1}
+  - id: parent:variant
+    match: {equals: parent:variant}
+    prices: {input_mtok: 1}
+    price_variants:
+      - when: {service_tier: flex}
+        prices: {input_mtok: 0.5}
 """
     )
     provider_yaml = ProviderYamlFile(provider_path)
@@ -70,7 +76,13 @@ models:
     collapse.collapse()
     assert capsys.readouterr().out == 'Provider example:\n  1 models combined\n\nTotal models combined: 1\n'
     saved = ProviderYamlFile(provider_path)
-    assert [model.id for model in saved.provider.models] == ['not-collapsible', 'parent', 'parent:different']
+    # same standard prices but its own price variants, so it isn't collapsed
+    assert [model.id for model in saved.provider.models] == [
+        'not-collapsible',
+        'parent',
+        'parent:different',
+        'parent:variant',
+    ]
     assert saved.provider.find_model('parent:matching') is not None
 
     empty_provider = ProviderYaml(Provider(id='empty', name='Empty', models=[]))

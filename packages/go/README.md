@@ -38,6 +38,12 @@ func main() {
 `Calculate` uses pricing data embedded at release time. Pass `ProviderID` when you know the provider. This avoids an
 ambiguous model name selecting the wrong provider.
 
+Some providers charge different rates depending on how a request was served, e.g. OpenAI's `flex` and `priority`
+tiers. Set `PriceContext` to the tier the provider reported in its response, using the provider's own field name, e.g.
+`PriceContext: map[string]string{"service_tier": string(response.ServiceTier)}`. Use the value from the response rather than the
+one you requested, since a provider can serve a request on a different tier. When a model has no rates for the tier, the
+standard rates are charged and `PriceCalculation.PriceVariant` is nil.
+
 ## Extract usage from a response
 
 ```go

@@ -2,6 +2,8 @@ package genai_prices
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"time"
 )
@@ -10,15 +12,77 @@ func activeModelPrice(model *model, timestamp time.Time) modelPrice {
 	if model.Prices.conditional == nil {
 		return model.Prices.direct
 	}
-	for index := len(model.Prices.conditional) - 1; index >= 0; index-- {
-		candidate := model.Prices.conditional[index]
-		constraint := candidate.Constraint
+	index := activePriceIndex(len(model.Prices.conditional), func(index int) *priceConstraint {
+		return model.Prices.conditional[index].Constraint
+	}, timestamp)
+	if index < 0 {
+		index = 0
+	}
+	return model.Prices.conditional[index].Prices
+}
+
+// resolveModelPrice returns the prices to charge for a request: the model's standard prices, with the active
+// price variant whose `when` matches priceContext laid over them key by key.
+func resolveModelPrice(model *model, timestamp time.Time, priceContext map[string]string) (modelPrice, *priceVariant) {
+	prices := activeModelPrice(model, timestamp)
+	if len(priceContext) == 0 {
+		return prices, nil
+	}
+	// The matching variants are resolved by date exactly as `prices` are: the last active one wins.
+	var matching []*priceVariant
+	for index := range model.PriceVariants {
+		if whenMatches(model.PriceVariants[index].When, priceContext) {
+			matching = append(matching, &model.PriceVariants[index])
+		}
+	}
+	index := activePriceIndex(len(matching), func(index int) *priceConstraint { return matching[index].Constraint }, timestamp)
+	if index < 0 {
+		return prices, nil
+	}
+	merged := maps.Clone(prices)
+	maps.Copy(merged, matching[index].Prices)
+	return merged, matching[index]
+}
+
+// whenMatches reports whether every parameter of a variant's `when` matches the caller's pricing context.
+//
+// Only string values, or lists of them, can match. Any other value comes from a newer data format this version
+// doesn't understand, so the variant never matches and the standard prices are charged.
+func whenMatches(when map[string]any, priceContext map[string]string) bool {
+	if len(when) == 0 {
+		return false
+	}
+	for parameter, expected := range when {
+		actual, found := priceContext[parameter]
+		if !found {
+			return false
+		}
+		switch expected := expected.(type) {
+		case string:
+			if actual != expected {
+				return false
+			}
+		case []any:
+			if !slices.Contains(expected, any(actual)) {
+				return false
+			}
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+// activePriceIndex returns the index of the last price whose constraint is active, or -1 when none is.
+func activePriceIndex(count int, constraintAt func(int) *priceConstraint, timestamp time.Time) int {
+	for index := count - 1; index >= 0; index-- {
+		constraint := constraintAt(index)
 		if constraint == nil {
-			return candidate.Prices
+			return index
 		}
 		if constraint.StartDate != "" {
 			if !timestamp.Before(constraint.date) {
-				return candidate.Prices
+				return index
 			}
 			continue
 		}
@@ -26,13 +90,13 @@ func activeModelPrice(model *model, timestamp time.Time) modelPrice {
 		seconds := float64(utc.Hour()*3600+utc.Minute()*60+utc.Second()) + float64(utc.Nanosecond())/1e9
 		if constraint.end < constraint.start {
 			if seconds >= constraint.start || seconds < constraint.end {
-				return candidate.Prices
+				return index
 			}
 		} else if seconds >= constraint.start && seconds < constraint.end {
-			return candidate.Prices
+			return index
 		}
 	}
-	return model.Prices.conditional[0].Prices
+	return -1
 }
 
 func calculateModelPrice(

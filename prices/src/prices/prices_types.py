@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import itertools
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, cast
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -198,6 +199,13 @@ class ModelInfo(_Model):
 
     If no conditional models match the conditions, the first one is used.
     """
+    price_variants: list[PriceVariant] | None = None
+    """Prices that apply only to requests made under a particular pricing context, e.g. OpenAI's flex tier.
+
+    The first variant whose `when` matches the caller's pricing context wins, and its prices override `prices`
+    key by key, so only the keys whose rate differs need to be listed. A request whose context matches no
+    variant, or that predates the variant, is charged the `prices` rates.
+    """
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
     prices_checked: date | None = Field(default=None, exclude=True)
@@ -228,6 +236,45 @@ class ModelInfo(_Model):
             if sum(p.constraint is None for p in prices) != 1:
                 raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
         return prices
+
+    @field_validator('price_variants', mode='after')
+    @classmethod
+    def validate_price_variants(
+        cls, variants: list[PriceVariant] | None, info: ValidationInfo
+    ) -> list[PriceVariant] | None:
+        if variants == []:
+            raise ValueError('`price_variants` may not be empty, omit it to charge the standard prices')
+
+        standard_prices = info.data.get('prices')
+        groups: dict[str, list[PriceVariant]] = {}
+        for variant in variants or []:
+            groups.setdefault(variant.describe_when(), []).append(variant)
+        for (when, group), (other_when, other_group) in itertools.combinations(groups.items(), 2):
+            if group[0].overlaps(other_group[0]):
+                raise ValueError(f'`when: {when}` and `when: {other_when}` can match the same request')
+        for when, group in groups.items():
+            unconstrained = sum(variant.constraint is None for variant in group)
+            start_dates = [v.constraint.start_date for v in group if isinstance(v.constraint, StartDateConstraint)]
+            if unconstrained > 1 or (unconstrained == 0 and len(start_dates) != len(group)):
+                raise ValueError(
+                    f'`when: {when}` needs one entry without a constraint, or only entries with a `start_date`'
+                )
+            # The last active entry wins, so an entry listed before a later-starting one would never apply.
+            if (unconstrained and group[0].constraint is not None) or start_dates != sorted(set(start_dates)):
+                raise ValueError(
+                    f'`when: {when}` entries must be listed unconstrained first, then by ascending `start_date`'
+                )
+            # Variants are resolved by date exactly as `prices` are, so a variant that doesn't repeat a dated
+            # change to `prices` would charge the new rate against requests made before that date.
+            # A variant with no unconstrained entry only applies from its first `start_date`, so only the changes
+            # to `prices` from then on need repeating.
+            first_start = None if unconstrained else min(start_dates)
+            missing = _constraint_descriptions(standard_prices, since=first_start) - _constraint_descriptions(group)
+            if missing:
+                raise ValueError(
+                    f'`when: {when}` must repeat the constraints used by `prices`, missing: {", ".join(sorted(missing))}'
+                )
+        return variants
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
@@ -330,6 +377,77 @@ class ConditionalPrice(_Model):
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
+
+
+WhenParameter = Literal['service_tier']
+"""The pricing context parameters a `PriceVariant` can match on.
+
+Each is named after the field providers report it in, e.g. `service_tier` is the field OpenAI returns on every
+response to say whether a request ran on the `flex`, `priority` or `default` tier. Adding a parameter is safe
+for released clients: a variant that names a parameter a client doesn't know never matches on that client.
+"""
+
+
+class PriceVariant(_Model):
+    """Prices that replace the standard ones for requests made under a particular pricing context.
+
+    Released clients ignore members they don't know, so a new kind of variant must be introduced through `when` (a new
+    parameter or value type, which older clients never match), never as a new member beside `prices`: an older client
+    would still apply the variant without it. A variant must always be fully expressed by its `prices`.
+    """
+
+    when: dict[WhenParameter, str | list[str]] = Field(min_length=1)
+    """Pricing context this variant applies to, every entry must match the caller's pricing context.
+
+    A list matches any of its values, e.g. `service_tier: [priority, fast]` for a tier with two names.
+    """
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Condition that determines when this variant applies.
+
+    Entries sharing a `when` are resolved by date exactly as `prices` are. When none of them is unconstrained,
+    the variant applies only from its earliest `start_date`, and earlier requests are charged the standard prices.
+    """
+    prices: ModelPrice
+    """Prices for this variant, applied over the standard prices key by key."""
+
+    @field_validator('when', mode='after')
+    @classmethod
+    def when_lists_not_empty(cls, when: dict[WhenParameter, str | list[str]]) -> dict[WhenParameter, str | list[str]]:
+        for parameter, expected in when.items():
+            if isinstance(expected, list) and len(set(expected)) != len(expected) or expected == []:
+                raise ValueError(f'`{parameter}` must list at least one value, each only once')
+        return when
+
+    @field_validator('prices', mode='after')
+    @classmethod
+    def prices_not_empty(cls, prices: ModelPrice) -> ModelPrice:
+        if prices.is_free():
+            raise ValueError('a price variant needs at least one price, omit it to charge the standard prices')
+        return prices
+
+    def overlaps(self, other: PriceVariant) -> bool:
+        """Whether both variants could match the same pricing context: every parameter they share has a common value."""
+        shared = self.when.keys() & other.when.keys()
+        return all(set(_as_list(self.when[key])) & set(_as_list(other.when[key])) for key in shared)
+
+    def describe_when(self) -> str:
+        return '{' + ', '.join(f'{key}: {value}' for key, value in sorted(self.when.items())) + '}'
+
+
+def _as_list(value: str | list[str]) -> list[str]:
+    return value if isinstance(value, list) else [value]
+
+
+def _constraint_descriptions(prices: object, *, since: date | None = None) -> set[str]:
+    """Describe each constraint in a list of prices, e.g. `start_date=2026-01-01`, skipping start dates before `since`."""
+    if not isinstance(prices, list):
+        return set()
+    return {
+        ', '.join(f'{key}={value}' for key, value in sorted(price.constraint.model_dump().items()))
+        for price in cast(list[ConditionalPrice | PriceVariant], prices)
+        if price.constraint is not None
+        and not (since and isinstance(price.constraint, StartDateConstraint) and price.constraint.start_date < since)
+    }
 
 
 class StartDateConstraint(_Model):

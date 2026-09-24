@@ -10,7 +10,7 @@ import type {
 } from './types'
 
 import { data as embeddedData } from './data'
-import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { calcPrice as calcPriceInternal, matchModelWithFallback, matchProvider, resolveModelPrice } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
@@ -74,6 +74,14 @@ function normalizeProvider(provider: Provider): Provider {
       prices: Array.isArray(model.prices)
         ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
         : model.prices,
+      ...(model.price_variants === undefined
+        ? {}
+        : {
+            price_variants: model.price_variants.map((variant) => ({
+              ...variant,
+              ...normalizeConditionalPrice(variant, provider.id, model.id),
+            })),
+          }),
     })),
   }
 }
@@ -227,7 +235,10 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
+  // Price variants are one provider's rates, so they don't apply to a model borrowed through
+  // `fallback_model_providers`, e.g. OpenAI's flex rates to a request priced against Azure.
+  const priceContext = model.price_variants && provider.models.includes(model) ? options?.priceContext : undefined
+  const { modelPrice, priceVariant } = resolveModelPrice(model, timestamp, priceContext)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }
@@ -247,6 +258,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     auto_update_timestamp: undefined,
     model,
     model_price: modelPrice,
+    ...(priceVariant === undefined ? {} : { price_variant: priceVariant }),
     provider,
     ...priceResult,
   }

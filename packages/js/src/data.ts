@@ -17091,6 +17091,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-mini',
@@ -17115,6 +17127,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.175,
+              output_mtok: 2.8,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-nano',
@@ -17137,6 +17161,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.5-preview',
@@ -17178,6 +17214,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 4.25,
+              cache_read_mtok: 2.125,
+              output_mtok: 17,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-2024-05-13',
@@ -17196,6 +17244,17 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 8.75,
+              output_mtok: 26.25,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-audio-preview',
@@ -17239,6 +17298,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.125,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-mini-2024-07-18.ft-',
@@ -17401,6 +17472,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-image',
@@ -17448,6 +17541,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 1,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 0.45,
+              cache_read_mtok: 0.045,
+              output_mtok: 3.6,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-nano',
@@ -17471,6 +17586,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.025,
+              cache_read_mtok: 0.0025,
+              output_mtok: 0.2,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-pro',
@@ -17544,6 +17671,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.1-codex-mini',
@@ -17617,6 +17766,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.875,
+              cache_read_mtok: 0.0875,
+              output_mtok: 7,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.2-pro',
@@ -17695,6 +17866,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.175,
           output_mtok: 14,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4',
@@ -17718,7 +17901,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing OpenAI publishes Fast mode rates only for prompts under 272K tokens and serves long context in Fast mode only on GPT-5.6 models, so the Fast variant has flat rates. Ref: https://developers.openai.com/api/docs/guides/fast-mode',
         prices: {
           input_mtok: {
             base: 2.5,
@@ -17750,6 +17933,52 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.13,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.25,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 11.25,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 5,
+              cache_read_mtok: 0.5,
+              output_mtok: 30,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-image-2',
@@ -17794,6 +18023,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 2.25,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 9,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-nano',
@@ -17823,6 +18074,18 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.625,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-pro',
@@ -17869,6 +18132,33 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 30,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 90,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 135,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5',
@@ -17916,7 +18206,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5 OpenAI publishes Fast mode rates only for prompts under 272K tokens and serves long context in Fast mode only on GPT-5.6 models, so the Fast variant has flat rates. Ref: https://developers.openai.com/api/docs/guides/fast-mode',
         prices: {
           input_mtok: {
             base: 5,
@@ -17948,6 +18238,52 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.5,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 22.5,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 12.5,
+              cache_read_mtok: 1.25,
+              output_mtok: 75,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5-pro',
@@ -17971,7 +18307,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing OpenAI publishes Flex rates only for prompts under 272K tokens, so the Flex variant has flat rates.',
         prices: {
           input_mtok: {
             base: 30,
@@ -17994,6 +18330,17 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 15,
+              output_mtok: 90,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-luna',
@@ -18105,6 +18452,102 @@ export const data: Provider[] = [
               },
               web_searches_kcount: 10,
               storage_searches_kcount: 2.5,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.125,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.01,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.02,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.6,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.9,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.04,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.08,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.4,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 3.6,
+                  },
+                ],
+              },
             },
           },
         ],
@@ -18228,6 +18671,102 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            constraint: {
+              start_date: '2026-08-21',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            constraint: {
+              start_date: '2026-08-21',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 8,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 16,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 20,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 40,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 60,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-terra',
@@ -18342,6 +18881,102 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 9,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            constraint: {
+              start_date: '2026-07-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 24,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 36,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-astra',
@@ -18400,6 +19035,94 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 12.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 1,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 37.5,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 50,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 271999,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -18458,6 +19181,94 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.05,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.0625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.125,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.005,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.01,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.375,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.02,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.04,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-sol',
@@ -18516,6 +19327,94 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-audio',
@@ -18939,6 +19838,36 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            constraint: {
+              start_date: '2025-06-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.25,
+              output_mtok: 4,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            constraint: {
+              start_date: '2025-06-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+          },
+        ],
       },
       {
         id: 'o3-deep-research',
@@ -19030,6 +19959,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.138,
+              output_mtok: 2.2,
+            },
+          },
+          {
+            when: {
+              service_tier: ['priority', 'fast'],
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.5,
+              output_mtok: 8,
+            },
+          },
+        ],
       },
       {
         id: 'o4-mini-deep-research',

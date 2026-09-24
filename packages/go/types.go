@@ -41,6 +41,11 @@ type PriceRequest struct {
 	ProviderID     string
 	ProviderAPIURL string
 	Timestamp      time.Time
+	// PriceContext says how the request was served, using the provider's own field names and values, e.g.
+	// {"service_tier": "flex"} for an OpenAI response whose service_tier is flex. Pass the value the provider
+	// reported in its response rather than the one requested, since the provider may serve a request on a
+	// different tier. When the model has no prices for the context, the standard prices are charged.
+	PriceContext map[string]string
 }
 
 // PriceCalculation contains prices in US dollars and the matched identifiers.
@@ -50,7 +55,18 @@ type PriceCalculation struct {
 	TotalPrice  float64
 	ProviderID  string
 	ModelID     string
-	Warnings    []string
+	// PriceVariant is the price variant laid over the model's standard prices, nil when the standard prices
+	// were charged.
+	PriceVariant *PriceVariant
+	Warnings     []string
+}
+
+// PriceVariant describes prices that replace a model's standard ones for requests made under a particular
+// pricing context.
+type PriceVariant struct {
+	// When is the pricing context the variant applies to, e.g. {"service_tier": "flex"}; a list value matches
+	// any of its values.
+	When map[string]any
 }
 
 // ExtractRequest describes usage extraction from a raw JSON response.
@@ -82,9 +98,10 @@ type provider struct {
 }
 
 type model struct {
-	ID     string      `json:"id"`
-	Match  matchLogic  `json:"match"`
-	Prices modelPrices `json:"prices"`
+	ID            string         `json:"id"`
+	Match         matchLogic     `json:"match"`
+	Prices        modelPrices    `json:"prices"`
+	PriceVariants []priceVariant `json:"price_variants"`
 }
 
 type modelPrices struct {
@@ -199,6 +216,32 @@ func (p *conditionalPrice) UnmarshalJSON(data []byte) error {
 		}
 		p.Constraint = &constraint
 	}
+	return nil
+}
+
+// priceVariant holds prices that replace the standard ones for requests made under a particular pricing context.
+type priceVariant struct {
+	// When is decoded without a fixed value type, so a value shape from a newer data format decodes and simply
+	// never matches instead of rejecting the data.
+	When       map[string]any
+	Constraint *priceConstraint
+	Prices     modelPrice
+}
+
+func (v *priceVariant) UnmarshalJSON(data []byte) error {
+	var fields struct {
+		When map[string]any `json:"when"`
+	}
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	var price conditionalPrice
+	if err := json.Unmarshal(data, &price); err != nil {
+		return err
+	}
+	v.When = fields.When
+	v.Constraint = price.Constraint
+	v.Prices = price.Prices
 	return nil
 }
 

@@ -33,6 +33,8 @@ __all__ = (
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
+    'PriceVariant',
+    'PriceContext',
     'StartDateConstraint',
     'TimeOfDateConstraint',
     'ClauseStartsWith',
@@ -99,6 +101,13 @@ class ArrayMatch:
 
 ExtractPath = str | Sequence[str | ArrayMatch]
 
+PriceContext = Mapping[str, str | None]
+"""What the caller knows about how a request was served, used to select a `PriceVariant`.
+
+Keys and values use the provider's own field names and values, e.g. `{'service_tier': 'flex'}` for an OpenAI
+response whose `service_tier` is `flex`. A `None` value, as SDKs report an absent field, matches no variant.
+"""
+
 
 @dataclass(repr=False)
 class PriceCalculation:
@@ -109,6 +118,8 @@ class PriceCalculation:
     provider: Provider = dataclasses.field(repr=False)
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
+    price_variant: PriceVariant | None = None
+    """The price variant laid over the model's standard prices, `None` when the standard prices were charged."""
 
     def __repr__(self) -> str:
         return (
@@ -119,7 +130,9 @@ class PriceCalculation:
             f'model={self.model.summary()}, '
             f'provider={self.provider.summary()}, '
             f'model_price=ModelPrice({self.model_price}), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            # only shown when set, so the repr of a standard-price calculation is unchanged
+            + (f', price_variant={self.price_variant!r})' if self.price_variant is not None else ')')
         )
 
 
@@ -131,7 +144,11 @@ class ExtractedUsage:
     auto_update_timestamp: datetime | None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -139,6 +156,7 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
+            price_context: How the request was served, e.g. `{'service_tier': 'flex'}`, see `PriceContext`.
         """
         model = model or self.model
         if model is None:
@@ -149,6 +167,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=price_context,
         )
 
     def __repr__(self) -> str:
@@ -711,19 +730,36 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+    price_variants: list[PriceVariant] | None = None
+    """Prices that apply only to requests made under a particular pricing context, e.g. OpenAI's flex tier.
+
+    The variants whose `when` matches the caller's `PriceContext` are resolved by date exactly as `prices` are, and the
+    active one's prices override `prices` key by key, so a key it omits is charged at its `prices` rate. When no
+    variant matches or none of the matching ones is active yet, the standard prices are charged.
+    """
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
+    def get_prices(self, request_timestamp: datetime, *, price_context: PriceContext | None = None) -> ModelPrice:
+        return self._resolve_prices(request_timestamp, price_context)[0]
+
+    def _resolve_prices(
+        self, request_timestamp: datetime, price_context: PriceContext | None
+    ) -> tuple[ModelPrice, PriceVariant | None]:
         if isinstance(self.prices, ModelPrice):
-            return self.prices
+            prices = self.prices
         else:
-            # reversed because the last price takes precedence
-            for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+            prices = (_active_price(self.prices, request_timestamp) or self.prices[0]).prices
+        if not price_context or not self.price_variants:
+            return prices, None
+
+        # The matching variants are resolved by date exactly as `prices` are: the last active one wins.
+        matching = [variant for variant in self.price_variants if _when_matches(variant.when, price_context)]
+        variant = _active_price(matching, request_timestamp)
+        if variant is None:
+            return prices, None
+        return _overlay_model_price(prices, variant.prices), variant
 
     def calc_price(
         self,
@@ -732,11 +768,16 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        # Price variants are one provider's rates, so they don't apply to a model borrowed through
+        # `fallback_model_providers`, e.g. OpenAI's flex rates to a request priced against Azure.
+        if price_context and self.price_variants and not any(model is self for model in provider.models):
+            price_context = None
+        model_price, price_variant = self._resolve_prices(genai_request_timestamp, price_context)
         if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
             usage = copy(Usage.from_raw(usage))
             reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')
@@ -753,10 +794,50 @@ class ModelInfo:
             provider=provider,
             model_price=model_price,
             auto_update_timestamp=auto_update_timestamp,
+            price_variant=price_variant,
         )
 
     def summary(self) -> str:
         return f'Model(id={self.id!r}, name={self.name!r}, ...)'
+
+
+_P = TypeVar('_P', 'ConditionalPrice', 'PriceVariant')
+
+
+def _active_price(prices: Sequence[_P], request_timestamp: datetime) -> _P | None:
+    # reversed because the last price takes precedence
+    for price in reversed(prices):
+        if price.constraint is None or price.constraint.active(request_timestamp):
+            return price
+    return None
+
+
+def _when_matches(when: Mapping[str, object], price_context: PriceContext) -> bool:
+    """Whether every parameter of a variant's `when` matches the caller's pricing context.
+
+    Only string values, or lists of them, can match. Any other value comes from a newer data format this version
+    doesn't understand, so the variant never matches and the standard prices are charged.
+    """
+    if not when:
+        return False
+    for parameter, expected in when.items():
+        actual = price_context.get(parameter)
+        if not isinstance(actual, str):
+            return False
+        if isinstance(expected, list):
+            if actual not in [value for value in cast(list[object], expected) if isinstance(value, str)]:
+                return False
+        elif not isinstance(expected, str) or actual != expected:
+            return False
+    return True
+
+
+def _overlay_model_price(standard: ModelPrice, overlay: ModelPrice) -> ModelPrice:
+    """`standard` with every price set on `overlay` replaced, keeping the type of `standard`."""
+    merged = copy(standard)
+    for price_key, price in overlay._comparable_values().items():  # pyright: ignore[reportPrivateUsage]
+        object.__setattr__(merged, price_key, price)
+    return merged
 
 
 class CalcPrice(TypedDict):
@@ -1044,6 +1125,24 @@ class ConditionalPrice:
 
     prices: ModelPrice
     """Prices for this condition."""
+
+
+@dataclass
+class PriceVariant:
+    """Prices that replace the standard ones for requests made under a particular pricing context."""
+
+    when: dict[str, Any] = dataclasses.field(default_factory=dict)
+    """Pricing context this variant applies to, e.g. `{'service_tier': 'flex'}`.
+
+    Every entry must match the caller's `PriceContext`; a list matches any of its values.
+    """
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Condition that determines when this variant applies; when omitted, it is always valid."""
+
+    _: dataclasses.KW_ONLY
+
+    prices: ModelPrice
+    """Prices for this variant, applied over the standard prices key by key."""
 
 
 @dataclass
