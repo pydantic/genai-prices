@@ -18714,6 +18714,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-live-1',
+        match: {
+          equals: 'gpt-live-1',
+        },
+        price_comments:
+          "Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+        prices: {
+          audio_hours: 3,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         description:

@@ -10781,6 +10781,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-live-1',
+                match=ClauseEquals(equals='gpt-live-1'),
+                price_comments="Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+                prices=ModelPrice(audio_hours=Decimal('3')),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='gpt-oss-120b'),
                 name='gpt-oss-120b',

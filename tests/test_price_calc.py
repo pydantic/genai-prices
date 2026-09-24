@@ -236,6 +236,18 @@ def test_gpt_5_6_cache_write_price_context_boundary(
 
 
 @pytest.mark.parametrize(
+    ('audio_seconds', 'total'),
+    [(60, Decimal('0.05')), (3_600, Decimal('3')), (90, Decimal('0.075'))],
+)
+def test_gpt_live_1_prices_session_duration(audio_seconds: int, total: Decimal):
+    """GPT-Live bills the voice session by the second, one rate for input and output audio."""
+    price = calc_price(Usage(audio_seconds=audio_seconds), model_ref='gpt-live-1', provider_id='openai')
+
+    assert price.model.id == 'gpt-live-1'
+    assert price.total_price == total
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'short_total', 'long_total'),
     [
         ('gpt-6-sol', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
