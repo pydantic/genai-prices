@@ -18668,6 +18668,52 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-image-2.5-flare',
+        name: 'GPT Image 2.5 Flare',
+        description: "OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2.5-flare',
+            },
+            {
+              equals: 'gpt-image-2.5-flare-2026-09-08',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 30,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-image-2.5-sunburst',
+        name: 'GPT Image 2.5 Sunburst',
+        description: "OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2.5-sunburst',
+            },
+            {
+              equals: 'gpt-image-2.5-sunburst-2026-09-08',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 30,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         description:

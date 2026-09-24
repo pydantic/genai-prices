@@ -1440,6 +1440,46 @@ models:
       # catch-all carries that modality's rate.
       output_mtok: 30
 
+  - id: gpt-image-2.5-flare
+    name: GPT Image 2.5 Flare
+    description: >-
+      OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-flare
+        - equals: gpt-image-2.5-flare-2026-09-08
+    prices_checked: 2026-09-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+
+  - id: gpt-image-2.5-sunburst
+    name: GPT Image 2.5 Sunburst
+    description: >-
+      OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-sunburst
+        - equals: gpt-image-2.5-sunburst-2026-09-08
+    prices_checked: 2026-09-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+
   - id: gpt-oss-120b
     name: gpt-oss-120b
     description: >-
