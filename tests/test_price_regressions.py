@@ -244,6 +244,32 @@ def test_openai_realtime_prices_image_and_cached_image_input() -> None:
             mtok('4.5', 200) + mtok('12', 300),
         ),
         (
+            'gemini-3.8-live',
+            Usage(
+                input_tokens=1_000,
+                output_tokens=500,
+                input_audio_tokens=200,
+                output_audio_tokens=300,
+                input_image_tokens=100,
+                input_video_tokens=100,
+            ),
+            mtok('0.75', 600) + mtok('3', 200) + mtok('1', 100) + mtok('1', 100),
+            mtok('4.5', 200) + mtok('12', 300),
+        ),
+        (
+            'gemini-3.8-live-extended-thinking',
+            Usage(
+                input_tokens=1_000,
+                output_tokens=500,
+                input_audio_tokens=200,
+                output_audio_tokens=300,
+                input_image_tokens=100,
+                input_video_tokens=100,
+            ),
+            mtok('0.75', 600) + mtok('3', 200) + mtok('1', 100) + mtok('1', 100),
+            mtok('4.5', 200) + mtok('12', 300),
+        ),
+        (
             'gemini-embedding-2',
             Usage(
                 input_tokens=1_000,

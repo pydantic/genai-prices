@@ -5423,6 +5423,22 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gemini-3.8-live',
+                match=ClauseStartsWith(starts_with='gemini-3.8-live'),
+                name='Gemini 3.8 Live',
+                description="Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue, including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.",
+                context_window=131072,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'),
+                    output_mtok=Decimal('4.5'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
+                    input_image_mtok=Decimal('1'),
+                    input_video_mtok=Decimal('1'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-embedding-001',
                 match=ClauseEquals(equals='gemini-embedding-001'),
                 prices=ModelPrice(input_mtok=Decimal('0.15')),
