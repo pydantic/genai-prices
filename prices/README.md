@@ -30,6 +30,25 @@ When you edit the prices of a model, remember to:
 - have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
   which will update the v2 and package data when prices change. You can also run `make build` to update these files manually.
 
+Rates that depend on how a request was served, e.g. OpenAI's flex and priority tiers, go in `price_variants`, listing
+only the keys whose rate differs from `prices`. `when` names the provider's own response field and value; a list
+matches any of its values, and no two variants may match the same value. If `prices` has dated entries, repeat each start date in the variant, or start the variant at
+a date and leave earlier requests at the standard rates. `openai.yml` shows the shape:
+
+```yaml
+price_variants:
+  - when:
+      service_tier: flex
+    prices:
+      input_mtok: 1.25
+      output_mtok: 7.5
+  - when:
+      service_tier: [priority, fast]
+    prices:
+      input_mtok: 5
+      output_mtok: 30
+```
+
 Please do not:
 
 - edit generated JSON files directly — edit the provider YAML and use `make build` instead

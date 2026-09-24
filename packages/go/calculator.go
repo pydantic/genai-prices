@@ -3,6 +3,7 @@ package genai_prices
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"math"
 	"strings"
 	"time"
@@ -100,7 +101,13 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if timestamp.IsZero() {
 		timestamp = time.Now()
 	}
-	prices := activeModelPrice(matchedModel, timestamp)
+	// Price variants are one provider's rates, so they don't apply to a model borrowed through
+	// fallback_model_providers, e.g. OpenAI's flex rates to a request priced against Azure.
+	priceContext := request.PriceContext
+	if len(priceContext) > 0 && len(matchedModel.PriceVariants) > 0 && !ownsModel(selected, matchedModel) {
+		priceContext = nil
+	}
+	prices, variant := resolveModelPrice(matchedModel, timestamp, priceContext)
 	usage := request.Usage
 	if usage == nil {
 		usage = Usage{}
@@ -117,14 +124,19 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if err != nil {
 		return PriceCalculation{}, err
 	}
-	return PriceCalculation{
+	calculation := PriceCalculation{
 		InputPrice:  inputPrice,
 		OutputPrice: outputPrice,
 		TotalPrice:  totalPrice,
 		ProviderID:  selected.ID,
 		ModelID:     matchedModel.ID,
 		Warnings:    calculationWarnings(request.Usage, prices, calculator.registry),
-	}, nil
+	}
+	if variant != nil {
+		// a copy, so a caller changing the result can't change the calculator's data
+		calculation.PriceVariant = &PriceVariant{When: deepCopyJSON(variant.When).(map[string]any)}
+	}
+	return calculation, nil
 }
 
 func (calculator *Calculator) validate() error {
@@ -187,6 +199,9 @@ func (calculator *Calculator) validate() error {
 			if err := model.Match.compile(); err != nil {
 				return fmt.Errorf("provider %q model %q match logic: %w", provider.ID, model.ID, err)
 			}
+			if err := validatePriceVariants(model, calculator.registry); err != nil {
+				return fmt.Errorf("provider %q model %q price variants: %w", provider.ID, model.ID, err)
+			}
 			if model.Prices.conditional == nil {
 				if err := validateModelPrice(model.Prices.direct, calculator.registry); err != nil {
 					return fmt.Errorf("provider %q model %q prices: %w", provider.ID, model.ID, err)
@@ -216,6 +231,62 @@ func (calculator *Calculator) validate() error {
 					provider.ID,
 					model.ID,
 				)
+			}
+		}
+	}
+	return nil
+}
+
+// deepCopyJSON copies a value decoded from JSON, including its nested maps and lists.
+func deepCopyJSON(value any) any {
+	switch value := value.(type) {
+	case map[string]any:
+		copied := make(map[string]any, len(value))
+		for key, item := range value {
+			copied[key] = deepCopyJSON(item)
+		}
+		return copied
+	case []any:
+		copied := make([]any, len(value))
+		for index, item := range value {
+			copied[index] = deepCopyJSON(item)
+		}
+		return copied
+	default:
+		return value
+	}
+}
+
+func ownsModel(provider *provider, model *model) bool {
+	for index := range provider.Models {
+		if &provider.Models[index] == model {
+			return true
+		}
+	}
+	return false
+}
+
+// validatePriceVariants checks each variant's constraint, and its prices laid over every standard price.
+func validatePriceVariants(model *model, registry *unitRegistry) error {
+	standardPrices := []modelPrice{model.Prices.direct}
+	if model.Prices.conditional != nil {
+		standardPrices = standardPrices[:0]
+		for _, conditional := range model.Prices.conditional {
+			standardPrices = append(standardPrices, conditional.Prices)
+		}
+	}
+	for variantIndex := range model.PriceVariants {
+		variant := &model.PriceVariants[variantIndex]
+		if variant.Constraint != nil {
+			if err := parseConstraint(variant.Constraint); err != nil {
+				return fmt.Errorf("constraint: %w", err)
+			}
+		}
+		for _, standard := range standardPrices {
+			merged := maps.Clone(standard)
+			maps.Copy(merged, variant.Prices)
+			if err := validateModelPrice(merged, registry); err != nil {
+				return err
 			}
 		}
 	}

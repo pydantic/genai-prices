@@ -75,6 +75,26 @@ tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `ca
 Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
 cannot exceed `input_tokens`.
 
+### Service tiers
+
+Some providers charge different rates depending on how a request was served, e.g. OpenAI's `flex` and `priority` tiers.
+Pass the tier the provider reported in its response as `price_context`, using the provider's own field name:
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(input_tokens=1000, output_tokens=100),
+    model_ref='gpt-5.4',
+    provider_id='openai',
+    price_context={'service_tier': response.service_tier},
+)
+print(price_data.total_price, price_data.price_variant)
+```
+
+Use the value from the response rather than the one you requested, since a provider can serve a request on a different
+tier. When a model has no rates for the tier, the standard rates are charged and `price_variant` is `None`.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,

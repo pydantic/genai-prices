@@ -55,6 +55,22 @@ tokens. You also report `cache_read_tokens` and `cache_write_tokens` so that `ca
 Do not pass only the uncached count as `input_tokens`. Cache tokens are partitions of the total, so their combined count
 cannot exceed `input_tokens`.
 
+### Service tiers
+
+Some providers charge different rates depending on how a request was served, e.g. OpenAI's `flex` and `priority` tiers.
+Pass the tier the provider reported in its response as `priceContext`, using the provider's own field name:
+
+```ts
+const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, 'gpt-5.4', {
+  priceContext: { service_tier: response.service_tier },
+  providerId: 'openai',
+})
+console.log(result?.total_price, result?.price_variant)
+```
+
+Use the value from the response rather than the one you requested, since a provider can serve a request on a different
+tier. When a model has no rates for the tier, the standard rates are charged and `price_variant` is absent.
+
 ### Fractional usage values
 
 Every reportable usage unit accepts finite non-negative numbers, including fractions. This is useful for duration units

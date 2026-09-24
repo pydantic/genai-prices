@@ -9904,6 +9904,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.5'), cache_read_mtok=Decimal('0.875'), output_mtok=Decimal('14')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4.1-mini',
@@ -9920,6 +9928,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('2.8')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4.1-nano',
@@ -9932,6 +9948,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('0.4')
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.8')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4.5-preview',
@@ -9961,6 +9985,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4.25'), cache_read_mtok=Decimal('2.125'), output_mtok=Decimal('17')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4o-2024-05-13',
@@ -9975,6 +10007,12 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(input_mtok=Decimal('8.75'), output_mtok=Decimal('26.25')),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4o-audio-preview',
@@ -10004,6 +10042,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('1')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-4o-mini-2024-07-18.ft-',
@@ -10106,6 +10152,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.625'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('5')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('20')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5-image',
@@ -10132,6 +10192,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.125'), cache_read_mtok=Decimal('0.0125'), output_mtok=Decimal('1')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.045'), output_mtok=Decimal('3.6')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5-nano',
@@ -10146,6 +10220,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.025'), cache_read_mtok=Decimal('0.0025'), output_mtok=Decimal('0.2')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-5-pro',
@@ -10186,6 +10268,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.625'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('5')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('20')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.1-codex-mini',
@@ -10229,6 +10325,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.875'), cache_read_mtok=Decimal('0.0875'), output_mtok=Decimal('7')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.5'), cache_read_mtok=Decimal('0.35'), output_mtok=Decimal('28')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.2-pro',
@@ -10276,6 +10386,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.5'), cache_read_mtok=Decimal('0.35'), output_mtok=Decimal('28')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-5.4',
@@ -10290,7 +10408,7 @@ providers: list[Provider] = [
                 name='GPT-5.4',
                 description="OpenAI's most capable model with a 1.05M token context window.",
                 context_window=1050000,
-                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing OpenAI publishes Fast mode rates only for prompts under 272K tokens and serves long context in Fast mode only on GPT-5.6 models, so the Fast variant has flat rates. Ref: https://developers.openai.com/api/docs/guides/fast-mode',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271999, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(
@@ -10300,6 +10418,28 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=271999, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.13'), tiers=[Tier(start=271999, price=Decimal('0.25'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('7.5'), tiers=[Tier(start=271999, price=Decimal('11.25'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.4-image-2',
@@ -10329,6 +10469,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('2.25')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.4-nano',
@@ -10350,6 +10504,14 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.625')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-5.4-pro',
@@ -10371,6 +10533,19 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=271999, price=Decimal('30'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('90'), tiers=[Tier(start=271999, price=Decimal('135'))]
+                            ),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-5.5',
@@ -10393,7 +10568,7 @@ providers: list[Provider] = [
                 name='GPT-5.5',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=1000000,
-                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5 OpenAI publishes Fast mode rates only for prompts under 272K tokens and serves long context in Fast mode only on GPT-5.6 models, so the Fast variant has flat rates. Ref: https://developers.openai.com/api/docs/guides/fast-mode',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271999, price=Decimal('10'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=271999, price=Decimal('1'))]),
@@ -10401,6 +10576,28 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=271999, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.25'), tiers=[Tier(start=271999, price=Decimal('0.5'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=271999, price=Decimal('22.5'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('75')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.5-pro',
@@ -10415,13 +10612,19 @@ providers: list[Provider] = [
                 name='GPT-5.5 Pro',
                 description='Version of GPT-5.5 that produces smarter and more precise responses.',
                 context_window=1000000,
-                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+                price_comments='OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing OpenAI publishes Flex rates only for prompts under 272K tokens, so the Flex variant has flat rates.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=271999, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=271999, price=Decimal('270'))]),
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('90')),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
@@ -10469,6 +10672,44 @@ providers: list[Provider] = [
                             ),
                             web_searches_kcount=Decimal('10'),
                             storage_searches_kcount=Decimal('2.5'),
+                        ),
+                    ),
+                ],
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=271999, price=Decimal('0.2'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.125'), tiers=[Tier(start=271999, price=Decimal('0.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.01'), tiers=[Tier(start=271999, price=Decimal('0.02'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('0.6'), tiers=[Tier(start=271999, price=Decimal('0.9'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=271999, price=Decimal('0.8'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=271999, price=Decimal('1'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.04'), tiers=[Tier(start=271999, price=Decimal('0.08'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.4'), tiers=[Tier(start=271999, price=Decimal('3.6'))]
+                            ),
                         ),
                     ),
                 ],
@@ -10524,6 +10765,40 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=271999, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=271999, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=271999, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('15'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 21)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=271999, price=Decimal('16'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=271999, price=Decimal('20'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.8'), tiers=[Tier(start=271999, price=Decimal('1.6'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('40'), tiers=[Tier(start=271999, price=Decimal('60'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.6-terra',
@@ -10576,6 +10851,38 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271999, price=Decimal('2'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=271999, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=271999, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=271999, price=Decimal('9'))]),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 7, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=271999, price=Decimal('8'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=271999, price=Decimal('10'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=271999, price=Decimal('0.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('24'), tiers=[Tier(start=271999, price=Decimal('36'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-astra',
@@ -10596,6 +10903,40 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271999, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=271999, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=271999, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('25'), tiers=[Tier(start=271999, price=Decimal('37.5'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=271999, price=Decimal('40'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('25'), tiers=[Tier(start=271999, price=Decimal('50'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('2'), tiers=[Tier(start=271999, price=Decimal('4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('100'), tiers=[Tier(start=271999, price=Decimal('150'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-luna',
@@ -10618,6 +10959,42 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.0625'), tiers=[Tier(start=272000, price=Decimal('0.125'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.005'), tiers=[Tier(start=272000, price=Decimal('0.01'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.375'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.02'), tiers=[Tier(start=272000, price=Decimal('0.04'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('1.5'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-sol',
@@ -10636,6 +11013,38 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-audio',
@@ -10904,6 +11313,22 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('4')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.5'), cache_read_mtok=Decimal('0.875'), output_mtok=Decimal('14')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='o3-deep-research',
@@ -10956,6 +11381,20 @@ providers: list[Provider] = [
                     web_searches_kcount=Decimal('10'),
                     storage_searches_kcount=Decimal('2.5'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.55'), cache_read_mtok=Decimal('0.138'), output_mtok=Decimal('2.2')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': ['priority', 'fast']},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='o4-mini-deep-research',
