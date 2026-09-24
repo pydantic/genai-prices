@@ -21689,6 +21689,27 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-3.8-flash',
+        name: 'Gemini 3.8 Flash',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.8-flash',
+            },
+            {
+              regex: '^google/gemini-3\\.8-flash-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.041666666666666664,
+          cache_read_mtok: 0.075,
+          output_mtok: 3.75,
+        },
+      },
+      {
         id: 'google/gemini-flash-1.5',
         match: {
           equals: 'google/gemini-flash-1.5',
