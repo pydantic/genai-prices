@@ -10743,6 +10743,44 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-image-2.5-flare',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-image-2.5-flare'),
+                        ClauseEquals(equals='gpt-image-2.5-flare-2026-09-08'),
+                    ]
+                ),
+                name='GPT Image 2.5 Flare',
+                description="OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.",
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('30'),
+                    input_image_mtok=Decimal('8'),
+                    cache_image_read_mtok=Decimal('2'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-image-2.5-sunburst',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-image-2.5-sunburst'),
+                        ClauseEquals(equals='gpt-image-2.5-sunburst-2026-09-08'),
+                    ]
+                ),
+                name='GPT Image 2.5 Sunburst',
+                description="OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.",
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('30'),
+                    input_image_mtok=Decimal('8'),
+                    cache_image_read_mtok=Decimal('2'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='gpt-oss-120b'),
                 name='gpt-oss-120b',
