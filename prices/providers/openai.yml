@@ -118,6 +118,15 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
+  # GPT-Live voice sessions report their duration, in `session.usage.updated` and `session.closed`:
+  # https://developers.openai.com/api/reference/resources/live/primary-websocket
+  # It is a running total, not an increment: price the latest report (or the final one on
+  # `session.closed`), or the difference between two, never each report in turn.
+  - api_flavor: live
+    root: usage
+    mappings:
+      - path: seconds
+        dest: audio_seconds
 models:
   - id: ada
     match:

@@ -9287,6 +9287,26 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gemini-3.8-live',
+        name: 'Gemini 3.8 Live',
+        description:
+          "Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue, including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.",
+        match: {
+          starts_with: 'gemini-3.8-live',
+        },
+        context_window: 131072,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 4.5,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
+          input_image_mtok: 1,
+          input_video_mtok: 1,
+        },
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
@@ -16707,6 +16727,18 @@ export const data: Provider[] = [
           {
             path: 'prompt_tokens',
             dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'live',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
             required: true,
           },
         ],

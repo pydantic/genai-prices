@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price
+from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
@@ -245,6 +245,15 @@ def test_gpt_live_1_prices_session_duration(audio_seconds: int, total: Decimal):
 
     assert price.model.id == 'gpt-live-1'
     assert price.total_price == total
+
+
+def test_gpt_live_1_duration_is_extracted_from_live_usage():
+    """Live's `session.usage.updated` and `session.closed` report `usage.seconds`, a running total."""
+    extracted = extract_usage({'usage': {'seconds': 60.0}}, provider_id='openai', api_flavor='live')
+
+    assert extracted.usage == Usage(audio_seconds=60.0)
+    price = calc_price(extracted.usage, model_ref='gpt-live-1', provider_id='openai')
+    assert price.total_price == Decimal('0.05')
 
 
 @pytest.mark.parametrize(
