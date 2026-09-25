@@ -17423,6 +17423,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Jev 1.13.0',
+                context_window=32000,
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             )
         ],

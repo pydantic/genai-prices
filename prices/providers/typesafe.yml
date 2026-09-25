@@ -29,6 +29,12 @@ models:
         - equals: jev-1.13.0
         - equals: jev-latest
         - equals: jev-preview
+    # https://docs.typesafe.ai/model-jaggedness/jev-1.13: 32k tokens for the state plus the longest question, and
+    # 64k for the state and all the questions together. The state is counted once per request, so the 32k is the
+    # limit a growing conversation hits; the 64k only binds when the questions themselves are very large. Measured
+    # live on jev-1.13.0: 32,878 input tokens were accepted, and the next size up was refused with HTTP 400
+    # `max_tokens_exceeded`.
+    context_window: 32000
     prices_checked: 2026-09-18
     prices:
       input_mtok: 0.042

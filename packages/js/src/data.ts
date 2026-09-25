@@ -30053,6 +30053,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.042,
         },
