@@ -8429,44 +8429,63 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        price_comments:
+          'Flat pricing across the full 1M context window since the long-context premium was removed on 2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+              cache_write_1h_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-7',

@@ -4976,14 +4976,33 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                price_comments='Flat pricing across the full 1M context window since the long-context premium was removed on 2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('5'),
+                            cache_write_mtok=Decimal('6.25'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('25'),
+                            cache_write_1h_mtok=Decimal('10'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='claude-opus-4-7',
