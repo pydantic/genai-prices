@@ -9726,6 +9726,12 @@ providers: list[Provider] = [
                 api_flavor='embeddings',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='seconds', dest='audio_seconds', required=True)],
+                api_flavor='live',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -10795,6 +10801,12 @@ providers: list[Provider] = [
                     input_image_mtok=Decimal('8'),
                     cache_image_read_mtok=Decimal('2'),
                 ),
+            ),
+            ModelInfo(
+                id='gpt-live-1',
+                match=ClauseEquals(equals='gpt-live-1'),
+                price_comments="Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+                prices=ModelPrice(audio_hours=Decimal('3')),
             ),
             ModelInfo(
                 id='gpt-oss-120b',

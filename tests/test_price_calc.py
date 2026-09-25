@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price
+from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
@@ -233,6 +233,27 @@ def test_gpt_5_6_cache_write_price_context_boundary(
         assert price.input_price == expected_input_price
         assert price.output_price == Decimal(0)
         assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('audio_seconds', 'total'),
+    [(60, Decimal('0.05')), (3_600, Decimal('3')), (90, Decimal('0.075'))],
+)
+def test_gpt_live_1_prices_session_duration(audio_seconds: int, total: Decimal):
+    """GPT-Live bills the voice session by the second, one rate for input and output audio."""
+    price = calc_price(Usage(audio_seconds=audio_seconds), model_ref='gpt-live-1', provider_id='openai')
+
+    assert price.model.id == 'gpt-live-1'
+    assert price.total_price == total
+
+
+def test_gpt_live_1_duration_is_extracted_from_live_usage():
+    """Live's `session.usage.updated` and `session.closed` report `usage.seconds`, a running total."""
+    extracted = extract_usage({'usage': {'seconds': 60.0}}, provider_id='openai', api_flavor='live')
+
+    assert extracted.usage == Usage(audio_seconds=60.0)
+    price = calc_price(extracted.usage, model_ref='gpt-live-1', provider_id='openai')
+    assert price.total_price == Decimal('0.05')
 
 
 @pytest.mark.parametrize(

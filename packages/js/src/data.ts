@@ -16731,6 +16731,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'live',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -18731,6 +18743,17 @@ export const data: Provider[] = [
           output_mtok: 30,
           input_image_mtok: 8,
           cache_image_read_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-live-1',
+        match: {
+          equals: 'gpt-live-1',
+        },
+        price_comments:
+          "Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+        prices: {
+          audio_hours: 3,
         },
       },
       {
