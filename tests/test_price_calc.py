@@ -1319,6 +1319,15 @@ def test_openai_web_search_price():
     assert price.total_price == Decimal('0.0528')
 
 
+@pytest.mark.parametrize('model_ref', ['o3-deep-research', 'o4-mini-deep-research-2025-06-26'])
+def test_openai_deep_research_tool_prices(model_ref: str):
+    price = calc_price(Usage(web_searches=2, storage_searches=3), model_ref=model_ref, provider_id='openai')
+
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('0.0275')
+
+
 def test_openai_gpt_56_sol_web_search_price():
     price = calc_price(
         Usage(web_searches=3),

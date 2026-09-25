@@ -11075,7 +11075,14 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='o3-deep-research'), ClauseEquals(equals='o3-deep-research-2025-06-26')]
                 ),
                 context_window=200000,
-                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
+                price_comments='Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('2.5'),
+                    output_mtok=Decimal('40'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='o3-mini',
@@ -11130,7 +11137,14 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=200000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
+                price_comments='Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('8'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='text-davinci-002',

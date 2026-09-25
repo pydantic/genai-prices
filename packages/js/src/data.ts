@@ -19146,10 +19146,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 10,
           cache_read_mtok: 2.5,
           output_mtok: 40,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
@@ -19237,10 +19241,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
           output_mtok: 8,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
