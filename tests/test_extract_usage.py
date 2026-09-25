@@ -157,6 +157,43 @@ def test_baseten_messages_usage() -> None:
 
 
 @pytest.mark.parametrize(
+    'provider_id,model,expected_price',
+    [
+        # 0.5M five-minute writes at $3.75/MTok plus 0.5M one-hour writes at $6/MTok.
+        pytest.param('aws', 'global.anthropic.claude-sonnet-4-6', Decimal('4.875'), id='aws-global'),
+        # The regional endpoint carries a 10% premium: $4.125 and $6.60/MTok.
+        pytest.param('aws', 'us.anthropic.claude-sonnet-4-6', Decimal('5.3625'), id='aws-regional'),
+        pytest.param('google', 'claude-sonnet-4-6', Decimal('4.875'), id='google'),
+        pytest.param('azure', 'claude-sonnet-4-6', Decimal('4.875'), id='azure'),
+    ],
+)
+def test_anthropic_platform_cache_write_ttl(provider_id: str, model: str, expected_price: Decimal) -> None:
+    """Claude on Bedrock, Vertex AI and Azure AI Foundry reports the cache write TTL split like Anthropic's API."""
+    response_data = {
+        'model': model,
+        'usage': {
+            'input_tokens': 0,
+            'cache_creation': {'ephemeral_5m_input_tokens': 500_000, 'ephemeral_1h_input_tokens': 500_000},
+            'cache_creation_input_tokens': 1_000_000,
+            'cache_read_input_tokens': 0,
+            'output_tokens': 0,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id=provider_id, api_flavor='anthropic')
+
+    assert extracted.usage == Usage(
+        input_tokens=1_000_000,
+        cache_write_tokens=1_000_000,
+        cache_write_5m_tokens=500_000,
+        cache_write_1h_tokens=500_000,
+        cache_read_tokens=0,
+        output_tokens=0,
+    )
+    assert extracted.calc_price().total_price == expected_price
+
+
+@pytest.mark.parametrize(
     'response_data,expected_model,expected_usage,expected_price',
     [
         (

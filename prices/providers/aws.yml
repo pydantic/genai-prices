@@ -42,6 +42,12 @@ extractors:
       - path: cache_creation_input_tokens
         dest: cache_write_tokens
         required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
       - path: cache_read_input_tokens
         dest: cache_read_tokens
         required: false
@@ -170,12 +176,13 @@ models:
 
   - id: global.anthropic.claude-fable-5-1-v1:0
     canonical_model: anthropic/claude-fable-5-1
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-25
     price_comments: >-
       Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x),
       unique to Fable 5.1 and Mythos 5.1.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - ends_with: global.anthropic.claude-fable-5-1
@@ -183,12 +190,15 @@ models:
     prices:
       input_mtok: 10
       cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
       cache_read_mtok: 0.25
       output_mtok: 50
 
   - id: global.anthropic.claude-fable-5-v1:0
     canonical_model: anthropic/claude-fable-5
-    prices_checked: 2026-06-09
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - ends_with: global.anthropic.claude-fable-5
@@ -196,66 +206,85 @@ models:
     prices:
       input_mtok: 10
       cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
       cache_read_mtok: 1.0
       output_mtok: 50
 
   - id: global.anthropic.claude-haiku-4-5-20251001-v1:0
     canonical_model: anthropic/claude-haiku-4-5
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-haiku-4-5-20251001
     prices:
       input_mtok: 1
       cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
       cache_read_mtok: 0.1
       output_mtok: 5
 
   - id: global.anthropic.claude-opus-4-5-v1:0
     canonical_model: anthropic/claude-opus-4-5
-    prices_checked: 2026-02-23
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-opus-4-5
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-6-v1:0
     canonical_model: anthropic/claude-opus-4-6
-    prices_checked: 2026-06-26
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-opus-4-6
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-7-v1:0
     canonical_model: anthropic/claude-opus-4-7
-    prices_checked: 2026-04-16
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-opus-4-7
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-8-v1:0
     canonical_model: anthropic/claude-opus-4-8
-    prices_checked: 2026-05-28
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-opus-4-8
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-5
     canonical_model: anthropic/claude-opus-5
-    prices_checked: 2026-07-25
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - ends_with: global.anthropic.claude-opus-5
@@ -263,6 +292,7 @@ models:
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
 
@@ -297,6 +327,9 @@ models:
 
   - id: global.anthropic.claude-sonnet-4-5-20250929-v1:0
     canonical_model: anthropic/claude-sonnet-4-5
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-sonnet-4-5-20250929
     # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
@@ -304,23 +337,27 @@ models:
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.3
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-4-6-v1:0
     canonical_model: anthropic/claude-sonnet-4-6
-    prices_checked: 2026-06-26
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       contains: global.anthropic.claude-sonnet-4-6
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.30
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-5-v1:0
     canonical_model: anthropic/claude-sonnet-5
-    prices_checked: 2026-08-24
+    prices_checked: 2026-09-25
     match:
       contains: global.anthropic.claude-sonnet-5
     price_comments: >-
@@ -328,9 +365,11 @@ models:
       launch rates are now permanent, with no 2026-09-01 increase.
       Refs: https://aws.amazon.com/bedrock/pricing/,
       https://platform.claude.com/docs/en/about-claude/pricing
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     prices:
       input_mtok: 2
       cache_write_mtok: 2.5
+      cache_write_1h_mtok: 4
       cache_read_mtok: 0.2
       output_mtok: 10
 
@@ -1027,12 +1066,13 @@ models:
 
   - id: regional.anthropic.claude-fable-5-1-v1:0
     canonical_model: anthropic/claude-fable-5-1
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-25
     price_comments: >-
       Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is
       currently us-east-1 only.
       Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
       Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - equals: anthropic.claude-fable-5-1
@@ -1043,12 +1083,15 @@ models:
     prices:
       input_mtok: 11
       cache_write_mtok: 13.75
+      cache_write_1h_mtok: 22
       cache_read_mtok: 0.275
       output_mtok: 55
 
   - id: regional.anthropic.claude-fable-5-v1:0
     canonical_model: anthropic/claude-fable-5
-    prices_checked: 2026-06-09
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - equals: anthropic.claude-fable-5
@@ -1062,11 +1105,15 @@ models:
     prices:
       input_mtok: 11
       cache_write_mtok: 13.75
+      cache_write_1h_mtok: 22
       cache_read_mtok: 1.1
       output_mtok: 55
 
   - id: regional.anthropic.claude-haiku-4-5-20251001-v1:0
     canonical_model: anthropic/claude-haiku-4-5
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-haiku-4-5-20251001
@@ -1080,6 +1127,7 @@ models:
     prices:
       input_mtok: 1.1
       cache_write_mtok: 1.375
+      cache_write_1h_mtok: 2.2
       cache_read_mtok: 0.11
       output_mtok: 5.5
 
@@ -1121,7 +1169,9 @@ models:
 
   - id: regional.anthropic.claude-opus-4-5-v1:0
     canonical_model: anthropic/claude-opus-4-5
-    prices_checked: 2026-02-23
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-opus-4-5
@@ -1135,12 +1185,15 @@ models:
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
       cache_read_mtok: 0.55
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-6-v1:0
     canonical_model: anthropic/claude-opus-4-6
-    prices_checked: 2026-06-26
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-opus-4-6
@@ -1154,12 +1207,15 @@ models:
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
       cache_read_mtok: 0.55
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-7-v1:0
     canonical_model: anthropic/claude-opus-4-7
-    prices_checked: 2026-04-16
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-opus-4-7
@@ -1173,12 +1229,15 @@ models:
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
       cache_read_mtok: 0.55
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-8-v1:0
     canonical_model: anthropic/claude-opus-4-8
-    prices_checked: 2026-05-28
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-opus-4-8
@@ -1190,15 +1249,17 @@ models:
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
       cache_read_mtok: 0.55
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-5
     canonical_model: anthropic/claude-opus-5
-    prices_checked: 2026-07-25
+    prices_checked: 2026-09-25
     price_comments: >-
       Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
       Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - equals: anthropic.claude-opus-5
@@ -1216,6 +1277,7 @@ models:
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
       cache_read_mtok: 0.55
       output_mtok: 27.5
 
@@ -1268,6 +1330,9 @@ models:
 
   - id: regional.anthropic.claude-sonnet-4-5-20250929-v1:0
     canonical_model: anthropic/claude-sonnet-4-5
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-sonnet-4-5-20250929
@@ -1283,12 +1348,15 @@ models:
     prices:
       input_mtok: 3.3
       cache_write_mtok: 4.125
+      cache_write_1h_mtok: 6.6
       cache_read_mtok: 0.33
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-4-6-v1:0
     canonical_model: anthropic/claude-sonnet-4-6
-    prices_checked: 2026-06-26
+    prices_checked: 2026-09-25
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
         - starts_with: anthropic.claude-sonnet-4-6
@@ -1302,12 +1370,13 @@ models:
     prices:
       input_mtok: 3.3
       cache_write_mtok: 4.125
+      cache_write_1h_mtok: 6.6
       cache_read_mtok: 0.33
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-5-v1:0
     canonical_model: anthropic/claude-sonnet-5
-    prices_checked: 2026-08-24
+    prices_checked: 2026-09-25
     match:
       or:
         - starts_with: anthropic.claude-sonnet-5
@@ -1323,9 +1392,11 @@ models:
       permanent, with no 2026-09-01 increase.
       Refs: https://aws.amazon.com/bedrock/pricing/,
       https://platform.claude.com/docs/en/about-claude/pricing
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     prices:
       input_mtok: 2.2
       cache_write_mtok: 2.75
+      cache_write_1h_mtok: 4.4
       cache_read_mtok: 0.22
       output_mtok: 11
 

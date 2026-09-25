@@ -757,3 +757,19 @@ def test_openrouter_claude_opus_latest_moves_to_opus_5_5(timestamp: datetime, ex
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('timestamp', 'expected_price'),
+    [(datetime(2026, 3, 12, 23, 59), '47.5'), (datetime(2026, 3, 13), '30')],
+)
+def test_vertex_claude_opus_4_6_drops_long_context_premium(timestamp: datetime, expected_price: str) -> None:
+    """Vertex AI dropped the >200K premium for Opus 4.6 on 2026-03-13, as Anthropic did."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='claude-opus-4-6',
+        provider_id='google',
+        genai_request_timestamp=timestamp,
+    )
+
+    assert price.total_price == Decimal(expected_price)

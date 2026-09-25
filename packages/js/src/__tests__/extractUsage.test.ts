@@ -177,6 +177,38 @@ describe('extractUsage', () => {
       expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_tokens: 40 })
     })
 
+    // 0.5M five-minute and 0.5M one-hour cache writes. The regional Bedrock endpoint carries a 10% premium.
+    it.each([
+      { expectedPrice: 4.875, model: 'global.anthropic.claude-sonnet-4-6', providerId: 'aws' },
+      { expectedPrice: 5.3625, model: 'us.anthropic.claude-sonnet-4-6', providerId: 'aws' },
+      { expectedPrice: 4.875, model: 'claude-sonnet-4-6', providerId: 'google' },
+      { expectedPrice: 4.875, model: 'claude-sonnet-4-6', providerId: 'azure' },
+    ])('should price Claude cache writes by TTL on $providerId ($model)', ({ expectedPrice, model, providerId }) => {
+      const provider = data.find((p) => p.id === providerId)!
+      const responseData = {
+        model,
+        usage: {
+          cache_creation: { ephemeral_1h_input_tokens: 500_000, ephemeral_5m_input_tokens: 500_000 },
+          cache_creation_input_tokens: 1_000_000,
+          cache_read_input_tokens: 0,
+          input_tokens: 0,
+          output_tokens: 0,
+        },
+      }
+
+      const { model: extractedModel, usage } = extractUsage(provider, responseData, 'anthropic')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_1h_tokens: 500_000,
+        cache_write_5m_tokens: 500_000,
+        cache_write_tokens: 1_000_000,
+        input_tokens: 1_000_000,
+        output_tokens: 0,
+      })
+      expect(calcPrice(usage, extractedModel!, { providerId })?.total_price).toBeCloseTo(expectedPrice)
+    })
+
     it('should extract usage with cache tokens', () => {
       const responseData = {
         id: 'msg_0152tnC3YpjyASTB9qxqDJXu',

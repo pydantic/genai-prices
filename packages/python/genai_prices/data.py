@@ -850,6 +850,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_5m_input_tokens'],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_1h_input_tokens'],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
@@ -964,12 +974,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+                price_comments='Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('0.25'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -981,66 +992,78 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
+                    cache_write_1h_mtok=Decimal('2'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-7-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-7'),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-8-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-8'),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -1052,11 +1075,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -1092,34 +1117,39 @@ providers: list[Provider] = [
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-5'),
                 context_window=1000000,
-                price_comments='Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
                     cache_read_mtok=Decimal('0.2'),
                     output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
                 ),
             ),
             ModelInfo(
@@ -1598,12 +1628,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+                price_comments='Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('11'),
                     cache_write_mtok=Decimal('13.75'),
                     cache_read_mtok=Decimal('0.275'),
                     output_mtok=Decimal('55'),
+                    cache_write_1h_mtok=Decimal('22'),
                 ),
             ),
             ModelInfo(
@@ -1621,11 +1652,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('11'),
                     cache_write_mtok=Decimal('13.75'),
                     cache_read_mtok=Decimal('1.1'),
                     output_mtok=Decimal('55'),
+                    cache_write_1h_mtok=Decimal('22'),
                 ),
             ),
             ModelInfo(
@@ -1643,11 +1676,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'),
                     cache_write_mtok=Decimal('1.375'),
                     cache_read_mtok=Decimal('0.11'),
                     output_mtok=Decimal('5.5'),
+                    cache_write_1h_mtok=Decimal('2.2'),
                 ),
             ),
             ModelInfo(
@@ -1709,11 +1744,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
                     cache_read_mtok=Decimal('0.55'),
                     output_mtok=Decimal('27.5'),
+                    cache_write_1h_mtok=Decimal('11'),
                 ),
             ),
             ModelInfo(
@@ -1731,11 +1768,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
                     cache_read_mtok=Decimal('0.55'),
                     output_mtok=Decimal('27.5'),
+                    cache_write_1h_mtok=Decimal('11'),
                 ),
             ),
             ModelInfo(
@@ -1753,11 +1792,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
                     cache_read_mtok=Decimal('0.55'),
                     output_mtok=Decimal('27.5'),
+                    cache_write_1h_mtok=Decimal('11'),
                 ),
             ),
             ModelInfo(
@@ -1773,11 +1814,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
                     cache_read_mtok=Decimal('0.55'),
                     output_mtok=Decimal('27.5'),
+                    cache_write_1h_mtok=Decimal('11'),
                 ),
             ),
             ModelInfo(
@@ -1799,12 +1842,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
                     cache_read_mtok=Decimal('0.55'),
                     output_mtok=Decimal('27.5'),
+                    cache_write_1h_mtok=Decimal('11'),
                 ),
             ),
             ModelInfo(
@@ -1872,11 +1916,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=200000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
                     cache_read_mtok=Decimal('0.33'),
                     output_mtok=Decimal('16.5'),
+                    cache_write_1h_mtok=Decimal('6.6'),
                 ),
             ),
             ModelInfo(
@@ -1894,11 +1940,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
                     cache_read_mtok=Decimal('0.33'),
                     output_mtok=Decimal('16.5'),
+                    cache_write_1h_mtok=Decimal('6.6'),
                 ),
             ),
             ModelInfo(
@@ -1916,12 +1964,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+                price_comments='Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.2'),
                     cache_write_mtok=Decimal('2.75'),
                     cache_read_mtok=Decimal('0.22'),
                     output_mtok=Decimal('11'),
+                    cache_write_1h_mtok=Decimal('4.4'),
                 ),
             ),
             ModelInfo(
@@ -2250,6 +2299,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_5m_input_tokens'],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_1h_input_tokens'],
+                        dest='cache_write_1h_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
@@ -4740,6 +4799,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_5m_input_tokens'],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_1h_input_tokens'],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
@@ -4872,12 +4941,13 @@ providers: list[Provider] = [
                     or_=[ClauseEndsWith(ends_with='claude-fable-5'), ClauseContains(contains='claude-fable-5@')]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                price_comments="Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -4886,12 +4956,13 @@ providers: list[Provider] = [
                     or_=[ClauseEndsWith(ends_with='claude-fable-5-1'), ClauseContains(contains='claude-fable-5-1@')]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai',
+                price_comments="Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('0.25'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -4905,14 +4976,33 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                price_comments='Flat pricing across the full 1M context window since the long-context premium was removed on 2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('5'),
+                            cache_write_mtok=Decimal('6.25'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('25'),
+                            cache_write_1h_mtok=Decimal('10'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='claude-opus-4-7',
@@ -4925,12 +5015,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                price_comments="Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -4944,12 +5035,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                price_comments="Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -4964,12 +5056,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -4984,12 +5077,13 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview",
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
                     cache_read_mtok=Decimal('0.2'),
                     output_mtok=Decimal('20'),
+                    cache_write_1h_mtok=Decimal('8'),
                 ),
             ),
             ModelInfo(
@@ -4998,7 +5092,7 @@ providers: list[Provider] = [
                     or_=[ClauseContains(contains='claude-sonnet-4-5'), ClauseContains(contains='claude-sonnet-4.5')]
                 ),
                 context_window=200000,
-                price_comments='Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+                price_comments="Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -5006,6 +5100,9 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
+                    ),
                 ),
             ),
             ModelInfo(
@@ -5014,12 +5111,13 @@ providers: list[Provider] = [
                     or_=[ClauseContains(contains='claude-sonnet-4-6'), ClauseContains(contains='claude-sonnet-4.6')]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+                price_comments="Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
