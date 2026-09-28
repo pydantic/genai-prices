@@ -1766,6 +1766,7 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 3.75
     context_window: 1048576
+    prices_checked: 2026-09-28
 
   - id: google/gemini-flash-1.5
     match:
