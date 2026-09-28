@@ -16465,7 +16465,7 @@ providers: list[Provider] = [
                         )
                     ),
                     ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 30)),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 28)),
                         prices=ModelPrice(
                             input_mtok=Decimal('2'),
                             cache_write_mtok=Decimal('2.5'),

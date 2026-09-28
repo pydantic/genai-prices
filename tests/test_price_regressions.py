@@ -826,10 +826,10 @@ def test_tightened_claude_sonnet_5_matchers_keep_existing_forms(
 
 @pytest.mark.parametrize(
     ('timestamp', 'expected_price'),
-    [(datetime(2026, 6, 29, 23, 59), '18'), (datetime(2026, 6, 30), '12')],
+    [(datetime(2026, 9, 27, 23, 59), '18'), (datetime(2026, 9, 28), '12')],
 )
-def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5(timestamp: datetime, expected_price: str) -> None:
-    """OpenRouter's family-level alias has pointed at $2/$10 Sonnet 5 (now 5.5) since Sonnet 5's release."""
+def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime, expected_price: str) -> None:
+    """OpenRouter's family-level alias resolves to $2/$10 Sonnet 5.5 from the date that was verified."""
     price = calc_price(
         Usage(input_tokens=1_000_000, output_tokens=1_000_000),
         model_ref='~anthropic/claude-sonnet-latest',

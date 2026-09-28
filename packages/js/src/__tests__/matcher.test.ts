@@ -507,9 +507,9 @@ describe('Claude Sonnet 5 vs 5.5', () => {
   })
 
   it.each([
-    ['2026-06-29T23:59:00Z', 18],
-    ['2026-06-30T00:00:00Z', 12],
-  ])('moves the OpenRouter family-level alias to Sonnet 5 at %s', (timestamp, expected) => {
+    ['2026-09-27T23:59:00Z', 18],
+    ['2026-09-28T00:00:00Z', 12],
+  ])('moves the OpenRouter family-level alias to Sonnet 5.5 at %s', (timestamp, expected) => {
     const price = calcPrice(usage, '~anthropic/claude-sonnet-latest', {
       providerId: 'openrouter',
       timestamp: new Date(timestamp),

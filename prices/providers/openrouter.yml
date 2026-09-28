@@ -6166,9 +6166,9 @@ models:
           cache_read_mtok: 0.3
           output_mtok: 15
       - constraint:
-          # The alias moved to Claude Sonnet 5 on its release and now resolves to Claude Sonnet 5.5,
-          # both $2/$10: https://openrouter.ai/api/v1/models
-          start_date: 2026-06-30
+          # Verified 2026-09-28: the alias resolves to Claude Sonnet 5.5 at $2/$10. OpenRouter does not
+          # publish when it left $3/$15: https://openrouter.ai/api/v1/models
+          start_date: 2026-09-28
         prices:
           input_mtok: 2
           cache_write_mtok: 2.5

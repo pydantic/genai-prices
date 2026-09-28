@@ -28319,7 +28319,7 @@ export const data: Provider[] = [
           },
           {
             constraint: {
-              start_date: '2026-06-30',
+              start_date: '2026-09-28',
               type: 'start_date',
             },
             prices: {
