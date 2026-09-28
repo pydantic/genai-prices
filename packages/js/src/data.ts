@@ -852,7 +852,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
+            },
+            {
+              regex: '^claude-sonnet-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5@',
             },
             {
               starts_with: 'claude-sonnet-5.0',
@@ -868,6 +874,44 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        name: 'Claude Sonnet 5.5',
+        description: 'The best combination of speed and intelligence',
+        match: {
+          or: [
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              regex: '^claude-sonnet-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5@',
+            },
+            {
+              starts_with: 'claude-sonnet-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-sonnet',
+            },
+            {
+              starts_with: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -1338,6 +1382,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -1508,12 +1562,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 0.25,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -1529,11 +1584,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -1542,11 +1599,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          cache_write_1h_mtok: 2,
         },
       },
       {
@@ -1555,11 +1614,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-5',
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1568,11 +1629,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-6',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1581,11 +1644,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-7',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1594,11 +1659,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-8',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1614,11 +1681,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1663,11 +1732,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
         },
       },
       {
@@ -1676,26 +1747,59 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
         },
       },
       {
-        id: 'global.anthropic.claude-sonnet-5-v1:0',
+        id: 'global.anthropic.claude-sonnet-5-5',
         match: {
-          contains: 'global.anthropic.claude-sonnet-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+          'Global endpoint (no premium), flat across the full 1M context window. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
           cache_read_mtok: 0.2,
           output_mtok: 10,
+          cache_write_1h_mtok: 4,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-5-v1:0',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
@@ -2625,12 +2729,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
           cache_read_mtok: 0.275,
           output_mtok: 55,
+          cache_write_1h_mtok: 22,
         },
       },
       {
@@ -2664,11 +2769,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
           cache_read_mtok: 1.1,
           output_mtok: 55,
+          cache_write_1h_mtok: 22,
         },
       },
       {
@@ -2702,11 +2809,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 1.1,
           cache_write_mtok: 1.375,
           cache_read_mtok: 0.11,
           output_mtok: 5.5,
+          cache_write_1h_mtok: 2.2,
         },
       },
       {
@@ -2816,11 +2925,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2854,11 +2965,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2892,11 +3005,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2924,11 +3039,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2975,12 +3092,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -3105,11 +3223,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+          cache_write_1h_mtok: 6.6,
         },
       },
       {
@@ -3143,11 +3263,78 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+          cache_write_1h_mtok: 6.6,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'apac.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 2.2,
+          cache_write_mtok: 2.75,
+          cache_read_mtok: 0.22,
+          output_mtok: 11,
+          cache_write_1h_mtok: 4.4,
         },
       },
       {
@@ -3155,39 +3342,64 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-sonnet-5',
+              equals: 'anthropic.claude-sonnet-5',
             },
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
             },
             {
-              contains: 'us.anthropic.claude-sonnet-5',
+              starts_with: 'anthropic.claude-sonnet-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-sonnet-5',
+              starts_with: 'claude-sonnet-5-v1',
             },
             {
-              contains: 'apac.anthropic.claude-sonnet-5',
+              equals: 'us.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'eu.anthropic.claude-sonnet-5',
+              equals: 'au.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'us-gov.anthropic.claude-sonnet-5',
+              equals: 'apac.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'jp.anthropic.claude-sonnet-5',
+              equals: 'eu.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-v1',
             },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 2.2,
           cache_write_mtok: 2.75,
           cache_read_mtok: 0.22,
           output_mtok: 11,
+          cache_write_1h_mtok: 4.4,
         },
       },
       {
@@ -3840,6 +4052,16 @@ export const data: Provider[] = [
           {
             path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
             required: false,
           },
           {
@@ -8118,6 +8340,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -8309,12 +8541,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -8331,12 +8564,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai',
+          "Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 0.25,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -8358,44 +8592,63 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        price_comments:
+          'Flat pricing across the full 1M context window since the long-context premium was removed on 2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+              cache_write_1h_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-7',
@@ -8417,12 +8670,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -8445,12 +8699,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -8476,12 +8731,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -8507,12 +8763,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview",
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 4,
           cache_write_mtok: 5,
           cache_read_mtok: 0.2,
           output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -8529,7 +8786,7 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         price_comments:
-          'Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+          "Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: {
             base: 3,
@@ -8567,6 +8824,15 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_1h_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -8583,12 +8849,42 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+          "Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-sonnet-5-5',
+            },
+            {
+              contains: 'claude-sonnet-5.5',
+            },
+            {
+              contains: 'claude-5-5-sonnet',
+            },
+            {
+              contains: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
@@ -9285,6 +9581,26 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gemini-3.8-live',
+        name: 'Gemini 3.8 Live',
+        description:
+          "Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue, including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.",
+        match: {
+          starts_with: 'gemini-3.8-live',
+        },
+        context_window: 131072,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 4.5,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
+          input_image_mtok: 1,
+          input_video_mtok: 1,
+        },
       },
       {
         id: 'gemini-embedding-001',
@@ -16711,6 +17027,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'live',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -18714,6 +19042,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-live-1',
+        match: {
+          equals: 'gpt-live-1',
+        },
+        price_comments:
+          "Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+        prices: {
+          audio_hours: 3,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         description:
@@ -18999,10 +19338,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 10,
           cache_read_mtok: 2.5,
           output_mtok: 40,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
@@ -19090,10 +19433,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
           output_mtok: 8,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
@@ -20080,6 +20427,28 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase. Refs: https://openrouter.ai/anthropic/claude-sonnet-5, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'anthropic/claude-sonnet-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-sonnet-5.5',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -27960,12 +28329,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-sonnet-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-28',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: '~google/gemini-flash-latest',
@@ -30031,6 +30416,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 32000,
         prices: {
           input_mtok: 0.042,
         },

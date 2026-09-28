@@ -17099,18 +17099,7 @@
             "input_price": "0.0033991",
             "output_price": "0.00022",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 9511,
-          "cache_write_5m_tokens": 1956,
-          "cache_write_tokens": 1956,
-          "input_tokens": 11470,
-          "output_tokens": 44
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.00373901",
@@ -17128,14 +17117,11 @@
             "input_price": "0.0033991",
             "output_price": "0.00022",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 9511,
+          "cache_write_5m_tokens": 1956,
           "cache_write_tokens": 1956,
           "input_tokens": 11470,
           "output_tokens": 44
@@ -17197,6 +17183,20 @@
         "usage": {
           "cache_read_tokens": 9511,
           "input_tokens": 9514,
+          "output_tokens": 44
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 9511,
+          "cache_write_tokens": 1956,
+          "input_tokens": 11470,
           "output_tokens": 44
         }
       }
@@ -22310,18 +22310,7 @@
             "input_price": "0.0019098",
             "output_price": "0.000495",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 1111,
-          "cache_write_5m_tokens": 418,
-          "cache_write_tokens": 418,
-          "input_tokens": 1532,
-          "output_tokens": 33
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.00210078",
@@ -22339,14 +22328,11 @@
             "input_price": "0.0019098",
             "output_price": "0.000495",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 1111,
+          "cache_write_5m_tokens": 418,
           "cache_write_tokens": 418,
           "input_tokens": 1532,
           "output_tokens": 33
@@ -22408,6 +22394,20 @@
         "usage": {
           "cache_read_tokens": 1111,
           "input_tokens": 1114,
+          "output_tokens": 33
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1111,
+          "cache_write_tokens": 418,
+          "input_tokens": 1532,
           "output_tokens": 33
         }
       }
@@ -159859,17 +159859,7 @@
             "input_price": "0.00402975",
             "output_price": "0.0009",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_write_5m_tokens": 1069,
-          "cache_write_tokens": 1069,
-          "input_tokens": 1076,
-          "output_tokens": 60
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.004432725",
@@ -159887,13 +159877,10 @@
             "input_price": "0.00402975",
             "output_price": "0.0009",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
+          "cache_write_5m_tokens": 1069,
           "cache_write_tokens": 1069,
           "input_tokens": 1076,
           "output_tokens": 60
@@ -159948,6 +159935,19 @@
           "input_tokens": 7,
           "output_tokens": 60
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_write_tokens": 1069,
+          "input_tokens": 1076,
+          "output_tokens": 60
+        }
       }
     ],
     "model": "claude-sonnet-4-5-20250929"
@@ -159977,18 +159977,7 @@
             "input_price": "0.00065745",
             "output_price": "0.00165",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 1069,
-          "cache_write_5m_tokens": 85,
-          "cache_write_tokens": 85,
-          "input_tokens": 1160,
-          "output_tokens": 110
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.000723195",
@@ -160006,14 +159995,11 @@
             "input_price": "0.00065745",
             "output_price": "0.00165",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 1069,
+          "cache_write_5m_tokens": 85,
           "cache_write_tokens": 85,
           "input_tokens": 1160,
           "output_tokens": 110
@@ -160075,6 +160061,20 @@
         "usage": {
           "cache_read_tokens": 1069,
           "input_tokens": 1075,
+          "output_tokens": 110
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1069,
+          "cache_write_tokens": 85,
+          "input_tokens": 1160,
           "output_tokens": 110
         }
       }
@@ -172411,14 +172411,11 @@
             "input_price": "0.0055356",
             "output_price": "0.00489",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 20443,
+          "cache_write_5m_tokens": 574,
           "cache_write_tokens": 574,
           "input_tokens": 21023,
           "output_tokens": 489
@@ -172484,6 +172481,20 @@
         "usage": {
           "cache_read_tokens": 20443,
           "input_tokens": 20449,
+          "output_tokens": 489
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 20443,
+          "cache_write_tokens": 574,
+          "input_tokens": 21023,
           "output_tokens": 489
         }
       }
@@ -172552,14 +172563,11 @@
             "input_price": "0.0038983",
             "output_price": "0.0029",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 14714,
+          "cache_write_5m_tokens": 379,
           "cache_write_tokens": 379,
           "input_tokens": 15097,
           "output_tokens": 290
@@ -172627,6 +172635,20 @@
           "input_tokens": 14718,
           "output_tokens": 290
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 14714,
+          "cache_write_tokens": 379,
+          "input_tokens": 15097,
+          "output_tokens": 290
+        }
       }
     ],
     "model": "claude-sonnet-5"
@@ -172660,18 +172682,7 @@
             "input_price": "0.01825335",
             "output_price": "0.003165",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 4332,
-          "cache_write_5m_tokens": 4513,
-          "cache_write_tokens": 4513,
-          "input_tokens": 8855,
-          "output_tokens": 211
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.020078685",
@@ -172689,14 +172700,11 @@
             "input_price": "0.01825335",
             "output_price": "0.003165",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 4332,
+          "cache_write_5m_tokens": 4513,
           "cache_write_tokens": 4513,
           "input_tokens": 8855,
           "output_tokens": 211
@@ -172762,6 +172770,20 @@
           "input_tokens": 4342,
           "output_tokens": 211
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 4332,
+          "cache_write_tokens": 4513,
+          "input_tokens": 8855,
+          "output_tokens": 211
+        }
       }
     ],
     "model": "claude-sonnet-4-6"
@@ -172795,18 +172817,7 @@
             "input_price": "0.00364095",
             "output_price": "0.00234",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 9134,
-          "cache_write_5m_tokens": 237,
-          "cache_write_tokens": 237,
-          "input_tokens": 9375,
-          "output_tokens": 156
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.004005045",
@@ -172824,14 +172835,11 @@
             "input_price": "0.00364095",
             "output_price": "0.00234",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 9134,
+          "cache_write_5m_tokens": 237,
           "cache_write_tokens": 237,
           "input_tokens": 9375,
           "output_tokens": 156
@@ -172895,6 +172903,20 @@
         "usage": {
           "cache_read_tokens": 9134,
           "input_tokens": 9138,
+          "output_tokens": 156
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 9134,
+          "cache_write_tokens": 237,
+          "input_tokens": 9375,
           "output_tokens": 156
         }
       }
@@ -172963,14 +172985,11 @@
             "input_price": "0.0203819",
             "output_price": "0.00344",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 13637,
+          "cache_write_5m_tokens": 7049,
           "cache_write_tokens": 7049,
           "input_tokens": 20702,
           "output_tokens": 344
@@ -173036,6 +173055,20 @@
         "usage": {
           "cache_read_tokens": 13637,
           "input_tokens": 13653,
+          "output_tokens": 344
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 13637,
+          "cache_write_tokens": 7049,
+          "input_tokens": 20702,
           "output_tokens": 344
         }
       }
@@ -173104,14 +173137,11 @@
             "input_price": "0.003915",
             "output_price": "0.0029",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 14210,
+          "cache_write_5m_tokens": 426,
           "cache_write_tokens": 426,
           "input_tokens": 14640,
           "output_tokens": 290
@@ -173179,6 +173209,20 @@
           "input_tokens": 14214,
           "output_tokens": 290
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 14210,
+          "cache_write_tokens": 426,
+          "input_tokens": 14640,
+          "output_tokens": 290
+        }
       }
     ],
     "model": "claude-sonnet-5"
@@ -173212,18 +173256,7 @@
             "input_price": "0.0026880",
             "output_price": "0.002895",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 8845,
-          "cache_write_5m_tokens": 6,
-          "cache_write_tokens": 6,
-          "input_tokens": 8855,
-          "output_tokens": 193
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.00295680",
@@ -173241,14 +173274,11 @@
             "input_price": "0.0026880",
             "output_price": "0.002895",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 8845,
+          "cache_write_5m_tokens": 6,
           "cache_write_tokens": 6,
           "input_tokens": 8855,
           "output_tokens": 193
@@ -173314,6 +173344,20 @@
           "input_tokens": 8849,
           "output_tokens": 193
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8845,
+          "cache_write_tokens": 6,
+          "input_tokens": 8855,
+          "output_tokens": 193
+        }
       }
     ],
     "model": "claude-sonnet-4-6"
@@ -173347,18 +173391,7 @@
             "input_price": "0.00356805",
             "output_price": "0.00234",
             "provider_id": "anthropic"
-          }
-        ],
-        "usage": {
-          "cache_read_tokens": 9116,
-          "cache_write_5m_tokens": 219,
-          "cache_write_tokens": 219,
-          "input_tokens": 9339,
-          "output_tokens": 156
-        }
-      },
-      {
-        "extractors": [
+          },
           {
             "api_flavor": "anthropic",
             "input_price": "0.003924855",
@@ -173376,14 +173409,11 @@
             "input_price": "0.00356805",
             "output_price": "0.00234",
             "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "minimax"
           }
         ],
         "usage": {
           "cache_read_tokens": 9116,
+          "cache_write_5m_tokens": 219,
           "cache_write_tokens": 219,
           "input_tokens": 9339,
           "output_tokens": 156
@@ -173447,6 +173477,20 @@
         "usage": {
           "cache_read_tokens": 9116,
           "input_tokens": 9120,
+          "output_tokens": 156
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 9116,
+          "cache_write_tokens": 219,
+          "input_tokens": 9339,
           "output_tokens": 156
         }
       }

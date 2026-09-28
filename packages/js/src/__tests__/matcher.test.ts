@@ -469,3 +469,52 @@ describe('Claude Opus 5 vs 5.5', () => {
     expect(price!.total_price).toBeCloseTo(expected, 10)
   })
 })
+
+describe('Claude Sonnet 5 vs 5.5', () => {
+  // Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix
+  // matchers no longer claim it.
+  const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+
+  it.each([
+    ['anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
+    ['anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', 12],
+    ['google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
+    ['google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', 12],
+    ['google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
+    ['aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', 12],
+    ['aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', 12],
+    ['aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.2],
+    ['aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', 13.2],
+    ['aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.2],
+    ['openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', 12],
+  ])('resolves %s %s to %s', (providerId, modelRef, modelId, expected) => {
+    const price = calcPrice(usage, modelRef, { providerId })
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it.each([
+    ['anthropic', 'claude-sonnet-5', 'claude-sonnet-5'],
+    ['anthropic', 'claude-sonnet-5-20260630', 'claude-sonnet-5'],
+    ['google', 'claude-sonnet-5@20260630', 'claude-sonnet-5'],
+    ['aws', 'global.anthropic.claude-sonnet-5', 'global.anthropic.claude-sonnet-5-v1:0'],
+    ['aws', 'global.anthropic.claude-sonnet-5-v1:0', 'global.anthropic.claude-sonnet-5-v1:0'],
+    ['aws', 'us.anthropic.claude-sonnet-5-v1:0', 'regional.anthropic.claude-sonnet-5-v1:0'],
+    ['aws', 'anthropic.claude-sonnet-5', 'regional.anthropic.claude-sonnet-5-v1:0'],
+  ])('keeps the %s Sonnet 5 form %s on Sonnet 5', (providerId, modelRef, modelId) => {
+    expect(calcPrice(usage, modelRef, { providerId })!.model.id).toBe(modelId)
+  })
+
+  it.each([
+    ['2026-09-27T23:59:00Z', 18],
+    ['2026-09-28T00:00:00Z', 12],
+  ])('moves the OpenRouter family-level alias to Sonnet 5.5 at %s', (timestamp, expected) => {
+    const price = calcPrice(usage, '~anthropic/claude-sonnet-latest', {
+      providerId: 'openrouter',
+      timestamp: new Date(timestamp),
+    })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+})

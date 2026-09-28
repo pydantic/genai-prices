@@ -33,10 +33,10 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
-- [Anthropic](prices/providers/anthropic.yml) - 25 models
+- [Anthropic](prices/providers/anthropic.yml) - 26 models
 - [Arcee](prices/providers/arcee.yml) - 6 models
 - [Avian](prices/providers/avian.yml) - 17 models
-- [AWS Bedrock](prices/providers/aws.yml) - 99 models
+- [AWS Bedrock](prices/providers/aws.yml) - 101 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 15 models
 - [Cerebras](prices/providers/cerebras.yml) - 7 models
@@ -47,7 +47,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 30 models
-- [Google](prices/providers/google.yml) - 56 models
+- [Google](prices/providers/google.yml) - 58 models
 - [Groq](prices/providers/groq.yml) - 31 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -65,8 +65,8 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 95 models
-- [OpenRouter](prices/providers/openrouter.yml) - 702 models
+- [OpenAI](prices/providers/openai.yml) - 96 models
+- [OpenRouter](prices/providers/openrouter.yml) - 703 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models

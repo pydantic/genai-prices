@@ -118,6 +118,15 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
+  # GPT-Live voice sessions report their duration, in `session.usage.updated` and `session.closed`:
+  # https://developers.openai.com/api/reference/resources/live/primary-websocket
+  # It is a running total, not an increment: price the latest report (or the final one on
+  # `session.closed`), or the difference between two, never each report in turn.
+  - api_flavor: live
+    root: usage
+    mappings:
+      - path: seconds
+        dest: audio_seconds
 models:
   - id: ada
     match:
@@ -1480,6 +1489,17 @@ models:
       # catch-all carries that modality's rate.
       output_mtok: 30
 
+  - id: gpt-live-1
+    match:
+      equals: gpt-live-1
+    prices_checked: 2026-09-24
+    price_comments: >-
+      Voice sessions are billed per second of session duration, covering both input and output audio. The
+      Responses backend a session delegates to is billed separately, at that model's own prices. See
+      https://developers.openai.com/api/docs/models/gpt-live-1.
+    prices:
+      audio_hours: 3
+
   - id: gpt-oss-120b
     name: gpt-oss-120b
     description: >-
@@ -1702,10 +1722,17 @@ models:
         - equals: o3-deep-research
         - equals: o3-deep-research-2025-06-26
     context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
     prices:
       input_mtok: 10
       cache_read_mtok: 2.5
       output_mtok: 40
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
 
   - id: o3-mini
     name: o3 Mini
@@ -1764,10 +1791,17 @@ models:
         - equals: o4-mini-deep-research
         - equals: o4-mini-deep-research-2025-06-26
     context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
 
   - id: text-davinci-002
     match:
