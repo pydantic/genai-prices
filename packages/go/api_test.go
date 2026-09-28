@@ -412,3 +412,31 @@ func TestOpenRouterClaudeOpusLatestMovesToOpus55(t *testing.T) {
 		}
 	}
 }
+
+// OpenRouter's family-level Sonnet alias has pointed at $2/$10 Sonnet 5 (now 5.5) since Sonnet 5's release.
+func TestOpenRouterClaudeSonnetLatestMovesToSonnet5(t *testing.T) {
+	tests := []struct {
+		timestamp time.Time
+		want      float64
+	}{
+		{time.Date(2026, 6, 29, 23, 59, 0, 0, time.UTC), 18},
+		{time.Date(2026, 6, 30, 0, 0, 0, 0, time.UTC), 12},
+	}
+	for _, test := range tests {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:  1_000_000,
+				genai_prices.UsageOutputTokens: 1_000_000,
+			},
+			Model:      "~anthropic/claude-sonnet-latest",
+			ProviderID: "openrouter",
+			Timestamp:  test.timestamp,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
+		}
+	}
+}

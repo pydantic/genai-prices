@@ -852,7 +852,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
+            },
+            {
+              regex: '^claude-sonnet-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5@',
             },
             {
               starts_with: 'claude-sonnet-5.0',
@@ -868,6 +874,44 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        name: 'Claude Sonnet 5.5',
+        description: 'The best combination of speed and intelligence',
+        match: {
+          or: [
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              regex: '^claude-sonnet-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5@',
+            },
+            {
+              starts_with: 'claude-sonnet-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-sonnet',
+            },
+            {
+              starts_with: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -1713,9 +1757,39 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium), flat across the full 1M context window. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+        },
+      },
+      {
         id: 'global.anthropic.claude-sonnet-5-v1:0',
         match: {
-          contains: 'global.anthropic.claude-sonnet-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -3199,32 +3273,121 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'apac.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 2.2,
+          cache_write_mtok: 2.75,
+          cache_read_mtok: 0.22,
+          output_mtok: 11,
+          cache_write_1h_mtok: 4.4,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-sonnet-5-v1:0',
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-sonnet-5',
+              equals: 'anthropic.claude-sonnet-5',
             },
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
             },
             {
-              contains: 'us.anthropic.claude-sonnet-5',
+              starts_with: 'anthropic.claude-sonnet-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-sonnet-5',
+              starts_with: 'claude-sonnet-5-v1',
             },
             {
-              contains: 'apac.anthropic.claude-sonnet-5',
+              equals: 'us.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'eu.anthropic.claude-sonnet-5',
+              equals: 'au.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'us-gov.anthropic.claude-sonnet-5',
+              equals: 'apac.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'jp.anthropic.claude-sonnet-5',
+              equals: 'eu.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-v1',
             },
           ],
         },
@@ -8693,6 +8856,35 @@ export const data: Provider[] = [
           cache_read_mtok: 0.3,
           output_mtok: 15,
           cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-sonnet-5-5',
+            },
+            {
+              contains: 'claude-sonnet-5.5',
+            },
+            {
+              contains: 'claude-5-5-sonnet',
+            },
+            {
+              contains: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
@@ -20243,6 +20435,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-sonnet-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-sonnet-5.5',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'anubis-pro-105b-v1',
         name: 'Anubis Pro 105B V1',
         match: {
@@ -28094,12 +28308,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-sonnet-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-06-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: '~google/gemini-flash-latest',

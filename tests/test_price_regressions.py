@@ -773,3 +773,68 @@ def test_vertex_claude_opus_4_6_drops_long_context_premium(timestamp: datetime, 
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'expected_price'),
+    [
+        ('anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
+        ('anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', '12'),
+        ('google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
+        ('google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', '12'),
+        ('google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
+        ('aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', '12'),
+        ('aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', '12'),
+        ('aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
+        ('aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
+        ('aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
+        ('openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', '12'),
+    ],
+)
+def test_claude_sonnet_5_5_resolves_to_its_own_model(
+    provider_id: str, model_ref: str, model_id: str, expected_price: str
+) -> None:
+    """Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix matchers no longer claim it."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id'),
+    [
+        ('anthropic', 'claude-sonnet-5', 'claude-sonnet-5'),
+        ('anthropic', 'claude-sonnet-5-20260630', 'claude-sonnet-5'),
+        ('google', 'claude-sonnet-5@20260630', 'claude-sonnet-5'),
+        ('aws', 'global.anthropic.claude-sonnet-5', 'global.anthropic.claude-sonnet-5-v1:0'),
+        ('aws', 'global.anthropic.claude-sonnet-5-v1:0', 'global.anthropic.claude-sonnet-5-v1:0'),
+        ('aws', 'us.anthropic.claude-sonnet-5-v1:0', 'regional.anthropic.claude-sonnet-5-v1:0'),
+        ('aws', 'anthropic.claude-sonnet-5', 'regional.anthropic.claude-sonnet-5-v1:0'),
+    ],
+)
+def test_tightened_claude_sonnet_5_matchers_keep_existing_forms(
+    provider_id: str, model_ref: str, model_id: str
+) -> None:
+    """The Sonnet 5 clauses were tightened to stop at Sonnet 5; its dated and `-v1:0` forms must still resolve."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id)
+
+    assert price.model.id == model_id
+
+
+@pytest.mark.parametrize(
+    ('timestamp', 'expected_price'),
+    [(datetime(2026, 6, 29, 23, 59), '18'), (datetime(2026, 6, 30), '12')],
+)
+def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5(timestamp: datetime, expected_price: str) -> None:
+    """OpenRouter's family-level alias has pointed at $2/$10 Sonnet 5 (now 5.5) since Sonnet 5's release."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='~anthropic/claude-sonnet-latest',
+        provider_id='openrouter',
+        genai_request_timestamp=timestamp,
+    )
+
+    assert price.total_price == Decimal(expected_price)

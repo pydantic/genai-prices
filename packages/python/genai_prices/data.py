@@ -547,7 +547,9 @@ providers: list[Provider] = [
                 id='claude-sonnet-5',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='claude-sonnet-5'),
+                        ClauseEquals(equals='claude-sonnet-5'),
+                        ClauseRegex(regex='^claude-sonnet-5-\\d{8}$'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5@'),
                         ClauseStartsWith(starts_with='claude-sonnet-5.0'),
                         ClauseStartsWith(starts_with='claude-5-sonnet'),
                         ClauseStartsWith(starts_with='claude-5.0-sonnet'),
@@ -557,6 +559,31 @@ providers: list[Provider] = [
                 description='Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost',
                 context_window=1000000,
                 price_comments='Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='claude-sonnet-5-5'),
+                        ClauseRegex(regex='^claude-sonnet-5-5-\\d{8}$'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5-5@'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5.5'),
+                        ClauseStartsWith(starts_with='claude-5-5-sonnet'),
+                        ClauseStartsWith(starts_with='claude-5.5-sonnet'),
+                    ]
+                ),
+                name='Claude Sonnet 5.5',
+                description='The best combination of speed and intelligence',
+                context_window=1000000,
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
@@ -1140,8 +1167,31 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-sonnet-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEndsWith(ends_with='global.anthropic.claude-sonnet-5-5'),
+                        ClauseContains(contains='global.anthropic.claude-sonnet-5-5-v1'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Global endpoint (no premium), flat across the full 1M context window. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
+                ),
+            ),
+            ModelInfo(
                 id='global.anthropic.claude-sonnet-5-v1:0',
-                match=ClauseContains(contains='global.anthropic.claude-sonnet-5'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEndsWith(ends_with='global.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='global.anthropic.claude-sonnet-5-v1'),
+                    ]
+                ),
                 context_window=1000000,
                 price_comments='Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
                 prices=ModelPrice(
@@ -1950,17 +2000,57 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='regional.anthropic.claude-sonnet-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='claude-sonnet-5-5'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-5-5-v1'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5-5-v1'),
+                        ClauseEquals(equals='us.anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='au.anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='apac.anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='eu.anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='us-gov.anthropic.claude-sonnet-5-5'),
+                        ClauseEquals(equals='jp.anthropic.claude-sonnet-5-5'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-5-5-v1'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-5-5-v1'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-5-5-v1'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-5-5-v1'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-5-5-v1'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-5-5-v1'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.2'),
+                    cache_write_mtok=Decimal('2.75'),
+                    cache_read_mtok=Decimal('0.22'),
+                    output_mtok=Decimal('11'),
+                    cache_write_1h_mtok=Decimal('4.4'),
+                ),
+            ),
+            ModelInfo(
                 id='regional.anthropic.claude-sonnet-5-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-5'),
-                        ClauseStartsWith(starts_with='claude-sonnet-5'),
-                        ClauseContains(contains='us.anthropic.claude-sonnet-5'),
-                        ClauseContains(contains='au.anthropic.claude-sonnet-5'),
-                        ClauseContains(contains='apac.anthropic.claude-sonnet-5'),
-                        ClauseContains(contains='eu.anthropic.claude-sonnet-5'),
-                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-5'),
-                        ClauseContains(contains='jp.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='claude-sonnet-5'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-5-v1'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5-v1'),
+                        ClauseEquals(equals='us.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='au.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='apac.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='eu.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='us-gov.anthropic.claude-sonnet-5'),
+                        ClauseEquals(equals='jp.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-5-v1'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-5-v1'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-5-v1'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-5-v1'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-5-v1'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-5-v1'),
                     ]
                 ),
                 context_window=1000000,
@@ -5118,6 +5208,26 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
                     cache_write_1h_mtok=Decimal('6'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-sonnet-5-5'),
+                        ClauseContains(contains='claude-sonnet-5.5'),
+                        ClauseContains(contains='claude-5-5-sonnet'),
+                        ClauseContains(contains='claude-5.5-sonnet'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
                 ),
             ),
             ModelInfo(
@@ -11757,6 +11867,23 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='anthropic/claude-sonnet-5.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-sonnet-5.5'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-5.5:beta'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='anubis-pro-105b-v1',
                 match=ClauseEquals(equals='anubis-pro-105b-v1'),
                 name='Anubis Pro 105B V1',
@@ -16328,12 +16455,25 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~anthropic/claude-sonnet-latest'),
                 name='Anthropic Claude Sonnet Latest',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 6, 30)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='~google/gemini-flash-latest',
