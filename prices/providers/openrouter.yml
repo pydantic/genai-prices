@@ -600,6 +600,24 @@ models:
       https://platform.claude.com/docs/en/about-claude/pricing
     collapse: false
 
+  - id: anthropic/claude-sonnet-5.5
+    match:
+      or:
+        - equals: anthropic/claude-sonnet-5.5
+        - equals: anthropic/claude-sonnet-5.5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.2
+      cache_write_mtok: 2.5
+      output_mtok: 10
+    prices_checked: 2026-09-28
+    price_comments: >-
+      Flat pricing across the full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Cache-read rate confirmed via https://openrouter.ai/api/v1/models
+    collapse: false
+
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
     match:
@@ -6140,11 +6158,22 @@ models:
     name: Anthropic Claude Sonnet Latest
     match:
       equals: ~anthropic/claude-sonnet-latest
+    prices_checked: 2026-09-28
     prices:
-      input_mtok: 3
-      cache_write_mtok: 3.75
-      cache_read_mtok: 0.3
-      output_mtok: 15
+      - prices:
+          input_mtok: 3
+          cache_write_mtok: 3.75
+          cache_read_mtok: 0.3
+          output_mtok: 15
+      - constraint:
+          # Verified 2026-09-28: the alias resolves to Claude Sonnet 5.5 at $2/$10. OpenRouter does not
+          # publish when it left $3/$15: https://openrouter.ai/api/v1/models
+          start_date: 2026-09-28
+        prices:
+          input_mtok: 2
+          cache_write_mtok: 2.5
+          cache_read_mtok: 0.2
+          output_mtok: 10
     context_window: 1000000
 
   - id: ~google/gemini-flash-latest

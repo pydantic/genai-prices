@@ -412,3 +412,92 @@ func TestOpenRouterClaudeOpusLatestMovesToOpus55(t *testing.T) {
 		}
 	}
 }
+
+// Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix matchers no longer claim it.
+func TestClaudeSonnet55ResolvesToItsOwnModel(t *testing.T) {
+	for _, test := range []struct {
+		providerID, model, wantModelID string
+		wantPrice                      float64
+	}{
+		{"anthropic", "claude-sonnet-5-5", "claude-sonnet-5-5", 12},
+		{"anthropic", "claude-sonnet-5-5-20260928", "claude-sonnet-5-5", 12},
+		{"google", "claude-sonnet-5-5", "claude-sonnet-5-5", 12},
+		{"google", "claude-sonnet-5-5@20260928", "claude-sonnet-5-5", 12},
+		{"google", "publishers/anthropic/models/claude-sonnet-5-5", "claude-sonnet-5-5", 12},
+		{"aws", "global.anthropic.claude-sonnet-5-5", "global.anthropic.claude-sonnet-5-5", 12},
+		{"aws", "global.anthropic.claude-sonnet-5-5-v1:0", "global.anthropic.claude-sonnet-5-5", 12},
+		{"aws", "us.anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.2},
+		{"aws", "us.anthropic.claude-sonnet-5-5-v1:0", "regional.anthropic.claude-sonnet-5-5", 13.2},
+		{"aws", "anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.2},
+		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:  1_000_000,
+				genai_prices.UsageOutputTokens: 1_000_000,
+			},
+			Model:      test.model,
+			ProviderID: test.providerID,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ModelID != test.wantModelID {
+			t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+		}
+		if math.Abs(calculation.TotalPrice-test.wantPrice) > 1e-9 {
+			t.Fatalf("%s/%s got %g, want %g", test.providerID, test.model, calculation.TotalPrice, test.wantPrice)
+		}
+	}
+}
+
+// The Sonnet 5 clauses were tightened to stop at Sonnet 5; its dated and `-v1:0` forms must still resolve.
+func TestTightenedClaudeSonnet5MatchersKeepExistingForms(t *testing.T) {
+	for _, test := range []struct{ providerID, model, wantModelID string }{
+		{"anthropic", "claude-sonnet-5", "claude-sonnet-5"},
+		{"anthropic", "claude-sonnet-5-20260630", "claude-sonnet-5"},
+		{"google", "claude-sonnet-5@20260630", "claude-sonnet-5"},
+		{"aws", "global.anthropic.claude-sonnet-5", "global.anthropic.claude-sonnet-5-v1:0"},
+		{"aws", "global.anthropic.claude-sonnet-5-v1:0", "global.anthropic.claude-sonnet-5-v1:0"},
+		{"aws", "us.anthropic.claude-sonnet-5-v1:0", "regional.anthropic.claude-sonnet-5-v1:0"},
+		{"aws", "anthropic.claude-sonnet-5", "regional.anthropic.claude-sonnet-5-v1:0"},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}, Model: test.model, ProviderID: test.providerID,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ModelID != test.wantModelID {
+			t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+		}
+	}
+}
+
+// OpenRouter's family-level Sonnet alias resolves to $2/$10 Sonnet 5.5 from the date that was verified.
+func TestOpenRouterClaudeSonnetLatestMovesToSonnet55(t *testing.T) {
+	tests := []struct {
+		timestamp time.Time
+		want      float64
+	}{
+		{time.Date(2026, 9, 27, 23, 59, 0, 0, time.UTC), 18},
+		{time.Date(2026, 9, 28, 0, 0, 0, 0, time.UTC), 12},
+	}
+	for _, test := range tests {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:  1_000_000,
+				genai_prices.UsageOutputTokens: 1_000_000,
+			},
+			Model:      "~anthropic/claude-sonnet-latest",
+			ProviderID: "openrouter",
+			Timestamp:  test.timestamp,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
+		}
+	}
+}

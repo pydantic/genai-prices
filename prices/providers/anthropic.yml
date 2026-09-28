@@ -615,7 +615,9 @@ models:
     description: Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost
     match:
       or:
-        - starts_with: claude-sonnet-5
+        - equals: claude-sonnet-5
+        - regex: ^claude-sonnet-5-\d{8}$
+        - starts_with: claude-sonnet-5@
         - starts_with: claude-sonnet-5.0
         - starts_with: claude-5-sonnet
         - starts_with: claude-5.0-sonnet
@@ -633,6 +635,33 @@ models:
       cache_write_1h_mtok: 4
       output_mtok: 10
       web_searches_kcount: 10
+
+  - id: claude-sonnet-5-5
+    name: Claude Sonnet 5.5
+    description: The best combination of speed and intelligence
+    match:
+      or:
+        - equals: claude-sonnet-5-5
+        - regex: ^claude-sonnet-5-5-\d{8}$
+        - starts_with: claude-sonnet-5-5@
+        - starts_with: claude-sonnet-5.5
+        - starts_with: claude-5-5-sonnet
+        - starts_with: claude-5.5-sonnet
+    context_window: 1000000
+    prices_checked: 2026-09-28
+    price_comments: >-
+      Flat pricing across the full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.20
+      cache_write_mtok: 2.50
+      cache_write_1h_mtok: 4
+      output_mtok: 10
+      web_searches_kcount: 10
+    # Same rates as Claude Sonnet 5; keep it a separate model so the ids stay distinct.
+    collapse: false
 
   - id: claude-v1
     description: Retired, here to match price sources
