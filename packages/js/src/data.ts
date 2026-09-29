@@ -9886,7 +9886,14 @@ export const data: Provider[] = [
         description:
           'The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
         match: {
-          starts_with: 'gemini-3.1-pro-preview',
+          or: [
+            {
+              starts_with: 'gemini-3.1-pro-preview',
+            },
+            {
+              equals: 'gemini-pro-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: {
@@ -9953,7 +9960,14 @@ export const data: Provider[] = [
         description:
           "Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          starts_with: 'gemini-3.5-flash-lite',
+          or: [
+            {
+              starts_with: 'gemini-3.5-flash-lite',
+            },
+            {
+              equals: 'gemini-flash-lite-latest',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -10039,7 +10053,14 @@ export const data: Provider[] = [
         description:
           "Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows.",
         match: {
-          starts_with: 'gemini-3.8-flash',
+          or: [
+            {
+              starts_with: 'gemini-3.8-flash',
+            },
+            {
+              equals: 'gemini-flash-latest',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -28940,12 +28961,27 @@ export const data: Provider[] = [
         },
         context_window: 1310720,
         price_comments:
-          "OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
-        prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.25,
-        },
+          'A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-fable-latest',
@@ -32137,6 +32173,28 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'GLM-4.6V',
+        name: 'GLM-4.6V',
+        description: 'Z.AI vision model with video, image, text and file input and native tool use.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.6V',
+            },
+            {
+              equals: 'glm-4.6v',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: 'Context length is 128K per https://docs.z.ai/guides/vlm/glm-4.6v.',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'GLM-5.2',
         name: 'GLM-5.2',
         description: 'Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
@@ -32196,12 +32254,27 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
-        prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.25,
-        },
+          'The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
     ],
   },
@@ -32582,12 +32655,27 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY. The pricing page marks this as a two-week 50% discount; list prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.',
-        prices: {
-          input_mtok: 0.055,
-          cache_read_mtok: 0.016,
-          output_mtok: 0.193,
-        },
+          "Launched with a two-week 50% promotion of 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens. List prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output. Converted to USD at 1 USD = 7.25 CNY. Zhipu's page does not state the end date; the list prices start on 2026-09-10, the first UTC day after Z.AI's promotion for the same model ended at 24:00 on September 9, 2026 (UTC+8).",
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.055,
+              cache_read_mtok: 0.016,
+              output_mtok: 0.193,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.11,
+              cache_read_mtok: 0.032,
+              output_mtok: 0.386,
+            },
+          },
+        ],
       },
     ],
   },

@@ -1097,6 +1097,7 @@ def test_zhipuai_glm_53_flash_price():
         Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
         model_ref='GLM-5.3-Flash',
         provider_id='zhipuai',
+        genai_request_timestamp=datetime(2026, 9, 9, tzinfo=timezone.utc),
     )
 
     assert_glm_53_flash_price(
@@ -1113,6 +1114,7 @@ def test_zai_glm_53_flash_price():
         Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
         model_ref='glm-5.3-flash',
         provider_api_url='https://api.z.ai/api/paas/v4',
+        genai_request_timestamp=datetime(2026, 9, 9, tzinfo=timezone.utc),
     )
 
     assert_glm_53_flash_price(
@@ -1129,6 +1131,7 @@ def test_openrouter_glm_53_flash_price():
         Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
         model_ref='z-ai/glm-5.3-flash',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 9, 9, tzinfo=timezone.utc),
     )
 
     assert_glm_53_flash_price(
@@ -1138,6 +1141,29 @@ def test_openrouter_glm_53_flash_price():
         input_price=Decimal('0.000039'),
         output_price=Decimal('0.000025'),
     )
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'provider_id', 'input_price', 'output_price'),
+    [
+        ('GLM-5.3-Flash', 'zhipuai', Decimal('0.0000632'), Decimal('0.0000386')),
+        ('glm-5.3-flash', 'zai', Decimal('0.000078'), Decimal('0.00005')),
+        ('z-ai/glm-5.3-flash', 'openrouter', Decimal('0.000078'), Decimal('0.00005')),
+    ],
+)
+def test_glm_53_flash_list_price_after_promotion(
+    model_ref: str, provider_id: str, input_price: Decimal, output_price: Decimal
+):
+    """The 50% launch promotion ended on 2026-09-09; list prices apply from 2026-09-10."""
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 9, 10, tzinfo=timezone.utc),
+    )
+
+    assert price.input_price == input_price
+    assert price.output_price == output_price
 
 
 def test_openrouter_modern_dated_aliases_price():

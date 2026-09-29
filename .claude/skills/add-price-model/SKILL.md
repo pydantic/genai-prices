@@ -116,6 +116,11 @@ to — check the provider docs and, if you can, hit the API and read the respons
 match that. Don't assume; the aliasing scheme is provider-specific (some vendors have no bare-family
 alias at all).
 
+Google keeps one family alias per tier: `gemini-flash-latest`, `gemini-flash-lite-latest` and
+`gemini-pro-latest`. Each can point at a different generation, and Google's changelog does not record
+every move. Read the target from the `modelVersion` field of a Gemini API `generateContent` response
+(`GOOGLE_API_KEY` in `~/ai-coding-tools/.env`) before you move one.
+
 ## 4b. Changing the price of a model that already exists
 
 A provider changing its rates is **not** an edit to the existing `prices:` block. Overwriting those

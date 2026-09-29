@@ -196,6 +196,21 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
+  describe('calcPrice - GLM-5.3-Flash launch promotion', () => {
+    // The 50% launch promotion ended on 2026-09-09; list prices apply from 2026-09-10.
+    it.each([
+      ['zhipuai', 'GLM-5.3-Flash', 0.0000632, 0.0000386],
+      ['zai', 'glm-5.3-flash', 0.000078, 0.00005],
+      ['openrouter', 'z-ai/glm-5.3-flash', 0.000078, 0.00005],
+    ])('should charge %s %s its list price from 2026-09-10', (providerId, modelRef, inputPrice, outputPrice) => {
+      const usage: Usage = { cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }
+      const result = calcPrice(usage, modelRef, { providerId, timestamp: new Date(Date.UTC(2026, 8, 10)) })
+
+      expect(result!.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result!.output_price).toBeCloseTo(outputPrice, 12)
+    })
+  })
+
   describe('calcPrice - Deepseek V4 peak windows', () => {
     // Deepseek V4 charges peak rates in two disjoint daily windows, so it has two constrained prices.
     const hours: [hour: number, isPeak: boolean][] = [
