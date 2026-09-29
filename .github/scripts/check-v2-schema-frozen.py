@@ -5,7 +5,7 @@ The unit-derived definitions (price keys and extractor destinations, both genera
 haven't upgraded, so a new unit requires v3 instead - see specs/data-driven-unit-registry/.
 
 Everything else may only grow: new definitions and new optional properties are allowed, but an
-existing definition, property, `required` list or `additionalProperties` setting must not change.
+existing definition, property or validation keyword (`required`, `additionalProperties`, ...) must not change.
 
 Usage: check-v2-schema-frozen.py <base-sha>
 """
@@ -20,8 +20,10 @@ from pathlib import Path
 SCHEMAS = ('prices/new_data/v2/data.schema.json', 'prices/new_data/v2/data_slim.schema.json')
 # `$defs` generated from prices/units.yml. Any change here is a unit change and needs v3.
 UNIT_DEFS = ('ModelPrice', 'UsageExtractorMapping')
-# Per-definition keys that must not change. `description`/`title` are docs and may be reworded.
-FROZEN_DEF_KEYS = ('type', 'required', 'additionalProperties', 'enum', 'anyOf', 'oneOf', 'allOf', '$ref', 'items')
+# Per-definition keys that may change: docs can be reworded, and `properties` is checked separately so it can grow.
+# Every other keyword (`required`, `additionalProperties`, `minProperties`, `not`, ...) must stay identical, so a new
+# assertion can't start rejecting previously valid published data.
+MUTABLE_DEF_KEYS = frozenset({'description', 'title', 'properties'})
 
 JsonObject = dict[str, object]
 
@@ -51,7 +53,7 @@ def compare(base: JsonObject, head: JsonObject) -> list[str]:
             if base_def != head_def:
                 errors.append(f'`$defs.{name}` is generated from prices/units.yml and changed: a unit change needs v3')
             continue
-        for key in FROZEN_DEF_KEYS:
+        for key in (base_def.keys() | head_def.keys()) - MUTABLE_DEF_KEYS:
             if base_def.get(key) != head_def.get(key):
                 errors.append(f'`$defs.{name}.{key}` changed')
         base_props, head_props = as_object(base_def.get('properties')), as_object(head_def.get('properties'))

@@ -180,6 +180,39 @@ def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'rate'),
+    [
+        # Gemini 3.x bills per search query, Gemini 2.5 per grounded prompt; callers report the billed count.
+        ('gemini-3-flash-preview', '14'),
+        ('gemini-3.8-flash', '14'),
+        ('gemini-2.5-flash', '35'),
+        ('gemini-2.5-pro', '35'),
+        ('gemini-2.0-flash', '35'),
+        # Grounding is unavailable on Gemini 2.5 Flash Image, so a reported search stays free.
+        ('gemini-2.5-flash-image', '0'),
+    ],
+)
+def test_google_gemini_grounding_web_search_price(model_ref: str, rate: str) -> None:
+    price = calc_price(Usage(web_searches=2), model_ref=model_ref, provider_id='google')
+
+    assert price.total_price == Decimal(rate) * 2 / THOUSAND
+
+
+@pytest.mark.parametrize('model_ref', ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-3-pro-image-preview'])
+@pytest.mark.parametrize(
+    ('timestamp', 'rate'),
+    [(datetime(2026, 1, 4, 23, 59), '0'), (datetime(2026, 1, 5), '14')],
+)
+def test_google_gemini_3_grounding_billed_from_2026_01_05(model_ref: str, timestamp: datetime, rate: str) -> None:
+    """Gemini 3 grounding billing started 2026-01-05; earlier searches on the first previews stay free."""
+    price = calc_price(
+        Usage(web_searches=2), model_ref=model_ref, provider_id='google', genai_request_timestamp=timestamp
+    )
+
+    assert price.total_price == Decimal(rate) * 2 / THOUSAND
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
     [
         ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),

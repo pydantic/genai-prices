@@ -9706,6 +9706,7 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.7,
           cache_audio_read_mtok: 0.175,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9747,6 +9748,7 @@ export const data: Provider[] = [
           output_mtok: 2.5,
           input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9802,6 +9804,7 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.3,
           cache_audio_read_mtok: 0.03,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9845,6 +9848,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
+          web_searches_kcount: 35,
         },
         deprecated: true,
       },
@@ -9912,6 +9916,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9952,13 +9957,31 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
-        prices: {
-          input_mtok: 0.5,
-          cache_read_mtok: 0.05,
-          output_mtok: 3,
-          input_audio_mtok: 1,
-          cache_audio_read_mtok: 0.1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.05,
+              output_mtok: 3,
+              input_audio_mtok: 1,
+              cache_audio_read_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.05,
+              output_mtok: 3,
+              input_audio_mtok: 1,
+              cache_audio_read_mtok: 0.1,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-image-preview',
@@ -9978,11 +10001,27 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
-        prices: {
-          input_mtok: 2,
-          output_mtok: 12,
-          output_image_mtok: 120,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              output_mtok: 12,
+              output_image_mtok: 120,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              output_mtok: 12,
+              output_image_mtok: 120,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-preview',
@@ -9998,35 +10037,75 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: {
-            base: 2,
-            tiers: [
-              {
-                start: 200000,
-                price: 4,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.4,
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 12,
-            tiers: [
-              {
-                start: 200000,
-                price: 18,
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 18,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 18,
+                  },
+                ],
+              },
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.1-flash-image-preview',
@@ -10050,6 +10129,7 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           output_mtok: 3,
           output_image_mtok: 60,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10075,6 +10155,7 @@ export const data: Provider[] = [
           output_mtok: 1.5,
           input_audio_mtok: 0.5,
           cache_audio_read_mtok: 0.05,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10106,6 +10187,7 @@ export const data: Provider[] = [
           output_audio_mtok: 12,
           input_image_mtok: 1,
           input_video_mtok: 1,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10144,6 +10226,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10171,6 +10254,7 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10188,6 +10272,7 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
           output_mtok: 2.5,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -10207,6 +10292,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -10218,6 +10304,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -10239,6 +10326,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -10250,6 +10338,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -10271,6 +10360,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -10282,6 +10372,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -10304,6 +10395,7 @@ export const data: Provider[] = [
           output_audio_mtok: 12,
           input_image_mtok: 1,
           input_video_mtok: 1,
+          web_searches_kcount: 14,
         },
       },
       {

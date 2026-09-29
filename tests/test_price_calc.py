@@ -652,32 +652,62 @@ def test_aws_gpt_6_context_boundary(
         (
             'gemini-3.6-flash',
             datetime(2026, 12, 31, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+            ModelPrice(
+                input_mtok=Decimal('0.75'),
+                cache_read_mtok=Decimal('0.075'),
+                output_mtok=Decimal('3.75'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
         (
             'gemini-3.6-flash',
             datetime(2027, 1, 1, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+            ModelPrice(
+                input_mtok=Decimal('1.5'),
+                cache_read_mtok=Decimal('0.15'),
+                output_mtok=Decimal('7.5'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
         (
             'gemini-3.7-flash',
             datetime(2026, 12, 31, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+            ModelPrice(
+                input_mtok=Decimal('0.75'),
+                cache_read_mtok=Decimal('0.075'),
+                output_mtok=Decimal('3.75'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
         (
             'gemini-3.7-flash',
             datetime(2027, 1, 1, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+            ModelPrice(
+                input_mtok=Decimal('1.5'),
+                cache_read_mtok=Decimal('0.15'),
+                output_mtok=Decimal('7.5'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
         (
             'gemini-3.8-flash',
             datetime(2026, 12, 31, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')),
+            ModelPrice(
+                input_mtok=Decimal('0.75'),
+                cache_read_mtok=Decimal('0.075'),
+                output_mtok=Decimal('3.75'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
         (
             'gemini-3.8-flash',
             datetime(2027, 1, 1, tzinfo=timezone.utc),
-            ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')),
+            ModelPrice(
+                input_mtok=Decimal('1.5'),
+                cache_read_mtok=Decimal('0.15'),
+                output_mtok=Decimal('7.5'),
+                web_searches_kcount=Decimal('14'),
+            ),
         ),
     ],
 )
