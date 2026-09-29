@@ -20,6 +20,7 @@ tools:
     - 'cat:*'
     - 'ls:*'
     - 'rg:*'
+    - 'jq:*'
   web-fetch:
 safe-outputs:
   # Disabled: the detection sub-agent runs its own minimax call through a separate
@@ -147,6 +148,21 @@ If any price change, new model, potential removal, unchecked field, or unreadabl
 - `Unreadable sources`: Provider, source URL, failure.
 
 Use tables and one row per finding. End with `Checked YYYY-MM-DD.` using the run date.
+
+To file the issue, write the body to `/tmp/gh-aw/agent/issue-body.md`, then run:
+
+```bash
+jq -Rs '{title: "Direct-provider price check findings", body: .}' /tmp/gh-aw/agent/issue-body.md | safeoutputs create_issue .
+```
+
+`jq -Rs` encodes the whole file as the JSON `body`. Keep the body under 10,000 bytes, because `safeoutputs` rejects a
+larger `body`. Measure it with `jq -Rs 'utf8bytelength' /tmp/gh-aw/agent/issue-body.md`. When the body is larger, keep
+`Price discrepancies`, `New models`, and `Unreadable sources` complete. Compact `Potential removals` first, then
+`Unchecked fields`, into one row per provider that lists the affected model IDs. If the body is still larger, replace
+each compacted section with one line per provider that gives the count.
+
+Call `create_issue` only with the real findings: the run allows one issue, and a test or placeholder call uses it up. A
+call that returns an error files nothing, so fix the cause and run the command again.
 
 Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
 checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all fifteen

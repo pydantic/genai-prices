@@ -69,3 +69,6 @@ notes to `.github/agentic-price-check-providers.yml`. Add each new source domain
   under that provider YAML's `pricing_urls:` (not every provider lists an alternative).
 - Agents run read-only; issue creation goes through gh-aw safe-outputs, not a
   write token on the agent itself.
+- `safeoutputs create_issue` rejects a `body` over 10 KB and allows one issue per run. Each
+  prompt gives the agent the `jq` command that files the body, and tells it how to compact
+  the report under that size.
