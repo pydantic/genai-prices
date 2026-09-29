@@ -248,9 +248,7 @@ models:
       GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
       120 billion parameters and 128 experts.
     match:
-      or:
-        - equals: openai/gpt-oss-120b
-        - equals: openai/gpt-oss-safeguard-20b
+      equals: openai/gpt-oss-120b
     context_window: 131072
     prices_checked: 2025-08-06
     prices:
@@ -272,6 +270,21 @@ models:
       cache_read_mtok: 0.0375
       output_mtok: 0.30
 
+  # https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b
+  - id: openai/gpt-oss-safeguard-20b
+    name: GPT-OSS Safeguard 20B
+    description: |
+      GPT-OSS Safeguard 20B is OpenAI's open-weight safety model. It classifies content against a policy supplied
+      in the prompt.
+    match:
+      equals: openai/gpt-oss-safeguard-20b
+    context_window: 131072
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0375
+      output_mtok: 0.30
+
   - id: qwen/qwen3-32b
     name: Qwen3 32B 131k
     match:
@@ -281,6 +294,18 @@ models:
     prices:
       input_mtok: 0.29
       output_mtok: 0.59
+
+  # https://console.groq.com/docs/model/qwen/qwen3.8-27b
+  - id: qwen/qwen3.8-27b
+    name: Qwen 3.8 27B
+    match:
+      equals: qwen/qwen3.8-27b
+    context_window: 131072
+    prices_checked: 2026-09-29
+    price_comments: Preview model. Groq lists no cached-input rate.
+    prices:
+      input_mtok: 0.80
+      output_mtok: 4.00
 
   - id: whisper-large-v3
     name: Whisper Large V3

@@ -119,6 +119,8 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 61, model: 'claude-fable-5' },
+    { expectedTotalPrice: 60.25, model: 'claude-fable-5.1' },
     { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
     { expectedTotalPrice: 61, model: 'claude-opus-4.8-fast' },
     { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
@@ -399,6 +401,16 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
 
     expect(result?.model_price).toEqual(expectedPrices)
+  })
+
+  it.each([
+    ['openai/gpt-oss-safeguard-20b', 0.375],
+    ['openai/gpt-oss-120b', 0.75],
+  ])('prices Groq %s on its own record', (model, expected) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, { providerId: 'groq' })
+
+    expect(result?.model.id).toBe(model)
+    expect(result?.total_price).toBeCloseTo(expected, 12)
   })
 
   it.each([

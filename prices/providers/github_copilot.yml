@@ -71,8 +71,7 @@ models:
     match:
       equals: claude-fable-5
     context_window: 264000
-    prices_checked: 2026-09-03
-    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 10
       cache_read_mtok: 1
@@ -81,16 +80,13 @@ models:
 
   - id: claude-fable-5.1
     name: Claude Fable 5.1
-    # A separate model in Copilot's catalog that happens to share Fable 5's rates.
-    collapse: false
     match:
       equals: claude-fable-5.1
     context_window: 264000
-    prices_checked: 2026-09-03
-    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 10
-      cache_read_mtok: 1
+      cache_read_mtok: 0.25
       cache_write_mtok: 12.50
       output_mtok: 50
 

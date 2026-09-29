@@ -6078,6 +6078,51 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'deepseek-flash',
+        name: 'DeepSeek V4.1 Flash',
+        description:
+          'DeepSeek-V4.1-Flash, with native visual understanding. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          equals: 'deepseek-flash',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Released 2026-09-10 (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00" Monday to Friday, everything else is off-peak. Weekends and Chinese public holidays are off-peak all day, which needs a day-of-week condition, so on those days the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+        ],
+      },
+      {
         id: 'deepseek-reasoner',
         name: 'Deepseek R1',
         description:
@@ -6175,7 +6220,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+          'Rates: flat before 2026-08-17; V4 off-peak from 2026-08-17; V4.1 Flash off-peak from 2026-09-10, when DeepSeek retired V4 Flash and routed `deepseek-v4-flash` to V4.1 Flash (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00"; the two peak windows come last so they win during peak hours. `constraint` is a union, so one entry cannot carry both a date and a daily window: peak-hour requests resolve to the current V4.1 Flash peak rate whatever their date. Weekends are off-peak all day from 2026-08-23, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
         prices: [
           {
             prices: {
@@ -6197,14 +6242,25 @@ export const data: Provider[] = [
           },
           {
             constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
               start_time: '01:00:00Z',
               end_time: '04:00:00Z',
               type: 'time_of_date',
             },
             prices: {
-              input_mtok: 0.44,
-              cache_read_mtok: 0.014,
-              output_mtok: 1.32,
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
             },
           },
           {
@@ -6214,9 +6270,9 @@ export const data: Provider[] = [
               type: 'time_of_date',
             },
             prices: {
-              input_mtok: 0.44,
-              cache_read_mtok: 0.014,
-              output_mtok: 1.32,
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
             },
           },
         ],
@@ -7200,7 +7256,6 @@ export const data: Provider[] = [
           equals: 'claude-fable-5',
         },
         context_window: 264000,
-        price_comments: 'The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
@@ -7215,11 +7270,10 @@ export const data: Provider[] = [
           equals: 'claude-fable-5.1',
         },
         context_window: 264000,
-        price_comments: 'The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1,
+          cache_read_mtok: 0.25,
           output_mtok: 50,
         },
       },
@@ -10245,14 +10299,7 @@ export const data: Provider[] = [
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-120b',
-            },
-            {
-              equals: 'openai/gpt-oss-safeguard-20b',
-            },
-          ],
+          equals: 'openai/gpt-oss-120b',
         },
         context_window: 131072,
         prices: {
@@ -10276,6 +10323,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-oss-safeguard-20b',
+        name: 'GPT-OSS Safeguard 20B',
+        description:
+          "GPT-OSS Safeguard 20B is OpenAI's open-weight safety model. It classifies content against a policy supplied\nin the prompt.\n",
+        match: {
+          equals: 'openai/gpt-oss-safeguard-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.3,
+        },
+      },
+      {
         id: 'qwen/qwen3-32b',
         name: 'Qwen3 32B 131k',
         match: {
@@ -10285,6 +10347,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-27b',
+        name: 'Qwen 3.8 27B',
+        match: {
+          equals: 'qwen/qwen3.8-27b',
+        },
+        context_window: 131072,
+        price_comments: 'Preview model. Groq lists no cached-input rate.',
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 4,
         },
       },
       {
