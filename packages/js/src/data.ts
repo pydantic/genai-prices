@@ -1816,13 +1816,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1831,7 +1831,7 @@ export const data: Provider[] = [
             base: 0.25,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.5,
               },
             ],
@@ -1840,7 +1840,7 @@ export const data: Provider[] = [
             base: 0.02,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.04,
               },
             ],
@@ -1849,7 +1849,7 @@ export const data: Provider[] = [
             base: 1.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 1.8,
               },
             ],
@@ -1864,7 +1864,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: [
           {
             prices: {
@@ -1872,7 +1872,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1881,7 +1881,7 @@ export const data: Provider[] = [
                 base: 6.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 12.5,
                   },
                 ],
@@ -1890,7 +1890,7 @@ export const data: Provider[] = [
                 base: 0.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1,
                   },
                 ],
@@ -1899,7 +1899,7 @@ export const data: Provider[] = [
                 base: 30,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 45,
                   },
                 ],
@@ -1916,7 +1916,7 @@ export const data: Provider[] = [
                 base: 4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8,
                   },
                 ],
@@ -1925,7 +1925,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1934,7 +1934,7 @@ export const data: Provider[] = [
                 base: 0.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.8,
                   },
                 ],
@@ -1943,7 +1943,7 @@ export const data: Provider[] = [
                 base: 20,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 30,
                   },
                 ],
@@ -1960,13 +1960,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 4,
               },
             ],
@@ -1975,7 +1975,7 @@ export const data: Provider[] = [
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -1984,7 +1984,7 @@ export const data: Provider[] = [
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1993,7 +1993,7 @@ export const data: Provider[] = [
             base: 12,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 18,
               },
             ],
@@ -3442,7 +3442,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3462,7 +3462,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3471,7 +3471,7 @@ export const data: Provider[] = [
                 base: 0.275,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.55,
                   },
                 ],
@@ -3480,7 +3480,7 @@ export const data: Provider[] = [
                 base: 0.022,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.044,
                   },
                 ],
@@ -3489,7 +3489,7 @@ export const data: Provider[] = [
                 base: 1.32,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.98,
                   },
                 ],
@@ -3516,7 +3516,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3524,7 +3524,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3533,7 +3533,7 @@ export const data: Provider[] = [
                 base: 6.875,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 13.75,
                   },
                 ],
@@ -3542,7 +3542,7 @@ export const data: Provider[] = [
                 base: 0.55,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.1,
                   },
                 ],
@@ -3551,7 +3551,7 @@ export const data: Provider[] = [
                 base: 33,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 49.5,
                   },
                 ],
@@ -3568,7 +3568,7 @@ export const data: Provider[] = [
                 base: 4.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8.8,
                   },
                 ],
@@ -3577,7 +3577,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3586,7 +3586,7 @@ export const data: Provider[] = [
                 base: 0.44,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.88,
                   },
                 ],
@@ -3595,7 +3595,7 @@ export const data: Provider[] = [
                 base: 22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 33,
                   },
                 ],
@@ -3625,7 +3625,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3645,7 +3645,7 @@ export const data: Provider[] = [
                 base: 2.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 4.4,
                   },
                 ],
@@ -3654,7 +3654,7 @@ export const data: Provider[] = [
                 base: 2.75,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5.5,
                   },
                 ],
@@ -3663,7 +3663,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3672,7 +3672,7 @@ export const data: Provider[] = [
                 base: 13.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 19.8,
                   },
                 ],

@@ -488,12 +488,12 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-sol',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=271_999, price=Decimal('11'))]),
+                input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272_000, price=Decimal('11'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('6.875'), tiers=[Tier(start=271_999, price=Decimal('13.75'))]
+                    base=Decimal('6.875'), tiers=[Tier(start=272_000, price=Decimal('13.75'))]
                 ),
-                cache_read_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=271_999, price=Decimal('1.1'))]),
-                output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=271_999, price=Decimal('49.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=272_000, price=Decimal('1.1'))]),
+                output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=272_000, price=Decimal('49.5'))]),
             ),
         ),
         (
@@ -510,10 +510,10 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-terra',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=271_999, price=Decimal('4.4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('2.75'), tiers=[Tier(start=271_999, price=Decimal('5.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=271_999, price=Decimal('0.44'))]),
-                output_mtok=TieredPrices(base=Decimal('13.2'), tiers=[Tier(start=271_999, price=Decimal('19.8'))]),
+                input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=272_000, price=Decimal('4.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.75'), tiers=[Tier(start=272_000, price=Decimal('5.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
+                output_mtok=TieredPrices(base=Decimal('13.2'), tiers=[Tier(start=272_000, price=Decimal('19.8'))]),
             ),
         ),
         (
@@ -530,14 +530,14 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-luna',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=271_999, price=Decimal('0.44'))]),
+                input_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('0.275'), tiers=[Tier(start=271_999, price=Decimal('0.55'))]
+                    base=Decimal('0.275'), tiers=[Tier(start=272_000, price=Decimal('0.55'))]
                 ),
                 cache_read_mtok=TieredPrices(
-                    base=Decimal('0.022'), tiers=[Tier(start=271_999, price=Decimal('0.044'))]
+                    base=Decimal('0.022'), tiers=[Tier(start=272_000, price=Decimal('0.044'))]
                 ),
-                output_mtok=TieredPrices(base=Decimal('1.32'), tiers=[Tier(start=271_999, price=Decimal('1.98'))]),
+                output_mtok=TieredPrices(base=Decimal('1.32'), tiers=[Tier(start=272_000, price=Decimal('1.98'))]),
             ),
         ),
     ],
@@ -595,7 +595,8 @@ def test_aws_gpt_5_6_sol_price_cut(
     ],
 )
 def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal, long_input_rate: Decimal) -> None:
-    for tokens, rate in ((271_999, short_input_rate), (272_000, long_input_rate)):
+    """AWS bills 272K input tokens or fewer at the short-context rate."""
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
         price = calc_price(
             Usage(input_tokens=tokens),
             model_ref=model_ref,
