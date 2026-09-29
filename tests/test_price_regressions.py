@@ -81,7 +81,7 @@ def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref:
         ('gemini-2.5-flash', '35'),
         ('gemini-2.5-pro', '35'),
         ('gemini-2.0-flash', '35'),
-        # Grounding is unavailable on image models, so a reported search stays free.
+        # Grounding is unavailable on Gemini 2.5 Flash Image, so a reported search stays free.
         ('gemini-2.5-flash-image', '0'),
     ],
 )
