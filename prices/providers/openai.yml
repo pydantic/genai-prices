@@ -1321,6 +1321,44 @@ models:
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
 
+  - id: gpt-6.1-sol
+    name: GPT-6.1 Sol
+    description: Model for complex coding and professional work at a lower cost than GPT-6 Astra.
+    match:
+      or:
+        - equals: gpt-6.1-sol
+        - regex: ^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K
+      input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the
+      pricing engines select a tier when token count exceeds start. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
   - id: gpt-audio
     name: GPT Audio
     description: >-
