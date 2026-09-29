@@ -2723,13 +2723,16 @@ export const data: Provider[] = [
               starts_with: 'claude-fable-5-1-v1',
             },
             {
+              equals: 'us.anthropic.claude-fable-5-1',
+            },
+            {
               contains: 'us.anthropic.claude-fable-5-1-v1',
             },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently the us. inference profile only; the AWS price list has no EU, AU or JP regional rate. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
@@ -2755,6 +2758,15 @@ export const data: Provider[] = [
               starts_with: 'claude-fable-5-v1',
             },
             {
+              equals: 'us.anthropic.claude-fable-5',
+            },
+            {
+              equals: 'au.anthropic.claude-fable-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-fable-5',
+            },
+            {
               contains: 'us.anthropic.claude-fable-5-v1',
             },
             {
@@ -2769,7 +2781,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+        price_comments:
+          'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1). The price list carries regional Fable 5 rates for US, EU and AU regions, but none for JP.',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,

@@ -397,6 +397,31 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(calcPrice(usage, modelRef, { providerId })!.total_price).toBeCloseTo(expected, 10)
   })
 
+  // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
+  it.each([
+    ['us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
+    ['eu.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
+    ['au.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
+    ['us.anthropic.claude-fable-5-v1:0', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
+    ['anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
+    ['global.anthropic.claude-fable-5', 'global.anthropic.claude-fable-5-v1:0', 73.5],
+    ['global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-v1:0', 73.5],
+    ['us.anthropic.claude-fable-5-1', 'regional.anthropic.claude-fable-5-1-v1:0', 80.025],
+    ['us.anthropic.claude-fable-5-1-v1:0', 'regional.anthropic.claude-fable-5-1-v1:0', 80.025],
+    ['anthropic.claude-fable-5-1', 'regional.anthropic.claude-fable-5-1-v1:0', 80.025],
+    ['global.anthropic.claude-fable-5-1', 'global.anthropic.claude-fable-5-1-v1:0', 72.75],
+    ['global.anthropic.claude-fable-5-1-v1:0', 'global.anthropic.claude-fable-5-1-v1:0', 72.75],
+  ])('prices the AWS id %s as %s', (modelRef, modelId, expected) => {
+    const price = calcPrice(
+      { cache_read_tokens: 1_000_000, cache_write_tokens: 1_000_000, input_tokens: 3_000_000, output_tokens: 1_000_000 },
+      modelRef,
+      { providerId: 'aws' }
+    )
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
   it('leaves the OpenRouter family-level alias on Fable 5', () => {
     const price = calcPrice(usage, '~anthropic/claude-fable-latest', { providerId: 'openrouter' })
 

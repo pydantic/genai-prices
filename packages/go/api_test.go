@@ -290,6 +290,50 @@ func TestClaudeFable51DoesNotUseFable5Prices(t *testing.T) {
 	}
 }
 
+// Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
+func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
+	tests := []struct {
+		model     string
+		modelID   string
+		wantTotal float64
+	}{
+		{"us.anthropic.claude-fable-5", "regional.anthropic.claude-fable-5-v1:0", 80.85},
+		{"eu.anthropic.claude-fable-5", "regional.anthropic.claude-fable-5-v1:0", 80.85},
+		{"au.anthropic.claude-fable-5", "regional.anthropic.claude-fable-5-v1:0", 80.85},
+		{"us.anthropic.claude-fable-5-v1:0", "regional.anthropic.claude-fable-5-v1:0", 80.85},
+		{"anthropic.claude-fable-5", "regional.anthropic.claude-fable-5-v1:0", 80.85},
+		{"global.anthropic.claude-fable-5", "global.anthropic.claude-fable-5-v1:0", 73.5},
+		{"global.anthropic.claude-fable-5-v1:0", "global.anthropic.claude-fable-5-v1:0", 73.5},
+		{"us.anthropic.claude-fable-5-1", "regional.anthropic.claude-fable-5-1-v1:0", 80.025},
+		{"us.anthropic.claude-fable-5-1-v1:0", "regional.anthropic.claude-fable-5-1-v1:0", 80.025},
+		{"anthropic.claude-fable-5-1", "regional.anthropic.claude-fable-5-1-v1:0", 80.025},
+		{"global.anthropic.claude-fable-5-1", "global.anthropic.claude-fable-5-1-v1:0", 72.75},
+		{"global.anthropic.claude-fable-5-1-v1:0", "global.anthropic.claude-fable-5-1-v1:0", 72.75},
+	}
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:      3_000_000,
+		genai_prices.UsageCacheReadTokens:  1_000_000,
+		genai_prices.UsageCacheWriteTokens: 1_000_000,
+		genai_prices.UsageOutputTokens:     1_000_000,
+	}
+	for _, test := range tests {
+		t.Run(test.model, func(t *testing.T) {
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: usage, Model: test.model, ProviderID: "aws",
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if calculation.ModelID != test.modelID {
+				t.Fatalf("got model %q, want %q", calculation.ModelID, test.modelID)
+			}
+			if math.Abs(calculation.TotalPrice-test.wantTotal) > 1e-9 {
+				t.Fatalf("got total %g, want %g", calculation.TotalPrice, test.wantTotal)
+			}
+		})
+	}
+}
+
 // OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added.
 func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
 	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
