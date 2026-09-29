@@ -64,8 +64,7 @@ extractors:
 #
 # Long-context tier starts are the threshold itself, not threshold-1. GitHub's rows read `<= 272K` and
 # `> 272K`, so a prompt of exactly the threshold stays on the default rate, which is what the engines
-# do for a tier whose `start` equals it. OpenAI's own page puts its standard rate at `< 272K` instead,
-# which is why openai.yml encodes 271999.
+# do for a tier whose `start` equals it.
 models:
   - id: claude-fable-5
     name: Claude Fable 5

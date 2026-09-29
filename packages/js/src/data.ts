@@ -600,7 +600,13 @@ export const data: Provider[] = [
               equals: 'claude-opus-5',
             },
             {
-              regex: '^claude-opus-5-\\d{8}$',
+              equals: 'claude-opus-5-latest',
+            },
+            {
+              regex: '^claude-opus-5[-@]\\d{8}$',
+            },
+            {
+              regex: '^claude-opus-5-\\d{4}-\\d{2}-\\d{2}$',
             },
             {
               starts_with: 'claude-opus-5.0',
@@ -1810,13 +1816,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1825,7 +1831,7 @@ export const data: Provider[] = [
             base: 0.25,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.5,
               },
             ],
@@ -1834,7 +1840,7 @@ export const data: Provider[] = [
             base: 0.02,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.04,
               },
             ],
@@ -1843,7 +1849,7 @@ export const data: Provider[] = [
             base: 1.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 1.8,
               },
             ],
@@ -1858,7 +1864,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: [
           {
             prices: {
@@ -1866,7 +1872,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1875,7 +1881,7 @@ export const data: Provider[] = [
                 base: 6.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 12.5,
                   },
                 ],
@@ -1884,7 +1890,7 @@ export const data: Provider[] = [
                 base: 0.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1,
                   },
                 ],
@@ -1893,7 +1899,7 @@ export const data: Provider[] = [
                 base: 30,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 45,
                   },
                 ],
@@ -1910,7 +1916,7 @@ export const data: Provider[] = [
                 base: 4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8,
                   },
                 ],
@@ -1919,7 +1925,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1928,7 +1934,7 @@ export const data: Provider[] = [
                 base: 0.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.8,
                   },
                 ],
@@ -1937,7 +1943,7 @@ export const data: Provider[] = [
                 base: 20,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 30,
                   },
                 ],
@@ -1954,13 +1960,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 4,
               },
             ],
@@ -1969,7 +1975,7 @@ export const data: Provider[] = [
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -1978,7 +1984,7 @@ export const data: Provider[] = [
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1987,7 +1993,7 @@ export const data: Provider[] = [
             base: 12,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 18,
               },
             ],
@@ -3436,7 +3442,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3456,7 +3462,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3465,7 +3471,7 @@ export const data: Provider[] = [
                 base: 0.275,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.55,
                   },
                 ],
@@ -3474,7 +3480,7 @@ export const data: Provider[] = [
                 base: 0.022,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.044,
                   },
                 ],
@@ -3483,7 +3489,7 @@ export const data: Provider[] = [
                 base: 1.32,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.98,
                   },
                 ],
@@ -3510,7 +3516,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3518,7 +3524,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3527,7 +3533,7 @@ export const data: Provider[] = [
                 base: 6.875,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 13.75,
                   },
                 ],
@@ -3536,7 +3542,7 @@ export const data: Provider[] = [
                 base: 0.55,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.1,
                   },
                 ],
@@ -3545,7 +3551,7 @@ export const data: Provider[] = [
                 base: 33,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 49.5,
                   },
                 ],
@@ -3562,7 +3568,7 @@ export const data: Provider[] = [
                 base: 4.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8.8,
                   },
                 ],
@@ -3571,7 +3577,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3580,7 +3586,7 @@ export const data: Provider[] = [
                 base: 0.44,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.88,
                   },
                 ],
@@ -3589,7 +3595,7 @@ export const data: Provider[] = [
                 base: 22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 33,
                   },
                 ],
@@ -3619,7 +3625,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3639,7 +3645,7 @@ export const data: Provider[] = [
                 base: 2.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 4.4,
                   },
                 ],
@@ -3648,7 +3654,7 @@ export const data: Provider[] = [
                 base: 2.75,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5.5,
                   },
                 ],
@@ -3657,7 +3663,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3666,7 +3672,7 @@ export const data: Provider[] = [
                 base: 13.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 19.8,
                   },
                 ],
@@ -18422,13 +18428,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
         prices: {
           input_mtok: {
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -18437,7 +18443,7 @@ export const data: Provider[] = [
             base: 0.25,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.5,
               },
             ],
@@ -18446,7 +18452,7 @@ export const data: Provider[] = [
             base: 15,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 22.5,
               },
             ],
@@ -18550,13 +18556,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4-pro',
         prices: {
           input_mtok: {
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 60,
               },
             ],
@@ -18565,7 +18571,7 @@ export const data: Provider[] = [
             base: 180,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 270,
               },
             ],
@@ -18620,13 +18626,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+          'Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
         prices: {
           input_mtok: {
             base: 5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 10,
               },
             ],
@@ -18635,7 +18641,7 @@ export const data: Provider[] = [
             base: 0.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 1,
               },
             ],
@@ -18644,7 +18650,7 @@ export const data: Provider[] = [
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 45,
               },
             ],
@@ -18675,13 +18681,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 60,
               },
             ],
@@ -18690,7 +18696,7 @@ export const data: Provider[] = [
             base: 180,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 270,
               },
             ],
@@ -18721,7 +18727,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18729,7 +18735,7 @@ export const data: Provider[] = [
                 base: 1,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 2,
                   },
                 ],
@@ -18738,7 +18744,7 @@ export const data: Provider[] = [
                 base: 1.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 2.5,
                   },
                 ],
@@ -18747,7 +18753,7 @@ export const data: Provider[] = [
                 base: 0.1,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.2,
                   },
                 ],
@@ -18756,7 +18762,7 @@ export const data: Provider[] = [
                 base: 6,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 9,
                   },
                 ],
@@ -18775,7 +18781,7 @@ export const data: Provider[] = [
                 base: 0.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.4,
                   },
                 ],
@@ -18784,7 +18790,7 @@ export const data: Provider[] = [
                 base: 0.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.5,
                   },
                 ],
@@ -18793,7 +18799,7 @@ export const data: Provider[] = [
                 base: 0.02,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.04,
                   },
                 ],
@@ -18802,7 +18808,7 @@ export const data: Provider[] = [
                 base: 1.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.8,
                   },
                 ],
@@ -18841,7 +18847,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18849,7 +18855,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -18858,7 +18864,7 @@ export const data: Provider[] = [
                 base: 6.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 12.5,
                   },
                 ],
@@ -18867,7 +18873,7 @@ export const data: Provider[] = [
                 base: 0.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1,
                   },
                 ],
@@ -18876,7 +18882,7 @@ export const data: Provider[] = [
                 base: 30,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 45,
                   },
                 ],
@@ -18895,7 +18901,7 @@ export const data: Provider[] = [
                 base: 4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8,
                   },
                 ],
@@ -18904,7 +18910,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -18913,7 +18919,7 @@ export const data: Provider[] = [
                 base: 0.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.8,
                   },
                 ],
@@ -18922,7 +18928,7 @@ export const data: Provider[] = [
                 base: 20,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 30,
                   },
                 ],
@@ -18955,7 +18961,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18963,7 +18969,7 @@ export const data: Provider[] = [
                 base: 2.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5,
                   },
                 ],
@@ -18972,7 +18978,7 @@ export const data: Provider[] = [
                 base: 3.125,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 6.25,
                   },
                 ],
@@ -18981,7 +18987,7 @@ export const data: Provider[] = [
                 base: 0.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.5,
                   },
                 ],
@@ -18990,7 +18996,7 @@ export const data: Provider[] = [
                 base: 15,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 22.5,
                   },
                 ],
@@ -19009,7 +19015,7 @@ export const data: Provider[] = [
                 base: 2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 4,
                   },
                 ],
@@ -19018,7 +19024,7 @@ export const data: Provider[] = [
                 base: 2.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5,
                   },
                 ],
@@ -19027,7 +19033,7 @@ export const data: Provider[] = [
                 base: 0.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.4,
                   },
                 ],
@@ -19036,7 +19042,7 @@ export const data: Provider[] = [
                 base: 12,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 18,
                   },
                 ],
@@ -19063,13 +19069,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 10,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 20,
               },
             ],
@@ -19078,7 +19084,7 @@ export const data: Provider[] = [
             base: 12.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 25,
               },
             ],
@@ -19087,7 +19093,7 @@ export const data: Provider[] = [
             base: 1,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 2,
               },
             ],
@@ -19096,7 +19102,7 @@ export const data: Provider[] = [
             base: 50,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 75,
               },
             ],
@@ -19205,6 +19211,64 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        description: 'Model for complex coding and professional work at a lower cost than GPT-6 Astra.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
               },
             ],
           },
@@ -26181,6 +26245,121 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol:batch',
+        name: 'GPT-6.1 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
               },
             ],
           },

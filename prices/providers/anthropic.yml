@@ -449,7 +449,9 @@ models:
     match:
       or:
         - equals: claude-opus-5
-        - regex: ^claude-opus-5-\d{8}$
+        - equals: claude-opus-5-latest
+        - regex: ^claude-opus-5[-@]\d{8}$
+        - regex: ^claude-opus-5-\d{4}-\d{2}-\d{2}$
         - starts_with: claude-opus-5.0
         - starts_with: claude-5-opus
         - starts_with: claude-5.0-opus

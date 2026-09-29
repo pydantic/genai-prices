@@ -475,6 +475,9 @@ describe('Claude Opus 5 vs 5.5', () => {
 
   it.each([
     ['anthropic', 'claude-opus-5-20260901', 'claude-opus-5'],
+    ['anthropic', 'claude-opus-5@20260901', 'claude-opus-5'],
+    ['anthropic', 'claude-opus-5-2026-09-01', 'claude-opus-5'],
+    ['anthropic', 'claude-opus-5-latest', 'claude-opus-5'],
     ['google', 'claude-opus-5@20260901', 'claude-opus-5'],
     ['aws', 'global.anthropic.claude-opus-5-v1:0', 'global.anthropic.claude-opus-5'],
     ['aws', 'us.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5'],
