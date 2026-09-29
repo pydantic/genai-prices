@@ -600,6 +600,37 @@ models:
           - start: 272000
             price: 15
 
+  - id: gpt-6.1-sol
+    name: GPT-6.1 Sol
+    match:
+      or:
+        - equals: gpt-6.1-sol
+        - regex: '^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$'
+    context_window: 400000
+    prices_checked: 2026-09-29
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_read_mtok:
+        base: 0.10
+        tiers:
+          - start: 272000
+            price: 0.20
+      cache_write_mtok:
+        base: 2.50
+        tiers:
+          - start: 272000
+            price: 5
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+
   - id: grok-4.5
     name: Grok 4.5
     match:

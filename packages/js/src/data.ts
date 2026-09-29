@@ -8048,6 +8048,60 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 400000,
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -26252,6 +26306,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^openai/gpt-6\\.1-sol-\\d{8}$',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-pro-\\d{8}$',
             },
           ],
         },

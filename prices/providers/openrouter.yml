@@ -4382,6 +4382,7 @@ models:
         - equals: openai/gpt-6.1-sol
         - equals: openai/gpt-6.1-sol-pro
         - regex: ^openai/gpt-6\.1-sol-\d{8}$
+        - regex: ^openai/gpt-6\.1-sol-pro-\d{8}$
     context_window: 1050000
     price_comments: >-
       OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
