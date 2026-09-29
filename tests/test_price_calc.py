@@ -106,6 +106,7 @@ def test_github_copilot_model_prices(model_ref: str, expected_total_price: Decim
         provider_id='github-copilot',
     )
 
+    assert price.model.id == model_ref
     assert price.total_price == expected_total_price
 
 

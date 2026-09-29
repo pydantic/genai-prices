@@ -139,6 +139,7 @@ describe('generated data split', () => {
       providerId: 'github-copilot',
     })
 
+    expect(result?.model.id).toBe(model)
     expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
   })
 
