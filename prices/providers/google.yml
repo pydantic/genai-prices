@@ -5,6 +5,10 @@ pricing_urls:
   - https://ai.google.dev/gemini-api/docs/pricing
   - https://cloud.google.com/vertex-ai/generative-ai/pricing
   # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
+  # Grounding with Google Search (`web_searches_kcount`): Gemini 3.x bills each unique non-empty search query at $14/1k,
+  # Gemini 2.x bills each grounded prompt at $35/1k however many queries it ran, and only when it returned a web source.
+  # Callers report the billed count as `web_searches`. Free monthly/daily allowances are account-wide and not modelled.
+  # https://ai.google.dev/gemini-api/docs/google-search#pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 model_match:
   contains: gemini
@@ -752,13 +756,14 @@ models:
         - contains: gemini-2.0-flash-thinking
         - contains: gemini-2.0-flash-latest
     context_window: 1000000
-    prices_checked: 2025-07-04
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.1
       input_audio_mtok: 0.7
       output_mtok: 0.4
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.175
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -786,13 +791,14 @@ models:
         - equals: gemini-2.5-flash-latest
         - equals: gemini-2.5-flash-preview-09-2025
     context_window: 1048576
-    prices_checked: 2025-10-31
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
       cache_read_mtok: 0.03
       cache_audio_read_mtok: 0.1
       output_mtok: 2.5
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-image
     name: Gemini 2.5 Flash Image
@@ -828,13 +834,14 @@ models:
             - starts_with: gemini-2.5-flash-lite-preview
             - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     context_window: 1000000
-    prices_checked: 2025-10-31
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.1
       input_audio_mtok: 0.3
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-lite-preview-tts
     name: Gemini 2.5 Flash-Lite Preview TTS
@@ -862,10 +869,11 @@ models:
         - equals: gemini-2.5-flash-preview:thinking
     price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
     deprecated: true
-    prices_checked: 2025-10-31
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-tts
     name: Gemini 2.5 Flash TTS
@@ -893,7 +901,7 @@ models:
         - starts_with: gemini-2.5-pro
         - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
-    prices_checked: 2025-10-31
+    prices_checked: 2026-09-29
     prices:
       input_mtok:
         base: 1.25
@@ -910,6 +918,7 @@ models:
         tiers:
           - start: 200000
             price: 15
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-pro-tts
     name: Gemini 2.5 Pro TTS
@@ -934,15 +943,26 @@ models:
         - equals: gemini-3-flash-preview
         - starts_with: gemini-3-flash-preview-
     context_window: 1000000
-    prices_checked: 2025-12-19
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50%
       discount on input/output.
     prices:
-      input_mtok: 0.5
-      input_audio_mtok: 1
-      cache_read_mtok: 0.05
-      cache_audio_read_mtok: 0.1
-      output_mtok: 3
+      - prices:
+          input_mtok: 0.5
+          input_audio_mtok: 1
+          cache_read_mtok: 0.05
+          cache_audio_read_mtok: 0.1
+          output_mtok: 3
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok: 0.5
+          input_audio_mtok: 1
+          cache_read_mtok: 0.05
+          cache_audio_read_mtok: 0.1
+          output_mtok: 3
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3-pro-image-preview
     name: Gemini 3 Pro Image Preview
@@ -954,14 +974,23 @@ models:
         - equals: gemini-3-pro-image
         - starts_with: gemini-3-pro-image-preview
     context_window: 1000000
-    prices_checked: 2026-07-22
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at
       $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.
       Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.
     prices:
-      input_mtok: 2
-      output_mtok: 12
-      output_image_mtok: 120
+      - prices:
+          input_mtok: 2
+          output_mtok: 12
+          output_image_mtok: 120
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok: 2
+          output_mtok: 12
+          output_image_mtok: 120
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
@@ -972,23 +1001,44 @@ models:
       or:
         - starts_with: gemini-3-pro-preview
         - equals: gemini-3-pro-text-preview
-    prices_checked: 2025-11-18
+    prices_checked: 2026-09-29
     prices:
-      input_mtok:
-        base: 2
-        tiers:
-          - start: 200000
-            price: 4
-      cache_read_mtok:
-        base: 0.2
-        tiers:
-          - start: 200000
-            price: 0.4
-      output_mtok:
-        base: 12
-        tiers:
-          - start: 200000
-            price: 18
+      - prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 200000
+                price: 18
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 200000
+                price: 18
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-image-preview
     name: Gemini 3.1 Flash Image Preview
@@ -1001,7 +1051,7 @@ models:
         - equals: gemini-3.1-flash-image
         - starts_with: gemini-3.1-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-07-22
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per
       1M tokens and is the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens.
       Preview model - pricing may change.
@@ -1009,6 +1059,7 @@ models:
       input_mtok: 0.5
       output_mtok: 3
       output_image_mtok: 60
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
@@ -1020,7 +1071,7 @@ models:
         - equals: gemini-3.1-flash-lite
         - starts_with: gemini-3.1-flash-lite-preview
     context_window: 1000000
-    prices_checked: 2026-05-12
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing.
     prices:
       input_mtok: 0.25
@@ -1028,6 +1079,7 @@ models:
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.05
       output_mtok: 1.5
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-lite-image
     name: Gemini 3.1 Flash Lite Image
@@ -1047,7 +1099,7 @@ models:
     description: Google's low-latency audio-to-audio model with multimodal input support.
     match:
       starts_with: gemini-3.1-flash-live-preview
-    prices_checked: 2026-07-22
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-live-preview.
     prices:
       input_mtok: 0.75
@@ -1056,6 +1108,7 @@ models:
       input_video_mtok: 1
       output_mtok: 4.5
       output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -1063,7 +1116,7 @@ models:
       for multimodal understanding, agentic capabilities, and vibe-coding.
     match:
       starts_with: gemini-3.1-pro-preview
-    prices_checked: 2026-02-23
+    prices_checked: 2026-09-29
     prices:
       input_mtok:
         base: 2
@@ -1080,6 +1133,7 @@ models:
         tiers:
           - start: 200000
             price: 18
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.5-flash
     name: Gemini 3.5 Flash
@@ -1092,7 +1146,7 @@ models:
         - starts_with: gemini-3.5-flash-preview
         - regex: '^gemini-3\.5-flash-\d'
     context_window: 1000000
-    prices_checked: 2026-05-19
+    prices_checked: 2026-09-29
     price_comments:
       See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
       offer 50% discount on input/output.
@@ -1100,6 +1154,7 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 9
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.5-flash-lite
     name: Gemini 3.5 Flash Lite
@@ -1109,13 +1164,14 @@ models:
     match:
       starts_with: gemini-3.5-flash-lite
     context_window: 1000000
-    prices_checked: 2026-07-22
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
       tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 2.5
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.6-flash
     name: Gemini 3.6 Flash
@@ -1125,7 +1181,7 @@ models:
     match:
       starts_with: gemini-3.6-flash
     context_window: 1000000
-    prices_checked: 2026-08-13
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
       tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through
       2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is
@@ -1135,6 +1191,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1142,6 +1199,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.7-flash
     name: Gemini 3.7 Flash
@@ -1151,7 +1209,7 @@ models:
     match:
       starts_with: gemini-3.7-flash
     context_window: 1000000
-    prices_checked: 2026-08-13
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
       tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache
       storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
@@ -1160,6 +1218,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1167,6 +1226,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.8-flash
     name: Gemini 3.8 Flash
@@ -1176,7 +1236,7 @@ models:
     match:
       starts_with: gemini-3.8-flash
     context_window: 1000000
-    prices_checked: 2026-09-02
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
       tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache
       storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
@@ -1185,6 +1245,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1192,6 +1253,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live
@@ -1201,7 +1263,7 @@ models:
       # Also covers `gemini-3.8-live-extended-thinking`, which Google prices identically.
       starts_with: gemini-3.8-live
     context_window: 131072
-    prices_checked: 2026-09-24
+    prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended
       Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output
       price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.
@@ -1212,6 +1274,7 @@ models:
       input_video_mtok: 1
       output_mtok: 4.5
       output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-embedding-001
     match:
