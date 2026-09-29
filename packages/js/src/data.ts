@@ -1033,6 +1033,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4.1-flash',
+        },
+        prices: {
+          input_mtok: 0.22,
+          cache_read_mtok: 0.007,
+          output_mtok: 0.66,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k3',
         name: 'Kimi K3',
         match: {
@@ -1078,6 +1102,30 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.26,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: 'zai-org/glm-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'zai-org/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -1247,6 +1295,32 @@ export const data: Provider[] = [
         name: 'MiMo-V2.5 Pro',
         match: {
           equals: 'xiaomi/mimo-v2.5-pro',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-flash',
+        name: 'MiMo-V2.6 Flash',
+        match: {
+          equals: 'xiaomi/mimo-v2.6-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-pro',
+        name: 'MiMo-V2.6 Pro',
+        match: {
+          equals: 'xiaomi/mimo-v2.6-pro',
         },
         context_window: 1000000,
         prices: {
@@ -4576,6 +4650,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.007,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'moonshotai/Kimi-K2.6',
         name: 'Kimi K2.6',
         match: {
@@ -4716,6 +4803,19 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.14,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Fast',
+        name: 'GLM 5.3 Fast',
+        match: {
+          equals: 'zai-org/GLM-5.3-Fast',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.21,
+          output_mtok: 6.6,
         },
       },
       {
@@ -4913,6 +5013,30 @@ export const data: Provider[] = [
         },
         price_comments: 'Seems to be no longer available on cerebras, here to help with tests',
         prices: {},
+      },
+      {
+        id: 'qwen-3.8-27b',
+        name: 'Qwen 3.8 27B',
+        description: "Qwen's 27B vision-language model for coding, research, and long-horizon agentic tasks.",
+        match: {
+          or: [
+            {
+              equals: 'qwen-3.8-27b',
+            },
+            {
+              starts_with: 'cerebras/qwen-3.8-27b',
+            },
+            {
+              starts_with: 'cerebras:qwen-3.8-27b',
+            },
+          ],
+        },
+        context_window: 65536,
+        price_comments: 'Rates and context length from https://api.cerebras.ai/public/v1/models.',
+        prices: {
+          input_mtok: 0.99,
+          output_mtok: 1.49,
+        },
       },
       {
         id: 'zai-glm-4.7',
@@ -32011,6 +32135,63 @@ export const data: Provider[] = [
             tiers: [
               {
                 start: 199999,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        description:
+          "xAI's flagship model for coding, agentic tasks, and knowledge work. Supports text and image inputs with text outputs, function calling, structured outputs, and configurable reasoning, over a 500k-token context window.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7',
+            },
+            {
+              regex: '^grok-4\\.7-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.7',
+            },
+            {
+              regex: '^x-ai/grok-4\\.7-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.7-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Requests that exceed 200K prompt tokens are billed at the higher rate for every token in the request. The model page says "exceed the 200K context window", so the tier starts at 200000. Ref: https://docs.x.ai/developers/models/grok-4.7',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
                 price: 12,
               },
             ],

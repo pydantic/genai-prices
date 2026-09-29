@@ -128,6 +128,22 @@ models:
     price_comments: Seems to be no longer available on cerebras, here to help with tests
     prices: {}
 
+  - id: qwen-3.8-27b
+    name: Qwen 3.8 27B
+    description: >-
+      Qwen's 27B vision-language model for coding, research, and long-horizon agentic tasks.
+    match:
+      or:
+        - equals: qwen-3.8-27b
+        - starts_with: cerebras/qwen-3.8-27b
+        - starts_with: cerebras:qwen-3.8-27b
+    context_window: 65536
+    prices_checked: 2026-09-29
+    price_comments: Rates and context length from https://api.cerebras.ai/public/v1/models.
+    prices:
+      input_mtok: 0.99
+      output_mtok: 1.49
+
   - id: zai-glm-4.7
     name: Z.ai GLM 4.7
     description: >-

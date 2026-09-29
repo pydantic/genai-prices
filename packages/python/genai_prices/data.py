@@ -665,6 +665,22 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash'),
+                name='DeepSeek V4.1 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.22'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('0.66')
+                ),
+            ),
+            ModelInfo(
                 id='moonshotai/kimi-k3',
                 match=ClauseEquals(equals='moonshotai/kimi-k3'),
                 name='Kimi K3',
@@ -692,6 +708,22 @@ providers: list[Provider] = [
                 name='GLM 5.2',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5.3',
+                match=ClauseEquals(equals='zai-org/glm-5.3'),
+                name='GLM 5.3',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5.3-flash',
+                match=ClauseEquals(equals='zai-org/glm-5.3-flash'),
+                name='GLM 5.3 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
                 ),
             ),
         ],
@@ -807,6 +839,24 @@ providers: list[Provider] = [
                 id='xiaomi/mimo-v2.5-pro',
                 match=ClauseEquals(equals='xiaomi/mimo-v2.5-pro'),
                 name='MiMo-V2.5 Pro',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-flash',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-flash'),
+                name='MiMo-V2.6 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-pro',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-pro'),
+                name='MiMo-V2.6 Pro',
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
@@ -2672,6 +2722,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                name='DeepSeek V4.1 Flash',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='moonshotai/Kimi-K2.6',
                 match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
                 name='Kimi K2.6',
@@ -2765,6 +2824,15 @@ providers: list[Provider] = [
                 context_window=1048000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3-Fast',
+                match=ClauseEquals(equals='zai-org/GLM-5.3-Fast'),
+                name='GLM 5.3 Fast',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
                 ),
             ),
             ModelInfo(
@@ -2891,6 +2959,21 @@ providers: list[Provider] = [
                 name='qwen-3-coder-480b',
                 price_comments='Seems to be no longer available on cerebras, here to help with tests',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='qwen-3.8-27b',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen-3.8-27b'),
+                        ClauseStartsWith(starts_with='cerebras/qwen-3.8-27b'),
+                        ClauseStartsWith(starts_with='cerebras:qwen-3.8-27b'),
+                    ]
+                ),
+                name='Qwen 3.8 27B',
+                description="Qwen's 27B vision-language model for coding, research, and long-horizon agentic tasks.",
+                context_window=65536,
+                price_comments='Rates and context length from https://api.cerebras.ai/public/v1/models.',
+                prices=ModelPrice(input_mtok=Decimal('0.99'), output_mtok=Decimal('1.49')),
             ),
             ModelInfo(
                 id='zai-glm-4.7',
@@ -18533,6 +18616,27 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=199999, price=Decimal('1'))]),
                     output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.7',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.7'),
+                        ClauseRegex(regex='^grok-4\\.7-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.7'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.7-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.7-latest'),
+                    ]
+                ),
+                name='Grok 4.7',
+                description="xAI's flagship model for coding, agentic tasks, and knowledge work. Supports text and image inputs with text outputs, function calling, structured outputs, and configurable reasoning, over a 500k-token context window.",
+                context_window=500000,
+                price_comments='Requests that exceed 200K prompt tokens are billed at the higher rate for every token in the request. The model page says "exceed the 200K context window", so the tier starts at 200000. Ref: https://docs.x.ai/developers/models/grok-4.7',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
                 ),
             ),
             ModelInfo(

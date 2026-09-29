@@ -287,6 +287,7 @@ describe('Comprehensive API Tests', () => {
   describe('calcPrice - long-context cliff', () => {
     const cases: [string, string, number, number, number][] = [
       ['x-ai', 'grok-4.5', 200_000, 2, 4],
+      ['x-ai', 'grok-4.7', 200_001, 2, 4],
       ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-build-0.1', 200_000, 1, 2],

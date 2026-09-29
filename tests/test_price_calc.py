@@ -2276,6 +2276,7 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
     'model_ref,first_long_token,base_input,long_input',
     [
         ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
+        ('grok-4.7', 200_001, Decimal('2'), Decimal('4')),
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
