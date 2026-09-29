@@ -4710,6 +4710,21 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-6.1-sol',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6.1-sol'), ClauseRegex(regex='^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6.1 Sol',
+                context_window=400000,
+                price_comments='Prompts over 272,000 tokens are billed at the long-context rates.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='grok-4.5',
                 match=ClauseEquals(equals='grok-4.5'),
                 name='Grok 4.5',
@@ -11038,6 +11053,29 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-6.1-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-6.1-sol'),
+                        ClauseEquals(equals='gpt-6-1-sol'),
+                        ClauseRegex(regex='^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-6-1-sol-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='GPT-6.1 Sol',
+                description='Near-Astra performance for complex work at a lower cost.',
+                context_window=1050000,
+                price_comments='Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6.1-sol',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-audio',
                 match=ClauseOr(
                     or_=[
@@ -15160,6 +15198,50 @@ providers: list[Provider] = [
                         base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.1-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6.1-sol'),
+                        ClauseEquals(equals='openai/gpt-6.1-sol-pro'),
+                        ClauseRegex(regex='^openai/gpt-6\\.1-sol-\\d{8}$'),
+                        ClauseRegex(regex='^openai/gpt-6\\.1-sol-pro-\\d{8}$'),
+                    ]
+                ),
+                name='GPT-6.1 Sol',
+                context_window=1050000,
+                price_comments='OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.1-sol:batch',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6.1-sol:batch'),
+                        ClauseEquals(equals='openai/gpt-6.1-sol-pro:batch'),
+                    ]
+                ),
+                name='GPT-6.1 Sol Batch',
+                context_window=1050000,
+                price_comments="OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
                     output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
                     web_searches_kcount=Decimal('10'),
                 ),

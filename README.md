@@ -46,7 +46,7 @@ The following providers are currently supported:
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
-- [GitHub Copilot](prices/providers/github_copilot.yml) - 39 models
+- [GitHub Copilot](prices/providers/github_copilot.yml) - 40 models
 - [Google](prices/providers/google.yml) - 58 models
 - [Groq](prices/providers/groq.yml) - 33 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
@@ -65,8 +65,8 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 96 models
-- [OpenRouter](prices/providers/openrouter.yml) - 703 models
+- [OpenAI](prices/providers/openai.yml) - 97 models
+- [OpenRouter](prices/providers/openrouter.yml) - 705 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models

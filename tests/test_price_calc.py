@@ -94,6 +94,7 @@ def test_cursor_provider_inference():
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
         ('gpt-6-astra', Decimal('97')),
+        ('gpt-6.1-sol', Decimal('19.2')),
         ('grok-4.7', Decimal('17')),
         ('kimi-k3', Decimal('18.3')),
         ('mai-code-1.1-flash', Decimal('1.42')),
@@ -272,6 +273,9 @@ def test_gpt_live_1_duration_is_extracted_from_live_usage():
         ('gpt-6-sol-2026-09-22', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
         ('gpt-6-luna', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
         ('gpt-6-luna-2026-09-22', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+        ('gpt-6.1-sol', 'gpt-6.1-sol', Decimal('0.4086'), Decimal('1.2122')),
+        ('gpt-6.1-sol-2026-09-29', 'gpt-6.1-sol', Decimal('0.4086'), Decimal('1.2122')),
+        ('gpt-6-1-sol', 'gpt-6.1-sol', Decimal('0.4086'), Decimal('1.2122')),
     ],
 )
 def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decimal, long_total: Decimal):
@@ -292,6 +296,7 @@ def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decim
     [
         ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
         ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
+        ('gpt-6.1-sol', Decimal('0.5526'), Decimal('1.100204')),
     ],
 )
 def test_gpt_6_sol_luna_long_context_boundary(model_ref: str, standard_total: Decimal, long_total: Decimal):
@@ -2643,6 +2648,8 @@ def test_gemma_4_31b_prices():
         ('openai/gpt-5.6-sol-20260901', 'openai/gpt-5.6-sol'),
         ('openai/gpt-6-sol-20260922', 'openai/gpt-6-sol'),
         ('openai/gpt-6-luna-20260922', 'openai/gpt-6-luna'),
+        ('openai/gpt-6.1-sol-20260929', 'openai/gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-pro-20260929', 'openai/gpt-6.1-sol'),
     ],
 )
 def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
@@ -2661,6 +2668,10 @@ def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
         ('openai/gpt-6-luna', 'gpt-6-luna'),
         ('openai/gpt-6-luna-pro', 'gpt-6-luna'),
         ('openai/gpt-6-luna-20260922', 'gpt-6-luna'),
+        ('openai/gpt-6.1-sol', 'gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-pro', 'gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-20260929', 'gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-pro-20260929', 'gpt-6.1-sol'),
     ],
 )
 def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
@@ -2687,6 +2698,8 @@ def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
         ('openai/gpt-6-sol-pro:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
         ('openai/gpt-6-luna:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
         ('openai/gpt-6-luna-pro:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+        ('openai/gpt-6.1-sol:batch', 'openai/gpt-6.1-sol', 'openai/gpt-6.1-sol:batch'),
+        ('openai/gpt-6.1-sol-pro:batch', 'openai/gpt-6.1-sol', 'openai/gpt-6.1-sol:batch'),
     ],
 )
 def test_openrouter_gpt_6_sol_luna_batch_prices(model_ref: str, base_model: str, batch_model: str):

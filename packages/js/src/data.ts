@@ -8042,6 +8042,60 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 400000,
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -19201,6 +19255,70 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        description: 'Near-Astra performance for complex work at a lower cost.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              equals: 'gpt-6-1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+            {
+              regex: '^gpt-6-1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6.1-sol',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
         id: 'gpt-audio',
         name: 'GPT Audio',
         description:
@@ -26160,6 +26278,124 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-\\d{8}$',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-pro-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol:batch',
+        name: 'GPT-6.1 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
               },
             ],
           },
