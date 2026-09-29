@@ -50,8 +50,8 @@ func TestOpenAILongContextBoundary(t *testing.T) {
 				tokens float64
 				rate   float64
 			}{
-				{tokens: 271_999, rate: test.baseRate},
-				{tokens: 272_000, rate: test.longRate},
+				{tokens: 272_000, rate: test.baseRate},
+				{tokens: 272_001, rate: test.longRate},
 			} {
 				calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 					Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: boundary.tokens},
