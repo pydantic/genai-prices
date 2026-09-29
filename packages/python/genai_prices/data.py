@@ -12904,6 +12904,40 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='google/gemini-3.6-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-3.6-flash'),
+                        ClauseRegex(regex='^google/gemini-3\\.6-flash-\\d{8}$'),
+                    ]
+                ),
+                name='Gemini 3.6 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'),
+                    cache_write_mtok=Decimal('0.041666666666666664'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('3.75'),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.7-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-3.7-flash'),
+                        ClauseRegex(regex='^google/gemini-3\\.7-flash-\\d{8}$'),
+                    ]
+                ),
+                name='Gemini 3.7 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'),
+                    cache_write_mtok=Decimal('0.041666666666666664'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('3.75'),
+                ),
+            ),
+            ModelInfo(
                 id='google/gemini-3.8-flash',
                 match=ClauseOr(
                     or_=[

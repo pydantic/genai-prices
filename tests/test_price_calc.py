@@ -1159,7 +1159,16 @@ def test_litellm_compact_dated_ref_price(model_ref: str, model_id: str):
     assert compact_price == canonical_price
 
 
-@pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
+@pytest.mark.parametrize(
+    'model_ref',
+    [
+        'deepseek/deepseek-v3.2',
+        'google/gemini-2.5-flash-lite',
+        'google/gemini-3.6-flash',
+        'google/gemini-3.7-flash',
+        'google/gemini-3.8-flash',
+    ],
+)
 def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
     price = calc_price(
         Usage(input_tokens=1_000, output_tokens=100),
