@@ -5613,14 +5613,28 @@ providers: list[Provider] = [
                 description="Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.5'),
-                    cache_read_mtok=Decimal('0.05'),
-                    output_mtok=Decimal('3'),
-                    input_audio_mtok=Decimal('1'),
-                    cache_audio_read_mtok=Decimal('0.1'),
-                    web_searches_kcount=Decimal('14'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.5'),
+                            cache_read_mtok=Decimal('0.05'),
+                            output_mtok=Decimal('3'),
+                            input_audio_mtok=Decimal('1'),
+                            cache_audio_read_mtok=Decimal('0.1'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 1, 5)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.5'),
+                            cache_read_mtok=Decimal('0.05'),
+                            output_mtok=Decimal('3'),
+                            input_audio_mtok=Decimal('1'),
+                            cache_audio_read_mtok=Decimal('0.1'),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemini-3-pro-image-preview',
@@ -5634,12 +5648,22 @@ providers: list[Provider] = [
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2'),
-                    output_mtok=Decimal('12'),
-                    output_image_mtok=Decimal('120'),
-                    web_searches_kcount=Decimal('14'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), output_mtok=Decimal('12'), output_image_mtok=Decimal('120')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 1, 5)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            output_mtok=Decimal('12'),
+                            output_image_mtok=Decimal('120'),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',
@@ -5651,12 +5675,32 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 3 Pro Preview',
                 description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
-                    web_searches_kcount=Decimal('14'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 1, 5)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]
+                            ),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemini-3.1-flash-image-preview',

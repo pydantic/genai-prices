@@ -9647,14 +9647,31 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
-        prices: {
-          input_mtok: 0.5,
-          cache_read_mtok: 0.05,
-          output_mtok: 3,
-          input_audio_mtok: 1,
-          cache_audio_read_mtok: 0.1,
-          web_searches_kcount: 14,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.05,
+              output_mtok: 3,
+              input_audio_mtok: 1,
+              cache_audio_read_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.05,
+              output_mtok: 3,
+              input_audio_mtok: 1,
+              cache_audio_read_mtok: 0.1,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-image-preview',
@@ -9674,12 +9691,27 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
-        prices: {
-          input_mtok: 2,
-          output_mtok: 12,
-          output_image_mtok: 120,
-          web_searches_kcount: 14,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              output_mtok: 12,
+              output_image_mtok: 120,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              output_mtok: 12,
+              output_image_mtok: 120,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3-pro-preview',
@@ -9695,36 +9727,75 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: {
-            base: 2,
-            tiers: [
-              {
-                start: 200000,
-                price: 4,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.4,
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 12,
-            tiers: [
-              {
-                start: 200000,
-                price: 18,
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 18,
+                  },
+                ],
               },
-            ],
+            },
           },
-          web_searches_kcount: 14,
-        },
+          {
+            constraint: {
+              start_date: '2026-01-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 18,
+                  },
+                ],
+              },
+              web_searches_kcount: 14,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.1-flash-image-preview',
