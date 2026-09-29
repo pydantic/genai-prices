@@ -157,7 +157,8 @@ jobs:
         env:
           GH_AW_ACTIONS_DIR: ${{ runner.temp }}/gh-aw/actions
 
-  # Byte-freeze the published v2 schemas. Adding a unit regenerates them and requires v3 instead.
+  # Freeze the published v2 schemas. The unit-derived definitions are byte-frozen (a new unit requires v3);
+  # everything else may only grow additively (new optional fields like `context_window` or `capabilities`).
   v2-schema-frozen:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
@@ -167,16 +168,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: compare the v2 schemas against the base branch
-        run: |
-          failed=0
-          for schema in prices/new_data/v2/data.schema.json prices/new_data/v2/data_slim.schema.json; do
-            if ! git diff --quiet "${BASE_SHA}" -- "$schema"; then
-              echo "::error file=$schema::The published v2 schema changed. Adding or altering a unit in prices/units.yml widens the v2 contract and requires v3 instead - see specs/data-driven-unit-registry/. If this change is genuinely v2-compatible, remove this job's guard in the same PR and say why."
-              git diff "${BASE_SHA}" -- "$schema"
-              failed=1
-            fi
-          done
-          exit $failed
+        run: python3 .github/scripts/check-v2-schema-frozen.py "${BASE_SHA}"
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
 

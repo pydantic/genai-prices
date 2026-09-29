@@ -50,6 +50,12 @@ extractors:
       - path: completion_tokens
         dest: output_tokens
   # https://docs.x.ai/developers/rest-api-reference/inference/voice#response.done
+  # `billable_audio_seconds` is a running total for the session, not an increment: three turns of 0.71s,
+  # 0.71s and 0.87s of audio report 1, 2 and 3 (observed live on `grok-voice-latest`, 2026-09-25). Price
+  # the latest report, or the difference between two, never each report in turn. The token counts in
+  # the same frame are per response.
+  # `input_text_messages` was absent from every report in that session, including text-only turns; it
+  # is mapped in case xAI starts reporting the $0.004-per-text-input meter it bills on.
   - api_flavor: realtime
     root: usage
     mappings:

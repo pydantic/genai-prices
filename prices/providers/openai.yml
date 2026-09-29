@@ -118,6 +118,15 @@ extractors:
     mappings:
       - path: prompt_tokens
         dest: input_tokens
+  # GPT-Live voice sessions report their duration, in `session.usage.updated` and `session.closed`:
+  # https://developers.openai.com/api/reference/resources/live/primary-websocket
+  # It is a running total, not an increment: price the latest report (or the final one on
+  # `session.closed`), or the difference between two, never each report in turn.
+  - api_flavor: live
+    root: usage
+    mappings:
+      - path: seconds
+        dest: audio_seconds
 models:
   - id: ada
     match:
@@ -652,6 +661,8 @@ models:
         - equals: gpt-5-chat-latest
     context_window: 400000
     # split from the gpt-5 record so capabilities can differ; prices are identical
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles: gpt-5-chat is _NO_REASONING)
+    # and the provider docs
     capabilities:
       reasoning:
         supported: false
@@ -927,26 +938,26 @@ models:
         top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
-      272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater
-      than start. Ref: https://developers.openai.com/api/docs/pricing
+      The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the
+      pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.4
     prices:
       input_mtok:
         base: 2.5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 5
       cache_read_mtok:
         base: 0.25
         tiers:
-          - start: 271999
+          - start: 272000
             price: 0.5
       output_mtok:
         base: 15
         tiers:
-          - start: 271999
+          - start: 272000
             price: 22.5
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
@@ -1014,21 +1025,21 @@ models:
         - equals: gpt-5-4-pro
         - equals: gpt-5-4-pro-2026-03-05
     context_window: 1050000
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
-      272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater
-      than start. Ref: https://developers.openai.com/api/docs/pricing
+      The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the
+      pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.4-pro
     prices:
       input_mtok:
         base: 30
         tiers:
-          - start: 271999
+          - start: 272000
             price: 60
       output_mtok:
         base: 180
         tiers:
-          - start: 271999
+          - start: 272000
             price: 270
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
@@ -1066,27 +1077,26 @@ models:
         top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
-      272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999
-      because the pricing engines select a tier when the token count is greater than start.
-      Ref: https://developers.openai.com/api/docs/models/gpt-5.5
+      Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier
+      starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.5
     prices:
       input_mtok:
         base: 5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 10
       cache_read_mtok:
         base: 0.5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 1
       output_mtok:
         base: 30
         tiers:
-          - start: 271999
+          - start: 272000
             price: 45
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
@@ -1101,22 +1111,21 @@ models:
         - equals: gpt-5-5-pro
         - equals: gpt-5-5-pro-2026-04-23
     context_window: 1000000
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly
-      272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing
-      engines select a tier when the token count is greater than start.
-      Ref: https://developers.openai.com/api/docs/pricing
+      Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000
+      because the pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 30
         tiers:
-          - start: 271999
+          - start: 272000
             price: 60
       output_mtok:
         base: 180
         tiers:
-          - start: 271999
+          - start: 272000
             price: 270
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
@@ -1147,34 +1156,33 @@ models:
         top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
-      input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as
-      271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna
-      prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna,
-      https://developers.openai.com/api/docs/changelog
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs:
+      https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog
     prices:
       - prices:
           input_mtok:
             base: 1
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 2
           cache_write_mtok:
             base: 1.25
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 2.5
           cache_read_mtok:
             base: 0.1
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.2
           output_mtok:
             base: 6
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 9
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1184,22 +1192,22 @@ models:
           input_mtok:
             base: 0.2
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.4
           cache_write_mtok:
             base: 0.25
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.5
           cache_read_mtok:
             base: 0.02
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.04
           output_mtok:
             base: 1.2
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 1.8
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1232,35 +1240,34 @@ models:
         top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
-      input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as
-      271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol
-      input prices by 20% and output prices by 33% on 2026-08-21. Refs:
-      https://developers.openai.com/api/docs/models/gpt-5.6-sol,
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on
+      2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol,
       https://developers.openai.com/api/docs/changelog
     prices:
       - prices:
           input_mtok:
             base: 5
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 10
           cache_write_mtok:
             base: 6.25
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 12.5
           cache_read_mtok:
             base: 0.5
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 1
           output_mtok:
             base: 30
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 45
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1271,22 +1278,22 @@ models:
           input_mtok:
             base: 4
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 8
           cache_write_mtok:
             base: 5
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 10
           cache_read_mtok:
             base: 0.4
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.8
           output_mtok:
             base: 20
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 30
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1317,34 +1324,33 @@ models:
         top_p: true
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-01
+    prices_checked: 2026-09-29
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
-      input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as
-      271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra
-      prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra,
-      https://developers.openai.com/api/docs/changelog
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs:
+      https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog
     prices:
       - prices:
           input_mtok:
             base: 2.5
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 5
           cache_write_mtok:
             base: 3.125
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 6.25
           cache_read_mtok:
             base: 0.25
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.5
           output_mtok:
             base: 15
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 22.5
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1354,22 +1360,22 @@ models:
           input_mtok:
             base: 2
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 4
           cache_write_mtok:
             base: 2.5
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 5
           cache_read_mtok:
             base: 0.2
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 0.4
           output_mtok:
             base: 12
             tiers:
-              - start: 271999
+              - start: 272000
                 price: 18
           web_searches_kcount: 10
           storage_searches_kcount: 2.5
@@ -1397,34 +1403,149 @@ models:
         top_p: false
       service_tiers: [auto, default, flex, priority]
       verbosity_levels: [low, medium, high]
-    prices_checked: 2026-09-03
+    prices_checked: 2026-09-29
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K
-      input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as
-      271999 because the pricing engines select a tier when the token count is greater than start. Refs:
-      https://developers.openai.com/api/docs/models/gpt-6-astra,
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra,
       https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
         base: 10
         tiers:
-          - start: 271999
+          - start: 272000
             price: 20
       cache_write_mtok:
         base: 12.5
         tiers:
-          - start: 271999
+          - start: 272000
             price: 25
       cache_read_mtok:
         base: 1
         tiers:
-          - start: 271999
+          - start: 272000
             price: 2
       output_mtok:
         base: 50
         tiers:
-          - start: 271999
+          - start: 272000
             price: 75
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-6-luna
+    name: GPT-6 Luna
+    description: Efficient model for focused, high-volume tasks.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-luna
+        - regex: ^gpt-6-luna-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-09-22
+    price_comments: >-
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-luna
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 0.75
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-6-sol
+    name: GPT-6 Sol
+    description: Model for complex coding and agentic workflows.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-sol
+        - regex: ^gpt-6-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-09-22
+    price_comments: >-
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-sol
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: gpt-6.1-sol
+    name: GPT-6.1 Sol
+    description: Model for complex coding and professional work at a lower cost than GPT-6 Astra.
+    match:
+      or:
+        - equals: gpt-6.1-sol
+        - regex: ^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K
+      input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the
+      pricing engines select a tier when token count exceeds start. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
       web_searches_kcount: 10
       storage_searches_kcount: 2.5
 
@@ -1549,6 +1670,57 @@ models:
       # The model's sole supported output modality is image, so the aggregate
       # catch-all carries that modality's rate.
       output_mtok: 30
+
+  - id: gpt-image-2.5-flare
+    name: GPT Image 2.5 Flare
+    description: >-
+      OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-flare
+        - equals: gpt-image-2.5-flare-2026-09-08
+    prices_checked: 2026-09-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+
+  - id: gpt-image-2.5-sunburst
+    name: GPT Image 2.5 Sunburst
+    description: >-
+      OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-sunburst
+        - equals: gpt-image-2.5-sunburst-2026-09-08
+    prices_checked: 2026-09-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+
+  - id: gpt-live-1
+    match:
+      equals: gpt-live-1
+    prices_checked: 2026-09-24
+    price_comments: >-
+      Voice sessions are billed per second of session duration, covering both input and output audio. The
+      Responses backend a session delegates to is billed separately, at that model's own prices. See
+      https://developers.openai.com/api/docs/models/gpt-live-1.
+    prices:
+      audio_hours: 3
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -1783,10 +1955,17 @@ models:
         - equals: o3-deep-research
         - equals: o3-deep-research-2025-06-26
     context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
     prices:
       input_mtok: 10
       cache_read_mtok: 2.5
       output_mtok: 40
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
 
   - id: o3-mini
     name: o3 Mini
@@ -1856,10 +2035,17 @@ models:
         - equals: o4-mini-deep-research
         - equals: o4-mini-deep-research-2025-06-26
     context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
 
   - id: text-davinci-002
     match:

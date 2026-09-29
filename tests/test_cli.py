@@ -266,13 +266,13 @@ def test_list_provider(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
 Deepseek: (8 models)
   deepseek:deepseek-chat: DeepSeek Chat
+  deepseek:deepseek-flash: DeepSeek V4.1 Flash
   deepseek:deepseek-reasoner: Deepseek R1
   deepseek:deepseek-v3.1-terminus: DeepSeek V3.1 Terminus
   deepseek:deepseek-v3.2: DeepSeek V3.2
   deepseek:deepseek-v3.2-exp: DeepSeek V3.2 Exp
   deepseek:deepseek-v4-flash: DeepSeek V4 Flash
   deepseek:deepseek-v4-pro: DeepSeek V4 Pro
-  deepseek:deepseek-v4.1-flash: DeepSeek V4.1 Flash
 """)
     assert err == ''
 

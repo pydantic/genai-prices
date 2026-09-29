@@ -119,11 +119,19 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 61, model: 'claude-fable-5' },
+    { expectedTotalPrice: 60.25, model: 'claude-fable-5.1' },
     { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
     { expectedTotalPrice: 61, model: 'claude-opus-4.8-fast' },
+    { expectedTotalPrice: 24.2, model: 'claude-opus-5.5' },
+    { expectedTotalPrice: 18.3, model: 'claude-sonnet-4.6' },
     { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
+    { expectedTotalPrice: 12.2, model: 'claude-sonnet-5.5' },
     { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
     { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
+    { expectedTotalPrice: 1.47, model: 'gpt-5.4-nano' },
+    { expectedTotalPrice: 97, model: 'gpt-6-astra' },
+    { expectedTotalPrice: 17, model: 'grok-4.7' },
     { expectedTotalPrice: 18.3, model: 'kimi-k3' },
     { expectedTotalPrice: 1.42, model: 'mai-code-1.1-flash' },
   ])('prices GitHub Copilot $model', ({ expectedTotalPrice, model }) => {
@@ -131,6 +139,7 @@ describe('generated data split', () => {
       providerId: 'github-copilot',
     })
 
+    expect(result?.model.id).toBe(model)
     expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
   })
 
@@ -346,10 +355,10 @@ describe('generated data split', () => {
   it.each([
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 271_999 }] },
-        cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 271_999 }] },
-        input_mtok: { base: 5, tiers: [{ price: 10, start: 271_999 }] },
-        output_mtok: { base: 30, tiers: [{ price: 45, start: 271_999 }] },
+        cache_read_mtok: { base: 0.5, tiers: [{ price: 1, start: 272_000 }] },
+        cache_write_mtok: { base: 6.25, tiers: [{ price: 12.5, start: 272_000 }] },
+        input_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        output_mtok: { base: 30, tiers: [{ price: 45, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -358,10 +367,10 @@ describe('generated data split', () => {
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 271_999 }] },
-        cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 271_999 }] },
-        input_mtok: { base: 4, tiers: [{ price: 8, start: 271_999 }] },
-        output_mtok: { base: 20, tiers: [{ price: 30, start: 271_999 }] },
+        cache_read_mtok: { base: 0.4, tiers: [{ price: 0.8, start: 272_000 }] },
+        cache_write_mtok: { base: 5, tiers: [{ price: 10, start: 272_000 }] },
+        input_mtok: { base: 4, tiers: [{ price: 8, start: 272_000 }] },
+        output_mtok: { base: 20, tiers: [{ price: 30, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -370,10 +379,10 @@ describe('generated data split', () => {
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 271_999 }] },
-        cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 271_999 }] },
-        input_mtok: { base: 1, tiers: [{ price: 2, start: 271_999 }] },
-        output_mtok: { base: 6, tiers: [{ price: 9, start: 271_999 }] },
+        cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
+        cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
+        input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
+        output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -382,10 +391,10 @@ describe('generated data split', () => {
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.02, tiers: [{ price: 0.04, start: 271_999 }] },
-        cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 271_999 }] },
-        input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 271_999 }] },
-        output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 271_999 }] },
+        cache_read_mtok: { base: 0.02, tiers: [{ price: 0.04, start: 272_000 }] },
+        cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -394,10 +403,10 @@ describe('generated data split', () => {
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 271_999 }] },
-        cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 271_999 }] },
-        input_mtok: { base: 2.5, tiers: [{ price: 5, start: 271_999 }] },
-        output_mtok: { base: 15, tiers: [{ price: 22.5, start: 271_999 }] },
+        cache_read_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
+        input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -406,10 +415,10 @@ describe('generated data split', () => {
     },
     {
       expectedPrices: {
-        cache_read_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 271_999 }] },
-        cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 271_999 }] },
-        input_mtok: { base: 2, tiers: [{ price: 4, start: 271_999 }] },
-        output_mtok: { base: 12, tiers: [{ price: 18, start: 271_999 }] },
+        cache_read_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
+        output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
         storage_searches_kcount: 2.5,
         web_searches_kcount: 10,
       },
@@ -420,6 +429,16 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
 
     expect(result?.model_price).toEqual(expectedPrices)
+  })
+
+  it.each([
+    ['openai/gpt-oss-safeguard-20b', 0.375],
+    ['openai/gpt-oss-120b', 0.75],
+  ])('prices Groq %s on its own record', (model, expected) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, { providerId: 'groq' })
+
+    expect(result?.model.id).toBe(model)
+    expect(result?.total_price).toBeCloseTo(expected, 12)
   })
 
   it.each([

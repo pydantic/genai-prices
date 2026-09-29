@@ -158,6 +158,18 @@ models:
       input_mtok: 1.74
       output_mtok: 3.48
 
+  - id: deepseek-ai/DeepSeek-V4.1-Flash
+    name: DeepSeek V4.1 Flash
+    match:
+      equals: deepseek-ai/DeepSeek-V4.1-Flash
+    prices_checked: 2026-09-15
+    price_comments: >-
+      Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.01
+      output_mtok: 0.60
+
   # Google models
   - id: google/gemma-4-31B-it
     name: Gemma 4 31B IT

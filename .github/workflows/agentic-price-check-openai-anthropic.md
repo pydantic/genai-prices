@@ -20,6 +20,7 @@ tools:
     - 'cat:*'
     - 'ls:*'
     - 'rg:*'
+    - 'jq:*'
   web-fetch:
 safe-outputs:
   # Disabled: the detection sub-agent runs its own minimax call through a separate
@@ -184,6 +185,19 @@ Collect every confirmed discrepancy from both providers first, then decide:
 Where you converted units, show the arithmetic in that row. End the body with the date
 you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML `prices:`
 and bump `prices_checked`.
+
+To file the issue, write the body to `/tmp/gh-aw/agent/issue-body.md`, then run:
+
+```bash
+jq -Rs '{title: "OpenAI/Anthropic price discrepancies", body: .}' /tmp/gh-aw/agent/issue-body.md | safeoutputs create_issue .
+```
+
+`jq -Rs` encodes the whole file as the JSON `body`. Keep the body under 10,000 bytes, because `safeoutputs` rejects a
+larger `body`. Measure it with `jq -Rs 'utf8bytelength' /tmp/gh-aw/agent/issue-body.md`. When the body is larger, use
+one row per model and list its differing fields in one cell.
+
+Call `create_issue` only with the real findings: the run allows one issue, and a test or placeholder call uses it up. A
+call that returns an error files nothing, so fix the cause and run the command again.
 
 - **Zero confirmed discrepancies** — call `safeoutputs noop` with a one-line reason,
   naming any page that would not load, e.g. "All OpenAI + Anthropic prices match" or

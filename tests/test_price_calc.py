@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price
+from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
@@ -82,11 +82,20 @@ def test_cursor_provider_inference():
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
+        ('claude-fable-5', Decimal('61')),
+        ('claude-fable-5.1', Decimal('60.25')),
         ('claude-haiku-4.5', Decimal('6.10')),
         ('claude-opus-4.8-fast', Decimal('61')),
+        ('claude-opus-5.5', Decimal('24.2')),
+        ('claude-sonnet-4.6', Decimal('18.3')),
         ('claude-sonnet-5', Decimal('12.2')),
+        ('claude-sonnet-5.5', Decimal('12.2')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gpt-5-mini', Decimal('2.275')),
+        ('gpt-5.4-nano', Decimal('1.47')),
+        ('gpt-6-astra', Decimal('97')),
+        ('gpt-6.1-sol', Decimal('19.2')),
+        ('grok-4.7', Decimal('17')),
         ('kimi-k3', Decimal('18.3')),
         ('mai-code-1.1-flash', Decimal('1.42')),
     ],
@@ -98,6 +107,7 @@ def test_github_copilot_model_prices(model_ref: str, expected_total_price: Decim
         provider_id='github-copilot',
     )
 
+    assert price.model.id == model_ref
     assert price.total_price == expected_total_price
 
 
@@ -222,7 +232,7 @@ def test_gpt_5_6_cache_write_price_context_boundary(
     short_write_rate: Decimal,
     long_write_rate: Decimal,
 ):
-    for tokens, rate in ((271_999, short_write_rate), (272_000, long_write_rate)):
+    for tokens, rate in ((272_000, short_write_rate), (272_001, long_write_rate)):
         price = calc_price(
             Usage(input_tokens=tokens, cache_write_tokens=tokens),
             model_ref=model_ref,
@@ -233,6 +243,67 @@ def test_gpt_5_6_cache_write_price_context_boundary(
         assert price.input_price == expected_input_price
         assert price.output_price == Decimal(0)
         assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('audio_seconds', 'total'),
+    [(60, Decimal('0.05')), (3_600, Decimal('3')), (90, Decimal('0.075'))],
+)
+def test_gpt_live_1_prices_session_duration(audio_seconds: int, total: Decimal):
+    """GPT-Live bills the voice session by the second, one rate for input and output audio."""
+    price = calc_price(Usage(audio_seconds=audio_seconds), model_ref='gpt-live-1', provider_id='openai')
+
+    assert price.model.id == 'gpt-live-1'
+    assert price.total_price == total
+
+
+def test_gpt_live_1_duration_is_extracted_from_live_usage():
+    """Live's `session.usage.updated` and `session.closed` report `usage.seconds`, a running total."""
+    extracted = extract_usage({'usage': {'seconds': 60.0}}, provider_id='openai', api_flavor='live')
+
+    assert extracted.usage == Usage(audio_seconds=60.0)
+    price = calc_price(extracted.usage, model_ref='gpt-live-1', provider_id='openai')
+    assert price.total_price == Decimal('0.05')
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'short_total', 'long_total'),
+    [
+        ('gpt-6-sol', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
+        ('gpt-6-sol-2026-09-22', 'gpt-6-sol', Decimal('0.4087'), Decimal('1.2124')),
+        ('gpt-6-luna', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+        ('gpt-6-luna-2026-09-22', 'gpt-6-luna', Decimal('0.020435'), Decimal('0.06062')),
+    ],
+)
+def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decimal, long_total: Decimal):
+    for input_tokens, expected_total in ((200_000, short_total), (300_000, long_total)):
+        price = calc_price(
+            Usage(input_tokens=input_tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+
+        assert price.model.id == model_id
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'standard_total', 'long_total'),
+    [
+        ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
+        ('gpt-6.1-sol', Decimal('0.5526'), Decimal('1.100204')),
+        ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
+    ],
+)
+def test_gpt_6_sol_luna_long_context_boundary(model_ref: str, standard_total: Decimal, long_total: Decimal):
+    for tokens, expected_total in ((272_000, standard_total), (272_001, long_total)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+        assert price.total_price == expected_total
 
 
 @pytest.mark.parametrize(
@@ -307,10 +378,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271_999, price=Decimal('10'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=271_999, price=Decimal('12.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=271_999, price=Decimal('1'))]),
-                output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=271_999, price=Decimal('45'))]),
+                input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('6.25'), tiers=[Tier(start=272_000, price=Decimal('12.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272_000, price=Decimal('1'))]),
+                output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272_000, price=Decimal('45'))]),
             ),
         ),
         (
@@ -319,10 +390,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=271_999, price=Decimal('8'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=271_999, price=Decimal('10'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=271_999, price=Decimal('0.8'))]),
-                output_mtok=TieredPrices(base=Decimal('20'), tiers=[Tier(start=271_999, price=Decimal('30'))]),
+                input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272_000, price=Decimal('8'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272_000, price=Decimal('10'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272_000, price=Decimal('0.8'))]),
+                output_mtok=TieredPrices(base=Decimal('20'), tiers=[Tier(start=272_000, price=Decimal('30'))]),
             ),
         ),
         (
@@ -331,10 +402,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=271_999, price=Decimal('2'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=271_999, price=Decimal('2.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=271_999, price=Decimal('0.2'))]),
-                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=271_999, price=Decimal('9'))]),
+                input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272_000, price=Decimal('0.2'))]),
+                output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272_000, price=Decimal('9'))]),
             ),
         ),
         (
@@ -343,10 +414,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=271_999, price=Decimal('0.4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=271_999, price=Decimal('0.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=271_999, price=Decimal('0.04'))]),
-                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=271_999, price=Decimal('1.8'))]),
+                input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.02'), tiers=[Tier(start=272_000, price=Decimal('0.04'))]),
+                output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272_000, price=Decimal('1.8'))]),
             ),
         ),
         (
@@ -355,12 +426,12 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271_999, price=Decimal('5'))]),
+                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('3.125'), tiers=[Tier(start=271_999, price=Decimal('6.25'))]
+                    base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
                 ),
-                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=271_999, price=Decimal('0.5'))]),
-                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=271_999, price=Decimal('22.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
+                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272_000, price=Decimal('22.5'))]),
             ),
         ),
         (
@@ -369,10 +440,10 @@ def test_gpt_5_5_long_context_price(
             ModelPrice(
                 web_searches_kcount=Decimal('10'),
                 storage_searches_kcount=Decimal('2.5'),
-                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=271_999, price=Decimal('4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=271_999, price=Decimal('5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=271_999, price=Decimal('0.4'))]),
-                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=271_999, price=Decimal('18'))]),
+                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
+                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272_000, price=Decimal('18'))]),
             ),
         ),
     ],
@@ -403,22 +474,22 @@ def test_gpt_6_astra_price():
 
 def test_gpt_6_astra_long_context_boundary():
     standard = calc_price(
-        Usage(input_tokens=271_999, output_tokens=1_000),
-        model_ref='gpt-6-astra',
-        provider_id='openai',
-    )
-    assert standard.input_price == Decimal('2.71999')
-    assert standard.output_price == Decimal('0.05')
-    assert standard.total_price == Decimal('2.76999')
-
-    long_context = calc_price(
         Usage(input_tokens=272_000, output_tokens=1_000),
         model_ref='gpt-6-astra',
         provider_id='openai',
     )
-    assert long_context.input_price == Decimal('5.44')
+    assert standard.input_price == Decimal('2.72')
+    assert standard.output_price == Decimal('0.05')
+    assert standard.total_price == Decimal('2.77')
+
+    long_context = calc_price(
+        Usage(input_tokens=272_001, output_tokens=1_000),
+        model_ref='gpt-6-astra',
+        provider_id='openai',
+    )
+    assert long_context.input_price == Decimal('5.44002')
     assert long_context.output_price == Decimal('0.075')
-    assert long_context.total_price == Decimal('5.515')
+    assert long_context.total_price == Decimal('5.51502')
 
 
 @pytest.mark.parametrize(
@@ -428,12 +499,12 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-sol',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=271_999, price=Decimal('11'))]),
+                input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272_000, price=Decimal('11'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('6.875'), tiers=[Tier(start=271_999, price=Decimal('13.75'))]
+                    base=Decimal('6.875'), tiers=[Tier(start=272_000, price=Decimal('13.75'))]
                 ),
-                cache_read_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=271_999, price=Decimal('1.1'))]),
-                output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=271_999, price=Decimal('49.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=272_000, price=Decimal('1.1'))]),
+                output_mtok=TieredPrices(base=Decimal('33'), tiers=[Tier(start=272_000, price=Decimal('49.5'))]),
             ),
         ),
         (
@@ -450,10 +521,10 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-terra',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=271_999, price=Decimal('4.4'))]),
-                cache_write_mtok=TieredPrices(base=Decimal('2.75'), tiers=[Tier(start=271_999, price=Decimal('5.5'))]),
-                cache_read_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=271_999, price=Decimal('0.44'))]),
-                output_mtok=TieredPrices(base=Decimal('13.2'), tiers=[Tier(start=271_999, price=Decimal('19.8'))]),
+                input_mtok=TieredPrices(base=Decimal('2.2'), tiers=[Tier(start=272_000, price=Decimal('4.4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.75'), tiers=[Tier(start=272_000, price=Decimal('5.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
+                output_mtok=TieredPrices(base=Decimal('13.2'), tiers=[Tier(start=272_000, price=Decimal('19.8'))]),
             ),
         ),
         (
@@ -470,14 +541,14 @@ def test_gpt_6_astra_long_context_boundary():
             'openai.gpt-5.6-luna',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
-                input_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=271_999, price=Decimal('0.44'))]),
+                input_mtok=TieredPrices(base=Decimal('0.22'), tiers=[Tier(start=272_000, price=Decimal('0.44'))]),
                 cache_write_mtok=TieredPrices(
-                    base=Decimal('0.275'), tiers=[Tier(start=271_999, price=Decimal('0.55'))]
+                    base=Decimal('0.275'), tiers=[Tier(start=272_000, price=Decimal('0.55'))]
                 ),
                 cache_read_mtok=TieredPrices(
-                    base=Decimal('0.022'), tiers=[Tier(start=271_999, price=Decimal('0.044'))]
+                    base=Decimal('0.022'), tiers=[Tier(start=272_000, price=Decimal('0.044'))]
                 ),
-                output_mtok=TieredPrices(base=Decimal('1.32'), tiers=[Tier(start=271_999, price=Decimal('1.98'))]),
+                output_mtok=TieredPrices(base=Decimal('1.32'), tiers=[Tier(start=272_000, price=Decimal('1.98'))]),
             ),
         ),
     ],
@@ -535,7 +606,8 @@ def test_aws_gpt_5_6_sol_price_cut(
     ],
 )
 def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal, long_input_rate: Decimal) -> None:
-    for tokens, rate in ((271_999, short_input_rate), (272_000, long_input_rate)):
+    """AWS bills 272K input tokens or fewer at the short-context rate."""
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
         price = calc_price(
             Usage(input_tokens=tokens),
             model_ref=model_ref,
@@ -546,6 +618,32 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
         assert price.input_price == expected_input_price
         assert price.output_price == Decimal(0)
         assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'short_input_rate', 'long_input_rate'),
+    [
+        ('global.openai.gpt-6-astra', 'global.openai.gpt-6-astra', Decimal('10'), Decimal('20')),
+        ('global.openai.gpt-6-sol', 'global.openai.gpt-6-sol', Decimal('2'), Decimal('4')),
+        ('global.openai.gpt-6-luna', 'global.openai.gpt-6-luna', Decimal('0.1'), Decimal('0.2')),
+        ('us.openai.gpt-6-astra', 'regional.openai.gpt-6-astra', Decimal('11'), Decimal('22')),
+        ('us.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('us.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('in.openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('in.openai.gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+        ('openai.gpt-6-sol', 'regional.openai.gpt-6-sol', Decimal('2.2'), Decimal('4.4')),
+        ('gpt-6-luna', 'regional.openai.gpt-6-luna', Decimal('0.11'), Decimal('0.22')),
+    ],
+)
+def test_aws_gpt_6_context_boundary(
+    model_ref: str, model_id: str, short_input_rate: Decimal, long_input_rate: Decimal
+) -> None:
+    """AWS bills 272K input tokens or fewer at the short-context rate."""
+    for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
+        price = calc_price(Usage(input_tokens=tokens), model_ref=model_ref, provider_id='aws')
+
+        assert price.model.id == model_id
+        assert price.input_price == rate * tokens / 1_000_000
 
 
 @pytest.mark.parametrize(
@@ -1231,6 +1329,15 @@ def test_openai_web_search_price():
     assert price.input_price == Decimal('0.002')
     assert price.output_price == Decimal('0.0008')
     assert price.total_price == Decimal('0.0528')
+
+
+@pytest.mark.parametrize('model_ref', ['o3-deep-research', 'o4-mini-deep-research-2025-06-26'])
+def test_openai_deep_research_tool_prices(model_ref: str):
+    price = calc_price(Usage(web_searches=2, storage_searches=3), model_ref=model_ref, provider_id='openai')
+
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('0.0275')
 
 
 def test_openai_gpt_56_sol_web_search_price():
@@ -2019,8 +2126,9 @@ def test_provider_api_url_matches_at_the_start_of_the_url():
 @pytest.mark.parametrize(
     'model_ref,model_name,off_peak,peak',
     [
-        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('44.00')),
+        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('30.00')),
         ('deepseek-v4-pro', 'DeepSeek V4 Pro', Decimal('66.00'), Decimal('132.00')),
+        ('deepseek-flash', 'DeepSeek V4.1 Flash', Decimal('15.00'), Decimal('30.00')),
     ],
 )
 @pytest.mark.parametrize(
@@ -2058,7 +2166,7 @@ def test_price_constraint_two_time_of_date_windows(
 @pytest.mark.parametrize(
     'model_ref,historic,peak',
     [
-        ('deepseek-v4-flash', Decimal('14.00'), Decimal('44.00')),
+        ('deepseek-v4-flash', Decimal('14.00'), Decimal('30.00')),
         ('deepseek-v4-pro', Decimal('43.50'), Decimal('132.00')),
     ],
 )
@@ -2094,19 +2202,35 @@ def test_price_deepseek_v4_before_repricing(
 
 
 @pytest.mark.parametrize(
+    'timestamp,off_peak',
+    [
+        (datetime(2026, 9, 9, 23, tzinfo=timezone.utc), Decimal('22.00')),
+        (datetime(2026, 9, 10, 0, tzinfo=timezone.utc), Decimal('15.00')),
+    ],
+)
+def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_peak: Decimal):
+    """From 2026-09-10 `deepseek-v4-flash` is served by V4.1 Flash and billed at its off-peak rate."""
+    price = calc_price(
+        Usage(input_tokens=100_000_000), model_ref='deepseek-v4-flash', genai_request_timestamp=timestamp
+    )
+    assert price.input_price == off_peak
+
+
+@pytest.mark.parametrize(
     'model_ref,first_long_token,base_input,long_input',
     [
         ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),
-        ('gpt-5.4', 272_000, Decimal('2.5'), Decimal('5')),
-        ('gpt-5.4-pro', 272_000, Decimal('30'), Decimal('60')),
-        ('gpt-5.5', 272_000, Decimal('5'), Decimal('10')),
-        ('gpt-5.5-pro', 272_000, Decimal('30'), Decimal('60')),
-        ('gpt-5.6-luna', 272_000, Decimal('0.2'), Decimal('0.4')),
-        ('gpt-5.6-sol', 272_000, Decimal('4'), Decimal('8')),
-        ('gpt-5.6-terra', 272_000, Decimal('2'), Decimal('4')),
+        ('gpt-5.4', 272_001, Decimal('2.5'), Decimal('5')),
+        ('gpt-5.4-pro', 272_001, Decimal('30'), Decimal('60')),
+        ('gpt-5.5', 272_001, Decimal('5'), Decimal('10')),
+        ('gpt-5.5-pro', 272_001, Decimal('30'), Decimal('60')),
+        ('gpt-5.6-luna', 272_001, Decimal('0.2'), Decimal('0.4')),
+        ('gpt-5.6-sol', 272_001, Decimal('4'), Decimal('8')),
+        ('gpt-5.6-terra', 272_001, Decimal('2'), Decimal('4')),
+        ('gpt-6.1-sol', 272_001, Decimal('2'), Decimal('4')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):
@@ -2521,6 +2645,8 @@ def test_gemma_4_31b_prices():
         ('openai/gpt-5.3-codex-20260224', 'openai/gpt-5.3-codex'),
         ('openai/gpt-5.4-20260305', 'openai/gpt-5.4'),
         ('openai/gpt-5.6-sol-20260901', 'openai/gpt-5.6-sol'),
+        ('openai/gpt-6-sol-20260922', 'openai/gpt-6-sol'),
+        ('openai/gpt-6-luna-20260922', 'openai/gpt-6-luna'),
     ],
 )
 def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
@@ -2528,6 +2654,65 @@ def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
     price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='openrouter')
 
     assert price.model.id == expected_model_id
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'openai_model'),
+    [
+        ('openai/gpt-6-sol', 'gpt-6-sol'),
+        ('openai/gpt-6-sol-pro', 'gpt-6-sol'),
+        ('openai/gpt-6-sol-20260922', 'gpt-6-sol'),
+        ('openai/gpt-6.1-sol', 'gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-pro', 'gpt-6.1-sol'),
+        ('openai/gpt-6.1-sol-pro-20260929', 'gpt-6.1-sol'),
+        ('openai/gpt-6-luna', 'gpt-6-luna'),
+        ('openai/gpt-6-luna-pro', 'gpt-6-luna'),
+        ('openai/gpt-6-luna-20260922', 'gpt-6-luna'),
+    ],
+)
+def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
+    for input_tokens in (200_000, 272_000, 272_001, 300_000):
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
+        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        direct_price = calc_price(usage, model_ref=openai_model, provider_id='openai')
+
+        assert price.model.id == f'openai/{openai_model}'
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == direct_price.total_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'base_model', 'batch_model'),
+    [
+        ('openai/gpt-6-sol:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6-sol-pro:batch', 'openai/gpt-6-sol', 'openai/gpt-6-sol:batch'),
+        ('openai/gpt-6.1-sol:batch', 'openai/gpt-6.1-sol', 'openai/gpt-6.1-sol:batch'),
+        ('openai/gpt-6.1-sol-pro:batch', 'openai/gpt-6.1-sol', 'openai/gpt-6.1-sol:batch'),
+        ('openai/gpt-6-luna:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+        ('openai/gpt-6-luna-pro:batch', 'openai/gpt-6-luna', 'openai/gpt-6-luna:batch'),
+    ],
+)
+def test_openrouter_gpt_6_sol_luna_batch_prices(model_ref: str, base_model: str, batch_model: str):
+    for input_tokens in (200_000, 272_000, 272_001, 300_000):
+        usage = Usage(
+            input_tokens=input_tokens,
+            cache_read_tokens=1_000,
+            cache_write_tokens=1_000,
+            output_tokens=1_000,
+            web_searches=1,
+        )
+        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        standard = calc_price(usage, model_ref=base_model, provider_id='openrouter')
+
+        assert price.model.id == batch_model
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == (standard.total_price - Decimal('0.01')) / 2 + Decimal('0.01')
 
 
 @pytest.mark.parametrize(

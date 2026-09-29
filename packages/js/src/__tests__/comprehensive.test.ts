@@ -209,8 +209,9 @@ describe('Comprehensive API Tests', () => {
       [23, false],
     ]
     const models: [modelRef: string, offPeak: number, peak: number][] = [
-      ['deepseek-v4-flash', 22, 44],
+      ['deepseek-v4-flash', 22, 30],
       ['deepseek-v4-pro', 66, 132],
+      ['deepseek-flash', 15, 30],
     ]
     const cases = models.flatMap(([modelRef, offPeak, peak]) =>
       hours.map(([hour, isPeak]): [string, number, number] => [modelRef, hour, isPeak ? peak : offPeak])
@@ -224,6 +225,15 @@ describe('Comprehensive API Tests', () => {
       })
 
       expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+
+    it.each([
+      [new Date(Date.UTC(2026, 8, 9, 23)), 22],
+      [new Date(Date.UTC(2026, 8, 10, 0)), 15],
+    ])('should route deepseek-v4-flash at %s to the V4.1 Flash off-peak rate from 2026-09-10', (timestamp, expected) => {
+      const result = calcPrice({ input_tokens: 100_000_000 }, 'deepseek-v4-flash', { providerId: 'deepseek', timestamp })
+
       expect(result!.input_price).toBeCloseTo(expected, 10)
     })
   })
@@ -240,7 +250,7 @@ describe('Comprehensive API Tests', () => {
       [23, false],
     ]
     const models: [modelRef: string, historic: number, peak: number][] = [
-      ['deepseek-v4-flash', 14, 44],
+      ['deepseek-v4-flash', 14, 30],
       ['deepseek-v4-pro', 43.5, 132],
     ]
     const cases = models.flatMap(([modelRef, historic, peak]) =>
@@ -265,13 +275,14 @@ describe('Comprehensive API Tests', () => {
       ['x-ai', 'grok-4.3', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-4.20', 200_000, 1.25, 2.5],
       ['x-ai', 'grok-build-0.1', 200_000, 1, 2],
-      ['openai', 'gpt-5.4', 272_000, 2.5, 5],
-      ['openai', 'gpt-5.4-pro', 272_000, 30, 60],
-      ['openai', 'gpt-5.5', 272_000, 5, 10],
-      ['openai', 'gpt-5.5-pro', 272_000, 30, 60],
-      ['openai', 'gpt-5.6-luna', 272_000, 0.2, 0.4],
-      ['openai', 'gpt-5.6-sol', 272_000, 4, 8],
-      ['openai', 'gpt-5.6-terra', 272_000, 2, 4],
+      ['openai', 'gpt-5.4', 272_001, 2.5, 5],
+      ['openai', 'gpt-5.4-pro', 272_001, 30, 60],
+      ['openai', 'gpt-5.5', 272_001, 5, 10],
+      ['openai', 'gpt-5.5-pro', 272_001, 30, 60],
+      ['openai', 'gpt-5.6-luna', 272_001, 0.2, 0.4],
+      ['openai', 'gpt-5.6-sol', 272_001, 4, 8],
+      ['openai', 'gpt-5.6-terra', 272_001, 2, 4],
+      ['openai', 'gpt-6.1-sol', 272_001, 2, 4],
     ]
 
     it.each(cases)(

@@ -622,7 +622,16 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
+            },
+            {
+              equals: 'claude-opus-5-latest',
+            },
+            {
+              regex: '^claude-opus-5[-@]\\d{8}$',
+            },
+            {
+              regex: '^claude-opus-5-\\d{4}-\\d{2}-\\d{2}$',
             },
             {
               starts_with: 'claude-opus-5.0',
@@ -658,6 +667,41 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 25,
           cache_write_1h_mtok: 10,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        name: 'Claude Opus 5.5',
+        description: 'For long-running agentic coding and knowledge work',
+        match: {
+          or: [
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              regex: '^claude-opus-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-opus-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-opus',
+            },
+            {
+              starts_with: 'claude-5.5-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
           web_searches_kcount: 10,
         },
       },
@@ -865,7 +909,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
+            },
+            {
+              regex: '^claude-sonnet-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5@',
             },
             {
               starts_with: 'claude-sonnet-5.0',
@@ -895,6 +945,44 @@ export const data: Provider[] = [
         },
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        name: 'Claude Sonnet 5.5',
+        description: 'The best combination of speed and intelligence',
+        match: {
+          or: [
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              regex: '^claude-sonnet-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5@',
+            },
+            {
+              starts_with: 'claude-sonnet-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-sonnet',
+            },
+            {
+              starts_with: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -1365,6 +1453,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -1535,12 +1633,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 0.25,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -1556,11 +1655,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -1581,11 +1682,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          cache_write_1h_mtok: 2,
         },
       },
       {
@@ -1607,11 +1710,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1620,11 +1725,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-6',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1633,11 +1740,13 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-7',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -1646,17 +1755,26 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-8',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
         id: 'global.anthropic.claude-opus-5',
         match: {
-          contains: 'global.anthropic.claude-opus-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         capabilities: {
@@ -1673,11 +1791,36 @@ export const data: Provider[] = [
             top_k: false,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -1711,11 +1854,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
         },
       },
       {
@@ -1724,17 +1869,49 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium), flat across the full 1M context window. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
         id: 'global.anthropic.claude-sonnet-5-v1:0',
         match: {
-          contains: 'global.anthropic.claude-sonnet-5',
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'global.anthropic.claude-sonnet-5-v1',
+            },
+          ],
         },
         context_window: 1000000,
         capabilities: {
@@ -1752,12 +1929,13 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+          'Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
           cache_read_mtok: 0.2,
           output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
@@ -1768,13 +1946,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1783,7 +1961,7 @@ export const data: Provider[] = [
             base: 0.25,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.5,
               },
             ],
@@ -1792,7 +1970,7 @@ export const data: Provider[] = [
             base: 0.02,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.04,
               },
             ],
@@ -1801,7 +1979,7 @@ export const data: Provider[] = [
             base: 1.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 1.8,
               },
             ],
@@ -1816,7 +1994,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by 33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four days of rates between global availability and the cut. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: [
           {
             prices: {
@@ -1824,7 +2002,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1833,7 +2011,7 @@ export const data: Provider[] = [
                 base: 6.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 12.5,
                   },
                 ],
@@ -1842,7 +2020,7 @@ export const data: Provider[] = [
                 base: 0.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1,
                   },
                 ],
@@ -1851,7 +2029,7 @@ export const data: Provider[] = [
                 base: 30,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 45,
                   },
                 ],
@@ -1868,7 +2046,7 @@ export const data: Provider[] = [
                 base: 4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8,
                   },
                 ],
@@ -1877,7 +2055,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -1886,7 +2064,7 @@ export const data: Provider[] = [
                 base: 0.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.8,
                   },
                 ],
@@ -1895,7 +2073,7 @@ export const data: Provider[] = [
                 base: 20,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 30,
                   },
                 ],
@@ -1912,13 +2090,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. At 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
+          "Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price. Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/",
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 4,
               },
             ],
@@ -1927,7 +2105,7 @@ export const data: Provider[] = [
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -1936,7 +2114,7 @@ export const data: Provider[] = [
             base: 0.2,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.4,
               },
             ],
@@ -1945,8 +2123,152 @@ export const data: Provider[] = [
             base: 12,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-astra',
+        name: 'GPT-6 Astra (global)',
+        match: {
+          contains: 'global.openai.gpt-6-astra',
+        },
+        context_window: 1050000,
+        price_comments:
+          "Global cross-Region inference at OpenAI's own list price; In-Region and Geo add 10% on top of it. Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html",
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-luna',
+        name: 'GPT-6 Luna (global)',
+        match: {
+          contains: 'global.openai.gpt-6-luna',
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Luna, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-luna",
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'global.openai.gpt-6-sol',
+        name: 'GPT-6 Sol (global)',
+        match: {
+          contains: 'global.openai.gpt-6-sol',
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Sol, so these rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL) are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000). Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/, https://developers.openai.com/api/docs/models/gpt-6-sol",
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
               },
             ],
           },
@@ -2537,18 +2859,22 @@ export const data: Provider[] = [
               starts_with: 'claude-fable-5-1-v1',
             },
             {
+              equals: 'us.anthropic.claude-fable-5-1',
+            },
+            {
               contains: 'us.anthropic.claude-fable-5-1-v1',
             },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently us-east-1 only. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+          'Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is currently the us. inference profile only; the AWS price list has no EU, AU or JP regional rate. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
           cache_read_mtok: 0.275,
           output_mtok: 55,
+          cache_write_1h_mtok: 22,
         },
       },
       {
@@ -2568,6 +2894,15 @@ export const data: Provider[] = [
               starts_with: 'claude-fable-5-v1',
             },
             {
+              equals: 'us.anthropic.claude-fable-5',
+            },
+            {
+              equals: 'au.anthropic.claude-fable-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-fable-5',
+            },
+            {
               contains: 'us.anthropic.claude-fable-5-v1',
             },
             {
@@ -2582,11 +2917,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1). The price list carries regional Fable 5 rates for US, EU and AU regions, but none for JP.',
         prices: {
           input_mtok: 11,
           cache_write_mtok: 13.75,
           cache_read_mtok: 1.1,
           output_mtok: 55,
+          cache_write_1h_mtok: 22,
         },
       },
       {
@@ -2632,11 +2970,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 1.1,
           cache_write_mtok: 1.375,
           cache_read_mtok: 0.11,
           output_mtok: 5.5,
+          cache_write_1h_mtok: 2.2,
         },
       },
       {
@@ -2759,11 +3099,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2797,11 +3139,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2835,11 +3179,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2867,11 +3213,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
         },
       },
       {
@@ -2879,22 +3227,40 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-opus-5',
+              equals: 'anthropic.claude-opus-5',
             },
             {
-              starts_with: 'claude-opus-5',
+              equals: 'claude-opus-5',
             },
             {
-              contains: 'us.anthropic.claude-opus-5',
+              starts_with: 'anthropic.claude-opus-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-opus-5',
+              starts_with: 'claude-opus-5-v1',
             },
             {
-              contains: 'eu.anthropic.claude-opus-5',
+              equals: 'us.anthropic.claude-opus-5',
             },
             {
-              contains: 'jp.anthropic.claude-opus-5',
+              equals: 'au.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-v1',
             },
           ],
         },
@@ -2914,12 +3280,66 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
           cache_read_mtok: 0.55,
           output_mtok: 27.5,
+          cache_write_1h_mtok: 11,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'claude-opus-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-opus-5-5-v1',
+            },
+            {
+              starts_with: 'claude-opus-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-opus-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-opus-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 4.4,
+          cache_write_mtok: 5.5,
+          cache_read_mtok: 0.22,
+          output_mtok: 22,
+          cache_write_1h_mtok: 8.8,
         },
       },
       {
@@ -3003,11 +3423,13 @@ export const data: Provider[] = [
             top_k: true,
           },
         },
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+          cache_write_1h_mtok: 6.6,
         },
       },
       {
@@ -3041,11 +3463,78 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments: 'One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 3.3,
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+          cache_write_1h_mtok: 6.6,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'claude-sonnet-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              starts_with: 'claude-sonnet-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'apac.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 2.2,
+          cache_write_mtok: 2.75,
+          cache_read_mtok: 0.22,
+          output_mtok: 11,
+          cache_write_1h_mtok: 4.4,
         },
       },
       {
@@ -3053,28 +3542,52 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'anthropic.claude-sonnet-5',
+              equals: 'anthropic.claude-sonnet-5',
             },
             {
-              starts_with: 'claude-sonnet-5',
+              equals: 'claude-sonnet-5',
             },
             {
-              contains: 'us.anthropic.claude-sonnet-5',
+              starts_with: 'anthropic.claude-sonnet-5-v1',
             },
             {
-              contains: 'au.anthropic.claude-sonnet-5',
+              starts_with: 'claude-sonnet-5-v1',
             },
             {
-              contains: 'apac.anthropic.claude-sonnet-5',
+              equals: 'us.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'eu.anthropic.claude-sonnet-5',
+              equals: 'au.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'us-gov.anthropic.claude-sonnet-5',
+              equals: 'apac.anthropic.claude-sonnet-5',
             },
             {
-              contains: 'jp.anthropic.claude-sonnet-5',
+              equals: 'eu.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-sonnet-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-sonnet-5',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-5-v1',
             },
           ],
         },
@@ -3094,12 +3607,13 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing',
+          'Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 2.2,
           cache_write_mtok: 2.75,
           cache_read_mtok: 0.22,
           output_mtok: 11,
+          cache_write_1h_mtok: 4.4,
         },
       },
       {
@@ -3123,7 +3637,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3143,7 +3657,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3152,7 +3666,7 @@ export const data: Provider[] = [
                 base: 0.275,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.55,
                   },
                 ],
@@ -3161,7 +3675,7 @@ export const data: Provider[] = [
                 base: 0.022,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.044,
                   },
                 ],
@@ -3170,7 +3684,7 @@ export const data: Provider[] = [
                 base: 1.32,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.98,
                   },
                 ],
@@ -3197,7 +3711,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on 2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html, https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3205,7 +3719,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3214,7 +3728,7 @@ export const data: Provider[] = [
                 base: 6.875,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 13.75,
                   },
                 ],
@@ -3223,7 +3737,7 @@ export const data: Provider[] = [
                 base: 0.55,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.1,
                   },
                 ],
@@ -3232,7 +3746,7 @@ export const data: Provider[] = [
                 base: 33,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 49.5,
                   },
                 ],
@@ -3249,7 +3763,7 @@ export const data: Provider[] = [
                 base: 4.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8.8,
                   },
                 ],
@@ -3258,7 +3772,7 @@ export const data: Provider[] = [
                 base: 5.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 11,
                   },
                 ],
@@ -3267,7 +3781,7 @@ export const data: Provider[] = [
                 base: 0.44,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.88,
                   },
                 ],
@@ -3276,7 +3790,7 @@ export const data: Provider[] = [
                 base: 22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 33,
                   },
                 ],
@@ -3306,7 +3820,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; at 272K input tokens and above, input and cache are 2x and output 1.5x. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30; the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M context window on 2026-08-03, so the launch entry stays flat. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html, https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/, https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/',
         prices: [
           {
             prices: {
@@ -3326,7 +3840,7 @@ export const data: Provider[] = [
                 base: 2.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 4.4,
                   },
                 ],
@@ -3335,7 +3849,7 @@ export const data: Provider[] = [
                 base: 2.75,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5.5,
                   },
                 ],
@@ -3344,7 +3858,7 @@ export const data: Provider[] = [
                 base: 0.22,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.44,
                   },
                 ],
@@ -3353,7 +3867,7 @@ export const data: Provider[] = [
                 base: 13.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 19.8,
                   },
                 ],
@@ -3361,6 +3875,186 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'regional.openai.gpt-6-astra',
+        name: 'GPT-6 Astra (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-astra',
+            },
+            {
+              starts_with: 'gpt-6-astra',
+            },
+            {
+              contains: 'us.openai.gpt-6-astra',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context rate, so tier starts are 272000. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html',
+        prices: {
+          input_mtok: {
+            base: 11,
+            tiers: [
+              {
+                start: 272000,
+                price: 22,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 13.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 27.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 55,
+            tiers: [
+              {
+                start: 272000,
+                price: 82.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'regional.openai.gpt-6-luna',
+        name: 'GPT-6 Luna (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-luna',
+            },
+            {
+              starts_with: 'gpt-6-luna',
+            },
+            {
+              contains: 'us.openai.gpt-6-luna',
+            },
+            {
+              contains: 'in.openai.gpt-6-luna',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Luna; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+        prices: {
+          input_mtok: {
+            base: 0.11,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.22,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.1375,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.275,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.011,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.022,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.825,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'regional.openai.gpt-6-sol',
+        name: 'GPT-6 Sol (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6-sol',
+            },
+            {
+              starts_with: 'gpt-6-sol',
+            },
+            {
+              contains: 'us.openai.gpt-6-sol',
+            },
+            {
+              contains: 'in.openai.gpt-6-sol',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or rate table for Sol; see the global entry for how these rates were derived. Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/',
+        prices: {
+          input_mtok: {
+            base: 2.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4.4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 5.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.22,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.44,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 11,
+            tiers: [
+              {
+                start: 272000,
+                price: 16.5,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'writer.palmyra-x4-v1:0',
@@ -3572,6 +4266,16 @@ export const data: Provider[] = [
           {
             path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
             required: false,
           },
           {
@@ -5611,6 +6315,64 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'deepseek-flash',
+        name: 'DeepSeek V4.1 Flash',
+        description:
+          'DeepSeek-V4.1-Flash, with native visual understanding. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-flash',
+            },
+            {
+              starts_with: 'deepseek-v4.1-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        capabilities: {
+          reasoning: {
+            supported: true,
+            always_on: false,
+          },
+        },
+        price_comments:
+          'Released 2026-09-10 (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00" Monday to Friday, everything else is off-peak. Weekends and Chinese public holidays are off-peak all day, which needs a day-of-week condition, so on those days the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_time: '01:00:00Z',
+              end_time: '04:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_time: '06:00:00Z',
+              end_time: '10:00:00Z',
+              type: 'time_of_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
+            },
+          },
+        ],
+      },
+      {
         id: 'deepseek-reasoner',
         name: 'Deepseek R1',
         description:
@@ -5728,7 +6490,7 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+          'Rates: flat before 2026-08-17; V4 off-peak from 2026-08-17; V4.1 Flash off-peak from 2026-09-10, when DeepSeek retired V4 Flash and routed `deepseek-v4-flash` to V4.1 Flash (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00"; the two peak windows come last so they win during peak hours. `constraint` is a union, so one entry cannot carry both a date and a daily window: peak-hour requests resolve to the current V4.1 Flash peak rate whatever their date. Weekends are off-peak all day from 2026-08-23, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
         prices: [
           {
             prices: {
@@ -5750,14 +6512,25 @@ export const data: Provider[] = [
           },
           {
             constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.003,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
               start_time: '01:00:00Z',
               end_time: '04:00:00Z',
               type: 'time_of_date',
             },
             prices: {
-              input_mtok: 0.44,
-              cache_read_mtok: 0.014,
-              output_mtok: 1.32,
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
             },
           },
           {
@@ -5767,9 +6540,9 @@ export const data: Provider[] = [
               type: 'time_of_date',
             },
             prices: {
-              input_mtok: 0.44,
-              cache_read_mtok: 0.014,
-              output_mtok: 1.32,
+              input_mtok: 0.3,
+              cache_read_mtok: 0.006,
+              output_mtok: 1.2,
             },
           },
         ],
@@ -5840,65 +6613,6 @@ export const data: Provider[] = [
               input_mtok: 1.32,
               cache_read_mtok: 0.044,
               output_mtok: 3.96,
-            },
-          },
-        ],
-      },
-      {
-        id: 'deepseek-v4.1-flash',
-        name: 'DeepSeek V4.1 Flash',
-        description:
-          'DeepSeek-V4.1-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
-        match: {
-          or: [
-            {
-              starts_with: 'deepseek-v4.1-flash',
-            },
-          ],
-        },
-        context_window: 1000000,
-        capabilities: {
-          reasoning: {
-            supported: true,
-            always_on: false,
-          },
-          sampling: {
-            temperature: true,
-            top_p: true,
-          },
-        },
-        price_comments:
-          'Off-peak rate is the unconstrained first price; the two weekday peak windows ("UTC 01:00-04:00" and "UTC 06:00-10:00") come last so they win during peak hours, matching the V4 layout. Weekends are off-peak all day, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound (https://github.com/pydantic/genai-prices/issues/582). Prices taken from OpenRouter\'s DeepSeek-hosted route (https://openrouter.ai/deepseek/deepseek-v4.1-flash), which mirrors DeepSeek\'s own schedule including the peak overrides; DeepSeek\'s pricing page is rendered client-side and could not be scraped.',
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.15,
-              cache_read_mtok: 0.003,
-              output_mtok: 0.6,
-            },
-          },
-          {
-            constraint: {
-              start_time: '01:00:00Z',
-              end_time: '04:00:00Z',
-              type: 'time_of_date',
-            },
-            prices: {
-              input_mtok: 0.3,
-              cache_read_mtok: 0.006,
-              output_mtok: 1.2,
-            },
-          },
-          {
-            constraint: {
-              start_time: '06:00:00Z',
-              end_time: '10:00:00Z',
-              type: 'time_of_date',
-            },
-            prices: {
-              input_mtok: 0.3,
-              cache_read_mtok: 0.006,
-              output_mtok: 1.2,
             },
           },
         ],
@@ -6114,6 +6828,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.74,
           output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.6,
         },
       },
       {
@@ -6819,7 +7546,6 @@ export const data: Provider[] = [
           equals: 'claude-fable-5',
         },
         context_window: 264000,
-        price_comments: 'The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
@@ -6834,11 +7560,10 @@ export const data: Provider[] = [
           equals: 'claude-fable-5.1',
         },
         context_window: 264000,
-        price_comments: 'The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1,
+          cache_read_mtok: 0.25,
           output_mtok: 50,
         },
       },
@@ -6914,12 +7639,64 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-5.5',
+        name: 'Claude Opus 5.5',
+        match: {
+          equals: 'claude-opus-5.5',
+        },
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
+        id: 'claude-sonnet-4',
+        name: 'Claude Sonnet 4',
+        match: {
+          equals: 'claude-sonnet-4',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'claude-sonnet-4.6',
+        name: 'Claude Sonnet 4.6',
+        match: {
+          equals: 'claude-sonnet-4.6',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'claude-sonnet-5',
         name: 'Claude Sonnet 5',
         match: {
           equals: 'claude-sonnet-5',
         },
         context_window: 264000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'claude-sonnet-5.5',
+        name: 'Claude Sonnet 5.5',
+        match: {
+          equals: 'claude-sonnet-5.5',
+        },
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -7170,6 +7947,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.4-nano',
+        name: 'GPT-5.4 nano',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-nano',
+            },
+            {
+              regex: '^gpt-5\\.4-nano-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.25,
+        },
+      },
+      {
         id: 'gpt-5.5',
         name: 'GPT-5.5',
         match: {
@@ -7377,6 +8173,219 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6-astra',
+        name: 'GPT-6 Astra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-astra',
+            },
+            {
+              regex: '^gpt-6-astra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-luna',
+            },
+            {
+              regex: '^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-sol',
+            },
+            {
+              regex: '^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 400000,
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -7421,6 +8430,43 @@ export const data: Provider[] = [
           equals: 'grok-4.6',
         },
         context_window: 328000,
+        price_comments: 'Prompts over 200,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        match: {
+          equals: 'grok-4.7',
+        },
         price_comments: 'Prompts over 200,000 tokens are billed at the long-context rates.',
         prices: {
           input_mtok: {
@@ -7972,6 +9018,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -8163,12 +9219,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -8185,12 +9242,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai',
+          "Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 0.25,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
         },
       },
       {
@@ -8212,44 +9270,63 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        price_comments:
+          'Flat pricing across the full 1M context window since the long-context premium was removed on 2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+              cache_write_1h_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-4-7',
@@ -8271,12 +9348,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -8299,12 +9377,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
         },
       },
       {
@@ -8315,7 +9394,10 @@ export const data: Provider[] = [
               contains: 'claude-5-opus',
             },
             {
-              contains: 'claude-opus-5',
+              ends_with: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-opus-5@',
             },
             {
               contains: 'claude-5.0-opus',
@@ -8341,12 +9423,45 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
+        },
+      },
+      {
+        id: 'claude-opus-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-5-opus',
+            },
+            {
+              ends_with: 'claude-opus-5-5',
+            },
+            {
+              contains: 'claude-opus-5-5@',
+            },
+            {
+              contains: 'claude-5.5-opus',
+            },
+            {
+              contains: 'claude-opus-5.5',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -8375,7 +9490,7 @@ export const data: Provider[] = [
           },
         },
         price_comments:
-          'Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+          "Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: {
             base: 3,
@@ -8413,6 +9528,15 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_1h_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -8429,12 +9553,42 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models',
+          "Flat pricing across the full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-sonnet-5-5',
+            },
+            {
+              contains: 'claude-sonnet-5.5',
+            },
+            {
+              contains: 'claude-5-5-sonnet',
+            },
+            {
+              contains: 'claude-5.5-sonnet',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
         },
       },
       {
@@ -9133,6 +10287,26 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gemini-3.8-live',
+        name: 'Gemini 3.8 Live',
+        description:
+          "Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue, including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.",
+        match: {
+          starts_with: 'gemini-3.8-live',
+        },
+        context_window: 131072,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 4.5,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
+          input_image_mtok: 1,
+          input_video_mtok: 1,
+        },
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
@@ -9762,14 +10936,7 @@ export const data: Provider[] = [
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-120b',
-            },
-            {
-              equals: 'openai/gpt-oss-safeguard-20b',
-            },
-          ],
+          equals: 'openai/gpt-oss-120b',
         },
         context_window: 131072,
         prices: {
@@ -9793,6 +10960,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-oss-safeguard-20b',
+        name: 'GPT-OSS Safeguard 20B',
+        description:
+          "GPT-OSS Safeguard 20B is OpenAI's open-weight safety model. It classifies content against a policy supplied\nin the prompt.\n",
+        match: {
+          equals: 'openai/gpt-oss-safeguard-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.3,
+        },
+      },
+      {
         id: 'qwen/qwen3-32b',
         name: 'Qwen3 32B 131k',
         match: {
@@ -9802,6 +10984,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-27b',
+        name: 'Qwen 3.8 27B',
+        match: {
+          equals: 'qwen/qwen3.8-27b',
+        },
+        context_window: 131072,
+        price_comments: 'Preview model. Groq lists no cached-input rate.',
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 4,
         },
       },
       {
@@ -16591,6 +17786,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'live',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'seconds',
+            dest: 'audio_seconds',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -17730,13 +18937,13 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
         prices: {
           input_mtok: {
             base: 2.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 5,
               },
             ],
@@ -17745,7 +18952,7 @@ export const data: Provider[] = [
             base: 0.25,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 0.5,
               },
             ],
@@ -17754,7 +18961,7 @@ export const data: Provider[] = [
             base: 15,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 22.5,
               },
             ],
@@ -17858,13 +19065,13 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4-pro',
         prices: {
           input_mtok: {
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 60,
               },
             ],
@@ -17873,7 +19080,7 @@ export const data: Provider[] = [
             base: 180,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 270,
               },
             ],
@@ -17943,13 +19150,13 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and cached input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+          'Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
         prices: {
           input_mtok: {
             base: 5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 10,
               },
             ],
@@ -17958,7 +19165,7 @@ export const data: Provider[] = [
             base: 0.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 1,
               },
             ],
@@ -17967,7 +19174,7 @@ export const data: Provider[] = [
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 45,
               },
             ],
@@ -17998,13 +19205,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'OpenAI lists the standard rates for prompts with <272K input tokens, so the long-context rates begin at exactly 272K and bill the full request at 2x input and 1.5x output. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 60,
               },
             ],
@@ -18013,7 +19220,7 @@ export const data: Provider[] = [
             base: 180,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 270,
               },
             ],
@@ -18060,7 +19267,7 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18068,7 +19275,7 @@ export const data: Provider[] = [
                 base: 1,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 2,
                   },
                 ],
@@ -18077,7 +19284,7 @@ export const data: Provider[] = [
                 base: 1.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 2.5,
                   },
                 ],
@@ -18086,7 +19293,7 @@ export const data: Provider[] = [
                 base: 0.1,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.2,
                   },
                 ],
@@ -18095,7 +19302,7 @@ export const data: Provider[] = [
                 base: 6,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 9,
                   },
                 ],
@@ -18114,7 +19321,7 @@ export const data: Provider[] = [
                 base: 0.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.4,
                   },
                 ],
@@ -18123,7 +19330,7 @@ export const data: Provider[] = [
                 base: 0.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.5,
                   },
                 ],
@@ -18132,7 +19339,7 @@ export const data: Provider[] = [
                 base: 0.02,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.04,
                   },
                 ],
@@ -18141,7 +19348,7 @@ export const data: Provider[] = [
                 base: 1.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1.8,
                   },
                 ],
@@ -18196,7 +19403,7 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18204,7 +19411,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -18213,7 +19420,7 @@ export const data: Provider[] = [
                 base: 6.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 12.5,
                   },
                 ],
@@ -18222,7 +19429,7 @@ export const data: Provider[] = [
                 base: 0.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 1,
                   },
                 ],
@@ -18231,7 +19438,7 @@ export const data: Provider[] = [
                 base: 30,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 45,
                   },
                 ],
@@ -18250,7 +19457,7 @@ export const data: Provider[] = [
                 base: 4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 8,
                   },
                 ],
@@ -18259,7 +19466,7 @@ export const data: Provider[] = [
                 base: 5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 10,
                   },
                 ],
@@ -18268,7 +19475,7 @@ export const data: Provider[] = [
                 base: 0.4,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.8,
                   },
                 ],
@@ -18277,7 +19484,7 @@ export const data: Provider[] = [
                 base: 20,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 30,
                   },
                 ],
@@ -18326,7 +19533,7 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -18334,7 +19541,7 @@ export const data: Provider[] = [
                 base: 2.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5,
                   },
                 ],
@@ -18343,7 +19550,7 @@ export const data: Provider[] = [
                 base: 3.125,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 6.25,
                   },
                 ],
@@ -18352,7 +19559,7 @@ export const data: Provider[] = [
                 base: 0.25,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.5,
                   },
                 ],
@@ -18361,7 +19568,7 @@ export const data: Provider[] = [
                 base: 15,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 22.5,
                   },
                 ],
@@ -18380,7 +19587,7 @@ export const data: Provider[] = [
                 base: 2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 4,
                   },
                 ],
@@ -18389,7 +19596,7 @@ export const data: Provider[] = [
                 base: 2.5,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 5,
                   },
                 ],
@@ -18398,7 +19605,7 @@ export const data: Provider[] = [
                 base: 0.2,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 0.4,
                   },
                 ],
@@ -18407,7 +19614,7 @@ export const data: Provider[] = [
                 base: 12,
                 tiers: [
                   {
-                    start: 271999,
+                    start: 272000,
                     price: 18,
                   },
                 ],
@@ -18450,13 +19657,13 @@ export const data: Provider[] = [
           verbosity_levels: ['low', 'medium', 'high'],
         },
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. OpenAI lists the standard rates for prompts with <272K input tokens, so the 2x input and 1.5x output long-context rates begin at exactly 272K. Tier starts are encoded as 271999 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 10,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 20,
               },
             ],
@@ -18465,7 +19672,7 @@ export const data: Provider[] = [
             base: 12.5,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 25,
               },
             ],
@@ -18474,7 +19681,7 @@ export const data: Provider[] = [
             base: 1,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 2,
               },
             ],
@@ -18483,8 +19690,182 @@ export const data: Provider[] = [
             base: 50,
             tiers: [
               {
-                start: 271999,
+                start: 272000,
                 price: 75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna',
+        description: 'Efficient model for focused, high-volume tasks.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-luna',
+            },
+            {
+              regex: '^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6-sol',
+        name: 'GPT-6 Sol',
+        description: 'Model for complex coding and agentic workflows.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-sol',
+            },
+            {
+              regex: '^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        description: 'Model for complex coding and professional work at a lower cost than GPT-6 Astra.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-sol',
+            },
+            {
+              regex: '^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
               },
             ],
           },
@@ -18640,6 +20021,63 @@ export const data: Provider[] = [
           output_mtok: 30,
           input_image_mtok: 8,
           cache_image_read_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-image-2.5-flare',
+        name: 'GPT Image 2.5 Flare',
+        description: "OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2.5-flare',
+            },
+            {
+              equals: 'gpt-image-2.5-flare-2026-09-08',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 30,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-image-2.5-sunburst',
+        name: 'GPT Image 2.5 Sunburst',
+        description: "OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2.5-sunburst',
+            },
+            {
+              equals: 'gpt-image-2.5-sunburst-2026-09-08',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 30,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-live-1',
+        match: {
+          equals: 'gpt-live-1',
+        },
+        price_comments:
+          "Voice sessions are billed per second of session duration, covering both input and output audio. The Responses backend a session delegates to is billed separately, at that model's own prices. See https://developers.openai.com/api/docs/models/gpt-live-1.",
+        prices: {
+          audio_hours: 3,
         },
       },
       {
@@ -18941,10 +20379,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 10,
           cache_read_mtok: 2.5,
           output_mtok: 40,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
@@ -19045,10 +20487,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Deep research supports web search and Responses file search. Reasoning-model web search (including preview) costs $10/1k calls; Responses file search costs $2.50/1k calls. See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.',
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
           output_mtok: 8,
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
         },
       },
       {
@@ -19886,6 +21332,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-5.5',
+            },
+            {
+              equals: 'anthropic/claude-opus-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'anthropic/claude-sonnet-4',
         name: 'Claude Sonnet 4',
         match: {
@@ -20013,6 +21481,28 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase. Refs: https://openrouter.ai/anthropic/claude-sonnet-5, https://platform.claude.com/docs/en/about-claude/pricing',
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'anthropic/claude-sonnet-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-sonnet-5.5',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-5.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -21619,6 +23109,27 @@ export const data: Provider[] = [
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+        },
+      },
+      {
+        id: 'google/gemini-3.8-flash',
+        name: 'Gemini 3.8 Flash',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.8-flash',
+            },
+            {
+              regex: '^google/gemini-3\\.8-flash-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.041666666666666664,
+          cache_read_mtok: 0.075,
+          output_mtok: 3.75,
         },
       },
       {
@@ -25134,6 +26645,354 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro',
+            },
+            {
+              regex: '^openai/gpt-6-luna-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-luna:batch',
+        name: 'GPT-6 Luna Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-luna:batch',
+            },
+            {
+              equals: 'openai/gpt-6-luna-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.0625,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.125,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.005,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.01,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.375,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6-sol-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6-sol:batch',
+        name: 'GPT-6 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-\\d{8}$',
+            },
+            {
+              regex: '^openai/gpt-6\\.1-sol-pro-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt tokens) is 2x input and cache rates and 1.5x output. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-sol:batch',
+        name: 'GPT-6.1 Sol Batch',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.1-sol:batch',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-pro:batch',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          "OpenRouter's batch routes bill input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
         id: 'openai/gpt-audio',
         name: 'GPT Audio',
         match: {
@@ -27612,12 +29471,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-opus-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-22',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.2,
+              output_mtok: 20,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-sonnet-latest',
@@ -27626,12 +29501,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-sonnet-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-28',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: '~google/gemini-flash-latest',
@@ -29644,6 +31535,62 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+    ],
+  },
+  {
+    id: 'typesafe',
+    name: 'TypeSafe',
+    pricing_urls: ['https://docs.typesafe.ai/models'],
+    api_pattern: 'https://api\\.typesafe\\.ai',
+    price_comments:
+      'TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.',
+    model_match: {
+      starts_with: 'jev-',
+    },
+    provider_match: {
+      contains: 'typesafe',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'jev-1.13.0',
+        name: 'Jev 1.13.0',
+        match: {
+          or: [
+            {
+              equals: 'jev-1.13.0',
+            },
+            {
+              equals: 'jev-latest',
+            },
+            {
+              equals: 'jev-preview',
+            },
+          ],
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.042,
         },
       },
     ],
