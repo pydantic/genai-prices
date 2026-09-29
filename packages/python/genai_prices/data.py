@@ -4712,6 +4712,21 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-6.1-sol',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-6.1-sol'), ClauseRegex(regex='^gpt-6\\.1-sol-\\d{4}-\\d{2}-\\d{2}$')]
+                ),
+                name='GPT-6.1 Sol',
+                context_window=400000,
+                price_comments='Prompts over 272,000 tokens are billed at the long-context rates.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='grok-4.5',
                 match=ClauseEquals(equals='grok-4.5'),
                 name='Grok 4.5',
@@ -15239,6 +15254,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='openai/gpt-6.1-sol'),
                         ClauseEquals(equals='openai/gpt-6.1-sol-pro'),
                         ClauseRegex(regex='^openai/gpt-6\\.1-sol-\\d{8}$'),
+                        ClauseRegex(regex='^openai/gpt-6\\.1-sol-pro-\\d{8}$'),
                     ]
                 ),
                 name='GPT-6.1 Sol',
