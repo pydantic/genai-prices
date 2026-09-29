@@ -73,6 +73,25 @@ def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'rate'),
+    [
+        # Gemini 3.x bills per search query, Gemini 2.5 per grounded prompt; callers report the billed count.
+        ('gemini-3-flash-preview', '14'),
+        ('gemini-3.8-flash', '14'),
+        ('gemini-2.5-flash', '35'),
+        ('gemini-2.5-pro', '35'),
+        ('gemini-2.0-flash', '35'),
+        # Grounding is unavailable on image models, so a reported search stays free.
+        ('gemini-2.5-flash-image', '0'),
+    ],
+)
+def test_google_gemini_grounding_web_search_price(model_ref: str, rate: str) -> None:
+    price = calc_price(Usage(web_searches=2), model_ref=model_ref, provider_id='google')
+
+    assert price.total_price == Decimal(rate) * 2 / THOUSAND
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'hourly_rate', 'usage', 'billed_seconds'),
     [
         ('whisper-large-v3', Decimal('0.111'), Usage(), Decimal(0)),

@@ -9015,6 +9015,7 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.7,
           cache_audio_read_mtok: 0.175,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9056,6 +9057,7 @@ export const data: Provider[] = [
           output_mtok: 2.5,
           input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9111,6 +9113,7 @@ export const data: Provider[] = [
           output_mtok: 0.4,
           input_audio_mtok: 0.3,
           cache_audio_read_mtok: 0.03,
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9154,6 +9157,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
+          web_searches_kcount: 35,
         },
         deprecated: true,
       },
@@ -9221,6 +9225,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 35,
         },
       },
       {
@@ -9267,6 +9272,7 @@ export const data: Provider[] = [
           output_mtok: 3,
           input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9291,6 +9297,7 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 12,
           output_image_mtok: 120,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9335,6 +9342,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9359,6 +9367,7 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           output_mtok: 3,
           output_image_mtok: 60,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9384,6 +9393,7 @@ export const data: Provider[] = [
           output_mtok: 1.5,
           input_audio_mtok: 0.5,
           cache_audio_read_mtok: 0.05,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9415,6 +9425,7 @@ export const data: Provider[] = [
           output_audio_mtok: 12,
           input_image_mtok: 1,
           input_video_mtok: 1,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9453,6 +9464,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9480,6 +9492,7 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9497,6 +9510,7 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
           output_mtok: 2.5,
+          web_searches_kcount: 14,
         },
       },
       {
@@ -9516,6 +9530,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -9527,6 +9542,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -9548,6 +9564,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -9559,6 +9576,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -9580,6 +9598,7 @@ export const data: Provider[] = [
               input_mtok: 0.75,
               cache_read_mtok: 0.075,
               output_mtok: 3.75,
+              web_searches_kcount: 14,
             },
           },
           {
@@ -9591,6 +9610,7 @@ export const data: Provider[] = [
               input_mtok: 1.5,
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
+              web_searches_kcount: 14,
             },
           },
         ],
@@ -9613,6 +9633,7 @@ export const data: Provider[] = [
           output_audio_mtok: 12,
           input_image_mtok: 1,
           input_video_mtok: 1,
+          web_searches_kcount: 14,
         },
       },
       {

@@ -5288,6 +5288,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.7'),
                     cache_audio_read_mtok=Decimal('0.175'),
+                    web_searches_kcount=Decimal('35'),
                 ),
             ),
             ModelInfo(
@@ -5316,6 +5317,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('2.5'),
                     input_audio_mtok=Decimal('1'),
                     cache_audio_read_mtok=Decimal('0.1'),
+                    web_searches_kcount=Decimal('35'),
                 ),
             ),
             ModelInfo(
@@ -5356,6 +5358,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.3'),
                     cache_audio_read_mtok=Decimal('0.03'),
+                    web_searches_kcount=Decimal('35'),
                 ),
             ),
             ModelInfo(
@@ -5381,7 +5384,9 @@ providers: list[Provider] = [
                 description='Gemini 2.5 Flash May 20th Checkpoint is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
                 price_comments='from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15',
                 deprecated=True,
-                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6'), web_searches_kcount=Decimal('35')
+                ),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-tts',
@@ -5413,6 +5418,7 @@ providers: list[Provider] = [
                         base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
+                    web_searches_kcount=Decimal('35'),
                 ),
             ),
             ModelInfo(
@@ -5443,6 +5449,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('3'),
                     input_audio_mtok=Decimal('1'),
                     cache_audio_read_mtok=Decimal('0.1'),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5457,7 +5464,12 @@ providers: list[Provider] = [
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('12'), output_image_mtok=Decimal('120')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    output_mtok=Decimal('12'),
+                    output_image_mtok=Decimal('120'),
+                    web_searches_kcount=Decimal('14'),
+                ),
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',
@@ -5473,6 +5485,7 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
                     output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5487,7 +5500,12 @@ providers: list[Provider] = [
                 description="Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per 1M tokens and is the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
-                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('3'), output_image_mtok=Decimal('60')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('3'),
+                    output_image_mtok=Decimal('60'),
+                    web_searches_kcount=Decimal('14'),
+                ),
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',
@@ -5507,6 +5525,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('1.5'),
                     input_audio_mtok=Decimal('0.5'),
                     cache_audio_read_mtok=Decimal('0.05'),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5532,6 +5551,7 @@ providers: list[Provider] = [
                     output_audio_mtok=Decimal('12'),
                     input_image_mtok=Decimal('1'),
                     input_video_mtok=Decimal('1'),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5543,6 +5563,7 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
                     output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5558,7 +5579,12 @@ providers: list[Provider] = [
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
-                prices=ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('9'),
+                    web_searches_kcount=Decimal('14'),
+                ),
             ),
             ModelInfo(
                 id='gemini-3.5-flash-lite',
@@ -5568,7 +5594,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('2.5')
+                    input_mtok=Decimal('0.3'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('2.5'),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(
@@ -5581,13 +5610,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                            input_mtok=Decimal('0.75'),
+                            cache_read_mtok=Decimal('0.075'),
+                            output_mtok=Decimal('3.75'),
+                            web_searches_kcount=Decimal('14'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                            input_mtok=Decimal('1.5'),
+                            cache_read_mtok=Decimal('0.15'),
+                            output_mtok=Decimal('7.5'),
+                            web_searches_kcount=Decimal('14'),
                         ),
                     ),
                 ],
@@ -5602,13 +5637,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                            input_mtok=Decimal('0.75'),
+                            cache_read_mtok=Decimal('0.075'),
+                            output_mtok=Decimal('3.75'),
+                            web_searches_kcount=Decimal('14'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                            input_mtok=Decimal('1.5'),
+                            cache_read_mtok=Decimal('0.15'),
+                            output_mtok=Decimal('7.5'),
+                            web_searches_kcount=Decimal('14'),
                         ),
                     ),
                 ],
@@ -5623,13 +5664,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                            input_mtok=Decimal('0.75'),
+                            cache_read_mtok=Decimal('0.075'),
+                            output_mtok=Decimal('3.75'),
+                            web_searches_kcount=Decimal('14'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                            input_mtok=Decimal('1.5'),
+                            cache_read_mtok=Decimal('0.15'),
+                            output_mtok=Decimal('7.5'),
+                            web_searches_kcount=Decimal('14'),
                         ),
                     ),
                 ],
@@ -5648,6 +5695,7 @@ providers: list[Provider] = [
                     output_audio_mtok=Decimal('12'),
                     input_image_mtok=Decimal('1'),
                     input_video_mtok=Decimal('1'),
+                    web_searches_kcount=Decimal('14'),
                 ),
             ),
             ModelInfo(

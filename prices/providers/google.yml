@@ -5,6 +5,10 @@ pricing_urls:
   - https://ai.google.dev/gemini-api/docs/pricing
   - https://cloud.google.com/vertex-ai/generative-ai/pricing
   # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
+  # Grounding with Google Search (`web_searches_kcount`): Gemini 3.x bills each unique non-empty search query at $14/1k,
+  # Gemini 2.x bills each grounded prompt at $35/1k however many queries it ran, and only when it returned a web source.
+  # Callers report the billed count as `web_searches`. Free monthly/daily allowances are account-wide and not modelled.
+  # https://ai.google.dev/gemini-api/docs/google-search#pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 model_match:
   contains: gemini
@@ -759,6 +763,7 @@ models:
       output_mtok: 0.4
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.175
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -793,6 +798,7 @@ models:
       cache_read_mtok: 0.03
       cache_audio_read_mtok: 0.1
       output_mtok: 2.5
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-image
     name: Gemini 2.5 Flash Image
@@ -835,6 +841,7 @@ models:
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-lite-preview-tts
     name: Gemini 2.5 Flash-Lite Preview TTS
@@ -866,6 +873,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-flash-tts
     name: Gemini 2.5 Flash TTS
@@ -910,6 +918,7 @@ models:
         tiers:
           - start: 200000
             price: 15
+      web_searches_kcount: 35 # per grounded prompt, not per query
 
   - id: gemini-2.5-pro-tts
     name: Gemini 2.5 Pro TTS
@@ -943,6 +952,7 @@ models:
       cache_read_mtok: 0.05
       cache_audio_read_mtok: 0.1
       output_mtok: 3
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3-pro-image-preview
     name: Gemini 3 Pro Image Preview
@@ -962,6 +972,7 @@ models:
       input_mtok: 2
       output_mtok: 12
       output_image_mtok: 120
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
@@ -989,6 +1000,7 @@ models:
         tiers:
           - start: 200000
             price: 18
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-image-preview
     name: Gemini 3.1 Flash Image Preview
@@ -1009,6 +1021,7 @@ models:
       input_mtok: 0.5
       output_mtok: 3
       output_image_mtok: 60
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
@@ -1028,6 +1041,7 @@ models:
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.05
       output_mtok: 1.5
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-flash-lite-image
     name: Gemini 3.1 Flash Lite Image
@@ -1056,6 +1070,7 @@ models:
       input_video_mtok: 1
       output_mtok: 4.5
       output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -1080,6 +1095,7 @@ models:
         tiers:
           - start: 200000
             price: 18
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.5-flash
     name: Gemini 3.5 Flash
@@ -1100,6 +1116,7 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 9
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.5-flash-lite
     name: Gemini 3.5 Flash Lite
@@ -1116,6 +1133,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 2.5
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-3.6-flash
     name: Gemini 3.6 Flash
@@ -1135,6 +1153,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1142,6 +1161,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.7-flash
     name: Gemini 3.7 Flash
@@ -1160,6 +1180,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1167,6 +1188,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.8-flash
     name: Gemini 3.8 Flash
@@ -1185,6 +1207,7 @@ models:
           input_mtok: 0.75
           cache_read_mtok: 0.075
           output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
       - constraint:
           # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
           start_date: 2027-01-01
@@ -1192,6 +1215,7 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live
@@ -1212,6 +1236,7 @@ models:
       input_video_mtok: 1
       output_mtok: 4.5
       output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
 
   - id: gemini-embedding-001
     match:
