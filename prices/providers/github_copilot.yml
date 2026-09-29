@@ -56,7 +56,8 @@ extractors:
         dest: output_tokens
 
 # Context windows are Copilot's own `max_context_window_tokens` from GET /models, which are narrower
-# than several of the upstream vendors' published windows.
+# than several of the upstream vendors' published windows. Models without one were added from the
+# pricing page alone; their window needs a read of /models with a Copilot credential.
 #
 # OpenAI-vendor ids also match a dated snapshot suffix: a `/responses` call for `gpt-5.4` comes back
 # with `"model": "gpt-5.4-2026-03-05"`. The other vendors returned the requested id unchanged.
@@ -71,8 +72,7 @@ models:
     match:
       equals: claude-fable-5
     context_window: 264000
-    prices_checked: 2026-09-03
-    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 10
       cache_read_mtok: 1
@@ -81,16 +81,13 @@ models:
 
   - id: claude-fable-5.1
     name: Claude Fable 5.1
-    # A separate model in Copilot's catalog that happens to share Fable 5's rates.
-    collapse: false
     match:
       equals: claude-fable-5.1
     context_window: 264000
-    prices_checked: 2026-09-03
-    price_comments: The pricing page gives cached input as a $0.25-$1.00 range; the highest rate is recorded.
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 10
-      cache_read_mtok: 1
+      cache_read_mtok: 0.25
       cache_write_mtok: 12.50
       output_mtok: 50
 
@@ -155,12 +152,58 @@ models:
       cache_write_mtok: 6.25
       output_mtok: 25
 
+  - id: claude-opus-5.5
+    name: Claude Opus 5.5
+    match:
+      equals: claude-opus-5.5
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.20
+      cache_write_mtok: 5
+      output_mtok: 20
+
+  - id: claude-sonnet-4
+    name: Claude Sonnet 4
+    match:
+      equals: claude-sonnet-4
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.30
+      cache_write_mtok: 3.75
+      output_mtok: 15
+
+  - id: claude-sonnet-4.6
+    name: Claude Sonnet 4.6
+    collapse: false
+    match:
+      equals: claude-sonnet-4.6
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.30
+      cache_write_mtok: 3.75
+      output_mtok: 15
+
   - id: claude-sonnet-5
     name: Claude Sonnet 5
     match:
       equals: claude-sonnet-5
     context_window: 264000
     prices_checked: 2026-09-03
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.20
+      cache_write_mtok: 2.50
+      output_mtok: 10
+
+  - id: claude-sonnet-5.5
+    name: Claude Sonnet 5.5
+    collapse: false
+    match:
+      equals: claude-sonnet-5.5
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 2
       cache_read_mtok: 0.20
@@ -337,6 +380,18 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 4.50
 
+  - id: gpt-5.4-nano
+    name: GPT-5.4 nano
+    match:
+      or:
+        - equals: gpt-5.4-nano
+        - regex: '^gpt-5\.4-nano-\d{4}-\d{2}-\d{2}$'
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 0.20
+      cache_read_mtok: 0.02
+      output_mtok: 1.25
+
   - id: gpt-5.5
     name: GPT-5.5
     match:
@@ -456,6 +511,96 @@ models:
           - start: 272000
             price: 18
 
+  - id: gpt-6-astra
+    name: GPT-6 Astra
+    match:
+      or:
+        - equals: gpt-6-astra
+        - regex: '^gpt-6-astra-\d{4}-\d{2}-\d{2}$'
+    prices_checked: 2026-09-29
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 272000
+            price: 25
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 272000
+            price: 75
+
+  - id: gpt-6-luna
+    name: GPT-6 Luna
+    match:
+      or:
+        - equals: gpt-6-luna
+        - regex: '^gpt-6-luna-\d{4}-\d{2}-\d{2}$'
+    prices_checked: 2026-09-29
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 0.10
+        tiers:
+          - start: 272000
+            price: 0.20
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      output_mtok:
+        base: 0.50
+        tiers:
+          - start: 272000
+            price: 0.75
+
+  - id: gpt-6-sol
+    name: GPT-6 Sol
+    match:
+      or:
+        - equals: gpt-6-sol
+        - regex: '^gpt-6-sol-\d{4}-\d{2}-\d{2}$'
+    prices_checked: 2026-09-29
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_read_mtok:
+        base: 0.20
+        tiers:
+          - start: 272000
+            price: 0.40
+      cache_write_mtok:
+        base: 2.50
+        tiers:
+          - start: 272000
+            price: 5
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+
   - id: grok-4.5
     name: Grok 4.5
     match:
@@ -486,6 +631,29 @@ models:
       equals: grok-4.6
     context_window: 328000
     prices_checked: 2026-09-03
+    price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+
+  - id: grok-4.7
+    name: Grok 4.7
+    match:
+      equals: grok-4.7
+    prices_checked: 2026-09-29
     price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:

@@ -134,6 +134,18 @@ def test_groq_transcription_duration_prices(
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_price'),
+    [('openai/gpt-oss-safeguard-20b', '0.375'), ('openai/gpt-oss-120b', '0.75')],
+)
+def test_groq_gpt_oss_safeguard_20b_has_its_own_price(model_ref: str, expected_price: str) -> None:
+    """Safeguard 20B was matched by the 120B record and billed at double its price."""
+    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref, provider_id='groq')
+
+    assert price.model.id == model_ref
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'seconds', 'expected_price'),
     [
         ('openai', 'gpt-transcribe', Decimal('0.5'), Decimal('0.0000375')),
