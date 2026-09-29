@@ -119,11 +119,19 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 61, model: 'claude-fable-5' },
+    { expectedTotalPrice: 60.25, model: 'claude-fable-5.1' },
     { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
     { expectedTotalPrice: 61, model: 'claude-opus-4.8-fast' },
+    { expectedTotalPrice: 24.2, model: 'claude-opus-5.5' },
+    { expectedTotalPrice: 18.3, model: 'claude-sonnet-4.6' },
     { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
+    { expectedTotalPrice: 12.2, model: 'claude-sonnet-5.5' },
     { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
     { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
+    { expectedTotalPrice: 1.47, model: 'gpt-5.4-nano' },
+    { expectedTotalPrice: 97, model: 'gpt-6-astra' },
+    { expectedTotalPrice: 17, model: 'grok-4.7' },
     { expectedTotalPrice: 18.3, model: 'kimi-k3' },
     { expectedTotalPrice: 1.42, model: 'mai-code-1.1-flash' },
   ])('prices GitHub Copilot $model', ({ expectedTotalPrice, model }) => {
@@ -131,6 +139,7 @@ describe('generated data split', () => {
       providerId: 'github-copilot',
     })
 
+    expect(result?.model.id).toBe(model)
     expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
   })
 
@@ -399,6 +408,16 @@ describe('generated data split', () => {
     const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
 
     expect(result?.model_price).toEqual(expectedPrices)
+  })
+
+  it.each([
+    ['openai/gpt-oss-safeguard-20b', 0.375],
+    ['openai/gpt-oss-120b', 0.75],
+  ])('prices Groq %s on its own record', (model, expected) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, { providerId: 'groq' })
+
+    expect(result?.model.id).toBe(model)
+    expect(result?.total_price).toBeCloseTo(expected, 12)
   })
 
   it.each([

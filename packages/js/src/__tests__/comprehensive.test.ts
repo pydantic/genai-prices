@@ -209,8 +209,9 @@ describe('Comprehensive API Tests', () => {
       [23, false],
     ]
     const models: [modelRef: string, offPeak: number, peak: number][] = [
-      ['deepseek-v4-flash', 22, 44],
+      ['deepseek-v4-flash', 22, 30],
       ['deepseek-v4-pro', 66, 132],
+      ['deepseek-flash', 15, 30],
     ]
     const cases = models.flatMap(([modelRef, offPeak, peak]) =>
       hours.map(([hour, isPeak]): [string, number, number] => [modelRef, hour, isPeak ? peak : offPeak])
@@ -224,6 +225,15 @@ describe('Comprehensive API Tests', () => {
       })
 
       expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(expected, 10)
+    })
+
+    it.each([
+      [new Date(Date.UTC(2026, 8, 9, 23)), 22],
+      [new Date(Date.UTC(2026, 8, 10, 0)), 15],
+    ])('should route deepseek-v4-flash at %s to the V4.1 Flash off-peak rate from 2026-09-10', (timestamp, expected) => {
+      const result = calcPrice({ input_tokens: 100_000_000 }, 'deepseek-v4-flash', { providerId: 'deepseek', timestamp })
+
       expect(result!.input_price).toBeCloseTo(expected, 10)
     })
   })
@@ -240,7 +250,7 @@ describe('Comprehensive API Tests', () => {
       [23, false],
     ]
     const models: [modelRef: string, historic: number, peak: number][] = [
-      ['deepseek-v4-flash', 14, 44],
+      ['deepseek-v4-flash', 14, 30],
       ['deepseek-v4-pro', 43.5, 132],
     ]
     const cases = models.flatMap(([modelRef, historic, peak]) =>

@@ -82,11 +82,19 @@ def test_cursor_provider_inference():
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
+        ('claude-fable-5', Decimal('61')),
+        ('claude-fable-5.1', Decimal('60.25')),
         ('claude-haiku-4.5', Decimal('6.10')),
         ('claude-opus-4.8-fast', Decimal('61')),
+        ('claude-opus-5.5', Decimal('24.2')),
+        ('claude-sonnet-4.6', Decimal('18.3')),
         ('claude-sonnet-5', Decimal('12.2')),
+        ('claude-sonnet-5.5', Decimal('12.2')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gpt-5-mini', Decimal('2.275')),
+        ('gpt-5.4-nano', Decimal('1.47')),
+        ('gpt-6-astra', Decimal('97')),
+        ('grok-4.7', Decimal('17')),
         ('kimi-k3', Decimal('18.3')),
         ('mai-code-1.1-flash', Decimal('1.42')),
     ],
@@ -98,6 +106,7 @@ def test_github_copilot_model_prices(model_ref: str, expected_total_price: Decim
         provider_id='github-copilot',
     )
 
+    assert price.model.id == model_ref
     assert price.total_price == expected_total_price
 
 
@@ -2115,8 +2124,9 @@ def test_provider_api_url_matches_at_the_start_of_the_url():
 @pytest.mark.parametrize(
     'model_ref,model_name,off_peak,peak',
     [
-        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('44.00')),
+        ('deepseek-v4-flash', 'DeepSeek V4 Flash', Decimal('22.00'), Decimal('30.00')),
         ('deepseek-v4-pro', 'DeepSeek V4 Pro', Decimal('66.00'), Decimal('132.00')),
+        ('deepseek-flash', 'DeepSeek V4.1 Flash', Decimal('15.00'), Decimal('30.00')),
     ],
 )
 @pytest.mark.parametrize(
@@ -2154,7 +2164,7 @@ def test_price_constraint_two_time_of_date_windows(
 @pytest.mark.parametrize(
     'model_ref,historic,peak',
     [
-        ('deepseek-v4-flash', Decimal('14.00'), Decimal('44.00')),
+        ('deepseek-v4-flash', Decimal('14.00'), Decimal('30.00')),
         ('deepseek-v4-pro', Decimal('43.50'), Decimal('132.00')),
     ],
 )
@@ -2187,6 +2197,21 @@ def test_price_deepseek_v4_before_repricing(
         genai_request_timestamp=datetime(2026, 5, 1, hour, tzinfo=timezone.utc),
     )
     assert price.input_price == (peak if in_peak_window else historic)
+
+
+@pytest.mark.parametrize(
+    'timestamp,off_peak',
+    [
+        (datetime(2026, 9, 9, 23, tzinfo=timezone.utc), Decimal('22.00')),
+        (datetime(2026, 9, 10, 0, tzinfo=timezone.utc), Decimal('15.00')),
+    ],
+)
+def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_peak: Decimal):
+    """From 2026-09-10 `deepseek-v4-flash` is served by V4.1 Flash and billed at its off-peak rate."""
+    price = calc_price(
+        Usage(input_tokens=100_000_000), model_ref='deepseek-v4-flash', genai_request_timestamp=timestamp
+    )
+    assert price.input_price == off_peak
 
 
 @pytest.mark.parametrize(
