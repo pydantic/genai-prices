@@ -7349,12 +7349,64 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-5.5',
+        name: 'Claude Opus 5.5',
+        match: {
+          equals: 'claude-opus-5.5',
+        },
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
+        id: 'claude-sonnet-4',
+        name: 'Claude Sonnet 4',
+        match: {
+          equals: 'claude-sonnet-4',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'claude-sonnet-4.6',
+        name: 'Claude Sonnet 4.6',
+        match: {
+          equals: 'claude-sonnet-4.6',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'claude-sonnet-5',
         name: 'Claude Sonnet 5',
         match: {
           equals: 'claude-sonnet-5',
         },
         context_window: 264000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'claude-sonnet-5.5',
+        name: 'Claude Sonnet 5.5',
+        match: {
+          equals: 'claude-sonnet-5.5',
+        },
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
@@ -7605,6 +7657,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.4-nano',
+        name: 'GPT-5.4 nano',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-nano',
+            },
+            {
+              regex: '^gpt-5\\.4-nano-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.25,
+        },
+      },
+      {
         id: 'gpt-5.5',
         name: 'GPT-5.5',
         match: {
@@ -7812,6 +7883,165 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6-astra',
+        name: 'GPT-6 Astra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-astra',
+            },
+            {
+              regex: '^gpt-6-astra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-luna',
+            },
+            {
+              regex: '^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6-sol',
+            },
+            {
+              regex: '^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -7856,6 +8086,43 @@ export const data: Provider[] = [
           equals: 'grok-4.6',
         },
         context_window: 328000,
+        price_comments: 'Prompts over 200,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        match: {
+          equals: 'grok-4.7',
+        },
         price_comments: 'Prompts over 200,000 tokens are billed at the long-context rates.',
         prices: {
           input_mtok: {
