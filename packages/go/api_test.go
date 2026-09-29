@@ -43,6 +43,7 @@ func TestOpenAILongContextBoundary(t *testing.T) {
 		{model: "gpt-5.6-luna", baseRate: 0.2, longRate: 0.4},
 		{model: "gpt-5.6-sol", baseRate: 4, longRate: 8},
 		{model: "gpt-5.6-terra", baseRate: 2, longRate: 4},
+		{model: "gpt-6.1-sol", baseRate: 2, longRate: 4},
 	}
 	for _, test := range tests {
 		t.Run(test.model, func(t *testing.T) {
@@ -50,8 +51,8 @@ func TestOpenAILongContextBoundary(t *testing.T) {
 				tokens float64
 				rate   float64
 			}{
-				{tokens: 271_999, rate: test.baseRate},
-				{tokens: 272_000, rate: test.longRate},
+				{tokens: 272_000, rate: test.baseRate},
+				{tokens: 272_001, rate: test.longRate},
 			} {
 				calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 					Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: boundary.tokens},
