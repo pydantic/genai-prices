@@ -660,6 +660,37 @@ def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cach
     assert price.total_price == Decimal(cache_read_mtok)
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected'),
+    [
+        ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
+        ('eu.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
+        ('au.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
+        ('us.anthropic.claude-fable-5-v1:0', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
+        ('anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
+        ('global.anthropic.claude-fable-5', 'global.anthropic.claude-fable-5-v1:0', '73.5'),
+        ('global.anthropic.claude-fable-5-v1:0', 'global.anthropic.claude-fable-5-v1:0', '73.5'),
+        ('us.anthropic.claude-fable-5-1', 'regional.anthropic.claude-fable-5-1-v1:0', '80.025'),
+        ('us.anthropic.claude-fable-5-1-v1:0', 'regional.anthropic.claude-fable-5-1-v1:0', '80.025'),
+        ('anthropic.claude-fable-5-1', 'regional.anthropic.claude-fable-5-1-v1:0', '80.025'),
+        ('global.anthropic.claude-fable-5-1', 'global.anthropic.claude-fable-5-1-v1:0', '72.75'),
+        ('global.anthropic.claude-fable-5-1-v1:0', 'global.anthropic.claude-fable-5-1-v1:0', '72.75'),
+    ],
+)
+def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, expected: str) -> None:
+    """Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate."""
+    price = calc_price(
+        Usage(
+            input_tokens=3_000_000, cache_read_tokens=1_000_000, cache_write_tokens=1_000_000, output_tokens=1_000_000
+        ),
+        model_ref=model_ref,
+        provider_id='aws',
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected)
+
+
 def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
     """OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added."""
     price = calc_price(
