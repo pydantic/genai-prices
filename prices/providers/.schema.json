@@ -223,6 +223,43 @@
       "title": "ConditionalPrice",
       "type": "object"
     },
+    "ModelCapabilities": {
+      "additionalProperties": false,
+      "description": "Request parameters a model accepts. Facts about the provider's API, not any client's settings.\n\nEvery field is optional and an omitted field means unknown, never a default.",
+      "properties": {
+        "reasoning": {
+          "$ref": "#/$defs/ReasoningCapabilities",
+          "description": "Reasoning support and the knobs that control it."
+        },
+        "sampling": {
+          "$ref": "#/$defs/SamplingCapabilities",
+          "description": "Which sampling parameters are accepted."
+        },
+        "service_tiers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Accepted service tier values, e.g. `[auto, default, flex, priority]`.",
+          "title": "Service Tiers"
+        },
+        "verbosity_levels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Accepted output verbosity values, e.g. `[low, medium, high]`.",
+          "title": "Verbosity Levels"
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "description": "Largest number of output tokens a single request may produce.",
+          "title": "Max Output Tokens"
+        }
+      },
+      "title": "ModelCapabilities",
+      "type": "object"
+    },
     "ModelInfo": {
       "additionalProperties": false,
       "description": "Information about an LLM model",
@@ -277,13 +314,17 @@
           "maxLength": 201,
           "pattern": "^\\S+/\\S+$",
           "type": "string",
-          "description": "The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.\n\nThe build copies missing metadata (currently only `context_window`) from that record; an explicit\nvalue on this record wins. Only set this when the value holds for every model this record matches.\nNot included in published data.",
+          "description": "The `provider/model` record for the same underlying model, e.g. `anthropic/claude-sonnet-4-5`.\n\nThe build copies missing metadata (`context_window` and `capabilities`) from that record; an\nexplicit value on this record wins. Only set this when the value holds for every model this record\nmatches. Not included in published data.",
           "title": "Canonical Model"
         },
         "context_window": {
           "type": "integer",
           "description": "Maximum number of input tokens allowed for this model",
           "title": "Context Window"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/ModelCapabilities",
+          "description": "Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits."
         },
         "price_comments": {
           "maxLength": 1000,
@@ -1060,6 +1101,87 @@
         }
       },
       "title": "ModelPrice",
+      "type": "object"
+    },
+    "ReasoningCapabilities": {
+      "additionalProperties": false,
+      "description": "How a model exposes reasoning (also called thinking), in the provider's own terms.",
+      "properties": {
+        "supported": {
+          "type": "boolean",
+          "description": "Whether the model can reason at all. `False` means the other fields do not apply.",
+          "title": "Supported"
+        },
+        "always_on": {
+          "type": "boolean",
+          "description": "Whether reasoning cannot be turned off.",
+          "title": "Always On"
+        },
+        "effort_levels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Accepted effort values, in the provider's vocabulary, e.g. `[none, low, medium, high, xhigh]`.",
+          "title": "Effort Levels"
+        },
+        "modes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Accepted reasoning modes, e.g. `[standard, pro]`.",
+          "title": "Modes"
+        },
+        "summary_levels": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "description": "Accepted values for a reasoning summary in the response, e.g. `[auto, concise, detailed]`.",
+          "title": "Summary Levels"
+        },
+        "cross_turn_context": {
+          "type": "boolean",
+          "description": "Whether reasoning from earlier turns can be carried into later requests.",
+          "title": "Cross Turn Context"
+        },
+        "token_budget": {
+          "type": "boolean",
+          "description": "Whether the request may set an explicit reasoning token budget.",
+          "title": "Token Budget"
+        },
+        "adaptive": {
+          "type": "boolean",
+          "description": "Whether the provider can decide per request whether and how much to reason.",
+          "title": "Adaptive"
+        }
+      },
+      "title": "ReasoningCapabilities",
+      "type": "object"
+    },
+    "SamplingCapabilities": {
+      "additionalProperties": false,
+      "description": "Which sampling parameters the provider accepts for this model. An omitted field is unknown.",
+      "properties": {
+        "temperature": {
+          "type": "boolean",
+          "title": "Temperature"
+        },
+        "top_p": {
+          "type": "boolean",
+          "title": "Top P"
+        },
+        "top_k": {
+          "type": "boolean",
+          "title": "Top K"
+        },
+        "seed": {
+          "type": "boolean",
+          "title": "Seed"
+        }
+      },
+      "title": "SamplingCapabilities",
       "type": "object"
     },
     "StartDateConstraint": {

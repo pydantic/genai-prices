@@ -70,13 +70,13 @@ def build():
 
 def prepare_providers_for_export(providers: list[Provider]) -> None:
     """Resolve canonical links before dropping removed models, so a removed record can still pass on its metadata."""
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
     for provider in providers:
         provider.exclude_removed()
 
 
-def inherit_context_windows(providers: list[Provider]) -> None:
-    """Fill each model's missing context window from its canonical record."""
+def inherit_canonical_metadata(providers: list[Provider]) -> None:
+    """Fill each model's missing context window and capabilities from its canonical record."""
     models = {f'{provider.id}/{model.id}': model for provider in providers for model in provider.models}
 
     for provider in providers:
@@ -91,6 +91,8 @@ def inherit_context_windows(providers: list[Provider]) -> None:
                     raise ValueError(f'Canonical model `{canonical_ref}` must not reference another canonical model')
                 if model.context_window is None and canonical.context_window is not None:
                     model.context_window = canonical.context_window
+                if model.capabilities is None and canonical.capabilities is not None:
+                    model.capabilities = canonical.capabilities
 
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:

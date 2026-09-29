@@ -42,6 +42,14 @@ models:
     # prices kept for historical usage.
     # No context_window: the kimi-k2 family spans two windows — kimi-k2-0711-preview was 128k and
     # kimi-k2-0905-preview 256k — so no single value is true for the bare name.
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     deprecated: true
     prices_checked: 2026-06-09
     prices:
@@ -90,6 +98,11 @@ models:
     match:
       equals: kimi-k2-thinking
     context_window: 262144
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: true
     # The kimi-k2 series was discontinued by Moonshot on 2026-05-25 (see https://platform.kimi.ai/docs/models.md);
     # prices kept for historical usage.
     deprecated: true
@@ -142,6 +155,11 @@ models:
     match:
       starts_with: kimi-k2.5
     context_window: 262144
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
     prices_checked: 2026-03-11
     prices:
       input_mtok: 0.60
@@ -158,6 +176,11 @@ models:
     match:
       starts_with: kimi-k2.6
     context_window: 262144
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
     prices_checked: "2026-05-22"
     prices:
       input_mtok: 0.95
@@ -203,6 +226,11 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: true
     prices_checked: "2026-07-16"
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
     prices:

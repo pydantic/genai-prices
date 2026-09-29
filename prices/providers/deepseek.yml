@@ -42,6 +42,14 @@ models:
         - starts_with: deepseek-chat
         - equals: deepseek-chat-v3-0324
     context_window: 64000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: false
+      sampling:
+        temperature: true
+        top_p: true
+        seed: true
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -62,8 +70,17 @@ models:
       DeepSeek-V4.1-Flash, with native visual understanding. Supports both non-thinking and thinking (default)
       modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).
     match:
-      equals: deepseek-flash
+      or:
+        - equals: deepseek-flash
+        # OpenRouter-style slug for the same model
+        - starts_with: deepseek-v4.1-flash
     context_window: 1000000
+    # reasoning per DeepSeek's release notes (thinking by default, non-thinking selectable,
+    # https://api-docs.deepseek.com/updates); sampling left unknown until DeepSeek documents it for V4.1
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
     price_comments: >-
       Released 2026-09-10 (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and
       "UTC 06:00-10:00" Monday to Friday, everything else is off-peak. Weekends and Chinese public
@@ -101,6 +118,14 @@ models:
         - starts_with: deepseek-r1
         - equals: deepseek-r1-0528
     context_window: 64000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: true
+      sampling:
+        temperature: false
+        top_p: false
     prices_checked: 2025-07-12
     prices:
       - prices:
@@ -164,6 +189,14 @@ models:
       or:
         - starts_with: deepseek-v4-flash
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
+      sampling:
+        temperature: true
+        top_p: true
     price_comments: >-
       Rates: flat before 2026-08-17; V4 off-peak from 2026-08-17; V4.1 Flash off-peak from 2026-09-10, when
       DeepSeek retired V4 Flash and routed `deepseek-v4-flash` to V4.1 Flash
@@ -214,6 +247,14 @@ models:
       or:
         - starts_with: deepseek-v4-pro
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
+      sampling:
+        temperature: true
+        top_p: true
     price_comments: >-
       From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is
       "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that

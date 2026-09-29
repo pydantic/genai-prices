@@ -33,6 +33,14 @@ models:
         - equals: GLM-5.2
         - equals: glm-5.2
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: false
+      sampling:
+        temperature: true
+        top_p: true
     prices_checked: "2026-08-04"
     prices:
       input_mtok: 1.4
@@ -50,6 +58,14 @@ models:
         - equals: GLM-5.3
         - equals: glm-5.3
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: true
+      sampling:
+        temperature: true
+        top_p: true
     prices_checked: "2026-08-26"
     prices:
       input_mtok: 1.4
@@ -66,6 +82,14 @@ models:
         - equals: GLM-5.3-Flash
         - equals: glm-5.3-flash
     context_window: 1000000
+    # capabilities derived from pydantic-ai model profiles (pydantic_ai.profiles) and the provider docs
+    capabilities:
+      reasoning:
+        supported: true
+        always_on: true
+      sampling:
+        temperature: true
+        top_p: true
     prices_checked: "2026-08-26"
     price_comments: >-
       Standard API rates reflect the 50% launch promotion ending at 24:00 on

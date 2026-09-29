@@ -2,14 +2,25 @@ from decimal import Decimal
 
 import pytest
 
-from prices.build import inherit_context_windows, prepare_providers_for_export
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider, providers_schema
+from genai_prices import types as runtime_types
+from prices.build import inherit_canonical_metadata, prepare_providers_for_export
+from prices.prices_types import (
+    ClauseEquals,
+    ModelCapabilities,
+    ModelInfo,
+    ModelPrice,
+    Provider,
+    ReasoningCapabilities,
+    SamplingCapabilities,
+    providers_schema,
+)
 
 
 def make_model(
     model_id: str,
     *,
     context_window: int | None = None,
+    capabilities: ModelCapabilities | None = None,
     canonical_model: str | None = None,
     removed: bool = False,
 ) -> ModelInfo:
@@ -18,9 +29,71 @@ def make_model(
         match=ClauseEquals(equals=model_id),
         canonical_model=canonical_model,
         context_window=context_window,
+        capabilities=capabilities,
         removed=removed,
         prices=ModelPrice(input_mtok=Decimal('1')),
     )
+
+
+REASONER = ModelCapabilities(
+    reasoning=ReasoningCapabilities(supported=True, always_on=True, effort_levels=['low', 'medium', 'high']),
+    sampling=SamplingCapabilities(temperature=False, top_p=False),
+    service_tiers=['auto', 'default'],
+)
+
+
+def test_inherit_capabilities_from_canonical_model():
+    canonical = make_model('canonical', capabilities=REASONER)
+    offering = make_model('offering', canonical_model='native/canonical')
+    explicit = make_model(
+        'explicit', capabilities=ModelCapabilities(max_output_tokens=4096), canonical_model='native/canonical'
+    )
+    providers = [
+        Provider(id='native', name='Native', api_pattern='native', models=[canonical]),
+        Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[explicit, offering]),
+    ]
+
+    inherit_canonical_metadata(providers)
+
+    assert offering.capabilities == REASONER
+    assert explicit.capabilities == ModelCapabilities(max_output_tokens=4096)
+
+
+def test_capabilities_round_trip_to_runtime_types():
+    model = make_model('reasoner', capabilities=REASONER)
+    providers = [Provider(id='native', name='Native', api_pattern='native', models=[model])]
+    serialized = providers_schema.dump_python(providers, mode='json', exclude_none=True)
+    assert serialized[0]['models'][0]['capabilities'] == {
+        'reasoning': {'supported': True, 'always_on': True, 'effort_levels': ['low', 'medium', 'high']},
+        'sampling': {'temperature': False, 'top_p': False},
+        'service_tiers': ['auto', 'default'],
+    }
+
+    runtime = runtime_types._providers_from_raw(serialized)[0].models[0]
+    assert runtime.capabilities == runtime_types.ModelCapabilities(
+        reasoning=runtime_types.ReasoningCapabilities(
+            supported=True, always_on=True, effort_levels=['low', 'medium', 'high']
+        ),
+        sampling=runtime_types.SamplingCapabilities(temperature=False, top_p=False),
+        service_tiers=['auto', 'default'],
+    )
+
+
+def test_omitted_capability_fields_stay_unknown():
+    reasoning = ReasoningCapabilities.model_validate({'effort_levels': ['low']})
+    assert reasoning.supported is None and reasoning.always_on is None
+    assert SamplingCapabilities.model_validate({}).temperature is None
+
+
+def test_unsupported_reasoning_rejects_details():
+    assert ReasoningCapabilities.model_validate({'supported': False}).supported is False
+    with pytest.raises(ValueError, match=r"must be omitted: \['always_on', 'effort_levels'\]"):
+        ReasoningCapabilities.model_validate({'supported': False, 'always_on': True, 'effort_levels': ['low']})
+
+
+def test_capabilities_reject_unknown_fields():
+    with pytest.raises(ValueError, match='extra_forbidden'):
+        ReasoningCapabilities.model_validate({'supports_reasoning': True})
 
 
 def test_inherit_context_window_from_canonical_model():
@@ -31,7 +104,7 @@ def test_inherit_context_window_from_canonical_model():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
 
     assert offering.context_window == 200_000
 
@@ -44,7 +117,7 @@ def test_serialized_offering_is_flattened():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
     serialized = providers_schema.dump_python(providers, mode='json', exclude_none=True)[1]['models'][0]
 
     assert serialized['context_window'] == 200_000
@@ -59,7 +132,7 @@ def test_provider_context_window_overrides_canonical_model():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
 
     assert offering.context_window == 100_000
 
@@ -74,7 +147,7 @@ def test_canonical_reference_accepts_maximum_length_ids():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
 
     assert offering.context_window == 200_000
 
@@ -89,7 +162,7 @@ def test_unknown_canonical_model_is_rejected():
     providers = [Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering])]
 
     with pytest.raises(ValueError, match='unknown canonical model `native/missing`'):
-        inherit_context_windows(providers)
+        inherit_canonical_metadata(providers)
 
 
 def test_canonical_model_without_context_window_is_allowed():
@@ -100,7 +173,7 @@ def test_canonical_model_without_context_window_is_allowed():
         Provider(id='proxy', name='Proxy', api_pattern='proxy', models=[offering]),
     ]
 
-    inherit_context_windows(providers)
+    inherit_canonical_metadata(providers)
 
     assert offering.context_window is None
 
@@ -118,7 +191,7 @@ def test_chained_canonical_models_are_rejected():
     with pytest.raises(
         ValueError, match='Canonical model `native/canonical` must not reference another canonical model'
     ):
-        inherit_context_windows(providers)
+        inherit_canonical_metadata(providers)
 
 
 def test_removed_canonical_model_can_supply_active_offering():

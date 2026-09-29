@@ -234,6 +234,10 @@ providers: list[Provider] = [
                 description='Fastest and most intelligent Haiku model',
                 context_window=200000,
                 price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
@@ -301,6 +305,15 @@ providers: list[Provider] = [
                 description='Premium model combining maximum intelligence with practical performance',
                 context_window=200000,
                 price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max'],
+                        token_budget=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -419,6 +432,16 @@ providers: list[Provider] = [
                 description='For complex agentic coding and enterprise work',
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -488,6 +511,10 @@ providers: list[Provider] = [
                 description='Our best combination of speed and intelligence',
                 context_window=200000,
                 price_comments='One-hour cache writes cost 2x the base input price. The 1M context beta was retired on 2026-04-30; requests over 200k now error. The >200k tiers describe historical usage from before retirement. Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing, https://platform.claude.com/docs/en/release-notes/overview',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -561,6 +588,16 @@ providers: list[Provider] = [
                 description='Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost',
                 context_window=1000000,
                 price_comments='Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase. Ref: https://platform.claude.com/docs/en/about-claude/pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
@@ -1035,6 +1072,10 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
@@ -1048,6 +1089,15 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max'],
+                        token_budget=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -1105,6 +1155,16 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -1147,6 +1207,10 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -1196,6 +1260,16 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments='Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
@@ -1733,6 +1807,10 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'),
                     cache_write_mtok=Decimal('1.375'),
@@ -1801,6 +1879,15 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max'],
+                        token_budget=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1899,6 +1986,16 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -1973,6 +2070,10 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 price_comments='One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
@@ -2061,6 +2162,16 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments='Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now permanent, with no 2026-09-01 increase. Refs: https://aws.amazon.com/bedrock/pricing/, https://platform.claude.com/docs/en/about-claude/pricing One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('2.2'),
                     cache_write_mtok=Decimal('2.75'),
@@ -2487,6 +2598,16 @@ providers: list[Provider] = [
                 id='o3-2025-04-16',
                 match=ClauseOr(or_=[ClauseEquals(equals='o3'), ClauseEquals(equals='o3-2025-04-16')]),
                 context_window=200000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                ),
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
@@ -2501,6 +2622,16 @@ providers: list[Provider] = [
                 id='o4-mini',
                 match=ClauseOr(or_=[ClauseContains(contains='o4-mini'), ClauseContains(contains='o4-mini-2025-04-16')]),
                 context_window=200000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('4.4')
                 ),
@@ -3541,6 +3672,10 @@ providers: list[Provider] = [
                 name='DeepSeek Chat',
                 description='DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.',
                 context_window=64000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=True),
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -3560,11 +3695,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-flash',
-                match=ClauseEquals(equals='deepseek-flash'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='deepseek-flash'), ClauseStartsWith(starts_with='deepseek-v4.1-flash')]
+                ),
                 name='DeepSeek V4.1 Flash',
                 description='DeepSeek-V4.1-Flash, with native visual understanding. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
                 price_comments='Released 2026-09-10 (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00" Monday to Friday, everything else is off-peak. Weekends and Chinese public holidays are off-peak all day, which needs a day-of-week condition, so on those days the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=False)),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -3603,6 +3741,10 @@ providers: list[Provider] = [
                 name='Deepseek R1',
                 description="DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass.",
                 context_window=64000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=True),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -3653,6 +3795,10 @@ providers: list[Provider] = [
                 description='DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
                 price_comments='Rates: flat before 2026-08-17; V4 off-peak from 2026-08-17; V4.1 Flash off-peak from 2026-09-10, when DeepSeek retired V4 Flash and routed `deepseek-v4-flash` to V4.1 Flash (https://api-docs.deepseek.com/updates). Peak is "UTC 01:00-04:00" and "UTC 06:00-10:00"; the two peak windows come last so they win during peak hours. `constraint` is a union, so one entry cannot carry both a date and a daily window: peak-hour requests resolve to the current V4.1 Flash peak rate whatever their date. Weekends are off-peak all day from 2026-08-23, which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -3698,6 +3844,10 @@ providers: list[Provider] = [
                 description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
                 price_comments='From 2026-08-17 the V4 models use different peak windows from the V3 models: peak is "UTC 01:00-04:00" and "UTC 06:00-10:00", everything else is off-peak. The flat rate that applied before 2026-08-17 is kept as the unconstrained first price, the new off-peak rate is gated on start_date, and the two peak windows come last so they win during peak hours. Two things this layout still cannot say, because `constraint` is a union and one entry cannot carry both a date and a daily window. Requests from before 2026-08-17 that fall inside 01:00-04:00 or 06:00-10:00 UTC - 7 hours of every day - resolve to the new peak rate rather than the old flat rate. And from 2026-08-23 Deepseek bills off-peak all day at weekends (Beijing time), which needs a day-of-week condition, so on Saturdays and Sundays the peak prices here are an upper bound. See https://github.com/pydantic/genai-prices/issues/582.',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -4002,6 +4152,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-pro'),
                 name='DeepSeek-V4-Pro',
                 context_window=1048576,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
                 ),
@@ -5321,6 +5475,16 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['low', 'medium', 'high', 'max', 'xhigh'],
+                        token_budget=False,
+                        adaptive=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=False, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -5357,6 +5521,10 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 price_comments="Long-context rates apply above 200K input tokens. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models The one-hour cache write rate is the global endpoint's, from the same pricing page.",
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False, token_budget=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=True, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -9737,6 +9905,10 @@ providers: list[Provider] = [
                 name='Kimi K2 0711',
                 description='Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass.',
                 deprecated=True,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=True),
+                ),
                 prices=ModelPrice(input_mtok=Decimal('0.57'), output_mtok=Decimal('2.3')),
             ),
             ModelInfo(
@@ -9768,6 +9940,7 @@ providers: list[Provider] = [
                 description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
                 context_window=262144,
                 deprecated=True,
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=True)),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
                 ),
@@ -9800,6 +9973,7 @@ providers: list[Provider] = [
                 name='Kimi K2.5',
                 description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=False)),
                 prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
@@ -9808,6 +9982,7 @@ providers: list[Provider] = [
                 name='Kimi K2.6',
                 description="Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=False)),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
                 ),
@@ -9839,6 +10014,7 @@ providers: list[Provider] = [
                 description="Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
                 context_window=1048576,
                 price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
+                capabilities=ModelCapabilities(reasoning=ReasoningCapabilities(supported=True, always_on=True)),
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
@@ -10406,6 +10582,10 @@ providers: list[Provider] = [
                 name='gpt 4.1',
                 description="GPT-4.1 is OpenAI's latest flagship model, offering major improvements in coding, instruction following, and long context understanding with up to 1 million tokens of context.",
                 context_window=1000000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=True),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_read_mtok=Decimal('0.5'),
@@ -10463,6 +10643,10 @@ providers: list[Provider] = [
                 name='gpt 4o',
                 description='GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning, creativity, and technical tasks while maintaining consistent output quality.',
                 context_window=128000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=True),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'),
                     cache_read_mtok=Decimal('1.25'),
@@ -10600,14 +10784,41 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='gpt-5'),
                         ClauseEquals(equals='gpt-5-2025-08-07'),
-                        ClauseEquals(equals='gpt-5-chat'),
-                        ClauseEquals(equals='gpt-5-chat-latest'),
                         ClauseEquals(equals='gpt-5-codex'),
                     ]
                 ),
                 name='GPT-5',
                 description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
                 context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['minimal', 'low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.125'),
+                    output_mtok=Decimal('10'),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5-chat',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-chat'), ClauseEquals(equals='gpt-5-chat-latest')]),
+                name='GPT-5 Chat',
+                description='The non-reasoning chat variant of GPT-5, priced the same as GPT-5.',
+                context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=True),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.125'),
@@ -10634,6 +10845,17 @@ providers: list[Provider] = [
                 name='GPT-5 mini',
                 description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
                 context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['minimal', 'low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
@@ -10648,6 +10870,17 @@ providers: list[Provider] = [
                 name='GPT-5 nano',
                 description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
                 context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['minimal', 'low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.05'),
                     cache_read_mtok=Decimal('0.005'),
@@ -10688,6 +10921,17 @@ providers: list[Provider] = [
                 name='GPT-5.1',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.125'),
@@ -10731,6 +10975,17 @@ providers: list[Provider] = [
                 name='GPT-5.2',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.75'),
                     cache_read_mtok=Decimal('0.175'),
@@ -10800,6 +11055,18 @@ providers: list[Provider] = [
                 description="OpenAI's most capable model with a 1.05M token context window.",
                 context_window=1050000,
                 price_comments='The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(
@@ -10903,6 +11170,18 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=1000000,
                 price_comments='Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'minimal', 'low', 'medium', 'high', 'xhigh'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
@@ -10946,6 +11225,19 @@ providers: list[Provider] = [
                 description='GPT-5.6 model optimized for cost-sensitive workloads.',
                 context_window=1050000,
                 price_comments='Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+                        modes=['standard', 'pro'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -10998,6 +11290,19 @@ providers: list[Provider] = [
                 description='Frontier model for complex professional work.',
                 context_window=1050000,
                 price_comments='Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+                        modes=['standard', 'pro'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -11048,6 +11353,19 @@ providers: list[Provider] = [
                 description='GPT-5.6 model that balances intelligence and cost.',
                 context_window=1050000,
                 price_comments='Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=False,
+                        effort_levels=['none', 'low', 'medium', 'high', 'xhigh', 'max'],
+                        modes=['standard', 'pro'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -11095,6 +11413,19 @@ providers: list[Provider] = [
                 description='Our most capable model, built for the hardest end-to-end work.',
                 context_window=1050000,
                 price_comments='Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['low', 'medium', 'high', 'xhigh', 'max'],
+                        modes=['standard', 'pro'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                        cross_turn_context=True,
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                    verbosity_levels=['low', 'medium', 'high'],
+                ),
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
                     cache_write_mtok=TieredPrices(
@@ -11454,6 +11785,16 @@ providers: list[Provider] = [
                 name='o3',
                 description='o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following. Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required for this model. Set up here: https://openrouter.ai/settings/integrations',
                 context_window=200000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                ),
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -11527,6 +11868,16 @@ providers: list[Provider] = [
                 name='o4 Mini High',
                 description='OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.',
                 context_window=200000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(
+                        supported=True,
+                        always_on=True,
+                        effort_levels=['low', 'medium', 'high'],
+                        summary_levels=['auto', 'concise', 'detailed'],
+                    ),
+                    sampling=SamplingCapabilities(temperature=False, top_p=False, top_k=None, seed=None),
+                    service_tiers=['auto', 'default', 'flex', 'priority'],
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'),
                     cache_read_mtok=Decimal('0.275'),
@@ -18606,6 +18957,10 @@ providers: list[Provider] = [
                 name='GLM-5.2',
                 description='Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
                 context_window=1000000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=False),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
@@ -18616,6 +18971,10 @@ providers: list[Provider] = [
                 name='GLM-5.3',
                 description='Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling. Reasoning is always enabled, with low, high and max effort levels.',
                 context_window=1000000,
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
@@ -18627,6 +18986,10 @@ providers: list[Provider] = [
                 description='Z.AI native multimodal model with a 1,000,000 token context window, context caching, function calling, and always-on reasoning.',
                 context_window=1000000,
                 price_comments='Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
+                capabilities=ModelCapabilities(
+                    reasoning=ReasoningCapabilities(supported=True, always_on=True),
+                    sampling=SamplingCapabilities(temperature=True, top_p=True, top_k=None, seed=None),
+                ),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.25')
                 ),

@@ -79,7 +79,51 @@ export interface UsageExtractor {
   root: ExtractPath
 }
 
+/** How a model exposes reasoning (also called thinking), in the provider's own terms. */
+export interface ReasoningCapabilities {
+  /** Whether the provider can decide per request whether and how much to reason. */
+  adaptive?: boolean
+  /** Whether reasoning cannot be turned off. */
+  always_on?: boolean
+  /** Whether reasoning from earlier turns can be carried into later requests. */
+  cross_turn_context?: boolean
+  /** Accepted effort values, in the provider's vocabulary, e.g. `[none, low, medium, high, xhigh]`. */
+  effort_levels?: string[]
+  /** Accepted reasoning modes, e.g. `[standard, pro]`. */
+  modes?: string[]
+  /** Accepted values for a reasoning summary in the response, e.g. `[auto, concise, detailed]`. */
+  summary_levels?: string[]
+  /** Whether the model can reason at all. `false` means the other fields do not apply. */
+  supported?: boolean
+  /** Whether the request may set an explicit reasoning token budget. */
+  token_budget?: boolean
+}
+
+/** Which sampling parameters the provider accepts for this model. */
+export interface SamplingCapabilities {
+  seed?: boolean
+  temperature?: boolean
+  top_k?: boolean
+  top_p?: boolean
+}
+
+/** Request parameters a model accepts. Facts about the provider's API, not any client's settings. */
+export interface ModelCapabilities {
+  /** Largest number of output tokens a single request may produce. */
+  max_output_tokens?: number
+  /** Reasoning support and the knobs that control it. */
+  reasoning?: ReasoningCapabilities
+  /** Which sampling parameters are accepted. */
+  sampling?: SamplingCapabilities
+  /** Accepted service tier values, e.g. `[auto, default, flex, priority]`. */
+  service_tiers?: string[]
+  /** Accepted output verbosity values, e.g. `[low, medium, high]`. */
+  verbosity_levels?: string[]
+}
+
 export interface ModelInfo {
+  /** Request parameters the model accepts: reasoning knobs, sampling, service tiers, output limits. */
+  capabilities?: ModelCapabilities
   context_window?: number
   deprecated?: boolean
   description?: string
