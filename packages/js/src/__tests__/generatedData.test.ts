@@ -558,6 +558,13 @@ describe('generated data split', () => {
       timestamp: new Date('2026-08-24T00:00:00Z'),
     },
     {
+      expectedInput: 1.5,
+      expectedModelId: 'mistral-medium-3-5',
+      expectedOutput: 7.5,
+      model: 'mistral-medium-2604',
+      timestamp: new Date('2026-08-24T00:00:00Z'),
+    },
+    {
       expectedInput: 0.4,
       expectedModelId: 'mistral-medium-latest',
       expectedOutput: 2,

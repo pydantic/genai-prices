@@ -343,6 +343,7 @@ models:
         - equals: mistral-medium-3.5
         - equals: mistral-medium-3-5
         - equals: mistral-medium-3
+        - equals: mistral-medium-2604
     context_window: 262144
     prices_checked: 2026-08-24
     price_comments: >-
