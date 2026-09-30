@@ -282,7 +282,10 @@ describe('generated data split', () => {
   ])(
     'prices GLM-5.3 Flash with $expectedProvider',
     ({ expectedInput, expectedModel, expectedOutput, expectedProvider, model, options }) => {
-      const result = calcPrice({ cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }, model, options)
+      const result = calcPrice({ cache_read_tokens: 600, input_tokens: 1_000, output_tokens: 100 }, model, {
+        ...options,
+        timestamp: new Date(Date.UTC(2026, 8, 9)),
+      })
 
       expect(result?.provider.id).toBe(expectedProvider)
       expect(result?.model.id).toBe(expectedModel)

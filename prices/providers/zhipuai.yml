@@ -273,13 +273,22 @@ models:
         - equals: GLM-5.3-Flash
         - equals: glm-5.3-flash
     context_window: 1000000
-    prices_checked: "2026-08-26"
+    prices_checked: "2026-09-29"
     price_comments: >-
-      The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input,
-      and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY.
-      The pricing page marks this as a two-week 50% discount; list prices are
-      0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.
+      Launched with a two-week 50% promotion of 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY
+      output per million tokens. List prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY
+      output. Converted to USD at 1 USD = 7.25 CNY. Zhipu's page does not state the end date; the
+      list prices start on 2026-09-10, the first UTC day after Z.AI's promotion for the same model
+      ended at 24:00 on September 9, 2026 (UTC+8).
     prices:
-      input_mtok: 0.055
-      cache_read_mtok: 0.016
-      output_mtok: 0.193
+      - prices:
+          input_mtok: 0.055
+          cache_read_mtok: 0.016
+          output_mtok: 0.193
+      - constraint:
+          # https://open.bigmodel.cn/pricing
+          start_date: 2026-09-10
+        prices:
+          input_mtok: 0.110
+          cache_read_mtok: 0.032
+          output_mtok: 0.386

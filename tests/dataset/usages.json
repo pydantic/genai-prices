@@ -134008,6 +134008,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001295",
+            "output_price": "0.0000657",
             "provider_id": "zai"
           },
           {
