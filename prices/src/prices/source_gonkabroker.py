@@ -47,6 +47,10 @@ def parse_catalog(payload: bytes) -> list[ModelInfo]:
         if 'embeddings' in model.output_modalities:
             # Embeddings are billed on input tokens only, although the catalog also lists a completion rate.
             prices = ModelPrice(input_mtok=mtok(pricing.prompt))
+        elif pricing.input_cache_read == 0:
+            # Free cache reads cannot be recorded because prices must be positive. Omitting the rate would bill
+            # cached tokens at the input rate instead.
+            raise RuntimeError(f'Gonka Broker lists free cache reads for {model.id}, which a price cannot record')
         else:
             prices = ModelPrice(
                 input_mtok=mtok(pricing.prompt),

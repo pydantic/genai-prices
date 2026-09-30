@@ -75,6 +75,13 @@ def test_parse_catalog_prices_embeddings_on_input_only() -> None:
     assert embeddings.prices == ModelPrice(input_mtok=Decimal('0.01'))
 
 
+def test_parse_catalog_rejects_free_cache_reads() -> None:
+    catalog = json.dumps({'data': [catalog_model('a/b', '0.0000002', cache_read='0')]}).encode()
+
+    with pytest.raises(RuntimeError, match='Gonka Broker lists free cache reads for a/b'):
+        source_gonkabroker.parse_catalog(catalog)
+
+
 def test_parse_catalog_rejects_duplicate_models() -> None:
     catalog = json.dumps({'data': [catalog_model('a/b', '0.0000002'), catalog_model('a/b', '0.0000003')]}).encode()
 
