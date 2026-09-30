@@ -20,12 +20,13 @@ price_comments: >-
   US, East US 2, North Central US, West US 2 and West US 3, and every GCP US region, rounded to $0.001. Other regions charge
   $0.074-$0.170 per DBU and SAP Databricks $0.125-$0.199, so costs there scale with the DBU rate. Not represented: priority
   pay-per-token, the 10% data-residency uplift on Kimi K3, provisioned throughput, batch inference and committed-use
-  discounts. Covers Databricks-hosted open-weight models only, not the Anthropic, OpenAI, Google and xAI models Databricks
-  also serves.
+  discounts. Covers Databricks-hosted open-weight models only, not the proprietary Claude, GPT, Gemini and Grok models
+  Databricks also serves.
 
-# Chat Completions usage, from both /serving-endpoints/chat/completions and /serving-endpoints/{name}/invocations.
-# `reasoning_tokens` and `cache_read_input_tokens` are top-level fields, and `prompt_tokens` includes cached input.
+# Chat Completions usage, also returned by /serving-endpoints/{name}/invocations for chat and completion models.
+# `reasoning_tokens` and `cache_read_input_tokens` are top-level fields:
 # https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#usage
+# The docs do not say whether `prompt_tokens` includes cache reads; LiteLLM's Databricks fixtures treat it as inclusive.
 extractors:
   - api_flavor: default
     root: usage

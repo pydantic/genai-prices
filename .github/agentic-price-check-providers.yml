@@ -162,4 +162,5 @@ providers:
       model's price_comments records its DBU rates. Map table rows to endpoints through the supported-models catalog: the
       GLM-5.2, 5.3 row prices both GLM endpoints, Qwen 3 80B Instruct is databricks-qwen3-next-80b-a3b-instruct, and Kimi K2.7 is
       databricks-kimi-k2-7-code. The catalog lists every current pay-per-token endpoint. Exclude Priority Pay Per Token,
-      Provisioned Throughput, Batch Inference, per-region DBU prices, and the Anthropic, OpenAI, Google, and xAI endpoints.
+      Provisioned Throughput, Batch Inference, per-region DBU prices, and the proprietary Claude, GPT, Gemini, and Grok
+      endpoints. The open-weight GPT OSS and Gemma endpoints are in scope.
