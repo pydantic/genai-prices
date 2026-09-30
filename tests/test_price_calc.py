@@ -200,6 +200,70 @@ def test_arcee_provider_inference() -> None:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('databricks-kimi-k3', Decimal('18.3')),
+        ('databricks-deepseek-v4-flash-0731', Decimal('0.448')),
+        ('databricks-deepseek-v4-pro-0813', Decimal('5.412')),
+        ('system.ai.glm-5-3', Decimal('6.06')),
+        ('databricks-qwen35-122b-a10b', Decimal('2.64')),
+        ('databricks-gpt-oss-120b', Decimal('0.9')),
+    ],
+)
+def test_databricks_model_prices(model_ref: str, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='databricks',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions',
+        'https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations',
+        'https://1234567890123456.7.gcp.databricks.com/ai-gateway/mlflow/v1/chat/completions',
+    ],
+)
+def test_databricks_api_url(provider_api_url: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url
+    )
+
+    assert price.provider.id == 'databricks'
+    assert price.total_price == Decimal('0.15')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions',
+        'https://my-workspace.cloud.databricks.com/api/2.0/clusters/list',
+    ],
+)
+def test_databricks_api_url_rejects_other_hosts_and_paths(provider_api_url: str) -> None:
+    with pytest.raises(LookupError, match='Unable to find provider provider_api_url='):
+        calc_price(Usage(input_tokens=1), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url)
+
+
+def test_databricks_provider_inference() -> None:
+    snapshot_data = get_snapshot()
+
+    assert snapshot_data.find_provider('databricks-gpt-oss-120b', None, None).id == 'databricks'
+    assert snapshot_data.find_provider('system.ai.kimi-k3', None, None).id == 'databricks'
+    assert snapshot_data.find_provider('kimi-k3', None, None).id == 'moonshotai'
+
+    litellm_price = calc_price(
+        Usage(input_tokens=1), model_ref='databricks/databricks-gpt-oss-120b', provider_id='litellm'
+    )
+    assert litellm_price.provider.id == 'databricks'
+    assert litellm_price.model.id == 'databricks-gpt-oss-120b'
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),

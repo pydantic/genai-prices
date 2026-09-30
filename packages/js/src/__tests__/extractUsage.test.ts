@@ -10,6 +10,7 @@ const anthropicProvider: Provider = data.find((provider) => provider.id === 'ant
 const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
 const basetenProvider: Provider = data.find((provider) => provider.id === 'baseten')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
+const databricksProvider: Provider = data.find((provider) => provider.id === 'databricks')!
 const githubCopilotProvider: Provider = data.find((provider) => provider.id === 'github-copilot')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
@@ -175,6 +176,68 @@ describe('extractUsage', () => {
 
       expect(model).toBe('zai-org/GLM-5.3-Flash')
       expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_tokens: 40 })
+    })
+
+    // The Databricks bodies follow the documented usage fields; no recorded response is public.
+    // https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#usage
+    it.each(['default', 'chat'])('should extract Databricks %s usage', (apiFlavor) => {
+      const responseData = {
+        model: 'databricks-glm-5-3',
+        object: 'chat.completion',
+        usage: {
+          cache_read_input_tokens: 12_002,
+          completion_tokens: 80,
+          prompt_tokens: 12_011,
+          reasoning_tokens: 30,
+          total_tokens: 12_091,
+        },
+      }
+
+      const { model, usage } = extractUsage(databricksProvider, responseData, apiFlavor)
+
+      expect(model).toBe('databricks-glm-5-3')
+      expect(usage).toEqual({
+        cache_read_tokens: 12_002,
+        input_tokens: 12_011,
+        output_reasoning_tokens: 30,
+        output_tokens: 80,
+      })
+      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.00348512, 12)
+    })
+
+    it('should extract Databricks Open Responses usage', () => {
+      const responseData = {
+        model: 'databricks-kimi-k3',
+        object: 'response',
+        usage: {
+          input_tokens: 100,
+          input_tokens_details: { cached_tokens: 40 },
+          output_tokens: 50,
+          output_tokens_details: { reasoning_tokens: 20 },
+          total_tokens: 150,
+        },
+      }
+
+      const { model, usage } = extractUsage(databricksProvider, responseData, 'responses')
+
+      expect(model).toBe('databricks-kimi-k3')
+      expect(usage).toEqual({ cache_read_tokens: 40, input_tokens: 100, output_reasoning_tokens: 20, output_tokens: 50 })
+      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.000942, 12)
+    })
+
+    it('should extract Databricks embeddings usage', () => {
+      const responseData = {
+        data: [{ embedding: [0.1, 0.2], index: 0, object: 'embedding' }],
+        model: 'databricks-gte-large-en',
+        object: 'list',
+        usage: { prompt_tokens: 1_000_000, total_tokens: 1_000_000 },
+      }
+
+      const { model, usage } = extractUsage(databricksProvider, responseData, 'embeddings')
+
+      expect(model).toBe('databricks-gte-large-en')
+      expect(usage).toEqual({ input_tokens: 1_000_000 })
+      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.13, 12)
     })
 
     // 0.5M five-minute and 0.5M one-hour cache writes. The regional Bedrock endpoint carries a 10% premium.
