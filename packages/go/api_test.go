@@ -609,6 +609,8 @@ func TestDatabricksProviderSelection(t *testing.T) {
 
 	for _, providerAPIURL := range []string{
 		"https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions",
+		"https://adb-1234567890123456.7.azuredatabricks.net.evil.test/serving-endpoints/databricks-gpt-oss-120b/invocations",
+		"https://1234567890123456.7.gcp.databricks.com.evil.test/ai-gateway/mlflow/v1/chat/completions",
 		"https://my-workspace.cloud.databricks.com/api/2.0/clusters/list",
 	} {
 		_, err := genai_prices.Calculate(genai_prices.PriceRequest{
@@ -644,6 +646,17 @@ func TestDatabricksExtractUsage(t *testing.T) {
 		{
 			request:   genai_prices.ExtractRequest{ResponseJSON: []byte(chatBody), ProviderID: "databricks", APIFlavor: "chat"},
 			wantModel: "databricks-glm-5-3", wantUsage: chatUsage, wantPrice: 0.00348512,
+		},
+		{
+			request: genai_prices.ExtractRequest{
+				ResponseJSON: []byte(`{"object":"chat.completion","model":"databricks-gpt-oss-120b",` +
+					`"usage":{"prompt_tokens":7,"completion_tokens":74,"total_tokens":81}}`),
+				ProviderID: "databricks",
+				APIFlavor:  "chat",
+			},
+			wantModel: "databricks-gpt-oss-120b",
+			wantUsage: genai_prices.Usage{genai_prices.UsageInputTokens: 7, genai_prices.UsageOutputTokens: 74},
+			wantPrice: 0.00004545,
 		},
 		{
 			request: genai_prices.ExtractRequest{

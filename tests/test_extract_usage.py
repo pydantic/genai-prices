@@ -182,6 +182,19 @@ def test_databricks_chat_usage(api_flavor: str) -> None:
     assert extracted.calc_price().total_price == Decimal('0.00348512')
 
 
+def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
+    response_data = {
+        'object': 'chat.completion',
+        'model': 'databricks-gpt-oss-120b',
+        'usage': {'prompt_tokens': 7, 'completion_tokens': 74, 'total_tokens': 81},
+    }
+
+    extracted = extract_usage(response_data, provider_id='databricks', api_flavor='chat')
+
+    assert extracted.usage == Usage(input_tokens=7, output_tokens=74)
+    assert extracted.calc_price().total_price == Decimal('0.00004545')
+
+
 def test_databricks_open_responses_usage() -> None:
     response_data = {
         'object': 'response',

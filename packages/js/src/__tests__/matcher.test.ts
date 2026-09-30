@@ -141,6 +141,8 @@ describe('Provider Matching', () => {
 
     it.each([
       'https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions',
+      'https://adb-1234567890123456.7.azuredatabricks.net.evil.test/serving-endpoints/databricks-gpt-oss-120b/invocations',
+      'https://1234567890123456.7.gcp.databricks.com.evil.test/ai-gateway/mlflow/v1/chat/completions',
       'https://my-workspace.cloud.databricks.com/api/2.0/clusters/list',
     ])('should not match Databricks for %s', (providerApiUrl) => {
       expect(matchProvider(actualProviders, { providerApiUrl })).toBeUndefined()

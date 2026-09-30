@@ -205,6 +205,20 @@ describe('extractUsage', () => {
       expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.00348512, 12)
     })
 
+    it('should extract Databricks chat usage without cache or reasoning fields', () => {
+      const responseData = {
+        model: 'databricks-gpt-oss-120b',
+        object: 'chat.completion',
+        usage: { completion_tokens: 74, prompt_tokens: 7, total_tokens: 81 },
+      }
+
+      const { model, usage } = extractUsage(databricksProvider, responseData, 'chat')
+
+      expect(model).toBe('databricks-gpt-oss-120b')
+      expect(usage).toEqual({ input_tokens: 7, output_tokens: 74 })
+      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.00004545, 12)
+    })
+
     it('should extract Databricks Open Responses usage', () => {
       const responseData = {
         model: 'databricks-kimi-k3',
