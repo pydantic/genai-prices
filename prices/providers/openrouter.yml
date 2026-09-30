@@ -6185,15 +6185,23 @@ models:
     name: GLM 5.3 Flash
     match:
       equals: z-ai/glm-5.3-flash
-    prices_checked: 2026-08-26
+    prices_checked: 2026-09-29
     price_comments: >-
-      OpenRouter's model page and models API show a 50% promotion through
-      September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached
-      input, and $0.50 output per million tokens.
+      A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so
+      the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after
+      the promotion ended, stay at the promotional rate.
     prices:
-      input_mtok: 0.075
-      cache_read_mtok: 0.015
-      output_mtok: 0.25
+      - prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.015
+          output_mtok: 0.25
+      - constraint:
+          # https://openrouter.ai/api/v1/models
+          start_date: 2026-09-10
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.03
+          output_mtok: 0.50
     context_window: 1310720
 
   - id: ~anthropic/claude-fable-latest

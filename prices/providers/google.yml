@@ -1115,7 +1115,11 @@ models:
     description: The latest performance, intelligence, and usability improvements to the best model family in the world
       for multimodal understanding, agentic capabilities, and vibe-coding.
     match:
-      starts_with: gemini-3.1-pro-preview
+      or:
+        - starts_with: gemini-3.1-pro-preview
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-pro-latest
     prices_checked: 2026-09-29
     prices:
       input_mtok:
@@ -1162,7 +1166,11 @@ models:
       Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume,
       low-latency applications while maintaining strong multimodal capabilities.
     match:
-      starts_with: gemini-3.5-flash-lite
+      or:
+        - starts_with: gemini-3.5-flash-lite
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-flash-lite-latest
     context_window: 1000000
     prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
@@ -1234,7 +1242,11 @@ models:
       Google's most intelligent Flash model, engineered for long-horizon software engineering,
       autonomous agents, and complex enterprise workflows.
     match:
-      starts_with: gemini-3.8-flash
+      or:
+        - starts_with: gemini-3.8-flash
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-flash-latest
     context_window: 1000000
     prices_checked: 2026-09-29
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex

@@ -385,6 +385,17 @@ describe('Model Matching with Fallback', () => {
   })
 })
 
+describe('Gemini family aliases', () => {
+  // Each alias follows the model the Gemini API's `modelVersion` reports for it.
+  it.each([
+    ['gemini-flash-latest', 'gemini-3.8-flash'],
+    ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite'],
+    ['gemini-pro-latest', 'gemini-3.1-pro-preview'],
+  ])('resolves %s to %s', (modelRef, modelId) => {
+    expect(calcPrice({ input_tokens: 1 }, modelRef, { providerId: 'google' })!.model.id).toBe(modelId)
+  })
+})
+
 describe('Claude Fable 5 vs 5.1', () => {
   // Fable 5.1 caches reads at 0.025x base input; Fable 5 at the usual 0.1x. The Fable 5
   // records match by prefix, so a loose clause silently prices Fable 5.1 cache reads 4x

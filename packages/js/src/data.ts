@@ -1033,6 +1033,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4.1-flash',
+        },
+        prices: {
+          input_mtok: 0.22,
+          cache_read_mtok: 0.007,
+          output_mtok: 0.66,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k3',
         name: 'Kimi K3',
         match: {
@@ -1078,6 +1102,30 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.26,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: 'zai-org/glm-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'zai-org/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -1249,6 +1297,34 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.5-pro',
         },
         context_window: 1000000,
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-flash',
+        name: 'MiMo-V2.6 Flash',
+        match: {
+          equals: 'xiaomi/mimo-v2.6-flash',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-pro',
+        name: 'MiMo-V2.6 Pro',
+        match: {
+          equals: 'xiaomi/mimo-v2.6-pro',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.0036,
@@ -4576,6 +4652,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.007,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'moonshotai/Kimi-K2.6',
         name: 'Kimi K2.6',
         match: {
@@ -4716,6 +4805,19 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.14,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Fast',
+        name: 'GLM 5.3 Fast',
+        match: {
+          equals: 'zai-org/GLM-5.3-Fast',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.21,
+          output_mtok: 6.6,
         },
       },
       {
@@ -4913,6 +5015,30 @@ export const data: Provider[] = [
         },
         price_comments: 'Seems to be no longer available on cerebras, here to help with tests',
         prices: {},
+      },
+      {
+        id: 'qwen-3.8-27b',
+        name: 'Qwen 3.8 27B',
+        description: "Qwen's 27B vision-language model for coding, research, and long-horizon agentic tasks.",
+        match: {
+          or: [
+            {
+              equals: 'qwen-3.8-27b',
+            },
+            {
+              starts_with: 'cerebras/qwen-3.8-27b',
+            },
+            {
+              starts_with: 'cerebras:qwen-3.8-27b',
+            },
+          ],
+        },
+        context_window: 65536,
+        price_comments: 'Rates and context length from https://api.cerebras.ai/public/v1/models.',
+        prices: {
+          input_mtok: 0.99,
+          output_mtok: 1.49,
+        },
       },
       {
         id: 'zai-glm-4.7',
@@ -10411,7 +10537,14 @@ export const data: Provider[] = [
         description:
           'The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
         match: {
-          starts_with: 'gemini-3.1-pro-preview',
+          or: [
+            {
+              starts_with: 'gemini-3.1-pro-preview',
+            },
+            {
+              equals: 'gemini-pro-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: {
@@ -10478,7 +10611,14 @@ export const data: Provider[] = [
         description:
           "Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          starts_with: 'gemini-3.5-flash-lite',
+          or: [
+            {
+              starts_with: 'gemini-3.5-flash-lite',
+            },
+            {
+              equals: 'gemini-flash-lite-latest',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -10564,7 +10704,14 @@ export const data: Provider[] = [
         description:
           "Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows.",
         match: {
-          starts_with: 'gemini-3.8-flash',
+          or: [
+            {
+              starts_with: 'gemini-3.8-flash',
+            },
+            {
+              equals: 'gemini-flash-latest',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -29465,12 +29612,27 @@ export const data: Provider[] = [
         },
         context_window: 1310720,
         price_comments:
-          "OpenRouter's model page and models API show a 50% promotion through September 9, 2026 at 16:00 UTC. List prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.",
-        prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.25,
-        },
+          'A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-fable-latest',
@@ -32507,6 +32669,63 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        description:
+          "xAI's flagship model for coding, agentic tasks, and knowledge work. Supports text and image inputs with text outputs, function calling, structured outputs, and configurable reasoning, over a 500k-token context window.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7',
+            },
+            {
+              regex: '^grok-4\\.7-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.7',
+            },
+            {
+              regex: '^x-ai/grok-4\\.7-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.7-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s pricing table labels the long-context column "Long context >= 200k tokens", while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Refs: https://docs.x.ai/developers/pricing, https://docs.x.ai/developers/models/grok-4.7',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 199999,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 199999,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 199999,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-build-0.1',
         name: 'Grok Build 0.1',
         description:
@@ -32662,6 +32881,28 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'GLM-4.6V',
+        name: 'GLM-4.6V',
+        description: 'Z.AI vision model with video, image, text and file input and native tool use.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.6V',
+            },
+            {
+              equals: 'glm-4.6v',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: 'Context length is 128K per https://docs.z.ai/guides/vlm/glm-4.6v.',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'GLM-5.2',
         name: 'GLM-5.2',
         description: 'Z.AI flagship model with a 1,000,000 token context window, context caching, structured output, and function calling.',
@@ -32721,12 +32962,27 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Standard API rates reflect the 50% launch promotion ending at 24:00 on September 9, 2026 (UTC+8): list prices are $0.15 input, $0.03 cached input, and $0.50 output per million tokens.',
-        prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.015,
-          output_mtok: 0.25,
-        },
+          'The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
     ],
   },
@@ -33107,12 +33363,27 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'The standard API launch promotion is 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens, converted to USD at 1 USD = 7.25 CNY. The pricing page marks this as a two-week 50% discount; list prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output per million tokens.',
-        prices: {
-          input_mtok: 0.055,
-          cache_read_mtok: 0.016,
-          output_mtok: 0.193,
-        },
+          "Launched with a two-week 50% promotion of 0.4 CNY input, 0.115 CNY cached input, and 1.4 CNY output per million tokens. List prices are 0.8 CNY input, 0.23 CNY cached input, and 2.8 CNY output. Converted to USD at 1 USD = 7.25 CNY. Zhipu's page does not state the end date; the list prices start on 2026-09-10, the first UTC day after Z.AI's promotion for the same model ended at 24:00 on September 9, 2026 (UTC+8).",
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.055,
+              cache_read_mtok: 0.016,
+              output_mtok: 0.193,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-10',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.11,
+              cache_read_mtok: 0.032,
+              output_mtok: 0.386,
+            },
+          },
+        ],
       },
     ],
   },

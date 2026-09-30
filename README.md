@@ -34,12 +34,12 @@ The following providers are currently supported:
 [comment]: <> (providers-start)
 
 - [Anthropic](prices/providers/anthropic.yml) - 26 models
-- [Arcee](prices/providers/arcee.yml) - 6 models
-- [Avian](prices/providers/avian.yml) - 17 models
+- [Arcee](prices/providers/arcee.yml) - 10 models
+- [Avian](prices/providers/avian.yml) - 19 models
 - [AWS Bedrock](prices/providers/aws.yml) - 101 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
-- [Baseten](prices/providers/baseten.yml) - 15 models
-- [Cerebras](prices/providers/cerebras.yml) - 7 models
+- [Baseten](prices/providers/baseten.yml) - 17 models
+- [Cerebras](prices/providers/cerebras.yml) - 8 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 47 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 6 models
@@ -74,8 +74,8 @@ The following providers are currently supported:
 - [Together AI](prices/providers/together.yml) - 72 models
 - [TypeSafe](prices/providers/typesafe.yml) - 1 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
-- [X AI](prices/providers/x_ai.yml) - 21 models
-- [Z.AI](prices/providers/zai.yml) - 3 models
+- [X AI](prices/providers/x_ai.yml) - 22 models
+- [Z.AI](prices/providers/zai.yml) - 4 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
 
 [comment]: <> (providers-end)
