@@ -1310,6 +1310,7 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.6-flash',
         },
         context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
@@ -1323,6 +1324,7 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.6-pro',
         },
         context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.0036,
@@ -29085,7 +29087,7 @@ export const data: Provider[] = [
         },
         context_window: 1310720,
         price_comments:
-          'A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+          'A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
         prices: [
           {
             prices: {
@@ -32167,13 +32169,13 @@ export const data: Provider[] = [
         },
         context_window: 500000,
         price_comments:
-          'Requests that exceed 200K prompt tokens are billed at the higher rate for every token in the request. The model page says "exceed the 200K context window", so the tier starts at 200000. Ref: https://docs.x.ai/developers/models/grok-4.7',
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s pricing table labels the long-context column "Long context >= 200k tokens", while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Refs: https://docs.x.ai/developers/pricing, https://docs.x.ai/developers/models/grok-4.7',
         prices: {
           input_mtok: {
             base: 2,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 4,
               },
             ],
@@ -32182,7 +32184,7 @@ export const data: Provider[] = [
             base: 0.5,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 1,
               },
             ],
@@ -32191,7 +32193,7 @@ export const data: Provider[] = [
             base: 6,
             tiers: [
               {
-                start: 200000,
+                start: 199999,
                 price: 12,
               },
             ],
@@ -32435,7 +32437,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+          'The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
         prices: [
           {
             prices: {

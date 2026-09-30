@@ -849,6 +849,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='xiaomi/mimo-v2.6-flash'),
                 name='MiMo-V2.6 Flash',
                 context_window=1000000,
+                price_comments='Rates and context window from the model table at https://avian.io/docs.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.4')
                 ),
@@ -858,6 +859,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='xiaomi/mimo-v2.6-pro'),
                 name='MiMo-V2.6 Pro',
                 context_window=1000000,
+                price_comments='Rates and context window from the model table at https://avian.io/docs.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
                 ),
@@ -16849,7 +16851,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='z-ai/glm-5.3-flash'),
                 name='GLM 5.3 Flash',
                 context_window=1310720,
-                price_comments='A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+                price_comments='A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -18632,11 +18634,11 @@ providers: list[Provider] = [
                 name='Grok 4.7',
                 description="xAI's flagship model for coding, agentic tasks, and knowledge work. Supports text and image inputs with text outputs, function calling, structured outputs, and configurable reasoning, over a 500k-token context window.",
                 context_window=500000,
-                price_comments='Requests that exceed 200K prompt tokens are billed at the higher rate for every token in the request. The model page says "exceed the 200K context window", so the tier starts at 200000. Ref: https://docs.x.ai/developers/models/grok-4.7',
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s pricing table labels the long-context column "Long context >= 200k tokens", while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Refs: https://docs.x.ai/developers/pricing, https://docs.x.ai/developers/models/grok-4.7',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=199999, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]),
                 ),
             ),
             ModelInfo(
@@ -18763,7 +18765,7 @@ providers: list[Provider] = [
                 name='GLM-5.3-Flash',
                 description='Z.AI native multimodal model with a 1,000,000 token context window, context caching, function calling, and always-on reasoning.',
                 context_window=1000000,
-                price_comments='The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours of the promotion stay at the promotional rate.',
+                price_comments='The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC. `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(

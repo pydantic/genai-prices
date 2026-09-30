@@ -438,25 +438,27 @@ models:
         - equals: grok-4.7-latest
     context_window: 500000
     price_comments: >-
-      Requests that exceed 200K prompt tokens are billed at the higher rate for every token in the
-      request. The model page says "exceed the 200K context window", so the tier starts at 200000.
-      Ref: https://docs.x.ai/developers/models/grok-4.7
+      Prompts at or above 200k tokens are billed at the higher rate for every token in the
+      request, not just the tokens past the threshold. xAI's pricing table labels the long-context
+      column "Long context >= 200k tokens", while a tier here fires on `tokens > start`, so the start
+      is 199999 and a 200000-token prompt lands on the higher rate. Refs:
+      https://docs.x.ai/developers/pricing, https://docs.x.ai/developers/models/grok-4.7
     prices_checked: 2026-09-29
     prices:
       input_mtok:
         base: 2
         tiers:
-          - start: 200000
+          - start: 199999
             price: 4
       cache_read_mtok:
         base: 0.5
         tiers:
-          - start: 200000
+          - start: 199999
             price: 1
       output_mtok:
         base: 6
         tiers:
-          - start: 200000
+          - start: 199999
             price: 12
 
   - id: grok-build-0.1

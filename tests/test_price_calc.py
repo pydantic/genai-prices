@@ -1144,15 +1144,15 @@ def test_openrouter_glm_53_flash_price():
 
 
 @pytest.mark.parametrize(
-    ('model_ref', 'provider_id', 'input_price', 'output_price'),
+    ('model_ref', 'provider_id', 'model_id', 'input_price', 'output_price'),
     [
-        ('GLM-5.3-Flash', 'zhipuai', Decimal('0.0000632'), Decimal('0.0000386')),
-        ('glm-5.3-flash', 'zai', Decimal('0.000078'), Decimal('0.00005')),
-        ('z-ai/glm-5.3-flash', 'openrouter', Decimal('0.000078'), Decimal('0.00005')),
+        ('GLM-5.3-Flash', 'zhipuai', 'GLM-5.3-Flash', Decimal('0.0000632'), Decimal('0.0000386')),
+        ('glm-5.3-flash', 'zai', 'GLM-5.3-Flash', Decimal('0.000078'), Decimal('0.00005')),
+        ('z-ai/glm-5.3-flash', 'openrouter', 'z-ai/glm-5.3-flash', Decimal('0.000078'), Decimal('0.00005')),
     ],
 )
 def test_glm_53_flash_list_price_after_promotion(
-    model_ref: str, provider_id: str, input_price: Decimal, output_price: Decimal
+    model_ref: str, provider_id: str, model_id: str, input_price: Decimal, output_price: Decimal
 ):
     """The 50% launch promotion ended on 2026-09-09; list prices apply from 2026-09-10."""
     price = calc_price(
@@ -1162,8 +1162,11 @@ def test_glm_53_flash_list_price_after_promotion(
         genai_request_timestamp=datetime(2026, 9, 10, tzinfo=timezone.utc),
     )
 
+    assert price.provider.id == provider_id
+    assert price.model.id == model_id
     assert price.input_price == input_price
     assert price.output_price == output_price
+    assert price.total_price == input_price + output_price
 
 
 def test_openrouter_modern_dated_aliases_price():
@@ -2276,7 +2279,7 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
     'model_ref,first_long_token,base_input,long_input',
     [
         ('grok-4.5', 200_000, Decimal('2'), Decimal('4')),
-        ('grok-4.7', 200_001, Decimal('2'), Decimal('4')),
+        ('grok-4.7', 200_000, Decimal('2'), Decimal('4')),
         ('grok-4.3', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-4.20', 200_000, Decimal('1.25'), Decimal('2.5')),
         ('grok-build-0.1', 200_000, Decimal('1'), Decimal('2')),

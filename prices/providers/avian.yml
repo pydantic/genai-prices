@@ -149,6 +149,7 @@ models:
       equals: xiaomi/mimo-v2.6-flash
     context_window: 1000000
     prices_checked: 2026-09-29
+    price_comments: Rates and context window from the model table at https://avian.io/docs.
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.05
@@ -160,6 +161,7 @@ models:
       equals: xiaomi/mimo-v2.6-pro
     context_window: 1000000
     prices_checked: 2026-09-29
+    price_comments: Rates and context window from the model table at https://avian.io/docs.
     prices:
       input_mtok: 0.435
       cache_read_mtok: 0.0036

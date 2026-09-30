@@ -136,7 +136,7 @@ def test_baseten_updater_rejects_suspiciously_small_results(tmp_path: Path) -> N
     provider_path = tmp_path / 'baseten.yml'
     provider_path.write_text('id: baseten\nname: Baseten\napi_pattern: baseten\nmodels: []\n')
 
-    with pytest.raises(RuntimeError, match='Baseten sources returned only 0 models; expected at least 5'):
+    with pytest.raises(RuntimeError, match='Baseten sources returned only 0 models; expected at least 11'):
         source_baseten.update_baseten_provider(ProviderYaml(provider_path), [])
 
 

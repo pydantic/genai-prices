@@ -85,8 +85,8 @@ models:
     prices_checked: "2026-09-29"
     price_comments: >-
       The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC.
-      `start_date` is a UTC date, so the list prices start on 2026-09-10 and the last eight hours
-      of the promotion stay at the promotional rate.
+      `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00
+      to 24:00 UTC on September 9, after the promotion ended, stay at the promotional rate.
     prices:
       - prices:
           input_mtok: 0.075
