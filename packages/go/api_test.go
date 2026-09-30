@@ -3,6 +3,7 @@ package genai_prices_test
 import (
 	"errors"
 	"math"
+	"reflect"
 	"testing"
 	"time"
 
@@ -544,5 +545,144 @@ func TestOpenRouterClaudeSonnetLatestMovesToSonnet55(t *testing.T) {
 		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
 			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
 		}
+	}
+}
+
+// Gonka Broker publishes no recorded responses, so these bodies follow its documented usage shapes:
+// https://docs.gonkabroker.com/reference/api-compatibility/ and https://docs.gonkabroker.com/reference/anthropic-api/
+func TestGonkaBrokerExtractUsage(t *testing.T) {
+	tests := []struct {
+		name      string
+		apiFlavor string
+		body      string
+		wantModel string
+		wantUsage genai_prices.Usage
+		wantPrice float64
+	}{
+		{
+			name:      "chat",
+			apiFlavor: "chat",
+			body: `{"object":"chat.completion","model":"zai-org/GLM-5.3-Flash","usage":{"prompt_tokens":100,` +
+				`"prompt_tokens_details":{"cached_tokens":30},"completion_tokens":40,` +
+				`"completion_tokens_details":{"reasoning_tokens":10},"total_tokens":140}}`,
+			wantModel: "zai-org/GLM-5.3-Flash",
+			wantUsage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:           100,
+				genai_prices.UsageCacheReadTokens:       30,
+				genai_prices.UsageOutputTokens:          40,
+				genai_prices.UsageOutputReasoningTokens: 10,
+			},
+			wantPrice: 0.000028,
+		},
+		{
+			name:      "chat without token details",
+			apiFlavor: "chat",
+			body:      `{"model":"zai-org/GLM-5.3-Flash","usage":{"prompt_tokens":100,"completion_tokens":40,"total_tokens":140}}`,
+			wantModel: "zai-org/GLM-5.3-Flash",
+			wantUsage: genai_prices.Usage{genai_prices.UsageInputTokens: 100, genai_prices.UsageOutputTokens: 40},
+			wantPrice: 0.000028,
+		},
+		{
+			name:      "anthropic",
+			apiFlavor: "anthropic",
+			body: `{"type":"message","model":"MiniMaxAI/MiniMax-M2.7","usage":{"input_tokens":70,` +
+				`"cache_creation_input_tokens":0,"cache_read_input_tokens":30,"output_tokens":40}}`,
+			wantModel: "MiniMaxAI/MiniMax-M2.7",
+			wantUsage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     100,
+				genai_prices.UsageCacheReadTokens: 30,
+				genai_prices.UsageOutputTokens:    40,
+			},
+			wantPrice: 0.000035,
+		},
+		{
+			name:      "embeddings",
+			apiFlavor: "embeddings",
+			body:      `{"object":"list","model":"BAAI/bge-m3","usage":{"prompt_tokens":1000000,"total_tokens":1000000}}`,
+			wantModel: "BAAI/bge-m3",
+			wantUsage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
+			wantPrice: 0.01,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
+				ResponseJSON: []byte(test.body),
+				ProviderID:   "gonkabroker",
+				APIFlavor:    test.apiFlavor,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if extracted.Model != test.wantModel || !reflect.DeepEqual(extracted.Usage, test.wantUsage) {
+				t.Fatalf("got model %q usage %v, want %q %v", extracted.Model, extracted.Usage, test.wantModel, test.wantUsage)
+			}
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage:      extracted.Usage,
+				Model:      extracted.Model,
+				ProviderID: "gonkabroker",
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(calculation.TotalPrice-test.wantPrice) > 1e-12 {
+				t.Fatalf("got %g, want %g", calculation.TotalPrice, test.wantPrice)
+			}
+		})
+	}
+}
+
+func TestGonkaBrokerModelPrices(t *testing.T) {
+	tests := []struct {
+		model string
+		want  float64
+	}{
+		{model: "MiniMaxAI/MiniMax-M2.7", want: 0.75},
+		{model: "deepseek-ai/DeepSeek-V4-Flash-0731", want: 0.6},
+		{model: "zai-org/GLM-5.3-Flash", want: 0.6},
+	}
+	for _, test := range tests {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     2_000_000,
+				genai_prices.UsageCacheReadTokens: 1_000_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+			},
+			Model:      test.model,
+			ProviderID: "gonkabroker",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-12 {
+			t.Fatalf("%s: got %g, want %g", test.model, calculation.TotalPrice, test.want)
+		}
+	}
+}
+
+func TestGonkaBrokerProviderSelection(t *testing.T) {
+	for _, request := range []genai_prices.PriceRequest{
+		{ProviderID: "gonkabroker"},
+		{ProviderID: "gonka"},
+		{ProviderAPIURL: "https://proxy.gonkabroker.com/v1/chat/completions"},
+		{ProviderAPIURL: "https://proxy.gonkabroker.com/v1/messages"},
+	} {
+		request.Usage = genai_prices.Usage{genai_prices.UsageInputTokens: 1}
+		request.Model = "zai-org/GLM-5.3-Flash"
+		calculation, err := genai_prices.Calculate(request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ProviderID != "gonkabroker" {
+			t.Fatalf("%#v selected provider %q", request, calculation.ProviderID)
+		}
+	}
+
+	_, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1},
+		Model: "BAAI/bge-m3",
+	})
+	if !errors.Is(err, genai_prices.ErrProviderNotFound) {
+		t.Fatalf("a bare Gonka Broker model ID selected a provider: %v", err)
 	}
 }

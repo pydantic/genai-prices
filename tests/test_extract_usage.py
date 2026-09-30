@@ -156,6 +156,76 @@ def test_baseten_messages_usage() -> None:
     assert extracted.calc_price().total_price == Decimal('0.0000314')
 
 
+# Gonka Broker publishes no recorded responses, so these bodies follow its documented usage shapes:
+# https://docs.gonkabroker.com/reference/api-compatibility/ and https://docs.gonkabroker.com/reference/anthropic-api/
+def test_gonkabroker_chat_usage() -> None:
+    response_data = {
+        'object': 'chat.completion',
+        'model': 'zai-org/GLM-5.3-Flash',
+        'usage': {
+            'prompt_tokens': 100,
+            'prompt_tokens_details': {'cached_tokens': 30},
+            'completion_tokens': 40,
+            'completion_tokens_details': {'reasoning_tokens': 10},
+            'total_tokens': 140,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='gonkabroker', api_flavor='chat')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'zai-org/GLM-5.3-Flash'
+    assert extracted.usage == Usage(
+        input_tokens=100, cache_read_tokens=30, output_tokens=40, output_reasoning_tokens=10
+    )
+    assert extracted.calc_price().total_price == Decimal('0.000028')
+
+
+def test_gonkabroker_chat_usage_without_token_details() -> None:
+    response_data = {
+        'model': 'zai-org/GLM-5.3-Flash',
+        'usage': {'prompt_tokens': 100, 'completion_tokens': 40, 'total_tokens': 140},
+    }
+
+    extracted = extract_usage(response_data, provider_api_url='https://proxy.gonkabroker.com/v1', api_flavor='chat')
+
+    assert extracted.provider.id == 'gonkabroker'
+    assert extracted.usage == Usage(input_tokens=100, output_tokens=40)
+
+
+def test_gonkabroker_messages_usage() -> None:
+    response_data = {
+        'type': 'message',
+        'model': 'MiniMaxAI/MiniMax-M2.7',
+        'usage': {
+            'input_tokens': 70,
+            'cache_creation_input_tokens': 0,
+            'cache_read_input_tokens': 30,
+            'output_tokens': 40,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='gonkabroker', api_flavor='anthropic')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'MiniMaxAI/MiniMax-M2.7'
+    assert extracted.usage == Usage(input_tokens=100, cache_read_tokens=30, output_tokens=40)
+    assert extracted.calc_price().total_price == Decimal('0.000035')
+
+
+def test_gonkabroker_embeddings_usage() -> None:
+    response_data = {
+        'object': 'list',
+        'model': 'BAAI/bge-m3',
+        'usage': {'prompt_tokens': 1_000_000, 'total_tokens': 1_000_000},
+    }
+
+    extracted = extract_usage(response_data, provider_id='gonkabroker', api_flavor='embeddings')
+
+    assert extracted.usage == Usage(input_tokens=1_000_000)
+    assert extracted.calc_price().total_price == Decimal('0.01')
+
+
 @pytest.mark.parametrize(
     'provider_id,model,expected_price',
     [

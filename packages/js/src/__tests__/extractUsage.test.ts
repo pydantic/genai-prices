@@ -10,6 +10,7 @@ const anthropicProvider: Provider = data.find((provider) => provider.id === 'ant
 const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')!
 const basetenProvider: Provider = data.find((provider) => provider.id === 'baseten')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
+const gonkabrokerProvider: Provider = data.find((provider) => provider.id === 'gonkabroker')!
 const githubCopilotProvider: Provider = data.find((provider) => provider.id === 'github-copilot')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
@@ -175,6 +176,66 @@ describe('extractUsage', () => {
 
       expect(model).toBe('zai-org/GLM-5.3-Flash')
       expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_tokens: 40 })
+    })
+
+    // Gonka Broker publishes no recorded responses, so these bodies follow its documented usage shapes:
+    // https://docs.gonkabroker.com/reference/api-compatibility/ and https://docs.gonkabroker.com/reference/anthropic-api/
+    it('should extract Gonka Broker chat usage', () => {
+      const responseData = {
+        model: 'zai-org/GLM-5.3-Flash',
+        object: 'chat.completion',
+        usage: {
+          completion_tokens: 40,
+          completion_tokens_details: { reasoning_tokens: 10 },
+          prompt_tokens: 100,
+          prompt_tokens_details: { cached_tokens: 30 },
+          total_tokens: 140,
+        },
+      }
+
+      const { model, usage } = extractUsage(gonkabrokerProvider, responseData, 'chat')
+
+      expect(model).toBe('zai-org/GLM-5.3-Flash')
+      expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_reasoning_tokens: 10, output_tokens: 40 })
+      expect(calcPrice(usage, model!, { providerId: 'gonkabroker' })?.total_price).toBeCloseTo(0.000028, 12)
+    })
+
+    it('should extract Gonka Broker chat usage without token details', () => {
+      const responseData = {
+        model: 'zai-org/GLM-5.3-Flash',
+        usage: { completion_tokens: 40, prompt_tokens: 100, total_tokens: 140 },
+      }
+
+      const { usage } = extractUsage(gonkabrokerProvider, responseData, 'chat')
+
+      expect(usage).toEqual({ input_tokens: 100, output_tokens: 40 })
+    })
+
+    it('should extract Gonka Broker Messages usage', () => {
+      const responseData = {
+        model: 'MiniMaxAI/MiniMax-M2.7',
+        type: 'message',
+        usage: { cache_creation_input_tokens: 0, cache_read_input_tokens: 30, input_tokens: 70, output_tokens: 40 },
+      }
+
+      const { model, usage } = extractUsage(gonkabrokerProvider, responseData, 'anthropic')
+
+      expect(model).toBe('MiniMaxAI/MiniMax-M2.7')
+      expect(usage).toEqual({ cache_read_tokens: 30, input_tokens: 100, output_tokens: 40 })
+      expect(calcPrice(usage, model!, { providerId: 'gonkabroker' })?.total_price).toBeCloseTo(0.000035, 12)
+    })
+
+    it('should extract Gonka Broker embeddings usage', () => {
+      const responseData = {
+        model: 'BAAI/bge-m3',
+        object: 'list',
+        usage: { prompt_tokens: 1_000_000, total_tokens: 1_000_000 },
+      }
+
+      const { model, usage } = extractUsage(gonkabrokerProvider, responseData, 'embeddings')
+
+      expect(usage).toEqual({ input_tokens: 1_000_000 })
+      expect(calcPrice(usage, model!, { providerId: 'gonkabroker' })?.total_price).toBeCloseTo(0.01, 12)
     })
 
     // 0.5M five-minute and 0.5M one-hour cache writes. The regional Bedrock endpoint carries a 10% premium.

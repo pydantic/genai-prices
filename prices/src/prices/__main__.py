@@ -11,6 +11,7 @@ from .source_arcee import get_arcee_prices
 from .source_baseten import get_baseten_prices
 from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
+from .source_gonkabroker import get_gonkabroker_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
@@ -29,6 +30,7 @@ def main():
         get_baseten_prices,
         get_cloudflare_prices,
         get_cursor_prices,
+        get_gonkabroker_prices,
         get_huggingface_prices,
         get_litellm_prices,
         get_openrouter_prices,

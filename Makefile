@@ -79,6 +79,10 @@ baseten-get: ## get baseten model prices
 cursor-get: ## get cursor model prices
 	uv run -m prices get_cursor_prices
 
+.PHONY: gonkabroker-get
+gonkabroker-get: ## get gonka broker model prices
+	uv run -m prices get_gonkabroker_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
@@ -88,7 +92,7 @@ quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get baseten-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get baseten-get cloudflare-get cursor-get gonkabroker-get ovhcloud-get quicksilverpro-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

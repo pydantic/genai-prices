@@ -156,6 +156,9 @@ describe('generated data split', () => {
 
   it.each([
     { expectedTotalPrice: 0.68, model: 'zai-org/GLM-5.3-Flash', providerId: 'baseten' },
+    { expectedTotalPrice: 0.75, model: 'MiniMaxAI/MiniMax-M2.7', providerId: 'gonkabroker' },
+    { expectedTotalPrice: 0.6, model: 'deepseek-ai/DeepSeek-V4-Flash-0731', providerId: 'gonkabroker' },
+    { expectedTotalPrice: 0.6, model: 'zai-org/GLM-5.3-Flash', providerId: 'gonkabroker' },
     { expectedTotalPrice: 0.448, model: 'deepseek/deepseek-v4-flash-latest' },
     { expectedTotalPrice: 5.42, model: 'deepseek/deepseek-v4-pro' },
     { expectedTotalPrice: 18.3, model: 'moonshotai/kimi-k3' },

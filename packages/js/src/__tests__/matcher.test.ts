@@ -51,6 +51,11 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { modelId: 'zai-org/GLM-5.3' })?.id).not.toBe('baseten')
     })
 
+    it('does not claim third-party model namespaces for Gonka Broker', () => {
+      expect(matchProvider(actualProviders, { modelId: 'zai-org/GLM-5.3-Flash' })?.id).not.toBe('gonkabroker')
+      expect(matchProvider(actualProviders, { modelId: 'BAAI/bge-m3' })).toBeUndefined()
+    })
+
     it('does not claim the vendor namespaces GitHub Copilot resells', () => {
       expect(matchProvider(actualProviders, { modelId: 'claude-haiku-4.5' })?.id).toBe('anthropic')
       expect(matchProvider(actualProviders, { modelId: 'gemini-3.6-flash' })?.id).toBe('google')
@@ -65,6 +70,8 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'arcee' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerId: 'baseten' })?.id).toBe('baseten')
       expect(matchProvider(actualProviders, { providerId: 'cursor' })?.id).toBe('cursor')
+      expect(matchProvider(actualProviders, { providerId: 'gonkabroker' })?.id).toBe('gonkabroker')
+      expect(matchProvider(actualProviders, { providerId: 'gonka' })?.id).toBe('gonkabroker')
       expect(matchProvider(actualProviders, { providerId: 'github-copilot' })?.id).toBe('github-copilot')
     })
 
@@ -119,6 +126,10 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.arcee.ai/api/v1/chat/completions' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://inference.baseten.co/v1/chat/completions' })?.id).toBe('baseten')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.cursor.com/v1/agents' })?.id).toBe('cursor')
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://proxy.gonkabroker.com/v1/chat/completions' })?.id).toBe(
+        'gonkabroker'
+      )
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://proxy.gonkabroker.com/v1/messages' })?.id).toBe('gonkabroker')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.githubcopilot.com/chat/completions' })?.id).toBe(
         'github-copilot'
       )

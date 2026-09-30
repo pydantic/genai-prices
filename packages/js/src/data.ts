@@ -8396,6 +8396,135 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'gonkabroker',
+    name: 'Gonka Broker',
+    pricing_urls: ['https://gonkabroker.com/gonka-api-pricing/', 'https://proxy.gonkabroker.com/v1/models'],
+    api_pattern: 'https://proxy\\.gonkabroker\\.com(?:/|$)',
+    description: 'OpenAI- and Anthropic-compatible inference for open-source models on the decentralized Gonka GPU network.',
+    price_comments:
+      "Rates come from the public GET /v1/models catalog, which lists every served model. Rates fluctuate with GPU supply and demand, and each top-up locks the rates current at that moment. Deposits are consumed oldest first, so a request is billed at the rates locked in the oldest deposit with a remaining balance, which can predate the dated rate recorded here. The monthly free tier of at least 1M tokens and the 10-30% rebates on days above 10M tokens are not modelled. Cache writes are free, cached input is billed at the catalog's input_cache_read rate, and reasoning is billed as output. Embeddings are billed on input tokens only. Model IDs use third-party namespaces, so they do not infer the Gonka Broker provider without a Gonka Broker provider ID or API URL.",
+    provider_match: {
+      contains: 'gonka',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'BAAI/bge-m3',
+        name: 'BGE-M3',
+        match: {
+          equals: 'BAAI/bge-m3',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M2.7',
+        name: 'MiniMax-M2.7',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M2.7',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        match: {
+          equals: 'zai-org/GLM-5.3-Flash',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+    ],
+  },
+  {
     id: 'google',
     name: 'Google',
     pricing_urls: ['https://ai.google.dev/gemini-api/docs/pricing', 'https://cloud.google.com/vertex-ai/generative-ai/pricing'],

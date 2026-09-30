@@ -47,6 +47,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 40 models
+- [Gonka Broker](prices/providers/gonkabroker.yml) - 4 models
 - [Google](prices/providers/google.yml) - 58 models
 - [Groq](prices/providers/groq.yml) - 33 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models

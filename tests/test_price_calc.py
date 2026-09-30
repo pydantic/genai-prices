@@ -200,6 +200,37 @@ def test_arcee_provider_inference() -> None:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('MiniMaxAI/MiniMax-M2.7', Decimal('0.75')),
+        ('deepseek-ai/DeepSeek-V4-Flash-0731', Decimal('0.6')),
+        ('zai-org/GLM-5.3-Flash', Decimal('0.6')),
+    ],
+)
+def test_gonkabroker_model_prices(model_ref: str, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='gonkabroker',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    ['https://proxy.gonkabroker.com/v1/chat/completions', 'https://proxy.gonkabroker.com/v1/messages'],
+)
+def test_gonkabroker_provider_inference(provider_api_url: str) -> None:
+    url_price = calc_price(Usage(input_tokens=1), model_ref='zai-org/GLM-5.3-Flash', provider_api_url=provider_api_url)
+
+    assert url_price.provider.id == 'gonkabroker'
+    assert calc_price(Usage(input_tokens=1), model_ref='BAAI/bge-m3', provider_id='gonka').provider.id == 'gonkabroker'
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'zai-org/glm-5.3-flash'"):
+        calc_price(Usage(input_tokens=1), model_ref='zai-org/GLM-5.3-Flash')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),
