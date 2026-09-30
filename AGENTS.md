@@ -9,8 +9,9 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 
 - **Price Data**: YAML files in `prices/providers/` with pricing information for 30+ LLM providers
 - **Unit Registry**: `prices/units.yml` defines every billable unit and its price key
-- **Packages**: `packages/python/` (PyPI `genai-prices`) and `packages/js/` (npm `@pydantic/genai-prices`) —
-  two implementations that must stay behaviourally identical
+- **Packages**: `packages/python/` (PyPI `genai-prices`), `packages/js/` (npm `@pydantic/genai-prices`) and
+  `packages/go/` (Go module `github.com/pydantic/genai-prices/packages/go`) — three implementations that must stay
+  behaviourally identical (see "Python/JS/Go parity")
 - **Data Pipeline**: Tools to build JSON schemas, validate data, and update from external sources
 - **Price Sources**: Integration with Helicone, OpenRouter, LiteLLM, and other pricing sources
 
@@ -22,7 +23,8 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 2. **Unit Registry** (`prices/units.yml`): the vocabulary of billable units — every valid price key and
    extractor destination is derived from it
 3. **Data Pipeline** (`prices/src/prices/`): Python modules that build, validate, and process pricing data
-4. **Packages** (`packages/python/`, `packages/js/`): published libraries for end users to calculate costs
+4. **Packages** (`packages/python/`, `packages/js/`, `packages/go/`): published libraries for end users to calculate
+   costs
 5. **External Data Integration**: Tools to pull and compare prices from external sources
 
 ### Key Directories
@@ -33,9 +35,10 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
   - `src/prices/`: Python package for data processing
   - `new_data/v2/`: the **live** published data — `data.json`, `data_slim.json` and their schemas (generated)
   - `data.json`, `data_slim.json` + schemas: **frozen v1** compatibility snapshots (see "Pricing Data")
-- `packages/python/`, `packages/js/`: published packages. `data.py`/`data.ts` and `data_units.py`/`dataUnits.ts`
-  are generated — never hand-edit them
-- `tests/`: Python test suite; JS tests live in `packages/js/src/__tests__/`
+- `packages/python/`, `packages/js/`, `packages/go/`: published packages. Their provider data (`data.py`, `data.ts`,
+  `internal/data/prices.json`) and unit data (`data_units.py`, `dataUnits.ts`, `data_units.go`) are generated — never
+  hand-edit them
+- `tests/`: Python test suite; JS tests live in `packages/js/src/__tests__/`, Go tests in `packages/go/*_test.go`
 - `specs/data-driven-unit-registry/`: authoritative design docs for the unit registry and the v1/v2/v3
   contract rules. Read these before changing anything about units or published artifacts
 - `scratch/`: Development/testing files IGNORE THESE FILES
@@ -55,24 +58,28 @@ make sync         # Update local packages and uv.lock
 make format       # Format code with ruff
 make lint         # Check code style and linting
 make typecheck    # Run static type checking with basedpyright
-make test         # Run the Python tests with coverage (does NOT run the JS suite)
+make test         # Run the Python tests with coverage (does NOT run the JS or Go suites)
 make testcov      # Run tests and generate HTML coverage report
 npm run ci        # Build and test the JS package
+make format-go    # Format the Go package with gofmt
+make lint-go      # Lint the Go package with golangci-lint
+make test-go      # Run the Go tests with the race detector; fails below 90% coverage
 ```
 
-`make all` covers both Python and JavaScript. Run `npm run ci` directly to verify only JavaScript.
+`make all` covers Python, JavaScript and Go. Run `npm run ci` directly to verify only JavaScript, and `make test-go`
+to verify only Go.
 
 ### Building and Data Processing
 
 ```bash
 make build        # build-prices + package-data + inject-providers — use this one
 make build-prices # Validate providers and write prices/new_data/v2/* + prices/providers/.schema.json
-make package-data # Regenerate the bundled data in packages/python/ and packages/js/
+make package-data # Regenerate the bundled data in packages/python/, packages/js/ and packages/go/
 ```
 
 Always run `make build`, not `make build-prices` alone. The installed packages read their **bundled**
-data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`), which only `package-data`
-regenerates — so a `calc_price` check run after `build-prices` verifies stale data.
+data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`, `packages/go/internal/data/prices.json`),
+which only `package-data` regenerates — so a `calc_price` check run after `build-prices` verifies stale data.
 
 ### Price Data Management
 
@@ -110,9 +117,9 @@ catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard
   `prices_checked` dates as a bug. `tests/test_frozen_v1_data.py` pins their sha256 digests, so an edit
   fails the test suite — because no build step rewrites them, that test is the only thing that catches it.
 - **NEVER** hand-edit any generated file: the v2 payloads and schemas, `prices/providers/.schema.json`,
-  or the bundled `data.py` / `data.ts` / `data_units.py` / `dataUnits.ts`. Edit the provider YAML or
-  `prices/units.yml` and run `make build`. The pre-commit `build` hook regenerates all of these and
-  fails when the result differs, so CI catches an edit to any of them.
+  or the bundled `data.py` / `data.ts` / `prices.json` / `data_units.py` / `dataUnits.ts` / `data_units.go`.
+  Edit the provider YAML or `prices/units.yml` and run `make build`. The pre-commit `build` hook regenerates
+  all of these and fails when the result differs, so CI catches an edit to any of them.
 - Every generated artifact is marked `linguist-generated` in `.gitattributes`, so GitHub collapses its
   diff. Review the provider YAML and `units.yml`; trust the build hook and the digest test for the rest.
 - Published artifact URLs must not change — new contracts go in a new `prices/new_data/v<version>/`
@@ -121,7 +128,7 @@ catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard
   place re-prices every past request at the new rate — a request from before the change gets billed
   at today's price. Add a dated conditional price entry instead: make `prices:` a list, keep the
   existing rates as the first entry with no `constraint`, and append the new rates under
-  `constraint: { start_date: <date the new price took effect> }`. Both engines take the **last**
+  `constraint: { start_date: <date the new price took effect> }`. All three engines take the **last**
   matching entry, so the dated entry goes at the end. `openai.yml` (o3) and `anthropic.yml`
   (1M-context surcharge) show the shape. Overwrite in place only to correct a value that was already
   wrong when it was written — a correction has no history worth keeping. The `/add-price-model` skill
@@ -159,37 +166,45 @@ closure rules.
 
 ### Development Workflow
 
-- Use `uv` for dependency management (not pip/conda), `npm` for the JS workspace
-- The pre-commit `build` hook fires on any change under `prices/` and rewrites **ten** paths:
+- Use `uv` for dependency management (not pip/conda), `npm` for the JS workspace, and `go` modules for `packages/go/`
+- `make build` needs a Go toolchain on `PATH`: `package-data` runs `gofmt` on the generated `data_units.go`
+- The pre-commit `build` hook fires on any change under `prices/` and rewrites **twelve** paths:
   `prices/providers/.schema.json`, the four `prices/new_data/v2/*` files, `data.py`, `data_units.py`,
-  `data.ts`, `dataUnits.ts`, plus `README.md` (provider list). Your first `git commit` will abort after
-  it rewrites them — re-stage the regenerated files and commit again. Never reach for `--no-verify`:
-  that hook is the only thing keeping the published data in sync with the YAML.
+  `data.ts`, `dataUnits.ts`, `packages/go/internal/data/prices.json`, `packages/go/data_units.go`, plus
+  `README.md` (provider list). Your first `git commit` will abort after it rewrites them — re-stage the
+  regenerated files and commit again. Never reach for `--no-verify`: that hook is the only thing keeping the
+  published data in sync with the YAML.
 - Run `make build` after editing anything under `prices/`
 - Always run the full test suite before submitting changes
 
 ### Testing
 
 - Python tests use pytest and are in `tests/`; JS tests are in `packages/js/src/__tests__/` and run
-  via `npm run ci`
+  via `npm run ci`; Go tests are `packages/go/*_test.go` and run via `make test-go`
 - CI and local `make test` enforce **100% coverage** across `packages/python/**`, `prices/src/**`,
-  and `tests/**`.
+  and `tests/**`. CI and local `make test-go` enforce **90% coverage** of `packages/go/`.
 - **Never hand-edit `tests/dataset/usages.json` or add synthetic feature cases to it.** It is the
   cross-language golden dataset generated by `tests/dataset/extract_usages.py` from recorded raw bodies;
-  synthetic behavior belongs in focused Python and JavaScript tests. `tests/test_dataset.py` compares in
+  synthetic behavior belongs in focused Python, JavaScript and Go tests. `tests/test_dataset.py` compares in
   memory and fails if the file is stale; regenerate with `python tests/dataset/extract_usages.py` and
   commit the diff.
-- Price changes are pinned by assertions in `tests/test_price_calc.py` and `tests/test_price_regressions.py`.
-  Update the expected values; don't weaken or delete the assertion.
+- Price changes are pinned by assertions in `tests/test_price_calc.py`, `tests/test_price_regressions.py`,
+  `packages/js/src/__tests__/` and `packages/go/api_test.go`. Update the expected values; don't weaken or delete
+  the assertion.
 - Use `make test-all-python` to test across Python 3.10-3.14
 
-### Python/JS parity
+### Python/JS/Go parity
 
-The two packages are independent implementations of the same behaviour and are the easiest place to
-introduce drift. Any change to pricing, extraction, matching or unit handling must land on both sides.
-`tests/dataset/usages.json` is generated by Python and asserted by JS, so it catches arithmetic drift on
-the models real data covers — but it pins a single UTC instant and only the units shipped prices use, so
-it does not catch constraint-resolution, matching, warning or error-shape divergence.
+The three packages are independent implementations of the same behaviour and are the easiest place to
+introduce drift. Any change to pricing, extraction, matching or unit handling must land in all three. The
+runtime data updater and the CLI exist only in Python and JS; Go callers load fresh data with
+`NewCalculatorFromJSON`.
+`tests/dataset/usages.json` is generated by Python and asserted by JS and Go (`packages/go/dataset_test.go`),
+so it catches arithmetic drift on the models real data covers — but it pins a single UTC instant and only the
+units shipped prices use, so it does not catch constraint-resolution, matching, warning or error-shape divergence.
+`packages/go/parity_test.go` covers matching, constraint resolution, tiered pricing, usage decomposition and
+usage extraction for Go against synthetic provider data. It asserts hardcoded expectations, not the other
+engines' output, so update it together with the matching Python and JS tests.
 
 ### Code Style
 
@@ -199,10 +214,11 @@ it does not catch constraint-resolution, matching, warning or error-shape diverg
 
 ## Releasing
 
-Create a GitHub release with a `vX.Y.Z` tag; CI publishes both packages from it. The version lives
-only in the tag - `packages/python/pyproject.toml` is `dynamic` (uv-dynamic-versioning) and the
-`0.0.0` in `packages/js/package.json` is a placeholder the release job overwrites. Never add a
-version bump to a PR. See `RELEASE.md`.
+Create a GitHub release with a `vX.Y.Z` tag; CI publishes the Python and JS packages from it and creates the
+matching `packages/go/vX.Y.Z` tag for the Go module. The version lives only in the tag -
+`packages/python/pyproject.toml` is `dynamic` (uv-dynamic-versioning) and the `0.0.0` in
+`packages/js/package.json` is a placeholder the release job overwrites. Never add a version bump to a PR. See
+`RELEASE.md`.
 
 ## Pull Requests
 
