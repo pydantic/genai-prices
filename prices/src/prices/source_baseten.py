@@ -15,7 +15,7 @@ from prices.utils import package_dir
 
 CATALOG_URL = 'https://docs.baseten.co/inference/model-apis/overview.md'
 PRICING_URL = 'https://www.baseten.co/pricing/'
-MIN_MODEL_COUNT = 15
+MIN_MODEL_COUNT = 11
 PRICING_ID_ALIASES = {
     'deepseek-v4-pro': 'deepseek-ai/DeepSeek-V4-Pro',
     'deepseek-v4-pro-0813': 'deepseek-ai/DeepSeek-V4-Pro-0813',

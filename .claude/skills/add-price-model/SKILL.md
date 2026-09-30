@@ -116,6 +116,11 @@ to — check the provider docs and, if you can, hit the API and read the respons
 match that. Don't assume; the aliasing scheme is provider-specific (some vendors have no bare-family
 alias at all).
 
+Google keeps one family alias per tier: `gemini-flash-latest`, `gemini-flash-lite-latest` and
+`gemini-pro-latest`. Each can point at a different generation, and Google's changelog does not record
+every move. Read the target from the `modelVersion` field of a Gemini API `generateContent` response
+(`GOOGLE_API_KEY` in `~/ai-coding-tools/.env`) before you move one.
+
 ## 4b. Changing the price of a model that already exists
 
 A provider changing its rates is **not** an edit to the existing `prices:` block. Overwriting those
@@ -138,8 +143,8 @@ prices:
       output_mtok: 1.2
 ```
 
-- Put the entry with no `constraint` **first**. Both engines scan the list backwards and take the
-  first entry whose constraint is active, so an unconstrained entry placed last would always win.
+- Put the entry with no `constraint` **first**. All three engines (Python, JS, Go) scan the list backwards and
+  take the first entry whose constraint is active, so an unconstrained entry placed last would always win.
 - Set `start_date` to the date the provider's new price took effect, not to today. Cite the changelog
   or announcement that states that date, in a YAML comment beside `start_date`.
 - Set `prices_checked` to today. It records when you verified the rates, which is a different fact
@@ -169,8 +174,9 @@ history, which is why #531 went green.
 
 ## 5. Build + verify resolution
 
-Use `make build`, not just `make build-prices`. The installed `genai_prices` package (and the JS
-package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`).
+Use `make build`, not just `make build-prices`. The installed `genai_prices` package (and the JS and Go
+packages) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`,
+`packages/go/internal/data/prices.json`).
 `make build-prices` writes only `prices/new_data/v2/*` and `prices/providers/.schema.json` — it does not
 touch the bundled data, so a `calc_price` check run after it verifies **stale** package data and can
 silently show the wrong result. `make build` runs `build-prices` + `package-data` + `inject-providers`.
@@ -195,7 +201,7 @@ for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-l
 
 ## 6. Commit, push, PR
 
-The pre-commit `build` hook regenerates ten paths, so the first `git commit` will abort after it
+The pre-commit `build` hook regenerates twelve paths, so the first `git commit` will abort after it
 rewrites them; re-stage and commit again. Stage files explicitly — **never `git add -A`** (it leaks
 local/scratch files) — and never `--no-verify`, since that hook is what keeps the published data in
 sync with the YAML:
@@ -207,6 +213,7 @@ git add prices/providers/<provider>.yml \
         prices/new_data/v2/data_slim.json prices/new_data/v2/data_slim.schema.json \
         packages/python/genai_prices/data.py packages/python/genai_prices/data_units.py \
         packages/js/src/data.ts packages/js/src/dataUnits.ts \
+        packages/go/internal/data/prices.json packages/go/data_units.go \
         README.md
 git commit -m "Add <Provider> <Model> pricing"   # re-run once if hooks rewrite files
 git push -u origin <slug>

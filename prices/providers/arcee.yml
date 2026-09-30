@@ -11,7 +11,8 @@ provider_match:
 price_comments: >-
   Covers the complete public Text Models pricing table. The table publishes input, cached-input, and output token rates.
   Context windows and rates for images, requests, and cache writes are omitted because the public pricing page does not publish
-  them. Model IDs use third-party namespaces, so they do not infer the Arcee provider without an Arcee provider ID or API URL.
+  them. Model IDs use third-party namespaces, so they do not infer the Arcee provider without an Arcee provider ID or API
+  URL.
 
 # Arcee returns an OpenAI-compatible chat completion response with standard model and usage fields.
 # https://docs.arcee.ai/api-reference/chat-completion
@@ -49,7 +50,7 @@ models:
     name: DeepSeek V4 Flash
     match:
       equals: deepseek/deepseek-v4-flash-latest
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.14
       cache_read_mtok: 0.028
@@ -59,17 +60,37 @@ models:
     name: DeepSeek V4 Pro
     match:
       equals: deepseek/deepseek-v4-pro
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 1.74
       cache_read_mtok: 0.20
       output_mtok: 3.48
 
+  - id: deepseek/deepseek-v4-pro-0813
+    name: DeepSeek V4 Pro 0813
+    match:
+      equals: deepseek/deepseek-v4-pro-0813
+    prices:
+      input_mtok: 1.32
+      cache_read_mtok: 0.044
+      output_mtok: 3.96
+    prices_checked: 2026-09-29
+
+  - id: deepseek/deepseek-v4.1-flash
+    name: DeepSeek V4.1 Flash
+    match:
+      equals: deepseek/deepseek-v4.1-flash
+    prices:
+      input_mtok: 0.22
+      cache_read_mtok: 0.007
+      output_mtok: 0.66
+    prices_checked: 2026-09-29
+
   - id: moonshotai/kimi-k3
     name: Kimi K3
     match:
       equals: moonshotai/kimi-k3
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30
@@ -79,7 +100,7 @@ models:
     name: Inkling Small
     match:
       equals: thinkingmachines/inkling-small
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.50
       cache_read_mtok: 0.10
@@ -89,7 +110,7 @@ models:
     name: Trinity Large Thinking
     match:
       equals: trinity-large-thinking
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.06
@@ -99,8 +120,28 @@ models:
     name: GLM 5.2
     match:
       equals: zai-org/glm-5.2
-    prices_checked: 2026-08-28
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 1.40
       cache_read_mtok: 0.26
       output_mtok: 4.40
+
+  - id: zai-org/glm-5.3
+    name: GLM 5.3
+    match:
+      equals: zai-org/glm-5.3
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    prices_checked: 2026-09-29
+
+  - id: zai-org/glm-5.3-flash
+    name: GLM 5.3 Flash
+    match:
+      equals: zai-org/glm-5.3-flash
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.03
+      output_mtok: 0.5
+    prices_checked: 2026-09-29

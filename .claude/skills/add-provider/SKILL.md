@@ -1,6 +1,6 @@
 ---
 name: add-provider
-description: Add a new inference provider to genai-prices, including provider data, matching, usage extractors, update automation, cassettes, agentic checks, generated artifacts, and Python/JavaScript parity tests. Use for a new provider, not a new model on an existing provider.
+description: Add a new inference provider to genai-prices, including provider data, matching, usage extractors, update automation, cassettes, agentic checks, generated artifacts, and Python/JavaScript/Go parity tests. Use for a new provider, not a new model on an existing provider.
 ---
 
 # Add a provider
@@ -51,7 +51,7 @@ has the same response as the provider's native endpoint.
 Add provider extractors for flavors that report usage. Extract the model when the response includes it. When the response omits
 the model, return the usage with a nullable model so callers can provide the request model during price calculation. Map cached
 tokens separately. Any extractor that maps `completion_tokens` must also map the provider's reasoning-token breakdown to
-`output_reasoning_tokens`. Test each flavor through the public Python and JavaScript extraction APIs.
+`output_reasoning_tokens`. Test each flavor through the public Python, JavaScript and Go extraction APIs.
 
 If an API response does not report usage, leave that flavor unsupported and document the limitation instead of inventing a
 mapping.
@@ -98,16 +98,18 @@ gh aw compile agentic-price-check-direct-providers --no-check-update --no-emit -
 The agentic workflow is read-only. It reports price discrepancies, new models, potential removals, unchecked fields, and
 unreadable sources through one rolling issue.
 
-## Verify both runtimes
+## Verify every runtime
 
-Add focused Python and JavaScript tests for:
+Add focused Python, JavaScript and Go tests for:
 
 - provider selection by explicit provider ID
 - provider selection by API URL and model namespace when supported
 - representative input, cached-input, and output price calculation
 - every usage extractor flavor
 - aliases and context-sensitive matching that could collide
-- updater parsing, metadata preservation, write guards, and cassette replay
+
+Put the Go tests in `packages/go/api_test.go`, which runs against the bundled provider data. Test updater parsing,
+metadata preservation, write guards, and cassette replay in Python only: the updater lives in `prices/src/prices/`.
 
 Run `make build` after every provider-data edit. This regenerates the v2 feed, package data, schemas, and provider inventory.
 Never hand-edit those outputs or `tests/dataset/usages.json`.
