@@ -137,6 +137,19 @@ providers:
       aliases while the docs table publishes qualified model IDs. A missing cached-input value is intentional only when the
       pricing table displays a dash. Do not treat third-party namespaces as Baseten provider ownership.
 
+  - name: Gonka Broker
+    file: prices/providers/gonkabroker.yml
+    scope: Models returned by Gonka Broker's public model catalog.
+    sources:
+      - https://proxy.gonkabroker.com/v1/models
+      - https://gonkabroker.com/gonka-api-pricing/
+    notes: >-
+      The public API is the complete catalog and the authoritative price source. Its prompt, completion, and input_cache_read
+      decimal strings are USD per token, so multiply them by 1,000,000 before comparing them with input_mtok, output_mtok, and
+      cache_read_mtok. The pricing page shows rounded rates under marketing names; use it only to confirm the API. Embedding
+      models are billed on input tokens only, so do not report their completion rate as a missing output price. Do not compare
+      the free tier or volume rebates. Do not treat third-party namespaces as Gonka Broker provider ownership.
+
   - name: GitHub Copilot
     file: prices/providers/github_copilot.yml
     scope: Chat models named on GitHub's Copilot models-and-pricing page.

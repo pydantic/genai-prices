@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Direct Providers'
-description: 'Check fifteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
+description: 'Check sixteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
 on:
   workflow_dispatch:
   schedule: weekly on monday
@@ -81,6 +81,8 @@ network:
     - docs.arcee.ai
     - docs.baseten.co
     - www.baseten.co
+    - proxy.gonkabroker.com
+    - gonkabroker.com
     - docs.github.com
 ---
 
@@ -165,5 +167,5 @@ Call `create_issue` only with the real findings: the run allows one issue, and a
 call that returns an error files nothing, so fix the cause and run the command again.
 
 Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
-checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all fifteen
+checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all sixteen
 direct providers match.

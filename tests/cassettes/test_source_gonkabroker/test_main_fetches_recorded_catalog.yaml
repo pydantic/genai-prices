@@ -1,0 +1,34 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - proxy.gonkabroker.com
+      user-agent:
+      - python-httpx2/2.2.0
+    method: GET
+    uri: https://proxy.gonkabroker.com/v1/models
+  response:
+    body:
+      string: '{"object":"list","data":[{"id":"zai-org/GLM-5.3-Flash","object":"model","created":1787616000,"owned_by":"gonka","name":"GLM-5.3-Flash","hugging_face_id":"zai-org/GLM-5.3-Flash","input_modalities":["text"],"output_modalities":["text"],"quantization":"fp8","context_length":400000,"max_output_length":16384,"pricing":{"prompt":"0.0000002","completion":"0.0000002","input":0.2,"output":0.2,"image":"0","request":"0","input_cache_read":"0.0000002"},"supported_sampling_parameters":["temperature","top_p","top_k","presence_penalty","frequency_penalty","stop","max_tokens"],"supported_features":["tools"]},{"id":"MiniMaxAI/MiniMax-M2.7","object":"model","created":1777650662,"owned_by":"gonka","name":"MiniMax-M2.7","hugging_face_id":"MiniMaxAI/MiniMax-M2.7","input_modalities":["text"],"output_modalities":["text"],"quantization":"fp8","context_length":204800,"max_output_length":16384,"pricing":{"prompt":"0.00000025","completion":"0.00000025","input":0.25,"output":0.25,"image":"0","request":"0","input_cache_read":"0.00000025"},"supported_sampling_parameters":["temperature","top_p","top_k","presence_penalty","frequency_penalty","stop","max_tokens"],"supported_features":["tools"]},{"id":"BAAI/bge-m3","object":"model","created":1784975249,"owned_by":"gonka","name":"BGE-M3","hugging_face_id":"BAAI/bge-m3","input_modalities":["text"],"output_modalities":["embeddings"],"quantization":null,"context_length":8192,"max_output_length":0,"pricing":{"prompt":"0.00000001","completion":"0.00000001","input":0.01,"output":0.01,"image":"0","request":"0","input_cache_read":"0"},"supported_sampling_parameters":[],"supported_features":[]},{"id":"deepseek-ai/DeepSeek-V4-Flash-0731","object":"model","created":1786704795,"owned_by":"gonka","name":"DeepSeek-V4-Flash-0731","hugging_face_id":"deepseek-ai/DeepSeek-V4-Flash-0731","input_modalities":["text"],"output_modalities":["text"],"quantization":"fp8","context_length":400000,"max_output_length":16384,"pricing":{"prompt":"0.0000002","completion":"0.0000002","input":0.2,"output":0.2,"image":"0","request":"0","input_cache_read":"0.0000002"},"supported_sampling_parameters":["temperature","top_p","top_k","presence_penalty","frequency_penalty","stop","max_tokens"],"supported_features":["tools"]}]}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '2240'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Wed, 30 Sep 2026 00:26:32 GMT
+      vary:
+      - Origin
+    status:
+      code: 200
+      message: OK
+version: 1

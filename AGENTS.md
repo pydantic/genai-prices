@@ -83,6 +83,7 @@ make openrouter-get                    # Get OpenRouter prices
 make litellm-get                       # Get LiteLLM prices
 make simonw-prices-get                 # Get Simon Willison's prices
 make huggingface-get                   # Get HuggingFace prices
+make gonkabroker-get                   # Get Gonka Broker prices
 make ovhcloud-get                      # Get OVHcloud AI Endpoints prices
 make quicksilverpro-get                # Get QuickSilver Pro prices
 make get-update-price-discrepancies    # Download and update price discrepancies
@@ -94,8 +95,8 @@ make collapse-models                   # Collapse duplicate similar models
 `make help` lists every target. These importers run against live third-party APIs and nothing in CI
 exercises them, so they break silently when an upstream schema changes — if one returns suspiciously
 little, suspect the importer before the data. The importers that rewrite tracked `prices/providers/*.yml`
-(`huggingface-get`, `ovhcloud-get`, `quicksilverpro-get`) exit non-zero instead of writing when the upstream
-catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard.py`); set
+(`huggingface-get`, `gonkabroker-get`, `ovhcloud-get`, `quicksilverpro-get`) exit non-zero instead of writing
+when the upstream catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard.py`); set
 `PRICES_ALLOW_MODEL_COUNT_DROP=1` to override a genuine catalog cut.
 
 ## Important Notes
