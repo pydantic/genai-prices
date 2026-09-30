@@ -6127,6 +6127,531 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'databricks',
+    name: 'Databricks',
+    pricing_urls: [
+      'https://www.databricks.com/product/pricing/foundation-model-serving',
+      'https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models',
+    ],
+    api_pattern:
+      'https://[^/]+\\.(?:cloud\\.databricks\\.com|azuredatabricks\\.net|gcp\\.databricks\\.com)/(?:serving-endpoints|ai-gateway)(?:/|$)',
+    description: 'Pay-per-token Foundation Model APIs for open-weight models hosted by Databricks on AWS, Azure and GCP workspaces.',
+    price_comments:
+      'Databricks bills pay-per-token usage in DBUs per 1M tokens. USD prices are the published Standard Pay Per Token DBU rates multiplied by $0.070 per DBU, the serverless real-time inference rate in AWS us-east-1, us-east-2 and us-west-2, Azure East US, East US 2, North Central US, West US 2 and West US 3, and every GCP US region, rounded to $0.001. Other regions charge $0.074-$0.170 per DBU and SAP Databricks $0.125-$0.199, so costs there scale with the DBU rate. Not represented: priority pay-per-token, the 10% data-residency uplift on Kimi K3, provisioned throughput, batch inference and committed-use discounts. Covers Databricks-hosted open-weight models only, not the proprietary Claude, GPT, Gemini and Grok models Databricks also serves.',
+    model_match: {
+      or: [
+        {
+          starts_with: 'databricks-',
+        },
+        {
+          starts_with: 'system.ai.',
+        },
+      ],
+    },
+    provider_match: {
+      contains: 'databricks',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'databricks-bge-large-en',
+        name: 'BGE Large (En)',
+        match: {
+          or: [
+            {
+              equals: 'databricks-bge-large-en',
+            },
+            {
+              equals: 'system.ai.bge-large-en',
+            },
+          ],
+        },
+        context_window: 512,
+        price_comments: '1.429 DBU per 1M input tokens.',
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'databricks-deepseek-v4-1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          or: [
+            {
+              equals: 'databricks-deepseek-v4-1-flash',
+            },
+            {
+              equals: 'system.ai.deepseek-v4-1-flash',
+            },
+          ],
+        },
+        price_comments: '4.286 input, 17.143 output and 0.429 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'databricks-deepseek-v4-flash-0731',
+        name: 'DeepSeek V4 Flash (0731)',
+        match: {
+          or: [
+            {
+              equals: 'databricks-deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'system.ai.deepseek-v4-flash-0731',
+            },
+          ],
+        },
+        price_comments: '2 input, 4 output and 0.4 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'databricks-deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro (0813)',
+        match: {
+          or: [
+            {
+              equals: 'databricks-deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'system.ai.deepseek-v4-pro-0813',
+            },
+          ],
+        },
+        price_comments: '18.857 input, 56.571 output and 1.886 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.132,
+          output_mtok: 3.96,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'databricks-gemma-3-12b',
+        name: 'Gemma 3 12B',
+        match: {
+          or: [
+            {
+              equals: 'databricks-gemma-3-12b',
+            },
+            {
+              equals: 'system.ai.gemma-3-12b',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: '2.143 input and 7.143 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'databricks-glm-5-2',
+        name: 'GLM 5.2',
+        match: {
+          or: [
+            {
+              equals: 'databricks-glm-5-2',
+            },
+            {
+              equals: 'system.ai.glm-5-2',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments: '20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'databricks-glm-5-3',
+        name: 'GLM 5.3',
+        match: {
+          or: [
+            {
+              equals: 'databricks-glm-5-3',
+            },
+            {
+              equals: 'system.ai.glm-5-3',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: '20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'databricks-glm-5-3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          or: [
+            {
+              equals: 'databricks-glm-5-3-flash',
+            },
+            {
+              equals: 'system.ai.glm-5-3-flash',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: '2.143 input, 7.143 output and 0.429 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'databricks-gpt-oss-120b',
+        name: 'GPT OSS 120B',
+        match: {
+          or: [
+            {
+              equals: 'databricks-gpt-oss-120b',
+            },
+            {
+              equals: 'system.ai.gpt-oss-120b',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: '2.143 input and 8.571 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'databricks-gpt-oss-20b',
+        name: 'GPT OSS 20B',
+        match: {
+          or: [
+            {
+              equals: 'databricks-gpt-oss-20b',
+            },
+            {
+              equals: 'system.ai.gpt-oss-20b',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: '1 input and 4.286 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'databricks-gte-large-en',
+        name: 'GTE Large (En)',
+        match: {
+          or: [
+            {
+              equals: 'databricks-gte-large-en',
+            },
+            {
+              equals: 'system.ai.gte-large-en',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: '1.857 DBU per 1M input tokens.',
+        prices: {
+          input_mtok: 0.13,
+        },
+      },
+      {
+        id: 'databricks-inkling',
+        name: 'Inkling',
+        match: {
+          or: [
+            {
+              equals: 'databricks-inkling',
+            },
+            {
+              equals: 'system.ai.inkling',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments: '14.286 input, 57.857 output and 2.429 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'databricks-kimi-k2-7-code',
+        name: 'Kimi K2.7 Code',
+        match: {
+          or: [
+            {
+              equals: 'databricks-kimi-k2-7-code',
+            },
+            {
+              equals: 'system.ai.kimi-k2-7-code',
+            },
+          ],
+        },
+        price_comments: '13.571 input, 57.143 output and 2.714 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.19,
+          output_mtok: 4,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'databricks-kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          or: [
+            {
+              equals: 'databricks-kimi-k3',
+            },
+            {
+              equals: 'system.ai.kimi-k3',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments: '42.857 input, 214.286 output and 4.286 cache-read DBU per 1M tokens.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'databricks-llama-4-maverick',
+        name: 'Llama 4 Maverick',
+        match: {
+          or: [
+            {
+              equals: 'databricks-llama-4-maverick',
+            },
+            {
+              equals: 'system.ai.llama-4-maverick',
+            },
+          ],
+        },
+        price_comments: '7.143 input and 21.429 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'databricks-meta-llama-3-1-8b-instruct',
+        name: 'Llama 3.1 8B Instruct',
+        match: {
+          or: [
+            {
+              equals: 'databricks-meta-llama-3-1-8b-instruct',
+            },
+            {
+              equals: 'system.ai.meta-llama-3-1-8b-instruct',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: '2.143 input and 6.429 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.45,
+        },
+      },
+      {
+        id: 'databricks-meta-llama-3-3-70b-instruct',
+        name: 'Llama 3.3 70B Instruct',
+        match: {
+          or: [
+            {
+              equals: 'databricks-meta-llama-3-3-70b-instruct',
+            },
+            {
+              equals: 'system.ai.meta-llama-3-3-70b-instruct',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: '7.143 input and 21.429 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'databricks-qwen3-embedding-0-6b',
+        name: 'Qwen3 Embedding 0.6B',
+        match: {
+          or: [
+            {
+              equals: 'databricks-qwen3-embedding-0-6b',
+            },
+            {
+              equals: 'system.ai.qwen3-embedding-0-6b',
+            },
+          ],
+        },
+        price_comments: '0.286 DBU per 1M input tokens.',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'databricks-qwen3-next-80b-a3b-instruct',
+        name: 'Qwen3 Next 80B A3B Instruct',
+        match: {
+          or: [
+            {
+              equals: 'databricks-qwen3-next-80b-a3b-instruct',
+            },
+            {
+              equals: 'system.ai.qwen3-next-80b-a3b-instruct',
+            },
+          ],
+        },
+        price_comments: '2.143 input and 17.143 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'databricks-qwen35-122b-a10b',
+        name: 'Qwen3.5 122B A10B',
+        match: {
+          or: [
+            {
+              equals: 'databricks-qwen35-122b-a10b',
+            },
+            {
+              equals: 'system.ai.qwen35-122b-a10b',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: '3.143 input and 31.429 output DBU per 1M tokens.',
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 2.2,
+        },
+      },
+    ],
+  },
+  {
     id: 'deepseek',
     name: 'Deepseek',
     pricing_urls: ['https://api-docs.deepseek.com/quick_start/pricing'],
