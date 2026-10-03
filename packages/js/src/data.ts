@@ -2221,6 +2221,54 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.openai.gpt-6.1-sol',
+        name: 'GPT-6.1 Sol (global)',
+        match: {
+          contains: 'global.openai.gpt-6.1-sol',
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-29. Global cross-Region inference, identical to OpenAI's own list price and 10% below In-Region and Geo. Cache reads are 5% of input and cache writes 1.25x. AWS bills the whole request at long-context rates above 272K input tokens: input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html, https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'google.gemma-3-12b-it',
         name: 'Gemma 3 12B IT',
         match: {
@@ -3923,6 +3971,64 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.44,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 11,
+            tiers: [
+              {
+                start: 272000,
+                price: 16.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'regional.openai.gpt-6.1-sol',
+        name: 'GPT-6.1 Sol (regional)',
+        match: {
+          or: [
+            {
+              starts_with: 'openai.gpt-6.1-sol',
+            },
+            {
+              starts_with: 'gpt-6.1-sol',
+            },
+            {
+              contains: 'us.openai.gpt-6.1-sol',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'In-Region (`bedrock-mantle` in us-east-1) and US Geo (`us.`) inference, 10% above global. AWS offers no `in.` profile for 6.1 Sol. See the global entry for tiering and cache notes. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html',
+        prices: {
+          input_mtok: {
+            base: 2.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4.4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 5.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.11,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.22,
               },
             ],
           },
