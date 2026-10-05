@@ -5315,6 +5315,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-4-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-4-5-opus'),
+                        ClauseContains(contains='claude-opus-4-5'),
+                        ClauseContains(contains='claude-4.5-opus'),
+                        ClauseContains(contains='claude-opus-4.5'),
+                    ]
+                ),
+                context_window=200000,
+                price_comments="A 200K context window, so there is no long-context tier. Vertex availability is confirmed by Google's own partner-model docs, which list Opus 4.5: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude That page carries no rates, and these rates are NOT yet verified against Google's Claude pricing table. They are Anthropic's published Opus 4.5 list prices (https://platform.claude.com/docs/en/models/opus-4-5/overview). The Opus 4.6, 4.7 and 4.8 entries in this file match Anthropic's list for those models exactly, which is the basis for using them here.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-opus-4-6',
                 match=ClauseOr(
                     or_=[
