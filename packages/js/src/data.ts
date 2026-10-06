@@ -1576,11 +1576,31 @@ export const data: Provider[] = [
         id: 'amazon.titan-embed-text-v1',
         name: 'Titan Embeddings G1 - Text',
         match: {
-          contains: 'amazon.titan-embed-text',
+          or: [
+            {
+              ends_with: 'amazon.titan-embed-text',
+            },
+            {
+              contains: 'amazon.titan-embed-text-v1',
+            },
+          ],
         },
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'amazon.titan-embed-text-v2:0',
+        name: 'Titan Text Embeddings V2',
+        match: {
+          contains: 'amazon.titan-embed-text-v2',
+        },
+        context_window: 8192,
+        price_comments:
+          'On-demand input token price from the AWS price list API, AmazonBedrock (us-east-1), usage type TitanEmbeddingV2-Text-input-tokens: $0.00002 per 1K tokens. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-text-embeddings-v2.html',
+        prices: {
+          input_mtok: 0.02,
         },
       },
       {

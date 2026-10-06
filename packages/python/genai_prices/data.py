@@ -1013,10 +1013,23 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.titan-embed-text-v1',
-                match=ClauseContains(contains='amazon.titan-embed-text'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEndsWith(ends_with='amazon.titan-embed-text'),
+                        ClauseContains(contains='amazon.titan-embed-text-v1'),
+                    ]
+                ),
                 name='Titan Embeddings G1 - Text',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='amazon.titan-embed-text-v2:0',
+                match=ClauseContains(contains='amazon.titan-embed-text-v2'),
+                name='Titan Text Embeddings V2',
+                context_window=8192,
+                price_comments='On-demand input token price from the AWS price list API, AmazonBedrock (us-east-1), usage type TitanEmbeddingV2-Text-input-tokens: $0.00002 per 1K tokens. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-text-embeddings-v2.html',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='amazon.titan-text-express-v1',
