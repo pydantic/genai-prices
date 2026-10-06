@@ -924,6 +924,7 @@ def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime
     [
         ('amazon.titan-embed-text-v1', 'amazon.titan-embed-text-v1', '0.1'),
         ('amazon.titan-embed-text', 'amazon.titan-embed-text-v1', '0.1'),
+        ('us.amazon.titan-embed-text-v1', 'amazon.titan-embed-text-v1', '0.1'),
         ('amazon.titan-embed-text-v2:0', 'amazon.titan-embed-text-v2:0', '0.02'),
         ('amazon.titan-embed-text-v2', 'amazon.titan-embed-text-v2:0', '0.02'),
         ('us.amazon.titan-embed-text-v2:0', 'amazon.titan-embed-text-v2:0', '0.02'),

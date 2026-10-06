@@ -556,6 +556,9 @@ func TestAWSTitanEmbedTextV2DoesNotUseV1Prices(t *testing.T) {
 		wantPrice float64
 	}{
 		{"amazon.titan-embed-text-v1", "amazon.titan-embed-text-v1", 0.1},
+		{"us.amazon.titan-embed-text-v1", "amazon.titan-embed-text-v1", 0.1},
+		{"amazon.titan-embed-text", "amazon.titan-embed-text-v1", 0.1},
+		{"us.amazon.titan-embed-text", "amazon.titan-embed-text-v1", 0.1},
 		{"amazon.titan-embed-text-v2:0", "amazon.titan-embed-text-v2:0", 0.02},
 		{"us.amazon.titan-embed-text-v2:0", "amazon.titan-embed-text-v2:0", 0.02},
 	}
