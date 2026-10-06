@@ -149,3 +149,18 @@ providers:
       above `start`. A row that names several versions covers each of them. Report a range, not a single number, as a range
       rather than a discrepancy. The page is a pricing table, not a catalog, so do not infer removals from it, and do not compare
       plan allowances, the AI-credit conversion, or the zero-priced models the YAML records with empty prices.
+
+  - name: Databricks
+    file: prices/providers/databricks.yml
+    scope: Databricks-hosted open-weight models in the Standard Pay Per Token table of the Foundation Model Serving page.
+    sources:
+      - https://www.databricks.com/product/pricing/foundation-model-serving
+      - https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models
+    notes: >-
+      The pricing page publishes DBU per 1M tokens, not USD. Multiply each Standard Pay Per Token Input, Output, and Cache read
+      rate by 0.070 USD per DBU and round to 0.001 before comparing it with input_mtok, output_mtok, and cache_read_mtok; each
+      model's price_comments records its DBU rates. Map table rows to endpoints through the supported-models catalog: the
+      GLM-5.2, 5.3 row prices both GLM endpoints, Qwen 3 80B Instruct is databricks-qwen3-next-80b-a3b-instruct, and Kimi K2.7 is
+      databricks-kimi-k2-7-code. The catalog lists every current pay-per-token endpoint. Exclude Priority Pay Per Token,
+      Provisioned Throughput, Batch Inference, per-region DBU prices, and the proprietary Claude, GPT, Gemini, and Grok
+      endpoints. The open-weight GPT OSS and Gemma endpoints are in scope.

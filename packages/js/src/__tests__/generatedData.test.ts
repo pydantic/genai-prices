@@ -119,6 +119,21 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 18.3, model: 'databricks-kimi-k3' },
+    { expectedTotalPrice: 0.448, model: 'databricks-deepseek-v4-flash-0731' },
+    { expectedTotalPrice: 5.412, model: 'databricks-deepseek-v4-pro-0813' },
+    { expectedTotalPrice: 6.06, model: 'system.ai.glm-5-3' },
+    { expectedTotalPrice: 2.64, model: 'databricks-qwen35-122b-a10b' },
+    { expectedTotalPrice: 0.9, model: 'databricks-gpt-oss-120b' },
+  ])('prices Databricks $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'databricks',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
     { expectedTotalPrice: 61, model: 'claude-fable-5' },
     { expectedTotalPrice: 60.25, model: 'claude-fable-5.1' },
     { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
