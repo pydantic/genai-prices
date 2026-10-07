@@ -236,6 +236,42 @@ def test_databricks_embeddings_usage() -> None:
 
 
 @pytest.mark.parametrize(
+    'model,expected_price',
+    [
+        # 0.5M five-minute writes at $3.75/MTok plus 0.5M one-hour writes at $6/MTok.
+        pytest.param('global.anthropic.claude-sonnet-4-6', Decimal('4.875'), id='global'),
+        # The regional endpoint carries a 10% premium: $4.125 and $6.60/MTok.
+        pytest.param('us.anthropic.claude-sonnet-4-6', Decimal('5.3625'), id='regional'),
+    ],
+)
+def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -> None:
+    """Bedrock Converse reports the cache write TTL split in `usage.cacheDetails`."""
+    response_data = {
+        'model': model,
+        'usage': {
+            'inputTokens': 0,
+            'cacheReadInputTokens': 0,
+            'cacheWriteInputTokens': 1_000_000,
+            'cacheDetails': [{'ttl': '5m', 'inputTokens': 500_000}, {'ttl': '1h', 'inputTokens': 500_000}],
+            'outputTokens': 0,
+            'totalTokens': 1_000_000,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='aws')
+
+    assert extracted.usage == Usage(
+        input_tokens=1_000_000,
+        cache_write_tokens=1_000_000,
+        cache_write_5m_tokens=500_000,
+        cache_write_1h_tokens=500_000,
+        cache_read_tokens=0,
+        output_tokens=0,
+    )
+    assert extracted.calc_price().total_price == expected_price
+
+
+@pytest.mark.parametrize(
     'provider_id,model,expected_price',
     [
         # 0.5M five-minute writes at $3.75/MTok plus 0.5M one-hour writes at $6/MTok.

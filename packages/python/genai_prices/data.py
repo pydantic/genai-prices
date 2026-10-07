@@ -917,6 +917,24 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='cacheWriteInputTokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(path='cacheReadInputTokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='cacheWriteInputTokens', dest='cache_write_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheDetails',
+                            ArrayMatch(type='array-match', field='ttl', match=ClauseEquals(equals='5m')),
+                            'inputTokens',
+                        ],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheDetails',
+                            ArrayMatch(type='array-match', field='ttl', match=ClauseEquals(equals='1h')),
+                            'inputTokens',
+                        ],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',

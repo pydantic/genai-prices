@@ -1111,6 +1111,39 @@ describe('extractUsage', () => {
       expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 11207, input_tokens: 11216, output_tokens: 5 })
     })
 
+    // 0.5M five-minute and 0.5M one-hour cache writes. The regional endpoint carries a 10% premium.
+    it.each([
+      { expectedPrice: 4.875, model: 'global.anthropic.claude-sonnet-4-6' },
+      { expectedPrice: 5.3625, model: 'us.anthropic.claude-sonnet-4-6' },
+    ])('should price Converse cache writes by TTL ($model)', ({ expectedPrice, model }) => {
+      const responseData = {
+        model,
+        usage: {
+          cacheDetails: [
+            { inputTokens: 500_000, ttl: '5m' },
+            { inputTokens: 500_000, ttl: '1h' },
+          ],
+          cacheReadInputTokens: 0,
+          cacheWriteInputTokens: 1_000_000,
+          inputTokens: 0,
+          outputTokens: 0,
+          totalTokens: 1_000_000,
+        },
+      }
+
+      const { model: extractedModel, usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_1h_tokens: 500_000,
+        cache_write_5m_tokens: 500_000,
+        cache_write_tokens: 1_000_000,
+        input_tokens: 1_000_000,
+        output_tokens: 0,
+      })
+      expect(calcPrice(usage, extractedModel!, { providerId: 'aws' })?.total_price).toBeCloseTo(expectedPrice)
+    })
+
     it('should extract Converse usage with cache read tokens', () => {
       const responseData = {
         usage: { cacheReadInputTokens: 11207, cacheWriteInputTokens: 0, inputTokens: 9, outputTokens: 5 },
