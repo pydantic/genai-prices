@@ -252,7 +252,7 @@ def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -
             'inputTokens': 0,
             'cacheReadInputTokens': 0,
             'cacheWriteInputTokens': 1_000_000,
-            'cacheDetails': [{'ttl': '5m', 'inputTokens': 500_000}, {'ttl': '1h', 'inputTokens': 500_000}],
+            'cacheDetails': [{'ttl': '1h', 'inputTokens': 500_000}, {'ttl': '5m', 'inputTokens': 500_000}],
             'outputTokens': 0,
             'totalTokens': 1_000_000,
         },

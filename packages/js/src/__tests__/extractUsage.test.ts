@@ -1120,8 +1120,8 @@ describe('extractUsage', () => {
         model,
         usage: {
           cacheDetails: [
-            { inputTokens: 500_000, ttl: '5m' },
             { inputTokens: 500_000, ttl: '1h' },
+            { inputTokens: 500_000, ttl: '5m' },
           ],
           cacheReadInputTokens: 0,
           cacheWriteInputTokens: 1_000_000,

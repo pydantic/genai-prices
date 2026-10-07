@@ -704,3 +704,41 @@ func TestDatabricksExtractUsage(t *testing.T) {
 		}
 	}
 }
+
+// 0.5M five-minute and 0.5M one-hour cache writes. The regional endpoint carries a 10% premium.
+func TestAWSConverseCacheWriteTTL(t *testing.T) {
+	wantUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:        1_000_000,
+		genai_prices.UsageCacheReadTokens:    0,
+		genai_prices.UsageCacheWriteTokens:   1_000_000,
+		genai_prices.UsageCacheWrite5MTokens: 500_000,
+		genai_prices.UsageCacheWrite1HTokens: 500_000,
+		genai_prices.UsageOutputTokens:       0,
+	}
+	for _, test := range []struct {
+		model     string
+		wantPrice float64
+	}{
+		{"global.anthropic.claude-sonnet-4-6", 4.875},
+		{"us.anthropic.claude-sonnet-4-6", 5.3625},
+	} {
+		body := `{"model":"` + test.model + `","usage":{"inputTokens":0,"cacheReadInputTokens":0,"cacheWriteInputTokens":1000000,` +
+			`"cacheDetails":[{"ttl":"1h","inputTokens":500000},{"ttl":"5m","inputTokens":500000}],"outputTokens":0,"totalTokens":1000000}}`
+		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{ResponseJSON: []byte(body), ProviderID: "aws"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if extracted.ProviderID != "aws" || extracted.Model != test.model || !maps.Equal(extracted.Usage, wantUsage) {
+			t.Fatalf("%s: got %#v", test.model, extracted)
+		}
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: extracted.Usage, Model: extracted.Model, ProviderID: extracted.ProviderID,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.wantPrice) > 1e-12 {
+			t.Fatalf("%s: got %g, want %g", test.model, calculation.TotalPrice, test.wantPrice)
+		}
+	}
+}
