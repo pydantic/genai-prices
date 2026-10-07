@@ -516,6 +516,62 @@ def test_cloudflare_embeddings_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.012')
 
 
+def test_cloudflare_decisions_usage() -> None:
+    response_data = {
+        'result': {
+            'model': 'clef',
+            'answers': {'urgent': {'type': 'noul', 'noul': 0.9}},
+            'usage': {'input_tokens': 1_000_000, 'output_tokens': 12},
+        },
+        'success': True,
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare', api_flavor='decisions')
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/cloudflare/clef'
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000, output_tokens=12)
+    assert extracted_usage.calc_price().output_price == 0
+    assert extracted_usage.calc_price().total_price == Decimal('0.24')
+
+
+def test_perplexity_decisions_usage() -> None:
+    response_data = {
+        'model': 'pplx-decider-v1.1-27b',
+        'answers': {'defect': {'type': 'noul', 'noul': 0.94}},
+        'usage': {'input_tokens': 367, 'output_tokens': 3},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='perplexity', api_flavor='decisions')
+
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'pplx-decider-v1.1-27b'
+    assert extracted_usage.usage == Usage(input_tokens=367, output_tokens=3)
+    assert extracted_usage.calc_price().total_price == Decimal('0.00000734')
+
+
+def test_openrouter_decisions_usage() -> None:
+    response_data = {
+        'model': 'typesafe/jev-1.13-20260917',
+        'provider': 'TypeSafe',
+        'answers': {'is_bug': {'type': 'noul', 'noul': 0.96}},
+        'usage': {'cost': 0.000019992, 'input_tokens': 476, 'output_tokens': 70},
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://openrouter.ai/api/alpha/decisions',
+        api_flavor='decisions',
+    )
+
+    assert extracted_usage.provider.id == 'openrouter'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'typesafe/jev-1.13'
+    assert extracted_usage.usage == Usage(input_tokens=476, output_tokens=70)
+    assert extracted_usage.calc_price().total_price == Decimal('0.000019992')
+
+
 def test_modal_responses_usage() -> None:
     response_data = {
         'model': 'moonshotai/Kimi-K3',
