@@ -238,10 +238,10 @@ def test_databricks_embeddings_usage() -> None:
 @pytest.mark.parametrize(
     'model,expected_price',
     [
-        # 0.5M five-minute writes at $3.75/MTok plus 0.5M one-hour writes at $6/MTok.
-        pytest.param('global.anthropic.claude-sonnet-4-6', Decimal('4.875'), id='global'),
+        # 0.75M five-minute writes at $3.75/MTok plus 0.25M one-hour writes at $6/MTok.
+        pytest.param('global.anthropic.claude-sonnet-4-6', Decimal('4.3125'), id='global'),
         # The regional endpoint carries a 10% premium: $4.125 and $6.60/MTok.
-        pytest.param('us.anthropic.claude-sonnet-4-6', Decimal('5.3625'), id='regional'),
+        pytest.param('us.anthropic.claude-sonnet-4-6', Decimal('4.74375'), id='regional'),
     ],
 )
 def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -> None:
@@ -252,7 +252,7 @@ def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -
             'inputTokens': 0,
             'cacheReadInputTokens': 0,
             'cacheWriteInputTokens': 1_000_000,
-            'cacheDetails': [{'ttl': '1h', 'inputTokens': 500_000}, {'ttl': '5m', 'inputTokens': 500_000}],
+            'cacheDetails': [{'ttl': '1h', 'inputTokens': 250_000}, {'ttl': '5m', 'inputTokens': 750_000}],
             'outputTokens': 0,
             'totalTokens': 1_000_000,
         },
@@ -263,8 +263,8 @@ def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -
     assert extracted.usage == Usage(
         input_tokens=1_000_000,
         cache_write_tokens=1_000_000,
-        cache_write_5m_tokens=500_000,
-        cache_write_1h_tokens=500_000,
+        cache_write_5m_tokens=750_000,
+        cache_write_1h_tokens=250_000,
         cache_read_tokens=0,
         output_tokens=0,
     )
