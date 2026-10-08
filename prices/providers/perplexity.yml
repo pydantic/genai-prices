@@ -34,6 +34,16 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
+  # https://docs.perplexity.ai/docs/decisions/quickstart — `usage.input_tokens` / `usage.output_tokens`.
+  # Output tokens are free. The Sonar extractor stays on `prompt_tokens` / `completion_tokens`.
+  - api_flavor: decisions
+    root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
 models:
   - id: llama-3.1-sonar-large-128k-online
     name: Llama 3.1 Sonar 70B Online
@@ -56,6 +66,30 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+
+  - id: pplx-decider-v1-27b
+    name: Decider V1 27B
+    match:
+      equals: pplx-decider-v1-27b
+    context_window: 262144
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under
+      262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart
+    prices:
+      input_mtok: 0.02
+
+  - id: pplx-decider-v1.1-27b
+    name: Decider V1.1 27B
+    match:
+      equals: pplx-decider-v1.1-27b
+    context_window: 262144
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under
+      262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart
+    prices:
+      input_mtok: 0.02
 
   - id: r1-1776
     name: R1 1776

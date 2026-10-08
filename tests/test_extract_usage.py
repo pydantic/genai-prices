@@ -156,6 +156,85 @@ def test_baseten_messages_usage() -> None:
     assert extracted.calc_price().total_price == Decimal('0.0000314')
 
 
+# The Databricks bodies follow the documented usage fields; no recorded response is public.
+# https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#usage
+@pytest.mark.parametrize('api_flavor', ['default', 'chat'])
+def test_databricks_chat_usage(api_flavor: str) -> None:
+    response_data = {
+        'object': 'chat.completion',
+        'model': 'databricks-glm-5-3',
+        'usage': {
+            'prompt_tokens': 12_011,
+            'completion_tokens': 80,
+            'total_tokens': 12_091,
+            'reasoning_tokens': 30,
+            'cache_read_input_tokens': 12_002,
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='databricks', api_flavor=api_flavor)
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'databricks-glm-5-3'
+    assert extracted.usage == Usage(
+        input_tokens=12_011, cache_read_tokens=12_002, output_tokens=80, output_reasoning_tokens=30
+    )
+    assert extracted.calc_price().total_price == Decimal('0.00348512')
+
+
+def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
+    response_data = {
+        'object': 'chat.completion',
+        'model': 'databricks-gpt-oss-120b',
+        'usage': {'prompt_tokens': 7, 'completion_tokens': 74, 'total_tokens': 81},
+    }
+
+    extracted = extract_usage(response_data, provider_id='databricks', api_flavor='chat')
+
+    assert extracted.usage == Usage(input_tokens=7, output_tokens=74)
+    assert extracted.calc_price().total_price == Decimal('0.00004545')
+
+
+def test_databricks_open_responses_usage() -> None:
+    response_data = {
+        'object': 'response',
+        'model': 'databricks-kimi-k3',
+        'usage': {
+            'input_tokens': 100,
+            'input_tokens_details': {'cached_tokens': 40},
+            'output_tokens': 50,
+            'output_tokens_details': {'reasoning_tokens': 20},
+            'total_tokens': 150,
+        },
+    }
+
+    extracted = extract_usage(
+        response_data,
+        provider_api_url='https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/open-responses',
+        api_flavor='responses',
+    )
+
+    assert extracted.provider.id == 'databricks'
+    assert extracted.usage == Usage(
+        input_tokens=100, cache_read_tokens=40, output_tokens=50, output_reasoning_tokens=20
+    )
+    assert extracted.calc_price().total_price == Decimal('0.000942')
+
+
+def test_databricks_embeddings_usage() -> None:
+    response_data = {
+        'object': 'list',
+        'model': 'databricks-gte-large-en',
+        'data': [{'object': 'embedding', 'index': 0, 'embedding': [0.1, 0.2]}],
+        'usage': {'prompt_tokens': 1_000_000, 'total_tokens': 1_000_000},
+    }
+
+    extracted = extract_usage(response_data, provider_id='databricks', api_flavor='embeddings')
+
+    assert extracted.usage == Usage(input_tokens=1_000_000)
+    assert extracted.calc_price().total_price == Decimal('0.13')
+
+
 @pytest.mark.parametrize(
     'provider_id,model,expected_price',
     [
@@ -435,6 +514,62 @@ def test_cloudflare_embeddings_usage() -> None:
 
     assert extracted_usage.usage == Usage(input_tokens=1_000_000)
     assert extracted_usage.calc_price().total_price == Decimal('0.012')
+
+
+def test_cloudflare_decisions_usage() -> None:
+    response_data = {
+        'result': {
+            'model': 'clef',
+            'answers': {'urgent': {'type': 'noul', 'noul': 0.9}},
+            'usage': {'input_tokens': 1_000_000, 'output_tokens': 12},
+        },
+        'success': True,
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='cloudflare', api_flavor='decisions')
+
+    assert extracted_usage.provider.id == 'cloudflare'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == '@cf/cloudflare/clef'
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000, output_tokens=12)
+    assert extracted_usage.calc_price().output_price == 0
+    assert extracted_usage.calc_price().total_price == Decimal('0.24')
+
+
+def test_perplexity_decisions_usage() -> None:
+    response_data = {
+        'model': 'pplx-decider-v1.1-27b',
+        'answers': {'defect': {'type': 'noul', 'noul': 0.94}},
+        'usage': {'input_tokens': 367, 'output_tokens': 3},
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='perplexity', api_flavor='decisions')
+
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'pplx-decider-v1.1-27b'
+    assert extracted_usage.usage == Usage(input_tokens=367, output_tokens=3)
+    assert extracted_usage.calc_price().total_price == Decimal('0.00000734')
+
+
+def test_openrouter_decisions_usage() -> None:
+    response_data = {
+        'model': 'typesafe/jev-1.13-20260917',
+        'provider': 'TypeSafe',
+        'answers': {'is_bug': {'type': 'noul', 'noul': 0.96}},
+        'usage': {'cost': 0.000019992, 'input_tokens': 476, 'output_tokens': 70},
+    }
+
+    extracted_usage = extract_usage(
+        response_data,
+        provider_api_url='https://openrouter.ai/api/alpha/decisions',
+        api_flavor='decisions',
+    )
+
+    assert extracted_usage.provider.id == 'openrouter'
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'typesafe/jev-1.13'
+    assert extracted_usage.usage == Usage(input_tokens=476, output_tokens=70)
+    assert extracted_usage.calc_price().total_price == Decimal('0.000019992')
 
 
 def test_modal_responses_usage() -> None:

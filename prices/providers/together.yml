@@ -443,6 +443,18 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
+  - id: together/Tev1-4B-experimental
+    name: Tev1 4B Experimental
+    match:
+      equals: together/Tev1-4B-experimental
+    context_window: 32768
+    prices_checked: 2026-10-07
+    price_comments: >-
+      The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free
+      output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models
+    prices:
+      input_mtok: 0.04
+
   - id: togethercomputer/GPT-JT-Moderation-6B
     match:
       equals: togethercomputer/GPT-JT-Moderation-6B
