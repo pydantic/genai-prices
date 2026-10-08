@@ -3,7 +3,6 @@ name: Triage pilot (pydantic-ai engine)
 on:
   issues:
     types: [opened, reopened]
-  workflow_dispatch:
   roles: all
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 permissions:
@@ -52,8 +51,7 @@ Triage exactly one open issue in ${{ github.repository }} and record one decisio
 
 ## Which issue
 
-- When the run was triggered by an issue event, triage issue #${{ github.event.issue.number }}.
-- When the run was triggered manually, triage the newest open issue that has no labels. When every open issue has labels, triage the newest open issue.
+Triage issue #${{ github.event.issue.number }}, the issue that triggered this run.
 
 ## How to decide
 
