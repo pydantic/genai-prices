@@ -31,6 +31,18 @@ extractors:
       - path: completion_tokens
         dest: output_tokens
 
+  # https://openrouter.ai/docs/api/reference/overview is the chat usage shape.
+  # Decisions responses use input_tokens / output_tokens:
+  # https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-questions-and-answers-request
+  - api_flavor: decisions
+    root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+
 models:
   - id: 01-ai/yi-large
     match:
@@ -813,6 +825,28 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+
+  - id: cloudflare/clef
+    name: Clef
+    match:
+      equals: cloudflare/clef
+    context_window: 65536
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Input only. https://openrouter.ai/api/v1/models/cloudflare/clef/endpoints
+    prices:
+      input_mtok: 0.24
+
+  - id: cloudflare/clef-flash
+    name: Clef Flash
+    match:
+      equals: cloudflare/clef-flash
+    context_window: 65536
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Input only. https://openrouter.ai/api/v1/models/cloudflare/clef-flash/endpoints
+    prices:
+      input_mtok: 0.09
 
   - id: codellama-7b-instruct-solidity
     name: CodeLLaMa 7B Instruct Solidity
@@ -4645,6 +4679,30 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
+  - id: perplexity/pplx-decider-v1-27b
+    name: Decider V1 27B
+    match:
+      equals: perplexity/pplx-decider-v1-27b
+    context_window: 262144
+    prices_checked: 2026-10-07
+    price_comments: >-
+      OpenRouter bills this id at $0.04 per million input tokens. Perplexity's own API bills the same
+      id at $0.02. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1-27b/endpoints
+    prices:
+      input_mtok: 0.04
+
+  - id: perplexity/pplx-decider-v1.1-27b
+    name: Decider V1.1 27B
+    match:
+      equals: perplexity/pplx-decider-v1.1-27b
+    context_window: 262144
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Same $0.02 input rate as Perplexity's API. Output is free.
+      https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1.1-27b/endpoints
+    prices:
+      input_mtok: 0.02
+
   - id: perplexity/r1-1776
     match:
       equals: perplexity/r1-1776
@@ -5836,6 +5894,22 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: typesafe/jev-1.13
+    name: Jev 1.13
+    match:
+      or:
+        - equals: typesafe/jev-1.13
+        - equals: "~typesafe/jev-latest"
+        - regex: ^typesafe/jev-1\.13-\d{8}$
+    context_window: 32000
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a
+      dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev
+      release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints
+    prices:
+      input_mtok: 0.042
 
   - id: undi95/remm-slerp-l2-13b
     name: ReMM SLERP 13B

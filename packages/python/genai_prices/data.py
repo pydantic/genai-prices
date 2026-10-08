@@ -3079,6 +3079,15 @@ providers: list[Provider] = [
                 api_flavor='embeddings',
                 model_path='model',
             ),
+            UsageExtractor(
+                root=['result', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path=['result', 'model'],
+            ),
         ],
         models=[
             ModelInfo(
@@ -3122,6 +3131,24 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='@cf/baai/bge-small-en-v1.5'),
                 name='BGE Small English v1.5',
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='@cf/cloudflare/clef',
+                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clef'), ClauseEquals(equals='clef')]),
+                name='Clef',
+                context_window=65536,
+                price_comments='Input only, $0.24 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef/',
+                prices=ModelPrice(input_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
+                id='@cf/cloudflare/clef-flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='@cf/cloudflare/clef-flash'), ClauseEquals(equals='clef-flash')]
+                ),
+                name='Clef Flash',
+                context_window=65536,
+                price_comments='Input only, $0.09 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-flash/',
+                prices=ModelPrice(input_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
@@ -12056,7 +12083,16 @@ providers: list[Provider] = [
                 ],
                 api_flavor='chat',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -12781,6 +12817,22 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
                 ),
+            ),
+            ModelInfo(
+                id='cloudflare/clef',
+                match=ClauseEquals(equals='cloudflare/clef'),
+                name='Clef',
+                context_window=65536,
+                price_comments='Input only. https://openrouter.ai/api/v1/models/cloudflare/clef/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
+                id='cloudflare/clef-flash',
+                match=ClauseEquals(equals='cloudflare/clef-flash'),
+                name='Clef Flash',
+                context_window=65536,
+                price_comments='Input only. https://openrouter.ai/api/v1/models/cloudflare/clef-flash/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='codellama-7b-instruct-solidity',
@@ -15913,6 +15965,22 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='perplexity/pplx-decider-v1-27b',
+                match=ClauseEquals(equals='perplexity/pplx-decider-v1-27b'),
+                name='Decider V1 27B',
+                context_window=262144,
+                price_comments="OpenRouter bills this id at $0.04 per million input tokens. Perplexity's own API bills the same id at $0.02. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1-27b/endpoints",
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='perplexity/pplx-decider-v1.1-27b',
+                match=ClauseEquals(equals='perplexity/pplx-decider-v1.1-27b'),
+                name='Decider V1.1 27B',
+                context_window=262144,
+                price_comments="Same $0.02 input rate as Perplexity's API. Output is free. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1.1-27b/endpoints",
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
                 id='perplexity/r1-1776',
                 match=ClauseEquals(equals='perplexity/r1-1776'),
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
@@ -16906,6 +16974,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
+                id='typesafe/jev-1.13',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='typesafe/jev-1.13'),
+                        ClauseEquals(equals='~typesafe/jev-latest'),
+                        ClauseRegex(regex='^typesafe/jev-1\\.13-\\d{8}$'),
+                    ]
+                ),
+                name='Jev 1.13',
+                context_window=32000,
+                price_comments='Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
+            ),
+            ModelInfo(
                 id='undi95/remm-slerp-l2-13b',
                 match=ClauseEquals(equals='undi95/remm-slerp-l2-13b'),
                 name='ReMM SLERP 13B',
@@ -17544,7 +17626,16 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -17560,6 +17651,22 @@ providers: list[Provider] = [
                 name='Llama 3.1 Sonar 8B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1-27b',
+                match=ClauseEquals(equals='pplx-decider-v1-27b'),
+                name='Decider V1 27B',
+                context_window=262144,
+                price_comments='Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1.1-27b',
+                match=ClauseEquals(equals='pplx-decider-v1.1-27b'),
+                name='Decider V1.1 27B',
+                context_window=262144,
+                price_comments='Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='r1-1776',
@@ -18364,6 +18471,14 @@ providers: list[Provider] = [
                 id='teknium/OpenHermes-2p5-Mistral-7B',
                 match=ClauseEquals(equals='teknium/OpenHermes-2p5-Mistral-7B'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='together/Tev1-4B-experimental',
+                match=ClauseEquals(equals='together/Tev1-4B-experimental'),
+                name='Tev1 4B Experimental',
+                context_window=32768,
+                price_comments='The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models',
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
             ),
             ModelInfo(
                 id='togethercomputer/GPT-JT-Moderation-6B',

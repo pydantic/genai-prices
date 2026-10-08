@@ -5204,6 +5204,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'decisions',
+        root: ['result', 'usage'],
+        model_path: ['result', 'model'],
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -5276,6 +5293,44 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.02,
+        },
+      },
+      {
+        id: '@cf/cloudflare/clef',
+        name: 'Clef',
+        match: {
+          or: [
+            {
+              equals: '@cf/cloudflare/clef',
+            },
+            {
+              equals: 'clef',
+            },
+          ],
+        },
+        context_window: 65536,
+        price_comments: 'Input only, $0.24 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef/',
+        prices: {
+          input_mtok: 0.24,
+        },
+      },
+      {
+        id: '@cf/cloudflare/clef-flash',
+        name: 'Clef Flash',
+        match: {
+          or: [
+            {
+              equals: '@cf/cloudflare/clef-flash',
+            },
+            {
+              equals: 'clef-flash',
+            },
+          ],
+        },
+        context_window: 65536,
+        price_comments: 'Input only, $0.09 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-flash/',
+        prices: {
+          input_mtok: 0.09,
         },
       },
       {
@@ -20837,6 +20892,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'decisions',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -22017,6 +22089,30 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'cloudflare/clef',
+        name: 'Clef',
+        match: {
+          equals: 'cloudflare/clef',
+        },
+        context_window: 65536,
+        price_comments: 'Input only. https://openrouter.ai/api/v1/models/cloudflare/clef/endpoints',
+        prices: {
+          input_mtok: 0.24,
+        },
+      },
+      {
+        id: 'cloudflare/clef-flash',
+        name: 'Clef Flash',
+        match: {
+          equals: 'cloudflare/clef-flash',
+        },
+        context_window: 65536,
+        price_comments: 'Input only. https://openrouter.ai/api/v1/models/cloudflare/clef-flash/endpoints',
+        prices: {
+          input_mtok: 0.09,
         },
       },
       {
@@ -27488,6 +27584,32 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'perplexity/pplx-decider-v1-27b',
+        name: 'Decider V1 27B',
+        match: {
+          equals: 'perplexity/pplx-decider-v1-27b',
+        },
+        context_window: 262144,
+        price_comments:
+          "OpenRouter bills this id at $0.04 per million input tokens. Perplexity's own API bills the same id at $0.02. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1-27b/endpoints",
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'perplexity/pplx-decider-v1.1-27b',
+        name: 'Decider V1.1 27B',
+        match: {
+          equals: 'perplexity/pplx-decider-v1.1-27b',
+        },
+        context_window: 262144,
+        price_comments:
+          "Same $0.02 input rate as Perplexity's API. Output is free. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1.1-27b/endpoints",
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
         id: 'perplexity/r1-1776',
         match: {
           equals: 'perplexity/r1-1776',
@@ -29149,6 +29271,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'typesafe/jev-1.13',
+        name: 'Jev 1.13',
+        match: {
+          or: [
+            {
+              equals: 'typesafe/jev-1.13',
+            },
+            {
+              equals: '~typesafe/jev-latest',
+            },
+            {
+              regex: '^typesafe/jev-1\\.13-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 32000,
+        price_comments:
+          'Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+        prices: {
+          input_mtok: 0.042,
+        },
+      },
+      {
         id: 'undi95/remm-slerp-l2-13b',
         name: 'ReMM SLERP 13B',
         match: {
@@ -30212,6 +30357,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'decisions',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -30238,6 +30400,32 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'pplx-decider-v1-27b',
+        name: 'Decider V1 27B',
+        match: {
+          equals: 'pplx-decider-v1-27b',
+        },
+        context_window: 262144,
+        price_comments:
+          'Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'pplx-decider-v1.1-27b',
+        name: 'Decider V1.1 27B',
+        match: {
+          equals: 'pplx-decider-v1.1-27b',
+        },
+        context_window: 262144,
+        price_comments:
+          'Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
         },
       },
       {
@@ -31623,6 +31811,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'together/Tev1-4B-experimental',
+        name: 'Tev1 4B Experimental',
+        match: {
+          equals: 'together/Tev1-4B-experimental',
+        },
+        context_window: 32768,
+        price_comments:
+          'The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models',
+        prices: {
+          input_mtok: 0.04,
         },
       },
       {

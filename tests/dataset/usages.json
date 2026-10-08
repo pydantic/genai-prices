@@ -86,6 +86,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -193,6 +201,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0634728",
             "output_price": "0.006336",
@@ -295,6 +311,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -400,6 +424,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -501,6 +533,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -606,6 +646,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -707,6 +755,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -811,6 +867,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -911,6 +975,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -1016,6 +1088,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -1117,6 +1197,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -1221,6 +1309,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -1321,6 +1417,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -1425,6 +1529,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -1525,6 +1637,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -1629,6 +1749,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -1729,6 +1857,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -1834,6 +1970,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -1935,6 +2079,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -2040,6 +2192,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -2140,6 +2300,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -2244,6 +2412,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -2346,6 +2522,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -2446,6 +2630,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -2551,6 +2743,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -2651,6 +2851,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -2755,6 +2963,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -2855,6 +3071,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -2959,6 +3183,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -3059,6 +3291,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -3163,6 +3403,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -3264,6 +3512,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -4160,6 +4416,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -5612,6 +5876,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0259416",
             "output_price": "0.007728",
@@ -6489,6 +6761,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -6594,6 +6874,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -17249,6 +17537,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -17349,6 +17645,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -17468,6 +17772,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000052",
             "output_price": "0.00088",
@@ -17580,6 +17892,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -17682,6 +18002,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -17868,6 +18196,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00478",
             "output_price": "0.00121",
@@ -17972,6 +18308,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -18072,6 +18416,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -18176,6 +18528,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -18276,6 +18636,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -18381,6 +18749,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000124",
             "output_price": "0.0006",
@@ -18484,6 +18860,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -18617,6 +19001,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000432",
             "output_price": "0.000096",
@@ -18721,6 +19113,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -18821,6 +19221,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -18938,6 +19346,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -19053,6 +19469,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -19154,6 +19578,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -19260,6 +19692,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -19360,6 +19800,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -19463,6 +19911,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -19570,6 +20026,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -19686,6 +20150,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -19786,6 +20258,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -19890,6 +20370,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -19990,6 +20478,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -20094,6 +20590,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -20192,6 +20696,14 @@
             "input_price": "0.000658",
             "output_price": "0.000096",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -20297,6 +20809,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000056",
             "output_price": "0.0001",
@@ -20400,6 +20920,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -20509,6 +21037,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -20614,6 +21150,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -20732,6 +21276,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0003264",
             "output_price": "0.000192",
@@ -20840,6 +21392,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -20940,6 +21500,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -21044,6 +21612,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -21144,6 +21720,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -21248,6 +21832,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -21348,6 +21940,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -21452,6 +22052,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -21552,6 +22160,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -21656,6 +22272,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -21758,6 +22382,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -21858,6 +22490,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -21991,6 +22631,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000528",
             "output_price": "0.000096",
@@ -22107,6 +22755,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -22268,6 +22924,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.004834",
             "output_price": "0.00133",
@@ -22391,6 +23055,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.002622",
             "output_price": "0.00016",
@@ -22496,6 +23168,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -22596,6 +23276,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -22712,6 +23400,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -22871,6 +23567,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.004964",
             "output_price": "0.00166",
@@ -22985,6 +23689,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23089,6 +23801,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -23223,6 +23943,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23328,6 +24056,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23428,6 +24164,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -23532,6 +24276,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23634,6 +24386,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23702,6 +24462,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -23843,6 +24611,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -23957,6 +24733,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -24075,6 +24859,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -24191,6 +24983,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -24294,6 +25094,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -24395,6 +25203,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -24513,6 +25329,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -24616,6 +25440,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -24717,6 +25549,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -24823,6 +25663,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -24985,6 +25833,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0115848",
             "output_price": "0.00114",
@@ -25092,6 +25948,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -25203,6 +26067,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.011256",
             "output_price": "0.001236",
@@ -25307,6 +26179,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -25375,6 +26255,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -26031,6 +26919,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -27315,6 +28211,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -27415,6 +28319,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -28049,6 +28961,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -28156,6 +29076,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -28685,6 +29613,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -28783,6 +29719,14 @@
             "input_price": "0.00003725",
             "output_price": "0.000034",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -29427,6 +30371,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -33518,6 +34470,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -33659,6 +34619,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -33761,6 +34729,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -33861,6 +34837,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -34202,6 +35186,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -34698,6 +35690,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -35062,6 +36062,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -35700,6 +36708,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -35823,6 +36839,16 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "input_price": "0.00804",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -35913,6 +36939,16 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "input_price": "0.00804",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -36037,6 +37073,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -36133,6 +37177,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -37113,6 +38165,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -37181,6 +38241,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -37323,6 +38391,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -38718,6 +39794,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -38819,6 +39903,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -39559,6 +40651,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -39666,6 +40766,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -41161,6 +42269,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -41261,6 +42377,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -41329,6 +42453,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -41655,6 +42787,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -41723,6 +42863,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -41864,6 +43012,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -41932,6 +43088,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -43488,6 +44652,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -43591,6 +44763,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -43692,6 +44872,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -44831,6 +46019,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -44932,6 +46128,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -45630,6 +46834,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -45730,6 +46942,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -48373,6 +49593,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -48885,6 +50113,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -48985,6 +50221,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -49117,6 +50361,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -49734,6 +50986,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -49835,6 +51095,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -49940,6 +51208,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -50041,6 +51317,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -50922,6 +52206,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -51022,6 +52314,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -52113,6 +53413,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -52181,6 +53489,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -53450,6 +54766,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -54003,6 +55327,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -54103,6 +55435,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -54463,6 +55803,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -54563,6 +55911,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -54726,6 +56082,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -54827,6 +56191,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -55070,6 +56442,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -57787,6 +59167,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -57940,6 +59328,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -58041,6 +59437,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -58146,6 +59550,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -58247,6 +59659,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -60623,6 +62043,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -60732,6 +62160,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -60839,6 +62275,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -62828,6 +64272,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -63854,6 +65306,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -63922,6 +65382,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -64899,6 +66367,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -64967,6 +66443,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -69151,6 +70635,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -69258,6 +70750,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -70680,6 +72180,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -71056,6 +72564,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -71157,6 +72673,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -71262,6 +72786,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -71362,6 +72894,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -71430,6 +72970,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -71788,6 +73336,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -71856,6 +73412,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -72083,6 +73647,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -72185,6 +73757,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -72253,6 +73833,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -72362,6 +73950,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -73012,6 +74608,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -73113,6 +74717,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -73218,6 +74830,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -73316,6 +74936,14 @@
             "input_price": "0.00001175",
             "output_price": "0.000132",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -73880,6 +75508,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -74028,6 +75664,14 @@
             "input_price": "0.00001175",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -76036,6 +77680,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -76137,6 +77789,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -76358,6 +78018,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -76465,6 +78133,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -77638,6 +79314,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -77739,6 +79423,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -78644,6 +80336,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -78712,6 +80412,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -79481,6 +81189,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -79549,6 +81265,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -79772,6 +81496,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -79875,6 +81607,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -79976,6 +81716,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -80974,6 +82722,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -81074,6 +82830,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -81142,6 +82906,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -83185,6 +84957,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -83286,6 +85066,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -83645,6 +85433,14 @@
             "input_price": "0.00001175",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -87681,6 +89477,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -87788,6 +89592,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -88095,6 +89907,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -88450,6 +90270,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -88755,6 +90583,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -88862,6 +90698,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -90480,6 +92324,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -96404,6 +98256,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -96497,6 +98357,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -96594,6 +98462,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -96689,6 +98565,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -96758,6 +98642,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -96888,6 +98780,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -96965,6 +98865,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -97071,6 +98979,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -97165,6 +99081,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -97287,6 +99211,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -99239,6 +101171,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -99897,6 +101837,14 @@
             "input_price": "0.00000375",
             "output_price": "0.000006",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -105954,6 +107902,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -110715,6 +112671,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -113386,6 +115350,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -114028,6 +116000,14 @@
             "input_price": "0.0000023",
             "output_price": "0.0000288",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -115155,6 +117135,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -118370,6 +120358,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -118724,6 +120720,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -118879,6 +120883,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -118979,6 +120991,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119048,6 +121068,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -119187,6 +121215,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119285,6 +121321,14 @@
             "input_price": "0.000135",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -119387,6 +121431,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119486,6 +121538,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119554,6 +121614,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -119661,6 +121729,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -119802,6 +121878,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119900,6 +121984,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -119968,6 +122060,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -120077,6 +122177,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -120174,6 +122282,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -120329,6 +122445,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -120429,6 +122553,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -120497,6 +122629,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -120604,6 +122744,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -120743,6 +122891,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -120843,6 +122999,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -120932,6 +123096,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -121031,6 +123203,14 @@
             "input_price": "0.0001275",
             "output_price": "0.00015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -121133,6 +123313,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -121193,6 +123381,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -121350,6 +123546,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -121441,6 +123645,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -121500,6 +123712,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -121627,6 +123847,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -121732,6 +123960,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -121871,6 +124107,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -121971,6 +124215,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -122060,6 +124312,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -122161,6 +124421,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -122250,6 +124518,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -122351,6 +124627,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -122440,6 +124724,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -122541,6 +124833,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -122609,6 +124909,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -122748,6 +125056,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -122851,6 +125167,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000072",
             "output_price": "0.00012",
@@ -122921,6 +125245,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -123030,6 +125362,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -123135,6 +125475,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -123274,6 +125622,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -123372,6 +125728,14 @@
             "input_price": "0.000325",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -123474,6 +125838,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -123570,6 +125942,14 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -123672,6 +126052,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -123770,6 +126158,14 @@
             "input_price": "0.0002125",
             "output_price": "0.0002",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -123872,6 +126268,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -123970,6 +126374,14 @@
             "input_price": "0.00297",
             "output_price": "0.00055",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -124075,6 +126487,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.006196",
             "output_price": "0.00072",
@@ -124145,6 +126565,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -124284,6 +126712,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -124382,6 +126818,14 @@
             "input_price": "0.00087",
             "output_price": "0.003104",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -124484,6 +126928,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -124584,6 +127036,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -124644,6 +127104,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -124761,6 +127229,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -124918,6 +127394,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -125016,6 +127500,14 @@
             "input_price": "0.000154",
             "output_price": "0.000072",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -125118,6 +127610,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -125218,6 +127718,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -125278,6 +127786,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -125395,6 +127911,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -125552,6 +128076,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -125652,6 +128184,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -125723,6 +128263,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -125878,6 +128426,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0001008",
             "output_price": "0.003492",
@@ -125948,6 +128504,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -126055,6 +128619,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -126192,6 +128764,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -126260,6 +128840,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -126367,6 +128955,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -126504,6 +129100,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -126600,6 +129204,14 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -126702,6 +129314,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -126762,6 +129382,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -126914,6 +129542,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000072",
             "output_price": "0.00012",
@@ -126984,6 +129620,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -127083,6 +129727,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -127198,6 +129850,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -127339,6 +129999,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -127439,6 +130107,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -127528,6 +130204,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -127627,6 +130311,14 @@
             "input_price": "0.000715",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -127729,6 +130421,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -127827,6 +130527,14 @@
             "input_price": "0.000112",
             "output_price": "0.000128",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -127929,6 +130637,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128027,6 +130743,14 @@
             "input_price": "0.000278",
             "output_price": "0.000112",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -128129,6 +130853,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128229,6 +130961,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128289,6 +131029,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -128446,6 +131194,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128542,6 +131298,14 @@
             "input_price": "0.000045",
             "output_price": "0.00216",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -128644,6 +131408,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128742,6 +131514,14 @@
             "input_price": "0.0002225",
             "output_price": "0.00016",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -128844,6 +131624,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -128912,6 +131700,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -129019,6 +131815,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -129158,6 +131962,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -129256,6 +132068,14 @@
             "input_price": "0.00044",
             "output_price": "0.00026",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -129358,6 +132178,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -129458,6 +132286,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -129554,6 +132390,14 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -129656,6 +132500,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -129756,6 +132608,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -129854,6 +132714,14 @@
             "input_price": "0.0000375",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -129957,6 +132825,14 @@
             "input_price": "0.00007",
             "output_price": "0.00036",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -130064,6 +132940,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000072",
             "output_price": "0.00012",
@@ -130168,6 +133052,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000072",
             "output_price": "0.00012",
@@ -130270,6 +133162,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -130365,6 +133265,14 @@
             "input_price": "0.0008375",
             "output_price": "0.00044",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -130467,6 +133375,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -130565,6 +133481,14 @@
             "input_price": "0.000765",
             "output_price": "0.00022",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -130668,6 +133592,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -130736,6 +133668,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -130843,6 +133783,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -130982,6 +133930,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -131082,6 +134038,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -131171,6 +134135,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -131272,6 +134244,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -131340,6 +134320,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -131477,6 +134465,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -131577,6 +134573,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -131645,6 +134649,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -131752,6 +134764,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -131888,6 +134908,14 @@
             "input_price": "0.00001625",
             "output_price": "0.00063",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -139734,6 +142762,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -152249,6 +155285,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -160173,6 +163217,14 @@
             "provider_id": "minimax"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "typesafe"
           }
@@ -160543,6 +163595,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -164522,6 +167582,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -164622,6 +167690,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -164720,6 +167796,14 @@
             "input_price": "0.001045",
             "output_price": "0.00036",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -164899,6 +167983,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165000,6 +168092,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -165105,6 +168205,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165205,6 +168313,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165303,6 +168419,14 @@
             "input_price": "0.0015175",
             "output_price": "0.00027",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -165408,6 +168532,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165509,6 +168641,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -165614,6 +168754,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165717,6 +168865,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -165818,6 +168974,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -165927,6 +169091,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -166046,6 +169218,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -166249,6 +169429,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -166349,6 +169537,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -166447,6 +169643,14 @@
             "input_price": "0.001045",
             "output_price": "0.00036",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -166552,6 +169756,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -166653,6 +169865,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -168937,6 +172157,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -169033,6 +172261,14 @@
             "input_price": "0.00060025",
             "output_price": "0.000238",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -169133,6 +172369,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -169202,6 +172446,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -169344,6 +172596,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -169445,6 +172705,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -169514,6 +172782,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -169656,6 +172932,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -169757,6 +173041,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -169864,6 +173156,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0025344",
             "output_price": "0.000432",
@@ -169966,6 +173266,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170064,6 +173372,14 @@
             "input_price": "0.00047325",
             "output_price": "0.000054",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -170169,6 +173485,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170270,6 +173594,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -170379,6 +173711,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170482,6 +173822,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170551,6 +173899,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -170693,6 +174049,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170792,6 +174156,14 @@
             "input_price": "0.00066",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -170894,6 +174266,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -170994,6 +174374,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -171092,6 +174480,14 @@
             "input_price": "0.0011925",
             "output_price": "0.000195",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -171577,6 +174973,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0038256",
             "output_price": "0.001584",
@@ -171682,6 +175086,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.002292",
             "output_price": "0.000696",
@@ -171785,6 +175197,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -171884,6 +175304,14 @@
             "input_price": "0.0009575",
             "output_price": "0.000195",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -171987,6 +175415,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -172094,6 +175530,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0029496",
             "output_price": "0.000528",
@@ -172167,6 +175611,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -172313,6 +175765,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00204",
             "output_price": "0.00048",
@@ -172422,6 +175882,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0038256",
             "output_price": "0.001584",
@@ -172527,6 +175995,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.002292",
             "output_price": "0.000672",
@@ -172630,6 +176106,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -172729,6 +176213,14 @@
             "input_price": "0.0009825",
             "output_price": "0.000195",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -172834,6 +176326,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -172935,6 +176435,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -173040,6 +176548,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -173141,6 +176657,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -173246,6 +176770,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -173347,6 +176879,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -173452,6 +176992,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -173553,6 +177101,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -173658,6 +177214,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -173761,6 +177325,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -173862,6 +177434,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -174192,6 +177772,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -174292,6 +177880,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -174360,6 +177956,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -174501,6 +178105,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -174597,6 +178209,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -175612,6 +179232,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -175725,6 +179353,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -175842,6 +179478,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -175955,6 +179599,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -177164,6 +180816,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -177279,6 +180939,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -177392,6 +181060,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -177509,6 +181185,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -177624,6 +181308,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -177737,6 +181429,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -178958,6 +182658,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000012",
             "output_price": "0.00489",
@@ -179114,6 +182822,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000008",
             "output_price": "0.0029",
@@ -179253,6 +182969,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000024",
             "output_price": "0.002532",
@@ -179390,6 +183114,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -179548,6 +183280,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000032",
             "output_price": "0.00344",
@@ -179704,6 +183444,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000008",
             "output_price": "0.0029",
@@ -179841,6 +183589,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -179982,6 +183738,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000096",
             "output_price": "0.001872",
@@ -180079,6 +183843,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -180225,6 +183997,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0113448",
             "output_price": "0.003336",
@@ -180334,6 +184114,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0113352",
             "output_price": "0.0033",
@@ -180441,6 +184229,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -180604,6 +184400,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -180664,6 +184468,14 @@
           {
             "api_flavor": "default",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -180789,6 +184601,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -180935,6 +184755,14 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",
@@ -186540,6 +190368,14 @@
             "provider_id": "openai"
           },
           {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "quicksilverpro"
           },
@@ -186639,6 +190475,14 @@
             "input_price": "0.00001625",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "decisions",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "responses",

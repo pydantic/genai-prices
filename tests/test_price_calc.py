@@ -2874,3 +2874,43 @@ def test_openrouter_gpt_56_sol_cache_write_price():
     assert price.input_price == Decimal('0.0222')
     assert price.output_price == Decimal('0.01')
     assert price.total_price == Decimal('0.0322')
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'input_tokens', 'total'),
+    [
+        ('cloudflare', '@cf/cloudflare/clef', '@cf/cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('cloudflare', 'clef', '@cf/cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('cloudflare', '@cf/cloudflare/clef-flash', '@cf/cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('cloudflare', 'clef-flash', '@cf/cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('together', 'together/Tev1-4B-experimental', 'together/Tev1-4B-experimental', 1_000_000, Decimal('0.04')),
+        ('perplexity', 'pplx-decider-v1-27b', 'pplx-decider-v1-27b', 600, Decimal('0.000012')),
+        ('perplexity', 'pplx-decider-v1.1-27b', 'pplx-decider-v1.1-27b', 367, Decimal('0.00000734')),
+        ('openrouter', 'cloudflare/clef', 'cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('openrouter', 'cloudflare/clef-flash', 'cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('openrouter', 'perplexity/pplx-decider-v1-27b', 'perplexity/pplx-decider-v1-27b', 1_000_000, Decimal('0.04')),
+        (
+            'openrouter',
+            'perplexity/pplx-decider-v1.1-27b',
+            'perplexity/pplx-decider-v1.1-27b',
+            1_000_000,
+            Decimal('0.02'),
+        ),
+        ('openrouter', 'typesafe/jev-1.13', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+        ('openrouter', 'typesafe/jev-1.13-20260917', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+        ('openrouter', '~typesafe/jev-latest', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+    ],
+)
+def test_decision_model_input_only_prices(
+    provider_id: str, model_ref: str, model_id: str, input_tokens: int, total: Decimal
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, output_tokens=70),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.provider.id == provider_id
+    assert price.model.id == model_id
+    assert price.output_price == 0
+    assert price.total_price == total
