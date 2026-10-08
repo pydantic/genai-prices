@@ -40,11 +40,12 @@ output. **Never edit the `.lock.yml` by hand.** After editing a `.md`:
 
 ```bash
 gh extension install github/gh-aw --pin v0.82.2   # once; the version pin matters, see below
-gh aw compile                                     # regenerates the .lock.yml files
+gh aw compile agentic-price-check-openai-anthropic agentic-price-check-google-mistral \
+  agentic-price-check-direct-providers            # regenerates their .lock.yml files
 ```
 
-Name the price-check workflows when compiling: a bare `gh aw compile` also recompiles
-`genai-prices-triage-pilot`, whose `pydantic-ai` engine requires gh-aw v0.91.1 or newer.
+Name the workflows: a bare `gh aw compile` also recompiles `genai-prices-triage-pilot`,
+whose `pydantic-ai` engine requires gh-aw v0.91.1 or newer.
 
 **Compile with gh-aw v0.82.2, and keep the `max-ai-credits: -1` frontmatter.** gh-aw's
 api-proxy meters AI credits and rejects any model with no pricing entry (`HTTP 400
@@ -60,7 +61,8 @@ catalog, both the version pin and the `max-ai-credits` lines are load-bearing.
 
 To add another direct provider, add its YAML path, official sources, scope, and mapping
 notes to `.github/agentic-price-check-providers.yml`. Add each new source domain to
-`network.allowed` in `agentic-price-check-direct-providers.md`, then run `gh aw compile`.
+`network.allowed` in `agentic-price-check-direct-providers.md`, then run
+`gh aw compile agentic-price-check-direct-providers`.
 
 ## Notes / caveats
 
