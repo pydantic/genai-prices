@@ -63,6 +63,17 @@ extractors:
       - path: prompt_tokens
         dest: input_tokens
 
+  # https://developers.cloudflare.com/workers-ai/models/clef/schema-output.json
+  # The REST API wraps that object in `result`. `model` is the selector, `clef` or `clef-flash`.
+  - api_flavor: decisions
+    root: [result, usage]
+    model_path: [result, model]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+
 models:
   - id: "@cf/ai4bharat/indictrans2-en-indic-1B"
     name: IndicTrans2 EN-Indic 1B
@@ -121,6 +132,32 @@ models:
     prices_checked: 2026-08-27
     prices:
       input_mtok: 0.02
+
+  - id: "@cf/cloudflare/clef"
+    name: Clef
+    match:
+      or:
+        - equals: "@cf/cloudflare/clef"
+        - equals: clef
+    context_window: 65536
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Input only, $0.24 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef/
+    prices:
+      input_mtok: 0.24
+
+  - id: "@cf/cloudflare/clef-flash"
+    name: Clef Flash
+    match:
+      or:
+        - equals: "@cf/cloudflare/clef-flash"
+        - equals: clef-flash
+    context_window: 65536
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Input only, $0.09 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-flash/
+    prices:
+      input_mtok: 0.09
 
   - id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
     name: DeepSeek R1 Distill Qwen 32B
