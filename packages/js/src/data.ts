@@ -347,6 +347,84 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-5-5',
+        name: 'Claude Haiku 5.5',
+        description: 'For high-volume, latency-sensitive tasks such as classification, extraction, and routing',
+        match: {
+          or: [
+            {
+              equals: 'claude-haiku-5-5',
+            },
+            {
+              regex: '^claude-haiku-5-5-\\d{8}$',
+            },
+            {
+              starts_with: 'claude-haiku-5-5@',
+            },
+            {
+              starts_with: 'claude-haiku-5.5',
+            },
+            {
+              starts_with: 'claude-5-5-haiku',
+            },
+            {
+              starts_with: 'claude-5.5-haiku',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed at the higher rate (5x). Cache reads are the standard 0.1x of base input. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.625,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.05,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 100000,
+                price: 1,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -1691,6 +1769,69 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-haiku-5-5',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-haiku-5-5',
+            },
+            {
+              contains: 'global.anthropic.claude-haiku-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Prompts over 100,000 tokens bill every token at the long-context rate. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.625,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.05,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 100000,
+                price: 1,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'global.anthropic.claude-opus-4-5-v1:0',
         match: {
           contains: 'global.anthropic.claude-opus-4-5',
@@ -2911,6 +3052,111 @@ export const data: Provider[] = [
           cache_read_mtok: 0.11,
           output_mtok: 5.5,
           cache_write_1h_mtok: 2.2,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-haiku-5-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'claude-haiku-5-5',
+            },
+            {
+              starts_with: 'anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              starts_with: 'claude-haiku-5-5-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'au.anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'apac.anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'eu.anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'us-gov.anthropic.claude-haiku-5-5',
+            },
+            {
+              equals: 'jp.anthropic.claude-haiku-5-5',
+            },
+            {
+              contains: 'us.anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              contains: 'au.anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              contains: 'apac.anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-haiku-5-5-v1',
+            },
+            {
+              contains: 'jp.anthropic.claude-haiku-5-5-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Prompts over 100,000 tokens bill every token at the long-context rate. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: {
+            base: 0.11,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.55,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.1375,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.6875,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.011,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.055,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.75,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.22,
+            tiers: [
+              {
+                start: 100000,
+                price: 1.1,
+              },
+            ],
+          },
         },
       },
       {
@@ -9671,6 +9917,75 @@ export const data: Provider[] = [
           cache_read_mtok: 0.25,
           output_mtok: 50,
           cache_write_1h_mtok: 20,
+        },
+      },
+      {
+        id: 'claude-haiku-5-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-haiku-5-5',
+            },
+            {
+              contains: 'claude-haiku-5.5',
+            },
+            {
+              contains: 'claude-5-5-haiku',
+            },
+            {
+              contains: 'claude-5.5-haiku',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing; multi-region and regional endpoints carry a 10% premium. Prompts over 100K input tokens bill every token at the long-context rate. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints",
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.625,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.05,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 100000,
+                price: 1,
+              },
+            ],
+          },
         },
       },
       {
@@ -21377,6 +21692,128 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-haiku-5.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-haiku-5.5',
+            },
+            {
+              regex: '^anthropic/claude-haiku-5\\.5-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read and 5m/1h cache-write rates confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.625,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.05,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 100000,
+                price: 1,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
+        id: 'anthropic/claude-haiku-5.5:batch',
+        name: 'Claude Haiku 5.5 Batch',
+        match: {
+          equals: 'anthropic/claude-haiku-5.5:batch',
+        },
+        context_window: 1000000,
+        price_comments:
+          "OpenRouter's batch route bills input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+        prices: {
+          input_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.0625,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.3125,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.005,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.025,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 100000,
+                price: 1.25,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-4',
         name: 'Claude Opus 4',
         match: {
@@ -29799,13 +30236,71 @@ export const data: Provider[] = [
         match: {
           equals: '~anthropic/claude-haiku-latest',
         },
-        context_window: 200000,
-        prices: {
-          input_mtok: 1,
-          cache_write_mtok: 1.25,
-          cache_read_mtok: 0.1,
-          output_mtok: 5,
-        },
+        context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              cache_write_mtok: 1.25,
+              cache_read_mtok: 0.1,
+              output_mtok: 5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-07',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.125,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 0.625,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.01,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 0.05,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_write_1h_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 1,
+                  },
+                ],
+              },
+              web_searches_kcount: 10,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-opus-latest',
