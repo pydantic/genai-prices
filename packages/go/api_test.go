@@ -712,26 +712,26 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 		providerID, model, wantModelID string
 		wantBase, wantLongContext      float64
 	}{
-		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
-		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.06, 0.0500005},
-		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
-		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.06, 0.0500005},
-		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
-		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.06, 0.0500005},
-		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 0.0500005},
-		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
-		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
-		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
-		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 0.0500005},
-		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 0.0500005},
-		{"openrouter", "anthropic/claude-haiku-5.5:batch", "anthropic/claude-haiku-5.5:batch", 0.03, 0.02500025},
+		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.3000005},
+		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.06, 0.3000005},
+		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.3000005},
+		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.06, 0.3000005},
+		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.3000005},
+		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.06, 0.3000005},
+		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 0.3000005},
+		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
+		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
+		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
+		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 0.3000005},
+		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 0.3000005},
+		{"openrouter", "anthropic/claude-haiku-5.5:batch", "anthropic/claude-haiku-5.5:batch", 0.03, 0.15000025},
 	} {
 		for _, tokens := range []struct {
 			usage genai_prices.Usage
 			want  float64
 		}{
 			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_000, genai_prices.UsageOutputTokens: 100_000}, test.wantBase},
-			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_001}, test.wantLongContext},
+			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_001, genai_prices.UsageOutputTokens: 100_000}, test.wantLongContext},
 		} {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 				Usage:      tokens.usage,

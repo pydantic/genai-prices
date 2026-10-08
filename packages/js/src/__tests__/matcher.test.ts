@@ -586,23 +586,23 @@ describe('Claude Haiku 5.5', () => {
   // Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the
   // base rate and 100,001 does not.
   const base = { input_tokens: 100_000, output_tokens: 100_000 }
-  const longContext = { input_tokens: 100_001 }
+  const longContext = { input_tokens: 100_001, output_tokens: 100_000 }
   const million = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
 
   it.each([
-    ['anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.0500005],
-    ['anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', 0.06, 0.0500005],
-    ['google', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.0500005],
-    ['google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', 0.06, 0.0500005],
-    ['google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.0500005],
-    ['aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', 0.06, 0.0500005],
-    ['aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', 0.06, 0.0500005],
-    ['aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.05500055],
-    ['aws', 'eu.anthropic.claude-haiku-5-5-v1:0', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.05500055],
-    ['aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.05500055],
-    ['openrouter', 'anthropic/claude-haiku-5.5', 'anthropic/claude-haiku-5.5', 0.06, 0.0500005],
-    ['openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', 0.06, 0.0500005],
-    ['openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', 0.03, 0.02500025],
+    ['anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['aws', 'eu.anthropic.claude-haiku-5-5-v1:0', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['openrouter', 'anthropic/claude-haiku-5.5', 'anthropic/claude-haiku-5.5', 0.06, 0.3000005],
+    ['openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', 0.06, 0.3000005],
+    ['openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', 0.03, 0.15000025],
   ])('prices %s %s as %s by prompt length', (providerId, modelRef, modelId, basePrice, longContextPrice) => {
     const price = calcPrice(base, modelRef, { providerId })
 
