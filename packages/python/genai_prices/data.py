@@ -1229,7 +1229,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+                price_comments='Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -2084,7 +2084,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
                 prices=ModelPrice(
                     input_mtok=Decimal('4.4'),
                     cache_write_mtok=Decimal('5.5'),
@@ -5917,7 +5917,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -12726,7 +12726,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),

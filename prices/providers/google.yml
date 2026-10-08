@@ -625,7 +625,7 @@ models:
       Global endpoint pricing, flat across the full 1M context window. Multi-region and regional
       endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read
       when this entry was added; the rates follow Anthropic's list price, as every other Claude entry
-      in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      in this file does. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
       Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
       Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview
