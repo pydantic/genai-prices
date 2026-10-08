@@ -581,3 +581,25 @@ describe('Claude Sonnet 5 vs 5.5', () => {
     expect(price!.total_price).toBeCloseTo(expected, 10)
   })
 })
+
+describe('Claude Haiku 5.5', () => {
+  it.each([
+    ['anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.51, 2.6],
+    ['anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', 0.51, 2.6],
+    ['google', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.51, 2.6],
+    ['google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', 0.51, 2.6],
+    ['google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', 0.51, 2.6],
+    ['aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', 0.51, 2.6],
+    ['aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', 0.51, 2.6],
+    ['aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.561, 2.86],
+    ['aws', 'eu.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.561, 2.86],
+    ['aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.561, 2.86],
+  ])('prices %s %s by prompt length', (providerId, modelRef, modelId, expected, expectedLong) => {
+    const price = calcPrice({ input_tokens: 100_000, output_tokens: 1_000_000 }, modelRef, { providerId })
+    const longPrice = calcPrice({ input_tokens: 200_000, output_tokens: 1_000_000 }, modelRef, { providerId })
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+    expect(longPrice!.total_price).toBeCloseTo(expectedLong, 10)
+  })
+})

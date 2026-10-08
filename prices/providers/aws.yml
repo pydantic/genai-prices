@@ -224,6 +224,46 @@ models:
       cache_read_mtok: 0.1
       output_mtok: 5
 
+  - id: global.anthropic.claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Global endpoint (no premium). Priced by prompt length: the "Long Context" rates apply to a
+      prompt of over 100,000 tokens.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    match:
+      or:
+        - ends_with: global.anthropic.claude-haiku-5-5
+        - contains: global.anthropic.claude-haiku-5-5-v1
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.2
+        tiers:
+          - start: 100000
+            price: 1
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+
   - id: global.anthropic.claude-opus-4-5-v1:0
     canonical_model: anthropic/claude-opus-4-5
     prices_checked: 2026-09-25
@@ -1154,6 +1194,55 @@ models:
       cache_write_1h_mtok: 2.2
       cache_read_mtok: 0.11
       output_mtok: 5.5
+
+  - id: regional.anthropic.claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
+      Priced by prompt length: the "Long Context" rates apply to a prompt of over 100,000 tokens.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    match:
+      or:
+        - equals: anthropic.claude-haiku-5-5
+        - equals: claude-haiku-5-5
+        - starts_with: anthropic.claude-haiku-5-5-v1
+        - starts_with: claude-haiku-5-5-v1
+        - equals: us.anthropic.claude-haiku-5-5
+        - equals: au.anthropic.claude-haiku-5-5
+        - equals: eu.anthropic.claude-haiku-5-5
+        - equals: jp.anthropic.claude-haiku-5-5
+        - contains: us.anthropic.claude-haiku-5-5-v1
+        - contains: au.anthropic.claude-haiku-5-5-v1
+        - contains: eu.anthropic.claude-haiku-5-5-v1
+        - contains: jp.anthropic.claude-haiku-5-5-v1
+    prices:
+      input_mtok:
+        base: 0.11
+        tiers:
+          - start: 100000
+            price: 0.55
+      cache_write_mtok:
+        base: 0.1375
+        tiers:
+          - start: 100000
+            price: 0.6875
+      cache_write_1h_mtok:
+        base: 0.22
+        tiers:
+          - start: 100000
+            price: 1.1
+      cache_read_mtok:
+        base: 0.011
+        tiers:
+          - start: 100000
+            price: 0.055
+      output_mtok:
+        base: 0.55
+        tiers:
+          - start: 100000
+            price: 2.75
 
   - id: regional.anthropic.claude-opus-4-1-20250805-v1:0
     canonical_model: anthropic/claude-opus-4-1

@@ -704,3 +704,41 @@ func TestDatabricksExtractUsage(t *testing.T) {
 		}
 	}
 }
+
+func TestClaudeHaiku55IsPricedByPromptLength(t *testing.T) {
+	for _, test := range []struct {
+		providerID, model, wantModelID string
+		wantPrice, wantLongPrice       float64
+	}{
+		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.51, 2.6},
+		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.51, 2.6},
+		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.51, 2.6},
+		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.51, 2.6},
+		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.51, 2.6},
+		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.51, 2.6},
+		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.51, 2.6},
+		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.561, 2.86},
+		{"aws", "eu.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.561, 2.86},
+		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.561, 2.86},
+	} {
+		for inputTokens, want := range map[float64]float64{100_000: test.wantPrice, 200_000: test.wantLongPrice} {
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{
+					genai_prices.UsageInputTokens:  inputTokens,
+					genai_prices.UsageOutputTokens: 1_000_000,
+				},
+				Model:      test.model,
+				ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if calculation.ModelID != test.wantModelID {
+				t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+			}
+			if math.Abs(calculation.TotalPrice-want) > 1e-9 {
+				t.Fatalf("%s/%s at %g input tokens got %g, want %g", test.providerID, test.model, inputTokens, calculation.TotalPrice, want)
+			}
+		}
+	}
+}

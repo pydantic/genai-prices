@@ -259,6 +259,53 @@ models:
       output_mtok: 5
       web_searches_kcount: 10
 
+  - id: claude-haiku-5-5
+    name: Claude Haiku 5.5
+    description: For high-volume, latency-sensitive tasks such as classification, extraction, and routing
+    match:
+      or:
+        - equals: claude-haiku-5-5
+        - regex: ^claude-haiku-5-5-\d{8}$
+        - starts_with: claude-haiku-5-5@
+        - starts_with: claude-haiku-5.5
+        - starts_with: claude-5-5-haiku
+        - starts_with: claude-5.5-haiku
+    context_window: 1000000
+    prices_checked: 2026-10-07
+    price_comments: >-
+      Priced by prompt length: a prompt of over 100,000 tokens pays 5x on every token category.
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Long context ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok:
+        base: 0.10
+        tiers:
+          - start: 100000
+            price: 0.50
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.20
+        tiers:
+          - start: 100000
+            price: 1
+      output_mtok:
+        base: 0.50
+        tiers:
+          - start: 100000
+            price: 2.50
+      web_searches_kcount: 10
+
   - id: claude-instant-1
     description: Retired, here to match price sources
     match:

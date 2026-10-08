@@ -883,6 +883,36 @@ def test_claude_sonnet_5_5_resolves_to_its_own_model(
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'expected_price', 'expected_long_price'),
+    [
+        ('anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', '0.51', '2.6'),
+        ('anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', '0.51', '2.6'),
+        ('google', 'claude-haiku-5-5', 'claude-haiku-5-5', '0.51', '2.6'),
+        ('google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', '0.51', '2.6'),
+        ('google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', '0.51', '2.6'),
+        ('aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', '0.51', '2.6'),
+        ('aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', '0.51', '2.6'),
+        ('aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', '0.561', '2.86'),
+        ('aws', 'eu.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', '0.561', '2.86'),
+        ('aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', '0.561', '2.86'),
+    ],
+)
+def test_claude_haiku_5_5_is_priced_by_prompt_length(
+    provider_id: str, model_ref: str, model_id: str, expected_price: str, expected_long_price: str
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=100_000, output_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+    )
+    long_price = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected_price)
+    assert long_price.total_price == Decimal(expected_long_price)
+
+
+@pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'model_id'),
     [
         ('anthropic', 'claude-sonnet-5', 'claude-sonnet-5'),
