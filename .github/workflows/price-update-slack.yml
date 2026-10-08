@@ -1,0 +1,31 @@
+name: Notify Slack about a price update
+
+on:
+  workflow_call:
+    inputs:
+      pr-url:
+        required: true
+        type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+
+permissions: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    environment: price-updates
+    timeout-minutes: 2
+    steps:
+      - name: Send the PR link to Slack
+        env:
+          PR_URL: ${{ inputs.pr-url }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          : "${PR_URL:?No price-update PR URL was provided}"
+          : "${SLACK_WEBHOOK_URL:?Set the SLACK_WEBHOOK_URL repository secret}"
+          jq -n --arg url "$PR_URL" \
+            '{text: ("Review the GenAI Prices update: " + $url), unfurl_links: false, unfurl_media: false}' \
+            | curl --fail --silent --show-error --connect-timeout 10 --max-time 30 \
+                --header 'Content-Type: application/json' --data-binary @- "$SLACK_WEBHOOK_URL"

@@ -1,45 +1,89 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Direct Providers'
-description: 'Check sixteen direct provider catalogs for changed prices, new models, removed models, and unreadable sources.'
+description: 'Check sixteen official provider catalogs, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
-  schedule: weekly on monday
+  schedule: daily
+  skip-if-match: 'is:pr is:open in:title "Update direct-provider prices"'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
 permissions:
   contents: read
-  issues: read
+  pull-requests: read
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 checkout:
   fetch-depth: 1
+imports:
+  - shared/price-update.md
 tools:
   bash:
     - 'cat:*'
     - 'ls:*'
     - 'rg:*'
     - 'jq:*'
+    - 'make:*'
+    - 'npm:*'
+    - 'uv:*'
   web-fetch:
 safe-outputs:
-  # Disabled: the detection sub-agent runs its own minimax call through a separate
-  # credit guardrail that can't be satisfied for a BYOK model (a positive cap rejects
-  # the unpriced minimax with HTTP 400; -1 is rejected as "maxAiCredits must be > 0").
-  # With minimax it can never produce a verdict, so it stamped a false "threat detected
-  # / could not be parsed" banner on every issue. Re-enable if the engine moves to a
-  # model gh-aw prices.
+  # Minimax is unpriced in gh-aw's separate detection guardrail.
   threat-detection: false
+  report-failure-as-issue: false
   noop:
     report-as-issue: false
-  create-issue:
+  create-pull-request:
     max: 1
-    title-prefix: '[price-check/direct-providers] '
-    close-older-key: '[price-check/direct-providers]'
-    close-older-issues: true
-    expires: 30d
-timeout-minutes: 30
-max-turns: 200
+    draft: false
+    fallback-as-issue: false
+    protected-files:
+      policy: blocked
+      exclude: [README.md]
+    allowed-files:
+      - prices/providers/deepseek.yml
+      - prices/providers/x_ai.yml
+      - prices/providers/groq.yml
+      - prices/providers/cerebras.yml
+      - prices/providers/minimax.yml
+      - prices/providers/moonshotai.yml
+      - prices/providers/avian.yml
+      - prices/providers/perplexity.yml
+      - prices/providers/cohere.yml
+      - prices/providers/voyageai.yml
+      - prices/providers/cloudflare.yml
+      - prices/providers/cursor.yml
+      - prices/providers/arcee.yml
+      - prices/providers/baseten.yml
+      - prices/providers/github_copilot.yml
+      - prices/providers/databricks.yml
+      - prices/providers/.schema.json
+      - prices/new_data/v2/data.json
+      - prices/new_data/v2/data_slim.json
+      - packages/python/genai_prices/data.py
+      - packages/python/genai_prices/data_units.py
+      - packages/js/src/data.ts
+      - packages/js/src/dataUnits.ts
+      - packages/go/internal/data/prices.json
+      - packages/go/data_units.go
+      - README.md
+      - tests/test_price_calc.py
+      - tests/test_price_regressions.py
+      - tests/dataset/usages.json
+      - packages/js/src/__tests__/**
+      - packages/go/*_test.go
+jobs:
+  notify_slack:
+    needs: [agent, safe_outputs]
+    if: ${{ !cancelled() && needs.safe_outputs.result == 'success' && needs.safe_outputs.outputs.created_pr_url != '' }}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.safe_outputs.outputs.created_pr_url }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+timeout-minutes: 60
+max-turns: 300
 # Disable gh-aw's AI-credits guardrail: the Fireworks minimax model isn't in gh-aw's
 # pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
 # unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
@@ -88,8 +132,9 @@ network:
 
 # Price Check: Direct Providers
 
-Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. File one rolling issue with
-every actionable or incomplete finding from the run. Do not edit the repository.
+Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. Propose verified price
+changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then the shared update steps.
+Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
 ## Step 1 - read the manifest and recorded data
 
@@ -137,35 +182,3 @@ For every provider, perform all four checks:
 
 If a source is readable for prices but not a complete catalog, compare prices and unchecked fields but do not report new models
 or potential removals from that source.
-
-## Step 4 - file one issue or noop
-
-If any price change, new model, potential removal, unchecked field, or unreadable source exists, create one issue titled
-`Direct-provider price check findings`. Include only non-empty sections from this list:
-
-- `Price discrepancies`: Provider, YAML model ID, field or tier, recorded value, official value, source URL.
-- `New models`: Provider, official model ID, official prices, source URL.
-- `Potential removals`: Provider, YAML model ID, source URL.
-- `Unchecked fields`: Provider, YAML model ID, field or tier, reason, source URL.
-- `Unreadable sources`: Provider, source URL, failure.
-
-Use tables and one row per finding. End with `Checked YYYY-MM-DD.` using the run date.
-
-To file the issue, write the body to `/tmp/gh-aw/agent/issue-body.md`, then run:
-
-```bash
-jq -Rs '{title: "Direct-provider price check findings", body: .}' /tmp/gh-aw/agent/issue-body.md | safeoutputs create_issue .
-```
-
-`jq -Rs` encodes the whole file as the JSON `body`. Keep the body under 10,000 bytes, because `safeoutputs` rejects a
-larger `body`. Measure it with `jq -Rs 'utf8bytelength' /tmp/gh-aw/agent/issue-body.md`. When the body is larger, keep
-`Price discrepancies`, `New models`, and `Unreadable sources` complete. Compact `Potential removals` first, then
-`Unchecked fields`, into one row per provider that lists the affected model IDs. If the body is still larger, replace
-each compacted section with one line per provider that gives the count.
-
-Call `create_issue` only with the real findings: the run allows one issue, and a test or placeholder call uses it up. A
-call that returns an error files nothing, so fix the cause and run the command again.
-
-Call `safeoutputs noop` only when all manifest providers and sources were read successfully, every active price field and tier was
-checked, every recorded value matched, and catalog comparison found no new or potentially removed models. State that all sixteen
-direct providers match.
