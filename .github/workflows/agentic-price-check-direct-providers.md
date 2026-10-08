@@ -76,7 +76,7 @@ safe-outputs:
 jobs:
   notify_slack:
     needs: [agent, safe_outputs]
-    if: ${{ !cancelled() && needs.safe_outputs.result == 'success' && needs.safe_outputs.outputs.created_pr_url != '' }}
+    if: ${{ !cancelled() && needs.safe_outputs.outputs.created_pr_url != '' }}
     uses: ./.github/workflows/price-update-slack.yml
     with:
       pr-url: ${{ needs.safe_outputs.outputs.created_pr_url }}
@@ -153,9 +153,9 @@ unit definition. Key suffixes are not interchangeable:
 - `_kpages` is USD per 1,000 pages.
 
 A price value can be a scalar or an object with `base` and `tiers`. Compare the base and every tier whose threshold appears in
-the official source. A model's `prices:` can also be a list of records with constraints. Compare every record that can apply on
-the run date, including separate time, context, batch, modality, or regional rates when the official source exposes them. Ignore
-records that ended before the run date or start in the future.
+the official source. A model's `prices:` can also be a list of records with constraints. For each distinct time, context, batch,
+modality, or regional scope, compare only the last matching record whose complete constraint applies on the run date. Ignore
+shadowed history, expired records, and future records when comparing current prices; preserve them unchanged.
 
 ## Step 2 - fetch every official source
 

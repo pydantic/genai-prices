@@ -68,7 +68,9 @@ These checks complement `make check-for-price-discrepancies`, which uses aggrega
 The shared instructions in `.github/workflows/shared/price-update.md` require the agent to:
 
 - Check existing canonical IDs and match rules before adding models. Do not add aliases as separate models.
-- Compare all registry units, active conditional records, and published tiers. Do not guess missing prices or effective dates.
+- Compare all registry units and published tiers, resolving the last matching conditional record for each usage scope.
+  Ignore shadowed historical rates and never append a change that would shadow a scheduled future rate.
+  Do not guess missing prices or effective dates.
 - Preserve historical prices. Append dated conditional records for real rate changes; correct values in place only with
   evidence that the recorded price was already wrong.
 - Edit only the workflow's provider YAML. Regenerate artifacts with `make build`, never by hand.

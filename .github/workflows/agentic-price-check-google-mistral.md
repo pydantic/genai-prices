@@ -62,7 +62,7 @@ safe-outputs:
 jobs:
   notify_slack:
     needs: [agent, safe_outputs]
-    if: ${{ !cancelled() && needs.safe_outputs.result == 'success' && needs.safe_outputs.outputs.created_pr_url != '' }}
+    if: ${{ !cancelled() && needs.safe_outputs.outputs.created_pr_url != '' }}
     uses: ./.github/workflows/price-update-slack.yml
     with:
       pr-url: ${{ needs.safe_outputs.outputs.created_pr_url }}
@@ -106,8 +106,9 @@ active field or tier under `prices:`. Read `prices/units.yml` for the billing un
 `_mtok` is USD per 1,000,000 tokens, `_kcount` per 1,000 events, `_mchars` per 1,000,000 characters, `_hours` per 3,600 seconds,
 `_gpixels` per 1,000,000,000 pixels, and `_kpages` per 1,000 pages. Show conversions in the PR body.
 
-Check both the `base` and every published tier. For conditional price lists, compare each record applicable on the run date
-and preserve its non-date constraints. Ignore expired and future records. A field with no identifiable official counterpart
+Check both the `base` and every published tier. For each distinct usage scope, resolve conditional price lists using the
+last matching record whose complete constraint applies on the run date. Ignore shadowed history, expired records, and
+future records when comparing current prices; preserve them unchanged. A field with no identifiable official counterpart
 is unchecked, not matching.
 
 ## Step 2 - fetch the official sources

@@ -69,9 +69,7 @@ def test_daily_price_updates_create_pr_before_notifying_slack(group: str) -> Non
     assert 'created_pr_url' in compiled['jobs']['safe_outputs']['outputs']
     notify = compiled['jobs']['notify_slack']
     assert set(notify['needs']) == {'agent', 'safe_outputs'}
-    assert notify['if'] == (
-        "${{ !cancelled() && needs.safe_outputs.result == 'success' && needs.safe_outputs.outputs.created_pr_url != '' }}"
-    )
+    assert notify['if'] == "${{ !cancelled() && needs.safe_outputs.outputs.created_pr_url != '' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
     assert notify['with'] == {'pr-url': '${{ needs.safe_outputs.outputs.created_pr_url }}'}
     assert notify['secrets'] == {'SLACK_WEBHOOK_URL': '${{ secrets.SLACK_WEBHOOK_URL }}'}
