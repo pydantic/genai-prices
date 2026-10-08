@@ -89,7 +89,7 @@ def test_cursor_provider_inference():
         ('claude-opus-5.5', Decimal('24.2')),
         ('claude-sonnet-4.6', Decimal('18.3')),
         ('claude-sonnet-5', Decimal('12.2')),
-        ('claude-sonnet-5.5', Decimal('12.2')),
+        ('claude-sonnet-5.5', Decimal('12.1')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
