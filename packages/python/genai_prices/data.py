@@ -12487,7 +12487,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
+                price_comments='Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read and 5m/1h cache-write rates confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]),
                     cache_write_mtok=TieredPrices(
@@ -12497,6 +12497,9 @@ providers: list[Provider] = [
                         base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
+                    ),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -12515,6 +12518,9 @@ providers: list[Provider] = [
                         base=Decimal('0.005'), tiers=[Tier(start=100000, price=Decimal('0.025'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=100000, price=Decimal('1.25'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]
+                    ),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -17456,6 +17462,9 @@ providers: list[Provider] = [
                             ),
                             output_mtok=TieredPrices(
                                 base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]
+                            ),
+                            cache_write_1h_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
                             ),
                             web_searches_kcount=Decimal('10'),
                         ),

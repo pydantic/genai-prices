@@ -612,6 +612,25 @@ describe('Claude Haiku 5.5', () => {
   })
 
   it.each([
+    ['anthropic/claude-haiku-5.5', 0.02, 0.100001],
+    ['anthropic/claude-haiku-5.5-20261007', 0.02, 0.100001],
+    ['anthropic/claude-haiku-5.5:batch', 0.01, 0.0500005],
+    ['~anthropic/claude-haiku-latest', 0.02, 0.100001],
+  ])('prices one-hour cache writes for %s', (modelRef, basePrice, longContextPrice) => {
+    for (const [tokens, expected] of [
+      [100_000, basePrice],
+      [100_001, longContextPrice],
+    ] as const) {
+      const price = calcPrice({ cache_write_1h_tokens: tokens, cache_write_tokens: tokens, input_tokens: tokens }, modelRef, {
+        providerId: 'openrouter',
+        timestamp: new Date('2026-10-07T00:00:00Z'),
+      })
+
+      expect(price!.total_price).toBeCloseTo(expected, 10)
+    }
+  })
+
+  it.each([
     ['2026-10-06T23:59:00Z', 6],
     ['2026-10-07T00:00:00Z', 3],
   ])('moves the OpenRouter family-level alias to Haiku 5.5 at %s', (timestamp, expected) => {

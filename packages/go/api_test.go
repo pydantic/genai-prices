@@ -751,6 +751,40 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 	}
 }
 
+func TestOpenRouterClaudeHaiku55OneHourCacheWrites(t *testing.T) {
+	for _, test := range []struct {
+		model                     string
+		wantBase, wantLongContext float64
+	}{
+		{"anthropic/claude-haiku-5.5", 0.02, 0.100001},
+		{"anthropic/claude-haiku-5.5-20261007", 0.02, 0.100001},
+		{"anthropic/claude-haiku-5.5:batch", 0.01, 0.0500005},
+		{"~anthropic/claude-haiku-latest", 0.02, 0.100001},
+	} {
+		for _, sample := range []struct {
+			tokens float64
+			want   float64
+		}{{100_000, test.wantBase}, {100_001, test.wantLongContext}} {
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{
+					genai_prices.UsageInputTokens:        sample.tokens,
+					genai_prices.UsageCacheWriteTokens:   sample.tokens,
+					genai_prices.UsageCacheWrite1HTokens: sample.tokens,
+				},
+				Model:      test.model,
+				ProviderID: "openrouter",
+				Timestamp:  time.Date(2026, 10, 7, 0, 0, 0, 0, time.UTC),
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(calculation.TotalPrice-sample.want) > 1e-12 {
+				t.Fatalf("%s with %g tokens got %g, want %g", test.model, sample.tokens, calculation.TotalPrice, sample.want)
+			}
+		}
+	}
+}
+
 // OpenRouter's family-level Haiku alias moved from $1/$5 Haiku 4.5 to tiered Haiku 5.5 on its release.
 func TestOpenRouterClaudeHaikuLatestMovesToHaiku55(t *testing.T) {
 	for _, test := range []struct {

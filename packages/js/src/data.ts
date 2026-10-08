@@ -21705,7 +21705,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
+          'Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read and 5m/1h cache-write rates confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
         prices: {
           input_mtok: {
             base: 0.1,
@@ -21740,6 +21740,15 @@ export const data: Provider[] = [
               {
                 start: 100000,
                 price: 2.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 100000,
+                price: 1,
               },
             ],
           },
@@ -21789,6 +21798,15 @@ export const data: Provider[] = [
               {
                 start: 100000,
                 price: 1.25,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
               },
             ],
           },
@@ -30267,6 +30285,15 @@ export const data: Provider[] = [
                   {
                     start: 100000,
                     price: 2.5,
+                  },
+                ],
+              },
+              cache_write_1h_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 100000,
+                    price: 1,
                   },
                 ],
               },

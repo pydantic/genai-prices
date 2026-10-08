@@ -952,6 +952,29 @@ def test_claude_haiku_5_5_prices_by_prompt_length(
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'base_price', 'long_context_price'),
+    [
+        ('anthropic/claude-haiku-5.5', '0.02', '0.100001'),
+        ('anthropic/claude-haiku-5.5-20261007', '0.02', '0.100001'),
+        ('anthropic/claude-haiku-5.5:batch', '0.01', '0.0500005'),
+        ('~anthropic/claude-haiku-latest', '0.02', '0.100001'),
+    ],
+)
+def test_openrouter_claude_haiku_5_5_one_hour_cache_writes(
+    model_ref: str, base_price: str, long_context_price: str
+) -> None:
+    for tokens, expected_price in ((100_000, base_price), (100_001, long_context_price)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_write_tokens=tokens, cache_write_1h_tokens=tokens),
+            model_ref=model_ref,
+            provider_id='openrouter',
+            genai_request_timestamp=datetime(2026, 10, 7),
+        )
+
+        assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
     ('timestamp', 'expected_price'),
     [(datetime(2026, 10, 6, 23, 59), '6'), (datetime(2026, 10, 7), '3')],
 )
