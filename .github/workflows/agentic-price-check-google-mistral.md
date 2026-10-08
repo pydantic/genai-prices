@@ -1,57 +1,81 @@
 ---
 emoji: '🏷️'
 name: 'Price Check: Google & Mistral'
-description: "Compare the recorded Google (Gemini) and Mistral model prices against each provider's official pricing page and file one rolling issue listing any discrepancies."
+description: 'Check official Google and Mistral prices, propose verified updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
-  schedule: weekly on monday
+  schedule: daily
+  permissions:
+    pull-requests: read
+  skip-if-match: 'is:pr is:open in:title "Update Google and Mistral prices"'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
 permissions:
   contents: read
-  issues: read
+  pull-requests: read
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 checkout:
   fetch-depth: 1
+imports:
+  - shared/price-update.md
 tools:
   bash:
     - 'cat:*'
     - 'ls:*'
     - 'rg:*'
     - 'jq:*'
+    - 'make:*'
+    - 'npm:*'
+    - 'uv:*'
   web-fetch:
 safe-outputs:
-  # Disabled: the detection sub-agent runs its own minimax call through a separate
-  # credit guardrail that can't be satisfied for a BYOK model (a positive cap rejects
-  # the unpriced minimax with HTTP 400; -1 is rejected as "maxAiCredits must be > 0").
-  # With minimax it can never produce a verdict, so it stamped a false "threat detected
-  # / could not be parsed" banner on every issue. Re-enable if the engine moves to a
-  # model gh-aw prices.
+  # Minimax is unpriced in gh-aw's separate detection guardrail.
   threat-detection: false
+  report-failure-as-issue: false
   noop:
     report-as-issue: false
-  create-issue:
+  create-pull-request:
     max: 1
-    title-prefix: '[price-check/google-mistral] '
-    close-older-key: '[price-check/google-mistral]'
-    close-older-issues: true
-    expires: 30d
-timeout-minutes: 20
-max-turns: 120
-# Disable gh-aw's AI-credits guardrail: the Fireworks minimax model isn't in gh-aw's
-# pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
-# unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
-# compiler pinned to v0.82.2 (firewall 0.27.22); see AGENTIC_PRICE_CHECK.md.
+    draft: false
+    fallback-as-issue: false
+    protected-files:
+      policy: blocked
+      exclude: [README.md]
+    allowed-files:
+      - prices/providers/google.yml
+      - prices/providers/mistral.yml
+      - prices/new_data/v2/data.json
+      - prices/new_data/v2/data_slim.json
+      - packages/python/genai_prices/data.py
+      - packages/python/genai_prices/data_units.py
+      - packages/js/src/data.ts
+      - packages/js/src/dataUnits.ts
+      - packages/go/internal/data/prices.json
+      - packages/go/data_units.go
+      - README.md
+      - tests/test_price_calc.py
+      - tests/test_price_regressions.py
+      - tests/dataset/usages.json
+      - packages/js/src/__tests__/**
+      - packages/go/*_test.go
+jobs:
+  notify_slack:
+    needs: [agent, safe_outputs]
+    if: ${{ !cancelled() && needs.safe_outputs.outputs.created_pr_url != '' }}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.safe_outputs.outputs.created_pr_url }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+timeout-minutes: 45
+max-turns: 200
+# Requires gh-aw v0.82.2; newer firewalls reject the unpriced Minimax model.
 max-ai-credits: -1
 max-daily-ai-credits: -1
 engine:
   id: claude
-  # Claude Code pointed at Fireworks's Anthropic-compatible endpoint, matching
-  # the pydantic/platform agentic fleet. The maintainer must add a
-  # FIREWORKS_API_KEY repo secret (or swap this block for a direct
-  # ANTHROPIC_API_KEY). gh-aw's preflight only checks the env var is non-empty.
   model: claude-sonnet-4-5
   api-target: api.fireworks.ai
   env:
@@ -67,124 +91,61 @@ network:
     - api.fireworks.ai
     - ai.google.dev
     - cloud.google.com
+    - docs.cloud.google.com
     - mistral.ai
     - docs.mistral.ai
 ---
 
 # Price Check: Google & Mistral
 
-Compare the model prices this repo records for **Google (Gemini)** and **Mistral**
-against each provider's official pricing page, and file one issue listing every
-price that differs. Do Google first, then Mistral: Steps 1-3 apply to each provider, and
-Step 4 combines both into a single issue (built fresh each run, replacing the previous one).
+Check **Google (Gemini)** and **Mistral** against their official pricing pages. Propose verified price changes and new models
+in one PR titled `Update Google and Mistral prices`. Follow Steps 1-3 for both providers, then the shared update steps.
 
-## Step 1 — read the recorded prices
+## Step 1 - read the recorded data
 
-Run `cat prices/providers/google.yml` (then `mistral.yml`). Under `models:` each
-entry has an `id`, a `match`, and a `prices:` block.
+Read `prices/providers/google.yml` and `prices/providers/mistral.yml`. Check every canonical model ID, `match` expression, and
+active field or tier under `prices:`. Read `prices/units.yml` for the billing units. Price keys are not interchangeable:
+`_mtok` is USD per 1,000,000 tokens, `_kcount` per 1,000 events, `_mchars` per 1,000,000 characters, `_hours` per 3,600 seconds,
+`_gpixels` per 1,000,000,000 pixels, and `_kpages` per 1,000 pages. Show conversions in the PR body.
 
-**Check every key under `prices:`, not a fixed list** — the vocabulary grows, and a key you skip is a
-discrepancy nobody sees. The key suffix tells you the unit, and they are **not** all per-million-tokens:
-`_mtok` is USD per 1,000,000 tokens, `_kcount` per 1,000 (`web_searches_kcount`, `requests_kcount`),
-`_mchars` per 1M characters, `_hours` per 3,600 seconds, `_gpixels` per 1e9 pixels, `_kpages` per 1,000
-pages. Convert the page's figure into the key's unit before comparing, and show the arithmetic in the
-issue row.
+Check both the `base` and every published tier. For each distinct usage scope, resolve conditional price lists using the
+last matching record whose complete constraint applies on the run date. Ignore shadowed history, expired records, and
+future records when comparing current prices; preserve them unchanged. A field with no identifiable official counterpart
+is unchecked, not matching.
 
-The ones you will see most often here:
+## Step 2 - fetch the official sources
 
-- `input_mtok` — standard **text** input price
-- `output_mtok` — output price
-- `cache_read_mtok` — cached input price (check only when the page lists one)
-- `input_audio_mtok` — audio input price, on Gemini models that have it (compare it to the page's audio input rate, separately from text)
-- `cache_audio_read_mtok` — cached **audio** input price, on Gemini models that have it (compare to the page's audio context-cache rate, check only when the page lists one)
-- `input_image_mtok` / `input_video_mtok` / `output_image_mtok` — per-modality rates where the page quotes them separately
-
-If a key has no counterpart you can identify on the page, **do not treat it as matching** — list it in
-the issue as unchecked with the key name. A silent skip reads as a clean bill of health.
-
-Some Gemini entries are tiered by prompt size, e.g.
-`input_mtok: {base: 1.25, tiers: [{start: 200000, price: 2.5}]}`. Use the `base`
-value (the ≤200K-token rate) and set the tiers aside.
-
-A model's `prices:` can also be a list of records, some wrapped in a `constraint:`
-(e.g. `start_date`). Use the record that applies on the run date — the one whose
-`start_date` is the most recent date on or before today (a record with no `constraint`
-is the default).
-
-Note each model's `id` and its `input_mtok` / `output_mtok` before you fetch.
-
-## Step 2 — fetch the pricing page
-
-`web-fetch` the exact URL for that provider (below). If the fetched content contains
-no dollar figures at all, the page did not render for you — record that provider as
-unread and move on; never fill in a number the page didn't give you.
+Use `web-fetch` on these exact URLs. You may follow model links on the allowed official domains to confirm an API ID or
+price. Do not use aggregators, search snippets, or remembered prices. A page without the required IDs and numeric prices is
+unreadable; record it and continue with the other provider.
 
 ### Google (Gemini)
 
-- Page: <https://ai.google.dev/gemini-api/docs/pricing>
-- Prices are the **paid tier**, per 1M tokens. Gemini often quotes a text/image/video
-  input rate and a separate **audio** input rate — compare the text rate to
-  `input_mtok` and the audio rate to `input_audio_mtok`. Where a rate is split by
-  prompt size (e.g. Gemini 2.5 Pro is $1.25 up to 200K tokens and $2.50 above),
-  compare the up-to-200K rate to the YAML `base`.
+- <https://ai.google.dev/gemini-api/docs/pricing>
+- <https://cloud.google.com/vertex-ai/generative-ai/pricing>
+- <https://cloud.google.com/text-to-speech/pricing#gemini-tts>
+- Check Gemini API models against the Gemini API page, Vertex-hosted Gemini and partner models against the Vertex AI page,
+  and Gemini TTS models against the Gemini-TTS section. Respect each model's `price_comments` source and endpoint scope;
+  do not substitute native Anthropic rates for Vertex-hosted Claude or regional rates for a recorded global endpoint.
+- Map Gemini TTS's per-million input and output token rates to `input_mtok` and `output_mtok`. Do not apply conventional
+  Cloud Text-to-Speech character prices to token-priced Gemini TTS models.
+- Compare the paid tier, in USD per 1M tokens. Map text input to `input_mtok` and audio input to `input_audio_mtok`.
+- Compare cached text with `cache_read_mtok` and cached audio with `cache_audio_read_mtok`. Preserve separately quoted
+  image, video, and image-output rates with their respective registry keys.
+- Check both rates when pricing is split by prompt size. A `<= 200000` / `> 200000` split uses tier `start: 200000`; the
+  engines apply a tier only above its `start` value.
 
 ### Mistral
 
-- Page: <https://mistral.ai/pricing/api>
-- The API pricing table lists an input and output price per model, per 1M tokens.
+- <https://mistral.ai/pricing/api>
+- Map the standard API table's input and output columns, in USD per 1M tokens, to `input_mtok` and `output_mtok`.
 
-## Step 3 — match models and compare
+## Step 3 - compare prices and discover models
 
-For each YAML model, find its row on the page by id or marketing name: YAML
-`gemini-2.5-flash` is "Gemini 2.5 Flash"; YAML `gemini-2.5-pro` is "Gemini 2.5 Pro";
-YAML `mistral-large` (name "Mistral Large"; `mistral-large-latest` is one of its match
-aliases, not a separate model) is the page's "Mistral Large"; YAML `codestral` is
-"Codestral". Match a row only when it identifies that exact record unambiguously — if a
-name could be more than one YAML record (e.g. `mistral-large` vs `mistral-large-2512`),
-skip it. When you find the row, compare each price field the page provides against the
-YAML.
+Match each official row only to an unambiguous canonical ID, satisfied `match` expression, or marketing name. An alias such
+as `mistral-large-latest` is not a separate model. If a marketing name could refer to multiple YAML records, skip it.
+Compare standard public-API on-demand rates, not Batch or provisioned-capacity rates. Preserve existing special-rate records.
 
-Put every price in USD per 1M tokens before comparing: "$3 / MTok" = `3`,
-"$0.003 / 1K tokens" = `3`, "$3.00" = `3`.
-
-Compare the standard on-demand rate. If the page also has Batch or provisioned
-tables, read the standard one for the comparison and leave those alone.
-
-Report each discrepancy under the model's canonical YAML `id`. A model where the matched
-page rate differs from the YAML is a discrepancy to report. When a YAML model has no
-matching row on the page, move to the next model.
-
-## Step 4 — file the issue (or noop)
-
-Collect every confirmed discrepancy from both providers first, then decide:
-
-- **One or more discrepancies** — file **one** issue titled
-  `Google/Mistral price discrepancies`, with a table, one row per differing field. If a
-  provider's page was unreadable this run, still file the discrepancies you did confirm
-  and add a line naming the unread page — never drop a real difference because the other
-  page failed to load.
-
-| Provider | Model (YAML id) | Field         | Recorded (YAML) | Official page | Page URL                                      |
-| -------- | --------------- | ------------- | --------------- | ------------- | --------------------------------------------- |
-| Google   | gemini-2.5-pro  | `output_mtok` | 10              | 12            | https://ai.google.dev/gemini-api/docs/pricing |
-
-Where you converted units, show the arithmetic in that row. End the body with the date
-you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML `prices:`
-and bump `prices_checked`.
-
-To file the issue, write the body to `/tmp/gh-aw/agent/issue-body.md`, then run:
-
-```bash
-jq -Rs '{title: "Google/Mistral price discrepancies", body: .}' /tmp/gh-aw/agent/issue-body.md | safeoutputs create_issue .
-```
-
-`jq -Rs` encodes the whole file as the JSON `body`. Keep the body under 10,000 bytes, because `safeoutputs` rejects a
-larger `body`. Measure it with `jq -Rs 'utf8bytelength' /tmp/gh-aw/agent/issue-body.md`. When the body is larger, use
-one row per model and list its differing fields in one cell.
-
-Call `create_issue` only with the real findings: the run allows one issue, and a test or placeholder call uses it up. A
-call that returns an error files nothing, so fix the cause and run the command again.
-
-- **Zero confirmed discrepancies** — call `safeoutputs noop` with a one-line reason,
-  naming any page that would not load, e.g. "All Google + Mistral prices match" or
-  "Mistral page returned no prices; all Google prices match".
+Identify publicly available, numerically priced models in the official source that neither have a canonical YAML ID nor
+satisfy an existing match rule. Confirm the exact API ID before proposing an addition. Aliases are not new models. Do not
+infer removals from absence on a pricing page. Record unmatched or ambiguous rows and unchecked fields as skipped findings.

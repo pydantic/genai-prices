@@ -8,6 +8,9 @@ prices/new_data/**/*.json
 prices/providers/.schema.json
 tests/dataset/usages.json
 
+# Generated agentic workflows (compiled from the Markdown sources by `gh aw compile`)
+.github/workflows/*.lock.yml
+
 # Generated bundled package data (rewritten from prices/ by `make build`)
 packages/python/genai_prices/data.py
 packages/python/genai_prices/data_units.py
