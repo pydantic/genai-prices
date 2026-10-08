@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 from typing import Any, cast
@@ -23,6 +24,11 @@ def test_daily_price_updates_create_pr_before_notifying_slack(group: str) -> Non
     source = read_workflow(f'agentic-price-check-{group}.md')
     compiled = read_workflow(f'agentic-price-check-{group}.lock.yml')
     assert source['on']['schedule'] == 'daily'
+    assert source['if'] == "${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}"
+    assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
+    assert source['on']['permissions'] == {'pull-requests': 'read'}
+    assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
+    assert 'Bash(git diff:*)' in json.dumps(compiled['jobs']['agent'])
     assert 'is:pr is:open' in source['on']['skip-if-match']
     assert compiled['on']['schedule'][0]['cron'].split()[2:] == ['*', '*', '*']
     assert source['concurrency']['cancel-in-progress'] is False
@@ -54,6 +60,7 @@ def test_daily_price_updates_create_pr_before_notifying_slack(group: str) -> Non
         'permission-pull-requests': 'write',
     }
     assert pr['protected-files'] == {'policy': 'blocked', 'exclude': ['README.md']}
+    assert 'prices/providers/.schema.json' not in pr['allowed-files']
     assert 'prices/units.yml' not in pr['allowed-files']
     assert 'prices/data.json' not in pr['allowed-files']
     assert 'prices/new_data/v2/data.json' in pr['allowed-files']
@@ -95,7 +102,7 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
     script = step['run']
     assert '--fail' in script
     assert '--connect-timeout 10 --max-time 30' in script
-    payload_script = script.split('| curl', 1)[0]
+    payload_script, _ = re.split(r'\|\s*curl\b', script, maxsplit=1)
     url = 'https://github.com/pydantic/genai-prices/pull/123?quote="\n$(exit 99)'
     result = subprocess.run(
         ['bash', '-e', '-o', 'pipefail', '-c', payload_script],

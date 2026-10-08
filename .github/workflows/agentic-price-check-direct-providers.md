@@ -5,6 +5,8 @@ description: 'Check sixteen official provider catalogs, propose verified price u
 on:
   workflow_dispatch:
   schedule: daily
+  permissions:
+    pull-requests: read
   skip-if-match: 'is:pr is:open in:title "Update direct-provider prices"'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
@@ -58,7 +60,6 @@ safe-outputs:
       - prices/providers/baseten.yml
       - prices/providers/github_copilot.yml
       - prices/providers/databricks.yml
-      - prices/providers/.schema.json
       - prices/new_data/v2/data.json
       - prices/new_data/v2/data_slim.json
       - packages/python/genai_prices/data.py

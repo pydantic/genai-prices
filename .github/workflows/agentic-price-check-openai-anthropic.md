@@ -5,6 +5,8 @@ description: 'Check official OpenAI and Anthropic prices, propose verified updat
 on:
   workflow_dispatch:
   schedule: daily
+  permissions:
+    pull-requests: read
   skip-if-match: 'is:pr is:open in:title "Update OpenAI and Anthropic prices"'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
@@ -44,7 +46,6 @@ safe-outputs:
     allowed-files:
       - prices/providers/openai.yml
       - prices/providers/anthropic.yml
-      - prices/providers/.schema.json
       - prices/new_data/v2/data.json
       - prices/new_data/v2/data_slim.json
       - packages/python/genai_prices/data.py

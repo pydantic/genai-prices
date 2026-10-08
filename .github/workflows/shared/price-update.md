@@ -1,4 +1,7 @@
 ---
+tools:
+  bash:
+    - 'git diff:*'
 safe-outputs:
   github-app:
     client-id: ${{ vars.PRICE_UPDATE_APP_CLIENT_ID }}
@@ -37,13 +40,15 @@ Earlier matching records are shadowed history, not current discrepancies. An unc
 outside a later record's restricted scope. Do not append a change when the effective rates already match the source.
 
 For a real rate change, convert a single `prices:` mapping to a list with the original mapping as its first unconstrained
-entry. If it is already a list, keep every existing record and its relative ordering. Append a complete new price record
-with `constraint: {start_date: YYYY-MM-DD}`. Copy the applicable record's other constraints into the new record. Use the
-provider's published effective date. If appending the change would shadow an existing future-dated record, skip the change
-and report it; never overwrite scheduled rates. If you cannot establish the effective date or represent the change without
-widening an existing constraint, leave the rate unchanged and report it as unverified. Do not use today's date as a guessed
-effective date. Correct a price in place only with evidence that the
-recorded value was wrong when it was added.
+entry. If it is already a list, keep every existing record and its relative ordering. Insert a complete dated record after
+the record it supersedes but before later overlapping scope overrides and scheduled future records. Do not append blindly:
+a new base rate must not shadow DeepSeek peak windows, batch rates, regional rates, or future-dated overrides.
+
+Use `constraint: {start_date: YYYY-MM-DD}` with the provider's published effective date. Keep the original record's scope
+only when the schema can represent it together with that date; the constraint schema is a union, so a date cannot be
+combined with a daily time window. If you cannot establish the effective date or preserve the existing scopes and future
+rates, leave the price unchanged and report it as unverified. Do not use today's date as a guessed effective date. Correct
+a price in place only with evidence that the recorded value was wrong when it was added.
 
 Add a new model only when the official source identifies its exact public API ID and supplies all prices needed for the
 in-scope usage. Check the canonical IDs and every existing `match` expression first, including nested `or`, `equals`,
