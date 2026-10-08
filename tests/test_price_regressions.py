@@ -917,3 +917,51 @@ def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'base_price', 'long_context_price'),
+    [
+        ('anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', '0.06', '3'),
+        ('anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', '0.06', '3'),
+        ('google', 'claude-haiku-5-5', 'claude-haiku-5-5', '0.06', '3'),
+        ('google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', '0.06', '3'),
+        ('google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', '0.06', '3'),
+        ('aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', '0.06', '3'),
+        ('aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', '0.06', '3'),
+        ('aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', '0.066', '3.3'),
+        ('aws', 'eu.anthropic.claude-haiku-5-5-v1:0', 'regional.anthropic.claude-haiku-5-5', '0.066', '3.3'),
+        ('aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', '0.066', '3.3'),
+        ('openrouter', 'anthropic/claude-haiku-5.5', 'anthropic/claude-haiku-5.5', '0.06', '3'),
+        ('openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', '0.06', '3'),
+        ('openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', '0.03', '1.5'),
+    ],
+)
+def test_claude_haiku_5_5_prices_by_prompt_length(
+    provider_id: str, model_ref: str, model_id: str, base_price: str, long_context_price: str
+) -> None:
+    """Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate."""
+    base = calc_price(Usage(input_tokens=100_000, output_tokens=100_000), model_ref=model_ref, provider_id=provider_id)
+    long_context = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+    )
+
+    assert base.model.id == model_id
+    assert base.total_price == Decimal(base_price)
+    assert long_context.total_price == Decimal(long_context_price)
+
+
+@pytest.mark.parametrize(
+    ('timestamp', 'expected_price'),
+    [(datetime(2026, 10, 6, 23, 59), '6'), (datetime(2026, 10, 7), '3')],
+)
+def test_openrouter_claude_haiku_latest_moves_to_haiku_5_5(timestamp: datetime, expected_price: str) -> None:
+    """OpenRouter's family-level Haiku alias moved from $1/$5 Haiku 4.5 to tiered Haiku 5.5 on its release."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='~anthropic/claude-haiku-latest',
+        provider_id='openrouter',
+        genai_request_timestamp=timestamp,
+    )
+
+    assert price.total_price == Decimal(expected_price)

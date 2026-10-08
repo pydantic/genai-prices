@@ -581,3 +581,43 @@ describe('Claude Sonnet 5 vs 5.5', () => {
     expect(price!.total_price).toBeCloseTo(expected, 10)
   })
 })
+
+describe('Claude Haiku 5.5', () => {
+  // Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate.
+  const base = { input_tokens: 100_000, output_tokens: 100_000 }
+  const longContext = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+
+  it.each([
+    ['anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 3],
+    ['anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', 0.06, 3],
+    ['google', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 3],
+    ['google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', 0.06, 3],
+    ['google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 3],
+    ['aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', 0.06, 3],
+    ['aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', 0.06, 3],
+    ['aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 3.3],
+    ['aws', 'eu.anthropic.claude-haiku-5-5-v1:0', 'regional.anthropic.claude-haiku-5-5', 0.066, 3.3],
+    ['aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 3.3],
+    ['openrouter', 'anthropic/claude-haiku-5.5', 'anthropic/claude-haiku-5.5', 0.06, 3],
+    ['openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', 0.06, 3],
+    ['openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', 0.03, 1.5],
+  ])('prices %s %s as %s by prompt length', (providerId, modelRef, modelId, basePrice, longContextPrice) => {
+    const price = calcPrice(base, modelRef, { providerId })
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(basePrice, 10)
+    expect(calcPrice(longContext, modelRef, { providerId })!.total_price).toBeCloseTo(longContextPrice, 10)
+  })
+
+  it.each([
+    ['2026-10-06T23:59:00Z', 6],
+    ['2026-10-07T00:00:00Z', 3],
+  ])('moves the OpenRouter family-level alias to Haiku 5.5 at %s', (timestamp, expected) => {
+    const price = calcPrice(longContext, '~anthropic/claude-haiku-latest', {
+      providerId: 'openrouter',
+      timestamp: new Date(timestamp),
+    })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+})

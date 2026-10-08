@@ -457,6 +457,49 @@ models:
       cache_write_1h_mtok: 20
       output_mtok: 50
 
+  - id: claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    match:
+      or:
+        - contains: claude-haiku-5-5
+        - contains: claude-haiku-5.5
+        - contains: claude-5-5-haiku
+        - contains: claude-5.5-haiku
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      Global endpoint pricing; multi-region and regional endpoints carry a 10% premium.
+      Prompts over 100K input tokens bill every token at the long-context rate.
+      Rates match Anthropic's list price and OpenRouter's Google endpoint.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.2
+        tiers:
+          - start: 100000
+            price: 1
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+
   - id: claude-opus-4-6
     canonical_model: anthropic/claude-opus-4-6
     # Google documents 1M for this exact model: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/opus-4-6

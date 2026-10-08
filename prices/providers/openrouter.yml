@@ -363,6 +363,73 @@ models:
       output_mtok: 5
     context_window: 200000
 
+  - id: anthropic/claude-haiku-5.5
+    match:
+      or:
+        - equals: anthropic/claude-haiku-5.5
+        - regex: ^anthropic/claude-haiku-5\.5-\d{8}$
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens
+      override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Cache-read rate confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+      web_searches_kcount: 10
+
+  - id: anthropic/claude-haiku-5.5:batch
+    name: Claude Haiku 5.5 Batch
+    match:
+      equals: anthropic/claude-haiku-5.5:batch
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      OpenRouter's batch route bills input, cache, and output tokens at half the standard rates;
+      web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.
+    prices:
+      input_mtok:
+        base: 0.05
+        tiers:
+          - start: 100000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.005
+        tiers:
+          - start: 100000
+            price: 0.025
+      cache_write_mtok:
+        base: 0.0625
+        tiers:
+          - start: 100000
+            price: 0.3125
+      output_mtok:
+        base: 0.25
+        tiers:
+          - start: 100000
+            price: 1.25
+      web_searches_kcount: 10
+
   - id: anthropic/claude-opus-4
     name: Claude Opus 4
     match:
@@ -6293,12 +6360,39 @@ models:
     name: Anthropic Claude Haiku Latest
     match:
       equals: ~anthropic/claude-haiku-latest
+    prices_checked: 2026-10-08
     prices:
-      input_mtok: 1
-      cache_write_mtok: 1.25
-      cache_read_mtok: 0.1
-      output_mtok: 5
-    context_window: 200000
+      - prices:
+          input_mtok: 1
+          cache_write_mtok: 1.25
+          cache_read_mtok: 0.1
+          output_mtok: 5
+      - constraint:
+          # The alias moved to Claude Haiku 5.5 on its release: https://openrouter.ai/api/v1/models
+          start_date: 2026-10-07
+        prices:
+          input_mtok:
+            base: 0.1
+            tiers:
+              - start: 100000
+                price: 0.5
+          cache_read_mtok:
+            base: 0.01
+            tiers:
+              - start: 100000
+                price: 0.05
+          cache_write_mtok:
+            base: 0.125
+            tiers:
+              - start: 100000
+                price: 0.625
+          output_mtok:
+            base: 0.5
+            tiers:
+              - start: 100000
+                price: 2.5
+          web_searches_kcount: 10
+    context_window: 1000000
 
   - id: ~anthropic/claude-opus-latest
     name: Claude Opus Latest

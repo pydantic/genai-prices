@@ -704,3 +704,75 @@ func TestDatabricksExtractUsage(t *testing.T) {
 		}
 	}
 }
+
+// Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate.
+func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
+	for _, test := range []struct {
+		providerID, model, wantModelID string
+		wantBase, wantLongContext      float64
+	}{
+		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
+		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.06, 3},
+		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
+		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.06, 3},
+		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
+		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.06, 3},
+		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 3},
+		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
+		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
+		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
+		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 3},
+		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 3},
+		{"openrouter", "anthropic/claude-haiku-5.5:batch", "anthropic/claude-haiku-5.5:batch", 0.03, 1.5},
+	} {
+		for _, tokens := range []struct {
+			count float64
+			want  float64
+		}{{100_000, test.wantBase}, {1_000_000, test.wantLongContext}} {
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{
+					genai_prices.UsageInputTokens:  tokens.count,
+					genai_prices.UsageOutputTokens: tokens.count,
+				},
+				Model:      test.model,
+				ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if calculation.ModelID != test.wantModelID {
+				t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+			}
+			if math.Abs(calculation.TotalPrice-tokens.want) > 1e-9 {
+				t.Fatalf("%s/%s at %g tokens got %g, want %g", test.providerID, test.model, tokens.count, calculation.TotalPrice, tokens.want)
+			}
+		}
+	}
+}
+
+// OpenRouter's family-level Haiku alias moved from $1/$5 Haiku 4.5 to tiered Haiku 5.5 on its release.
+func TestOpenRouterClaudeHaikuLatestMovesToHaiku55(t *testing.T) {
+	for _, test := range []struct {
+		timestamp time.Time
+		want      float64
+	}{
+		{time.Date(2026, 10, 6, 23, 59, 0, 0, time.UTC), 6},
+		{time.Date(2026, 10, 7, 0, 0, 0, 0, time.UTC), 3},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:  1_000_000,
+				genai_prices.UsageOutputTokens: 1_000_000,
+			},
+			Model:      "~anthropic/claude-haiku-latest",
+			ProviderID: "openrouter",
+			Timestamp:  test.timestamp,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
+		}
+	}
+}

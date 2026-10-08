@@ -244,6 +244,37 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-haiku-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='claude-haiku-5-5'),
+                        ClauseRegex(regex='^claude-haiku-5-5-\\d{8}$'),
+                        ClauseStartsWith(starts_with='claude-haiku-5-5@'),
+                        ClauseStartsWith(starts_with='claude-haiku-5.5'),
+                        ClauseStartsWith(starts_with='claude-5-5-haiku'),
+                        ClauseStartsWith(starts_with='claude-5.5-haiku'),
+                    ]
+                ),
+                name='Claude Haiku 5.5',
+                description='For high-volume, latency-sensitive tasks such as classification, extraction, and routing',
+                context_window=1000000,
+                price_comments='Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed at the higher rate (5x). Cache reads are the standard 0.1x of base input. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=100000, price=Decimal('0.625'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
+                    ),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-opus-4-0',
                 match=ClauseOr(
                     or_=[
@@ -1096,6 +1127,30 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-haiku-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEndsWith(ends_with='global.anthropic.claude-haiku-5-5'),
+                        ClauseContains(contains='global.anthropic.claude-haiku-5-5-v1'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Global endpoint (no premium). Prompts over 100,000 tokens bill every token at the long-context rate. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=100000, price=Decimal('0.625'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
                 id='global.anthropic.claude-opus-4-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
                 context_window=200000,
@@ -1791,6 +1846,44 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.11'),
                     output_mtok=Decimal('5.5'),
                     cache_write_1h_mtok=Decimal('2.2'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-haiku-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='claude-haiku-5-5'),
+                        ClauseStartsWith(starts_with='anthropic.claude-haiku-5-5-v1'),
+                        ClauseStartsWith(starts_with='claude-haiku-5-5-v1'),
+                        ClauseEquals(equals='us.anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='au.anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='apac.anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='eu.anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='us-gov.anthropic.claude-haiku-5-5'),
+                        ClauseEquals(equals='jp.anthropic.claude-haiku-5-5'),
+                        ClauseContains(contains='us.anthropic.claude-haiku-5-5-v1'),
+                        ClauseContains(contains='au.anthropic.claude-haiku-5-5-v1'),
+                        ClauseContains(contains='apac.anthropic.claude-haiku-5-5-v1'),
+                        ClauseContains(contains='eu.anthropic.claude-haiku-5-5-v1'),
+                        ClauseContains(contains='us-gov.anthropic.claude-haiku-5-5-v1'),
+                        ClauseContains(contains='jp.anthropic.claude-haiku-5-5-v1'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Prompts over 100,000 tokens bill every token at the long-context rate. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.11'), tiers=[Tier(start=100000, price=Decimal('0.55'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.1375'), tiers=[Tier(start=100000, price=Decimal('0.6875'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.011'), tiers=[Tier(start=100000, price=Decimal('0.055'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.55'), tiers=[Tier(start=100000, price=Decimal('2.75'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.22'), tiers=[Tier(start=100000, price=Decimal('1.1'))]
+                    ),
                 ),
             ),
             ModelInfo(
@@ -5648,6 +5741,32 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.25'),
                     output_mtok=Decimal('50'),
                     cache_write_1h_mtok=Decimal('20'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-haiku-5-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-haiku-5-5'),
+                        ClauseContains(contains='claude-haiku-5.5'),
+                        ClauseContains(contains='claude-5-5-haiku'),
+                        ClauseContains(contains='claude-5.5-haiku'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments="Global endpoint pricing; multi-region and regional endpoints carry a 10% premium. Prompts over 100K input tokens bill every token at the long-context rate. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=100000, price=Decimal('0.625'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
+                    ),
                 ),
             ),
             ModelInfo(
@@ -12360,6 +12479,46 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='anthropic/claude-haiku-5.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-haiku-5.5'),
+                        ClauseRegex(regex='^anthropic/claude-haiku-5\\.5-\\d{8}$'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=100000, price=Decimal('0.625'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-haiku-5.5:batch',
+                match=ClauseEquals(equals='anthropic/claude-haiku-5.5:batch'),
+                name='Claude Haiku 5.5 Batch',
+                context_window=1000000,
+                price_comments="OpenRouter's batch route bills input, cache, and output tokens at half the standard rates; web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.05'), tiers=[Tier(start=100000, price=Decimal('0.25'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.0625'), tiers=[Tier(start=100000, price=Decimal('0.3125'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.005'), tiers=[Tier(start=100000, price=Decimal('0.025'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=100000, price=Decimal('1.25'))]),
+                    web_searches_kcount=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='anthropic/claude-opus-4',
                 match=ClauseOr(
                     or_=[
@@ -17273,13 +17432,35 @@ providers: list[Provider] = [
                 id='~anthropic/claude-haiku-latest',
                 match=ClauseEquals(equals='~anthropic/claude-haiku-latest'),
                 name='Anthropic Claude Haiku Latest',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('1'),
-                    cache_write_mtok=Decimal('1.25'),
-                    cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('5'),
-                ),
+                context_window=1000000,
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'),
+                            cache_write_mtok=Decimal('1.25'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('5'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 7)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=100000, price=Decimal('0.5'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.125'), tiers=[Tier(start=100000, price=Decimal('0.625'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.01'), tiers=[Tier(start=100000, price=Decimal('0.05'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=100000, price=Decimal('2.5'))]
+                            ),
+                            web_searches_kcount=Decimal('10'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='~anthropic/claude-opus-latest',
