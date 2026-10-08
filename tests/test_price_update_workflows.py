@@ -98,6 +98,7 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
     assert workflow['permissions'] == {}
     assert workflow['on']['workflow_call']['secrets']['SLACK_WEBHOOK_URL']['required'] is True
     step = workflow['jobs']['notify']['steps'][0]
+    assert step['shell'] == 'bash'
     assert step['env']['SLACK_WEBHOOK_URL'] == '${{ secrets.SLACK_WEBHOOK_URL }}'
     script = step['run']
     assert '--fail' in script

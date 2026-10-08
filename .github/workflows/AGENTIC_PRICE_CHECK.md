@@ -11,9 +11,9 @@ gh workflow run agentic-price-check-openai-anthropic.lock.yml
 
 These three [gh-aw](https://github.com/github/gh-aw) workflows check official provider pricing **daily** and on manual
 dispatch. They add verified new models and update verified prices through ready-for-review PRs instead of issues. A separate
-job sends the created PR link to Slack. Clean checks, unverified findings, and failed validation produce no price-update PR
-notification.
-You can read their reasons in the workflow run's summary.
+job sends the created PR link to Slack. Clean checks and runs without any verified changes produce no price-update PR
+notification. A verified change can still create a PR when other findings remain unchecked; those findings appear in its
+body. You can read noop reasons in the workflow run's summary.
 
 ## Configuration
 
@@ -43,7 +43,8 @@ App private key is never passed to the agent. Slack credentials are passed only 
 ### Slack notifications
 
 Slack receives a message only after the workflow creates a ready-for-review PR. The message contains that PR's actual URL.
-Skipped runs, clean checks, unverified findings, failed builds or tests, and authentication failures send no Slack message.
+Skipped runs, clean checks, runs with only unverified findings, failed builds or tests, and authentication failures send no
+Slack message. A created PR can include both verified updates and a list of skipped findings.
 You can inspect failures and noop reasons in Actions. The App generates fresh short-lived tokens automatically, so there is
 no personal-token expiry to monitor.
 
@@ -71,11 +72,11 @@ The shared instructions in `.github/workflows/shared/price-update.md` require th
 - Compare all registry units and published tiers, resolving the last matching conditional record for each usage scope.
   Ignore shadowed historical rates and insert dated updates before later scope overrides and scheduled future rates.
   Do not guess missing prices or effective dates.
-- Preserve historical prices. Append dated conditional records for real rate changes; correct values in place only with
+- Preserve historical prices. Insert dated conditional records for real rate changes; correct values in place only with
   evidence that the recorded price was already wrong.
 - Edit only the workflow's provider YAML. Regenerate artifacts with `make build`, never by hand.
-- Run `make test`, `npm run ci`, and `make test-go` before proposing a PR. Update affected regression expectations in all three
-  languages without weakening assertions.
+- Run `make lint`, `make typecheck`, `make lint-go`, `make test`, `npm run ci`, and `make test-go` before proposing a PR.
+  Update affected regression expectations in all three languages without weakening assertions.
 - Leave frozen v1 data, the unit registry, and published v2 schemas unchanged.
 - Include official source URLs, unit conversions, validation results, unchecked findings, and the AI disclaimer in the PR body.
 

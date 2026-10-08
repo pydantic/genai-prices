@@ -91,6 +91,7 @@ network:
     - api.fireworks.ai
     - ai.google.dev
     - cloud.google.com
+    - docs.cloud.google.com
     - mistral.ai
     - docs.mistral.ai
 ---
@@ -121,6 +122,13 @@ unreadable; record it and continue with the other provider.
 ### Google (Gemini)
 
 - <https://ai.google.dev/gemini-api/docs/pricing>
+- <https://cloud.google.com/vertex-ai/generative-ai/pricing>
+- <https://cloud.google.com/text-to-speech/pricing#gemini-tts>
+- Check Gemini API models against the Gemini API page, Vertex-hosted Gemini and partner models against the Vertex AI page,
+  and Gemini TTS models against the Gemini-TTS section. Respect each model's `price_comments` source and endpoint scope;
+  do not substitute native Anthropic rates for Vertex-hosted Claude or regional rates for a recorded global endpoint.
+- Map Gemini TTS's per-million input and output token rates to `input_mtok` and `output_mtok`. Do not apply conventional
+  Cloud Text-to-Speech character prices to token-priced Gemini TTS models.
 - Compare the paid tier, in USD per 1M tokens. Map text input to `input_mtok` and audio input to `input_audio_mtok`.
 - Compare cached text with `cache_read_mtok` and cached audio with `cache_audio_read_mtok`. Preserve separately quoted
   image, video, and image-output rates with their respective registry keys.

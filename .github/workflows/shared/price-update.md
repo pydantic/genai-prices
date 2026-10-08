@@ -2,6 +2,9 @@
 tools:
   bash:
     - 'git diff:*'
+network:
+  allowed:
+    - go
 safe-outputs:
   github-app:
     client-id: ${{ vars.PRICE_UPDATE_APP_CLIENT_ID }}
@@ -51,8 +54,8 @@ rates, leave the price unchanged and report it as unverified. Do not use today's
 a price in place only with evidence that the recorded value was wrong when it was added.
 
 Add a new model only when the official source identifies its exact public API ID and supplies all prices needed for the
-in-scope usage. Check the canonical IDs and every existing `match` expression first, including nested `or`, `equals`,
-`starts_with`, `contains`, and `regex`. Do not add a separate model for an alias already matched. Use a precise match rule;
+in-scope usage. Check the canonical IDs and every existing `match` expression first, including nested `or` and `and`,
+`equals`, `starts_with`, `ends_with`, `contains`, and `regex`. Do not add a separate model for an alias already matched. Use a precise match rule;
 do not broaden an existing model's match to cover a differently priced model. Include all required ancestor and join prices
 from the existing unit registry. Skip models requiring a new unit or an unverified price. Do not invent launch dates,
 context windows, or prices. Never delete or deprecate a model just because a pricing page omits it.
@@ -71,6 +74,9 @@ After editing the provider YAML, run:
 
 ```bash
 make build
+make lint
+make typecheck
+make lint-go
 make test
 npm run ci
 make test-go

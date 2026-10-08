@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Send the PR link to Slack
+        shell: bash
         env:
           PR_URL: ${{ inputs.pr-url }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
