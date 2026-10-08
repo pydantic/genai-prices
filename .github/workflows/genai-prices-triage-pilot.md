@@ -9,12 +9,31 @@ if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 permissions:
   contents: read
   issues: read
+  # Threat detection runs on the built-in copilot engine, which authenticates with this.
   copilot-requests: write
-model: copilot/claude-sonnet-4-5
+# Strict mode rejects any secret in engine.env. ANTHROPIC_API_KEY reaches only the AWF
+# api-proxy: `awf --exclude-env` keeps it out of the agent sandbox.
+strict: false
+# glm-5.3-flash is not in gh-aw's AI-credit pricing catalog, so the api-proxy would reject
+# it while the credit guardrail is on.
+max-ai-credits: -1
+max-daily-ai-credits: -1
 engine:
   id: pydantic-ai
+  # The anthropic/ backend sends Messages API requests through the api-proxy, which
+  # forwards them to Z.AI's Anthropic-compatible endpoint named by ANTHROPIC_BASE_URL.
+  model: anthropic/glm-5.3-flash
+  env:
+    ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
+    ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
+# The imported engine requires gh-aw v0.91.1 or newer. Compile this workflow alone
+# (`gh aw compile genai-prices-triage-pilot`); the price checks stay on v0.82.2.
 imports:
-  - shared/pydantic.md
+  - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main
+network:
+  allowed:
+    - defaults
+    - api.z.ai
 sandbox:
   agent:
     id: awf

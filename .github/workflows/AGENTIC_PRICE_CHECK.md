@@ -43,6 +43,9 @@ gh extension install github/gh-aw --pin v0.82.2   # once; the version pin matter
 gh aw compile                                     # regenerates the .lock.yml files
 ```
 
+Name the price-check workflows when compiling: a bare `gh aw compile` also recompiles
+`genai-prices-triage-pilot`, whose `pydantic-ai` engine requires gh-aw v0.91.1 or newer.
+
 **Compile with gh-aw v0.82.2, and keep the `max-ai-credits: -1` frontmatter.** gh-aw's
 api-proxy meters AI credits and rejects any model with no pricing entry (`HTTP 400
 unknown_model_ai_credits`); the Fireworks `minimax-m3` model isn't in gh-aw's pricing
