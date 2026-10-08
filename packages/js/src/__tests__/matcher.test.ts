@@ -51,6 +51,12 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { modelId: 'zai-org/GLM-5.3' })?.id).not.toBe('baseten')
     })
 
+    it('infers Databricks from its endpoint and Unity AI Gateway names only', () => {
+      expect(matchProvider(actualProviders, { modelId: 'databricks-gpt-oss-120b' })?.id).toBe('databricks')
+      expect(matchProvider(actualProviders, { modelId: 'system.ai.kimi-k3' })?.id).toBe('databricks')
+      expect(matchProvider(actualProviders, { modelId: 'kimi-k3' })?.id).toBe('moonshotai')
+    })
+
     it('does not claim the vendor namespaces GitHub Copilot resells', () => {
       expect(matchProvider(actualProviders, { modelId: 'claude-haiku-4.5' })?.id).toBe('anthropic')
       expect(matchProvider(actualProviders, { modelId: 'gemini-3.6-flash' })?.id).toBe('google')
@@ -65,6 +71,7 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerId: 'arcee' })?.id).toBe('arcee')
       expect(matchProvider(actualProviders, { providerId: 'baseten' })?.id).toBe('baseten')
       expect(matchProvider(actualProviders, { providerId: 'cursor' })?.id).toBe('cursor')
+      expect(matchProvider(actualProviders, { providerId: 'databricks' })?.id).toBe('databricks')
       expect(matchProvider(actualProviders, { providerId: 'github-copilot' })?.id).toBe('github-copilot')
     })
 
@@ -122,6 +129,23 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.githubcopilot.com/chat/completions' })?.id).toBe(
         'github-copilot'
       )
+    })
+
+    it.each([
+      'https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions',
+      'https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations',
+      'https://1234567890123456.7.gcp.databricks.com/ai-gateway/mlflow/v1/chat/completions',
+    ])('should match the Databricks workspace endpoint %s', (providerApiUrl) => {
+      expect(matchProvider(actualProviders, { providerApiUrl })?.id).toBe('databricks')
+    })
+
+    it.each([
+      'https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions',
+      'https://adb-1234567890123456.7.azuredatabricks.net.evil.test/serving-endpoints/databricks-gpt-oss-120b/invocations',
+      'https://1234567890123456.7.gcp.databricks.com.evil.test/ai-gateway/mlflow/v1/chat/completions',
+      'https://my-workspace.cloud.databricks.com/api/2.0/clusters/list',
+    ])('should not match Databricks for %s', (providerApiUrl) => {
+      expect(matchProvider(actualProviders, { providerApiUrl })).toBeUndefined()
     })
 
     it('should not match a provider embedded later in the URL', () => {

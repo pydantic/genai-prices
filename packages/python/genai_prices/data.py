@@ -3074,6 +3074,15 @@ providers: list[Provider] = [
                 api_flavor='embeddings',
                 model_path='model',
             ),
+            UsageExtractor(
+                root=['result', 'usage'],
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path=['result', 'model'],
+            ),
         ],
         models=[
             ModelInfo(
@@ -3117,6 +3126,24 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='@cf/baai/bge-small-en-v1.5'),
                 name='BGE Small English v1.5',
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='@cf/cloudflare/clef',
+                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clef'), ClauseEquals(equals='clef')]),
+                name='Clef',
+                context_window=65536,
+                price_comments='Input only, $0.24 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef/',
+                prices=ModelPrice(input_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
+                id='@cf/cloudflare/clef-flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='@cf/cloudflare/clef-flash'), ClauseEquals(equals='clef-flash')]
+                ),
+                name='Clef Flash',
+                context_window=65536,
+                price_comments='Input only, $0.09 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-flash/',
+                prices=ModelPrice(input_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
@@ -3598,6 +3625,315 @@ providers: list[Provider] = [
                 context_window=256000,
                 price_comments='Fast on-demand usage.',
                 prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('12')),
+            ),
+        ],
+    ),
+    Provider(
+        id='databricks',
+        name='Databricks',
+        api_pattern='https://[^/]+\\.(?:cloud\\.databricks\\.com|azuredatabricks\\.net|gcp\\.databricks\\.com)/(?:serving-endpoints|ai-gateway)(?:/|$)',
+        pricing_urls=[
+            'https://www.databricks.com/product/pricing/foundation-model-serving',
+            'https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models',
+        ],
+        description='Pay-per-token Foundation Model APIs for open-weight models hosted by Databricks on AWS, Azure and GCP workspaces.',
+        price_comments='Databricks bills pay-per-token usage in DBUs per 1M tokens. USD prices are the published Standard Pay Per Token DBU rates multiplied by $0.070 per DBU, the serverless real-time inference rate in AWS us-east-1, us-east-2 and us-west-2, Azure East US, East US 2, North Central US, West US 2 and West US 3, and every GCP US region, rounded to $0.001. Other regions charge $0.074-$0.170 per DBU and SAP Databricks $0.125-$0.199, so costs there scale with the DBU rate. Not represented: priority pay-per-token, the 10% data-residency uplift on Kimi K3, provisioned throughput, batch inference and committed-use discounts. Covers Databricks-hosted open-weight models only, not the proprietary Claude, GPT, Gemini and Grok models Databricks also serves.',
+        model_match=ClauseOr(
+            or_=[ClauseStartsWith(starts_with='databricks-'), ClauseStartsWith(starts_with='system.ai.')]
+        ),
+        provider_match=ClauseContains(contains='databricks'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='databricks-bge-large-en',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-bge-large-en'), ClauseEquals(equals='system.ai.bge-large-en')]
+                ),
+                name='BGE Large (En)',
+                context_window=512,
+                price_comments='1.429 DBU per 1M input tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='databricks-deepseek-v4-1-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-deepseek-v4-1-flash'),
+                        ClauseEquals(equals='system.ai.deepseek-v4-1-flash'),
+                    ]
+                ),
+                name='DeepSeek V4.1 Flash',
+                price_comments='4.286 input, 17.143 output and 0.429 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-deepseek-v4-flash-0731',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-deepseek-v4-flash-0731'),
+                        ClauseEquals(equals='system.ai.deepseek-v4-flash-0731'),
+                    ]
+                ),
+                name='DeepSeek V4 Flash (0731)',
+                price_comments='2 input, 4 output and 0.4 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-deepseek-v4-pro-0813',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-deepseek-v4-pro-0813'),
+                        ClauseEquals(equals='system.ai.deepseek-v4-pro-0813'),
+                    ]
+                ),
+                name='DeepSeek V4 Pro (0813)',
+                price_comments='18.857 input, 56.571 output and 1.886 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+                deprecated=True,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.132'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-gemma-3-12b',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-gemma-3-12b'), ClauseEquals(equals='system.ai.gemma-3-12b')]
+                ),
+                name='Gemma 3 12B',
+                context_window=128000,
+                price_comments='2.143 input and 7.143 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='databricks-glm-5-2',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-glm-5-2'), ClauseEquals(equals='system.ai.glm-5-2')]
+                ),
+                name='GLM 5.2',
+                context_window=1000000,
+                price_comments='20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-glm-5-3',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-glm-5-3'), ClauseEquals(equals='system.ai.glm-5-3')]
+                ),
+                name='GLM 5.3',
+                context_window=1048576,
+                price_comments='20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-glm-5-3-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-glm-5-3-flash'),
+                        ClauseEquals(equals='system.ai.glm-5-3-flash'),
+                    ]
+                ),
+                name='GLM 5.3 Flash',
+                context_window=1048576,
+                price_comments='2.143 input, 7.143 output and 0.429 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-gpt-oss-120b',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-gpt-oss-120b'), ClauseEquals(equals='system.ai.gpt-oss-120b')]
+                ),
+                name='GPT OSS 120B',
+                context_window=128000,
+                price_comments='2.143 input and 8.571 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
+                id='databricks-gpt-oss-20b',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-gpt-oss-20b'), ClauseEquals(equals='system.ai.gpt-oss-20b')]
+                ),
+                name='GPT OSS 20B',
+                context_window=128000,
+                price_comments='1 input and 4.286 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.3')),
+            ),
+            ModelInfo(
+                id='databricks-gte-large-en',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-gte-large-en'), ClauseEquals(equals='system.ai.gte-large-en')]
+                ),
+                name='GTE Large (En)',
+                context_window=8192,
+                price_comments='1.857 DBU per 1M input tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.13')),
+            ),
+            ModelInfo(
+                id='databricks-inkling',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-inkling'), ClauseEquals(equals='system.ai.inkling')]
+                ),
+                name='Inkling',
+                context_window=1000000,
+                price_comments='14.286 input, 57.857 output and 2.429 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+                deprecated=True,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-kimi-k2-7-code',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-kimi-k2-7-code'),
+                        ClauseEquals(equals='system.ai.kimi-k2-7-code'),
+                    ]
+                ),
+                name='Kimi K2.7 Code',
+                price_comments='13.571 input, 57.143 output and 2.714 cache-read DBU per 1M tokens. Retires on 2026-10-30.',
+                deprecated=True,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
+                id='databricks-kimi-k3',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='databricks-kimi-k3'), ClauseEquals(equals='system.ai.kimi-k3')]
+                ),
+                name='Kimi K3',
+                context_window=1000000,
+                price_comments='42.857 input, 214.286 output and 4.286 cache-read DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='databricks-llama-4-maverick',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-llama-4-maverick'),
+                        ClauseEquals(equals='system.ai.llama-4-maverick'),
+                    ]
+                ),
+                name='Llama 4 Maverick',
+                price_comments='7.143 input and 21.429 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='databricks-meta-llama-3-1-8b-instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-meta-llama-3-1-8b-instruct'),
+                        ClauseEquals(equals='system.ai.meta-llama-3-1-8b-instruct'),
+                    ]
+                ),
+                name='Llama 3.1 8B Instruct',
+                context_window=128000,
+                price_comments='2.143 input and 6.429 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.45')),
+            ),
+            ModelInfo(
+                id='databricks-meta-llama-3-3-70b-instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-meta-llama-3-3-70b-instruct'),
+                        ClauseEquals(equals='system.ai.meta-llama-3-3-70b-instruct'),
+                    ]
+                ),
+                name='Llama 3.3 70B Instruct',
+                context_window=128000,
+                price_comments='7.143 input and 21.429 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='databricks-qwen3-embedding-0-6b',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-qwen3-embedding-0-6b'),
+                        ClauseEquals(equals='system.ai.qwen3-embedding-0-6b'),
+                    ]
+                ),
+                name='Qwen3 Embedding 0.6B',
+                price_comments='0.286 DBU per 1M input tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='databricks-qwen3-next-80b-a3b-instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-qwen3-next-80b-a3b-instruct'),
+                        ClauseEquals(equals='system.ai.qwen3-next-80b-a3b-instruct'),
+                    ]
+                ),
+                name='Qwen3 Next 80B A3B Instruct',
+                price_comments='2.143 input and 17.143 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('1.2')),
+            ),
+            ModelInfo(
+                id='databricks-qwen35-122b-a10b',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='databricks-qwen35-122b-a10b'),
+                        ClauseEquals(equals='system.ai.qwen35-122b-a10b'),
+                    ]
+                ),
+                name='Qwen3.5 122B A10B',
+                context_window=256000,
+                price_comments='3.143 input and 31.429 output DBU per 1M tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('2.2')),
             ),
         ],
     ),
@@ -11742,7 +12078,16 @@ providers: list[Provider] = [
                 ],
                 api_flavor='chat',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -12467,6 +12812,22 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
                 ),
+            ),
+            ModelInfo(
+                id='cloudflare/clef',
+                match=ClauseEquals(equals='cloudflare/clef'),
+                name='Clef',
+                context_window=65536,
+                price_comments='Input only. https://openrouter.ai/api/v1/models/cloudflare/clef/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
+                id='cloudflare/clef-flash',
+                match=ClauseEquals(equals='cloudflare/clef-flash'),
+                name='Clef Flash',
+                context_window=65536,
+                price_comments='Input only. https://openrouter.ai/api/v1/models/cloudflare/clef-flash/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='codellama-7b-instruct-solidity',
@@ -15599,6 +15960,22 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='perplexity/pplx-decider-v1-27b',
+                match=ClauseEquals(equals='perplexity/pplx-decider-v1-27b'),
+                name='Decider V1 27B',
+                context_window=262144,
+                price_comments="OpenRouter bills this id at $0.04 per million input tokens. Perplexity's own API bills the same id at $0.02. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1-27b/endpoints",
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='perplexity/pplx-decider-v1.1-27b',
+                match=ClauseEquals(equals='perplexity/pplx-decider-v1.1-27b'),
+                name='Decider V1.1 27B',
+                context_window=262144,
+                price_comments="Same $0.02 input rate as Perplexity's API. Output is free. https://openrouter.ai/api/v1/models/perplexity/pplx-decider-v1.1-27b/endpoints",
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
                 id='perplexity/r1-1776',
                 match=ClauseEquals(equals='perplexity/r1-1776'),
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
@@ -16592,6 +16969,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
+                id='typesafe/jev-1.13',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='typesafe/jev-1.13'),
+                        ClauseEquals(equals='~typesafe/jev-latest'),
+                        ClauseRegex(regex='^typesafe/jev-1\\.13-\\d{8}$'),
+                    ]
+                ),
+                name='Jev 1.13',
+                context_window=32000,
+                price_comments='Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
+            ),
+            ModelInfo(
                 id='undi95/remm-slerp-l2-13b',
                 match=ClauseEquals(equals='undi95/remm-slerp-l2-13b'),
                 name='ReMM SLERP 13B',
@@ -17230,7 +17621,16 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -17246,6 +17646,22 @@ providers: list[Provider] = [
                 name='Llama 3.1 Sonar 8B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1-27b',
+                match=ClauseEquals(equals='pplx-decider-v1-27b'),
+                name='Decider V1 27B',
+                context_window=262144,
+                price_comments='Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1.1-27b',
+                match=ClauseEquals(equals='pplx-decider-v1.1-27b'),
+                name='Decider V1.1 27B',
+                context_window=262144,
+                price_comments='Decisions API: $0.02 per million input tokens, output free, no per-request fee. Input stays under 262,144 tokens. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='r1-1776',
@@ -18050,6 +18466,14 @@ providers: list[Provider] = [
                 id='teknium/OpenHermes-2p5-Mistral-7B',
                 match=ClauseEquals(equals='teknium/OpenHermes-2p5-Mistral-7B'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='together/Tev1-4B-experimental',
+                match=ClauseEquals(equals='together/Tev1-4B-experimental'),
+                name='Tev1 4B Experimental',
+                context_window=32768,
+                price_comments='The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models',
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
             ),
             ModelInfo(
                 id='togethercomputer/GPT-JT-Moderation-6B',

@@ -200,6 +200,72 @@ def test_arcee_provider_inference() -> None:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('databricks-kimi-k3', Decimal('18.3')),
+        ('databricks-deepseek-v4-flash-0731', Decimal('0.448')),
+        ('databricks-deepseek-v4-pro-0813', Decimal('5.412')),
+        ('system.ai.glm-5-3', Decimal('6.06')),
+        ('databricks-qwen35-122b-a10b', Decimal('2.64')),
+        ('databricks-gpt-oss-120b', Decimal('0.9')),
+    ],
+)
+def test_databricks_model_prices(model_ref: str, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='databricks',
+    )
+
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions',
+        'https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations',
+        'https://1234567890123456.7.gcp.databricks.com/ai-gateway/mlflow/v1/chat/completions',
+    ],
+)
+def test_databricks_api_url(provider_api_url: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url
+    )
+
+    assert price.provider.id == 'databricks'
+    assert price.total_price == Decimal('0.15')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions',
+        'https://adb-1234567890123456.7.azuredatabricks.net.evil.test/serving-endpoints/databricks-gpt-oss-120b/invocations',
+        'https://1234567890123456.7.gcp.databricks.com.evil.test/ai-gateway/mlflow/v1/chat/completions',
+        'https://my-workspace.cloud.databricks.com/api/2.0/clusters/list',
+    ],
+)
+def test_databricks_api_url_rejects_other_hosts_and_paths(provider_api_url: str) -> None:
+    with pytest.raises(LookupError, match='Unable to find provider provider_api_url='):
+        calc_price(Usage(input_tokens=1), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url)
+
+
+def test_databricks_provider_inference() -> None:
+    snapshot_data = get_snapshot()
+
+    assert snapshot_data.find_provider('databricks-gpt-oss-120b', None, None).id == 'databricks'
+    assert snapshot_data.find_provider('system.ai.kimi-k3', None, None).id == 'databricks'
+    assert snapshot_data.find_provider('kimi-k3', None, None).id == 'moonshotai'
+
+    litellm_price = calc_price(
+        Usage(input_tokens=1), model_ref='databricks/databricks-gpt-oss-120b', provider_id='litellm'
+    )
+    assert litellm_price.provider.id == 'databricks'
+    assert litellm_price.model.id == 'databricks-gpt-oss-120b'
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.005')),
@@ -2817,3 +2883,43 @@ def test_openrouter_gpt_56_sol_cache_write_price():
     assert price.input_price == Decimal('0.0222')
     assert price.output_price == Decimal('0.01')
     assert price.total_price == Decimal('0.0322')
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'input_tokens', 'total'),
+    [
+        ('cloudflare', '@cf/cloudflare/clef', '@cf/cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('cloudflare', 'clef', '@cf/cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('cloudflare', '@cf/cloudflare/clef-flash', '@cf/cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('cloudflare', 'clef-flash', '@cf/cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('together', 'together/Tev1-4B-experimental', 'together/Tev1-4B-experimental', 1_000_000, Decimal('0.04')),
+        ('perplexity', 'pplx-decider-v1-27b', 'pplx-decider-v1-27b', 600, Decimal('0.000012')),
+        ('perplexity', 'pplx-decider-v1.1-27b', 'pplx-decider-v1.1-27b', 367, Decimal('0.00000734')),
+        ('openrouter', 'cloudflare/clef', 'cloudflare/clef', 1_000_000, Decimal('0.24')),
+        ('openrouter', 'cloudflare/clef-flash', 'cloudflare/clef-flash', 1_000_000, Decimal('0.09')),
+        ('openrouter', 'perplexity/pplx-decider-v1-27b', 'perplexity/pplx-decider-v1-27b', 1_000_000, Decimal('0.04')),
+        (
+            'openrouter',
+            'perplexity/pplx-decider-v1.1-27b',
+            'perplexity/pplx-decider-v1.1-27b',
+            1_000_000,
+            Decimal('0.02'),
+        ),
+        ('openrouter', 'typesafe/jev-1.13', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+        ('openrouter', 'typesafe/jev-1.13-20260917', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+        ('openrouter', '~typesafe/jev-latest', 'typesafe/jev-1.13', 476, Decimal('0.000019992')),
+    ],
+)
+def test_decision_model_input_only_prices(
+    provider_id: str, model_ref: str, model_id: str, input_tokens: int, total: Decimal
+) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, output_tokens=70),
+        model_ref=model_ref,
+        provider_id=provider_id,
+    )
+
+    assert price.provider.id == provider_id
+    assert price.model.id == model_id
+    assert price.output_price == 0
+    assert price.total_price == total
