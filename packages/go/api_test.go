@@ -705,35 +705,36 @@ func TestDatabricksExtractUsage(t *testing.T) {
 	}
 }
 
-// Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate.
+// Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate
+// and 100,001 does not.
 func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 	for _, test := range []struct {
 		providerID, model, wantModelID string
 		wantBase, wantLongContext      float64
 	}{
-		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
-		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.06, 3},
-		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
-		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.06, 3},
-		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.06, 3},
-		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.06, 3},
-		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 3},
-		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
-		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
-		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 3.3},
-		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 3},
-		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 3},
-		{"openrouter", "anthropic/claude-haiku-5.5:batch", "anthropic/claude-haiku-5.5:batch", 0.03, 1.5},
+		{"anthropic", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
+		{"anthropic", "claude-haiku-5-5-20261007", "claude-haiku-5-5", 0.06, 0.0500005},
+		{"google", "claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
+		{"google", "claude-haiku-5-5@20261007", "claude-haiku-5-5", 0.06, 0.0500005},
+		{"google", "publishers/anthropic/models/claude-haiku-5-5", "claude-haiku-5-5", 0.06, 0.0500005},
+		{"aws", "global.anthropic.claude-haiku-5-5", "global.anthropic.claude-haiku-5-5", 0.06, 0.0500005},
+		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 0.0500005},
+		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
+		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
+		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.05500055},
+		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 0.0500005},
+		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 0.0500005},
+		{"openrouter", "anthropic/claude-haiku-5.5:batch", "anthropic/claude-haiku-5.5:batch", 0.03, 0.02500025},
 	} {
 		for _, tokens := range []struct {
-			count float64
+			usage genai_prices.Usage
 			want  float64
-		}{{100_000, test.wantBase}, {1_000_000, test.wantLongContext}} {
+		}{
+			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_000, genai_prices.UsageOutputTokens: 100_000}, test.wantBase},
+			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_001}, test.wantLongContext},
+		} {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: genai_prices.Usage{
-					genai_prices.UsageInputTokens:  tokens.count,
-					genai_prices.UsageOutputTokens: tokens.count,
-				},
+				Usage:      tokens.usage,
 				Model:      test.model,
 				ProviderID: test.providerID,
 			})
@@ -744,7 +745,7 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 				t.Fatalf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
 			}
 			if math.Abs(calculation.TotalPrice-tokens.want) > 1e-9 {
-				t.Fatalf("%s/%s at %g tokens got %g, want %g", test.providerID, test.model, tokens.count, calculation.TotalPrice, tokens.want)
+				t.Fatalf("%s/%s with %v got %g, want %g", test.providerID, test.model, tokens.usage, calculation.TotalPrice, tokens.want)
 			}
 		}
 	}
