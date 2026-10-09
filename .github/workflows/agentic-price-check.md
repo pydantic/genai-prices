@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check'
-description: 'Check twenty providers against official pricing sources, propose verified price updates in a PR, and notify Slack.'
+description: 'Check twenty-one provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
   schedule: daily
@@ -45,6 +45,7 @@ safe-outputs:
       exclude: [README.md]
     allowed-files:
       - prices/providers/openai.yml
+      - prices/providers/openai_decisions.yml
       - prices/providers/anthropic.yml
       - prices/providers/google.yml
       - prices/providers/mistral.yml

@@ -21351,6 +21351,105 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'openai-decisions',
+    name: 'OpenAI Decisions',
+    pricing_urls: [
+      'https://developers.openai.com/api/docs/guides/decisions',
+      'https://developers.openai.com/api/reference/resources/decisions',
+      'https://developers.openai.com/api/docs/models/gpt-6-luna',
+    ],
+    api_pattern: 'https://api\\.openai\\.com',
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna Decisions',
+        match: {
+          equals: 'gpt-6-luna',
+        },
+        context_window: 1050000,
+        price_comments:
+          'Decisions input is billed at the standard GPT-6 Luna input rate, with the 2x rate applying above 272K input tokens. Cache subsets are included in input pricing and have no separate charge. Regional-processing +10% premiums are not represented here, consistent with the standard OpenAI provider. Refs: https://developers.openai.com/api/docs/guides/decisions, https://developers.openai.com/api/reference/resources/decisions, https://developers.openai.com/api/docs/models/gpt-6-luna',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+  {
     id: 'openrouter',
     name: 'OpenRouter',
     pricing_urls: ['https://openrouter.ai/models'],
