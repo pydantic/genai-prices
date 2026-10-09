@@ -134,7 +134,8 @@ network:
 # Price Check: Direct Providers
 
 Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. Propose verified price
-changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then the shared update steps.
+changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then Step 3a, then the shared
+Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
 ## Step 1 - read the manifest and recorded data
