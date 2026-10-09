@@ -4,8 +4,8 @@ import re
 import subprocess
 from pathlib import Path
 from typing import Any, cast
+from urllib.parse import urlparse
 
-import pytest
 from ruamel.yaml import YAML
 
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
@@ -19,17 +19,16 @@ def read_workflow(filename: str) -> dict[str, Any]:
     return cast(dict[str, Any], yaml.load(content))
 
 
-@pytest.mark.parametrize('group', ['openai-anthropic', 'google-mistral', 'direct-providers'])
-def test_daily_price_updates_create_pr_before_notifying_slack(group: str) -> None:
-    source = read_workflow(f'agentic-price-check-{group}.md')
-    compiled = read_workflow(f'agentic-price-check-{group}.lock.yml')
+def test_daily_price_updates_create_pr_before_notifying_slack() -> None:
+    source = read_workflow('agentic-price-check.md')
+    compiled = read_workflow('agentic-price-check.lock.yml')
     assert source['on']['schedule'] == 'daily'
     assert source['if'] == "${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}"
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
     assert 'Bash(git diff:*)' in json.dumps(compiled['jobs']['agent'])
-    assert 'is:pr is:open' in source['on']['skip-if-match']
+    assert source['on']['skip-if-match'] == 'is:pr is:open author:app/genai-prices-automation'
     assert compiled['on']['schedule'][0]['cron'].split()[2:] == ['*', '*', '*']
     assert source['concurrency']['cancel-in-progress'] is False
     assert 'create-issue' not in source['safe-outputs']
@@ -84,13 +83,26 @@ def test_daily_price_updates_create_pr_before_notifying_slack(group: str) -> Non
     assert 'notify_auth_failure' not in compiled['jobs']
 
 
-def test_direct_provider_allowlist_matches_manifest() -> None:
+def test_provider_allowlist_matches_manifest() -> None:
     manifest = read_workflow('../agentic-price-check-providers.yml')
-    source = read_workflow('agentic-price-check-direct-providers.md')
+    source = read_workflow('agentic-price-check.md')
     allowed = source['safe-outputs']['create-pull-request']['allowed-files']
     assert {path for path in allowed if path.endswith('.yml')} == {
         provider['file'] for provider in manifest['providers']
     }
+    assert len(manifest['providers']) == 20
+    assert len({provider['file'] for provider in manifest['providers']}) == 20
+    assert {'OpenAI', 'Anthropic', 'Google (Gemini)', 'Mistral'} <= {
+        provider['name'] for provider in manifest['providers']
+    }
+    for provider in manifest['providers']:
+        for url in provider['sources']:
+            assert urlparse(cast(str, url)).netloc in source['network']['allowed']
+
+
+def test_price_checks_use_one_scheduled_workflow() -> None:
+    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.md')} == {'agentic-price-check.md'}
+    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.lock.yml')} == {'agentic-price-check.lock.yml'}
 
 
 def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
