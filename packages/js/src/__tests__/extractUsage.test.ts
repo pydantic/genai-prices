@@ -11,6 +11,7 @@ const arceeProvider: Provider = data.find((provider) => provider.id === 'arcee')
 const basetenProvider: Provider = data.find((provider) => provider.id === 'baseten')!
 const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor')!
 const databricksProvider: Provider = data.find((provider) => provider.id === 'databricks')!
+const openaiDecisionsProvider: Provider = data.find((provider) => provider.id === 'openai-decisions')!
 const githubCopilotProvider: Provider = data.find((provider) => provider.id === 'github-copilot')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
@@ -62,6 +63,30 @@ describe('extractUsage', () => {
       expect(price?.input_price).toBeCloseTo(0.00051, 8)
       expect(price?.output_price).toBeCloseTo(0.00048, 8)
       expect(price?.total_price).toBeCloseTo(0.00099, 8)
+    })
+
+    it.each(['default', 'responses'] as const)('should extract OpenAI Decisions %s usage', (apiFlavor) => {
+      const responseData = {
+        model: 'gpt-6-luna',
+        usage: {
+          input_tokens: 1_000,
+          input_tokens_details: { cache_write_tokens: 50, cached_tokens: 200 },
+          output_tokens: 100,
+          output_tokens_details: { reasoning_tokens: 25 },
+        },
+      }
+
+      const { model, usage } = extractUsage(openaiDecisionsProvider, responseData, apiFlavor)
+
+      expect(model).toBe('gpt-6-luna')
+      expect(usage).toEqual({
+        cache_read_tokens: 200,
+        cache_write_tokens: 50,
+        input_tokens: 1_000,
+        output_reasoning_tokens: 25,
+        output_tokens: 100,
+      })
+      expect(calcPrice(usage, model!, { providerId: 'openai-decisions' })?.total_price).toBeCloseTo(0.0001, 10)
     })
 
     it('should extract GitHub Copilot chat usage', () => {

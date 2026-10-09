@@ -131,6 +131,38 @@ describe('Provider Matching', () => {
       )
     })
 
+    it('keeps shared OpenAI URLs on OpenAI and selects Decisions by normalized provider ID', () => {
+      for (const providerApiUrl of [
+        'https://api.openai.com/v1/',
+        'https://api.openai.com/v1/chat/completions',
+        'https://api.openai.com/v1/responses',
+        'https://api.openai.com/v1/decisions',
+      ]) {
+        expect(matchProvider(actualProviders, { providerApiUrl })?.id).toBe('openai')
+      }
+
+      const price = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna', {
+        providerId: ' OPENAI-DECISIONS ',
+      })
+      expect(price?.provider.id).toBe('openai-decisions')
+      expect(price?.total_price).toBeCloseTo(0.0001, 10)
+      expect(calcPrice({ input_tokens: 1 }, 'gpt-6-sol', { providerId: 'openai-decisions' })).toBeNull()
+
+      const inferredPrice = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna')
+      expect(inferredPrice?.provider.id).toBe('openai')
+      expect(inferredPrice?.total_price).toBeCloseTo(0.000132, 10)
+
+      for (const { expectedTotal, inputTokens } of [
+        { expectedTotal: 0.0272, inputTokens: 272_000 },
+        { expectedTotal: 0.0544002, inputTokens: 272_001 },
+      ]) {
+        const tierPrice = calcPrice({ cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: inputTokens }, 'gpt-6-luna', {
+          providerId: 'openai-decisions',
+        })
+        expect(tierPrice?.total_price).toBeCloseTo(expectedTotal, 10)
+      }
+    })
+
     it.each([
       'https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions',
       'https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations',

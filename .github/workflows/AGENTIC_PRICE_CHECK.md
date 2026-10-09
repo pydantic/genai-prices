@@ -9,7 +9,7 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty covered providers **daily** and on manual
+This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-one covered provider records **daily** and on manual
 dispatch. It combines verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
@@ -49,9 +49,9 @@ no personal-token expiry to monitor.
 
 ## Coverage
 
-The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, Anthropic, Google (Gemini), Mistral,
-DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor,
-Arcee, Baseten, GitHub Copilot, and Databricks.
+The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, OpenAI Decisions, Anthropic, Google
+(Gemini), Mistral, DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare
+Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, and Databricks.
 
 You define each provider's scope, official URLs, and pricing mappings in `.github/agentic-price-check-providers.yml`.
 The workflow creates at most one PR per run. It skips while any PR authored by `app/genai-prices-automation` remains open,

@@ -6,7 +6,9 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: end-of-file-fixer
+        exclude: '^\.github/workflows/.*\.lock\.yml$'
       - id: trailing-whitespace
+        exclude: '^\.github/workflows/.*\.lock\.yml$'
 
   - repo: https://github.com/sirosen/texthooks
     rev: 0.7.1

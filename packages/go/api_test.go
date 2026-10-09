@@ -31,6 +31,101 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:      1_000,
+		genai_prices.UsageCacheReadTokens:  200,
+		genai_prices.UsageCacheWriteTokens: 50,
+		genai_prices.UsageOutputTokens:     100,
+	}
+	decisions, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: usage, Model: "gpt-6-luna", ProviderID: " OPENAI-DECISIONS ",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if decisions.ProviderID != "openai-decisions" || math.Abs(decisions.TotalPrice-0.0001) > 1e-12 {
+		t.Fatalf("unexpected Decisions price: %#v", decisions)
+	}
+	ordinary, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens:     1_000,
+			genai_prices.UsageCacheReadTokens: 200,
+			genai_prices.UsageOutputTokens:    100,
+		},
+		Model: "gpt-6-luna", ProviderID: "openai",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(ordinary.TotalPrice-0.000132) > 1e-12 {
+		t.Fatalf("ordinary OpenAI total = %g, want 0.000132", ordinary.TotalPrice)
+	}
+
+	for _, test := range []struct {
+		inputTokens float64
+		want        float64
+	}{
+		{inputTokens: 272_000, want: 0.0272},
+		{inputTokens: 272_001, want: 0.0544002},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:      test.inputTokens,
+				genai_prices.UsageCacheReadTokens:  100_000,
+				genai_prices.UsageCacheWriteTokens: 50_000,
+			},
+			Model: "gpt-6-luna", ProviderID: "openai-decisions",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-12 {
+			t.Fatalf("%g input tokens: got %g, want %g", test.inputTokens, calculation.TotalPrice, test.want)
+		}
+	}
+
+	for _, apiFlavor := range []string{"default", "responses"} {
+		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
+			ResponseJSON: []byte(`{"model":"gpt-6-luna","usage":{"input_tokens":1000,` +
+				`"input_tokens_details":{"cached_tokens":200,"cache_write_tokens":50},"output_tokens":100,` +
+				`"output_tokens_details":{"reasoning_tokens":25}}}`),
+			ProviderID: "openai-decisions", APIFlavor: apiFlavor,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantUsage := genai_prices.Usage{
+			genai_prices.UsageInputTokens:           1_000,
+			genai_prices.UsageCacheReadTokens:       200,
+			genai_prices.UsageCacheWriteTokens:      50,
+			genai_prices.UsageOutputTokens:          100,
+			genai_prices.UsageOutputReasoningTokens: 25,
+		}
+		if extracted.ProviderID != "openai-decisions" || extracted.Model != "gpt-6-luna" || !maps.Equal(extracted.Usage, wantUsage) {
+			t.Fatalf("%s extraction = %#v", apiFlavor, extracted)
+		}
+	}
+
+	sharedURL, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1}, Model: "gpt-6-luna",
+		ProviderAPIURL: "https://api.openai.com/v1/decisions",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sharedURL.ProviderID != "openai" {
+		t.Fatalf("shared OpenAI URL selected %q, want openai", sharedURL.ProviderID)
+	}
+
+	_, err = genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1}, Model: "gpt-6-sol", ProviderID: "openai-decisions",
+	})
+	if !errors.Is(err, genai_prices.ErrModelNotFound) {
+		t.Fatalf("unsupported sibling model error = %v, want ErrModelNotFound", err)
+	}
+}
+
 func TestOpenAILongContextBoundary(t *testing.T) {
 	tests := []struct {
 		model    string
