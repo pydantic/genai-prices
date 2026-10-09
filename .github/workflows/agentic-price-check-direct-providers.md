@@ -134,7 +134,8 @@ network:
 # Price Check: Direct Providers
 
 Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. Propose verified price
-changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then the shared update steps.
+changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then Step 3a, then the shared
+Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
 ## Step 1 - read the manifest and recorded data
@@ -177,9 +178,39 @@ For every provider, perform all four checks:
 2. **New models.** List each in-scope, publicly available, numerically priced official model whose ID is not a canonical YAML ID
    and does not satisfy any YAML `match` expression. Do not list aliases as separate models.
 3. **Potential removals.** List each non-deprecated YAML model that is absent from a readable, complete official catalog. Do not
-   infer removal from a pricing page that does not claim to list the full catalog.
+   infer removal from a pricing page that does not claim to list the full catalog. Keep removal claims specific to the provider
+   and exact model IDs in the source. A reseller's catalog omission does not establish discontinuation by the model's creator.
+   Do not extend a family's discontinuation notice to separately listed variants or later generations.
 4. **Unchecked fields.** List every active YAML price field or tier that you could not map to an official value. A missing,
    ambiguous, or non-numeric official value is unchecked, not matching.
 
 If a source is readable for prices but not a complete catalog, compare prices and unchecked fields but do not report new models
 or potential removals from that source.
+
+## Step 3a - establish evidence before editing an existing rate
+
+A different price on today's official page proves the current rate. It does not prove when the rate changed or that the
+recorded price was wrong. Classify every proposed change to an existing model before editing its YAML:
+
+1. **Rate change with a verified effective date.** Record the provider's effective date and the official source URL that
+   establishes it. Preserve every existing price record and add the dated update using the shared Step 4 scope rules.
+2. **Correction with evidence of an original error.** Record the official evidence that the old value was already wrong when
+   recorded. Only this case permits an in-place correction. Today's rate alone is not that evidence.
+3. **Unverified timing or correction.** Leave the entire model entry unchanged, including `prices_checked`. Put the exact
+   model ID, recorded and proposed rates, source URL, and missing evidence in the PR's skipped-findings section. Continue with
+   independently verified new models or changes. Call noop if no safe changes remain.
+
+Do not use the run date, `prices_checked`, a page's update date, a search crawl date, or a model's launch date as a substitute
+for a published rate-change date. If the available sources disagree about timing or rates, skip the change.
+
+For example, if YAML records $0.0805 per million input tokens and today's page lists $0.14 without a change date or proof
+of an original error, retain $0.0805 and report $0.14 as deferred. Do not overwrite it or invent a dated entry.
+
+For every dated update, add public-API regression assertions in Python, JavaScript, and Go for a request immediately before
+the effective date and a request on that date. Assert the original and new costs, including each affected cache or output
+rate. Updating only the current-price assertions does not verify historical pricing.
+
+Before submitting the PR, inspect `git diff` and check every changed existing rate against its classification above. The PR
+body must include effective-date evidence for each dated update and original-error evidence for each in-place correction.
+Restore and defer any change missing that evidence, then rebuild and rerun the checks. Passing tests do not supply missing
+pricing evidence.
