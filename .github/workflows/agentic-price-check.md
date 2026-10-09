@@ -1,13 +1,13 @@
 ---
 emoji: '🏷️'
-name: 'Price Check: Direct Providers'
-description: 'Check sixteen official provider catalogs, propose verified price updates in a PR, and notify Slack.'
+name: 'Price Check'
+description: 'Check twenty official provider pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
   schedule: daily
   permissions:
     pull-requests: read
-  skip-if-match: 'is:pr is:open in:title "Update direct-provider prices"'
+  skip-if-match: 'is:pr is:open author:app/genai-prices-automation'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
 permissions:
@@ -44,6 +44,10 @@ safe-outputs:
       policy: blocked
       exclude: [README.md]
     allowed-files:
+      - prices/providers/openai.yml
+      - prices/providers/anthropic.yml
+      - prices/providers/google.yml
+      - prices/providers/mistral.yml
       - prices/providers/deepseek.yml
       - prices/providers/x_ai.yml
       - prices/providers/groq.yml
@@ -83,8 +87,8 @@ jobs:
       pr-url: ${{ needs.safe_outputs.outputs.created_pr_url }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-timeout-minutes: 60
-max-turns: 300
+timeout-minutes: 90
+max-turns: 500
 # Disable gh-aw's AI-credits guardrail: the Fireworks minimax model isn't in gh-aw's
 # pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
 # unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
@@ -110,6 +114,16 @@ network:
   allowed:
     - defaults
     - api.fireworks.ai
+    - platform.openai.com
+    - developers.openai.com
+    - platform.claude.com
+    - docs.claude.com
+    - docs.anthropic.com
+    - ai.google.dev
+    - cloud.google.com
+    - docs.cloud.google.com
+    - mistral.ai
+    - docs.mistral.ai
     - api-docs.deepseek.com
     - docs.x.ai
     - console.groq.com
@@ -131,10 +145,10 @@ network:
     - docs.databricks.com
 ---
 
-# Price Check: Direct Providers
+# Price Check
 
 Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. Propose verified price
-changes and new models in one PR titled `Update direct-provider prices`. Follow Steps 1-3, then Step 3a, then the shared
+changes and new models in one PR titled `Update provider prices`. Follow Steps 1-3, then Step 3a, then the shared
 Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
@@ -161,8 +175,9 @@ shadowed history, expired records, and future records when comparing current pri
 
 ## Step 2 - fetch every official source
 
-Use `web-fetch` on every exact URL in the manifest. You may follow links on the same allowed official domains when a manifest
-note requires a model detail page. Do not use search results, aggregators, cached snippets, or third-party pages.
+Use `web-fetch` on every exact URL in the manifest. You may follow links on the same allowed official domains to confirm an
+exact API ID or an in-scope price. Respect the manifest's mapping notes. Do not use search results, aggregators, cached
+snippets, or third-party pages.
 
 A source is unreadable when it times out, errors, redirects to unrelated content, or omits the model IDs or numeric prices needed
 for its stated purpose. Record an unreadable-source finding. Do not guess, reuse remembered prices, or treat the provider as clean.
@@ -184,8 +199,8 @@ For every provider, perform all four checks:
 4. **Unchecked fields.** List every active YAML price field or tier that you could not map to an official value. A missing,
    ambiguous, or non-numeric official value is unchecked, not matching.
 
-If a source is readable for prices but not a complete catalog, compare prices and unchecked fields but do not report new models
-or potential removals from that source.
+If a source is readable for prices but not a complete catalog, compare prices and unchecked fields but do not report potential
+removals from it. You may propose new models when the official source identifies their exact API IDs and in-scope prices.
 
 ## Step 3a - establish evidence before editing an existing rate
 

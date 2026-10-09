@@ -1,4 +1,4 @@
-# Agentic price-update workflows
+# Agentic price-update workflow
 
 ```bash
 gh secret set FIREWORKS_API_KEY
@@ -6,14 +6,13 @@ gh variable set PRICE_UPDATE_APP_CLIENT_ID --body Iv23libntR0K6oyQrZWX
 gh secret set PRICE_UPDATE_APP_PRIVATE_KEY < /path/to/genai-prices-automation.private-key.pem
 gh secret set SLACK_WEBHOOK_URL
 gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
-gh workflow run agentic-price-check-openai-anthropic.lock.yml
+gh workflow run agentic-price-check.lock.yml
 ```
 
-These three [gh-aw](https://github.com/github/gh-aw) workflows check official provider pricing **daily** and on manual
-dispatch. They add verified new models and update verified prices through ready-for-review PRs instead of issues. A separate
-job sends the created PR link to Slack. Clean checks and runs without any verified changes produce no price-update PR
-notification. A verified change can still create a PR when other findings remain unchecked; those findings appear in its
-body. You can read noop reasons in the workflow run's summary.
+This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty covered providers **daily** and on manual
+dispatch. It combines verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
+A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
+findings in the PR body and noop reasons in the workflow run's summary.
 
 ## Configuration
 
@@ -50,30 +49,28 @@ no personal-token expiry to monitor.
 
 ## Coverage
 
-| Workflow                                  | Providers                                                                                                                                                           | PR title                             |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic                                                                                                                                                   | `Update OpenAI and Anthropic prices` |
-| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral                                                                                                                                            | `Update Google and Mistral prices`   |
-| `agentic-price-check-direct-providers.md` | DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks | `Update direct-provider prices`      |
+The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, Anthropic, Google (Gemini), Mistral,
+DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare Workers AI, Cursor,
+Arcee, Baseten, GitHub Copilot, and Databricks.
 
-Each workflow creates at most one PR per run. It skips runs while a PR with its title remains open, so daily runs do not
-create duplicate proposals or discard review feedback. Merge or close the existing PR to resume that provider group's checks.
-The workflows do not merge PRs, force-push branches, or close older proposals.
+You define each provider's scope, official URLs, and pricing mappings in `.github/agentic-price-check-providers.yml`.
+The workflow creates at most one PR per run. It skips while any PR authored by `app/genai-prices-automation` remains open,
+including proposals from the previous three workflows. Renaming a PR does not bypass this guard. Merge or close those
+proposals to resume checks. The workflow does not merge PRs, force-push branches, or close older proposals.
 
-The direct-provider workflow reads its scope, official URLs, and provider-specific mapping notes from
-`.github/agentic-price-check-providers.yml`. The other two workflows specify their official pricing pages in their prompts.
 These checks complement `make check-for-price-discrepancies`, which uses aggregators such as LiteLLM and OpenRouter.
 
 ## Update safeguards
 
-The shared instructions in `.github/workflows/shared/price-update.md` require the agent to:
+The workflow prompt and shared instructions in `.github/workflows/shared/price-update.md` require the agent to:
 
 - Check existing canonical IDs and match rules before adding models. Do not add aliases as separate models.
 - Compare all registry units and published tiers, resolving the last matching conditional record for each usage scope.
   Ignore shadowed historical rates and insert dated updates before later scope overrides and scheduled future rates.
   Do not guess missing prices or effective dates.
 - Preserve historical prices. Insert dated conditional records for real rate changes; correct values in place only with
-  evidence that the recorded price was already wrong.
+  evidence that the recorded price was already wrong. Defer changes with unverified timing or correction evidence.
+  Test requests before and on each effective date in Python, JavaScript, and Go.
 - Edit only the workflow's provider YAML. Regenerate artifacts with `make build`, never by hand.
 - Run `make lint`, `make typecheck`, `make lint-go`, `make test`, `npm run ci`, and `make test-go` before proposing a PR.
   Update affected regression expectations in all three languages without weakening assertions.
@@ -92,26 +89,23 @@ as clean. A missing model on a pricing page is never enough evidence to remove i
 
 ```bash
 gh extension install github/gh-aw --pin v0.82.2
-gh aw compile --no-check-update \
-  agentic-price-check-openai-anthropic \
-  agentic-price-check-google-mistral \
-  agentic-price-check-direct-providers
+gh aw compile --no-check-update agentic-price-check
 ```
 
-The `.md` files are source. The `.lock.yml` files are compiled output. Never edit a lock file by hand. Compile only these
-three workflows with this version; other workflows can use a different compiler version.
+The `.md` files are source. The `.lock.yml` files are compiled output. Never edit a lock file by hand. Compile this
+workflow with the pinned version; other workflows can use a different compiler version.
 
 **Keep gh-aw v0.82.2 and `max-ai-credits: -1` / `max-daily-ai-credits: -1`.** The Fireworks `minimax-m3` model is not in gh-aw's
 pricing catalog. Its API proxy otherwise rejects requests with `HTTP 400 unknown_model_ai_credits`. The firewall pinned by
 v0.82.2, version 0.27.22, drops the credit cap when it is `-1`. Newer firewalls no longer drop it. Both the compiler pin and
 these credit settings are required until gh-aw adds the model to its catalog.
 
-To use Anthropic directly, edit all three `engine:` blocks. Set `ANTHROPIC_API_KEY` to your Anthropic secret and remove
+To use Anthropic directly, edit the workflow's `engine:` block. Set `ANTHROPIC_API_KEY` to your Anthropic secret and remove
 `api-target`, `ANTHROPIC_BASE_URL`, and the `ANTHROPIC_MODEL` / `ANTHROPIC_DEFAULT_*_MODEL` overrides. Then recompile.
 You can re-enable threat detection with a model that gh-aw prices; it is disabled for Minimax because its separate detection
 credit guardrail cannot accept the unpriced model.
 
-To add a direct provider, update `.github/agentic-price-check-providers.yml`, add its source domains to `network.allowed`, and
+To add a provider, update `.github/agentic-price-check-providers.yml`, add its source domains to `network.allowed`, and
 add its YAML path to `create-pull-request.allowed-files`. Then recompile.
 
 ## Source limitations
