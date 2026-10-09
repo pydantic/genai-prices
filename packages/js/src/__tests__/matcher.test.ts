@@ -148,6 +148,10 @@ describe('Provider Matching', () => {
       expect(price?.total_price).toBeCloseTo(0.0001, 10)
       expect(calcPrice({ input_tokens: 1 }, 'gpt-6-sol', { providerId: 'openai-decisions' })).toBeNull()
 
+      const inferredPrice = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna')
+      expect(inferredPrice?.provider.id).toBe('openai')
+      expect(inferredPrice?.total_price).toBeCloseTo(0.000132, 10)
+
       for (const { expectedTotal, inputTokens } of [
         { expectedTotal: 0.0272, inputTokens: 272_000 },
         { expectedTotal: 0.0544002, inputTokens: 272_001 },
