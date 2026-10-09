@@ -339,7 +339,7 @@ models:
     canonical_model: anthropic/claude-opus-5-5
     prices_checked: 2026-09-22
     price_comments: >-
-      Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
       Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)"
       (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
       Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
@@ -396,13 +396,14 @@ models:
 
   - id: global.anthropic.claude-sonnet-5-5
     canonical_model: anthropic/claude-sonnet-5-5
-    prices_checked: 2026-09-28
+    prices_checked: 2026-10-08
     match:
       or:
         - ends_with: global.anthropic.claude-sonnet-5-5
         - contains: global.anthropic.claude-sonnet-5-5-v1
     price_comments: >-
       Global endpoint (no premium), flat across the full 1M context window.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
       Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)"
       (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
       Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
@@ -410,7 +411,7 @@ models:
       input_mtok: 2
       cache_write_mtok: 2.5
       cache_write_1h_mtok: 4
-      cache_read_mtok: 0.2
+      cache_read_mtok: 0.1
       output_mtok: 10
 
   - id: global.anthropic.claude-sonnet-5-v1:0
@@ -1437,7 +1438,7 @@ models:
     prices_checked: 2026-09-22
     price_comments: >-
       Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
-      Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
       Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)"
       (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
     match:
@@ -1527,7 +1528,7 @@ models:
 
   - id: regional.anthropic.claude-sonnet-5-5
     canonical_model: anthropic/claude-sonnet-5-5
-    prices_checked: 2026-09-28
+    prices_checked: 2026-10-08
     match:
       or:
         - equals: anthropic.claude-sonnet-5-5
@@ -1548,13 +1549,14 @@ models:
         - contains: jp.anthropic.claude-sonnet-5-5-v1
     price_comments: >-
       Regional endpoints and inference profiles carry a 10% premium over the global endpoint.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
       Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)"
       (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
     prices:
       input_mtok: 2.2
       cache_write_mtok: 2.75
       cache_write_1h_mtok: 4.4
-      cache_read_mtok: 0.22
+      cache_read_mtok: 0.11
       output_mtok: 11
 
   - id: regional.anthropic.claude-sonnet-5-v1:0

@@ -534,24 +534,24 @@ describe('Claude Opus 5 vs 5.5', () => {
 })
 
 describe('Claude Sonnet 5 vs 5.5', () => {
-  // Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix
-  // matchers no longer claim it.
+  // Sonnet 5.5 resolves to its own model, and bills cache reads at half Sonnet 5's rate (0.05x input).
   const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+  const withCacheReads = { cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }
 
   it.each([
-    ['anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
-    ['anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', 12],
-    ['google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
-    ['google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', 12],
-    ['google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', 12],
-    ['aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', 12],
-    ['aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', 12],
-    ['aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.2],
-    ['aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', 13.2],
-    ['aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.2],
-    ['openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', 12],
+    ['anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12.1],
+    ['anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', 12.1],
+    ['google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', 12.1],
+    ['google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', 12.1],
+    ['google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', 12.1],
+    ['aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', 12.1],
+    ['aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', 12.1],
+    ['aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.31],
+    ['aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', 13.31],
+    ['aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.31],
+    ['openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', 12.1],
   ])('resolves %s %s to %s', (providerId, modelRef, modelId, expected) => {
-    const price = calcPrice(usage, modelRef, { providerId })
+    const price = calcPrice(withCacheReads, modelRef, { providerId })
 
     expect(price!.model.id).toBe(modelId)
     expect(price!.total_price).toBeCloseTo(expected, 10)

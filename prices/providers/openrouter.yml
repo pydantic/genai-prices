@@ -599,7 +599,7 @@ models:
     prices_checked: 2026-09-22
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
-      Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Cache-read rate confirmed via https://openrouter.ai/api/v1/models
 
@@ -698,12 +698,13 @@ models:
     context_window: 1000000
     prices:
       input_mtok: 2
-      cache_read_mtok: 0.2
+      cache_read_mtok: 0.1
       cache_write_mtok: 2.5
       output_mtok: 10
-    prices_checked: 2026-09-28
+    prices_checked: 2026-10-08
     price_comments: >-
       Flat pricing across the full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Cache-read rate confirmed via https://openrouter.ai/api/v1/models
     collapse: false
