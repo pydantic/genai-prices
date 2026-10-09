@@ -25,6 +25,25 @@ extractors:
       - path: cacheWriteInputTokens
         dest: cache_write_tokens
         required: false
+      # Converse splits cache writes by TTL; the two TTLs are billed at different rates.
+      - path:
+          - cacheDetails
+          - type: array-match
+            field: ttl
+            match:
+              equals: 5m
+          - inputTokens
+        dest: cache_write_5m_tokens
+        required: false
+      - path:
+          - cacheDetails
+          - type: array-match
+            field: ttl
+            match:
+              equals: 1h
+          - inputTokens
+        dest: cache_write_1h_tokens
+        required: false
       - path: outputTokens
         dest: output_tokens
   - api_flavor: anthropic
