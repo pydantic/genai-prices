@@ -1,5 +1,55 @@
-# Providers covered by agentic-price-check-direct-providers.md.
+# Providers covered by agentic-price-check.md.
 providers:
+  - name: OpenAI
+    file: prices/providers/openai.yml
+    scope: Public OpenAI API models with standard on-demand prices.
+    sources:
+      - https://developers.openai.com/api/docs/pricing.md
+    notes: >-
+      Model arrays such as ["gpt-4o", 2.5, 1.25, 10] mean model ID, input, cached input, and output in USD per 1M tokens.
+      Map them to input_mtok, cache_read_mtok, and output_mtok. Do not substitute Batch, Flex, Priority, fine-tuning, or
+      Fast-mode rates for standard rates. Preserve existing special-rate records. This is a pricing page, not a complete
+      catalog; do not infer removals from it.
+
+  - name: Anthropic
+    file: prices/providers/anthropic.yml
+    scope: Public Anthropic API models with standard on-demand prices and web-search charges.
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/pricing.md
+    notes: >-
+      Map Base Input Tokens to input_mtok, Output Tokens to output_mtok, 5m Cache Writes to cache_write_mtok,
+      1h Cache Writes to cache_write_1h_mtok, and Cache Hits & Refreshes to cache_read_mtok. In the tool-use section,
+      $10 per 1,000 web searches maps to web_searches_kcount: 10. Do not substitute Batch or Fast-mode rates for standard
+      rates. Preserve existing special-rate records. This is a pricing page, not a complete catalog; do not infer removals.
+
+  - name: Google (Gemini)
+    file: prices/providers/google.yml
+    scope: Gemini API models, Vertex-hosted Gemini and partner models, and token-priced Gemini TTS models.
+    sources:
+      - https://ai.google.dev/gemini-api/docs/pricing
+      - https://cloud.google.com/vertex-ai/generative-ai/pricing
+      - https://cloud.google.com/text-to-speech/pricing#gemini-tts
+    notes: >-
+      Match each model's price_comments source and endpoint scope. Use the Gemini API page for Gemini API models, the
+      Vertex AI page for Vertex-hosted Gemini and partner models, and the Gemini-TTS section for Gemini TTS. Do not substitute
+      native Anthropic rates for Vertex-hosted Claude or regional rates for a recorded global endpoint. Compare the paid
+      tier in USD per 1M tokens. Map text input to input_mtok, audio input to input_audio_mtok, cached text to cache_read_mtok,
+      and cached audio to cache_audio_read_mtok. Preserve separately quoted image, video, and image-output rates with their
+      registry keys. Map Gemini TTS token rates to input_mtok and output_mtok, never conventional TTS character prices.
+      A <= 200000 / > 200000 prompt-size split uses tier start: 200000 because the engines apply tiers only above start.
+      Exclude Batch and provisioned capacity. These are pricing pages, not complete catalogs; do not infer removals.
+
+  - name: Mistral
+    file: prices/providers/mistral.yml
+    scope: Public Mistral API models with standard on-demand prices.
+    sources:
+      - https://mistral.ai/pricing/api
+    notes: >-
+      Map the standard API table's input and output columns, in USD per 1M tokens, to input_mtok and output_mtok.
+      Exclude Batch and provisioned capacity. Preserve existing special-rate records. Aliases such as mistral-large-latest
+      are not separate models. Skip ambiguous marketing names. This is a pricing page, not a complete catalog; do not
+      infer removals.
+
   - name: DeepSeek
     file: prices/providers/deepseek.yml
     scope: Public DeepSeek API models.

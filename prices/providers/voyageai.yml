@@ -130,6 +130,15 @@ models:
     prices:
       input_mtok: 0.18
 
+  - id: voyage-code-4
+    name: Voyage Code 4
+    description: Embedding model optimized for code retrieval.
+    match:
+      equals: voyage-code-4
+    prices_checked: 2026-10-09
+    prices:
+      input_mtok: 0.12
+
   - id: voyage-context-3
     name: Voyage Context 3
     description: Contextualized chunk embedding model that encodes chunks together with full-document context.
@@ -138,6 +147,15 @@ models:
     prices_checked: 2026-06-18
     prices:
       input_mtok: 0.18
+
+  - id: voyage-context-4
+    name: Voyage Context 4
+    description: Contextualized chunk embedding model that encodes chunks together with full-document context.
+    match:
+      equals: voyage-context-4
+    prices_checked: 2026-10-09
+    prices:
+      input_mtok: 0.12
 
   - id: voyage-finance-2
     name: Voyage Finance 2
