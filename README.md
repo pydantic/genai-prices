@@ -35,7 +35,7 @@ The following providers are currently supported:
 
 - [Anthropic](prices/providers/anthropic.yml) - 27 models
 - [Arcee](prices/providers/arcee.yml) - 10 models
-- [Avian](prices/providers/avian.yml) - 19 models
+- [Avian](prices/providers/avian.yml) - 24 models
 - [AWS Bedrock](prices/providers/aws.yml) - 105 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 17 models
@@ -73,7 +73,7 @@ The following providers are currently supported:
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models
 - [Together AI](prices/providers/together.yml) - 73 models
 - [TypeSafe](prices/providers/typesafe.yml) - 1 models
-- [Voyage AI](prices/providers/voyageai.yml) - 22 models
+- [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models
 - [Z.AI](prices/providers/zai.yml) - 4 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models

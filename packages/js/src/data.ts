@@ -1271,11 +1271,13 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v3.2',
         },
         context_window: 163000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.23,
           cache_read_mtok: 0.012,
           output_mtok: 0.33,
         },
+        deprecated: true,
       },
       {
         id: 'deepseek/deepseek-v4-flash',
@@ -1284,10 +1286,11 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-flash',
         },
         context_window: 1000000,
+        price_comments: 'Rates from the Avian docs catalog (https://avian.io/docs).',
         prices: {
-          input_mtok: 0.0805,
-          cache_read_mtok: 0.0165,
-          output_mtok: 0.161,
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
         },
       },
       {
@@ -1297,11 +1300,13 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-pro',
         },
         context_window: 1000000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); the dated V4 Pro 0813 entry took its place.",
         prices: {
           input_mtok: 1.305,
           cache_read_mtok: 0.10875,
           output_mtok: 2.61,
         },
+        deprecated: true,
       },
       {
         id: 'deepseek/deepseek-v4-pro-0813',
@@ -1310,10 +1315,25 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-pro-0813',
         },
         context_window: 1000000,
+        price_comments: 'Rates from the Avian docs catalog (https://avian.io/docs).',
         prices: {
-          input_mtok: 0.594,
-          cache_read_mtok: 0.0198,
-          output_mtok: 1.782,
+          input_mtok: 0.561,
+          cache_read_mtok: 0.0187,
+          output_mtok: 1.683,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek/deepseek-v4.1-flash',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 0.1275,
+          cache_read_mtok: 0.00255,
+          output_mtok: 0.51,
         },
       },
       {
@@ -1323,10 +1343,26 @@ export const data: Provider[] = [
           equals: 'minimax/minimax-m2.5',
         },
         context_window: 196000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.27,
           cache_read_mtok: 0.15,
           output_mtok: 1.08,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'minimax/minimax-m3',
+        name: 'MiniMax M3',
+        match: {
+          equals: 'minimax/minimax-m3',
+        },
+        context_window: 512000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 0.255,
+          cache_read_mtok: 0.051,
+          output_mtok: 1.02,
         },
       },
       {
@@ -1336,11 +1372,14 @@ export const data: Provider[] = [
           equals: 'moonshotai/kimi-k2.5',
         },
         context_window: 262000,
+        price_comments:
+          "No longer listed in Avian's model catalog (checked 2026-10-09); Moonshot discontinued the kimi-k2.5 family on 2026-08-31 (https://platform.kimi.ai/docs/models.md).",
         prices: {
           input_mtok: 0.45,
           cache_read_mtok: 0.225,
           output_mtok: 2.2,
         },
+        deprecated: true,
       },
       {
         id: 'moonshotai/kimi-k2.6',
@@ -1349,10 +1388,26 @@ export const data: Provider[] = [
           equals: 'moonshotai/kimi-k2.6',
         },
         context_window: 262000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
           output_mtok: 4,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 2.55,
+          cache_read_mtok: 0.255,
+          output_mtok: 12.75,
         },
       },
       {
@@ -1362,11 +1417,13 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.5',
         },
         context_window: 1000000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
           output_mtok: 0.4,
         },
+        deprecated: true,
       },
       {
         id: 'xiaomi/mimo-v2.5-pro',
@@ -1375,10 +1432,11 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.5-pro',
         },
         context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.0036,
-          output_mtok: 0.87,
+          input_mtok: 0.36975,
+          cache_read_mtok: 0.00306,
+          output_mtok: 0.7395,
         },
       },
       {
@@ -1390,9 +1448,9 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.4,
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
         },
       },
       {
@@ -1404,9 +1462,9 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.0036,
-          output_mtok: 0.87,
+          input_mtok: 0.36975,
+          cache_read_mtok: 0.00306,
+          output_mtok: 0.7395,
         },
       },
       {
@@ -1416,11 +1474,13 @@ export const data: Provider[] = [
           equals: 'z-ai/glm-4.7',
         },
         context_window: 202000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.388,
           cache_read_mtok: 0.097,
           output_mtok: 1.806,
         },
+        deprecated: true,
       },
       {
         id: 'z-ai/glm-5',
@@ -1429,11 +1489,13 @@ export const data: Provider[] = [
           equals: 'z-ai/glm-5',
         },
         context_window: 205000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.516,
           cache_read_mtok: 0.129,
           output_mtok: 2.322,
         },
+        deprecated: true,
       },
       {
         id: 'z-ai/glm-5.1',
@@ -1442,11 +1504,13 @@ export const data: Provider[] = [
           equals: 'z-ai/glm-5.1',
         },
         context_window: 202000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.743,
           cache_read_mtok: 0.186,
           output_mtok: 2.971,
         },
+        deprecated: true,
       },
       {
         id: 'z-ai/glm-5.2',
@@ -1455,10 +1519,40 @@ export const data: Provider[] = [
           equals: 'z-ai/glm-5.2',
         },
         context_window: 1000000,
+        price_comments: "No longer listed in Avian's model catalog (checked 2026-10-09); kept for historical usage.",
         prices: {
           input_mtok: 0.495,
           cache_read_mtok: 0.124,
           output_mtok: 1.733,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'z-ai/glm-5.3',
+        name: 'GLM-5.3',
+        match: {
+          equals: 'z-ai/glm-5.3',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 1.19,
+          cache_read_mtok: 0.221,
+          output_mtok: 3.74,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.3-flash',
+        name: 'GLM-5.3 Flash',
+        match: {
+          equals: 'z-ai/glm-5.3-flash',
+        },
+        context_window: 1000000,
+        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
+        prices: {
+          input_mtok: 0.1275,
+          cache_read_mtok: 0.0255,
+          output_mtok: 0.425,
         },
       },
     ],
@@ -4984,11 +5078,14 @@ export const data: Provider[] = [
           equals: 'deepseek-ai/DeepSeek-V4-Pro',
         },
         context_window: 1048000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); the dated V4 Pro 0813 endpoint took its place.',
         prices: {
           input_mtok: 1.74,
           cache_read_mtok: 0.145,
           output_mtok: 3.48,
         },
+        deprecated: true,
       },
       {
         id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
@@ -5023,11 +5120,14 @@ export const data: Provider[] = [
           equals: 'moonshotai/Kimi-K2.6',
         },
         context_window: 262000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
           output_mtok: 4,
         },
+        deprecated: true,
       },
       {
         id: 'moonshotai/Kimi-K2.7-Code',
@@ -5036,11 +5136,14 @@ export const data: Provider[] = [
           equals: 'moonshotai/Kimi-K2.7-Code',
         },
         context_window: 262000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
           output_mtok: 4,
         },
+        deprecated: true,
       },
       {
         id: 'moonshotai/Kimi-K3',
@@ -5088,11 +5191,14 @@ export const data: Provider[] = [
           equals: 'thinkingmachines/inkling',
         },
         context_window: 1048000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
         prices: {
           input_mtok: 1,
           cache_read_mtok: 0.17,
           output_mtok: 4.05,
         },
+        deprecated: true,
       },
       {
         id: 'thinkingmachines/inkling-small',
@@ -5101,11 +5207,14 @@ export const data: Provider[] = [
           equals: 'thinkingmachines/inkling-small',
         },
         context_window: 1048000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.1,
           output_mtok: 1.2,
         },
+        deprecated: true,
       },
       {
         id: 'zai-org/GLM-4.7',
@@ -5114,11 +5223,14 @@ export const data: Provider[] = [
           equals: 'zai-org/GLM-4.7',
         },
         context_window: 200000,
+        price_comments:
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.12,
           output_mtok: 2.2,
         },
+        deprecated: true,
       },
       {
         id: 'zai-org/GLM-5.2',
@@ -5365,8 +5477,10 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen-3-coder-480b',
         },
-        price_comments: 'Seems to be no longer available on cerebras, here to help with tests',
+        price_comments:
+          'No longer listed in the Cerebras Inference models API (https://api.cerebras.ai/public/v1/models, last checked 2026-10-09); kept for historical usage.',
         prices: {},
+        deprecated: true,
       },
       {
         id: 'qwen-3.8-27b',
@@ -8471,10 +8585,11 @@ export const data: Provider[] = [
         match: {
           equals: 'claude-sonnet-5.5',
         },
+        price_comments: 'Cached input rate dropped from $0.20 to $0.10.',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.2,
+          cache_read_mtok: 0.1,
           output_mtok: 10,
         },
       },
@@ -17965,6 +18080,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.1,
           output_mtok: 3,
         },
+        deprecated: true,
       },
       {
         id: 'kimi-k2.6',
@@ -18047,6 +18163,7 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 5,
         },
+        deprecated: true,
       },
       {
         id: 'moonshot-v1-32k',
@@ -18066,6 +18183,7 @@ export const data: Provider[] = [
           input_mtok: 1,
           output_mtok: 3,
         },
+        deprecated: true,
       },
       {
         id: 'moonshot-v1-8k',
@@ -18085,6 +18203,7 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 2,
         },
+        deprecated: true,
       },
     ],
   },
@@ -32750,6 +32869,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voyage-code-4',
+        name: 'Voyage Code 4',
+        description: 'Embedding model optimized for code retrieval.',
+        match: {
+          equals: 'voyage-code-4',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
         id: 'voyage-context-3',
         name: 'Voyage Context 3',
         description: 'Contextualized chunk embedding model that encodes chunks together with full-document context.',
@@ -32758,6 +32888,17 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.18,
+        },
+      },
+      {
+        id: 'voyage-context-4',
+        name: 'Voyage Context 4',
+        description: 'Contextualized chunk embedding model that encodes chunks together with full-document context.',
+        match: {
+          equals: 'voyage-context-4',
+        },
+        prices: {
+          input_mtok: 0.12,
         },
       },
       {

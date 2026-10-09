@@ -65,7 +65,13 @@ models:
     match:
       equals: deepseek-ai/DeepSeek-V4-Pro
     context_window: 1048000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # Replaced by V4 Pro 0813 in the Baseten Model APIs catalog; kept for historical usage.
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); the
+      dated V4 Pro 0813 endpoint took its place.
     prices:
       input_mtok: 1.74
       cache_read_mtok: 0.145
@@ -98,7 +104,14 @@ models:
     match:
       equals: moonshotai/Kimi-K2.6
     context_window: 262000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # No longer in the Baseten docs catalog; Moonshot discontinued the kimi-k2.x family on 2026-05-25
+    # (https://platform.kimi.ai/docs/models.md).
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot
+      discontinued the kimi-k2.x family on 2026-05-25.
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.16
@@ -109,7 +122,13 @@ models:
     match:
       equals: moonshotai/Kimi-K2.7-Code
     context_window: 262000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # No longer in the Baseten docs catalog.
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot
+      discontinued the kimi-k2.x family on 2026-05-25.
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.16
@@ -153,7 +172,12 @@ models:
     match:
       equals: thinkingmachines/inkling
     context_window: 1048000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # No longer in the Baseten docs catalog.
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).
     prices:
       input_mtok: 1
       cache_read_mtok: 0.17
@@ -164,7 +188,12 @@ models:
     match:
       equals: thinkingmachines/inkling-small
     context_window: 1048000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # No longer in the Baseten docs catalog.
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).
     prices:
       input_mtok: 0.5
       cache_read_mtok: 0.1
@@ -175,7 +204,12 @@ models:
     match:
       equals: zai-org/GLM-4.7
     context_window: 200000
-    prices_checked: 2026-08-31
+    deprecated: true
+    prices_checked: 2026-10-09
+    # No longer in the Baseten docs catalog.
+    price_comments: >-
+      No longer listed in the Baseten Model APIs catalog
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).
     prices:
       input_mtok: 0.6
       cache_read_mtok: 0.12
