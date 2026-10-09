@@ -853,10 +853,12 @@ models:
         - equals: gemini-2.5-flash-image
         - equals: gemini-2.5-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-07-22
+    deprecated: true
+    prices_checked: 2026-10-09
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at
       $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
       model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.
+      Deprecated by Google on 2026-10-02.
     prices:
       input_mtok: 0.3
       output_mtok: 2.5
@@ -1153,6 +1155,19 @@ models:
       output_audio_mtok: 12
       web_searches_kcount: 14 # per search query
 
+  - id: gemini-3.1-flash-tts-preview
+    name: Gemini 3.1 Flash TTS Preview
+    match:
+      or:
+        - equals: gemini-3.1-flash-tts-preview
+        - regex: '^gemini-3\.1-flash-tts-preview-\d{4}-\d{2}-\d{2}$'
+    context_window: 8192
+    prices_checked: 2026-10-09
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 1.0
+      output_mtok: 20.0
+
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
     description: The latest performance, intelligence, and usability improvements to the best model family in the world
@@ -1286,7 +1301,9 @@ models:
       autonomous agents, and complex enterprise workflows.
     match:
       or:
-        - starts_with: gemini-3.8-flash
+        - equals: gemini-3.8-flash
+        - starts_with: gemini-3.8-flash-preview
+        - regex: '^gemini-3\.8-flash-\d'
         # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
         # Move it when Google points it at a newer model.
         - equals: gemini-flash-latest
@@ -1309,6 +1326,27 @@ models:
           cache_read_mtok: 0.15
           output_mtok: 7.5
           web_searches_kcount: 14 # per search query
+
+  - id: gemini-3.8-flash-tts
+    name: Gemini 3.8 Flash TTS
+    match:
+      or:
+        - equals: gemini-3.8-flash-tts
+        - equals: gemini-3.8-flash-tts-preview
+        - regex: '^gemini-3\.8-flash-tts-preview-\d{4}-\d{2}-\d{2}$'
+    context_window: 8192
+    prices_checked: 2026-10-09
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+      Per-2027 increase matches the introductory-then-GA price pattern of gemini-3.6/3.7/3.8 Flash.
+    prices:
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 9.0
+      - constraint:
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.0
+          output_mtok: 18.0
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live

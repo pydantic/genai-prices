@@ -10585,12 +10585,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text. Deprecated by Google on 2026-10-02.',
         prices: {
           input_mtok: 0.3,
           output_mtok: 2.5,
           output_image_mtok: 30,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-flash-lite',
@@ -11008,6 +11009,26 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3.1-flash-tts-preview',
+        name: 'Gemini 3.1 Flash TTS Preview',
+        match: {
+          or: [
+            {
+              equals: 'gemini-3.1-flash-tts-preview',
+            },
+            {
+              regex: '^gemini-3\\.1-flash-tts-preview-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+        prices: {
+          input_mtok: 1,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'gemini-3.1-pro-preview',
         name: 'Gemini 3.1 Pro Preview',
         description:
@@ -11182,7 +11203,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'gemini-3.8-flash',
+              equals: 'gemini-3.8-flash',
+            },
+            {
+              starts_with: 'gemini-3.8-flash-preview',
+            },
+            {
+              regex: '^gemini-3\\.8-flash-\\d',
             },
             {
               equals: 'gemini-flash-latest',
@@ -11211,6 +11238,44 @@ export const data: Provider[] = [
               cache_read_mtok: 0.15,
               output_mtok: 7.5,
               web_searches_kcount: 14,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-3.8-flash-tts',
+        name: 'Gemini 3.8 Flash TTS',
+        match: {
+          or: [
+            {
+              equals: 'gemini-3.8-flash-tts',
+            },
+            {
+              equals: 'gemini-3.8-flash-tts-preview',
+            },
+            {
+              regex: '^gemini-3\\.8-flash-tts-preview-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 8192,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts. Per-2027 increase matches the introductory-then-GA price pattern of gemini-3.6/3.7/3.8 Flash.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 18,
             },
           },
         ],
@@ -17166,6 +17231,23 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           cache_read_mtok: 0.05,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'mistral-large-4-0',
+        name: 'Mistral Large 4',
+        description:
+          'Mistral Large 4 is Mistral\'s flagship frontier model. The rates below are the launch-discount "sale" price; the standard (non-sale) price is $1.36 / $0.14 / $4.18 per million tokens.',
+        match: {
+          equals: 'mistral-large-4-0',
+        },
+        context_window: 262144,
+        price_comments:
+          'Sale price as published on https://docs.mistral.ai/inference/pricing. Standard (non-sale) price is $1.36 input, $0.14 cached input, $4.18 output per million tokens.',
+        prices: {
+          input_mtok: 0.68,
+          cache_read_mtok: 0.07,
+          output_mtok: 2.09,
         },
       },
       {

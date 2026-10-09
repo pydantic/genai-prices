@@ -298,6 +298,23 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 1.5
 
+  - id: mistral-large-4-0
+    name: Mistral Large 4
+    description: >-
+      Mistral Large 4 is Mistral's flagship frontier model. The rates below are the launch-discount "sale" price;
+      the standard (non-sale) price is $1.36 / $0.14 / $4.18 per million tokens.
+    match:
+      equals: mistral-large-4-0
+    context_window: 262144
+    prices_checked: 2026-10-09
+    price_comments: >-
+      Sale price as published on https://docs.mistral.ai/inference/pricing.
+      Standard (non-sale) price is $1.36 input, $0.14 cached input, $4.18 output per million tokens.
+    prices:
+      input_mtok: 0.68
+      cache_read_mtok: 0.07
+      output_mtok: 2.09
+
   - id: mistral-medium-2312
     name: Mistral Medium 1
     description: Mistral's first enterprise-grade model, released in December 2023.

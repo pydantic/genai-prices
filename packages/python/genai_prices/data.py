@@ -6077,7 +6077,8 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash Image',
                 description="Google's specialized image generation model optimized for fast, high-quality image generation. Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text. Deprecated by Google on 2026-10-02.',
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), output_mtok=Decimal('2.5'), output_image_mtok=Decimal('30')
                 ),
@@ -6345,6 +6346,19 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3.1-flash-tts-preview',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.1-flash-tts-preview'),
+                        ClauseRegex(regex='^gemini-3\\.1-flash-tts-preview-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='Gemini 3.1 Flash TTS Preview',
+                context_window=8192,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts.',
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
                 id='gemini-3.1-pro-preview',
                 match=ClauseOr(
                     or_=[
@@ -6457,7 +6471,12 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gemini-3.8-flash',
                 match=ClauseOr(
-                    or_=[ClauseStartsWith(starts_with='gemini-3.8-flash'), ClauseEquals(equals='gemini-flash-latest')]
+                    or_=[
+                        ClauseEquals(equals='gemini-3.8-flash'),
+                        ClauseStartsWith(starts_with='gemini-3.8-flash-preview'),
+                        ClauseRegex(regex='^gemini-3\\.8-flash-\\d'),
+                        ClauseEquals(equals='gemini-flash-latest'),
+                    ]
                 ),
                 name='Gemini 3.8 Flash',
                 description="Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows.",
@@ -6480,6 +6499,28 @@ providers: list[Provider] = [
                             output_mtok=Decimal('7.5'),
                             web_searches_kcount=Decimal('14'),
                         ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-3.8-flash-tts',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.8-flash-tts'),
+                        ClauseEquals(equals='gemini-3.8-flash-tts-preview'),
+                        ClauseRegex(regex='^gemini-3\\.8-flash-tts-preview-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='Gemini 3.8 Flash TTS',
+                context_window=8192,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing and https://cloud.google.com/text-to-speech/pricing#gemini-tts. Per-2027 increase matches the introductory-then-GA price pattern of gemini-3.6/3.7/3.8 Flash.',
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('9'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('18')),
                     ),
                 ],
             ),
@@ -9927,6 +9968,17 @@ providers: list[Provider] = [
                 context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.5')
+                ),
+            ),
+            ModelInfo(
+                id='mistral-large-4-0',
+                match=ClauseEquals(equals='mistral-large-4-0'),
+                name='Mistral Large 4',
+                description='Mistral Large 4 is Mistral\'s flagship frontier model. The rates below are the launch-discount "sale" price; the standard (non-sale) price is $1.36 / $0.14 / $4.18 per million tokens.',
+                context_window=262144,
+                price_comments='Sale price as published on https://docs.mistral.ai/inference/pricing. Standard (non-sale) price is $1.36 input, $0.14 cached input, $4.18 output per million tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
                 ),
             ),
             ModelInfo(

@@ -48,7 +48,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 40 models
-- [Google](prices/providers/google.yml) - 59 models
+- [Google](prices/providers/google.yml) - 61 models
 - [Groq](prices/providers/groq.yml) - 33 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -62,7 +62,7 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 43 models
+- [Mistral](prices/providers/mistral.yml) - 44 models
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
