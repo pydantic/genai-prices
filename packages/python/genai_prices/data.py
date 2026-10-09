@@ -810,9 +810,8 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek/deepseek-v4-flash'),
                 name='DeepSeek V4 Flash',
                 context_window=1000000,
-                price_comments='Rates from the Avian docs catalog (https://avian.io/docs).',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                    input_mtok=Decimal('0.0805'), cache_read_mtok=Decimal('0.0165'), output_mtok=Decimal('0.161')
                 ),
             ),
             ModelInfo(
@@ -831,9 +830,8 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813'),
                 name='DeepSeek V4 Pro 0813',
                 context_window=1000000,
-                price_comments='Rates from the Avian docs catalog (https://avian.io/docs).',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.561'), cache_read_mtok=Decimal('0.0187'), output_mtok=Decimal('1.683')
+                    input_mtok=Decimal('0.594'), cache_read_mtok=Decimal('0.0198'), output_mtok=Decimal('1.782')
                 ),
             ),
             ModelInfo(
@@ -915,9 +913,8 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='xiaomi/mimo-v2.5-pro'),
                 name='MiMo-V2.5 Pro',
                 context_window=1000000,
-                price_comments='Rates and context window from the model table at https://avian.io/docs.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.36975'), cache_read_mtok=Decimal('0.00306'), output_mtok=Decimal('0.7395')
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
                 ),
             ),
             ModelInfo(
@@ -927,7 +924,7 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Rates and context window from the model table at https://avian.io/docs.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.4')
                 ),
             ),
             ModelInfo(
@@ -937,7 +934,7 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Rates and context window from the model table at https://avian.io/docs.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.36975'), cache_read_mtok=Decimal('0.00306'), output_mtok=Decimal('0.7395')
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.87')
                 ),
             ),
             ModelInfo(
@@ -2941,7 +2938,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
                 name='Kimi K2.6',
                 context_window=262000,
-                price_comments='No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
+                price_comments='No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
                 deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
@@ -2952,7 +2949,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='moonshotai/Kimi-K2.7-Code'),
                 name='Kimi K2.7 Code',
                 context_window=262000,
-                price_comments='No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
+                price_comments='No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
                 deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
@@ -5077,11 +5074,10 @@ providers: list[Provider] = [
                 id='claude-sonnet-5.5',
                 match=ClauseEquals(equals='claude-sonnet-5.5'),
                 name='Claude Sonnet 5.5',
-                price_comments='Cached input rate dropped from $0.20 to $0.10.',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.2'),
                     output_mtok=Decimal('10'),
                 ),
             ),

@@ -89,7 +89,7 @@ def test_cursor_provider_inference():
         ('claude-opus-5.5', Decimal('24.2')),
         ('claude-sonnet-4.6', Decimal('18.3')),
         ('claude-sonnet-5', Decimal('12.2')),
-        ('claude-sonnet-5.5', Decimal('12.10')),
+        ('claude-sonnet-5.5', Decimal('12.2')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
@@ -860,9 +860,9 @@ def test_openrouter_deepseek_v32_price():
 @pytest.mark.parametrize(
     ('model_ref', 'context_window', 'input_rate', 'cache_read_rate', 'output_rate'),
     [
-        ('deepseek/deepseek-v4-flash', 1_000_000, Decimal('0.14'), Decimal('0.0028'), Decimal('0.28')),
+        ('deepseek/deepseek-v4-flash', 1_000_000, Decimal('0.0805'), Decimal('0.0165'), Decimal('0.161')),
         ('deepseek/deepseek-v4-pro', 1_000_000, Decimal('1.305'), Decimal('0.10875'), Decimal('2.61')),
-        ('deepseek/deepseek-v4-pro-0813', 1_000_000, Decimal('0.561'), Decimal('0.0187'), Decimal('1.683')),
+        ('deepseek/deepseek-v4-pro-0813', 1_000_000, Decimal('0.594'), Decimal('0.0198'), Decimal('1.782')),
         ('deepseek/deepseek-v3.2', 163_000, Decimal('0.23'), Decimal('0.012'), Decimal('0.33')),
         ('minimax/minimax-m2.5', 196_000, Decimal('0.27'), Decimal('0.15'), Decimal('1.08')),
         ('z-ai/glm-4.7', 202_000, Decimal('0.388'), Decimal('0.097'), Decimal('1.806')),
@@ -872,7 +872,7 @@ def test_openrouter_deepseek_v32_price():
         ('moonshotai/kimi-k2.5', 262_000, Decimal('0.45'), Decimal('0.225'), Decimal('2.2')),
         ('moonshotai/kimi-k2.6', 262_000, Decimal('0.95'), Decimal('0.16'), Decimal('4')),
         ('xiaomi/mimo-v2.5', 1_000_000, Decimal('0.2'), Decimal('0.05'), Decimal('0.4')),
-        ('xiaomi/mimo-v2.5-pro', 1_000_000, Decimal('0.36975'), Decimal('0.00306'), Decimal('0.7395')),
+        ('xiaomi/mimo-v2.5-pro', 1_000_000, Decimal('0.435'), Decimal('0.0036'), Decimal('0.87')),
     ],
 )
 def test_avian_prices(

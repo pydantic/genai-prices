@@ -106,12 +106,9 @@ models:
     context_window: 262000
     deprecated: true
     prices_checked: 2026-10-09
-    # No longer in the Baseten docs catalog; Moonshot discontinued the kimi-k2.x family on 2026-05-25
-    # (https://platform.kimi.ai/docs/models.md).
     price_comments: >-
       No longer listed in the Baseten Model APIs catalog
-      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot
-      discontinued the kimi-k2.x family on 2026-05-25.
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.16
@@ -127,8 +124,7 @@ models:
     # No longer in the Baseten docs catalog.
     price_comments: >-
       No longer listed in the Baseten Model APIs catalog
-      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot
-      discontinued the kimi-k2.x family on 2026-05-25.
+      (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).
     prices:
       input_mtok: 0.95
       cache_read_mtok: 0.16

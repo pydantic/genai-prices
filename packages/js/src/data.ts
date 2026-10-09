@@ -1286,11 +1286,10 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-flash',
         },
         context_window: 1000000,
-        price_comments: 'Rates from the Avian docs catalog (https://avian.io/docs).',
         prices: {
-          input_mtok: 0.14,
-          cache_read_mtok: 0.0028,
-          output_mtok: 0.28,
+          input_mtok: 0.0805,
+          cache_read_mtok: 0.0165,
+          output_mtok: 0.161,
         },
       },
       {
@@ -1315,11 +1314,10 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-pro-0813',
         },
         context_window: 1000000,
-        price_comments: 'Rates from the Avian docs catalog (https://avian.io/docs).',
         prices: {
-          input_mtok: 0.561,
-          cache_read_mtok: 0.0187,
-          output_mtok: 1.683,
+          input_mtok: 0.594,
+          cache_read_mtok: 0.0198,
+          output_mtok: 1.782,
         },
       },
       {
@@ -1432,11 +1430,10 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.5-pro',
         },
         context_window: 1000000,
-        price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.36975,
-          cache_read_mtok: 0.00306,
-          output_mtok: 0.7395,
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
         },
       },
       {
@@ -1448,9 +1445,9 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.14,
-          cache_read_mtok: 0.0028,
-          output_mtok: 0.28,
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.4,
         },
       },
       {
@@ -1462,9 +1459,9 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
         prices: {
-          input_mtok: 0.36975,
-          cache_read_mtok: 0.00306,
-          output_mtok: 0.7395,
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
         },
       },
       {
@@ -5121,7 +5118,7 @@ export const data: Provider[] = [
         },
         context_window: 262000,
         price_comments:
-          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -5137,7 +5134,7 @@ export const data: Provider[] = [
         },
         context_window: 262000,
         price_comments:
-          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09); Moonshot discontinued the kimi-k2.x family on 2026-05-25.',
+          'No longer listed in the Baseten Model APIs catalog (https://docs.baseten.co/inference/model-apis/overview, checked 2026-10-09).',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -8585,11 +8582,10 @@ export const data: Provider[] = [
         match: {
           equals: 'claude-sonnet-5.5',
         },
-        price_comments: 'Cached input rate dropped from $0.20 to $0.10.',
         prices: {
           input_mtok: 2,
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.1,
+          cache_read_mtok: 0.2,
           output_mtok: 10,
         },
       },

@@ -141,7 +141,7 @@ describe('generated data split', () => {
     { expectedTotalPrice: 24.2, model: 'claude-opus-5.5' },
     { expectedTotalPrice: 18.3, model: 'claude-sonnet-4.6' },
     { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
-    { expectedTotalPrice: 12.1, model: 'claude-sonnet-5.5' },
+    { expectedTotalPrice: 12.2, model: 'claude-sonnet-5.5' },
     { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
     { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
     { expectedTotalPrice: 1.47, model: 'gpt-5.4-nano' },
@@ -312,19 +312,19 @@ describe('generated data split', () => {
 
   it.each([
     {
-      cacheReadRate: 0.0028,
+      cacheReadRate: 0.0165,
       contextWindow: 1_000_000,
-      inputRate: 0.14,
+      inputRate: 0.0805,
       model: 'deepseek/deepseek-v4-flash',
-      outputRate: 0.28,
+      outputRate: 0.161,
     },
     { cacheReadRate: 0.10875, contextWindow: 1_000_000, inputRate: 1.305, model: 'deepseek/deepseek-v4-pro', outputRate: 2.61 },
     {
-      cacheReadRate: 0.0187,
+      cacheReadRate: 0.0198,
       contextWindow: 1_000_000,
-      inputRate: 0.561,
+      inputRate: 0.594,
       model: 'deepseek/deepseek-v4-pro-0813',
-      outputRate: 1.683,
+      outputRate: 1.782,
     },
     { cacheReadRate: 0.012, contextWindow: 163_000, inputRate: 0.23, model: 'deepseek/deepseek-v3.2', outputRate: 0.33 },
     { cacheReadRate: 0.15, contextWindow: 196_000, inputRate: 0.27, model: 'minimax/minimax-m2.5', outputRate: 1.08 },
@@ -335,7 +335,7 @@ describe('generated data split', () => {
     { cacheReadRate: 0.225, contextWindow: 262_000, inputRate: 0.45, model: 'moonshotai/kimi-k2.5', outputRate: 2.2 },
     { cacheReadRate: 0.16, contextWindow: 262_000, inputRate: 0.95, model: 'moonshotai/kimi-k2.6', outputRate: 4 },
     { cacheReadRate: 0.05, contextWindow: 1_000_000, inputRate: 0.2, model: 'xiaomi/mimo-v2.5', outputRate: 0.4 },
-    { cacheReadRate: 0.00306, contextWindow: 1_000_000, inputRate: 0.36975, model: 'xiaomi/mimo-v2.5-pro', outputRate: 0.7395 },
+    { cacheReadRate: 0.0036, contextWindow: 1_000_000, inputRate: 0.435, model: 'xiaomi/mimo-v2.5-pro', outputRate: 0.87 },
   ])('prices Avian $model', ({ cacheReadRate, contextWindow, inputRate, model, outputRate }) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'avian',

@@ -202,11 +202,10 @@ models:
     collapse: false
     match:
       equals: claude-sonnet-5.5
-    prices_checked: 2026-10-09
-    price_comments: Cached input rate dropped from $0.20 to $0.10.
+    prices_checked: 2026-09-29
     prices:
       input_mtok: 2
-      cache_read_mtok: 0.10
+      cache_read_mtok: 0.20
       cache_write_mtok: 2.50
       output_mtok: 10
 
