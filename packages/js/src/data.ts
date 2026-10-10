@@ -5767,6 +5767,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/cloudflare/clef-omni',
+        name: 'Clef Omni',
+        match: {
+          equals: '@cf/cloudflare/clef-omni',
+        },
+        context_window: 65536,
+        price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
+        prices: {
+          input_mtok: 0.15,
+        },
+      },
+      {
         id: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
         name: 'DeepSeek R1 Distill Qwen 32B',
         match: {
@@ -6221,6 +6233,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/zai-org/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: '@cf/zai-org/glm-5.3',
+        },
+        price_comments: 'https://developers.cloudflare.com/workers-ai/platform/pricing/',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
         id: '@cf/zai-org/glm-5.3-flash',
         name: 'GLM 5.3 Flash',
         match: {
@@ -6631,6 +6656,50 @@ export const data: Provider[] = [
             },
             {
               regex: '^grok-4\\.6\\[fast=true\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Fast on-demand usage.',
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 1,
+          output_mtok: 12,
+        },
+      },
+      {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        description: "Cursor and SpaceXAI's frontier model for complex coding and knowledge work.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7',
+            },
+            {
+              regex: '^grok-4\\.7\\[fast=false\\]$',
+            },
+          ],
+        },
+        context_window: 256000,
+        price_comments: 'Standard on-demand usage. Fast is a separately priced variant.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'grok-4.7-fast',
+        name: 'Grok 4.7 Fast',
+        description: 'Faster Grok 4.7 speed tier for complex coding and knowledge work.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7-fast',
+            },
+            {
+              regex: '^grok-4\\.7\\[fast=true\\]$',
             },
           ],
         },
@@ -10696,12 +10765,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+          'Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image." (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
         prices: {
           input_mtok: 0.3,
           output_mtok: 2.5,
           output_image_mtok: 30,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-flash-lite',
@@ -11686,6 +11756,30 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'canopylabs/orpheus-arabic-saudi',
+        name: 'Orpheus Arabic Saudi (Canopy Labs)',
+        match: {
+          equals: 'canopylabs/orpheus-arabic-saudi',
+        },
+        context_window: 4000,
+        price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-arabic-saudi',
+        prices: {
+          input_mchars: 40,
+        },
+      },
+      {
+        id: 'canopylabs/orpheus-v1-english',
+        name: 'Orpheus V1 English (Canopy Labs)',
+        match: {
+          equals: 'canopylabs/orpheus-v1-english',
+        },
+        context_window: 4000,
+        price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-v1-english',
+        prices: {
+          input_mchars: 22,
+        },
+      },
+      {
         id: 'deepseek-r1-distill-llama-70b',
         name: 'DeepSeek R1 Distill Llama 70B',
         match: {
@@ -11930,6 +12024,32 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'meta-llama/llama-prompt-guard-2-22m',
+        name: 'Llama Prompt Guard 2 22M',
+        match: {
+          equals: 'meta-llama/llama-prompt-guard-2-22m',
+        },
+        context_window: 512,
+        price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-22m',
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'meta-llama/llama-prompt-guard-2-86m',
+        name: 'Llama Prompt Guard 2 86M',
+        match: {
+          equals: 'meta-llama/llama-prompt-guard-2-86m',
+        },
+        context_window: 512,
+        price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-86m',
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
         },
       },
       {
@@ -17023,11 +17143,14 @@ export const data: Provider[] = [
           equals: 'devstral-2512',
         },
         context_window: 262144,
+        price_comments:
+          'Deprecated. Mistral catalog overview marks Devstral 2 2512 as deprecated 2026-05-22; retired 2026-07-31. Suggested replacement: Mistral Medium 3.5. (https://docs.mistral.ai/getting-started/models/models_overview)',
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
           output_mtok: 2,
         },
+        deprecated: true,
       },
       {
         id: 'devstral-small',
@@ -17083,10 +17206,13 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments:
+          "Deprecated. Mistral catalog overview marks mag.medium-2506/2507/2509 as retired 2026-07-31. Suggested replacement: Mistral Medium 3.5. (https://docs.mistral.ai/getting-started/models/models_overview) No context_window: this record also matches the retired magistral-medium-2506/2507 releases (40k per Mistral's model docs) vs magistral-medium-latest's 262,144 — no single value is true",
         prices: {
           input_mtok: 2,
           output_mtok: 5,
         },
+        deprecated: true,
       },
       {
         id: 'magistral-small',
@@ -17096,10 +17222,13 @@ export const data: Provider[] = [
         match: {
           starts_with: 'magistral-small-',
         },
+        price_comments:
+          "Deprecated. Mistral catalog overview marks mag.small-2506/2507/2509 as retired 2026-07-31. Suggested replacement: Mistral Small 4. (https://docs.mistral.ai/getting-started/models/models_overview) No context_window: this record also matches the retired magistral-small-2506/2507 releases (40k per Mistral's model docs) vs magistral-small-latest's 262,144 — no single value is true",
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
         },
+        deprecated: true,
       },
       {
         id: 'ministral-14b-2512',
@@ -17475,11 +17604,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 16384,
-        price_comments: 'https://docs.mistral.ai/models/ocr-4-0',
+        price_comments:
+          'Deprecated. Mistral catalog overview marks Mistral OCR 4.0 as deprecated 2026-05-22; retired 2026-07-31. Suggested replacement: OCR 4.1. (https://docs.mistral.ai/getting-started/models/models_overview; https://docs.mistral.ai/models/ocr-4-0)',
         prices: {
           input_document_kpages: 4,
           input_annotated_document_kpages: 5,
         },
+        deprecated: true,
       },
       {
         id: 'mistral-ocr-4-1',

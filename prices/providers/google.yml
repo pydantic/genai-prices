@@ -853,9 +853,13 @@ models:
         - equals: gemini-2.5-flash-image
         - equals: gemini-2.5-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-07-22
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at
-      $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
+    deprecated: true
+    prices_checked: 2026-10-10
+    price_comments: >-
+      Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut
+      down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image."
+      (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each
+      1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
       model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.
     prices:
       input_mtok: 0.3
