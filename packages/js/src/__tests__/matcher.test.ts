@@ -131,6 +131,38 @@ describe('Provider Matching', () => {
       )
     })
 
+    it('keeps shared OpenAI URLs on OpenAI and selects Decisions by normalized provider ID', () => {
+      for (const providerApiUrl of [
+        'https://api.openai.com/v1/',
+        'https://api.openai.com/v1/chat/completions',
+        'https://api.openai.com/v1/responses',
+        'https://api.openai.com/v1/decisions',
+      ]) {
+        expect(matchProvider(actualProviders, { providerApiUrl })?.id).toBe('openai')
+      }
+
+      const price = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna', {
+        providerId: ' OPENAI-DECISIONS ',
+      })
+      expect(price?.provider.id).toBe('openai-decisions')
+      expect(price?.total_price).toBeCloseTo(0.0001, 10)
+      expect(calcPrice({ input_tokens: 1 }, 'gpt-6-sol', { providerId: 'openai-decisions' })).toBeNull()
+
+      const inferredPrice = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna')
+      expect(inferredPrice?.provider.id).toBe('openai')
+      expect(inferredPrice?.total_price).toBeCloseTo(0.000132, 10)
+
+      for (const { expectedTotal, inputTokens } of [
+        { expectedTotal: 0.0272, inputTokens: 272_000 },
+        { expectedTotal: 0.0544002, inputTokens: 272_001 },
+      ]) {
+        const tierPrice = calcPrice({ cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: inputTokens }, 'gpt-6-luna', {
+          providerId: 'openai-decisions',
+        })
+        expect(tierPrice?.total_price).toBeCloseTo(expectedTotal, 10)
+      }
+    })
+
     it.each([
       'https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions',
       'https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations',
@@ -574,6 +606,67 @@ describe('Claude Sonnet 5 vs 5.5', () => {
     ['2026-09-28T00:00:00Z', 12],
   ])('moves the OpenRouter family-level alias to Sonnet 5.5 at %s', (timestamp, expected) => {
     const price = calcPrice(usage, '~anthropic/claude-sonnet-latest', {
+      providerId: 'openrouter',
+      timestamp: new Date(timestamp),
+    })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+})
+
+describe('Claude Haiku 5.5', () => {
+  // Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the
+  // base rate and 100,001 does not.
+  const base = { input_tokens: 100_000, output_tokens: 100_000 }
+  const longContext = { input_tokens: 100_001, output_tokens: 100_000 }
+  const million = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+
+  it.each([
+    ['anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['anthropic', 'claude-haiku-5-5-20261007', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'claude-haiku-5-5@20261007', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['google', 'publishers/anthropic/models/claude-haiku-5-5', 'claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'global.anthropic.claude-haiku-5-5', 'global.anthropic.claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'global.anthropic.claude-haiku-5-5-v1:0', 'global.anthropic.claude-haiku-5-5', 0.06, 0.3000005],
+    ['aws', 'us.anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['aws', 'eu.anthropic.claude-haiku-5-5-v1:0', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['aws', 'anthropic.claude-haiku-5-5', 'regional.anthropic.claude-haiku-5-5', 0.066, 0.33000055],
+    ['openrouter', 'anthropic/claude-haiku-5.5', 'anthropic/claude-haiku-5.5', 0.06, 0.3000005],
+    ['openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', 0.06, 0.3000005],
+    ['openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', 0.03, 0.15000025],
+  ])('prices %s %s as %s by prompt length', (providerId, modelRef, modelId, basePrice, longContextPrice) => {
+    const price = calcPrice(base, modelRef, { providerId })
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(basePrice, 10)
+    expect(calcPrice(longContext, modelRef, { providerId })!.total_price).toBeCloseTo(longContextPrice, 10)
+  })
+
+  it.each([
+    ['anthropic/claude-haiku-5.5', 0.02, 0.100001],
+    ['anthropic/claude-haiku-5.5-20261007', 0.02, 0.100001],
+    ['anthropic/claude-haiku-5.5:batch', 0.01, 0.0500005],
+    ['~anthropic/claude-haiku-latest', 0.02, 0.100001],
+  ])('prices one-hour cache writes for %s', (modelRef, basePrice, longContextPrice) => {
+    for (const [tokens, expected] of [
+      [100_000, basePrice],
+      [100_001, longContextPrice],
+    ] as const) {
+      const price = calcPrice({ cache_write_1h_tokens: tokens, cache_write_tokens: tokens, input_tokens: tokens }, modelRef, {
+        providerId: 'openrouter',
+        timestamp: new Date('2026-10-07T00:00:00Z'),
+      })
+
+      expect(price!.total_price).toBeCloseTo(expected, 10)
+    }
+  })
+
+  it.each([
+    ['2026-10-06T23:59:00Z', 6],
+    ['2026-10-07T00:00:00Z', 3],
+  ])('moves the OpenRouter family-level alias to Haiku 5.5 at %s', (timestamp, expected) => {
+    const price = calcPrice(million, '~anthropic/claude-haiku-latest', {
       providerId: 'openrouter',
       timestamp: new Date(timestamp),
     })
