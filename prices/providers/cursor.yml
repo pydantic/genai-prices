@@ -120,3 +120,33 @@ models:
       input_mtok: 4
       cache_read_mtok: 1
       output_mtok: 12
+
+  - id: grok-4.7
+    name: Grok 4.7
+    description: Cursor and SpaceXAI's frontier model for complex coding and knowledge work.
+    match:
+      or:
+        - equals: grok-4.7
+        - regex: '^grok-4\.7\[fast=false\]$'
+    context_window: 256000
+    prices_checked: 2026-10-10
+    price_comments: Standard on-demand usage. Fast is a separately priced variant.
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 6
+
+  - id: grok-4.7-fast
+    name: Grok 4.7 Fast
+    description: Faster Grok 4.7 speed tier for complex coding and knowledge work.
+    match:
+      or:
+        - equals: grok-4.7-fast
+        - regex: '^grok-4\.7\[fast=true\]$'
+    context_window: 256000
+    prices_checked: 2026-10-10
+    price_comments: Fast on-demand usage.
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 1
+      output_mtok: 12

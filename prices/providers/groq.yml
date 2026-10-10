@@ -35,6 +35,26 @@ extractors:
         required: false
 
 models:
+  - id: canopylabs/orpheus-arabic-saudi
+    name: Orpheus Arabic Saudi (Canopy Labs)
+    match:
+      equals: canopylabs/orpheus-arabic-saudi
+    context_window: 4000
+    prices_checked: 2026-10-10
+    price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-arabic-saudi'
+    prices:
+      input_mchars: 40
+
+  - id: canopylabs/orpheus-v1-english
+    name: Orpheus V1 English (Canopy Labs)
+    match:
+      equals: canopylabs/orpheus-v1-english
+    context_window: 4000
+    prices_checked: 2026-10-10
+    price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-v1-english'
+    prices:
+      input_mchars: 22
+
   - id: deepseek-r1-distill-llama-70b
     name: DeepSeek R1 Distill Llama 70B
     context_window: 131072
@@ -214,6 +234,28 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+
+  - id: meta-llama/llama-prompt-guard-2-22m
+    name: Llama Prompt Guard 2 22M
+    match:
+      equals: meta-llama/llama-prompt-guard-2-22m
+    context_window: 512
+    prices_checked: 2026-10-10
+    price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-22m'
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.03
+
+  - id: meta-llama/llama-prompt-guard-2-86m
+    name: Llama Prompt Guard 2 86M
+    match:
+      equals: meta-llama/llama-prompt-guard-2-86m
+    context_window: 512
+    prices_checked: 2026-10-10
+    price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-86m'
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
 
   - id: mistral-saba-24b
     match:

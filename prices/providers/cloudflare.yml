@@ -159,6 +159,18 @@ models:
     prices:
       input_mtok: 0.09
 
+  - id: "@cf/cloudflare/clef-omni"
+    name: Clef Omni
+    match:
+      equals: "@cf/cloudflare/clef-omni"
+    context_window: 65536
+    prices_checked: 2026-10-10
+    price_comments: >-
+      Input only, $0.15 per million tokens.
+      https://developers.cloudflare.com/workers-ai/models/clef-omni/
+    prices:
+      input_mtok: 0.15
+
   - id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
     name: DeepSeek R1 Distill Qwen 32B
     match:
@@ -531,6 +543,17 @@ models:
       cache_read_mtok: 0.26
       output_mtok: 4.4
 
+  - id: "@cf/zai-org/glm-5.3"
+    name: GLM 5.3
+    match:
+      equals: "@cf/zai-org/glm-5.3"
+    prices_checked: 2026-10-10
+    price_comments: 'https://developers.cloudflare.com/workers-ai/platform/pricing/'
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+
   - id: "@cf/zai-org/glm-5.3-flash"
     name: GLM 5.3 Flash
     match:
@@ -540,3 +563,4 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
+
