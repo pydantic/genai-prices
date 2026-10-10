@@ -699,6 +699,20 @@ describe('generated data split', () => {
     }
   )
 
+  it.each([
+    { expectedModel: 'amazon.titan-embed-text-v1', expectedPrice: 0.1, model: 'amazon.titan-embed-text-v1' },
+    { expectedModel: 'amazon.titan-embed-text-v1', expectedPrice: 0.1, model: 'us.amazon.titan-embed-text-v1' },
+    { expectedModel: 'amazon.titan-embed-text-v1', expectedPrice: 0.1, model: 'amazon.titan-embed-text' },
+    { expectedModel: 'amazon.titan-embed-text-v1', expectedPrice: 0.1, model: 'us.amazon.titan-embed-text' },
+    { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'amazon.titan-embed-text-v2:0' },
+    { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'us.amazon.titan-embed-text-v2:0' },
+  ])('does not price Titan Text Embeddings V2 as V1 for $model', ({ expectedModel, expectedPrice, model }) => {
+    const result = calcPrice({ input_tokens: 1_000_000 }, model, { providerId: 'aws' })
+
+    expect(result?.model.id).toBe(expectedModel)
+    expect(result?.total_price).toBe(expectedPrice)
+  })
+
   it('infers Mistral for the native Voxtral alias', () => {
     const result = calcPrice({ output_tokens: 1 }, 'voxtral-small-latest')
 

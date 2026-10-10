@@ -643,6 +643,41 @@ func TestOpenRouterClaudeSonnetLatestMovesToSonnet55(t *testing.T) {
 	}
 }
 
+// The Titan Text Embeddings V1 record matched any ref containing `amazon.titan-embed-text`, so V2
+// silently resolved to V1 and was priced 5x too high.
+func TestAWSTitanEmbedTextV2DoesNotUseV1Prices(t *testing.T) {
+	tests := []struct {
+		model     string
+		wantModel string
+		wantPrice float64
+	}{
+		{"amazon.titan-embed-text-v1", "amazon.titan-embed-text-v1", 0.1},
+		{"us.amazon.titan-embed-text-v1", "amazon.titan-embed-text-v1", 0.1},
+		{"amazon.titan-embed-text", "amazon.titan-embed-text-v1", 0.1},
+		{"us.amazon.titan-embed-text", "amazon.titan-embed-text-v1", 0.1},
+		{"amazon.titan-embed-text-v2:0", "amazon.titan-embed-text-v2:0", 0.02},
+		{"us.amazon.titan-embed-text-v2:0", "amazon.titan-embed-text-v2:0", 0.02},
+	}
+	for _, test := range tests {
+		t.Run(test.model, func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
+				Model:      test.model,
+				ProviderID: "aws",
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.ModelID != test.wantModel {
+				t.Fatalf("got model %q, want %q", result.ModelID, test.wantModel)
+			}
+			if math.Abs(result.TotalPrice-test.wantPrice) > 1e-9 {
+				t.Fatalf("got price %g, want %g", result.TotalPrice, test.wantPrice)
+			}
+		})
+	}
+}
+
 func TestDatabricksPrices(t *testing.T) {
 	for _, test := range []struct {
 		model, wantModelID string

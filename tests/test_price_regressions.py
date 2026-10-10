@@ -920,6 +920,25 @@ def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected_price'),
+    [
+        ('amazon.titan-embed-text-v1', 'amazon.titan-embed-text-v1', '0.1'),
+        ('amazon.titan-embed-text', 'amazon.titan-embed-text-v1', '0.1'),
+        ('us.amazon.titan-embed-text-v1', 'amazon.titan-embed-text-v1', '0.1'),
+        ('amazon.titan-embed-text-v2:0', 'amazon.titan-embed-text-v2:0', '0.02'),
+        ('amazon.titan-embed-text-v2', 'amazon.titan-embed-text-v2:0', '0.02'),
+        ('us.amazon.titan-embed-text-v2:0', 'amazon.titan-embed-text-v2:0', '0.02'),
+    ],
+)
+def test_aws_titan_embed_text_v2_does_not_use_v1_prices(model_ref: str, model_id: str, expected_price: str) -> None:
+    """The v1 matcher was `contains: amazon.titan-embed-text`, so V2 silently got V1's 5x higher rate."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'model_id', 'base_price', 'long_context_price'),
     [
         ('anthropic', 'claude-haiku-5-5', 'claude-haiku-5-5', '0.06', '0.3000005'),

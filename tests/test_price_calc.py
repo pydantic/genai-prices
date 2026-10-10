@@ -770,6 +770,15 @@ def test_aws_gpt_6_context_boundary(
         assert price.input_price == rate * tokens / 1_000_000
 
 
+def test_aws_titan_embed_text_v2_price() -> None:
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref='amazon.titan-embed-text-v2:0', provider_id='aws')
+
+    assert price.model.id == 'amazon.titan-embed-text-v2:0'
+    assert price.model.context_window == 8192
+    assert price.input_price == Decimal('0.02')
+    assert price.total_price == Decimal('0.02')
+
+
 @pytest.mark.parametrize(
     'model_ref,request_timestamp,expected_prices',
     [
