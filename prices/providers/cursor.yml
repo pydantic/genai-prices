@@ -128,13 +128,27 @@ models:
       or:
         - equals: grok-4.7
         - regex: '^grok-4\.7\[fast=false\]$'
-    context_window: 256000
-    prices_checked: 2026-10-10
-    price_comments: Standard on-demand usage. Fast is a separately priced variant.
+    context_window: 500000
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Standard rates apply through 256k input tokens; longer requests use the 500k rates for all tokens.
+      https://cursor.com/docs/models/grok-4-7
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 6
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 256000
+            price: 4
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 256000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 256000
+            price: 12
 
   - id: grok-4.7-fast
     name: Grok 4.7 Fast
@@ -143,10 +157,24 @@ models:
       or:
         - equals: grok-4.7-fast
         - regex: '^grok-4\.7\[fast=true\]$'
-    context_window: 256000
-    prices_checked: 2026-10-10
-    price_comments: Fast on-demand usage.
+    context_window: 500000
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Fast rates apply through 256k input tokens; longer requests use the 500k Fast rates for all tokens.
+      https://cursor.com/docs/models/grok-4-7
     prices:
-      input_mtok: 4
-      cache_read_mtok: 1
-      output_mtok: 12
+      input_mtok:
+        base: 4
+        tiers:
+          - start: 256000
+            price: 6
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 256000
+            price: 1.5
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 256000
+            price: 18

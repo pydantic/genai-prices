@@ -31,6 +31,35 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestCursorGrok47LongContextPrices(t *testing.T) {
+	for _, test := range []struct {
+		model       string
+		inputTokens float64
+		want        float64
+	}{
+		{"grok-4.7", 256_000, 6.362},
+		{"grok-4.7", 256_001, 12.724004},
+		{"grok-4.7-fast", 256_000, 12.724},
+		{"grok-4.7-fast", 256_001, 19.086006},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     test.inputTokens,
+				genai_prices.UsageCacheReadTokens: 100_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+			},
+			Model:      test.model,
+			ProviderID: "cursor",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("%s with %g input tokens got %g, want %g", test.model, test.inputTokens, calculation.TotalPrice, test.want)
+		}
+	}
+}
+
 func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 	usage := genai_prices.Usage{
 		genai_prices.UsageInputTokens:      1_000,

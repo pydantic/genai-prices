@@ -5772,7 +5772,7 @@ export const data: Provider[] = [
         match: {
           equals: '@cf/cloudflare/clef-omni',
         },
-        context_window: 65536,
+        context_window: 64000,
         price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
         prices: {
           input_mtok: 0.15,
@@ -6681,12 +6681,37 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 256000,
-        price_comments: 'Standard on-demand usage. Fast is a separately priced variant.',
+        context_window: 500000,
+        price_comments:
+          'Standard rates apply through 256k input tokens; longer requests use the 500k rates for all tokens. https://cursor.com/docs/models/grok-4-7',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 256000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 256000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 256000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -6703,12 +6728,37 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 256000,
-        price_comments: 'Fast on-demand usage.',
+        context_window: 500000,
+        price_comments:
+          'Fast rates apply through 256k input tokens; longer requests use the 500k Fast rates for all tokens. https://cursor.com/docs/models/grok-4-7',
         prices: {
-          input_mtok: 4,
-          cache_read_mtok: 1,
-          output_mtok: 12,
+          input_mtok: {
+            base: 4,
+            tiers: [
+              {
+                start: 256000,
+                price: 6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 256000,
+                price: 1.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 256000,
+                price: 18,
+              },
+            ],
+          },
         },
       },
     ],
@@ -17144,7 +17194,7 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         price_comments:
-          'Deprecated. Mistral catalog overview marks Devstral 2 2512 as deprecated 2026-05-22; retired 2026-07-31. Suggested replacement: Mistral Medium 3.5. (https://docs.mistral.ai/getting-started/models/models_overview)',
+          'Deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5 for new integrations. https://docs.mistral.ai/models/devstral-2-25-12',
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
@@ -17207,7 +17257,7 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          "Deprecated. Mistral catalog overview marks mag.medium-2506/2507/2509 as retired 2026-07-31. Suggested replacement: Mistral Medium 3.5. (https://docs.mistral.ai/getting-started/models/models_overview) No context_window: this record also matches the retired magistral-medium-2506/2507 releases (40k per Mistral's model docs) vs magistral-medium-latest's 262,144 — no single value is true",
+          'Magistral Medium 1.2 was deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5. https://docs.mistral.ai/models/magistral-medium-1-2-25-09 No context_window: this record matches versions with different context limits.',
         prices: {
           input_mtok: 2,
           output_mtok: 5,
@@ -17223,7 +17273,7 @@ export const data: Provider[] = [
           starts_with: 'magistral-small-',
         },
         price_comments:
-          "Deprecated. Mistral catalog overview marks mag.small-2506/2507/2509 as retired 2026-07-31. Suggested replacement: Mistral Small 4. (https://docs.mistral.ai/getting-started/models/models_overview) No context_window: this record also matches the retired magistral-small-2506/2507 releases (40k per Mistral's model docs) vs magistral-small-latest's 262,144 — no single value is true",
+          'Magistral Small 1.2 was deprecated 2026-04-30. Mistral recommends Mistral Small 4. https://docs.mistral.ai/models/magistral-small-1-2-25-09 No context_window: this record matches versions with different context limits.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
@@ -17604,8 +17654,7 @@ export const data: Provider[] = [
           ],
         },
         context_window: 16384,
-        price_comments:
-          'Deprecated. Mistral catalog overview marks Mistral OCR 4.0 as deprecated 2026-05-22; retired 2026-07-31. Suggested replacement: OCR 4.1. (https://docs.mistral.ai/getting-started/models/models_overview; https://docs.mistral.ai/models/ocr-4-0)',
+        price_comments: 'Deprecated 2026-09-29. Mistral recommends OCR 4.1 for new integrations. https://docs.mistral.ai/models/ocr-4-0',
         prices: {
           input_document_kpages: 4,
           input_annotated_document_kpages: 5,

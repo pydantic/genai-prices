@@ -119,6 +119,26 @@ def test_cursor_model_prices(model_ref: str, expected_total_price: Decimal):
     assert price.total_price == expected_total_price
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_tokens', 'expected_total_price'),
+    [
+        ('grok-4.7', 256_000, Decimal('6.362')),
+        ('grok-4.7', 256_001, Decimal('12.724004')),
+        ('grok-4.7-fast', 256_000, Decimal('12.724')),
+        ('grok-4.7-fast', 256_001, Decimal('19.086006')),
+    ],
+)
+def test_cursor_grok_4_7_long_context_prices(model_ref: str, input_tokens: int, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='cursor',
+    )
+
+    assert price.total_price == expected_total_price
+    assert price.model.context_window == 500_000
+
+
 def test_cursor_provider_inference():
     composer_price = calc_price(Usage(input_tokens=1), model_ref='composer-2.5[fast=true]')
     grok_price = calc_price(

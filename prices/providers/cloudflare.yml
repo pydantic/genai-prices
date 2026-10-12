@@ -163,8 +163,8 @@ models:
     name: Clef Omni
     match:
       equals: "@cf/cloudflare/clef-omni"
-    context_window: 65536
-    prices_checked: 2026-10-10
+    context_window: 64000
+    prices_checked: 2026-10-12
     price_comments: >-
       Input only, $0.15 per million tokens.
       https://developers.cloudflare.com/workers-ai/models/clef-omni/
@@ -548,7 +548,7 @@ models:
     match:
       equals: "@cf/zai-org/glm-5.3"
     prices_checked: 2026-10-10
-    price_comments: 'https://developers.cloudflare.com/workers-ai/platform/pricing/'
+    price_comments: "https://developers.cloudflare.com/workers-ai/platform/pricing/"
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.26
@@ -563,4 +563,3 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-
