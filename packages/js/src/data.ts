@@ -19444,6 +19444,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.5,
@@ -19451,6 +19453,42 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-mini',
@@ -19468,6 +19506,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.1,
@@ -19475,6 +19515,42 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.175,
+              output_mtok: 2.8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.175,
+              output_mtok: 2.8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-nano',
@@ -19492,11 +19568,49 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.5-preview',
@@ -19531,6 +19645,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
@@ -19538,6 +19654,42 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 4.25,
+              cache_read_mtok: 2.125,
+              output_mtok: 17,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 4.25,
+              cache_read_mtok: 2.125,
+              output_mtok: 17,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-2024-05-13',
@@ -19549,13 +19701,47 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         price_comments:
-          'Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input price. Ref: https://developers.openai.com/api/docs/pricing.md',
         prices: {
           input_mtok: 5,
           output_mtok: 15,
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 8.75,
+              output_mtok: 26.25,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 8.75,
+              output_mtok: 26.25,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-audio-preview',
@@ -19592,6 +19778,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.075,
@@ -19599,6 +19787,42 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.125,
+              output_mtok: 1,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.125,
+              output_mtok: 1,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4o-mini-2024-07-18.ft-',
@@ -19754,6 +19978,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
@@ -19761,6 +19987,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-image',
@@ -19801,6 +20077,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -19808,6 +20086,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 1,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.45,
+              cache_read_mtok: 0.045,
+              output_mtok: 3.6,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 0.45,
+              cache_read_mtok: 0.045,
+              output_mtok: 3.6,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-nano',
@@ -19824,6 +20152,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.05,
           cache_read_mtok: 0.005,
@@ -19831,6 +20161,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.025,
+              cache_read_mtok: 0.0025,
+              output_mtok: 0.2,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5-pro',
@@ -19897,6 +20249,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
@@ -19904,6 +20258,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.625,
+              cache_read_mtok: 0.0625,
+              output_mtok: 5,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 20,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.1-codex-mini',
@@ -19970,6 +20374,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
@@ -19977,6 +20383,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.875,
+              cache_read_mtok: 0.0875,
+              output_mtok: 7,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.2-pro',
@@ -20050,11 +20506,49 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
           output_mtok: 14,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 28,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4',
@@ -20078,7 +20572,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached input uses the published $0.13/MTok rate. The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
         prices: {
           input_mtok: {
             base: 2.5,
@@ -20110,6 +20604,80 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.13,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.25,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 11.25,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_read_mtok: 0.5,
+              output_mtok: 30,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_read_mtok: 0.5,
+              output_mtok: 30,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-image-2',
@@ -20147,6 +20715,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.75,
           cache_read_mtok: 0.075,
@@ -20154,6 +20724,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 2.25,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 9,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 9,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-nano',
@@ -20176,6 +20796,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
@@ -20183,6 +20805,28 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.625,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.4-pro',
@@ -20206,7 +20850,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4-pro',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4-pro',
         prices: {
           input_mtok: {
             base: 30,
@@ -20229,6 +20873,43 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 90,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 135,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5',
@@ -20276,7 +20957,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.5',
         prices: {
           input_mtok: {
             base: 5,
@@ -20308,6 +20989,80 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 22.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 12.5,
+              cache_read_mtok: 1.25,
+              output_mtok: 75,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 12.5,
+              cache_read_mtok: 1.25,
+              output_mtok: 75,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5-pro',
@@ -20331,7 +21086,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. The table publishes only base Flex rates; no long-context Flex surcharge is modeled. Standard prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
@@ -20354,6 +21109,27 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 15,
+              output_mtok: 90,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-luna',
@@ -20377,7 +21153,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -20468,6 +21244,155 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.125,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.01,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.02,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.9,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.04,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.08,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.6,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.04,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.08,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.6,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-sol',
@@ -20497,7 +21422,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on 2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -20588,6 +21513,155 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 16,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 20,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 40,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 60,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 16,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 20,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 40,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 60,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-terra',
@@ -20611,7 +21685,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog',
         prices: [
           {
             prices: {
@@ -20702,6 +21776,155 @@ export const data: Provider[] = [
             },
           },
         ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 9,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 24,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 36,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 24,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 36,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-astra',
@@ -20719,7 +21942,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra, https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 10,
@@ -20760,6 +21983,155 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 12.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 37.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 50,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 50,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -20777,7 +22149,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-luna',
         prices: {
           input_mtok: {
             base: 0.1,
@@ -20818,6 +22190,155 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.05,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.0625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.125,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.005,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.01,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.375,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.02,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.04,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.02,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.04,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-sol',
@@ -20835,7 +22356,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Ref: https://developers.openai.com/api/docs/models/gpt-6-sol',
         prices: {
           input_mtok: {
             base: 2,
@@ -20876,6 +22397,155 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6.1-sol',
@@ -20893,7 +22563,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog',
         prices: {
           input_mtok: {
             base: 2,
@@ -20934,6 +22604,155 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.05,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.1,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gpt-audio',
@@ -21390,6 +23209,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
         prices: [
           {
             prices: {
@@ -21411,6 +23232,56 @@ export const data: Provider[] = [
               output_mtok: 8,
               web_searches_kcount: 10,
               storage_searches_kcount: 2.5,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.25,
+              output_mtok: 4,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 3.5,
+              cache_read_mtok: 0.875,
+              output_mtok: 14,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
             },
           },
         ],
@@ -21502,6 +23373,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached input uses the published $0.138/MTok rate.',
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
@@ -21509,6 +23382,56 @@ export const data: Provider[] = [
           web_searches_kcount: 10,
           storage_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.138,
+              output_mtok: 2.2,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.5,
+              output_mtok: 8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.5,
+              output_mtok: 8,
+            },
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'o4-mini-deep-research',

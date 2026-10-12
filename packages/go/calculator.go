@@ -100,7 +100,12 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if timestamp.IsZero() {
 		timestamp = time.Now()
 	}
-	prices := activeModelPrice(matchedModel, timestamp)
+	prices, contextWarnings := resolvePriceVariants(matchedModel, selected, timestamp, request.PriceContext)
+	if len(request.PriceContext) > 0 {
+		if err := validateModelPrice(prices, calculator.registry); err != nil {
+			return PriceCalculation{}, fmt.Errorf("%w: %v", ErrInvalidData, err)
+		}
+	}
 	usage := request.Usage
 	if usage == nil {
 		usage = Usage{}
@@ -123,7 +128,7 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 		TotalPrice:  totalPrice,
 		ProviderID:  selected.ID,
 		ModelID:     matchedModel.ID,
-		Warnings:    calculationWarnings(request.Usage, prices, calculator.registry),
+		Warnings:    append(contextWarnings, calculationWarnings(request.Usage, prices, calculator.registry)...),
 	}, nil
 }
 
@@ -186,6 +191,19 @@ func (calculator *Calculator) validate() error {
 			modelIDs[model.ID] = struct{}{}
 			if err := model.Match.compile(); err != nil {
 				return fmt.Errorf("provider %q model %q match logic: %w", provider.ID, model.ID, err)
+			}
+			for variantIndex := range model.PriceVariants {
+				variant := &model.PriceVariants[variantIndex]
+				if variant.Constraint != nil {
+					if err := parseConstraint(variant.Constraint); err != nil {
+						return fmt.Errorf("model %q price variant constraint: %w", model.ID, err)
+					}
+				}
+				for key, price := range variant.Prices {
+					if err := validatePriceValue(key, price); err != nil {
+						return fmt.Errorf("model %q price variant: %w", model.ID, err)
+					}
+				}
 			}
 			if model.Prices.conditional == nil {
 				if err := validateModelPrice(model.Prices.direct, calculator.registry); err != nil {

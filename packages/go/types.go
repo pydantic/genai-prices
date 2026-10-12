@@ -41,6 +41,7 @@ type PriceRequest struct {
 	ProviderID     string
 	ProviderAPIURL string
 	Timestamp      time.Time
+	PriceContext   map[string]string
 }
 
 // PriceCalculation contains prices in US dollars and the matched identifiers.
@@ -82,9 +83,10 @@ type provider struct {
 }
 
 type model struct {
-	ID     string      `json:"id"`
-	Match  matchLogic  `json:"match"`
-	Prices modelPrices `json:"prices"`
+	ID            string         `json:"id"`
+	Match         matchLogic     `json:"match"`
+	Prices        modelPrices    `json:"prices"`
+	PriceVariants []priceVariant `json:"price_variants"`
 }
 
 type modelPrices struct {

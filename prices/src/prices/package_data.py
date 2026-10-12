@@ -4,11 +4,12 @@ import json
 import re
 import subprocess
 from collections.abc import Iterable, Iterator, Mapping, Sequence
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
 from .build import load_units
-from .prices_types import ModelPrice, providers_schema as build_providers_schema
+from .prices_types import ModelPrice, PriceVariant, TimeOfDateConstraint, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
 
 if TYPE_CHECKING:
@@ -113,17 +114,50 @@ def load_unit_registry(units: dict[str, Any]) -> UnitRegistry:
 
 
 def validate_provider_model_prices(providers: Iterable[object], registry: UnitRegistry) -> None:
+    from genai_prices.types import PriceVariant as RuntimePriceVariant, TimeOfDateConstraint as RuntimeTimeConstraint
     from genai_prices.validation import validate_model_price
 
     for provider in providers:
         provider_id = cast(str, getattr(provider, 'id'))
         for model in cast(Iterable[object], getattr(provider, 'models')):
             model_id = cast(str, getattr(model, 'id'))
-            for label, model_price in _iter_model_prices(getattr(model, 'prices')):
+            standard_prices = list(_iter_model_prices(getattr(model, 'prices')))
+            for label, model_price in standard_prices:
                 try:
                     validate_model_price(_collect_model_price_keys(model_price), registry)
                 except ValueError as exc:
                     raise ValueError(f'Invalid model price for {provider_id}/{model_id}{label}: {exc}') from exc
+            variants = cast(list[PriceVariant | RuntimePriceVariant] | None, getattr(model, 'price_variants', None))
+            for index, variant in enumerate(variants or ()):
+                current_keys = _collect_model_price_keys(variant.prices)
+                combinations = [current_keys]
+                for previous in (variants or ())[:index]:
+                    if any(key in previous.when and previous.when[key] != value for key, value in variant.when.items()):
+                        continue
+                    intervals = [
+                        RuntimeTimeConstraint(constraint.start_time, constraint.end_time)
+                        for constraint in (previous.constraint, variant.constraint)
+                        if isinstance(constraint, TimeOfDateConstraint | RuntimeTimeConstraint)
+                    ]
+                    if intervals and not any(
+                        all(interval.active(timestamp) for interval in intervals)
+                        for timestamp in (
+                            datetime.combine(
+                                date(1970, 1, 1), interval.start_time, interval.start_time.tzinfo or timezone.utc
+                            ).astimezone(timezone.utc)
+                            for interval in intervals
+                        )
+                    ):
+                        continue
+                    combinations.append(current_keys | _collect_model_price_keys(previous.prices))
+                for label, model_price in standard_prices:
+                    for override_keys in combinations:
+                        try:
+                            validate_model_price(_collect_model_price_keys(model_price) | override_keys, registry)
+                        except ValueError as exc:
+                            raise ValueError(
+                                f'Invalid price variant for {provider_id}/{model_id}.price_variants[{index}] over {label}: {exc}'
+                            ) from exc
 
 
 def validate_provider_extractor_destinations(providers: Iterable[object], registry: UnitRegistry) -> None:

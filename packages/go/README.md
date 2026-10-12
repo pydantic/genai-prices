@@ -38,6 +38,50 @@ func main() {
 `Calculate` uses pricing data embedded at release time. Pass `ProviderID` when you know the provider. This avoids an
 ambiguous model name selecting the wrong provider.
 
+## Request pricing context
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/pydantic/genai-prices/packages/go"
+)
+
+func main() {
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens: 1_000_000,
+			genai_prices.UsageOutputTokens: 1_000_000,
+		},
+		Model: "o3",
+		ProviderID: "openai",
+		Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
+		PriceContext: map[string]string{"service_tier": "flex"},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(price.TotalPrice) // 5
+}
+```
+
+You pass `PriceContext` explicitly to select request-specific prices.
+Use the `service_tier` reported in OpenAI's response. A priority request can be downgraded and report `default`.
+`auto` is a request setting and does not identify the rate you were charged. Extraction does not infer a context.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
+and the standard-price estimate; the fallback provider's tier rates are not applied.
+
+OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
+`default` selects standard prices on these models. Omit the context for ordinary standard pricing.
+
+If a nonempty context matches no variant, `PriceCalculation.Warnings` records the fallback and you receive the standard-price estimate.
+This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
+The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
+Check `Warnings` when you require a verified tier price.
+
 ## Extract usage from a response
 
 ```go

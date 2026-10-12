@@ -1,10 +1,12 @@
 import { computeLeafValues } from './decompose'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import {
+  ConditionalPrice,
   MatchLogic,
   ModelInfo,
   ModelPrice,
   ModelPriceCalculationResult,
+  PriceContext,
   Provider,
   ProviderFindOptions,
   Tier,
@@ -158,62 +160,56 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
   return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
-  if (!Array.isArray(model.prices)) {
-    return model.prices
+function constraintActive(constraint: ConditionalPrice['constraint'], timestamp: Date, modelId: string): boolean {
+  if (constraint === undefined) return true
+  if (Number.isNaN(timestamp.getTime())) throw new RangeError('Invalid time value')
+  if (constraint.type === 'start_date') return timestamp >= new Date(constraint.start_date)
+  if (!isTimeOfDateConstraint(constraint)) {
+    constraint satisfies never
+    throw new Error(`Unknown price constraint for model '${modelId}': ${JSON.stringify(constraint)}`)
   }
-  if (Number.isNaN(timestamp.getTime())) {
-    throw new RangeError('Invalid time value')
-  }
-  // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
+  const time =
+    timestamp.getUTCHours() * 3_600 + timestamp.getUTCMinutes() * 60 + timestamp.getUTCSeconds() + timestamp.getUTCMilliseconds() / 1_000
+  const start = utcTimeOfDaySeconds(constraint.start_time)
+  const end = utcTimeOfDaySeconds(constraint.end_time)
+  return end < start ? time >= start || time < end : time >= start && time < end
+}
+
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext?: PriceContext): ModelPrice {
+  let standard: ModelPrice
+  if (Array.isArray(model.prices)) {
+    if (Number.isNaN(timestamp.getTime())) throw new RangeError('Invalid time value')
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
-    const constraint = cond.constraint
-
-    if (constraint === undefined) {
-      return cond.prices
+    standard = model.prices[0]!.prices
+    for (const candidate of [...model.prices].reverse()) {
+      if (constraintActive(candidate.constraint, timestamp, model.id)) {
+        standard = candidate.prices
+        break
+      }
     }
-
-    if (constraint.type === 'start_date') {
-      if (timestamp >= new Date(constraint.start_date)) {
-        return cond.prices
+  } else {
+    standard = model.prices
+  }
+  if (!priceContext || !Object.keys(priceContext).length) return standard
+  const overrides = Object.create(null) as ModelPrice
+  let matched = false
+  for (const variant of model.price_variants ?? []) {
+    if (!constraintActive(variant.constraint, timestamp, model.id)) continue
+    if (
+      !Object.entries(variant.when).every(
+        ([key, value]) => Object.prototype.hasOwnProperty.call(priceContext, key) && priceContext[key] === value
+      )
+    )
+      continue
+    matched = true
+    for (const [key, price] of Object.entries(variant.prices)) {
+      if (price != null && !Object.prototype.hasOwnProperty.call(overrides, key)) {
+        overrides[key] = price
       }
-    } else if (isTimeOfDateConstraint(constraint)) {
-      const time =
-        timestamp.getUTCHours() * 3_600 +
-        timestamp.getUTCMinutes() * 60 +
-        timestamp.getUTCSeconds() +
-        timestamp.getUTCMilliseconds() / 1_000
-      const startTime = utcTimeOfDaySeconds(constraint.start_time)
-      const endTime = utcTimeOfDaySeconds(constraint.end_time)
-
-      // Handle time ranges that span midnight (end time < start time)
-      if (endTime < startTime) {
-        // Time is in range if it's >= start OR < end
-        if (time >= startTime || time < endTime) {
-          return cond.prices
-        }
-      } else {
-        // Normal time range (start <= time < end)
-        if (time >= startTime && time < endTime) {
-          return cond.prices
-        }
-      }
-    } else {
-      // Unreachable for well-typed data (constraint is `never` here): the two
-      // branches above cover the discriminated union. At runtime it guards
-      // against a representation leak - constraints are normalized into the
-      // discriminated form at activation and for caller-supplied providers in
-      // calcPrice (see normalizeProvider in
-      // api.ts), so anything else reaching this point is unnormalized data.
-      constraint satisfies never
-      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
     }
   }
-  // Fallback to first
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  if (!matched) console.warn(`No price variant matched for model '${model.id}'; using standard prices`)
+  return { ...standard, ...overrides }
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {

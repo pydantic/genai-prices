@@ -198,6 +198,8 @@ class ModelInfo(_Model):
 
     If no conditional models match the conditions, the first one is used.
     """
+    price_variants: list[PriceVariant] | None = None
+    """Partial request-specific prices, resolved first to last for each price key."""
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
     prices_checked: date | None = Field(default=None, exclude=True)
@@ -330,6 +332,14 @@ class ConditionalPrice(_Model):
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
+
+
+class PriceVariant(_Model):
+    """Partial prices selected by exact request context values."""
+
+    when: dict[str, str] = Field(min_length=1, strict=True)
+    prices: ModelPrice
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
 
 
 class StartDateConstraint(_Model):

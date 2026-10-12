@@ -12,6 +12,10 @@ These files are downloaded by packages to auto-update prices, so their URLs must
 before v2. No build step writes them, and they receive no provider, model or price updates. `prices/new_data/v2/`
 is the live feed.
 
+The v2 schema compatibility check permits the optional model `price_variants` field because older clients ignore it.
+Every existing schema member, including the billable-unit vocabulary, remains protected. This exception does not allow
+new units or changes to existing fields.
+
 ## Contributing
 
 We welcome contributions from the community and especially model/inference providers!
@@ -39,6 +43,49 @@ Please do not:
 - add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
 - try to change the schema of providers or models without creating an issue to discuss the changes first
 - add new providers without creating an issue to discuss the changes first, adding models is fine
+
+### Request-specific prices
+
+```yaml
+id: example
+name: Example
+api_pattern: 'https://example\.com'
+models:
+  - id: example-model
+    match: { equals: example-model }
+    prices_checked: 2026-10-12
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+      web_searches_kcount: 10
+    price_variants:
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 1
+          output_mtok: 4
+      - when: { service_tier: default }
+        prices: {}
+```
+
+A price variant is a partial rate card selected by the caller's pricing context.
+You keep the standard `prices` and add `price_variants` beside it.
+This keeps existing v2 clients from applying a request-specific discount to every request.
+
+Each `when` must contain at least one string key and string value. Every pair must match exactly, including case.
+You can use the existing date and time constraints to limit a variant's validity.
+For each price key, the first active matching variant that supplies a value wins.
+Other keys retain their standard rates. An empty `prices` map acknowledges a standard-price context.
+Null price values are omitted. A nonempty context with no matching variant produces a warning and a standard-price estimate.
+
+You list explicit per-unit rates because a discount may apply to tokens without applying to tools or storage.
+Keep dated entries when rates change, and place newer variant entries before older ones.
+Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
+and constrain those rates to the verification date. Earlier requests then warn instead of receiving an unverified tier rate.
+When standard prices change, verify every variant independently. Its listed rates are absolute; omitted keys inherit standard prices for that date.
+Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
+Test each affected context before and after the date boundary in all three packages.
+Run `make build` after changing variants. The build validates each variant and their combined price keys with standard prices.
 
 ### Automatic price discrepancy detection
 

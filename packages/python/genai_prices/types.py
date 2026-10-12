@@ -12,7 +12,7 @@ from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import Self, TypedDict
+from typing_extensions import Self, TypeAlias, TypedDict  # noqa: UP035 - keep typing aliases with the backports
 
 from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
 from genai_prices.units import UnitRegistry
@@ -33,6 +33,8 @@ __all__ = (
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
+    'PriceContext',
+    'PriceVariant',
     'StartDateConstraint',
     'TimeOfDateConstraint',
     'ClauseStartsWith',
@@ -45,6 +47,8 @@ __all__ = (
     'MatchLogic',
     'ArrayMatch',
 )
+
+PriceContext: TypeAlias = Mapping[str, str]
 
 
 # Define MatchLogic after __all__ to avoid forward reference issues
@@ -131,7 +135,11 @@ class ExtractedUsage:
     auto_update_timestamp: datetime | None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -149,6 +157,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=price_context,
         )
 
     def __repr__(self) -> str:
@@ -711,19 +720,44 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+    price_variants: list[PriceVariant] | None = None
+    """Request-specific overrides, resolved first to last independently for each price key."""
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
+    def get_prices(self, request_timestamp: datetime, price_context: PriceContext | None = None) -> ModelPrice:
         if isinstance(self.prices, ModelPrice):
-            return self.prices
+            standard = self.prices
         else:
+            standard = self.prices[0].prices
             # reversed because the last price takes precedence
             for conditional_price in reversed(self.prices):
                 if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+                    standard = conditional_price.prices
+                    break
+        if not price_context:
+            return standard
+        overrides: dict[str, Decimal | TieredPrices] = {}
+        matched = False
+        for variant in self.price_variants or ():
+            if variant.constraint is not None and not variant.constraint.active(request_timestamp):
+                continue
+            if not all(price_context.get(key) == value for key, value in variant.when.items()):
+                continue
+            matched = True
+            for key, price in variant.prices.__dict__.items():
+                if price is not None:
+                    overrides.setdefault(key, price)
+        if not matched:
+            warnings.warn(
+                f'No price variant matched for model {self.id!r}; using standard prices',
+                UserWarning,
+                stacklevel=3,
+            )
+        resolved = copy(standard)
+        resolved.__dict__.update(overrides)
+        return resolved
 
     def calc_price(
         self,
@@ -732,11 +766,20 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        if price_context and not any(self is model for model in provider.models):
+            warnings.warn(
+                f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
+                UserWarning,
+                stacklevel=2,
+            )
+            model_price = self.get_prices(genai_request_timestamp)
+        else:
+            model_price = self.get_prices(genai_request_timestamp, price_context)
         if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
             usage = copy(Usage.from_raw(usage))
             reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')
@@ -1028,6 +1071,22 @@ class Tier:
     """Start of the tier"""
     price: Decimal
     """Price for this tier"""
+
+
+@dataclass
+class PriceVariant:
+    """Partial prices selected by exact, case-sensitive request context values."""
+
+    when: dict[str, str]
+    prices: ModelPrice
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+
+    def __post_init__(self) -> None:
+        if not self.when or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for key, value in cast(Mapping[object, object], self.when).items()
+        ):
+            raise ValueError('Price variant when must contain at least one string value')
 
 
 @dataclass

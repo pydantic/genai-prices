@@ -51,6 +51,39 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Request pricing context
+
+```python
+from datetime import datetime, timezone
+
+from genai_prices import Usage, calc_price
+
+price = calc_price(
+    Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+    model_ref='o3',
+    provider_id='openai',
+    genai_request_timestamp=datetime(2026, 10, 12, tzinfo=timezone.utc),
+    price_context={'service_tier': 'flex'},
+)
+assert price.total_price == 5
+```
+
+You pass `price_context` explicitly to select request-specific prices. Its keys and values are strings.
+Use the `service_tier` reported in OpenAI's response. The response can report `default` after a priority request
+is downgraded. `auto` is a request setting and does not identify the rate you were charged.
+
+OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
+`default` selects standard prices on these models. Omit the context for ordinary standard pricing.
+You can also pass it to `ExtractedUsage.calc_price()`, `ModelInfo.calc_price()`, and `DataSnapshot.calc()`.
+Extraction does not infer a pricing context.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
+and the standard-price estimate; the fallback provider's tier rates are not applied.
+
+If a nonempty context matches no variant, you receive a `UserWarning` and the standard-price estimate.
+This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
+The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
+You can make warnings errors when you require a verified tier price.
+
 ### Cached input tokens
 
 ```python
