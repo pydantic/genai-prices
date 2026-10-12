@@ -1442,7 +1442,7 @@ models:
 
   - id: regional.anthropic.claude-opus-5
     canonical_model: anthropic/claude-opus-5
-    prices_checked: 2026-09-25
+    prices_checked: 2026-10-12
     price_comments: >-
       Regional endpoints and US/EU/JP/AU/IN inference profiles carry a 10% premium over the global endpoint.
       Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
