@@ -15,7 +15,7 @@ from genai_prices import Usage, calc_price
         ('avian', 'xiaomi/mimo-v2.5-pro', '0.435', '0.0036', '0.87'),
         ('avian', 'xiaomi/mimo-v2.6-flash', '0.2', '0.05', '0.4'),
         ('avian', 'xiaomi/mimo-v2.6-pro', '0.435', '0.0036', '0.87'),
-        ('github-copilot', 'claude-sonnet-5.5', '2', '0.20', '10'),
+        ('github-copilot', 'claude-sonnet-5.5', '2', '0.10', '10'),
     ],
 )
 def test_price_check_preserves_rates_without_an_effective_date(

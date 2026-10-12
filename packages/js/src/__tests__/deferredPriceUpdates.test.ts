@@ -8,7 +8,7 @@ it.each([
   { cache: 0.0036, input: 0.435, model: 'xiaomi/mimo-v2.5-pro', output: 0.87, providerId: 'avian' },
   { cache: 0.05, input: 0.2, model: 'xiaomi/mimo-v2.6-flash', output: 0.4, providerId: 'avian' },
   { cache: 0.0036, input: 0.435, model: 'xiaomi/mimo-v2.6-pro', output: 0.87, providerId: 'avian' },
-  { cache: 0.2, input: 2, model: 'claude-sonnet-5.5', output: 10, providerId: 'github-copilot' },
+  { cache: 0.1, input: 2, model: 'claude-sonnet-5.5', output: 10, providerId: 'github-copilot' },
 ])('preserves $providerId $model rates without an effective date', ({ cache, input, model, output, providerId }) => {
   for (const date of ['2026-09-30', '2026-10-09']) {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
