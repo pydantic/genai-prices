@@ -17572,6 +17572,9 @@ export const data: Provider[] = [
             {
               equals: 'mistral-medium-3',
             },
+            {
+              equals: 'mistral-medium-2604',
+            },
           ],
         },
         context_window: 262144,
