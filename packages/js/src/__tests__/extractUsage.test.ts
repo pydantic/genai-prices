@@ -13,6 +13,7 @@ const cursorProvider: Provider = data.find((provider) => provider.id === 'cursor
 const databricksProvider: Provider = data.find((provider) => provider.id === 'databricks')!
 const openaiDecisionsProvider: Provider = data.find((provider) => provider.id === 'openai-decisions')!
 const githubCopilotProvider: Provider = data.find((provider) => provider.id === 'github-copilot')!
+const metaProvider: Provider = data.find((provider) => provider.id === 'meta')!
 const fractionalProvider: Provider = {
   api_pattern: 'fractional',
   extractors: [
@@ -37,6 +38,44 @@ afterEach(() => {
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
+    const metaUsageResponses: {
+      apiFlavor: 'chat' | 'responses'
+      usageData: Record<string, unknown>
+    }[] = [
+      {
+        apiFlavor: 'chat',
+        usageData: {
+          completion_tokens: 40,
+          completion_tokens_details: { reasoning_tokens: 10 },
+          prompt_tokens: 100,
+          prompt_tokens_details: { cached_tokens: 20 },
+        },
+      },
+      {
+        apiFlavor: 'responses',
+        usageData: {
+          input_tokens: 100,
+          input_tokens_details: { cached_tokens: 20 },
+          output_tokens: 40,
+          output_tokens_details: { reasoning_tokens: 10 },
+        },
+      },
+    ]
+
+    it.each(metaUsageResponses)('extracts Meta Muse Wonder $apiFlavor usage', ({ apiFlavor, usageData }) => {
+      const extracted = extractUsage(metaProvider, { model: 'muse-wonder-1.0', usage: usageData }, apiFlavor)
+
+      expect(extracted).toEqual({
+        model: 'muse-wonder-1.0',
+        usage: {
+          cache_read_tokens: 20,
+          input_tokens: 100,
+          output_reasoning_tokens: 10,
+          output_tokens: 40,
+        },
+      })
+    })
+
     it('should extract Cursor usage events', () => {
       const responseData = {
         model: 'grok-4.6-fast',
