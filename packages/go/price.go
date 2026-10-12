@@ -12,27 +12,26 @@ func activeModelPrice(model *model, timestamp time.Time) modelPrice {
 	}
 	for index := len(model.Prices.conditional) - 1; index >= 0; index-- {
 		candidate := model.Prices.conditional[index]
-		constraint := candidate.Constraint
-		if constraint == nil {
-			return candidate.Prices
-		}
-		if constraint.StartDate != "" {
-			if !timestamp.Before(constraint.date) {
-				return candidate.Prices
-			}
-			continue
-		}
-		utc := timestamp.UTC()
-		seconds := float64(utc.Hour()*3600+utc.Minute()*60+utc.Second()) + float64(utc.Nanosecond())/1e9
-		if constraint.end < constraint.start {
-			if seconds >= constraint.start || seconds < constraint.end {
-				return candidate.Prices
-			}
-		} else if seconds >= constraint.start && seconds < constraint.end {
+		if candidate.Constraint.active(timestamp) {
 			return candidate.Prices
 		}
 	}
 	return model.Prices.conditional[0].Prices
+}
+
+func (constraint *priceConstraint) active(timestamp time.Time) bool {
+	if constraint == nil {
+		return true
+	}
+	if constraint.StartDate != "" {
+		return !timestamp.Before(constraint.date)
+	}
+	utc := timestamp.UTC()
+	seconds := float64(utc.Hour()*3600+utc.Minute()*60+utc.Second()) + float64(utc.Nanosecond())/1e9
+	if constraint.end < constraint.start {
+		return seconds >= constraint.start || seconds < constraint.end
+	}
+	return seconds >= constraint.start && seconds < constraint.end
 }
 
 func calculateModelPrice(

@@ -2,6 +2,7 @@ import type {
   ConditionalPrice,
   PriceCalculationResult,
   PriceOptions,
+  PriceVariant,
   Provider,
   ProviderDataPayload,
   ProviderFindOptions,
@@ -71,6 +72,20 @@ function normalizeProvider(provider: Provider): Provider {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
+      price_variants: model.price_variants?.map((variant) => {
+        if (!isRecord(variant.prices)) throw new Error('Price variant prices must be an object')
+        if (
+          !isRecord(variant.when) ||
+          !Object.keys(variant.when).length ||
+          Object.values(variant.when).some((value) => typeof value !== 'string')
+        ) {
+          throw new Error('Price variant when must contain at least one string value')
+        }
+        return {
+          ...normalizeConditionalPrice({ ...variant, constraint: variant.constraint ?? undefined }, provider.id, model.id),
+          when: variant.when,
+        } as PriceVariant
+      }),
       prices: Array.isArray(model.prices)
         ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
         : model.prices,
@@ -227,7 +242,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
+  const modelPrice = getActiveModelPrice(model, timestamp, options?.priceContext)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }

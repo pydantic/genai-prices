@@ -119,11 +119,23 @@ def validate_provider_model_prices(providers: Iterable[object], registry: UnitRe
         provider_id = cast(str, getattr(provider, 'id'))
         for model in cast(Iterable[object], getattr(provider, 'models')):
             model_id = cast(str, getattr(model, 'id'))
-            for label, model_price in _iter_model_prices(getattr(model, 'prices')):
+            standard_prices = list(_iter_model_prices(getattr(model, 'prices')))
+            for label, model_price in standard_prices:
                 try:
                     validate_model_price(_collect_model_price_keys(model_price), registry)
                 except ValueError as exc:
                     raise ValueError(f'Invalid model price for {provider_id}/{model_id}{label}: {exc}') from exc
+            variants = cast(list[object] | None, getattr(model, 'price_variants', None))
+            variant_keys: set[str] = set()
+            for index, variant in enumerate(variants or ()):
+                variant_keys.update(_collect_model_price_keys(getattr(variant, 'prices')))
+                for label, model_price in standard_prices:
+                    try:
+                        validate_model_price(_collect_model_price_keys(model_price) | variant_keys, registry)
+                    except ValueError as exc:
+                        raise ValueError(
+                            f'Invalid price variant for {provider_id}/{model_id}.price_variants[{index}] over {label}: {exc}'
+                        ) from exc
 
 
 def validate_provider_extractor_destinations(providers: Iterable[object], registry: UnitRegistry) -> None:

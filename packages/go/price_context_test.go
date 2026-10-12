@@ -1,0 +1,114 @@
+package genai_prices_test
+
+import (
+	"encoding/json"
+	"math"
+	"os"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/pydantic/genai-prices/packages/go"
+)
+
+func TestPriceContextContract(t *testing.T) {
+	data, err := os.ReadFile("../../tests/fixtures/price_context.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture struct {
+		Providers json.RawMessage    `json:"providers"`
+		Usage     genai_prices.Usage `json:"usage"`
+		Cases     []struct {
+			Name      string            `json:"name"`
+			Timestamp string            `json:"timestamp"`
+			Context   map[string]string `json:"context"`
+			Input     float64           `json:"input"`
+			Output    float64           `json:"output"`
+			Total     float64           `json:"total"`
+			Warn      bool              `json:"warn"`
+		} `json:"cases"`
+	}
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatal(err)
+	}
+	calculator, err := genai_prices.NewCalculatorFromJSON(fixture.Providers)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, test := range fixture.Cases {
+		t.Run(test.Name, func(t *testing.T) {
+			timestamp, err := time.Parse(time.RFC3339, test.Timestamp)
+			if err != nil {
+				t.Fatal(err)
+			}
+			result, err := calculator.Calculate(genai_prices.PriceRequest{
+				Usage: fixture.Usage, Model: "context-model", ProviderID: "testing",
+				Timestamp: timestamp, PriceContext: test.Context,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.InputPrice != test.Input || result.OutputPrice != test.Output || result.TotalPrice != test.Total {
+				t.Fatalf("got %+v, want %v/%v/%v", result, test.Input, test.Output, test.Total)
+			}
+			if test.Warn {
+				if len(result.Warnings) != 1 || result.Warnings[0] != "No price variant matched for model 'context-model'; using standard prices" {
+					t.Fatalf("got warnings %v", result.Warnings)
+				}
+			} else if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
+func TestOpenAIServiceTiers(t *testing.T) {
+	for _, test := range []struct {
+		model, tier string
+		total       float64
+	}{
+		{"o3", "flex", 4.8125}, {"o3", "priority", 16.84375},
+		{"o4-mini", "flex", 2.646875}, {"o4-mini", "priority", 9.625},
+		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
+		{"gpt-6.1-sol", "priority", 36.1},
+	} {
+		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
+				Model: test.model, ProviderID: "openai", Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
+				PriceContext: map[string]string{"service_tier": test.tier},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
+func TestInvalidPriceVariants(t *testing.T) {
+	for _, variant := range []string{
+		`{"when":{},"prices":{}}`, `{"when":{"service_tier":null},"prices":{}}`,
+		`{"when":{"service_tier":true},"prices":{}}`, `{"when":{"service_tier":"flex"}}`,
+		`{"when":{"service_tier":"flex"},"prices":{"input_mtok":-1}}`,
+		`{"when":{"service_tier":"flex"},"prices":{},"constraint":{"start_date":"bad"}}`,
+	} {
+		t.Run(variant, func(t *testing.T) {
+			_, err := genai_prices.NewCalculatorFromJSON([]byte(`[{"id":"testing","name":"Testing","api_pattern":"testing","models":[{"id":"m","match":{"equals":"m"},"prices":{"input_mtok":1},"price_variants":[` + variant + `]}]}]`))
+			if err == nil {
+				t.Fatal("accepted invalid variant")
+			}
+		})
+	}
+	calculator := newTestCalculator(t, `[{"id":"testing","name":"Testing","api_pattern":"testing","models":[{"id":"m","match":{"equals":"m"},"prices":{"input_mtok":1},"price_variants":[{"when":{"service_tier":"flex"},"prices":{"cache_image_read_mtok":1}}]}]}]`)
+	_, err := calculator.Calculate(genai_prices.PriceRequest{Model: "m", ProviderID: "testing", PriceContext: map[string]string{"service_tier": "flex"}})
+	if err == nil || !strings.Contains(err.Error(), "missing ancestor") {
+		t.Fatalf("got %v", err)
+	}
+}

@@ -1,0 +1,176 @@
+{
+  "providers": [
+    {
+      "id": "testing",
+      "name": "Testing",
+      "api_pattern": "testing",
+      "models": [
+        {
+          "id": "context-model",
+          "match": { "equals": "context-model" },
+          "prices": [
+            { "prices": { "input_mtok": 4, "cache_read_mtok": 1, "output_mtok": 8, "web_searches_kcount": 10 } },
+            {
+              "constraint": { "start_date": "2026-01-01" },
+              "prices": { "input_mtok": 8, "cache_read_mtok": 2, "output_mtok": 16, "web_searches_kcount": 10 }
+            }
+          ],
+          "price_variants": [
+            {
+              "when": { "service_tier": "flex", "inference_geo": "us" },
+              "constraint": { "start_date": "2026-07-01" },
+              "prices": { "input_mtok": 1, "output_mtok": null }
+            },
+            {
+              "when": { "service_tier": "flex" },
+              "constraint": { "start_time": "22:00:00Z", "end_time": "06:00:00Z" },
+              "prices": { "output_mtok": 3 }
+            },
+            {
+              "when": { "service_tier": "flex" },
+              "constraint": { "start_date": "2026-06-01" },
+              "prices": { "input_mtok": 2, "cache_read_mtok": 0.25 }
+            },
+            { "when": { "service_tier": "flex" }, "prices": { "input_mtok": 3, "output_mtok": 4 } },
+            { "when": { "service_tier": "flex" }, "prices": { "output_mtok": 5 } },
+            { "when": { "service_tier": "default" }, "prices": {} }
+          ]
+        }
+      ]
+    }
+  ],
+  "usage": { "input_tokens": 1000000, "cache_read_tokens": 250000, "output_tokens": 1000000, "web_searches": 100 },
+  "cases": [
+    {
+      "name": "standard before change",
+      "timestamp": "2025-12-31T23:59:59Z",
+      "input": 3.25,
+      "output": 8,
+      "total": 12.25
+    },
+    {
+      "name": "standard after change",
+      "timestamp": "2026-01-01T00:00:00Z",
+      "context": {},
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5
+    },
+    {
+      "name": "explicit default",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "default" },
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5
+    },
+    {
+      "name": "initial flex",
+      "timestamp": "2025-12-31T12:00:00Z",
+      "context": { "service_tier": "flex" },
+      "input": 2.5,
+      "output": 4,
+      "total": 7.5
+    },
+    {
+      "name": "flex before dated override",
+      "timestamp": "2026-05-31T23:59:59Z",
+      "context": { "service_tier": "flex" },
+      "input": 2.75,
+      "output": 3,
+      "total": 6.75
+    },
+    {
+      "name": "flex at boundary",
+      "timestamp": "2026-06-01T00:00:00Z",
+      "context": { "service_tier": "flex" },
+      "input": 1.5625,
+      "output": 3,
+      "total": 5.5625
+    },
+    {
+      "name": "flex during day",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "flex" },
+      "input": 1.5625,
+      "output": 4,
+      "total": 6.5625
+    },
+    {
+      "name": "multiple conditions",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "flex", "inference_geo": "us" },
+      "input": 0.8125,
+      "output": 4,
+      "total": 5.8125
+    },
+    {
+      "name": "missing condition",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "inference_geo": "us" },
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5,
+      "warn": true
+    },
+    {
+      "name": "case sensitive",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "Flex" },
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5,
+      "warn": true
+    },
+    {
+      "name": "unknown key",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_teir": "flex" },
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5,
+      "warn": true
+    },
+    {
+      "name": "unknown tier",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "incentivized-tier" },
+      "input": 6.5,
+      "output": 16,
+      "total": 23.5,
+      "warn": true
+    },
+    {
+      "name": "offset timestamp",
+      "timestamp": "2026-08-01T01:00:00+02:00",
+      "context": { "service_tier": "flex" },
+      "input": 1.5625,
+      "output": 3,
+      "total": 5.5625
+    },
+    {
+      "name": "end exclusive",
+      "timestamp": "2026-08-01T06:00:00Z",
+      "context": { "service_tier": "flex" },
+      "input": 1.5625,
+      "output": 4,
+      "total": 6.5625
+    },
+    {
+      "name": "start inclusive",
+      "timestamp": "2026-08-01T22:00:00Z",
+      "context": { "service_tier": "flex" },
+      "input": 1.5625,
+      "output": 3,
+      "total": 5.5625
+    },
+    {
+      "name": "extra caller metadata",
+      "timestamp": "2026-08-01T12:00:00Z",
+      "context": { "service_tier": "flex", "unused": "yes" },
+      "input": 1.5625,
+      "output": 4,
+      "total": 6.5625
+    }
+  ]
+}

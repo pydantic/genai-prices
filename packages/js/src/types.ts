@@ -23,6 +23,12 @@ export interface ConditionalPrice {
   prices: ModelPrice
 }
 
+export type PriceContext = Record<string, string>
+
+export interface PriceVariant extends ConditionalPrice {
+  when: PriceContext
+}
+
 export interface StartDateConstraint {
   start_date: string // ISO date string
   type: 'start_date'
@@ -87,6 +93,7 @@ export interface ModelInfo {
   match: MatchLogic
   name?: string
   price_comments?: string
+  price_variants?: PriceVariant[]
   prices: ConditionalPrice[] | ModelPrice
 }
 
@@ -144,6 +151,8 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  priceContext?: PriceContext
+
   provider?: Provider
   providerApiUrl?: string
   providerId?: string
