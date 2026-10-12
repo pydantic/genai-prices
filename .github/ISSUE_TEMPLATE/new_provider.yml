@@ -6,7 +6,7 @@ body:
     id: provider-name
     attributes:
       label: Provider name
-      placeholder: e.g. Gonka Broker
+      placeholder: e.g. OpenAI
     validations:
       required: true
   - type: input
@@ -32,6 +32,11 @@ body:
       placeholder: Customer references, independent reviews, or projects using its API.
     validations:
       required: true
-  - type: markdown
+  - type: textarea
+    id: community-support
     attributes:
+      label: Community support
+      description: Keep this note so other users know how to show their support.
       value: If you want this provider to be supported, please give this issue a thumbs up (👍).
+    validations:
+      required: true
