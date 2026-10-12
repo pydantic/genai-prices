@@ -857,25 +857,27 @@ def test_vertex_claude_opus_4_6_drops_long_context_premium(timestamp: datetime, 
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'model_id', 'expected_price'),
     [
-        ('anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
-        ('anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', '12'),
-        ('google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
-        ('google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', '12'),
-        ('google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', '12'),
-        ('aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', '12'),
-        ('aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', '12'),
-        ('aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
-        ('aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
-        ('aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.2'),
-        ('openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', '12'),
+        ('anthropic', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12.1'),
+        ('anthropic', 'claude-sonnet-5-5-20260928', 'claude-sonnet-5-5', '12.1'),
+        ('google', 'claude-sonnet-5-5', 'claude-sonnet-5-5', '12.1'),
+        ('google', 'claude-sonnet-5-5@20260928', 'claude-sonnet-5-5', '12.1'),
+        ('google', 'publishers/anthropic/models/claude-sonnet-5-5', 'claude-sonnet-5-5', '12.1'),
+        ('aws', 'global.anthropic.claude-sonnet-5-5', 'global.anthropic.claude-sonnet-5-5', '12.1'),
+        ('aws', 'global.anthropic.claude-sonnet-5-5-v1:0', 'global.anthropic.claude-sonnet-5-5', '12.1'),
+        ('aws', 'us.anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.31'),
+        ('aws', 'us.anthropic.claude-sonnet-5-5-v1:0', 'regional.anthropic.claude-sonnet-5-5', '13.31'),
+        ('aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', '13.31'),
+        ('openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', '12.1'),
     ],
 )
 def test_claude_sonnet_5_5_resolves_to_its_own_model(
     provider_id: str, model_ref: str, model_id: str, expected_price: str
 ) -> None:
-    """Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix matchers no longer claim it."""
+    """Sonnet 5.5 resolves to its own model, and bills cache reads at half Sonnet 5's rate (0.05x input)."""
     price = calc_price(
-        Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
     )
 
     assert price.model.id == model_id
