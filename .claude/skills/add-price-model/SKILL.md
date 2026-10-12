@@ -150,8 +150,8 @@ prices:
 - Set `prices_checked` to today. It records when you verified the rates, which is a different fact
   from when the rates changed.
 - Append one entry to a model that already uses a list. Leave the existing entries alone.
-- Check every `price_variants` rate card separately. These are absolute rates, so a standard-price
-  change does not update flex, priority, or other contexts automatically. Preserve existing variants
+- Check every `price_variants` rate card separately. Its listed rates are absolute; omitted keys
+  inherit standard prices for that date. Preserve existing variants
   and prepend dated entries for changed tier rates, since the first matching value wins per price
   key. Cite a source for tiers whose rates stayed unchanged. Test each affected context on both sides
   of the date boundary in Python, JavaScript and Go.

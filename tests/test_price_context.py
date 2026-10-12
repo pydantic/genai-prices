@@ -39,7 +39,7 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
             Usage(**FIXTURE['usage']),
             'context-model',
             provider_id='testing',
-            genai_request_timestamp=datetime.fromisoformat(case['timestamp']),
+            genai_request_timestamp=datetime.fromisoformat(case['timestamp'].replace('Z', '+00:00')),
             price_context=case.get('context'),
         )
     assert result.input_price == Decimal(str(case['input']))
@@ -120,7 +120,7 @@ def test_fallback_provider_does_not_inherit_tier_rates() -> None:
         )
 
 
-@pytest.mark.parametrize('when', [{}, {'service_tier': None}, {'service_tier': True}])
+@pytest.mark.parametrize('when', [{}, {'service_tier': None}, {'service_tier': True}, {1: 'flex'}])
 def test_invalid_variant_condition(when: Any) -> None:
     with pytest.raises(ValueError, match='Price variant when'):
         PriceVariant(when=when, prices=ModelPrice(input_mtok=Decimal('1')))
@@ -135,7 +135,43 @@ def test_variant_export_validation() -> None:
         validate_export_payload([provider], load_units())
 
 
-def test_variant_export_validation_covers_combined_overrides() -> None:
+@pytest.mark.parametrize(
+    'second_when,first_constraint,second_constraint,valid',
+    [
+        ({'inference_geo': 'us'}, None, None, False),
+        ({'service_tier': 'priority'}, None, None, True),
+        (
+            {'inference_geo': 'us'},
+            {'start_time': '00:00:00Z', 'end_time': '06:00:00Z'},
+            {'start_time': '06:00:00Z', 'end_time': '12:00:00Z'},
+            True,
+        ),
+        (
+            {'inference_geo': 'us'},
+            {'start_time': '22:00:00Z', 'end_time': '06:00:00Z'},
+            {'start_time': '08:00:00+02:00', 'end_time': '14:00:00+02:00'},
+            True,
+        ),
+        (
+            {'inference_geo': 'us'},
+            {'start_time': '22:00:00Z', 'end_time': '06:00:00Z'},
+            {'start_time': '23:00:00Z', 'end_time': '07:00:00Z'},
+            False,
+        ),
+        (
+            {'inference_geo': 'us'},
+            None,
+            {'start_time': '00:00:00Z', 'end_time': '00:00:00Z'},
+            True,
+        ),
+    ],
+)
+def test_variant_export_validation_covers_combined_overrides(
+    second_when: dict[str, str],
+    first_constraint: dict[str, str] | None,
+    second_constraint: dict[str, str] | None,
+    valid: bool,
+) -> None:
     provider = prices_types.Provider.model_validate(
         {
             'id': 'example',
@@ -147,15 +183,22 @@ def test_variant_export_validation_covers_combined_overrides() -> None:
                     'match': {'equals': 'm'},
                     'prices': {'input_mtok': 1},
                     'price_variants': [
-                        {'when': {'service_tier': 'flex'}, 'prices': {'cache_read_mtok': 1}},
-                        {'when': {'inference_geo': 'us'}, 'prices': {'input_image_mtok': 1}},
+                        {
+                            'when': {'service_tier': 'flex'},
+                            'constraint': first_constraint,
+                            'prices': {'cache_read_mtok': 1},
+                        },
+                        {'when': second_when, 'constraint': second_constraint, 'prices': {'input_image_mtok': 1}},
                     ],
                 }
             ],
         }
     )
-    with pytest.raises(ValueError, match='Missing join price'):
+    if valid:
         validate_export_payload([provider], load_units())
+    else:
+        with pytest.raises(ValueError, match='Missing join price'):
+            validate_export_payload([provider], load_units())
 
 
 def test_variant_export_validation_covers_later_variant_alone() -> None:

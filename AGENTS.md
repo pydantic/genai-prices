@@ -134,7 +134,7 @@ catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard
   wrong when it was written — a correction has no history worth keeping. The `/add-price-model` skill
   covers the full procedure.
 - When a model has `price_variants`, verify every tier separately when its standard rates change.
-  Variant rates are absolute and do not follow standard-price changes automatically. Preserve existing
+  The rates a variant lists are absolute; omitted keys inherit standard prices for that date. Preserve existing
   variant entries and prepend dated entries for changed tier rates: variants use the first matching
   value per price key. Record a source confirming any tier whose rates stayed unchanged, and test
   each affected context before and after the change in Python, JavaScript and Go.

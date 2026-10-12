@@ -1082,7 +1082,10 @@ class PriceVariant:
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
 
     def __post_init__(self) -> None:
-        if not self.when or any(not isinstance(value, str) for value in cast(Mapping[str, object], self.when).values()):
+        if not self.when or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for key, value in cast(Mapping[object, object], self.when).items()
+        ):
             raise ValueError('Price variant when must contain at least one string value')
 
 

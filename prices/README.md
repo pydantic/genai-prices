@@ -12,6 +12,10 @@ These files are downloaded by packages to auto-update prices, so their URLs must
 before v2. No build step writes them, and they receive no provider, model or price updates. `prices/new_data/v2/`
 is the live feed.
 
+The v2 schema compatibility check permits the optional model `price_variants` field because older clients ignore it.
+Every existing schema member, including the billable-unit vocabulary, remains protected. This exception does not allow
+new units or changes to existing fields.
+
 ## Contributing
 
 We welcome contributions from the community and especially model/inference providers!
@@ -78,7 +82,7 @@ You list explicit per-unit rates because a discount may apply to tokens without 
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
 and constrain those rates to the verification date. Earlier requests then warn instead of receiving an unverified tier rate.
-When standard prices change, verify every variant independently. Its absolute rates do not change automatically.
+When standard prices change, verify every variant independently. Its listed rates are absolute; omitted keys inherit standard prices for that date.
 Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
 Test each affected context before and after the date boundary in all three packages.
 Run `make build` after changing variants. The build validates each variant and their combined price keys with standard prices.
