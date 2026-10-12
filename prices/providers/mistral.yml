@@ -308,6 +308,26 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 1.5
 
+  - id: mistral-large-4
+    name: Mistral Large 4
+    match:
+      or:
+        - equals: mistral-large-4
+        - equals: mistral-large-4-0
+    context_window: 1048576
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The
+      published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not
+      state an exact effective end date, so no future price change is scheduled here.
+      https://docs.mistral.ai/models/mistral-large-4-0
+      https://docs.mistral.ai/inference/pricing
+      https://docs.mistral.ai/resources/changelogs
+    prices:
+      input_mtok: 0.68
+      cache_read_mtok: 0.07
+      output_mtok: 2.09
+
   - id: mistral-medium-2312
     name: Mistral Medium 1
     description: Mistral's first enterprise-grade model, released in December 2023.

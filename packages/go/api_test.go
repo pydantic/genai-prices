@@ -4,6 +4,7 @@ import (
 	"errors"
 	"maps"
 	"math"
+	"strings"
 	"testing"
 	"time"
 
@@ -1004,6 +1005,66 @@ func TestOpenRouterClaudeHaikuLatestMovesToHaiku55(t *testing.T) {
 		}
 		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
 			t.Fatalf("at %s got %g, want %g", test.timestamp, calculation.TotalPrice, test.want)
+		}
+	}
+}
+
+func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
+	for _, test := range []struct {
+		providerID, model, wantModelID string
+		priceContext                   map[string]string
+		wantTotal                      float64
+	}{
+		{"meta", "muse-wonder-1.0", "muse-wonder-1.0", nil, 23.6225},
+		{"openrouter", "meta/muse-wonder", "meta/muse-wonder", nil, 23.6225},
+		{"openrouter", "meta/muse-wonder-20261012", "meta/muse-wonder", nil, 23.6225},
+		{"mistral", "mistral-large-4", "mistral-large-4", nil, 2.709},
+		{"mistral", "mistral-large-4-0", "mistral-large-4", nil, 2.709},
+		{"openrouter", "mistralai/mistral-large-4-0-20261006", "mistralai/mistral-large-4-0", nil, 2.709},
+		{"openrouter", "mistralai/mistral-large-4-0", "mistralai/mistral-large-4-0", map[string]string{"route": "mistral/eu"}, 2.9799},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     1_000_000,
+				genai_prices.UsageCacheReadTokens: 100_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+				genai_prices.UsageWebSearches:     1,
+			},
+			Model:        test.model,
+			ProviderID:   test.providerID,
+			PriceContext: test.priceContext,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ModelID != test.wantModelID {
+			t.Errorf("%s/%s resolved to %q, want %q", test.providerID, test.model, calculation.ModelID, test.wantModelID)
+		}
+		if math.Abs(calculation.TotalPrice-test.wantTotal) > 1e-9 {
+			t.Errorf("%s/%s got %g, want %g", test.providerID, test.model, calculation.TotalPrice, test.wantTotal)
+		}
+	}
+
+	for _, body := range []string{
+		`{"model":"muse-wonder-1.0","usage":{"prompt_tokens":100,"prompt_tokens_details":{"cached_tokens":20},"completion_tokens":40,"completion_tokens_details":{"reasoning_tokens":10}}}`,
+		`{"model":"muse-wonder-1.0","usage":{"input_tokens":100,"input_tokens_details":{"cached_tokens":20},"output_tokens":40,"output_tokens_details":{"reasoning_tokens":10}}}`,
+	} {
+		flavor := "chat"
+		if strings.Contains(body, `"input_tokens"`) {
+			flavor = "responses"
+		}
+		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
+			ResponseJSON: []byte(body),
+			ProviderID:   "meta",
+			APIFlavor:    flavor,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if extracted.Model != "muse-wonder-1.0" || extracted.Usage[genai_prices.UsageCacheReadTokens] != 20 ||
+			extracted.Usage[genai_prices.UsageInputTokens] != 100 || extracted.Usage[genai_prices.UsageOutputTokens] != 40 ||
+			extracted.Usage[genai_prices.UsageOutputReasoningTokens] != 10 {
+			t.Errorf("%s extracted %#v", flavor, extracted)
 		}
 	}
 }

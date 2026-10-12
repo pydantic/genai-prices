@@ -819,6 +819,33 @@ def test_mistral():
     )
 
 
+def test_meta_muse_wonder_chat_and_responses_usage():
+    provider = next(provider for provider in providers if provider.id == 'meta')
+    chat = {
+        'model': 'muse-wonder-1.0',
+        'usage': {
+            'prompt_tokens': 100,
+            'prompt_tokens_details': {'cached_tokens': 20},
+            'completion_tokens': 40,
+            'completion_tokens_details': {'reasoning_tokens': 10},
+        },
+    }
+    response = {
+        'model': 'muse-wonder-1.0',
+        'usage': {
+            'input_tokens': 100,
+            'input_tokens_details': {'cached_tokens': 20},
+            'output_tokens': 40,
+            'output_tokens_details': {'reasoning_tokens': 10},
+        },
+    }
+    expected = Usage(input_tokens=100, cache_read_tokens=20, output_tokens=40, output_reasoning_tokens=10)
+    assert provider.extract_usage(chat, api_flavor='chat') == ('muse-wonder-1.0', expected)
+    assert provider.extract_usage(response, api_flavor='responses') == ('muse-wonder-1.0', expected)
+    assert extract_usage(chat, provider_id='meta', api_flavor='chat').usage == expected
+    assert extract_usage(response, provider_id='meta', api_flavor='responses').usage == expected
+
+
 def test_mistral_ocr():
     response_data = {
         'model': 'mistral-ocr-4-1-completion',
