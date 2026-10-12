@@ -10145,6 +10145,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='mistral-medium-3.5'),
                         ClauseEquals(equals='mistral-medium-3-5'),
                         ClauseEquals(equals='mistral-medium-3'),
+                        ClauseEquals(equals='mistral-medium-2604'),
                     ]
                 ),
                 name='Mistral Medium 3.5',
