@@ -152,7 +152,6 @@ export interface ProviderFindOptions {
 
 export interface PriceOptions {
   priceContext?: PriceContext
-
   provider?: Provider
   providerApiUrl?: string
   providerId?: string
