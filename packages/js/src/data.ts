@@ -10355,6 +10355,35 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-4-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-4-5-opus',
+            },
+            {
+              contains: 'claude-opus-4-5',
+            },
+            {
+              contains: 'claude-4.5-opus',
+            },
+            {
+              contains: 'claude-opus-4.5',
+            },
+          ],
+        },
+        context_window: 200000,
+        price_comments:
+          'A 200K context window, so there is no long-context tier. Global endpoint rates; regional and multi-region endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+          cache_write_1h_mtok: 10,
+        },
+      },
+      {
         id: 'claude-opus-4-6',
         match: {
           or: [

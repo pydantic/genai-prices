@@ -5954,6 +5954,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-4-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-4-5-opus'),
+                        ClauseContains(contains='claude-opus-4-5'),
+                        ClauseContains(contains='claude-4.5-opus'),
+                        ClauseContains(contains='claude-opus-4.5'),
+                    ]
+                ),
+                context_window=200000,
+                price_comments='A 200K context window, so there is no long-context tier. Global endpoint rates; regional and multi-region endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-opus-4-6',
                 match=ClauseOr(
                     or_=[
