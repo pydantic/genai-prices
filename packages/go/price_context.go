@@ -50,10 +50,20 @@ func (variant *priceVariant) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func resolvePriceVariants(model *model, timestamp time.Time, context map[string]string) (modelPrice, []string) {
+func resolvePriceVariants(model *model, provider *provider, timestamp time.Time, context map[string]string) (modelPrice, []string) {
 	standard := activeModelPrice(model, timestamp)
 	if len(context) == 0 {
 		return standard, nil
+	}
+	ownsModel := false
+	for index := range provider.Models {
+		if model == &provider.Models[index] {
+			ownsModel = true
+			break
+		}
+	}
+	if !ownsModel {
+		return standard, []string{fmt.Sprintf("No price variant matched for provider '%s' model '%s'; using standard prices", provider.ID, model.ID)}
 	}
 	resolved := make(modelPrice, len(standard))
 	for key, price := range standard {

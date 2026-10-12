@@ -76,6 +76,8 @@ OpenAI variants cover `flex`, `priority`, and `fast` where the published rate ta
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 You can also pass it to `ExtractedUsage.calc_price()`, `ModelInfo.calc_price()`, and `DataSnapshot.calc()`.
 Extraction does not infer a pricing context.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
+and the standard-price estimate; the fallback provider's tier rates are not applied.
 
 If a nonempty context matches no variant, you receive a `UserWarning` and the standard-price estimate.
 This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.

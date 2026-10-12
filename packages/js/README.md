@@ -44,6 +44,8 @@ if (!price || price.total_price !== 5) {
 You pass `priceContext` explicitly to select request-specific prices. Its keys and values are strings.
 Use the `service_tier` reported in OpenAI's response. A priority request can be downgraded and report `default`.
 `auto` is a request setting and does not identify the rate you were charged. Extraction does not infer a context.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
+and the standard-price estimate; the fallback provider's tier rates are not applied.
 
 OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.

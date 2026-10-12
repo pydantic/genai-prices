@@ -102,6 +102,24 @@ def test_unresearched_tier_history_and_unsupported_model() -> None:
         assert result.total_price == standard.total_price
 
 
+def test_fallback_provider_does_not_inherit_tier_rates() -> None:
+    usage = Usage(input_tokens=1_000_000, output_tokens=1_000_000)
+    timestamp = datetime(2026, 10, 12)
+    standard = calc_price(usage, 'gpt-5', provider_id='azure', genai_request_timestamp=timestamp)
+    assert standard.total_price == Decimal('11.25')
+    for context in [None, {}, {'service_tier': 'priority'}]:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter('always')
+            result = calc_price(
+                usage, 'gpt-5', provider_id='azure', genai_request_timestamp=timestamp, price_context=context
+            )
+        assert result.provider.id == 'azure'
+        assert result.total_price == standard.total_price
+        assert [str(w.message) for w in caught] == (
+            ["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"] if context else []
+        )
+
+
 @pytest.mark.parametrize('when', [{}, {'service_tier': None}, {'service_tier': True}])
 def test_invalid_variant_condition(when: Any) -> None:
     with pytest.raises(ValueError, match='Price variant when'):
@@ -137,6 +155,29 @@ def test_variant_export_validation_covers_combined_overrides() -> None:
         }
     )
     with pytest.raises(ValueError, match='Missing join price'):
+        validate_export_payload([provider], load_units())
+
+
+def test_variant_export_validation_covers_later_variant_alone() -> None:
+    provider = prices_types.Provider.model_validate(
+        {
+            'id': 'example',
+            'name': 'Example',
+            'api_pattern': 'example',
+            'models': [
+                {
+                    'id': 'm',
+                    'match': {'equals': 'm'},
+                    'prices': {'input_mtok': 1},
+                    'price_variants': [
+                        {'when': {'service_tier': 'flex'}, 'prices': {'input_audio_mtok': 1}},
+                        {'when': {'inference_geo': 'us'}, 'prices': {'cache_read_mtok': 1, 'cache_audio_read_mtok': 1}},
+                    ],
+                }
+            ],
+        }
+    )
+    with pytest.raises(ValueError, match='Invalid price variant.*Missing ancestor price'):
         validate_export_payload([provider], load_units())
 
 

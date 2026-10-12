@@ -100,7 +100,7 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if timestamp.IsZero() {
 		timestamp = time.Now()
 	}
-	prices, contextWarnings := resolvePriceVariants(matchedModel, timestamp, request.PriceContext)
+	prices, contextWarnings := resolvePriceVariants(matchedModel, selected, timestamp, request.PriceContext)
 	if len(request.PriceContext) > 0 {
 		if err := validateModelPrice(prices, calculator.registry); err != nil {
 			return PriceCalculation{}, fmt.Errorf("%w: %v", ErrInvalidData, err)

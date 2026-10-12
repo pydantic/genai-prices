@@ -771,7 +771,15 @@ class ModelInfo:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp, price_context)
+        if price_context and not any(self is model for model in provider.models):
+            warnings.warn(
+                f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
+                UserWarning,
+                stacklevel=2,
+            )
+            model_price = self.get_prices(genai_request_timestamp)
+        else:
+            model_price = self.get_prices(genai_request_timestamp, price_context)
         if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
             usage = copy(Usage.from_raw(usage))
             reported_seconds = usage.__dict__.get('audio_seconds') or usage.__dict__.get('input_audio_seconds')

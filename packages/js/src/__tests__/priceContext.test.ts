@@ -126,3 +126,16 @@ it('rejects a missing variant price map', () => {
   variant.prices = null as unknown as ModelPrice
   expect(() => calcPrice({}, 'context-model', { provider })).toThrow('Price variant prices must be an object')
 })
+
+it('does not inherit tier rates from a fallback provider', () => {
+  const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+  const options = { providerId: 'azure', timestamp: new Date('2026-10-12T00:00:00Z') }
+  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+  const contexts: (PriceContext | undefined)[] = [undefined, {}, { service_tier: 'priority' }]
+  for (const priceContext of contexts) {
+    const result = calcPrice(usage, 'gpt-5', { ...options, priceContext })
+    expect(result?.provider.id).toBe('azure')
+    expect(result?.total_price).toBe(11.25)
+  }
+  expect(warning.mock.calls).toEqual([["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"]])
+})

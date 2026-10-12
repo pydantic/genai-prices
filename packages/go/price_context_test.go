@@ -112,3 +112,26 @@ func TestInvalidPriceVariants(t *testing.T) {
 		t.Fatalf("got %v", err)
 	}
 }
+
+func TestFallbackProviderDoesNotInheritTierRates(t *testing.T) {
+	for _, context := range []map[string]string{nil, {}, {"service_tier": "priority"}} {
+		result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageOutputTokens: 1_000_000},
+			Model: "gpt-5", ProviderID: "azure", Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
+			PriceContext: context,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if result.ProviderID != "azure" || result.TotalPrice != 11.25 {
+			t.Fatalf("got %+v", result)
+		}
+		if len(context) == 0 {
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		} else if len(result.Warnings) != 1 || result.Warnings[0] != "No price variant matched for provider 'azure' model 'gpt-5'; using standard prices" {
+			t.Fatalf("got warnings %v", result.Warnings)
+		}
+	}
+}

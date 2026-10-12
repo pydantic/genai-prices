@@ -78,7 +78,10 @@ You list explicit per-unit rates because a discount may apply to tokens without 
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
 and constrain those rates to the verification date. Earlier requests then warn instead of receiving an unverified tier rate.
-Run `make build` after changing variants. The build validates their price keys and coverage with the standard prices.
+When standard prices change, verify every variant independently. Its absolute rates do not change automatically.
+Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
+Test each affected context before and after the date boundary in all three packages.
+Run `make build` after changing variants. The build validates each variant and their combined price keys with standard prices.
 
 ### Automatic price discrepancy detection
 
