@@ -24,6 +24,44 @@ describe('Match Logic', () => {
 })
 
 describe('Provider Matching', () => {
+  it.each([
+    ['meta', 'muse-wonder-1.0', 'muse-wonder-1.0'],
+    ['mistral', 'mistral-large-4', 'mistral-large-4'],
+    ['mistral', 'mistral-large-4-0', 'mistral-large-4'],
+    ['openrouter', 'meta/muse-wonder', 'meta/muse-wonder'],
+    ['openrouter', 'meta/muse-wonder-20261012', 'meta/muse-wonder'],
+    ['openrouter', 'mistralai/mistral-large-4-0', 'mistralai/mistral-large-4-0'],
+    ['openrouter', 'mistralai/mistral-large-4-0-20261006', 'mistralai/mistral-large-4-0'],
+  ])('resolves %s model ref %s to %s', (providerId, modelRef, expectedModelId) => {
+    expect(calcPrice({ input_tokens: 1 }, modelRef, { providerId })?.model.id).toBe(expectedModelId)
+  })
+
+  it('prices the October Meta and Mistral models with their confirmed routes', () => {
+    const tokenUsage = { cache_read_tokens: 100_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }
+    const meta = actualProviders.find((provider) => provider.id === 'meta')!
+    expect(matchModel(meta.models, 'muse-wonder-1.0')?.context_window).toBe(1_048_576)
+    expect(
+      calcPrice({ ...tokenUsage, web_searches: 1 }, 'muse-wonder-1.0', { providerApiUrl: 'https://api.meta.ai/v1' })?.total_price
+    ).toBeCloseTo(23.6225, 10)
+    expect(
+      calcPrice({ ...tokenUsage, web_searches: 1 }, 'meta/muse-wonder-20261012', { providerId: 'openrouter' })?.total_price
+    ).toBeCloseTo(23.6225, 10)
+
+    const mistral = actualProviders.find((provider) => provider.id === 'mistral')!
+    expect(matchModel(mistral.models, 'mistral-large-4-0')?.context_window).toBe(1_048_576)
+    expect(calcPrice(tokenUsage, 'mistral-large-4-0', { providerId: 'mistral' })?.total_price).toBeCloseTo(2.709, 10)
+
+    const openrouter = actualProviders.find((provider) => provider.id === 'openrouter')!
+    expect(matchModel(openrouter.models, 'mistralai/mistral-large-4-0-20261006')?.context_window).toBeUndefined()
+    expect(calcPrice(tokenUsage, 'mistralai/mistral-large-4-0-20261006', { providerId: 'openrouter' })?.total_price).toBeCloseTo(2.709, 10)
+    expect(
+      calcPrice(tokenUsage, 'mistralai/mistral-large-4-0', {
+        priceContext: { route: 'mistral/eu' },
+        providerId: 'openrouter',
+      })?.total_price
+    ).toBeCloseTo(2.9799, 10)
+  })
+
   describe('matchProvider with modelId', () => {
     it('prefers Fireworks for its fully-qualified DeepSeek model IDs', () => {
       const provider = matchProvider(actualProviders, { modelId: 'accounts/fireworks/models/deepseek-v4-flash-0731' })
@@ -41,6 +79,13 @@ describe('Provider Matching', () => {
     it('infers Cursor only for its Composer namespace', () => {
       expect(matchProvider(actualProviders, { modelId: 'composer-2.5' })?.id).toBe('cursor')
       expect(matchProvider(actualProviders, { modelId: 'grok-4.6' })?.id).not.toBe('cursor')
+    })
+
+    it('infers Meta only for its documented model ID and API host', () => {
+      expect(matchProvider(actualProviders, { modelId: 'muse-wonder-1.0' })?.id).toBe('meta')
+      expect(matchProvider(actualProviders, { modelId: 'muse-spark-1.3' })?.id).not.toBe('meta')
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.meta.ai/v1' })?.id).toBe('meta')
+      expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.meta.ai.evil.test/v1' })?.id).not.toBe('meta')
     })
 
     it('does not claim third-party model namespaces for Arcee', () => {

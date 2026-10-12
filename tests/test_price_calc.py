@@ -44,6 +44,42 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_october_model_prices_and_context_metadata():
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000, web_searches=1)
+    meta_price = calc_price(usage, 'muse-wonder-1.0', provider_api_url='https://api.meta.ai/v1')
+    assert meta_price.provider.id == 'meta'
+    assert meta_price.model.context_window == 1_048_576
+    assert meta_price.total_price == Decimal('23.6225')
+
+    mistral_price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        'mistral-large-4-0',
+        provider_id='mistral',
+    )
+    assert mistral_price.model.id == 'mistral-large-4'
+    assert mistral_price.model.context_window == 1_048_576
+    assert mistral_price.total_price == Decimal('2.709')
+
+    openrouter_mistral = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        'mistralai/mistral-large-4-0-20261006',
+        provider_id='openrouter',
+    )
+    assert openrouter_mistral.model.context_window is None
+    assert openrouter_mistral.total_price == Decimal('2.709')
+    eu_price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        'mistralai/mistral-large-4-0',
+        provider_id='openrouter',
+        price_context={'route': 'mistral/eu'},
+    )
+    assert eu_price.total_price == Decimal('2.9799')
+
+    openrouter_meta = calc_price(usage, 'meta/muse-wonder-20261012', provider_id='openrouter')
+    assert openrouter_meta.model.context_window == 1_048_576
+    assert openrouter_meta.total_price == Decimal('23.6225')
+
+
 def test_openai_decisions_price_and_usage_extraction():
     decisions_usage = Usage(input_tokens=1_000, cache_read_tokens=200, output_tokens=100)
     decisions_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ')

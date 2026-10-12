@@ -9758,6 +9758,70 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='meta',
+        name='Meta',
+        api_pattern='https://api\\.meta\\.ai(?:/|$)',
+        pricing_urls=[
+            'https://dev.meta.ai/docs/pricing-rate-limits',
+            'https://dev.meta.ai/docs/protocols/chat-completions',
+            'https://dev.meta.ai/docs/protocols/responses',
+            'https://dev.meta.ai/docs/prompt-caching',
+        ],
+        model_match=ClauseEquals(equals='muse-wonder-1.0'),
+        provider_match=ClauseEquals(equals='meta'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='muse-wonder-1.0',
+                match=ClauseEquals(equals='muse-wonder-1.0'),
+                name='Muse Wonder 1.0',
+                context_window=1048576,
+                price_comments='Standard mode pricing: $4 input, $0.20 cached input, $20 output per million tokens, plus $2.50 per 1,000 web search queries. The usage response has no documented billable-search count, so callers provide web_searches. No Messages extractor is defined because the docs do not consistently confirm Wonder support. https://dev.meta.ai/docs/pricing-rate-limits',
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            )
+        ],
+    ),
+    Provider(
         id='minimax',
         name='MiniMax',
         api_pattern='https://api\\.minimax(i)?\\.(?:com|io)',
@@ -10152,6 +10216,16 @@ providers: list[Provider] = [
                 context_window=262144,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.5')
+                ),
+            ),
+            ModelInfo(
+                id='mistral-large-4',
+                match=ClauseOr(or_=[ClauseEquals(equals='mistral-large-4'), ClauseEquals(equals='mistral-large-4-0')]),
+                name='Mistral Large 4',
+                context_window=1048576,
+                price_comments='Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. https://docs.mistral.ai/models/mistral-large-4-0 https://docs.mistral.ai/inference/pricing https://docs.mistral.ai/resources/changelogs',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
                 ),
             ),
             ModelInfo(
@@ -15705,6 +15779,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.05')),
             ),
             ModelInfo(
+                id='meta/muse-wonder',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='meta/muse-wonder'), ClauseEquals(equals='meta/muse-wonder-20261012')]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-wonder-20261012/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='microsoft/phi-3-medium-128k-instruct',
                 match=ClauseEquals(equals='microsoft/phi-3-medium-128k-instruct'),
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
@@ -16034,6 +16122,27 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.5')
                 ),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-large-4-0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistralai/mistral-large-4-0'),
+                        ClauseEquals(equals='mistralai/mistral-large-4-0-20261006'),
+                    ]
+                ),
+                price_comments='Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. This model is available on the global route with a 1,048,576-token context and the EU route with a 524,288-token context, so no single context_window is listed. The EU endpoint is priced at 10% above its global counterpart; callers can select it with request context route=mistral/eu. https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints https://docs.mistral.ai/resources/changelogs',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'route': 'mistral/eu'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.748'), cache_read_mtok=Decimal('0.077'), output_mtok=Decimal('2.299')
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='mistralai/mistral-medium',
