@@ -3231,6 +3231,9 @@ export const data: Provider[] = [
             {
               contains: 'jp.anthropic.claude-haiku-4-5-20251001',
             },
+            {
+              contains: 'in.anthropic.claude-haiku-4-5-20251001',
+            },
           ],
         },
         context_window: 200000,
@@ -3607,6 +3610,9 @@ export const data: Provider[] = [
               equals: 'jp.anthropic.claude-opus-5',
             },
             {
+              equals: 'in.anthropic.claude-opus-5',
+            },
+            {
               contains: 'us.anthropic.claude-opus-5-v1',
             },
             {
@@ -3617,6 +3623,9 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-opus-5-v1',
+            },
+            {
+              contains: 'in.anthropic.claude-opus-5-v1',
             },
           ],
         },
@@ -3902,6 +3911,9 @@ export const data: Provider[] = [
               equals: 'jp.anthropic.claude-sonnet-5',
             },
             {
+              equals: 'in.anthropic.claude-sonnet-5',
+            },
+            {
               contains: 'us.anthropic.claude-sonnet-5-v1',
             },
             {
@@ -3918,6 +3930,9 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'in.anthropic.claude-sonnet-5-v1',
             },
           ],
         },

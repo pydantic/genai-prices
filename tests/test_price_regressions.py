@@ -755,6 +755,24 @@ def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, e
     assert price.total_price == Decimal(expected)
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected'),
+    [
+        ('in.anthropic.claude-haiku-4-5-20251001-v1:0', 'regional.anthropic.claude-haiku-4-5-20251001-v1:0', '6.6'),
+        ('in.anthropic.claude-opus-5', 'regional.anthropic.claude-opus-5', '33'),
+        ('in.anthropic.claude-opus-5-v1:0', 'regional.anthropic.claude-opus-5', '33'),
+        ('in.anthropic.claude-sonnet-5', 'regional.anthropic.claude-sonnet-5-v1:0', '13.2'),
+        ('in.anthropic.claude-sonnet-5-v1:0', 'regional.anthropic.claude-sonnet-5-v1:0', '13.2'),
+    ],
+)
+def test_aws_claude_india_inference_profile_ids(model_ref: str, model_id: str, expected: str) -> None:
+    """Bedrock's India (`in.`) inference profiles in ap-south-1 take the regional rate, like the other geographies."""
+    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected)
+
+
 def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
     """OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added."""
     price = calc_price(
