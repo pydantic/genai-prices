@@ -4,7 +4,6 @@ import (
 	"errors"
 	"maps"
 	"math"
-	"strings"
 	"testing"
 	"time"
 
@@ -1045,18 +1044,17 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		}
 	}
 
-	for _, body := range []string{
-		`{"model":"muse-wonder-1.0","usage":{"prompt_tokens":100,"prompt_tokens_details":{"cached_tokens":20},"completion_tokens":40,"completion_tokens_details":{"reasoning_tokens":10}}}`,
-		`{"model":"muse-wonder-1.0","usage":{"input_tokens":100,"input_tokens_details":{"cached_tokens":20},"output_tokens":40,"output_tokens_details":{"reasoning_tokens":10}}}`,
+	for _, fixture := range []struct {
+		apiFlavor string
+		body      string
+	}{
+		{"chat", `{"model":"muse-wonder-1.0","usage":{"prompt_tokens":100,"prompt_tokens_details":{"cached_tokens":20},"completion_tokens":40,"completion_tokens_details":{"reasoning_tokens":10}}}`},
+		{"responses", `{"model":"muse-wonder-1.0","usage":{"input_tokens":100,"input_tokens_details":{"cached_tokens":20},"output_tokens":40,"output_tokens_details":{"reasoning_tokens":10}}}`},
 	} {
-		flavor := "chat"
-		if strings.Contains(body, `"input_tokens"`) {
-			flavor = "responses"
-		}
 		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
-			ResponseJSON: []byte(body),
+			ResponseJSON: []byte(fixture.body),
 			ProviderID:   "meta",
-			APIFlavor:    flavor,
+			APIFlavor:    fixture.apiFlavor,
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -1064,7 +1062,7 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		if extracted.Model != "muse-wonder-1.0" || extracted.Usage[genai_prices.UsageCacheReadTokens] != 20 ||
 			extracted.Usage[genai_prices.UsageInputTokens] != 100 || extracted.Usage[genai_prices.UsageOutputTokens] != 40 ||
 			extracted.Usage[genai_prices.UsageOutputReasoningTokens] != 10 {
-			t.Errorf("%s extracted %#v", flavor, extracted)
+			t.Errorf("%s extracted %#v", fixture.apiFlavor, extracted)
 		}
 	}
 }
