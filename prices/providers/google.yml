@@ -457,6 +457,49 @@ models:
       cache_write_1h_mtok: 20
       output_mtok: 50
 
+  - id: claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    match:
+      or:
+        - contains: claude-haiku-5-5
+        - contains: claude-haiku-5.5
+        - contains: claude-5-5-haiku
+        - contains: claude-5.5-haiku
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      Global endpoint pricing; multi-region and regional endpoints carry a 10% premium.
+      Prompts over 100K input tokens bill every token at the long-context rate.
+      Rates match Anthropic's list price and OpenRouter's Google endpoint.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.2
+        tiers:
+          - start: 100000
+            price: 1
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+
   - id: claude-opus-4-5
     canonical_model: anthropic/claude-opus-4-5
     match:
@@ -466,16 +509,12 @@ models:
         - contains: claude-4.5-opus
         - contains: claude-opus-4.5
     context_window: 200000
-    prices_checked: 2026-10-04
+    prices_checked: 2026-10-12
     price_comments: >-
       A 200K context window, so there is no long-context tier.
-      Vertex availability is confirmed by Google's own partner-model docs, which list Opus 4.5:
-      https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
-      That page carries no rates, and these rates are NOT yet verified against Google's Claude
-      pricing table. They are Anthropic's published Opus 4.5 list prices
-      (https://platform.claude.com/docs/en/models/opus-4-5/overview). The Opus 4.6, 4.7 and 4.8
-      entries in this file match Anthropic's list for those models exactly, which is the basis
-      for using them here.
+      Global endpoint rates; regional and multi-region endpoints carry a 10% premium.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Model ID ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
     prices:
       input_mtok: 5
       cache_read_mtok: 0.50
@@ -836,9 +875,13 @@ models:
         - equals: gemini-2.5-flash-image
         - equals: gemini-2.5-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-07-22
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at
-      $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
+    deprecated: true
+    prices_checked: 2026-10-10
+    price_comments: >-
+      Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut
+      down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image."
+      (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each
+      1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
       model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.
     prices:
       input_mtok: 0.3
