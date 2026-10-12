@@ -46,7 +46,7 @@ it.each(fixture.cases)('price context: $name', (test) => {
 it.each([
   ['o3', 'flex', 4.8125],
   ['o3', 'priority', 16.84375],
-  ['o4-mini', 'flex', 2.646875],
+  ['o4-mini', 'flex', 2.647],
   ['o4-mini', 'priority', 9.625],
   ['gpt-5-mini', 'flex', 1.096875],
   ['gpt-6.1-sol', 'fast', 36.1],
@@ -59,6 +59,22 @@ it.each([
       timestamp: new Date('2026-10-12T00:00:00Z'),
     })?.total_price
   ).toBeCloseTo(total, 12)
+})
+
+it.each([
+  ['o4-mini', 100_000, 100_000, 0.0138, 2.2],
+  ['gpt-5.4', 272_000, 272_000, 0.03536, 7.5],
+  ['gpt-5.4', 272_001, 272_001, 0.06800025, 11.25],
+  ['gpt-5.5-pro', 272_000, 0, 4.08, 90],
+  ['gpt-5.5-pro', 272_001, 0, 4.080015, 90],
+] as const)('uses published Flex rates for %s at %i input tokens', (model, inputTokens, cacheReadTokens, inputPrice, outputPrice) => {
+  const result = calcPrice({ cache_read_tokens: cacheReadTokens, input_tokens: inputTokens, output_tokens: 1_000_000 }, model, {
+    priceContext: { service_tier: 'flex' },
+    providerId: 'openai',
+    timestamp: new Date('2026-10-12T00:00:00Z'),
+  })
+  expect(result?.input_price).toBeCloseTo(inputPrice, 12)
+  expect(result?.output_price).toBeCloseTo(outputPrice, 12)
 })
 
 it('preserves the shared rate card across extracted flex, default and priority calls', () => {

@@ -1775,11 +1775,31 @@ export const data: Provider[] = [
         id: 'amazon.titan-embed-text-v1',
         name: 'Titan Embeddings G1 - Text',
         match: {
-          contains: 'amazon.titan-embed-text',
+          or: [
+            {
+              ends_with: 'amazon.titan-embed-text',
+            },
+            {
+              contains: 'amazon.titan-embed-text-v1',
+            },
+          ],
         },
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'amazon.titan-embed-text-v2:0',
+        name: 'Titan Text Embeddings V2',
+        match: {
+          contains: 'amazon.titan-embed-text-v2',
+        },
+        context_window: 8192,
+        price_comments:
+          'On-demand input token price from the AWS price list API, AmazonBedrock (us-east-1), usage type TitanEmbeddingV2-Text-input-tokens: $0.00002 per 1K tokens. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-text-embeddings-v2.html',
+        prices: {
+          input_mtok: 0.02,
         },
       },
       {
@@ -20552,7 +20572,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached input uses the published $0.13/MTok rate. The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/models/gpt-5.4',
         prices: {
           input_mtok: {
             base: 2.5,
@@ -20606,7 +20626,7 @@ export const data: Provider[] = [
                 ],
               },
               cache_read_mtok: {
-                base: 0.125,
+                base: 0.13,
                 tiers: [
                   {
                     start: 272000,
@@ -21066,7 +21086,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision. Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. The table publishes only base Flex rates; no long-context Flex surcharge is modeled. Standard prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref: https://developers.openai.com/api/docs/pricing',
         prices: {
           input_mtok: {
             base: 30,
@@ -21101,24 +21121,8 @@ export const data: Provider[] = [
               service_tier: 'flex',
             },
             prices: {
-              input_mtok: {
-                base: 15,
-                tiers: [
-                  {
-                    start: 272000,
-                    price: 30,
-                  },
-                ],
-              },
-              output_mtok: {
-                base: 90,
-                tiers: [
-                  {
-                    start: 272000,
-                    price: 135,
-                  },
-                ],
-              },
+              input_mtok: 15,
+              output_mtok: 90,
             },
             constraint: {
               start_date: '2026-10-12',
@@ -23370,7 +23374,7 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         price_comments:
-          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.',
+          'Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing. Tier history before this verification is not modeled. Flex cached input uses the published $0.138/MTok rate.',
         prices: {
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
@@ -23391,7 +23395,7 @@ export const data: Provider[] = [
             },
             prices: {
               input_mtok: 0.55,
-              cache_read_mtok: 0.1375,
+              cache_read_mtok: 0.138,
               output_mtok: 2.2,
             },
             constraint: {

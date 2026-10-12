@@ -1055,7 +1055,7 @@ models:
     prices_checked: 2026-10-12
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
-      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Tier history before this verification is not modeled. Flex cached input uses the published $0.13/MTok rate.
       The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the
       pricing engines select a tier when the token count is greater than start. Ref:
       https://developers.openai.com/api/docs/models/gpt-5.4
@@ -1089,7 +1089,7 @@ models:
               - start: 272000
                 price: 2.50
           cache_read_mtok:
-            base: 0.125
+            base: 0.13
             tiers:
               - start: 272000
                 price: 0.25
@@ -1338,9 +1338,10 @@ models:
     prices_checked: 2026-10-12
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
-      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
-      Prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output. Tier starts use 272000
-      because the pricing engines select a tier when the token count is greater than start. Ref:
+      Tier history before this verification is not modeled.
+      The table publishes only base Flex rates; no long-context Flex surcharge is modeled.
+      Standard prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output.
+      Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref:
       https://developers.openai.com/api/docs/pricing
     prices:
       input_mtok:
@@ -1361,16 +1362,8 @@ models:
       - when: { service_tier: flex }
         constraint: { start_date: 2026-10-12 }
         prices:
-          input_mtok:
-            base: 15.00
-            tiers:
-              - start: 272000
-                price: 30.00
-          output_mtok:
-            base: 90.00
-            tiers:
-              - start: 272000
-                price: 135.00
+          input_mtok: 15.00
+          output_mtok: 90.00
 
   - id: gpt-5.6-luna
     name: GPT-5.6 Luna
@@ -2733,7 +2726,7 @@ models:
       storage_searches_kcount: 2.5
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
-      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Tier history before this verification is not modeled. Flex cached input uses the published $0.138/MTok rate.
     price_variants:
       - when: { service_tier: default }
         prices: {}
@@ -2741,7 +2734,7 @@ models:
         constraint: { start_date: 2026-10-12 }
         prices:
           input_mtok: 0.55
-          cache_read_mtok: 0.1375
+          cache_read_mtok: 0.138
           output_mtok: 2.20
       - when: { service_tier: priority }
         constraint: { start_date: 2026-10-12 }

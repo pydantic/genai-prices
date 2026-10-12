@@ -55,7 +55,7 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
     [
         ('o3', 'flex', '4.8125'),
         ('o3', 'priority', '16.84375'),
-        ('o4-mini', 'flex', '2.646875'),
+        ('o4-mini', 'flex', '2.647'),
         ('o4-mini', 'priority', '9.625'),
         ('gpt-5-mini', 'flex', '1.096875'),
         ('gpt-6.1-sol', 'fast', '36.1'),
@@ -71,6 +71,30 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
         price_context={'service_tier': tier},
     )
     assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
+    'model,input_tokens,cache_read_tokens,input_price,output_price',
+    [
+        ('o4-mini', 100_000, 100_000, '0.0138', '2.2'),
+        ('gpt-5.4', 272_000, 272_000, '0.03536', '7.5'),
+        ('gpt-5.4', 272_001, 272_001, '0.06800025', '11.25'),
+        ('gpt-5.5-pro', 272_000, 0, '4.08', '90'),
+        ('gpt-5.5-pro', 272_001, 0, '4.080015', '90'),
+    ],
+)
+def test_openai_published_flex_rates(
+    model: str, input_tokens: int, cache_read_tokens: int, input_price: str, output_price: str
+) -> None:
+    result = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=cache_read_tokens, output_tokens=1_000_000),
+        model,
+        provider_id='openai',
+        genai_request_timestamp=datetime(2026, 10, 12),
+        price_context={'service_tier': 'flex'},
+    )
+    assert result.input_price == Decimal(input_price)
+    assert result.output_price == Decimal(output_price)
 
 
 def test_extracted_context_and_no_mutation() -> None:

@@ -2,6 +2,7 @@ package genai_prices_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"os"
 	"strings"
@@ -69,7 +70,7 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		total       float64
 	}{
 		{"o3", "flex", 4.8125}, {"o3", "priority", 16.84375},
-		{"o4-mini", "flex", 2.646875}, {"o4-mini", "priority", 9.625},
+		{"o4-mini", "flex", 2.647}, {"o4-mini", "priority", 9.625},
 		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
 		{"gpt-6.1-sol", "priority", 36.1},
 	} {
@@ -84,6 +85,41 @@ func TestOpenAIServiceTiers(t *testing.T) {
 			}
 			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
 				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
+func TestOpenAIPublishedFlexRates(t *testing.T) {
+	for _, test := range []struct {
+		model                        string
+		inputTokens, cacheReadTokens float64
+		inputPrice, outputPrice      float64
+	}{
+		{"o4-mini", 100_000, 100_000, 0.0138, 2.2},
+		{"gpt-5.4", 272_000, 272_000, 0.03536, 7.5},
+		{"gpt-5.4", 272_001, 272_001, 0.06800025, 11.25},
+		{"gpt-5.5-pro", 272_000, 0, 4.08, 90},
+		{"gpt-5.5-pro", 272_001, 0, 4.080015, 90},
+	} {
+		t.Run(test.model+"/"+fmt.Sprint(test.inputTokens), func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{
+					genai_prices.UsageInputTokens:     test.inputTokens,
+					genai_prices.UsageCacheReadTokens: test.cacheReadTokens,
+					genai_prices.UsageOutputTokens:    1_000_000,
+				},
+				Model: test.model, ProviderID: "openai", Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
+				PriceContext: map[string]string{"service_tier": "flex"},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.InputPrice-test.inputPrice) > 1e-12 || math.Abs(result.OutputPrice-test.outputPrice) > 1e-12 {
+				t.Fatalf("got %v/%v, want %v/%v", result.InputPrice, result.OutputPrice, test.inputPrice, test.outputPrice)
 			}
 			if len(result.Warnings) != 0 {
 				t.Fatalf("got warnings %v", result.Warnings)
