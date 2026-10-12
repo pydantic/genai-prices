@@ -11,6 +11,18 @@ providers:
       Fast-mode rates for standard rates. Preserve existing special-rate records. This is a pricing page, not a complete
       catalog; do not infer removals from it.
 
+  - name: OpenAI Decisions
+    file: prices/providers/openai_decisions.yml
+    scope: OpenAI Decisions endpoint pricing for models listed by the Decisions guide.
+    sources:
+      - https://developers.openai.com/api/docs/guides/decisions
+      - https://developers.openai.com/api/docs/models/gpt-6-luna
+    notes: >-
+      The Decisions guide lists the models available through this endpoint; currently, only gpt-6-luna is in scope. Its $0.10
+      per 1M total input tokens includes cached and write subsets; do not record separate cache or output rates. Above 272000
+      total input tokens, input is priced at 2x; the YAML tier start is 272000 because the engines apply tiers only above
+      start. Exclude generic Chat and Responses pricing and regional premiums. Do not infer removals from the model page.
+
   - name: Anthropic
     file: prices/providers/anthropic.yml
     scope: Public Anthropic API models with standard on-demand prices and web-search charges.

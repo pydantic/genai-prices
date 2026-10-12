@@ -5797,6 +5797,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/cloudflare/clef-omni',
+        name: 'Clef Omni',
+        match: {
+          equals: '@cf/cloudflare/clef-omni',
+        },
+        context_window: 64000,
+        price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
+        prices: {
+          input_mtok: 0.15,
+        },
+      },
+      {
         id: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
         name: 'DeepSeek R1 Distill Qwen 32B',
         match: {
@@ -6251,6 +6263,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/zai-org/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: '@cf/zai-org/glm-5.3',
+        },
+        price_comments: 'https://developers.cloudflare.com/workers-ai/platform/pricing/',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
         id: '@cf/zai-org/glm-5.3-flash',
         name: 'GLM 5.3 Flash',
         match: {
@@ -6670,6 +6695,100 @@ export const data: Provider[] = [
           input_mtok: 4,
           cache_read_mtok: 1,
           output_mtok: 12,
+        },
+      },
+      {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        description: "Cursor and SpaceXAI's frontier model for complex coding and knowledge work.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7',
+            },
+            {
+              regex: '^grok-4\\.7\\[fast=false\\]$',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Standard rates apply through 256k input tokens; longer requests use the 500k rates for all tokens. https://cursor.com/docs/models/grok-4-7',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 256000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 256000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 256000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'grok-4.7-fast',
+        name: 'Grok 4.7 Fast',
+        description: 'Faster Grok 4.7 speed tier for complex coding and knowledge work.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.7-fast',
+            },
+            {
+              regex: '^grok-4\\.7\\[fast=true\\]$',
+            },
+          ],
+        },
+        context_window: 500000,
+        price_comments:
+          'Fast rates apply through 256k input tokens; longer requests use the 500k Fast rates for all tokens. https://cursor.com/docs/models/grok-4-7',
+        prices: {
+          input_mtok: {
+            base: 4,
+            tiers: [
+              {
+                start: 256000,
+                price: 6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 256000,
+                price: 1.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 256000,
+                price: 18,
+              },
+            ],
+          },
         },
       },
     ],
@@ -10726,12 +10845,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+          'Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image." (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
         prices: {
           input_mtok: 0.3,
           output_mtok: 2.5,
           output_image_mtok: 30,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-flash-lite',
@@ -11716,6 +11836,30 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'canopylabs/orpheus-arabic-saudi',
+        name: 'Orpheus Arabic Saudi (Canopy Labs)',
+        match: {
+          equals: 'canopylabs/orpheus-arabic-saudi',
+        },
+        context_window: 4000,
+        price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-arabic-saudi',
+        prices: {
+          input_mchars: 40,
+        },
+      },
+      {
+        id: 'canopylabs/orpheus-v1-english',
+        name: 'Orpheus V1 English (Canopy Labs)',
+        match: {
+          equals: 'canopylabs/orpheus-v1-english',
+        },
+        context_window: 4000,
+        price_comments: 'https://console.groq.com/docs/models#canopylabs/orpheus-v1-english',
+        prices: {
+          input_mchars: 22,
+        },
+      },
+      {
         id: 'deepseek-r1-distill-llama-70b',
         name: 'DeepSeek R1 Distill Llama 70B',
         match: {
@@ -11960,6 +12104,32 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'meta-llama/llama-prompt-guard-2-22m',
+        name: 'Llama Prompt Guard 2 22M',
+        match: {
+          equals: 'meta-llama/llama-prompt-guard-2-22m',
+        },
+        context_window: 512,
+        price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-22m',
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'meta-llama/llama-prompt-guard-2-86m',
+        name: 'Llama Prompt Guard 2 86M',
+        match: {
+          equals: 'meta-llama/llama-prompt-guard-2-86m',
+        },
+        context_window: 512,
+        price_comments: 'https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-86m',
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
         },
       },
       {
@@ -17053,11 +17223,14 @@ export const data: Provider[] = [
           equals: 'devstral-2512',
         },
         context_window: 262144,
+        price_comments:
+          'Deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5 for new integrations. https://docs.mistral.ai/models/devstral-2-25-12',
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
           output_mtok: 2,
         },
+        deprecated: true,
       },
       {
         id: 'devstral-small',
@@ -17113,10 +17286,13 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments:
+          'Magistral Medium 1.2 was deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5. https://docs.mistral.ai/models/magistral-medium-1-2-25-09 No context_window: this record matches versions with different context limits.',
         prices: {
           input_mtok: 2,
           output_mtok: 5,
         },
+        deprecated: true,
       },
       {
         id: 'magistral-small',
@@ -17126,10 +17302,13 @@ export const data: Provider[] = [
         match: {
           starts_with: 'magistral-small-',
         },
+        price_comments:
+          'Magistral Small 1.2 was deprecated 2026-04-30. Mistral recommends Mistral Small 4. https://docs.mistral.ai/models/magistral-small-1-2-25-09 No context_window: this record matches versions with different context limits.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
         },
+        deprecated: true,
       },
       {
         id: 'ministral-14b-2512',
@@ -17505,11 +17684,12 @@ export const data: Provider[] = [
           ],
         },
         context_window: 16384,
-        price_comments: 'https://docs.mistral.ai/models/ocr-4-0',
+        price_comments: 'Deprecated 2026-09-29. Mistral recommends OCR 4.1 for new integrations. https://docs.mistral.ai/models/ocr-4-0',
         prices: {
           input_document_kpages: 4,
           input_annotated_document_kpages: 5,
         },
+        deprecated: true,
       },
       {
         id: 'mistral-ocr-4-1',
@@ -21376,6 +21556,105 @@ export const data: Provider[] = [
         prices: {
           audio_hours: 0.36,
           input_audio_hours: 0.36,
+        },
+      },
+    ],
+  },
+  {
+    id: 'openai-decisions',
+    name: 'OpenAI Decisions',
+    pricing_urls: [
+      'https://developers.openai.com/api/docs/guides/decisions',
+      'https://developers.openai.com/api/reference/resources/decisions',
+      'https://developers.openai.com/api/docs/models/gpt-6-luna',
+    ],
+    api_pattern: 'https://api\\.openai\\.com',
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna Decisions',
+        match: {
+          equals: 'gpt-6-luna',
+        },
+        context_window: 1050000,
+        price_comments:
+          'Decisions input is billed at the standard GPT-6 Luna input rate, with the 2x rate applying above 272K input tokens. Cache subsets are included in input pricing and have no separate charge. Regional-processing +10% premiums are not represented here, consistent with the standard OpenAI provider. Refs: https://developers.openai.com/api/docs/guides/decisions, https://developers.openai.com/api/reference/resources/decisions, https://developers.openai.com/api/docs/models/gpt-6-luna',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
         },
       },
     ],

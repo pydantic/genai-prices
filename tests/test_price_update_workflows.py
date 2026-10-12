@@ -90,9 +90,9 @@ def test_provider_allowlist_matches_manifest() -> None:
     assert {path for path in allowed if path.endswith('.yml')} == {
         provider['file'] for provider in manifest['providers']
     }
-    assert len(manifest['providers']) == 20
-    assert len({provider['file'] for provider in manifest['providers']}) == 20
-    assert {'OpenAI', 'Anthropic', 'Google (Gemini)', 'Mistral'} <= {
+    assert len(manifest['providers']) == 21
+    assert len({provider['file'] for provider in manifest['providers']}) == 21
+    assert {'OpenAI', 'OpenAI Decisions', 'Anthropic', 'Google (Gemini)', 'Mistral'} <= {
         provider['name'] for provider in manifest['providers']
     }
     for provider in manifest['providers']:
