@@ -44,6 +44,60 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_openai_decisions_price_and_usage_extraction():
+    decisions_usage = Usage(input_tokens=1_000, cache_read_tokens=200, output_tokens=100)
+    decisions_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ')
+    openai_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id='openai')
+
+    assert decisions_price.provider.id == 'openai-decisions'
+    assert decisions_price.total_price == Decimal('0.000100')
+    assert openai_price.total_price == Decimal('0.000132')
+    shared_url_price = calc_price(
+        Usage(input_tokens=1),
+        model_ref='gpt-6-luna',
+        provider_api_url='https://api.openai.com/v1/decisions',
+    )
+    assert shared_url_price.provider.id == 'openai'
+
+    for api_flavor in ('default', 'responses'):
+        extracted = extract_usage(
+            {
+                'model': 'gpt-6-luna',
+                'usage': {
+                    'input_tokens': 1_000,
+                    'input_tokens_details': {'cached_tokens': 200, 'cache_write_tokens': 50},
+                    'output_tokens': 100,
+                    'output_tokens_details': {'reasoning_tokens': 25},
+                },
+            },
+            provider_id='openai-decisions',
+            api_flavor=api_flavor,
+        )
+        assert extracted.model is not None
+        assert extracted.model.id == 'gpt-6-luna'
+        assert extracted.usage == Usage(
+            input_tokens=1_000,
+            cache_read_tokens=200,
+            cache_write_tokens=50,
+            output_tokens=100,
+            output_reasoning_tokens=25,
+        )
+        assert calc_price(
+            extracted.usage, model_ref=extracted.model.id, provider_id='openai-decisions'
+        ).total_price == Decimal('0.000100')
+
+    for input_tokens, expected in ((272_000, Decimal('0.0272')), (272_001, Decimal('0.0544002'))):
+        tier_price = calc_price(
+            Usage(input_tokens=input_tokens, cache_read_tokens=100_000, cache_write_tokens=50_000),
+            model_ref='gpt-6-luna',
+            provider_id='openai-decisions',
+        )
+        assert tier_price.total_price == expected
+
+    with pytest.raises(LookupError, match="Unable to find model with model_ref='gpt-6-sol'"):
+        calc_price(Usage(input_tokens=1), model_ref='gpt-6-sol', provider_id='openai-decisions')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
@@ -63,6 +117,26 @@ def test_cursor_model_prices(model_ref: str, expected_total_price: Decimal):
     )
 
     assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'input_tokens', 'expected_total_price'),
+    [
+        ('grok-4.7', 256_000, Decimal('6.362')),
+        ('grok-4.7', 256_001, Decimal('12.724004')),
+        ('grok-4.7-fast', 256_000, Decimal('12.724')),
+        ('grok-4.7-fast', 256_001, Decimal('19.086006')),
+    ],
+)
+def test_cursor_grok_4_7_long_context_prices(model_ref: str, input_tokens: int, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='cursor',
+    )
+
+    assert price.total_price == expected_total_price
+    assert price.model.context_window == 500_000
 
 
 def test_cursor_provider_inference():

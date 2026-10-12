@@ -119,6 +119,20 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 6.362, inputTokens: 256_000, model: 'grok-4.7' },
+    { expectedTotalPrice: 12.724004, inputTokens: 256_001, model: 'grok-4.7' },
+    { expectedTotalPrice: 12.724, inputTokens: 256_000, model: 'grok-4.7-fast' },
+    { expectedTotalPrice: 19.086006, inputTokens: 256_001, model: 'grok-4.7-fast' },
+  ])('prices Cursor $model at the 256K boundary', ({ expectedTotalPrice, inputTokens, model }) => {
+    const result = calcPrice({ cache_read_tokens: 100_000, input_tokens: inputTokens, output_tokens: 1_000_000 }, model, {
+      providerId: 'cursor',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+    expect(result?.model.context_window).toBe(500_000)
+  })
+
+  it.each([
     { expectedTotalPrice: 18.3, model: 'databricks-kimi-k3' },
     { expectedTotalPrice: 0.448, model: 'databricks-deepseek-v4-flash-0731' },
     { expectedTotalPrice: 5.412, model: 'databricks-deepseek-v4-pro-0813' },

@@ -35,21 +35,21 @@ The following providers are currently supported:
 
 - [Anthropic](prices/providers/anthropic.yml) - 27 models
 - [Arcee](prices/providers/arcee.yml) - 10 models
-- [Avian](prices/providers/avian.yml) - 19 models
+- [Avian](prices/providers/avian.yml) - 24 models
 - [AWS Bedrock](prices/providers/aws.yml) - 105 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 17 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
-- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 49 models
+- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 51 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
-- [Cursor](prices/providers/cursor.yml) - 6 models
+- [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 40 models
 - [Google](prices/providers/google.yml) - 59 models
-- [Groq](prices/providers/groq.yml) - 33 models
+- [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models
@@ -67,13 +67,14 @@ The following providers are currently supported:
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 97 models
+- [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 712 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 11 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 42 models
 - [Together AI](prices/providers/together.yml) - 73 models
 - [TypeSafe](prices/providers/typesafe.yml) - 1 models
-- [Voyage AI](prices/providers/voyageai.yml) - 22 models
+- [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models
 - [Z.AI](prices/providers/zai.yml) - 4 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
