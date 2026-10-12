@@ -2,7 +2,7 @@ name: Add provider request note
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions: {}
 

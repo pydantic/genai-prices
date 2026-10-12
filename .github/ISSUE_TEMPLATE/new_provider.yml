@@ -1,6 +1,6 @@
 name: New provider
 description: Request pricing support for a new LLM provider.
-title: "Add support for "
+title: "Add support for <provider name>"
 body:
   - type: input
     id: provider-name
