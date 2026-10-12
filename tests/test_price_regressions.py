@@ -41,6 +41,25 @@ def test_gemini_25_flash_context_window() -> None:
     assert price.model.context_window == 1_048_576
 
 
+def test_google_claude_opus_45_global_prices() -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=100_000,
+            cache_read_tokens=20_000,
+            cache_write_tokens=20_000,
+            cache_write_1h_tokens=10_000,
+            output_tokens=10_000,
+        ),
+        model_ref='claude-opus-4-5@20251101',
+        provider_id='google',
+    )
+
+    assert price.model.id == 'claude-opus-4-5'
+    assert price.model.context_window == 200_000
+    assert price.input_price == mtok('5', 60_000) + mtok('0.5', 20_000) + mtok('6.25', 10_000) + mtok('10', 10_000)
+    assert price.output_price == mtok('25', 10_000)
+
+
 @pytest.mark.parametrize(
     ('input_tokens', 'rate'),
     [(200_000, '3'), (200_001, '6')],
