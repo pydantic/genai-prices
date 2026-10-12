@@ -18,7 +18,7 @@ func TestPriceCheckPreservesRatesWithoutAnEffectiveDate(t *testing.T) {
 		{"avian", "xiaomi/mimo-v2.5-pro", 0.435, 0.0036, 0.87},
 		{"avian", "xiaomi/mimo-v2.6-flash", 0.2, 0.05, 0.4},
 		{"avian", "xiaomi/mimo-v2.6-pro", 0.435, 0.0036, 0.87},
-		{"github-copilot", "claude-sonnet-5.5", 2, 0.20, 10},
+		{"github-copilot", "claude-sonnet-5.5", 2, 0.10, 10},
 	} {
 		t.Run(test.providerID+"/"+test.model, func(t *testing.T) {
 			for _, timestamp := range []time.Time{

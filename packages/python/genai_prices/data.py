@@ -473,7 +473,7 @@ providers: list[Provider] = [
                 name='Claude Opus 5.5',
                 description='For long-running agentic coding and knowledge work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -616,11 +616,11 @@ providers: list[Provider] = [
                 name='Claude Sonnet 5.5',
                 description='The best combination of speed and intelligence',
                 context_window=1000000,
-                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('10'),
                     cache_write_1h_mtok=Decimal('4'),
                     web_searches_kcount=Decimal('10'),
@@ -1018,6 +1018,24 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='cacheWriteInputTokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(path='cacheReadInputTokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='cacheWriteInputTokens', dest='cache_write_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheDetails',
+                            ArrayMatch(type='array-match', field='ttl', match=ClauseEquals(equals='5m')),
+                            'inputTokens',
+                        ],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheDetails',
+                            ArrayMatch(type='array-match', field='ttl', match=ClauseEquals(equals='1h')),
+                            'inputTokens',
+                        ],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -1312,7 +1330,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+                price_comments='Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -1367,11 +1385,11 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Global endpoint (no premium), flat across the full 1M context window. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
+                price_comments='Global endpoint (no premium), flat across the full 1M context window. Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('10'),
                     cache_write_1h_mtok=Decimal('4'),
                 ),
@@ -2167,7 +2185,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
                 prices=ModelPrice(
                     input_mtok=Decimal('4.4'),
                     cache_write_mtok=Decimal('5.5'),
@@ -2269,11 +2287,11 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+                price_comments='Regional endpoints and inference profiles carry a 10% premium over the global endpoint. Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.2'),
                     cache_write_mtok=Decimal('2.75'),
-                    cache_read_mtok=Decimal('0.22'),
+                    cache_read_mtok=Decimal('0.11'),
                     output_mtok=Decimal('11'),
                     cache_write_1h_mtok=Decimal('4.4'),
                 ),
@@ -3358,6 +3376,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.09')),
             ),
             ModelInfo(
+                id='@cf/cloudflare/clef-omni',
+                match=ClauseEquals(equals='@cf/cloudflare/clef-omni'),
+                name='Clef Omni',
+                context_window=64000,
+                price_comments='Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
+                prices=ModelPrice(input_mtok=Decimal('0.15')),
+            ),
+            ModelInfo(
                 id='@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
                 match=ClauseEquals(equals='@cf/deepseek-ai/deepseek-r1-distill-qwen-32b'),
                 name='DeepSeek R1 Distill Qwen 32B',
@@ -3622,6 +3648,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='@cf/zai-org/glm-5.3',
+                match=ClauseEquals(equals='@cf/zai-org/glm-5.3'),
+                name='GLM 5.3',
+                price_comments='https://developers.cloudflare.com/workers-ai/platform/pricing/',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
                 id='@cf/zai-org/glm-5.3-flash',
                 match=ClauseEquals(equals='@cf/zai-org/glm-5.3-flash'),
                 name='GLM 5.3 Flash',
@@ -3837,6 +3872,36 @@ providers: list[Provider] = [
                 context_window=256000,
                 price_comments='Fast on-demand usage.',
                 prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
+                id='grok-4.7',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.7'), ClauseRegex(regex='^grok-4\\.7\\[fast=false\\]$')]
+                ),
+                name='Grok 4.7',
+                description="Cursor and SpaceXAI's frontier model for complex coding and knowledge work.",
+                context_window=500000,
+                price_comments='Standard rates apply through 256k input tokens; longer requests use the 500k rates for all tokens. https://cursor.com/docs/models/grok-4-7',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=256000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=256000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=256000, price=Decimal('12'))]),
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.7-fast',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='grok-4.7-fast'), ClauseRegex(regex='^grok-4\\.7\\[fast=true\\]$')]
+                ),
+                name='Grok 4.7 Fast',
+                description='Faster Grok 4.7 speed tier for complex coding and knowledge work.',
+                context_window=500000,
+                price_comments='Fast rates apply through 256k input tokens; longer requests use the 500k Fast rates for all tokens. https://cursor.com/docs/models/grok-4-7',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=256000, price=Decimal('6'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=256000, price=Decimal('1.5'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=256000, price=Decimal('18'))]),
+                ),
             ),
         ],
     ),
@@ -5090,7 +5155,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('10'),
                 ),
             ),
@@ -5902,6 +5967,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-4-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-4-5-opus'),
+                        ClauseContains(contains='claude-opus-4-5'),
+                        ClauseContains(contains='claude-4.5-opus'),
+                        ClauseContains(contains='claude-opus-4.5'),
+                    ]
+                ),
+                context_window=200000,
+                price_comments='A 200K context window, so there is no long-context tier. Global endpoint rates; regional and multi-region endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Model ID ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-opus-4-6',
                 match=ClauseOr(
                     or_=[
@@ -6013,7 +6098,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview The one-hour cache write rate is the global endpoint's, from the same pricing page.",
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -6067,11 +6152,11 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
+                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint. Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints",
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('10'),
                     cache_write_1h_mtok=Decimal('4'),
                 ),
@@ -6173,7 +6258,8 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash Image',
                 description="Google's specialized image generation model optimized for fast, high-quality image generation. Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+                price_comments='Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image." (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), output_mtok=Decimal('2.5'), output_image_mtok=Decimal('30')
                 ),
@@ -6782,6 +6868,22 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='canopylabs/orpheus-arabic-saudi',
+                match=ClauseEquals(equals='canopylabs/orpheus-arabic-saudi'),
+                name='Orpheus Arabic Saudi (Canopy Labs)',
+                context_window=4000,
+                price_comments='https://console.groq.com/docs/models#canopylabs/orpheus-arabic-saudi',
+                prices=ModelPrice(input_mchars=Decimal('40')),
+            ),
+            ModelInfo(
+                id='canopylabs/orpheus-v1-english',
+                match=ClauseEquals(equals='canopylabs/orpheus-v1-english'),
+                name='Orpheus V1 English (Canopy Labs)',
+                context_window=4000,
+                price_comments='https://console.groq.com/docs/models#canopylabs/orpheus-v1-english',
+                prices=ModelPrice(input_mchars=Decimal('22')),
+            ),
+            ModelInfo(
                 id='deepseek-r1-distill-llama-70b',
                 match=ClauseEquals(equals='deepseek-r1-distill-llama-70b'),
                 name='DeepSeek R1 Distill Llama 70B',
@@ -6905,6 +7007,22 @@ providers: list[Provider] = [
                 name='Llama Guard 4 12B',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-prompt-guard-2-22m',
+                match=ClauseEquals(equals='meta-llama/llama-prompt-guard-2-22m'),
+                name='Llama Prompt Guard 2 22M',
+                context_window=512,
+                price_comments='https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-22m',
+                prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-prompt-guard-2-86m',
+                match=ClauseEquals(equals='meta-llama/llama-prompt-guard-2-86m'),
+                name='Llama Prompt Guard 2 86M',
+                context_window=512,
+                price_comments='https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-86m',
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
             ),
             ModelInfo(
                 id='mistral-saba-24b',
@@ -9886,6 +10004,8 @@ providers: list[Provider] = [
                 name='Devstral 2 2512',
                 description='Devstral 2 is a state-of-the-art open-source model by Mistral AI specializing in agentic coding. It is a 123B-parameter dense transformer model supporting a 256K context window.',
                 context_window=262144,
+                price_comments='Deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5 for new integrations. https://docs.mistral.ai/models/devstral-2-25-12',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
@@ -9917,6 +10037,8 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseStartsWith(starts_with='magistral-medium')]),
                 name='Magistral Medium',
                 description="Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.",
+                price_comments='Magistral Medium 1.2 was deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5. https://docs.mistral.ai/models/magistral-medium-1-2-25-09 No context_window: this record matches versions with different context limits.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
@@ -9924,6 +10046,8 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='magistral-small-'),
                 name='Magistral Small',
                 description='Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised fine-tuning on traces from Magistral Medium and further refined via reinforcement learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.',
+                price_comments='Magistral Small 1.2 was deprecated 2026-04-30. Mistral recommends Mistral Small 4. https://docs.mistral.ai/models/magistral-small-1-2-25-09 No context_window: this record matches versions with different context limits.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
             ),
             ModelInfo(
@@ -10054,6 +10178,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='mistral-medium-3.5'),
                         ClauseEquals(equals='mistral-medium-3-5'),
                         ClauseEquals(equals='mistral-medium-3'),
+                        ClauseEquals(equals='mistral-medium-2604'),
                     ]
                 ),
                 name='Mistral Medium 3.5',
@@ -10134,7 +10259,8 @@ providers: list[Provider] = [
                 ),
                 name='Mistral OCR 4.0',
                 context_window=16384,
-                price_comments='https://docs.mistral.ai/models/ocr-4-0',
+                price_comments='Deprecated 2026-09-29. Mistral recommends OCR 4.1 for new integrations. https://docs.mistral.ai/models/ocr-4-0',
+                deprecated=True,
                 prices=ModelPrice(input_document_kpages=Decimal('4'), input_annotated_document_kpages=Decimal('5')),
             ),
             ModelInfo(
@@ -12890,7 +13016,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), unique to Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -12979,11 +13105,11 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
-                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
+                price_comments='Flat pricing across the full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Cache-read rate confirmed via https://openrouter.ai/api/v1/models',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
+                    cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('10'),
                 ),
             ),

@@ -31,6 +31,35 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestCursorGrok47LongContextPrices(t *testing.T) {
+	for _, test := range []struct {
+		model       string
+		inputTokens float64
+		want        float64
+	}{
+		{"grok-4.7", 256_000, 6.362},
+		{"grok-4.7", 256_001, 12.724004},
+		{"grok-4.7-fast", 256_000, 12.724},
+		{"grok-4.7-fast", 256_001, 19.086006},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     test.inputTokens,
+				genai_prices.UsageCacheReadTokens: 100_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+			},
+			Model:      test.model,
+			ProviderID: "cursor",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+			t.Fatalf("%s with %g input tokens got %g, want %g", test.model, test.inputTokens, calculation.TotalPrice, test.want)
+		}
+	}
+}
+
 func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 	usage := genai_prices.Usage{
 		genai_prices.UsageInputTokens:      1_000,
@@ -554,28 +583,29 @@ func TestOpenRouterClaudeOpusLatestMovesToOpus55(t *testing.T) {
 	}
 }
 
-// Sonnet 5.5 shares Sonnet 5's rates, so only the resolved model shows the Sonnet 5 prefix matchers no longer claim it.
+// Sonnet 5.5 resolves to its own model, and bills cache reads at half Sonnet 5's rate (0.05x input).
 func TestClaudeSonnet55ResolvesToItsOwnModel(t *testing.T) {
 	for _, test := range []struct {
 		providerID, model, wantModelID string
 		wantPrice                      float64
 	}{
-		{"anthropic", "claude-sonnet-5-5", "claude-sonnet-5-5", 12},
-		{"anthropic", "claude-sonnet-5-5-20260928", "claude-sonnet-5-5", 12},
-		{"google", "claude-sonnet-5-5", "claude-sonnet-5-5", 12},
-		{"google", "claude-sonnet-5-5@20260928", "claude-sonnet-5-5", 12},
-		{"google", "publishers/anthropic/models/claude-sonnet-5-5", "claude-sonnet-5-5", 12},
-		{"aws", "global.anthropic.claude-sonnet-5-5", "global.anthropic.claude-sonnet-5-5", 12},
-		{"aws", "global.anthropic.claude-sonnet-5-5-v1:0", "global.anthropic.claude-sonnet-5-5", 12},
-		{"aws", "us.anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.2},
-		{"aws", "us.anthropic.claude-sonnet-5-5-v1:0", "regional.anthropic.claude-sonnet-5-5", 13.2},
-		{"aws", "anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.2},
-		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12},
+		{"anthropic", "claude-sonnet-5-5", "claude-sonnet-5-5", 12.1},
+		{"anthropic", "claude-sonnet-5-5-20260928", "claude-sonnet-5-5", 12.1},
+		{"google", "claude-sonnet-5-5", "claude-sonnet-5-5", 12.1},
+		{"google", "claude-sonnet-5-5@20260928", "claude-sonnet-5-5", 12.1},
+		{"google", "publishers/anthropic/models/claude-sonnet-5-5", "claude-sonnet-5-5", 12.1},
+		{"aws", "global.anthropic.claude-sonnet-5-5", "global.anthropic.claude-sonnet-5-5", 12.1},
+		{"aws", "global.anthropic.claude-sonnet-5-5-v1:0", "global.anthropic.claude-sonnet-5-5", 12.1},
+		{"aws", "us.anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.31},
+		{"aws", "us.anthropic.claude-sonnet-5-5-v1:0", "regional.anthropic.claude-sonnet-5-5", 13.31},
+		{"aws", "anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.31},
+		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12.1},
 	} {
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 			Usage: genai_prices.Usage{
-				genai_prices.UsageInputTokens:  1_000_000,
-				genai_prices.UsageOutputTokens: 1_000_000,
+				genai_prices.UsageInputTokens:     2_000_000,
+				genai_prices.UsageCacheReadTokens: 1_000_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
 			},
 			Model:      test.model,
 			ProviderID: test.providerID,
@@ -643,8 +673,6 @@ func TestOpenRouterClaudeSonnetLatestMovesToSonnet55(t *testing.T) {
 	}
 }
 
-// The Titan Text Embeddings V1 record matched any ref containing `amazon.titan-embed-text`, so V2
-// silently resolved to V1 and was priced 5x too high.
 func TestAWSTitanEmbedTextV2DoesNotUseV1Prices(t *testing.T) {
 	tests := []struct {
 		model     string
@@ -831,6 +859,44 @@ func TestDatabricksExtractUsage(t *testing.T) {
 		}
 		if math.Abs(calculation.TotalPrice-test.wantPrice) > 1e-12 {
 			t.Fatalf("%s: got %g, want %g", test.request.APIFlavor, calculation.TotalPrice, test.wantPrice)
+		}
+	}
+}
+
+// 0.75M five-minute and 0.25M one-hour cache writes. The regional endpoint carries a 10% premium.
+func TestAWSConverseCacheWriteTTL(t *testing.T) {
+	wantUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:        1_000_000,
+		genai_prices.UsageCacheReadTokens:    0,
+		genai_prices.UsageCacheWriteTokens:   1_000_000,
+		genai_prices.UsageCacheWrite5MTokens: 750_000,
+		genai_prices.UsageCacheWrite1HTokens: 250_000,
+		genai_prices.UsageOutputTokens:       0,
+	}
+	for _, test := range []struct {
+		model     string
+		wantPrice float64
+	}{
+		{"global.anthropic.claude-sonnet-4-6", 4.3125},
+		{"us.anthropic.claude-sonnet-4-6", 4.74375},
+	} {
+		body := `{"model":"` + test.model + `","usage":{"inputTokens":0,"cacheReadInputTokens":0,"cacheWriteInputTokens":1000000,` +
+			`"cacheDetails":[{"ttl":"1h","inputTokens":250000},{"ttl":"5m","inputTokens":750000}],"outputTokens":0,"totalTokens":1000000}}`
+		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{ResponseJSON: []byte(body), ProviderID: "aws"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if extracted.ProviderID != "aws" || extracted.Model != test.model || !maps.Equal(extracted.Usage, wantUsage) {
+			t.Fatalf("%s: got %#v", test.model, extracted)
+		}
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: extracted.Usage, Model: extracted.Model, ProviderID: extracted.ProviderID,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.wantPrice) > 1e-12 {
+			t.Fatalf("%s: got %g, want %g", test.model, calculation.TotalPrice, test.wantPrice)
 		}
 	}
 }

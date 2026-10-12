@@ -119,6 +119,26 @@ def test_cursor_model_prices(model_ref: str, expected_total_price: Decimal):
     assert price.total_price == expected_total_price
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'input_tokens', 'expected_total_price'),
+    [
+        ('grok-4.7', 256_000, Decimal('6.362')),
+        ('grok-4.7', 256_001, Decimal('12.724004')),
+        ('grok-4.7-fast', 256_000, Decimal('12.724')),
+        ('grok-4.7-fast', 256_001, Decimal('19.086006')),
+    ],
+)
+def test_cursor_grok_4_7_long_context_prices(model_ref: str, input_tokens: int, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='cursor',
+    )
+
+    assert price.total_price == expected_total_price
+    assert price.model.context_window == 500_000
+
+
 def test_cursor_provider_inference():
     composer_price = calc_price(Usage(input_tokens=1), model_ref='composer-2.5[fast=true]')
     grok_price = calc_price(
@@ -143,7 +163,7 @@ def test_cursor_provider_inference():
         ('claude-opus-5.5', Decimal('24.2')),
         ('claude-sonnet-4.6', Decimal('18.3')),
         ('claude-sonnet-5', Decimal('12.2')),
-        ('claude-sonnet-5.5', Decimal('12.2')),
+        ('claude-sonnet-5.5', Decimal('12.1')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
@@ -1994,6 +2014,13 @@ def test_mistral_voxtral_small_price_change(
         ),
         (
             'mistral-medium-3',
+            datetime(2026, 8, 24, tzinfo=timezone.utc),
+            'mistral-medium-3-5',
+            Decimal('1.5'),
+            Decimal('7.5'),
+        ),
+        (
+            'mistral-medium-2604',
             datetime(2026, 8, 24, tzinfo=timezone.utc),
             'mistral-medium-3-5',
             Decimal('1.5'),
