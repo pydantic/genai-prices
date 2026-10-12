@@ -75,7 +75,11 @@ models:
     match:
       equals: devstral-2512
     context_window: 262144
-    prices_checked: 2026-06-09
+    deprecated: true
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5 for new integrations.
+      https://docs.mistral.ai/models/devstral-2-25-12
     prices:
       input_mtok: 0.4
       cache_read_mtok: 0.04
@@ -128,9 +132,12 @@ models:
     match:
       or:
         - starts_with: magistral-medium
-    prices_checked: 2025-08-12
-    # No context_window: this record also matches the retired magistral-medium-2506/2507 releases
-    # (40k per Mistral's model docs) vs magistral-medium-latest's 262,144 — no single value is true
+    deprecated: true
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Magistral Medium 1.2 was deprecated 2026-05-22. Mistral recommends Mistral Medium 3.5.
+      https://docs.mistral.ai/models/magistral-medium-1-2-25-09
+      No context_window: this record matches versions with different context limits.
     prices:
       input_mtok: 2
       output_mtok: 5
@@ -143,9 +150,12 @@ models:
       learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.
     match:
       starts_with: magistral-small-
-    prices_checked: 2025-08-12
-    # No context_window: this record also matches the retired magistral-small-2506/2507 releases
-    # (40k per Mistral's model docs) vs magistral-small-latest's 262,144 — no single value is true
+    deprecated: true
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Magistral Small 1.2 was deprecated 2026-04-30. Mistral recommends Mistral Small 4.
+      https://docs.mistral.ai/models/magistral-small-1-2-25-09
+      No context_window: this record matches versions with different context limits.
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -445,8 +455,11 @@ models:
         - equals: mistral-ocr-4-0
         - equals: mistral-ocr-4-0-completion
     context_window: 16384
-    prices_checked: 2026-08-25
-    price_comments: https://docs.mistral.ai/models/ocr-4-0
+    deprecated: true
+    prices_checked: 2026-10-12
+    price_comments: >-
+      Deprecated 2026-09-29. Mistral recommends OCR 4.1 for new integrations.
+      https://docs.mistral.ai/models/ocr-4-0
     prices:
       input_document_kpages: 4
       input_annotated_document_kpages: 5

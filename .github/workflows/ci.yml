@@ -150,7 +150,7 @@ jobs:
           node-version: 24.x
           package-manager-cache: false
       - name: Install triage-pilot action helpers
-        uses: github/gh-aw-actions/setup@30aadb1626371455f145991c6385924babda2d04 # v0.86.3
+        uses: github/gh-aw-actions/setup@d7cc687a9bc76b9d56e6c496649403392f654b35 # v0.91.1
         with:
           destination: ${{ runner.temp }}/gh-aw/actions
       - run: node .github/scripts/test-triage-pilot-pydantic-harness.cjs

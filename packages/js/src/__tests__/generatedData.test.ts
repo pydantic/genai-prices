@@ -119,6 +119,35 @@ describe('generated data split', () => {
   })
 
   it.each([
+    { expectedTotalPrice: 6.362, inputTokens: 256_000, model: 'grok-4.7' },
+    { expectedTotalPrice: 12.724004, inputTokens: 256_001, model: 'grok-4.7' },
+    { expectedTotalPrice: 12.724, inputTokens: 256_000, model: 'grok-4.7-fast' },
+    { expectedTotalPrice: 19.086006, inputTokens: 256_001, model: 'grok-4.7-fast' },
+  ])('prices Cursor $model at the 256K boundary', ({ expectedTotalPrice, inputTokens, model }) => {
+    const result = calcPrice({ cache_read_tokens: 100_000, input_tokens: inputTokens, output_tokens: 1_000_000 }, model, {
+      providerId: 'cursor',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+    expect(result?.model.context_window).toBe(500_000)
+  })
+
+  it.each([
+    { expectedTotalPrice: 18.3, model: 'databricks-kimi-k3' },
+    { expectedTotalPrice: 0.448, model: 'databricks-deepseek-v4-flash-0731' },
+    { expectedTotalPrice: 5.412, model: 'databricks-deepseek-v4-pro-0813' },
+    { expectedTotalPrice: 6.06, model: 'system.ai.glm-5-3' },
+    { expectedTotalPrice: 2.64, model: 'databricks-qwen35-122b-a10b' },
+    { expectedTotalPrice: 0.9, model: 'databricks-gpt-oss-120b' },
+  ])('prices Databricks $model', ({ expectedTotalPrice, model }) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'databricks',
+    })
+
+    expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
+  })
+
+  it.each([
     { expectedTotalPrice: 61, model: 'claude-fable-5' },
     { expectedTotalPrice: 60.25, model: 'claude-fable-5.1' },
     { expectedTotalPrice: 6.1, model: 'claude-haiku-4.5' },
@@ -126,7 +155,7 @@ describe('generated data split', () => {
     { expectedTotalPrice: 24.2, model: 'claude-opus-5.5' },
     { expectedTotalPrice: 18.3, model: 'claude-sonnet-4.6' },
     { expectedTotalPrice: 12.2, model: 'claude-sonnet-5' },
-    { expectedTotalPrice: 12.2, model: 'claude-sonnet-5.5' },
+    { expectedTotalPrice: 12.1, model: 'claude-sonnet-5.5' },
     { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
     { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
     { expectedTotalPrice: 1.47, model: 'gpt-5.4-nano' },
