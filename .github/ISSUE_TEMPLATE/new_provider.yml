@@ -1,0 +1,37 @@
+name: New provider
+description: Request pricing support for a new LLM provider.
+title: "Add support for "
+body:
+  - type: input
+    id: provider-name
+    attributes:
+      label: Provider name
+      placeholder: e.g. Gonka Broker
+    validations:
+      required: true
+  - type: input
+    id: provider-website
+    attributes:
+      label: Provider website
+      placeholder: https://example.com
+    validations:
+      required: true
+  - type: input
+    id: pricing
+    attributes:
+      label: Pricing
+      description: Link to the provider's official pricing page or public pricing API.
+      placeholder: https://example.com/pricing
+    validations:
+      required: true
+  - type: textarea
+    id: usage-evidence
+    attributes:
+      label: Evidence of usage
+      description: Link to public evidence that this is an operating LLM provider with real users.
+      placeholder: Customer references, independent reviews, or projects using its API.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: If you want this provider to be supported, please give this issue a thumbs up (👍).
