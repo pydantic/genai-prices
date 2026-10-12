@@ -1601,6 +1601,36 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: [
+              'cacheDetails',
+              {
+                type: 'array-match',
+                field: 'ttl',
+                match: {
+                  equals: '5m',
+                },
+              },
+              'inputTokens',
+            ],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheDetails',
+              {
+                type: 'array-match',
+                field: 'ttl',
+                match: {
+                  equals: '1h',
+                },
+              },
+              'inputTokens',
+            ],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'outputTokens',
             dest: 'output_tokens',
             required: true,
