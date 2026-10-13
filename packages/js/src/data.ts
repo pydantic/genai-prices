@@ -3231,6 +3231,9 @@ export const data: Provider[] = [
             {
               contains: 'jp.anthropic.claude-haiku-4-5-20251001',
             },
+            {
+              contains: 'in.anthropic.claude-haiku-4-5-20251001',
+            },
           ],
         },
         context_window: 200000,
@@ -3607,6 +3610,9 @@ export const data: Provider[] = [
               equals: 'jp.anthropic.claude-opus-5',
             },
             {
+              equals: 'in.anthropic.claude-opus-5',
+            },
+            {
               contains: 'us.anthropic.claude-opus-5-v1',
             },
             {
@@ -3618,11 +3624,14 @@ export const data: Provider[] = [
             {
               contains: 'jp.anthropic.claude-opus-5-v1',
             },
+            {
+              contains: 'in.anthropic.claude-opus-5-v1',
+            },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
+          'Regional endpoints and US/EU/JP/AU/IN inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions IN rates from the AWS price list API, AmazonBedrockFoundationModels (ap-south-1, ap-south-2). One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -3902,6 +3911,9 @@ export const data: Provider[] = [
               equals: 'jp.anthropic.claude-sonnet-5',
             },
             {
+              equals: 'in.anthropic.claude-sonnet-5',
+            },
+            {
               contains: 'us.anthropic.claude-sonnet-5-v1',
             },
             {
@@ -3918,6 +3930,9 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-sonnet-5-v1',
+            },
+            {
+              contains: 'in.anthropic.claude-sonnet-5-v1',
             },
           ],
         },

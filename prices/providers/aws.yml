@@ -1257,6 +1257,7 @@ models:
         - contains: eu.anthropic.claude-haiku-4-5-20251001
         - contains: us-gov.anthropic.claude-haiku-4-5-20251001
         - contains: jp.anthropic.claude-haiku-4-5-20251001
+        - contains: in.anthropic.claude-haiku-4-5-20251001
     prices:
       input_mtok: 1.1
       cache_write_mtok: 1.375
@@ -1441,10 +1442,11 @@ models:
 
   - id: regional.anthropic.claude-opus-5
     canonical_model: anthropic/claude-opus-5
-    prices_checked: 2026-09-25
+    prices_checked: 2026-10-12
     price_comments: >-
-      Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
+      Regional endpoints and US/EU/JP/AU/IN inference profiles carry a 10% premium over the global endpoint.
       Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+      IN rates from the AWS price list API, AmazonBedrockFoundationModels (ap-south-1, ap-south-2).
       One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
     match:
       or:
@@ -1456,10 +1458,12 @@ models:
         - equals: au.anthropic.claude-opus-5
         - equals: eu.anthropic.claude-opus-5
         - equals: jp.anthropic.claude-opus-5
+        - equals: in.anthropic.claude-opus-5
         - contains: us.anthropic.claude-opus-5-v1
         - contains: au.anthropic.claude-opus-5-v1
         - contains: eu.anthropic.claude-opus-5-v1
         - contains: jp.anthropic.claude-opus-5-v1
+        - contains: in.anthropic.claude-opus-5-v1
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875
@@ -1608,12 +1612,14 @@ models:
         - equals: eu.anthropic.claude-sonnet-5
         - equals: us-gov.anthropic.claude-sonnet-5
         - equals: jp.anthropic.claude-sonnet-5
+        - equals: in.anthropic.claude-sonnet-5
         - contains: us.anthropic.claude-sonnet-5-v1
         - contains: au.anthropic.claude-sonnet-5-v1
         - contains: apac.anthropic.claude-sonnet-5-v1
         - contains: eu.anthropic.claude-sonnet-5-v1
         - contains: us-gov.anthropic.claude-sonnet-5-v1
         - contains: jp.anthropic.claude-sonnet-5-v1
+        - contains: in.anthropic.claude-sonnet-5-v1
     price_comments: >-
       Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now
       permanent, with no 2026-09-01 increase.
