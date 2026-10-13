@@ -7865,10 +7865,27 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek-ai/DeepSeek-V4-Flash',
         },
-        prices: {
-          input_mtok: 0.14,
-          output_mtok: 0.28,
-        },
+        price_comments:
+          'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash. The models page showed $0.14 in / $0.28 out with no cache price on 2026-06-06 (Wayback snapshot 20260606012647) and $0.09 in / $0.02 cache read / $0.18 out on 2026-10-12. The change date is not published, so the current rates start on the verification date.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              output_mtok: 0.28,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.18,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
@@ -36461,6 +36478,50 @@ export const data: Provider[] = [
       },
     ],
     models: [
+      {
+        id: 'GLM-4.5-Air',
+        name: 'GLM-4.5-Air',
+        description: 'Z.AI lightweight GLM-4.5 model with context caching and function calling.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5-Air',
+            },
+            {
+              equals: 'glm-4.5-air',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: 'Context length is 128K per https://docs.z.ai/guides/llm/glm-4.5.',
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'GLM-4.6',
+        name: 'GLM-4.6',
+        description: 'Z.AI GLM-4.6 model with context caching and function calling.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.6',
+            },
+            {
+              equals: 'glm-4.6',
+            },
+          ],
+        },
+        context_window: 200000,
+        price_comments: 'Context length is 200K per https://docs.z.ai/guides/llm/glm-4.6.',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
       {
         id: 'GLM-4.6V',
         name: 'GLM-4.6V',
