@@ -8141,6 +8141,49 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4p1-flash',
+        },
+        context_window: 1048576,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'deepseek-v4p1-flash-us',
+        name: 'DeepSeek V4.1 Flash US',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-us',
+        },
+        context_window: 1048576,
+        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.009,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'ember-1',
+        name: 'Ember-1',
+        description: 'Fireworks model built on Kimi K3 that produces shorter reasoning traces.',
+        match: {
+          equals: 'accounts/fireworks/models/ember-1',
+        },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'gemma-3-27b-it',
         name: 'Gemma 3 27B Instruct',
         match: {
@@ -8225,6 +8268,76 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.1,
           cache_read_mtok: 0.21,
+          output_mtok: 6.6,
+        },
+      },
+      {
+        id: 'glm-5p3',
+        name: 'GLM-5.3',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3',
+        },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'glm-5p3-fast',
+        name: 'GLM 5.3 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-fast',
+        },
+        context_window: 1040000,
+        price_comments: 'Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.39,
+          output_mtok: 6.6,
+        },
+      },
+      {
+        id: 'glm-5p3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3-flash',
+        },
+        context_window: 1040000,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'glm-5p3-flash-us',
+        name: 'GLM 5.3 Flash US',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-flash-us',
+        },
+        context_window: 1040000,
+        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: {
+          input_mtok: 0.225,
+          cache_read_mtok: 0.045,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'glm-5p3-us',
+        name: 'GLM 5.3 US',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-us',
+        },
+        context_window: 1040000,
+        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.39,
           output_mtok: 6.6,
         },
       },
@@ -8475,6 +8588,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nemotron-lightning-3p5-30b-a3b',
+        name: 'NVIDIA Nemotron 3.5 Lightning 30B A3B',
+        match: {
+          equals: 'accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b',
+        },
+        context_window: 262144,
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.2,
+        },
+      },
+      {
         id: 'qwen2p5-vl-72b-instruct',
         name: 'Qwen2.5-VL 72B Instruct',
         description: "Latest Qwen's VLM model",
@@ -8503,6 +8630,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen3-embedding-8b',
+        name: 'Qwen3 Embedding 8B',
+        match: {
+          equals: 'accounts/fireworks/models/qwen3-embedding-8b',
+        },
+        context_window: 40960,
+        price_comments: 'Embeddings are billed on input tokens only. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
         id: 'qwen3p6-plus',
         name: 'Qwen3.6 Plus',
         match: {
@@ -8527,6 +8666,19 @@ export const data: Provider[] = [
           input_mtok: 0.4,
           cache_read_mtok: 0.08,
           output_mtok: 1.6,
+        },
+      },
+      {
+        id: 'qwen3p8-max',
+        name: 'Qwen 3.8 Max',
+        match: {
+          equals: 'accounts/fireworks/models/qwen3p8-max',
+        },
+        price_comments: 'Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
         },
       },
     ],

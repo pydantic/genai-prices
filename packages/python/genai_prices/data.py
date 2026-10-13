@@ -4723,6 +4723,35 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4p1-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4p1-flash'),
+                name='DeepSeek V4.1 Flash',
+                context_window=1048576,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4p1-flash-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-us'),
+                name='DeepSeek V4.1 Flash US',
+                context_window=1048576,
+                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.009'), output_mtok=Decimal('1.8')
+                ),
+            ),
+            ModelInfo(
+                id='ember-1',
+                match=ClauseEquals(equals='accounts/fireworks/models/ember-1'),
+                name='Ember-1',
+                description='Fireworks model built on Kimi K3 that produces shorter reasoning traces.',
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
                 id='gemma-3-27b-it',
                 match=ClauseEquals(equals='accounts/fireworks/models/gemma-3-27b-it'),
                 name='Gemma 3 27B Instruct',
@@ -4778,6 +4807,56 @@ providers: list[Provider] = [
                 price_comments='Fast and US-only serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.21'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p3'),
+                name='GLM-5.3',
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-fast'),
+                name='GLM 5.3 Fast',
+                context_window=1040000,
+                price_comments='Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.39'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p3-flash'),
+                name='GLM 5.3 Flash',
+                context_window=1040000,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-flash-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-flash-us'),
+                name='GLM 5.3 Flash US',
+                context_window=1040000,
+                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.225'), cache_read_mtok=Decimal('0.045'), output_mtok=Decimal('0.75')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-us'),
+                name='GLM 5.3 US',
+                context_window=1040000,
+                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.39'), output_mtok=Decimal('6.6')
                 ),
             ),
             ModelInfo(
@@ -4938,6 +5017,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='nemotron-lightning-3p5-30b-a3b',
+                match=ClauseEquals(equals='accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b'),
+                name='NVIDIA Nemotron 3.5 Lightning 30B A3B',
+                context_window=262144,
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.2')
+                ),
+            ),
+            ModelInfo(
                 id='qwen2p5-vl-72b-instruct',
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen2p5-vl-72b-instruct'),
                 name='Qwen2.5-VL 72B Instruct',
@@ -4955,6 +5044,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.88')),
             ),
             ModelInfo(
+                id='qwen3-embedding-8b',
+                match=ClauseEquals(equals='accounts/fireworks/models/qwen3-embedding-8b'),
+                name='Qwen3 Embedding 8B',
+                context_window=40960,
+                price_comments='Embeddings are billed on input tokens only. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
                 id='qwen3p6-plus',
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen3p6-plus'),
                 name='Qwen3.6 Plus',
@@ -4969,6 +5066,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('1.6')
                 ),
+            ),
+            ModelInfo(
+                id='qwen3p8-max',
+                match=ClauseEquals(equals='accounts/fireworks/models/qwen3p8-max'),
+                name='Qwen 3.8 Max',
+                price_comments='Standard serverless pricing. See https://docs.fireworks.ai/serverless/pricing.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
         ],
     ),
