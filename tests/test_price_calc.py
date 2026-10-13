@@ -80,6 +80,37 @@ def test_october_model_prices_and_context_metadata():
     assert openrouter_meta.total_price == Decimal('23.6225')
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'provider_id', 'expected_model_id', 'expected_total'),
+    [
+        # Standard mode: 0.9M uncached x $1.25 + 0.1M cached x $0.15 + 1M out x $4.25 + 1 search x $0.0025
+        ('muse-spark-1.1', 'meta', 'muse-spark-1.1', Decimal('5.3925')),
+        ('muse-spark-1.2', 'meta', 'muse-spark-1.2', Decimal('5.3925')),
+        ('muse-spark-1.3', 'meta', 'muse-spark-1.3', Decimal('5.3925')),
+        # Contributor mode: 0.9M x $0.10 + 0.1M x $0.002 + 1M x $0.20 + 1 search x $0.0025
+        ('muse-spark-1.2-contributor', 'meta', 'muse-spark-1.2-contributor', Decimal('0.2927')),
+        ('muse-spark-1.3-contributor', 'meta', 'muse-spark-1.3-contributor', Decimal('0.2927')),
+        # Provider inferred from the model ID alone.
+        ('muse-spark-1.3', None, 'muse-spark-1.3', Decimal('5.3925')),
+        ('meta/muse-spark-1.3-20260902', 'openrouter', 'meta/muse-spark-1.3', Decimal('5.3925')),
+        (
+            'meta/muse-spark-1.3-contributor-20260902',
+            'openrouter',
+            'meta/muse-spark-1.3-contributor',
+            Decimal('0.2927'),
+        ),
+    ],
+)
+def test_muse_spark_standard_and_contributor_prices(
+    model_ref: str, provider_id: str | None, expected_model_id: str, expected_total: Decimal
+):
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000, web_searches=1)
+    price = calc_price(usage, model_ref, provider_id=provider_id)
+    assert price.model.id == expected_model_id
+    assert price.model.context_window == 1_048_576
+    assert price.total_price == expected_total
+
+
 def test_openai_decisions_price_and_usage_extraction():
     decisions_usage = Usage(input_tokens=1_000, cache_read_tokens=200, output_tokens=100)
     decisions_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ')

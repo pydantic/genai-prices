@@ -26,14 +26,34 @@ describe('Match Logic', () => {
 describe('Provider Matching', () => {
   it.each([
     ['meta', 'muse-wonder-1.0', 'muse-wonder-1.0'],
+    ['meta', 'muse-spark-1.1', 'muse-spark-1.1'],
+    ['meta', 'muse-spark-1.3', 'muse-spark-1.3'],
+    ['meta', 'muse-spark-1.3-contributor', 'muse-spark-1.3-contributor'],
     ['mistral', 'mistral-large-4', 'mistral-large-4'],
     ['mistral', 'mistral-large-4-0', 'mistral-large-4'],
     ['openrouter', 'meta/muse-wonder', 'meta/muse-wonder'],
     ['openrouter', 'meta/muse-wonder-20261012', 'meta/muse-wonder'],
+    ['openrouter', 'meta/muse-spark-1.3-20260902', 'meta/muse-spark-1.3'],
+    ['openrouter', 'meta/muse-spark-1.2-contributor-20260805', 'meta/muse-spark-1.2-contributor'],
     ['openrouter', 'mistralai/mistral-large-4-0', 'mistralai/mistral-large-4-0'],
     ['openrouter', 'mistralai/mistral-large-4-0-20261006', 'mistralai/mistral-large-4-0'],
   ])('resolves %s model ref %s to %s', (providerId, modelRef, expectedModelId) => {
     expect(calcPrice({ input_tokens: 1 }, modelRef, { providerId })?.model.id).toBe(expectedModelId)
+  })
+
+  it.each([
+    // Standard: 0.9M uncached x $1.25 + 0.1M cached x $0.15 + 1M out x $4.25 + 1 search x $0.0025
+    ['meta', 'muse-spark-1.1', 5.3925],
+    ['meta', 'muse-spark-1.2', 5.3925],
+    ['meta', 'muse-spark-1.3', 5.3925],
+    // Contributor: 0.9M x $0.10 + 0.1M x $0.002 + 1M x $0.20 + 1 search x $0.0025
+    ['meta', 'muse-spark-1.2-contributor', 0.2927],
+    ['meta', 'muse-spark-1.3-contributor', 0.2927],
+    ['openrouter', 'meta/muse-spark-1.3-20260902', 5.3925],
+    ['openrouter', 'meta/muse-spark-1.3-contributor-20260902', 0.2927],
+  ])('prices %s Muse Spark model %s', (providerId, modelRef, expectedTotal) => {
+    const usage = { cache_read_tokens: 100_000, input_tokens: 1_000_000, output_tokens: 1_000_000, web_searches: 1 }
+    expect(calcPrice(usage, modelRef, { providerId })?.total_price).toBeCloseTo(expectedTotal, 10)
   })
 
   it('prices the October Meta and Mistral models with their confirmed routes', () => {
@@ -81,9 +101,12 @@ describe('Provider Matching', () => {
       expect(matchProvider(actualProviders, { modelId: 'grok-4.6' })?.id).not.toBe('cursor')
     })
 
-    it('infers Meta only for its documented model ID and API host', () => {
+    it('infers Meta only for its priced model IDs and API host', () => {
       expect(matchProvider(actualProviders, { modelId: 'muse-wonder-1.0' })?.id).toBe('meta')
-      expect(matchProvider(actualProviders, { modelId: 'muse-spark-1.3' })?.id).not.toBe('meta')
+      expect(matchProvider(actualProviders, { modelId: 'muse-spark-1.3' })?.id).toBe('meta')
+      expect(matchProvider(actualProviders, { modelId: 'muse-spark-1.3-contributor' })?.id).toBe('meta')
+      // Unpriced Muse models (per-image, per-second) must not be claimed.
+      expect(matchProvider(actualProviders, { modelId: 'muse-image-1.0' })?.id).not.toBe('meta')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.meta.ai/v1' })?.id).toBe('meta')
       expect(matchProvider(actualProviders, { providerApiUrl: 'https://api.meta.ai.evil.test/v1' })?.id).not.toBe('meta')
     })

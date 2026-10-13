@@ -9767,7 +9767,7 @@ providers: list[Provider] = [
             'https://dev.meta.ai/docs/protocols/responses',
             'https://dev.meta.ai/docs/prompt-caching',
         ],
-        model_match=ClauseEquals(equals='muse-wonder-1.0'),
+        model_match=ClauseOr(or_=[ClauseEquals(equals='muse-wonder-1.0'), ClauseStartsWith(starts_with='muse-spark-')]),
         provider_match=ClauseEquals(equals='meta'),
         extractors=[
             UsageExtractor(
@@ -9807,6 +9807,71 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='muse-spark-1.1',
+                match=ClauseEquals(equals='muse-spark-1.1'),
+                name='Muse Spark 1.1',
+                context_window=1048576,
+                price_comments='Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. Muse Spark 1.1 has no Contributor mode variant. https://dev.meta.ai/docs/pricing-rate-limits',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='muse-spark-1.2',
+                match=ClauseEquals(equals='muse-spark-1.2'),
+                name='Muse Spark 1.2',
+                context_window=1048576,
+                price_comments='Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='muse-spark-1.2-contributor',
+                match=ClauseEquals(equals='muse-spark-1.2-contributor'),
+                name='Muse Spark 1.2 (Contributor mode)',
+                context_window=1048576,
+                price_comments="Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's contributor endpoints list web_search at $0.0025 per query). https://dev.meta.ai/docs/pricing-rate-limits",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.002'),
+                    output_mtok=Decimal('0.2'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='muse-spark-1.3',
+                match=ClauseEquals(equals='muse-spark-1.3'),
+                name='Muse Spark 1.3',
+                context_window=1048576,
+                price_comments='Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='muse-spark-1.3-contributor',
+                match=ClauseEquals(equals='muse-spark-1.3-contributor'),
+                name='Muse Spark 1.3 (Contributor mode)',
+                context_window=1048576,
+                price_comments="Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's contributor endpoints list web_search at $0.0025 per query). https://dev.meta.ai/docs/pricing-rate-limits",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.002'),
+                    output_mtok=Decimal('0.2'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='muse-wonder-1.0',
                 match=ClauseEquals(equals='muse-wonder-1.0'),
                 name='Muse Wonder 1.0',
@@ -9818,7 +9883,7 @@ providers: list[Provider] = [
                     output_mtok=Decimal('20'),
                     web_searches_kcount=Decimal('2.5'),
                 ),
-            )
+            ),
         ],
     ),
     Provider(
@@ -15777,6 +15842,91 @@ providers: list[Provider] = [
                 name='Llama Guard 4 12B',
                 context_window=163840,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.05')),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta/muse-spark-1.1'),
+                        ClauseEquals(equals='meta/muse-spark-1.1-20260709'),
+                    ]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-spark-1.1-20260709/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta/muse-spark-1.2'),
+                        ClauseEquals(equals='meta/muse-spark-1.2-20260805'),
+                    ]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-20260805/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.2-contributor',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta/muse-spark-1.2-contributor'),
+                        ClauseEquals(equals='meta/muse-spark-1.2-contributor-20260805'),
+                    ]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-contributor-20260805/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.002'),
+                    output_mtok=Decimal('0.2'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta/muse-spark-1.3'),
+                        ClauseEquals(equals='meta/muse-spark-1.3-20260902'),
+                    ]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-20260902/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('4.25'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.3-contributor',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta/muse-spark-1.3-contributor'),
+                        ClauseEquals(equals='meta/muse-spark-1.3-contributor-20260902'),
+                    ]
+                ),
+                context_window=1048576,
+                price_comments='https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-contributor-20260902/endpoints',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    cache_read_mtok=Decimal('0.002'),
+                    output_mtok=Decimal('0.2'),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='meta/muse-wonder',

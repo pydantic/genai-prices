@@ -16852,7 +16852,14 @@ export const data: Provider[] = [
     ],
     api_pattern: 'https://api\\.meta\\.ai(?:/|$)',
     model_match: {
-      equals: 'muse-wonder-1.0',
+      or: [
+        {
+          equals: 'muse-wonder-1.0',
+        },
+        {
+          starts_with: 'muse-spark-',
+        },
+      ],
     },
     provider_match: {
       equals: 'meta',
@@ -16914,6 +16921,86 @@ export const data: Provider[] = [
       },
     ],
     models: [
+      {
+        id: 'muse-spark-1.1',
+        name: 'Muse Spark 1.1',
+        match: {
+          equals: 'muse-spark-1.1',
+        },
+        context_window: 1048576,
+        price_comments:
+          'Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. Muse Spark 1.1 has no Contributor mode variant. https://dev.meta.ai/docs/pricing-rate-limits',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'muse-spark-1.2',
+        name: 'Muse Spark 1.2',
+        match: {
+          equals: 'muse-spark-1.2',
+        },
+        context_window: 1048576,
+        price_comments:
+          'Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'muse-spark-1.2-contributor',
+        name: 'Muse Spark 1.2 (Contributor mode)',
+        match: {
+          equals: 'muse-spark-1.2-contributor',
+        },
+        context_window: 1048576,
+        price_comments:
+          "Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's contributor endpoints list web_search at $0.0025 per query). https://dev.meta.ai/docs/pricing-rate-limits",
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.002,
+          output_mtok: 0.2,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'muse-spark-1.3',
+        name: 'Muse Spark 1.3',
+        match: {
+          equals: 'muse-spark-1.3',
+        },
+        context_window: 1048576,
+        price_comments:
+          'Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'muse-spark-1.3-contributor',
+        name: 'Muse Spark 1.3 (Contributor mode)',
+        match: {
+          equals: 'muse-spark-1.3-contributor',
+        },
+        context_window: 1048576,
+        price_comments:
+          "Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's contributor endpoints list web_search at $0.0025 per query). https://dev.meta.ai/docs/pricing-rate-limits",
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.002,
+          output_mtok: 0.2,
+          web_searches_kcount: 2.5,
+        },
+      },
       {
         id: 'muse-wonder-1.0',
         name: 'Muse Wonder 1.0',
@@ -27774,6 +27861,111 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'meta/muse-spark-1.1',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-1.1',
+            },
+            {
+              equals: 'meta/muse-spark-1.1-20260709',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'https://openrouter.ai/api/v1/models/meta/muse-spark-1.1-20260709/endpoints',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'meta/muse-spark-1.2',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-1.2',
+            },
+            {
+              equals: 'meta/muse-spark-1.2-20260805',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-20260805/endpoints',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'meta/muse-spark-1.2-contributor',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-1.2-contributor',
+            },
+            {
+              equals: 'meta/muse-spark-1.2-contributor-20260805',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-contributor-20260805/endpoints',
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.002,
+          output_mtok: 0.2,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'meta/muse-spark-1.3',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-1.3',
+            },
+            {
+              equals: 'meta/muse-spark-1.3-20260902',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-20260902/endpoints',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'meta/muse-spark-1.3-contributor',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-1.3-contributor',
+            },
+            {
+              equals: 'meta/muse-spark-1.3-contributor-20260902',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-contributor-20260902/endpoints',
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.002,
+          output_mtok: 0.2,
+          web_searches_kcount: 2.5,
         },
       },
       {
