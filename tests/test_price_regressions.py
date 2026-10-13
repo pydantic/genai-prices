@@ -97,6 +97,7 @@ def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref:
         # Gemini 3.x bills per search query, Gemini 2.5 per grounded prompt; callers report the billed count.
         ('gemini-3-flash-preview', '14'),
         ('gemini-3.8-flash', '14'),
+        ('gemini-4-argon', '14'),
         ('gemini-2.5-flash', '35'),
         ('gemini-2.5-pro', '35'),
         ('gemini-2.0-flash', '35'),

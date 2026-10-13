@@ -43,6 +43,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('google', 'gemini-3.8-live', snapshot(('google', 'gemini-3.8-live'))),
     ('google', 'gemini-3.8-live-extended-thinking', snapshot(('google', 'gemini-3.8-live'))),
     ('google-vertex', 'gemini-3.8-live', snapshot(('google', 'gemini-3.8-live'))),
+    ('google', 'gemini-4-argon', snapshot(('google', 'gemini-4-argon'))),
+    ('google', 'gemini-4-argon-preview', snapshot(('google', 'gemini-4-argon'))),
+    ('google', 'gemini-4-argon-preview-10-2026', snapshot(('google', 'gemini-4-argon'))),
+    ('google', 'gemini-4-argon-001', snapshot(('google', 'gemini-4-argon'))),
     # Family aliases follow the model the Gemini API's `modelVersion` reports for them.
     ('google', 'gemini-flash-latest', snapshot(('google', 'gemini-3.8-flash'))),
     ('google', 'gemini-flash-lite-latest', snapshot(('google', 'gemini-3.5-flash-lite'))),

@@ -945,6 +945,47 @@ def test_gemini_flash_introductory_price_expiry(
     assert price.model_price == expected_prices
 
 
+@pytest.mark.parametrize(
+    'request_timestamp,expected_prices,expected_total',
+    [
+        (
+            datetime(2026, 11, 30, 23, 59, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('2'),
+                cache_read_mtok=Decimal('0.1'),
+                output_mtok=Decimal('10'),
+                web_searches_kcount=Decimal('14'),
+            ),
+            Decimal('11.81'),
+        ),
+        (
+            datetime(2026, 12, 1, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=Decimal('4'),
+                cache_read_mtok=Decimal('0.2'),
+                output_mtok=Decimal('20'),
+                web_searches_kcount=Decimal('14'),
+            ),
+            Decimal('23.62'),
+        ),
+    ],
+)
+def test_gemini_4_argon_introductory_price_expiry(
+    request_timestamp: datetime, expected_prices: ModelPrice, expected_total: Decimal
+) -> None:
+    """Introductory rates run through 2026-11-30, standard rates take over on 2026-12-01."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref='gemini-4-argon',
+        provider_id='google',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+    assert price.model.context_window == 1_048_576
+    assert price.total_price == expected_total
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),

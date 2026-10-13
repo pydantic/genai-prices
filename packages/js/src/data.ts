@@ -11562,6 +11562,50 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-4-argon',
+        name: 'Gemini 4 Argon',
+        description:
+          "Google's frontier model for complex, long-horizon workflows across real-world software engineering, enterprise knowledge work like legal and finance, and cybersecurity defense, with output of up to 1M tokens.",
+        match: {
+          or: [
+            {
+              equals: 'gemini-4-argon',
+            },
+            {
+              starts_with: 'gemini-4-argon-preview',
+            },
+            {
+              regex: '^gemini-4-argon-\\d',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+              web_searches_kcount: 14,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_read_mtok: 0.2,
+              output_mtok: 20,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
