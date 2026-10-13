@@ -15,10 +15,19 @@ mark_xfail_todo = pytest.mark.xfail(reason='todo')
 # Cases with xfail I think we can/should probably support eventually
 test_cases: list[tuple[str, str, str]] = [
     ('meta', 'muse-wonder-1.0', snapshot(('meta', 'muse-wonder-1.0'))),
+    ('meta', 'muse-spark-1.1', snapshot(('meta', 'muse-spark-1.1'))),
+    ('meta', 'muse-spark-1.3', snapshot(('meta', 'muse-spark-1.3'))),
+    ('meta', 'muse-spark-1.3-contributor', snapshot(('meta', 'muse-spark-1.3-contributor'))),
     ('mistral', 'mistral-large-4', snapshot(('mistral', 'mistral-large-4'))),
     ('mistral', 'mistral-large-4-0', snapshot(('mistral', 'mistral-large-4'))),
     ('openrouter', 'meta/muse-wonder', snapshot(('openrouter', 'meta/muse-wonder'))),
     ('openrouter', 'meta/muse-wonder-20261012', snapshot(('openrouter', 'meta/muse-wonder'))),
+    ('openrouter', 'meta/muse-spark-1.3-20260902', snapshot(('openrouter', 'meta/muse-spark-1.3'))),
+    (
+        'openrouter',
+        'meta/muse-spark-1.2-contributor-20260805',
+        snapshot(('openrouter', 'meta/muse-spark-1.2-contributor')),
+    ),
     ('openrouter', 'mistralai/mistral-large-4-0', snapshot(('openrouter', 'mistralai/mistral-large-4-0'))),
     (
         'openrouter',
