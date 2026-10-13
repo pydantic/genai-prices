@@ -6699,8 +6699,26 @@ providers: list[Provider] = [
                 name='Gemini 4 Argon',
                 description="Google's frontier model for complex, long-horizon workflows across real-world software engineering, enterprise knowledge work like legal and finance, and cybersecurity defense, with output of up to 1M tokens.",
                 context_window=1048576,
-                price_comments='Introductory rates from https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/ - "$2 per million input tokens and $10 per million output tokens, with cached input tokens priced at 95% off input token price". No prompt-size tiers are announced. "After the introductory period expires, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply." Google has not announced when the introductory period ends or the cached input rate after it, so no future price change is scheduled here.',
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('14'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('20'),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemini-embedding-001',
