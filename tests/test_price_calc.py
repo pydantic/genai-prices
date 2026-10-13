@@ -945,6 +945,21 @@ def test_gemini_flash_introductory_price_expiry(
     assert price.model_price == expected_prices
 
 
+def test_gemini_4_argon_introductory_price():
+    """Google has not announced when the introductory rates end, so no standard-rate entry is dated yet."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref='gemini-4-argon',
+        provider_id='google',
+    )
+
+    assert price.model_price == ModelPrice(
+        input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+    )
+    assert price.model.context_window == 1_048_576
+    assert price.total_price == snapshot(Decimal('11.81'))
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),

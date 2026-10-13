@@ -1358,6 +1358,29 @@ models:
       output_audio_mtok: 12
       web_searches_kcount: 14 # per search query
 
+  - id: gemini-4-argon
+    name: Gemini 4 Argon
+    description: >-
+      Google's frontier model for complex, long-horizon workflows across real-world software engineering,
+      enterprise knowledge work like legal and finance, and cybersecurity defense, with output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-argon
+        - starts_with: gemini-4-argon-preview
+        - regex: '^gemini-4-argon-\d'
+    context_window: 1048576
+    prices_checked: 2026-10-13
+    price_comments: >-
+      Introductory rates from https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/
+      - "$2 per million input tokens and $10 per million output tokens, with cached input tokens priced at 95% off
+      input token price". No prompt-size tiers are announced. "After the introductory period expires, the price of $4
+      per 1M input tokens and $20 per 1M output tokens will apply." Google has not announced when the introductory
+      period ends or the cached input rate after it, so no future price change is scheduled here.
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.1
+      output_mtok: 10
+
   - id: gemini-embedding-001
     match:
       equals: gemini-embedding-001
