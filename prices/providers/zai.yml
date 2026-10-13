@@ -23,6 +23,38 @@ extractors:
         dest: output_tokens
 
 models:
+  - id: GLM-4.5-Air
+    name: GLM-4.5-Air
+    description: >-
+      Z.AI lightweight GLM-4.5 model with context caching and function calling.
+    match:
+      or:
+        - equals: GLM-4.5-Air
+        - equals: glm-4.5-air
+    context_window: 128000
+    prices_checked: "2026-10-12"
+    price_comments: Context length is 128K per https://docs.z.ai/guides/llm/glm-4.5.
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.03
+      output_mtok: 1.1
+
+  - id: GLM-4.6
+    name: GLM-4.6
+    description: >-
+      Z.AI GLM-4.6 model with context caching and function calling.
+    match:
+      or:
+        - equals: GLM-4.6
+        - equals: glm-4.6
+    context_window: 200000
+    prices_checked: "2026-10-12"
+    price_comments: Context length is 200K per https://docs.z.ai/guides/llm/glm-4.6.
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.11
+      output_mtok: 2.2
+
   - id: GLM-4.6V
     name: GLM-4.6V
     description: >-
