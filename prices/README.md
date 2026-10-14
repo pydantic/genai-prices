@@ -84,7 +84,7 @@ and providers disagree on what `service_tier` a batch result reports, so `servic
 You list explicit per-unit rates because a discount may apply to tokens without applying to tools or storage.
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
-and constrain those rates to the verification date. Earlier requests then warn instead of receiving an unverified tier rate.
+and constrain those rates to the verification date. Earlier requests then receive the standard-price estimate instead of an unverified tier rate.
 When standard prices change, verify every variant independently. Its listed rates are absolute; omitted keys inherit standard prices for that date.
 Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
 Test each affected context before and after the date boundary in all three packages.
