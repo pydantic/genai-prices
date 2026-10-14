@@ -98,7 +98,8 @@ func resolvePriceVariants(model *model, provider *provider, timestamp time.Time,
 		warnings = append(warnings, fmt.Sprintf("No price variant matched for model '%s'; using standard prices", model.ID))
 	}
 	if !ownsModel {
-		// Another provider's variants are never applied; warn only when they would have changed the price.
+		// This model's prices come from another provider (e.g. Azure using OpenAI's), whose tier rates aren't applied.
+		// Warn only if they would have changed the price (`priority`), not for a standard tier (`default`).
 		if !reflect.DeepEqual(resolved, standard) {
 			warnings = append(warnings, fmt.Sprintf("No price variant matched for provider '%s' model '%s'; using standard prices", provider.ID, model.ID))
 		}

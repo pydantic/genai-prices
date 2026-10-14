@@ -773,7 +773,8 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         if price_context and not any(self is model for model in provider.models):
-            # Another provider's variants are never applied; warn only when they would have changed the price.
+            # This model's prices come from another provider (e.g. Azure using OpenAI's), whose tier rates aren't applied.
+            # Warn only if they would have changed the price (`priority`), not for a standard tier (`default`).
             model_price = self.get_prices(genai_request_timestamp)
             if self.get_prices(genai_request_timestamp, price_context) != model_price:
                 warnings.warn(
