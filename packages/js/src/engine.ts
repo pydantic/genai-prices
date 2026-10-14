@@ -192,7 +192,6 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
   }
   if (!priceContext || !Object.keys(priceContext).length) return standard
   const overrides = Object.create(null) as ModelPrice
-  let matched = false
   for (const variant of model.price_variants ?? []) {
     if (!constraintActive(variant.constraint, timestamp, model.id)) continue
     if (
@@ -201,18 +200,12 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
       )
     )
       continue
-    matched = true
     for (const [key, price] of Object.entries(variant.prices)) {
       if (price != null && !Object.prototype.hasOwnProperty.call(overrides, key)) {
         overrides[key] = price
       }
     }
   }
-  // A context none of the variants condition on can't change this model's price, so it isn't worth a warning.
-  const usesContextKey = (model.price_variants ?? []).some((variant) =>
-    Object.keys(variant.when).some((key) => Object.prototype.hasOwnProperty.call(priceContext, key))
-  )
-  if (!matched && usesContextKey) console.warn(`No price variant matched for model '${model.id}'; using standard prices`)
   return { ...standard, ...overrides }
 }
 

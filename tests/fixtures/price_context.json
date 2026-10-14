@@ -110,8 +110,7 @@
       "context": { "inference_geo": "us" },
       "input": 6.5,
       "output": 16,
-      "total": 23.5,
-      "warn": true
+      "total": 23.5
     },
     {
       "name": "case sensitive",
@@ -119,11 +118,10 @@
       "context": { "service_tier": "Flex" },
       "input": 6.5,
       "output": 16,
-      "total": 23.5,
-      "warn": true
+      "total": 23.5
     },
     {
-      "name": "key no variant uses",
+      "name": "unknown key",
       "timestamp": "2026-08-01T12:00:00Z",
       "context": { "service_teir": "flex" },
       "input": 6.5,
@@ -136,8 +134,7 @@
       "context": { "service_tier": "incentivized-tier" },
       "input": 6.5,
       "output": 16,
-      "total": 23.5,
-      "warn": true
+      "total": 23.5
     },
     {
       "name": "offset timestamp",

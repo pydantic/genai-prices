@@ -14,7 +14,6 @@ const fixture = JSON.parse(readFileSync(new URL('../../../../tests/fixtures/pric
     output: number
     timestamp: string
     total: number
-    warn?: boolean
   }[]
   providers: Provider[]
   usage: Usage
@@ -40,7 +39,7 @@ it.each(fixture.cases)('price context: $name', (test) => {
   expect(result?.input_price).toBe(test.input)
   expect(result?.output_price).toBe(test.output)
   expect(result?.total_price).toBe(test.total)
-  expect(warning.mock.calls).toEqual(test.warn ? [["No price variant matched for model 'context-model'; using standard prices"]] : [])
+  expect(warning).not.toHaveBeenCalled()
 })
 
 it.each([
@@ -134,24 +133,20 @@ it.each([{}, { service_tier: null }, { service_tier: true }])('rejects invalid v
   expect(() => calcPrice({}, 'context-model', { provider })).toThrow('Price variant when')
 })
 
-it('warns for unresearched tier history', () => {
-  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-  const options = { providerId: 'openai', timestamp: new Date('2026-10-11') }
-  const standard = calcPrice({ input_tokens: 1_000_000 }, 'o3', options)
-  const flex = calcPrice({ input_tokens: 1_000_000 }, 'o3', { ...options, priceContext: { service_tier: 'flex' } })
-  expect(flex?.total_price).toBe(standard?.total_price)
-  expect(warning).toHaveBeenCalledTimes(1)
-})
-
-it('is silent for a context key no variant uses', () => {
-  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-  const result = calcPrice({ input_tokens: 1_000_000 }, 'gemini-2.5-flash', {
-    priceContext: { service_tier: 'standard' },
-    providerId: 'google',
-    timestamp: new Date('2026-10-14'),
-  })
-  expect(result?.total_price).toBe(0.3)
-  expect(warning).not.toHaveBeenCalled()
+it('prices unresearched history and unsupported models at standard rates', () => {
+  for (const [model, timestamp] of [
+    ['o3', '2026-10-11'],
+    ['text-embedding-3-small', '2026-10-12'],
+  ] as const) {
+    const options = { providerId: 'openai', timestamp: new Date(timestamp) }
+    const standard = calcPrice({ input_tokens: 1_000_000 }, model, options)
+    expect(
+      calcPrice({ input_tokens: 1_000_000 }, model, {
+        ...options,
+        priceContext: { service_tier: 'flex' },
+      })?.total_price
+    ).toBe(standard?.total_price)
+  }
 })
 
 it('rejects a missing variant price map', () => {
@@ -166,21 +161,10 @@ it('rejects a missing variant price map', () => {
 it('does not inherit tier rates from a fallback provider', () => {
   const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
   const options = { providerId: 'azure', timestamp: new Date('2026-10-12T00:00:00Z') }
-  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-  const contexts: (PriceContext | undefined)[] = [
-    undefined,
-    {},
-    { service_tier: 'default' },
-    { service_tier: 'priority' },
-    { service_tier: 'scale' },
-  ]
+  const contexts: (PriceContext | undefined)[] = [undefined, {}, { service_tier: 'priority' }]
   for (const priceContext of contexts) {
     const result = calcPrice(usage, 'gpt-5', { ...options, priceContext })
     expect(result?.provider.id).toBe('azure')
     expect(result?.total_price).toBe(11.25)
   }
-  expect(warning.mock.calls).toEqual([
-    ["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"],
-    ["No price variant matched for model 'gpt-5'; using standard prices"],
-  ])
 })

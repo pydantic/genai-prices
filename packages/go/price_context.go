@@ -3,7 +3,6 @@ package genai_prices
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"time"
 )
 
@@ -51,10 +50,10 @@ func (variant *priceVariant) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func resolvePriceVariants(model *model, provider *provider, timestamp time.Time, context map[string]string) (modelPrice, []string) {
+func resolvePriceVariants(model *model, provider *provider, timestamp time.Time, context map[string]string) modelPrice {
 	standard := activeModelPrice(model, timestamp)
 	if len(context) == 0 {
-		return standard, nil
+		return standard
 	}
 	ownsModel := false
 	for index := range provider.Models {
@@ -63,12 +62,14 @@ func resolvePriceVariants(model *model, provider *provider, timestamp time.Time,
 			break
 		}
 	}
+	if !ownsModel {
+		return standard
+	}
 	resolved := make(modelPrice, len(standard))
 	for key, price := range standard {
 		resolved[key] = price
 	}
 	overridden := make(map[string]bool)
-	matched := false
 	for _, variant := range model.PriceVariants {
 		if !variant.Constraint.active(timestamp) {
 			continue
@@ -84,7 +85,6 @@ func resolvePriceVariants(model *model, provider *provider, timestamp time.Time,
 		if !matches {
 			continue
 		}
-		matched = true
 		for key, price := range variant.Prices {
 			if !overridden[key] {
 				resolved[key] = price
@@ -92,29 +92,5 @@ func resolvePriceVariants(model *model, provider *provider, timestamp time.Time,
 			}
 		}
 	}
-	var warnings []string
-	// A context none of the variants condition on can't change this model's price, so it isn't worth a warning.
-	if !matched && usesContextKey(model, context) {
-		warnings = append(warnings, fmt.Sprintf("No price variant matched for model '%s'; using standard prices", model.ID))
-	}
-	if !ownsModel {
-		// This model's prices come from another provider (e.g. Azure using OpenAI's), whose tier rates aren't applied.
-		// Warn only if they would have changed the price (`priority`), not for a standard tier (`default`).
-		if !reflect.DeepEqual(resolved, standard) {
-			warnings = append(warnings, fmt.Sprintf("No price variant matched for provider '%s' model '%s'; using standard prices", provider.ID, model.ID))
-		}
-		return standard, warnings
-	}
-	return resolved, warnings
-}
-
-func usesContextKey(model *model, context map[string]string) bool {
-	for _, variant := range model.PriceVariants {
-		for key := range variant.When {
-			if _, found := context[key]; found {
-				return true
-			}
-		}
-	}
-	return false
+	return resolved
 }

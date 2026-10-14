@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -28,7 +27,6 @@ func TestPriceContextContract(t *testing.T) {
 			Input     float64           `json:"input"`
 			Output    float64           `json:"output"`
 			Total     float64           `json:"total"`
-			Warn      bool              `json:"warn"`
 		} `json:"cases"`
 	}
 	if err := json.Unmarshal(data, &fixture); err != nil {
@@ -54,11 +52,7 @@ func TestPriceContextContract(t *testing.T) {
 			if result.InputPrice != test.Input || result.OutputPrice != test.Output || result.TotalPrice != test.Total {
 				t.Fatalf("got %+v, want %v/%v/%v", result, test.Input, test.Output, test.Total)
 			}
-			if test.Warn {
-				if len(result.Warnings) != 1 || result.Warnings[0] != "No price variant matched for model 'context-model'; using standard prices" {
-					t.Fatalf("got warnings %v", result.Warnings)
-				}
-			} else if len(result.Warnings) != 0 {
+			if len(result.Warnings) != 0 {
 				t.Fatalf("got warnings %v", result.Warnings)
 			}
 		})
@@ -184,42 +178,20 @@ func TestInvalidPriceVariants(t *testing.T) {
 }
 
 func TestFallbackProviderDoesNotInheritTierRates(t *testing.T) {
-	providerWarning := "No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"
-	modelWarning := "No price variant matched for model 'gpt-5'; using standard prices"
-	for _, test := range []struct {
-		context  map[string]string
-		warnings []string
-	}{
-		{nil, nil},
-		{map[string]string{}, nil},
-		{map[string]string{"service_tier": "default"}, nil},
-		{map[string]string{"service_tier": "priority"}, []string{providerWarning}},
-		{map[string]string{"service_tier": "scale"}, []string{modelWarning}},
-	} {
+	for _, context := range []map[string]string{nil, {}, {"service_tier": "priority"}} {
 		result, err := genai_prices.Calculate(genai_prices.PriceRequest{
 			Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageOutputTokens: 1_000_000},
 			Model: "gpt-5", ProviderID: "azure", Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
-			PriceContext: test.context,
+			PriceContext: context,
 		})
 		if err != nil {
 			t.Fatal(err)
 		}
-		if result.ProviderID != "azure" || result.TotalPrice != 11.25 || !slices.Equal(result.Warnings, test.warnings) {
-			t.Fatalf("context %v: got %+v", test.context, result)
+		if result.ProviderID != "azure" || result.TotalPrice != 11.25 {
+			t.Fatalf("got %+v", result)
 		}
-	}
-}
-
-func TestContextKeyWithoutVariantsIsSilent(t *testing.T) {
-	result, err := genai_prices.Calculate(genai_prices.PriceRequest{
-		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
-		Model: "gemini-2.5-flash", ProviderID: "google", Timestamp: time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC),
-		PriceContext: map[string]string{"service_tier": "standard"},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.TotalPrice != 0.3 || len(result.Warnings) != 0 {
-		t.Fatalf("got %+v", result)
+		if len(result.Warnings) != 0 {
+			t.Fatalf("got warnings %v", result.Warnings)
+		}
 	}
 }

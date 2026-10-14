@@ -244,14 +244,6 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const timestamp = options?.timestamp ?? new Date()
   const ownsModel = provider.models.includes(model)
   const modelPrice = getActiveModelPrice(model, timestamp, ownsModel ? options?.priceContext : undefined)
-  if (!ownsModel && options?.priceContext && Object.keys(options.priceContext).length) {
-    // This model's prices come from another provider (e.g. Azure using OpenAI's), whose tier rates aren't applied.
-    // Warn only if they would have changed the price (`priority`), not for a standard tier (`default`).
-    const contextPrice = getActiveModelPrice(model, timestamp, options.priceContext)
-    if (Object.keys(contextPrice).some((key) => contextPrice[key] !== modelPrice[key])) {
-      console.warn(`No price variant matched for provider '${provider.id}' model '${model.id}'; using standard prices`)
-    }
-  }
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }

@@ -739,23 +739,14 @@ class ModelInfo:
         if not price_context:
             return standard
         overrides: dict[str, Decimal | TieredPrices] = {}
-        matched = False
         for variant in self.price_variants or ():
             if variant.constraint is not None and not variant.constraint.active(request_timestamp):
                 continue
             if not all(price_context.get(key) == value for key, value in variant.when.items()):
                 continue
-            matched = True
             for key, price in variant.prices.__dict__.items():
                 if price is not None:
                     overrides.setdefault(key, price)
-        # A context none of the variants condition on can't change this model's price, so it isn't worth a warning.
-        if not matched and any(key in price_context for variant in self.price_variants or () for key in variant.when):
-            warnings.warn(
-                f'No price variant matched for model {self.id!r}; using standard prices',
-                UserWarning,
-                stacklevel=3,
-            )
         resolved = copy(standard)
         resolved.__dict__.update(overrides)
         return resolved
@@ -773,15 +764,7 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         if price_context and not any(self is model for model in provider.models):
-            # This model's prices come from another provider (e.g. Azure using OpenAI's), whose tier rates aren't applied.
-            # Warn only if they would have changed the price (`priority`), not for a standard tier (`default`).
             model_price = self.get_prices(genai_request_timestamp)
-            if self.get_prices(genai_request_timestamp, price_context) != model_price:
-                warnings.warn(
-                    f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
-                    UserWarning,
-                    stacklevel=2,
-                )
         else:
             model_price = self.get_prices(genai_request_timestamp, price_context)
         if provider.id == 'groq' and self.id in ('whisper-large-v3', 'whisper-large-v3-turbo'):
