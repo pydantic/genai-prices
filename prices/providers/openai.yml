@@ -205,6 +205,7 @@ models:
       starts_with: "ft:gpt-3.5-turbo"
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 3
       output_mtok: 6
@@ -232,6 +233,7 @@ models:
       starts_with: "ft:gpt-4o-mini-2024-"
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
@@ -704,6 +706,7 @@ models:
       starts_with: gpt-4o-mini-2024-07-18.ft-
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
@@ -3199,6 +3202,7 @@ models:
     context_window: 200000
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 20
       output_mtok: 80

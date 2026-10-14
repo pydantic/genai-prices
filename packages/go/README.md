@@ -85,20 +85,31 @@ Check `Warnings` when you require a verified tier price.
 ## Batch API
 
 ```go
-price, err := genai_prices.Calculate(genai_prices.PriceRequest{
-	Usage: genai_prices.Usage{
-		genai_prices.UsageInputTokens: 1_000_000,
-		genai_prices.UsageOutputTokens: 1_000_000,
-	},
-	Model: "o3",
-	ProviderID: "openai",
-	Timestamp: time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC),
-	PriceContext: map[string]string{"processing": "batch"},
-})
-if err != nil {
-	panic(err)
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/pydantic/genai-prices/packages/go"
+)
+
+func main() {
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens: 1_000_000,
+			genai_prices.UsageOutputTokens: 1_000_000,
+		},
+		Model: "o3",
+		ProviderID: "openai",
+		Timestamp: time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC),
+		PriceContext: map[string]string{"processing": "batch"},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(price.TotalPrice) // 5
 }
-fmt.Println(price.TotalPrice) // 5
 ```
 
 You pass `{"processing": "batch"}` for usage from a provider's batch API. Most providers do not mark batch results in
