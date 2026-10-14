@@ -727,6 +727,28 @@ class ModelInfo:
         return self.match.is_match(model_ref.lower())
 
     def get_prices(self, request_timestamp: datetime, price_context: PriceContext | None = None) -> ModelPrice:
+        resolved, matched, _ = self._resolve_variants(request_timestamp, price_context)
+        if not matched and self._prices_context_key(price_context):
+            warnings.warn(
+                f'No price variant matched for model {self.id!r}; using standard prices',
+                UserWarning,
+                stacklevel=3,
+            )
+        return resolved
+
+    def _prices_context_key(self, price_context: PriceContext | None) -> bool:
+        """Whether any variant of this model, active or not, conditions on a key in `price_context`.
+
+        A context whose keys no variant uses can't change this model's price, so it isn't worth a warning.
+        """
+        return bool(price_context) and any(
+            key in price_context for variant in self.price_variants or () for key in variant.when
+        )
+
+    def _resolve_variants(
+        self, request_timestamp: datetime, price_context: PriceContext | None
+    ) -> tuple[ModelPrice, bool, bool]:
+        """Resolve prices for a context, returning them with whether a variant matched and whether one set a price."""
         if isinstance(self.prices, ModelPrice):
             standard = self.prices
         else:
@@ -737,7 +759,7 @@ class ModelInfo:
                     standard = conditional_price.prices
                     break
         if not price_context:
-            return standard
+            return standard, True, False
         overrides: dict[str, Decimal | TieredPrices] = {}
         matched = False
         for variant in self.price_variants or ():
@@ -749,15 +771,9 @@ class ModelInfo:
             for key, price in variant.prices.__dict__.items():
                 if price is not None:
                     overrides.setdefault(key, price)
-        if not matched:
-            warnings.warn(
-                f'No price variant matched for model {self.id!r}; using standard prices',
-                UserWarning,
-                stacklevel=3,
-            )
         resolved = copy(standard)
         resolved.__dict__.update(overrides)
-        return resolved
+        return resolved, matched, bool(overrides)
 
     def calc_price(
         self,
@@ -772,11 +788,15 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         if price_context and not any(self is model for model in provider.models):
-            warnings.warn(
-                f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
-                UserWarning,
-                stacklevel=2,
-            )
+            # Another provider's tier rates are never applied; warn only when they would have changed the price,
+            # or when the context names a value this model doesn't price for a key it does.
+            _, matched, overridden = self._resolve_variants(genai_request_timestamp, price_context)
+            if self._prices_context_key(price_context) and (overridden or not matched):
+                warnings.warn(
+                    f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
+                    UserWarning,
+                    stacklevel=2,
+                )
             model_price = self.get_prices(genai_request_timestamp)
         else:
             model_price = self.get_prices(genai_request_timestamp, price_context)

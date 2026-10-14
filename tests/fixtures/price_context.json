@@ -123,13 +123,12 @@
       "warn": true
     },
     {
-      "name": "unknown key",
+      "name": "key no variant uses",
       "timestamp": "2026-08-01T12:00:00Z",
       "context": { "service_teir": "flex" },
       "input": 6.5,
       "output": 16,
-      "total": 23.5,
-      "warn": true
+      "total": 23.5
     },
     {
       "name": "unknown tier",

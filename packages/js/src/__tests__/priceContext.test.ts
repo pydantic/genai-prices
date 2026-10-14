@@ -134,22 +134,30 @@ it.each([{}, { service_tier: null }, { service_tier: true }])('rejects invalid v
   expect(() => calcPrice({}, 'context-model', { provider })).toThrow('Price variant when')
 })
 
-it('warns for unresearched history and unsupported models', () => {
+it('warns for a tier a tier-priced model has no active rate for', () => {
   const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-  for (const [model, timestamp] of [
-    ['o3', '2026-10-11'],
-    ['text-embedding-3-small', '2026-10-12'],
+  const options = { providerId: 'openai', timestamp: new Date('2026-10-11') }
+  const standard = calcPrice({ input_tokens: 1_000_000 }, 'o3', options)
+  expect(calcPrice({ input_tokens: 1_000_000 }, 'o3', { ...options, priceContext: { service_tier: 'flex' } })?.total_price).toBe(
+    standard?.total_price
+  )
+  expect(warning).toHaveBeenCalledTimes(1)
+})
+
+it('is silent for a model with no variants for the context keys', () => {
+  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+  for (const [model, providerId, tier] of [
+    ['text-embedding-3-small', 'openai', 'flex'],
+    ['gemini-2.5-flash', 'google', 'standard'],
+    ['claude-sonnet-4-5', 'anthropic', 'standard'],
   ] as const) {
-    const options = { providerId: 'openai', timestamp: new Date(timestamp) }
+    const options = { providerId, timestamp: new Date('2026-10-14') }
     const standard = calcPrice({ input_tokens: 1_000_000 }, model, options)
-    expect(
-      calcPrice({ input_tokens: 1_000_000 }, model, {
-        ...options,
-        priceContext: { service_tier: 'flex' },
-      })?.total_price
-    ).toBe(standard?.total_price)
+    expect(calcPrice({ input_tokens: 1_000_000 }, model, { ...options, priceContext: { service_tier: tier } })?.total_price).toBe(
+      standard?.total_price
+    )
   }
-  expect(warning).toHaveBeenCalledTimes(2)
+  expect(warning).not.toHaveBeenCalled()
 })
 
 it('rejects a missing variant price map', () => {
@@ -165,11 +173,21 @@ it('does not inherit tier rates from a fallback provider', () => {
   const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
   const options = { providerId: 'azure', timestamp: new Date('2026-10-12T00:00:00Z') }
   const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-  const contexts: (PriceContext | undefined)[] = [undefined, {}, { service_tier: 'priority' }]
-  for (const priceContext of contexts) {
+  const contexts: [PriceContext | undefined, boolean][] = [
+    [undefined, false],
+    [{}, false],
+    [{ service_tier: 'default' }, false],
+    [{ inference_geo: 'us' }, false],
+    [{ service_tier: 'priority' }, true],
+    [{ service_tier: 'scale' }, true],
+  ]
+  for (const [priceContext, warns] of contexts) {
+    warning.mockClear()
     const result = calcPrice(usage, 'gpt-5', { ...options, priceContext })
     expect(result?.provider.id).toBe('azure')
     expect(result?.total_price).toBe(11.25)
+    expect(warning.mock.calls).toEqual(
+      warns ? [["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"]] : []
+    )
   }
-  expect(warning.mock.calls).toEqual([["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"]])
 })

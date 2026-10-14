@@ -76,11 +76,14 @@ OpenAI variants cover `flex`, `priority`, and `fast` where the published rate ta
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 You can also pass it to `ExtractedUsage.calc_price()`, `ModelInfo.calc_price()`, and `DataSnapshot.calc()`.
 Extraction does not infer a pricing context.
-Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
-and the standard-price estimate; the fallback provider's tier rates are not applied.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive the
+standard-price estimate; the fallback provider's tier rates are not applied. You are warned when those rates would have
+changed the price, or when the context has a value the model has no rate for.
 
-If a nonempty context matches no variant, you receive a `UserWarning` and the standard-price estimate.
-This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
+If a model has variants for a context key but none match, you receive a `UserWarning` and the standard-price estimate.
+This includes unknown tiers and dates without verified tier rates.
+A context whose keys none of the model's variants use cannot change its price, so it is priced at standard rates without a warning.
+This covers models with no tier rates and misspelled keys.
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 You can make warnings errors when you require a verified tier price.
 
