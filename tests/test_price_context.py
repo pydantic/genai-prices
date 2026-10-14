@@ -74,6 +74,29 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
 
 
 @pytest.mark.parametrize(
+    'provider,model,timestamp,total',
+    [
+        ('openai', 'o3', datetime(2026, 10, 14), '4.875'),
+        ('anthropic', 'claude-sonnet-5', datetime(2026, 10, 14), '5.775'),
+        ('google', 'gemini-4-argon', datetime(2026, 10, 14), '5.7625'),
+        ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),
+        ('groq', 'openai/gpt-oss-120b', datetime(2026, 10, 14), '0.375'),
+        ('mistral', 'mistral-small-2603', datetime(2026, 10, 14), '0.358125'),
+        ('x-ai', 'grok-4.3', datetime(2026, 10, 14), '5.58'),
+    ],
+)
+def test_batch_processing(provider: str, model: str, timestamp: datetime, total: str) -> None:
+    result = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
+        model,
+        provider_id=provider,
+        genai_request_timestamp=timestamp,
+        price_context={'processing': 'batch'},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
     'model,input_tokens,cache_read_tokens,input_price,output_price',
     [
         ('o4-mini', 100_000, 100_000, '0.0138', '2.2'),

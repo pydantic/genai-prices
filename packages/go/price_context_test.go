@@ -93,6 +93,39 @@ func TestOpenAIServiceTiers(t *testing.T) {
 	}
 }
 
+func TestBatchProcessing(t *testing.T) {
+	for _, test := range []struct {
+		provider, model string
+		timestamp       time.Time
+		total           float64
+	}{
+		{"openai", "o3", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 4.875},
+		{"anthropic", "claude-sonnet-5", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.775},
+		{"google", "gemini-4-argon", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.7625},
+		{"google", "gemini-4-argon", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
+		{"groq", "openai/gpt-oss-120b", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 0.375},
+		{"mistral", "mistral-small-2603", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 0.358125},
+		{"x-ai", "grok-4.3", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.58},
+	} {
+		t.Run(test.provider+"/"+test.model+"/"+test.timestamp.Format(time.DateOnly), func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
+				Model: test.model, ProviderID: test.provider, Timestamp: test.timestamp,
+				PriceContext: map[string]string{"processing": "batch"},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
 func TestOpenAIPublishedFlexRates(t *testing.T) {
 	for _, test := range []struct {
 		model                        string

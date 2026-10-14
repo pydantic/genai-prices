@@ -4,6 +4,12 @@ id: mistral
 pricing_urls:
   - https://mistral.ai/pricing/api
 api_pattern: 'https://api\.mistral\.ai'
+price_comments: >-
+  Batch API usage is charged at 50% of the standard rates for every model ("We offer a 50% discount on batch API").
+  Batch rates for chat models, OCR 4.1 pages and Voxtral Mini Transcribe 2 are read from the Batch pricing mode at
+  https://docs.mistral.ai/inference/pricing; OCR annotated pages, OCR 3, Voxtral Small and Mistral Embed apply the
+  documented 50% discount to their current standard rates. Only models Mistral still serves carry a batch variant.
+  https://docs.mistral.ai/capabilities/batch/
 provider_match:
   starts_with: mistral
 model_match:
@@ -48,10 +54,16 @@ models:
         - equals: codestral-latest
         - equals: codestral-2501
     context_window: 256000
-    prices_checked: 2025-07-04
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.3
       output_mtok: 0.9
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          output_mtok: 0.45
 
   - id: codestral-2508
     name: Codestral 2508
@@ -61,11 +73,18 @@ models:
     match:
       equals: codestral-2508
     context_window: 256000
-    prices_checked: 2026-06-09
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 0.9
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.015
+          output_mtok: 0.45
 
   - id: devstral-2512
     name: Devstral 2 2512
@@ -168,11 +187,18 @@ models:
     match:
       equals: ministral-14b-2512
     context_window: 262144
-    prices_checked: 2026-06-09
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 0.2
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.1
+          cache_read_mtok: 0.01
+          output_mtok: 0.1
 
   - id: ministral-3b
     name: Ministral 3B
@@ -195,11 +221,18 @@ models:
     match:
       equals: ministral-3b-2512
     context_window: 131072
-    prices_checked: 2026-06-09
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.01
       output_mtok: 0.1
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.005
+          output_mtok: 0.05
 
   - id: ministral-8b
     name: Ministral 8B 24.10
@@ -227,13 +260,20 @@ models:
     match:
       equals: ministral-8b-2512
     context_window: 262144
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.15
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0075
+          output_mtok: 0.075
 
   - id: ministral-8b-latest
     name: Ministral 8B Latest
@@ -241,7 +281,7 @@ models:
       equals: ministral-8b-latest
     # No context_window: this alias pointed to Ministral 8B 24.10 (128k) until 2025-12-02,
     # now to Ministral 3 8B (262,144) — no single value is true for every request it matches
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: >-
       The latest alias moved from Ministral 8B 24.10 to Ministral 3 8B on 2025-12-02.
       Ref: https://github.com/mistralai/platform-docs-public/commit/4975b09514f95978cfeeea814562000348548107
@@ -255,6 +295,13 @@ models:
           input_mtok: 0.15
           cache_read_mtok: 0.015
           output_mtok: 0.15
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0075
+          output_mtok: 0.075
 
   - id: mistral-7b
     name: Mistral 7B
@@ -271,9 +318,16 @@ models:
     match:
       equals: mistral-embed
     context_window: 8192
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.05
+          output_mtok: 0.05
 
   - id: mistral-large
     name: Mistral Large
@@ -302,11 +356,18 @@ models:
     match:
       equals: mistral-large-2512
     context_window: 262144
-    prices_checked: 2026-06-09
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.5
       cache_read_mtok: 0.05
       output_mtok: 1.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.025
+          output_mtok: 0.75
 
   - id: mistral-large-4
     name: Mistral Large 4
@@ -315,11 +376,12 @@ models:
         - equals: mistral-large-4
         - equals: mistral-large-4-0
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-14
     price_comments: >-
       Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The
       published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not
-      state an exact effective end date, so no future price change is scheduled here.
+      state an exact effective end date, so no future price change is scheduled here. The batch variant is half the
+      promotional rate; when the list rates return, prepend a dated batch variant at $0.68/$0.07/$2.09.
       https://docs.mistral.ai/models/mistral-large-4-0
       https://docs.mistral.ai/inference/pricing
       https://docs.mistral.ai/resources/changelogs
@@ -327,6 +389,13 @@ models:
       input_mtok: 0.68
       cache_read_mtok: 0.07
       output_mtok: 2.09
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.34
+          cache_read_mtok: 0.035
+          output_mtok: 1.045
 
   - id: mistral-medium-2312
     name: Mistral Medium 1
@@ -375,13 +444,20 @@ models:
         - equals: mistral-medium-3
         - equals: mistral-medium-2604
     context_window: 262144
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 7.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
 
   - id: mistral-medium-latest
     name: Mistral Medium Latest
@@ -389,7 +465,7 @@ models:
       equals: mistral-medium-latest
     # No context_window: this alias pointed to the 128k mistral-medium-2505 before repointing
     # to the 262,144 Medium 3.5 — no single value is true for every request it matches
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: >-
       The latest alias moved from Mistral Medium 3.1 to Mistral Medium 3.5 on 2026-06-16.
       Ref: https://github.com/mistralai/platform-docs-public/commit/cc58c1186b1ca8ad65658f5dfd3ebd29de778c7f
@@ -404,6 +480,13 @@ models:
           input_mtok: 1.5
           cache_read_mtok: 0.15
           output_mtok: 7.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
 
   - id: mistral-nemo
     name: Mistral NeMo
@@ -462,11 +545,17 @@ models:
         - equals: mistral-ocr-2512
         - equals: mistral-ocr-2512-completion
     context_window: 16384
-    prices_checked: 2026-08-25
+    prices_checked: 2026-10-14
     price_comments: https://docs.mistral.ai/models/ocr-3-25-12
     prices:
       input_document_kpages: 2
       input_annotated_document_kpages: 3
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_document_kpages: 1
+          input_annotated_document_kpages: 1.5
 
   - id: mistral-ocr-4-0
     name: Mistral OCR 4.0
@@ -493,11 +582,17 @@ models:
         - equals: mistral-ocr-4-1
         - equals: mistral-ocr-4-1-completion
     context_window: 16384
-    prices_checked: 2026-08-25
+    prices_checked: 2026-10-14
     price_comments: https://docs.mistral.ai/models/ocr-4-1
     prices:
       input_document_kpages: 4
       input_annotated_document_kpages: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_document_kpages: 2
+          input_annotated_document_kpages: 2.5
 
   - id: mistral-ocr-latest
     name: Mistral OCR Latest
@@ -507,7 +602,7 @@ models:
         - equals: mistral-ocr-latest-completion
     # No context_window: this alias pointed to the 40k mistral-ocr-2505 before today's
     # 16,384 OCR 4 — no single value is true for every request it matches
-    prices_checked: 2026-08-25
+    prices_checked: 2026-10-14
     price_comments: >-
       The latest alias moved to OCR 3 on December 18, 2025, OCR 4.0 on June 23, 2026, and OCR 4.1 on July 16, 2026.
       OCR 4.1 kept the OCR 4.0 rates: https://docs.mistral.ai/resources/changelogs
@@ -529,6 +624,12 @@ models:
         prices:
           input_document_kpages: 4
           input_annotated_document_kpages: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_document_kpages: 2
+          input_annotated_document_kpages: 2.5
 
   - id: mistral-saba
     name: Mistral Saba
@@ -579,11 +680,18 @@ models:
     match:
       equals: mistral-small-2603
     context_window: 262144
-    prices_checked: 2026-06-09
+    prices_checked: 2026-10-14
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.6
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0075
+          output_mtok: 0.3
 
   - id: mistral-small-3.1-24b-instruct
     name: Mistral Small 3.1 24B
@@ -695,11 +803,17 @@ models:
         - equals: voxtral-mini-latest
         - equals: voxtral-mini-2602
     context_window: 16384
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
     prices:
       audio_hours: 0.18
       input_audio_hours: 0.18
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          audio_hours: 0.09
+          input_audio_hours: 0.09
 
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
@@ -712,7 +826,7 @@ models:
         - equals: voxtral-small-2507
         - equals: voxtral-small-latest
     context_window: 32768
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-14
     price_comments: >-
       Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11.
       Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5
@@ -727,3 +841,10 @@ models:
           input_mtok: 0.1
           cache_read_mtok: 0.01
           output_mtok: 0.4
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.005
+          output_mtok: 0.2

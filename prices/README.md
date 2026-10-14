@@ -78,6 +78,9 @@ For each price key, the first active matching variant that supplies a value wins
 Other keys retain their standard rates. An empty `prices` map acknowledges a standard-price context.
 Null price values are omitted. A nonempty context with no matching variant produces a warning and a standard-price estimate.
 
+Batch API rates use `when: { processing: batch }`, not `service_tier`. Batch is a way of submitting requests,
+and providers disagree on what `service_tier` a batch result reports, so `service_tier` stays the value the response carries.
+
 You list explicit per-unit rates because a discount may apply to tokens without applying to tools or storage.
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`

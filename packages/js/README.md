@@ -54,6 +54,28 @@ If a nonempty context matches no variant, `console.warn` reports the fallback an
 This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 
+### Batch API
+
+```ts
+import { calcPrice } from '@pydantic/genai-prices'
+
+const price = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, 'o3', {
+  providerId: 'openai',
+  timestamp: new Date('2026-10-14T00:00:00Z'),
+  priceContext: { processing: 'batch' },
+})
+if (!price || price.total_price !== 5) {
+  throw new Error('Expected the verified o3 batch price')
+}
+```
+
+You pass `{ processing: 'batch' }` for usage from a provider's batch API. Most providers do not mark batch results in
+the response, so you set it yourself. Batch is a separate key from `service_tier` because it is a way of submitting
+requests, not a tier: OpenAI batch results report `service_tier: "default"`.
+
+Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
+A model the provider does not serve in batch warns and returns the standard-price estimate.
+
 ### Cached input tokens
 
 ```ts

@@ -292,11 +292,21 @@ models:
     match:
       equals: openai/gpt-oss-120b
     context_window: 131072
-    prices_checked: 2025-08-06
+    prices_checked: 2026-10-14
+    price_comments: >-
+      Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed
+      at the halved input rate. See https://console.groq.com/docs/batch.
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.075
+          output_mtok: 0.3
 
   # https://console.groq.com/docs/model/openai/gpt-oss-20b
   - id: openai/gpt-oss-20b
@@ -306,11 +316,21 @@ models:
     match:
       equals: openai/gpt-oss-20b
     context_window: 131072
-    prices_checked: 2025-08-06
+    prices_checked: 2026-10-14
+    price_comments: >-
+      Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed
+      at the halved input rate. See https://console.groq.com/docs/batch.
     prices:
       input_mtok: 0.075
       cache_read_mtok: 0.0375
       output_mtok: 0.30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.0375
+          cache_read_mtok: 0.0375
+          output_mtok: 0.15
 
   # https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b
   - id: openai/gpt-oss-safeguard-20b
@@ -355,11 +375,19 @@ models:
       equals: whisper-large-v3
     # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
     # token limit, not a text context window
-    prices_checked: 2026-08-24
-    price_comments: See https://console.groq.com/docs/model/whisper-large-v3.
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://console.groq.com/docs/model/whisper-large-v3. Batch API is 50% of the synchronous rate, see
+      https://console.groq.com/docs/batch.
     prices:
       audio_hours: 0.111
       input_audio_hours: 0.111
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          audio_hours: 0.0555
+          input_audio_hours: 0.0555
 
   - id: whisper-large-v3-turbo
     name: Whisper Large V3 Turbo
@@ -367,8 +395,16 @@ models:
       equals: whisper-large-v3-turbo
     # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
     # token limit, not a text context window
-    prices_checked: 2026-08-24
-    price_comments: See https://console.groq.com/docs/model/whisper-large-v3-turbo.
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://console.groq.com/docs/model/whisper-large-v3-turbo. Batch API is 50% of the synchronous rate, see
+      https://console.groq.com/docs/batch.
     prices:
       audio_hours: 0.04
       input_audio_hours: 0.04
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          audio_hours: 0.02
+          input_audio_hours: 0.02
