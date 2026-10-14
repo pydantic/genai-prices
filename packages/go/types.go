@@ -418,7 +418,7 @@ func calculationWarnings(usage Usage, prices modelPrice, registry *unitRegistry)
 			priceKeys = append(priceKeys, key)
 		}
 	}
-	warnings := make([]string, 0, 2)
+	var warnings []string
 	if len(usageKeys) > 0 {
 		sort.Strings(usageKeys)
 		warnings = append(warnings, "Unsupported usage key for standard pricing: "+strings.Join(usageKeys, ", "))

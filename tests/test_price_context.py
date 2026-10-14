@@ -45,9 +45,7 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
     assert result.input_price == Decimal(str(case['input']))
     assert result.output_price == Decimal(str(case['output']))
     assert result.total_price == Decimal(str(case['total']))
-    assert [str(w.message) for w in caught] == (
-        ["No price variant matched for model 'context-model'; using standard prices"] if case.get('warn') else []
-    )
+    assert caught == []
 
 
 @pytest.mark.parametrize(
@@ -138,14 +136,13 @@ def test_unresearched_tier_history_and_unsupported_model() -> None:
         standard = calc_price(
             Usage(input_tokens=1_000_000), model, provider_id='openai', genai_request_timestamp=timestamp
         )
-        with pytest.warns(UserWarning, match='No price variant matched'):
-            result = calc_price(
-                Usage(input_tokens=1_000_000),
-                model,
-                provider_id='openai',
-                genai_request_timestamp=timestamp,
-                price_context={'service_tier': 'flex'},
-            )
+        result = calc_price(
+            Usage(input_tokens=1_000_000),
+            model,
+            provider_id='openai',
+            genai_request_timestamp=timestamp,
+            price_context={'service_tier': 'flex'},
+        )
         assert result.total_price == standard.total_price
 
 
@@ -155,16 +152,11 @@ def test_fallback_provider_does_not_inherit_tier_rates() -> None:
     standard = calc_price(usage, 'gpt-5', provider_id='azure', genai_request_timestamp=timestamp)
     assert standard.total_price == Decimal('11.25')
     for context in [None, {}, {'service_tier': 'priority'}]:
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter('always')
-            result = calc_price(
-                usage, 'gpt-5', provider_id='azure', genai_request_timestamp=timestamp, price_context=context
-            )
+        result = calc_price(
+            usage, 'gpt-5', provider_id='azure', genai_request_timestamp=timestamp, price_context=context
+        )
         assert result.provider.id == 'azure'
         assert result.total_price == standard.total_price
-        assert [str(w.message) for w in caught] == (
-            ["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"] if context else []
-        )
 
 
 @pytest.mark.parametrize('when', [{}, {'service_tier': None}, {'service_tier': True}, {1: 'flex'}])

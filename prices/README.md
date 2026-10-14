@@ -76,7 +76,7 @@ Each `when` must contain at least one string key and string value. Every pair mu
 You can use the existing date and time constraints to limit a variant's validity.
 For each price key, the first active matching variant that supplies a value wins.
 Other keys retain their standard rates. An empty `prices` map acknowledges a standard-price context.
-Null price values are omitted. A nonempty context with no matching variant produces a warning and a standard-price estimate.
+Null price values are omitted. A context with no matching variant gives a standard-price estimate.
 
 Batch API rates use `when: { processing: batch }`, not `service_tier`. Batch is a way of submitting requests,
 and providers disagree on what `service_tier` a batch result reports, so `service_tier` stays the value the response carries.
@@ -84,7 +84,7 @@ and providers disagree on what `service_tier` a batch result reports, so `servic
 You list explicit per-unit rates because a discount may apply to tokens without applying to tools or storage.
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
-and constrain those rates to the verification date. Earlier requests then warn instead of receiving an unverified tier rate.
+and constrain those rates to the verification date. Earlier requests then receive the standard-price estimate instead of an unverified tier rate.
 When standard prices change, verify every variant independently. Its listed rates are absolute; omitted keys inherit standard prices for that date.
 Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
 Test each affected context before and after the date boundary in all three packages.

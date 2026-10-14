@@ -27,7 +27,6 @@ func TestPriceContextContract(t *testing.T) {
 			Input     float64           `json:"input"`
 			Output    float64           `json:"output"`
 			Total     float64           `json:"total"`
-			Warn      bool              `json:"warn"`
 		} `json:"cases"`
 	}
 	if err := json.Unmarshal(data, &fixture); err != nil {
@@ -53,11 +52,7 @@ func TestPriceContextContract(t *testing.T) {
 			if result.InputPrice != test.Input || result.OutputPrice != test.Output || result.TotalPrice != test.Total {
 				t.Fatalf("got %+v, want %v/%v/%v", result, test.Input, test.Output, test.Total)
 			}
-			if test.Warn {
-				if len(result.Warnings) != 1 || result.Warnings[0] != "No price variant matched for model 'context-model'; using standard prices" {
-					t.Fatalf("got warnings %v", result.Warnings)
-				}
-			} else if len(result.Warnings) != 0 {
+			if len(result.Warnings) != 0 {
 				t.Fatalf("got warnings %v", result.Warnings)
 			}
 		})
@@ -195,11 +190,7 @@ func TestFallbackProviderDoesNotInheritTierRates(t *testing.T) {
 		if result.ProviderID != "azure" || result.TotalPrice != 11.25 {
 			t.Fatalf("got %+v", result)
 		}
-		if len(context) == 0 {
-			if len(result.Warnings) != 0 {
-				t.Fatalf("got warnings %v", result.Warnings)
-			}
-		} else if len(result.Warnings) != 1 || result.Warnings[0] != "No price variant matched for provider 'azure' model 'gpt-5'; using standard prices" {
+		if len(result.Warnings) != 0 {
 			t.Fatalf("got warnings %v", result.Warnings)
 		}
 	}

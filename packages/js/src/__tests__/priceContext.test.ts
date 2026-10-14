@@ -14,7 +14,6 @@ const fixture = JSON.parse(readFileSync(new URL('../../../../tests/fixtures/pric
     output: number
     timestamp: string
     total: number
-    warn?: boolean
   }[]
   providers: Provider[]
   usage: Usage
@@ -40,7 +39,7 @@ it.each(fixture.cases)('price context: $name', (test) => {
   expect(result?.input_price).toBe(test.input)
   expect(result?.output_price).toBe(test.output)
   expect(result?.total_price).toBe(test.total)
-  expect(warning.mock.calls).toEqual(test.warn ? [["No price variant matched for model 'context-model'; using standard prices"]] : [])
+  expect(warning).not.toHaveBeenCalled()
 })
 
 it.each([
@@ -134,8 +133,7 @@ it.each([{}, { service_tier: null }, { service_tier: true }])('rejects invalid v
   expect(() => calcPrice({}, 'context-model', { provider })).toThrow('Price variant when')
 })
 
-it('warns for unresearched history and unsupported models', () => {
-  const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+it('prices unresearched history and unsupported models at standard rates', () => {
   for (const [model, timestamp] of [
     ['o3', '2026-10-11'],
     ['text-embedding-3-small', '2026-10-12'],
@@ -149,7 +147,6 @@ it('warns for unresearched history and unsupported models', () => {
       })?.total_price
     ).toBe(standard?.total_price)
   }
-  expect(warning).toHaveBeenCalledTimes(2)
 })
 
 it('rejects a missing variant price map', () => {
@@ -171,5 +168,5 @@ it('does not inherit tier rates from a fallback provider', () => {
     expect(result?.provider.id).toBe('azure')
     expect(result?.total_price).toBe(11.25)
   }
-  expect(warning.mock.calls).toEqual([["No price variant matched for provider 'azure' model 'gpt-5'; using standard prices"]])
+  expect(warning).not.toHaveBeenCalled()
 })

@@ -44,13 +44,13 @@ if (!price || price.total_price !== 5) {
 You pass `priceContext` explicitly to select request-specific prices. Its keys and values are strings.
 Use the `service_tier` reported in OpenAI's response. A priority request can be downgraded and report `default`.
 `auto` is a request setting and does not identify the rate you were charged. Extraction does not infer a context.
-Tier variants are specific to their provider. If model lookup falls back to another provider, you receive a warning
-and the standard-price estimate; the fallback provider's tier rates are not applied.
+Tier variants are specific to their provider. If model lookup falls back to another provider, you receive the
+standard-price estimate; the fallback provider's tier rates are not applied.
 
 OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 
-If a nonempty context matches no variant, `console.warn` reports the fallback and you receive the standard-price estimate.
+If a context matches no variant, you receive the standard-price estimate.
 This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 
@@ -74,7 +74,7 @@ the response, so you set it yourself. Batch is a separate key from `service_tier
 requests, not a tier: OpenAI batch results report `service_tier: "default"`.
 
 Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
-A model the provider does not serve in batch warns and returns the standard-price estimate.
+A model the provider does not serve in batch returns the standard-price estimate.
 
 ### Cached input tokens
 

@@ -243,9 +243,6 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const ownsModel = provider.models.includes(model)
-  if (!ownsModel && options?.priceContext && Object.keys(options.priceContext).length) {
-    console.warn(`No price variant matched for provider '${provider.id}' model '${model.id}'; using standard prices`)
-  }
   const modelPrice = getActiveModelPrice(model, timestamp, ownsModel ? options?.priceContext : undefined)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {

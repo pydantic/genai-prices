@@ -739,22 +739,14 @@ class ModelInfo:
         if not price_context:
             return standard
         overrides: dict[str, Decimal | TieredPrices] = {}
-        matched = False
         for variant in self.price_variants or ():
             if variant.constraint is not None and not variant.constraint.active(request_timestamp):
                 continue
             if not all(price_context.get(key) == value for key, value in variant.when.items()):
                 continue
-            matched = True
             for key, price in variant.prices.__dict__.items():
                 if price is not None:
                     overrides.setdefault(key, price)
-        if not matched:
-            warnings.warn(
-                f'No price variant matched for model {self.id!r}; using standard prices',
-                UserWarning,
-                stacklevel=3,
-            )
         resolved = copy(standard)
         resolved.__dict__.update(overrides)
         return resolved
@@ -772,11 +764,6 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         if price_context and not any(self is model for model in provider.models):
-            warnings.warn(
-                f'No price variant matched for provider {provider.id!r} model {self.id!r}; using standard prices',
-                UserWarning,
-                stacklevel=2,
-            )
             model_price = self.get_prices(genai_request_timestamp)
         else:
             model_price = self.get_prices(genai_request_timestamp, price_context)

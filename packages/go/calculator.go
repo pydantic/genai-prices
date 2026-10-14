@@ -100,7 +100,7 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 	if timestamp.IsZero() {
 		timestamp = time.Now()
 	}
-	prices, contextWarnings := resolvePriceVariants(matchedModel, selected, timestamp, request.PriceContext)
+	prices := resolvePriceVariants(matchedModel, selected, timestamp, request.PriceContext)
 	if len(request.PriceContext) > 0 {
 		if err := validateModelPrice(prices, calculator.registry); err != nil {
 			return PriceCalculation{}, fmt.Errorf("%w: %v", ErrInvalidData, err)
@@ -128,7 +128,7 @@ func (calculator *Calculator) Calculate(request PriceRequest) (PriceCalculation,
 		TotalPrice:  totalPrice,
 		ProviderID:  selected.ID,
 		ModelID:     matchedModel.ID,
-		Warnings:    append(contextWarnings, calculationWarnings(request.Usage, prices, calculator.registry)...),
+		Warnings:    calculationWarnings(request.Usage, prices, calculator.registry),
 	}, nil
 }
 
