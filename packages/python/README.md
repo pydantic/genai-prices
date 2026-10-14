@@ -80,10 +80,9 @@ Tier variants are specific to their provider. If model lookup falls back to anot
 standard-price estimate; the fallback provider's tier rates are not applied. You are warned when those rates would have
 changed the price, or when the context has a value the model has no rate for under a key it prices.
 
-If a model has variants for a context key but none match, you receive a `UserWarning` and the standard-price estimate.
-This includes unknown tiers and dates without verified tier rates.
-A context whose keys none of the model's variants use cannot change its price, so it is priced at standard rates without a warning.
-This covers models with no tier rates and misspelled keys.
+If no variant matches the context, you receive the standard-price estimate.
+If the model has a variant for one of the context's keys, you also receive a `UserWarning`, for example for an unknown tier or a date before the tier rates were verified.
+Otherwise the context can't change the price and there is no warning, for example for a model without tier rates or a misspelled key.
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 You can make warnings errors when you require a verified tier price.
 

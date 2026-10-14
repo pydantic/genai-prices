@@ -51,10 +51,9 @@ changed the price, or when the context has a value the model has no rate for und
 OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 
-If a model has variants for a context key but none match, `console.warn` reports the fallback and you receive the standard-price estimate.
-This includes unknown tiers and dates without verified tier rates.
-A context whose keys none of the model's variants use cannot change its price, so it is priced at standard rates without a warning.
-This covers models with no tier rates and misspelled keys.
+If no variant matches the context, you receive the standard-price estimate.
+If the model has a variant for one of the context's keys, `console.warn` also reports it, for example for an unknown tier or a date before the tier rates were verified.
+Otherwise the context can't change the price and there is no warning, for example for a model without tier rates or a misspelled key.
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 
 ### Batch API
