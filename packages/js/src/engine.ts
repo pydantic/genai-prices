@@ -176,30 +176,6 @@ function constraintActive(constraint: ConditionalPrice['constraint'], timestamp:
 }
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext?: PriceContext): ModelPrice {
-  const { matched, prices } = resolvePriceVariants(model, timestamp, priceContext)
-  if (!matched && pricesContextKey(model, priceContext)) {
-    console.warn(`No price variant matched for model '${model.id}'; using standard prices`)
-  }
-  return prices
-}
-
-/**
- * Whether any variant of this model, active or not, conditions on a key in the context.
- * A context whose keys no variant uses can't change this model's price, so it isn't worth a warning.
- */
-export function pricesContextKey(model: ModelInfo, priceContext?: PriceContext): boolean {
-  if (!priceContext) return false
-  return (model.price_variants ?? []).some((variant) =>
-    Object.keys(variant.when).some((key) => Object.prototype.hasOwnProperty.call(priceContext, key))
-  )
-}
-
-/** Resolves prices for a context, with whether a variant matched and whether one set a price. */
-export function resolvePriceVariants(
-  model: ModelInfo,
-  timestamp: Date,
-  priceContext?: PriceContext
-): { matched: boolean; overridden: boolean; prices: ModelPrice } {
   let standard: ModelPrice
   if (Array.isArray(model.prices)) {
     if (Number.isNaN(timestamp.getTime())) throw new RangeError('Invalid time value')
@@ -214,7 +190,7 @@ export function resolvePriceVariants(
   } else {
     standard = model.prices
   }
-  if (!priceContext || !Object.keys(priceContext).length) return { matched: true, overridden: false, prices: standard }
+  if (!priceContext || !Object.keys(priceContext).length) return standard
   const overrides = Object.create(null) as ModelPrice
   let matched = false
   for (const variant of model.price_variants ?? []) {
@@ -232,7 +208,12 @@ export function resolvePriceVariants(
       }
     }
   }
-  return { matched, overridden: Object.keys(overrides).length > 0, prices: { ...standard, ...overrides } }
+  // A context none of the variants condition on can't change this model's price, so it isn't worth a warning.
+  const usesContextKey = (model.price_variants ?? []).some((variant) =>
+    Object.keys(variant.when).some((key) => Object.prototype.hasOwnProperty.call(priceContext, key))
+  )
+  if (!matched && usesContextKey) console.warn(`No price variant matched for model '${model.id}'; using standard prices`)
+  return { ...standard, ...overrides }
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {

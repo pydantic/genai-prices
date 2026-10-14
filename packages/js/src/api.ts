@@ -11,14 +11,7 @@ import type {
 } from './types'
 
 import { data as embeddedData } from './data'
-import {
-  calcPrice as calcPriceInternal,
-  getActiveModelPrice,
-  matchModelWithFallback,
-  matchProvider,
-  pricesContextKey,
-  resolvePriceVariants,
-} from './engine'
+import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import { validateUsageValue } from './usage'
 import { warnUnsupportedExtractorDestinations } from './validation'
@@ -250,15 +243,14 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const ownsModel = provider.models.includes(model)
-  if (!ownsModel && pricesContextKey(model, options?.priceContext)) {
-    // Another provider's tier rates are never applied; warn only when they would have changed the price,
-    // or when the context names a value this model doesn't price for a key it does.
-    const { matched, overridden } = resolvePriceVariants(model, timestamp, options?.priceContext)
-    if (overridden || !matched) {
+  const modelPrice = getActiveModelPrice(model, timestamp, ownsModel ? options?.priceContext : undefined)
+  if (!ownsModel && options?.priceContext && Object.keys(options.priceContext).length) {
+    // Another provider's variants are never applied; warn only when they would have changed the price.
+    const contextPrice = getActiveModelPrice(model, timestamp, options.priceContext)
+    if (Object.keys(contextPrice).some((key) => contextPrice[key] !== modelPrice[key])) {
       console.warn(`No price variant matched for provider '${provider.id}' model '${model.id}'; using standard prices`)
     }
   }
-  const modelPrice = getActiveModelPrice(model, timestamp, ownsModel ? options?.priceContext : undefined)
   let billedUsage = usage
   if (provider.id === 'groq' && (model.id === 'whisper-large-v3' || model.id === 'whisper-large-v3-turbo')) {
     billedUsage = { ...usage }

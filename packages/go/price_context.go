@@ -3,6 +3,7 @@ package genai_prices
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 )
 
@@ -62,36 +63,6 @@ func resolvePriceVariants(model *model, provider *provider, timestamp time.Time,
 			break
 		}
 	}
-	resolved, matched, overridden := applyPriceVariants(model, standard, timestamp, context)
-	if !ownsModel {
-		// Another provider's tier rates are never applied; warn only when they would have changed the price,
-		// or when the context names a value this model doesn't price for a key it does.
-		if pricesContextKey(model, context) && (overridden || !matched) {
-			return standard, []string{fmt.Sprintf("No price variant matched for provider '%s' model '%s'; using standard prices", provider.ID, model.ID)}
-		}
-		return standard, nil
-	}
-	if !matched && pricesContextKey(model, context) {
-		return resolved, []string{fmt.Sprintf("No price variant matched for model '%s'; using standard prices", model.ID)}
-	}
-	return resolved, nil
-}
-
-// pricesContextKey reports whether any variant of the model, active or not, conditions on a key in the context.
-// A context whose keys no variant uses can't change the model's price, so it isn't worth a warning.
-func pricesContextKey(model *model, context map[string]string) bool {
-	for _, variant := range model.PriceVariants {
-		for key := range variant.When {
-			if _, found := context[key]; found {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// applyPriceVariants resolves prices for a context, reporting whether a variant matched and whether one set a price.
-func applyPriceVariants(model *model, standard modelPrice, timestamp time.Time, context map[string]string) (modelPrice, bool, bool) {
 	resolved := make(modelPrice, len(standard))
 	for key, price := range standard {
 		resolved[key] = price
@@ -121,5 +92,28 @@ func applyPriceVariants(model *model, standard modelPrice, timestamp time.Time, 
 			}
 		}
 	}
-	return resolved, matched, len(overridden) > 0
+	var warnings []string
+	// A context none of the variants condition on can't change this model's price, so it isn't worth a warning.
+	if !matched && usesContextKey(model, context) {
+		warnings = append(warnings, fmt.Sprintf("No price variant matched for model '%s'; using standard prices", model.ID))
+	}
+	if !ownsModel {
+		// Another provider's variants are never applied; warn only when they would have changed the price.
+		if !reflect.DeepEqual(resolved, standard) {
+			warnings = append(warnings, fmt.Sprintf("No price variant matched for provider '%s' model '%s'; using standard prices", provider.ID, model.ID))
+		}
+		return standard, warnings
+	}
+	return resolved, warnings
+}
+
+func usesContextKey(model *model, context map[string]string) bool {
+	for _, variant := range model.PriceVariants {
+		for key := range variant.When {
+			if _, found := context[key]; found {
+				return true
+			}
+		}
+	}
+	return false
 }
