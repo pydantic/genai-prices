@@ -62,6 +62,24 @@ it.each([
 })
 
 it.each([
+  ['openai', 'o3', '2026-10-14', 4.875],
+  ['anthropic', 'claude-sonnet-5', '2026-10-14', 5.775],
+  ['google', 'gemini-4-argon', '2026-10-14', 5.7625],
+  ['google', 'gemini-4-argon', '2026-12-01', 11.525],
+  ['groq', 'openai/gpt-oss-120b', '2026-10-14', 0.375],
+  ['mistral', 'mistral-small-2603', '2026-10-14', 0.358125],
+  ['x-ai', 'grok-4.3', '2026-10-14', 5.58],
+] as const)('prices %s %s batch processing on %s', (providerId, model, date, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      priceContext: { processing: 'batch' },
+      providerId,
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
   ['o4-mini', 100_000, 100_000, 0.0138, 2.2],
   ['gpt-5.4', 272_000, 272_000, 0.03536, 7.5],
   ['gpt-5.4', 272_001, 272_001, 0.06800025, 11.25],

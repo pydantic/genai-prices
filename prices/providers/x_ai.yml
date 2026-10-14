@@ -277,7 +277,9 @@ models:
       table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier
       here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands
       on the higher rate. Ref: https://docs.x.ai/docs/models
-    prices_checked: 2026-08-22
+      The Batch API is 20% off every token type, cached tokens included, on both context tiers.
+      Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
+    prices_checked: 2026-10-14
     prices:
       input_mtok:
         base: 1.25
@@ -294,6 +296,25 @@ models:
         tiers:
           - start: 199999
             price: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 199999
+                price: 2
+          cache_read_mtok:
+            base: 0.16
+            tiers:
+              - start: 199999
+                price: 0.32
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
 
   - id: grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
@@ -329,7 +350,9 @@ models:
       table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier
       here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands
       on the higher rate. Ref: https://docs.x.ai/docs/models
-    prices_checked: 2026-08-22
+      The Batch API is 20% off every token type, cached tokens included, on both context tiers.
+      Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
+    prices_checked: 2026-10-14
     prices:
       input_mtok:
         base: 1.25
@@ -346,6 +369,25 @@ models:
         tiers:
           - start: 199999
             price: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 199999
+                price: 2
+          cache_read_mtok:
+            base: 0.16
+            tiers:
+              - start: 199999
+                price: 0.32
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
 
   - id: grok-4.5
     name: Grok 4.5

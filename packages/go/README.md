@@ -82,6 +82,32 @@ This includes unsupported models, unknown tiers, misspelled keys, and dates with
 The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
 Check `Warnings` when you require a verified tier price.
 
+## Batch API
+
+```go
+price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+	Usage: genai_prices.Usage{
+		genai_prices.UsageInputTokens: 1_000_000,
+		genai_prices.UsageOutputTokens: 1_000_000,
+	},
+	Model: "o3",
+	ProviderID: "openai",
+	Timestamp: time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC),
+	PriceContext: map[string]string{"processing": "batch"},
+})
+if err != nil {
+	panic(err)
+}
+fmt.Println(price.TotalPrice) // 5
+```
+
+You pass `{"processing": "batch"}` for usage from a provider's batch API. Most providers do not mark batch results in
+the response, so you set it yourself. Batch is a separate key from `service_tier` because it is a way of submitting
+requests, not a tier: OpenAI batch results report `service_tier: "default"`.
+
+Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
+A model the provider does not serve in batch records a warning and returns the standard-price estimate.
+
 ## Extract usage from a response
 
 ```go
