@@ -78,7 +78,7 @@ You can also pass it to `ExtractedUsage.calc_price()`, `ModelInfo.calc_price()`,
 Extraction does not infer a pricing context.
 Tier variants are specific to their provider. If model lookup falls back to another provider, you receive the
 standard-price estimate; the fallback provider's tier rates are not applied. You are warned when those rates would have
-changed the price, or when the context has a value the model has no rate for.
+changed the price, or when the context has a value the model has no rate for under a key it prices.
 
 If a model has variants for a context key but none match, you receive a `UserWarning` and the standard-price estimate.
 This includes unknown tiers and dates without verified tier rates.
@@ -109,7 +109,7 @@ the response, so you set it yourself. Batch is a separate key from `service_tier
 requests, not a tier: OpenAI batch results report `service_tier: "default"`.
 
 Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
-A model the provider does not serve in batch warns and returns the standard-price estimate.
+A model without batch rates returns the standard-price estimate.
 
 ### Cached input tokens
 

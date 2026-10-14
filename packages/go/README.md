@@ -73,7 +73,7 @@ Use the `service_tier` reported in OpenAI's response. A priority request can be 
 `auto` is a request setting and does not identify the rate you were charged. Extraction does not infer a context.
 Tier variants are specific to their provider. If model lookup falls back to another provider, you receive the
 standard-price estimate; the fallback provider's tier rates are not applied. You are warned when those rates would have
-changed the price, or when the context has a value the model has no rate for.
+changed the price, or when the context has a value the model has no rate for under a key it prices.
 
 OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
@@ -120,7 +120,7 @@ the response, so you set it yourself. Batch is a separate key from `service_tier
 requests, not a tier: OpenAI batch results report `service_tier: "default"`.
 
 Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
-A model the provider does not serve in batch records a warning and returns the standard-price estimate.
+A model without batch rates returns the standard-price estimate.
 
 ## Extract usage from a response
 
