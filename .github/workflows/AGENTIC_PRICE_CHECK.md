@@ -9,7 +9,7 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-one covered provider records hourly from 06:00
+This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-five covered provider records hourly from 06:00
 through 18:00 inclusive, Monday through Friday in `America/Los_Angeles`, and on manual dispatch. gh-aw v0.82.2 preserves
 the schedule's native timezone field in the compiled workflow and follows daylight saving time: the window is 14:00–02:00
 UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
@@ -62,9 +62,11 @@ no personal-token expiry to monitor.
 
 The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, OpenAI Decisions, Anthropic, Google
 (Gemini), Mistral, DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare
-Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, and Databricks.
+Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks, TypeSafe, Z.AI, Meta, and Modal.
 
 You define each provider's scope, official URLs, and pricing mappings in `.github/agentic-price-check-providers.yml`.
+Each run reads that manifest once, completes research provider by provider, and starts one full validation pass after edits
+and diff review are complete. Each official response is reused for the in-scope models it covers.
 The workflow creates at most one PR per run. It skips while any PR authored by `app/genai-prices-automation` remains open,
 including proposals from the previous three workflows. Renaming a PR does not bypass this guard. Merge or close those
 proposals to resume checks. The workflow does not merge PRs, force-push branches, or close older proposals.
@@ -90,7 +92,8 @@ The workflow prompt and shared instructions in `.github/workflows/shared/price-u
 
 The safe-output file allowlist permits only the covered providers, generated v2 and bundled data, the provider inventory, and
 price regression assertions. It blocks code, dependencies, workflows, agent instructions, and registry changes. There is no
-fallback issue when PR creation fails. Failures remain visible in Actions; Slack is reserved for created PRs.
+fallback issue when PR creation fails. Its existing 10 MiB patch limit accommodates the generated full-data snapshot.
+Failures remain visible in Actions; Slack is reserved for created PRs.
 
 Unreadable sources, ambiguous mappings, missing fields, and potential removals are not safe edits. They appear in a PR's
 skipped-findings section if another change can be verified, or in the noop summary otherwise. A partial check is not reported

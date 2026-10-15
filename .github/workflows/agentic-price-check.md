@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check'
-description: 'Check twenty-one provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
+description: 'Check twenty-five provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
   schedule:
@@ -69,6 +69,10 @@ safe-outputs:
       - prices/providers/baseten.yml
       - prices/providers/github_copilot.yml
       - prices/providers/databricks.yml
+      - prices/providers/typesafe.yml
+      - prices/providers/zai.yml
+      - prices/providers/meta.yml
+      - prices/providers/modal.yml
       - prices/new_data/v2/data.json
       - prices/new_data/v2/data_slim.json
       - packages/python/genai_prices/data.py
@@ -129,6 +133,8 @@ network:
     - mistral.ai
     - docs.mistral.ai
     - api-docs.deepseek.com
+    - docs.z.ai
+    - dev.meta.ai
     - docs.x.ai
     - console.groq.com
     - api.cerebras.ai
@@ -139,6 +145,7 @@ network:
     - docs.perplexity.ai
     - cohere.com
     - docs.voyageai.com
+    - docs.typesafe.ai
     - developers.cloudflare.com
     - cursor.com
     - docs.arcee.ai
@@ -146,20 +153,23 @@ network:
     - www.baseten.co
     - docs.github.com
     - www.databricks.com
+    - modal.com
     - docs.databricks.com
 ---
 
 # Price Check
 
 Check every provider in `.github/agentic-price-check-providers.yml` against its official sources. Propose verified price
-changes and new models in one PR titled `Update provider prices`. Follow Steps 1-3, then Step 3a, then the shared
-Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
+changes and new models in one PR titled `Update provider prices`. Read the manifest once, then work provider by provider:
+complete Steps 1-3a for one provider before moving to the next, recording findings as you go. After every provider is covered,
+follow the shared Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
 ## Step 1 - read the manifest and recorded data
 
-Run `cat .github/agentic-price-check-providers.yml` and then `cat` every provider file named by the manifest. The manifest's
-`scope` limits model discovery and its `notes` define provider-specific mappings. Do not infer coverage outside that scope.
+Run `cat .github/agentic-price-check-providers.yml` once. For each provider, `cat` its provider file and read all models
+before checking that provider's official sources. The manifest's `scope` limits model discovery and its `notes` define
+provider-specific mappings. Do not infer coverage outside that scope.
 
 Read every model's canonical `id`, complete `match` expression, `deprecated` state, and every key under `prices:`. A match
 expression can use `equals`, `starts_with`, `contains`, `regex`, or nested `or` rules. Read `prices/units.yml` when you need a
@@ -179,9 +189,11 @@ shadowed history, expired records, and future records when comparing current pri
 
 ## Step 2 - fetch every official source
 
-Use `web-fetch` on every exact URL in the manifest. You may follow links on the same allowed official domains to confirm an
-exact API ID or an in-scope price. Respect the manifest's mapping notes. Do not use search results, aggregators, cached
-snippets, or third-party pages.
+For the current provider, use `web-fetch` on every exact URL in the manifest. Reuse each fetched response for all in-scope
+models it covers; do not fetch or reread a readable page again per model. Fetch a distinct official URL once when needed.
+You may follow links on the same allowed official domains to confirm an exact API ID or an in-scope price. Respect the
+manifest's mapping notes. Do not use search results, aggregators, cached snippets, or third-party pages. Retry a failed
+fetch, or fetch a specific official follow-up only for a field the first response leaves unresolved.
 
 A source is unreadable when it times out, errors, redirects to unrelated content, or omits the model IDs or numeric prices needed
 for its stated purpose. Record an unreadable-source finding. Do not guess, reuse remembered prices, or treat the provider as clean.

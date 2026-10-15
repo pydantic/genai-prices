@@ -226,3 +226,47 @@ providers:
       databricks-kimi-k2-7-code. The catalog lists every current pay-per-token endpoint. Exclude Priority Pay Per Token,
       Provisioned Throughput, Batch Inference, per-region DBU prices, and the proprietary Claude, GPT, Gemini, and Grok
       endpoints. The open-weight GPT OSS and Gemma endpoints are in scope.
+
+  - name: TypeSafe
+    file: prices/providers/typesafe.yml
+    scope: Public Jev input-token pricing.
+    sources:
+      - https://docs.typesafe.ai/models
+    notes: >-
+      Compare published input prices per 1M tokens with input_mtok; output is free. Match exact versioned API IDs. Treat
+      jev-latest and jev-preview as aliases, follow the page's current targets, and do not add aliases as separate models.
+      The page does not cover every older versioned ID, so do not infer removals from it.
+
+  - name: Z.AI
+    file: prices/providers/zai.yml
+    scope: Public API models with token-based pricing.
+    sources:
+      - https://docs.z.ai/guides/overview/pricing
+    notes: >-
+      Map Input, Cached Input, and Output prices per 1M tokens to input_mtok, cache_read_mtok, and output_mtok. Match exact
+      IDs and documented upper- and lowercase aliases. Resolve dated promotional and standard records for the run date and
+      preserve price history. Cached Input Storage is not a cache-read price and has no existing registry key. Exclude
+      subscriptions and non-token charges.
+
+  - name: Meta
+    file: prices/providers/meta.yml
+    scope: Public Meta Model API token-priced models, including Contributor variants and web-search charges.
+    sources:
+      - https://dev.meta.ai/docs/pricing-rate-limits
+    notes: >-
+      Map Input, Cached Input, and Output prices per 1M tokens to input_mtok, cache_read_mtok, and output_mtok. Map web-search
+      query prices per 1,000 queries to web_searches_kcount. Treat Contributor IDs as separate from Standard IDs. Reasoning
+      tokens use the completion rate and have no independent price. Exclude Muse Code and non-token image, audio, and
+      segmentation charges. Muse Wonder requires a caller-supplied web-search count; compare only its published per-query rate.
+
+  - name: Modal
+    file: prices/providers/modal.yml
+    scope: Shared Endpoint models priced by the listed model pages only.
+    sources:
+      - https://modal.com/library/moonshot/kimi-k3
+      - https://modal.com/library/thinking-machines/inkling
+    notes: >-
+      Map Prompt, Cached prompt, and Completion prices per million tokens to input_mtok, cache_read_mtok, and output_mtok.
+      Match exact IDs moonshotai/Kimi-K3 and thinkingmachines/Inkling-NVFP4. Reasoning tokens use the completion rate.
+      Exclude Dedicated Endpoint compute prices. The general model library is not a complete pricing catalog, so do not
+      infer removals from it.
