@@ -269,7 +269,10 @@ models:
       Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines
       low hallucination rates with strict prompt adherence.
     match:
-      equals: grok-4.20
+      or:
+        - equals: grok-4.20
+        - equals: grok-4.20-0309-reasoning
+        - equals: grok-4.20-0309-non-reasoning
     context_window: 1000000
     price_comments: >-
       Prompts at or above 200k tokens are billed at the higher rate for every token in the
@@ -279,7 +282,9 @@ models:
       on the higher rate. Ref: https://docs.x.ai/docs/models
       The Batch API is 20% off every token type, cached tokens included, on both context tiers.
       Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
-    prices_checked: 2026-10-14
+      The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price
+      identically: https://docs.x.ai/developers/models
+    prices_checked: 2026-10-15
     prices:
       input_mtok:
         base: 1.25
@@ -322,9 +327,13 @@ models:
       Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents
       operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
     match:
-      equals: grok-4.20-multi-agent
+      or:
+        - equals: grok-4.20-multi-agent
+        - equals: grok-4.20-multi-agent-0309
     context_window: 1000000
-    prices_checked: 2026-06-09
+    # The dated catalog id grok-4.20-multi-agent-0309 prices identically:
+    # https://docs.x.ai/developers/models
+    prices_checked: 2026-10-15
     prices:
       input_mtok: 2
       cache_read_mtok: 0.2
@@ -554,10 +563,14 @@ models:
   - id: grok-voice-latest
     name: Grok Voice
     match:
-      equals: grok-voice-latest
-    prices_checked: 2026-08-24
+      or:
+        - equals: grok-voice-latest
+        - equals: grok-voice-3.0
+    prices_checked: 2026-10-15
     price_comments: >-
       See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.
+      grok-voice-3.0 bills at $0.08/min ($4.80/hr) plus $0.004 per text input, the same as the
+      current grok-voice-latest rates: https://docs.x.ai/developers/pricing#voice-pricing
     prices:
       - prices:
           audio_hours: 3

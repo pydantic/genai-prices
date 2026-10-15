@@ -19,7 +19,8 @@ extractors:
         dest: output_tokens
 price_comments: >-
   TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
-  move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.
+  move with releases; per https://docs.typesafe.ai/models, `jev-latest` currently points at `jev-1.13.0` while
+  `jev-preview` points at `jev-1.14.0`. Every version bills at the same $0.042 input rate.
 
 models:
   - id: jev-1.13.0
@@ -28,13 +29,27 @@ models:
       or:
         - equals: jev-1.13.0
         - equals: jev-latest
-        - equals: jev-preview
     # https://docs.typesafe.ai/model-jaggedness/jev-1.13: 32k tokens for the state plus the longest question, and
     # 64k for the state and all the questions together. The state is counted once per request, so the 32k is the
     # limit a growing conversation hits; the 64k only binds when the questions themselves are very large. Measured
     # live on jev-1.13.0: 32,878 input tokens were accepted, and the next size up was refused with HTTP 400
     # `max_tokens_exceeded`.
+    # https://docs.typesafe.ai/models: `jev-preview` moved to `jev-1.14.0`, which is checked 2026-10-15;
+    # `jev-latest` still points here.
     context_window: 32000
-    prices_checked: 2026-09-18
+    prices_checked: 2026-10-15
+    prices:
+      input_mtok: 0.042
+
+  - id: jev-1.14.0
+    name: Jev 1.14.0
+    match:
+      or:
+        - equals: jev-1.14.0
+        - equals: jev-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042
+      input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13.
     prices:
       input_mtok: 0.042

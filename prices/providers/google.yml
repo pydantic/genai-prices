@@ -1286,6 +1286,24 @@ models:
       output_audio_mtok: 12
       web_searches_kcount: 14 # per search query
 
+  - id: gemini-3.1-flash-tts-preview
+    name: Gemini 3.1 Flash TTS Preview
+    description: Preview token-priced text-to-speech model in the Gemini 3.1 Flash family.
+    match:
+      equals: gemini-3.1-flash-tts-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; batch is half input and output.
+    prices:
+      input_mtok: 1
+      output_mtok: 20
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 10
+
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
     description: The latest performance, intelligence, and usability improvements to the best model family in the world
@@ -1462,7 +1480,10 @@ models:
       autonomous agents, and complex enterprise workflows.
     match:
       or:
-        - starts_with: gemini-3.8-flash
+        # Excludes the token-priced TTS variants, which are separate models priced below.
+        - and:
+            - starts_with: gemini-3.8-flash
+            - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
         # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
         # Move it when Google points it at a newer model.
         - equals: gemini-flash-latest
@@ -1501,6 +1522,68 @@ models:
           input_mtok: 0.375
           cache_read_mtok: 0.0375
           output_mtok: 1.875
+
+  - id: gemini-3.8-flash-lite-tts
+    name: Gemini 3.8 Flash-Lite TTS
+    description: Token-priced text-to-speech model, the lightest member of the Gemini 3.8 family.
+    match:
+      equals: gemini-3.8-flash-lite-tts
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
+      2026-12-31 and batch is half input and output at both rate levels.
+    prices:
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1
+          output_mtok: 12
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 3
+
+  - id: gemini-3.8-flash-tts
+    name: Gemini 3.8 Flash TTS
+    description: Token-priced text-to-speech model in the Gemini 3.8 Flash family.
+    match:
+      equals: gemini-3.8-flash-tts
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
+      2026-12-31 and batch is half input and output at both rate levels.
+    prices:
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1
+          output_mtok: 18
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 4.5
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live
@@ -1677,6 +1760,30 @@ models:
       input_audio_mtok: 3
       output_mtok: 2
       output_audio_mtok: 12
+
+  - id: gemini-nano-banana-2.1
+    name: Gemini Nano Banana 2.1
+    description: >-
+      Google's latest image generation and editing model, with text/thinking output tokens priced
+      separately from image output tokens.
+    match:
+      equals: gemini-nano-banana-2.1
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking
+      output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text.
+      Batch halves input, text output and image output.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 7.5
+      output_image_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.75
+          output_mtok: 3.75
+          output_image_mtok: 15
 
   - id: gemini-omni-flash-preview
     name: Gemini Omni Flash Preview
