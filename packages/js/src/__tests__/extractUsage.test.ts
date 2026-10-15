@@ -812,16 +812,17 @@ describe('extractUsage', () => {
           ? { cache_read_tokens: 800, input_tokens: 1000, output_reasoning_tokens: 50, output_tokens: 100, web_searches: 2 }
           : { input_tokens: 1000, output_tokens: 100 }
       )
-      for (const [day, priceContext, expectedTotal] of [
-        [15, undefined, 0.00535],
-        [15, { search_type: 'web' }, 0.00535],
-        [14, { search_type: 'fast' }, 0.00535],
-        [15, { search_type: 'fast' }, 0.00235],
+      for (const [month, day, priceContext, expectedTotal] of [
+        [10, 15, undefined, 0.00535],
+        [10, 15, { search_type: 'web' }, 0.00535],
+        [9, 24, { search_type: 'fast' }, 0.00235],
+        [10, 14, { search_type: 'fast' }, 0.00235],
+        [10, 15, { search_type: 'fast' }, 0.00235],
       ] as const) {
         const price = calcPrice(usage, model!, {
           priceContext,
           provider: perplexityProvider,
-          timestamp: new Date(Date.UTC(2026, 9, day)),
+          timestamp: new Date(Date.UTC(2026, month - 1, day)),
         })
         expect(price!.model.id).toBe('perplexity/sonar')
         expect(price!.input_price).toBeCloseTo(withDetails ? 0.0001 : 0.00025, 12)

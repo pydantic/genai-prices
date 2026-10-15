@@ -101,7 +101,8 @@ models:
       Pass price_context search_type=fast for Fast Search, including presets that select it.
       The response invocation count does not identify the search type. Without context, standard web search is estimated.
       https://docs.perplexity.ai/docs/agent-api/tools/web-search
-      Rates verified on 2026-10-15; earlier Fast Search requests retain the standard estimate.
+      Fast Search launched at $1 per thousand invocations in September 2026, before this price verification.
+      https://docs.perplexity.ai/docs/resources/changelog#september-2026
       Only tokens, cache reads, and web search are represented; other Agent tools are not priced.
     prices:
       input_mtok: 0.25
@@ -110,7 +111,6 @@ models:
       web_searches_kcount: 2.5
     price_variants:
       - when: { search_type: fast }
-        constraint: { start_date: 2026-10-15 }
         prices:
           web_searches_kcount: 1
       - when: { search_type: web }

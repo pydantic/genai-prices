@@ -56,18 +56,20 @@ func TestPerplexityResponsesUsageAndPrice(t *testing.T) {
 				t.Fatalf("unexpected extraction: %#v", extracted)
 			}
 			for _, context := range []struct {
+				month     time.Month
 				day       int
 				context   map[string]string
 				wantTotal float64
 			}{
-				{15, nil, 0.00535},
-				{15, map[string]string{"search_type": "web"}, 0.00535},
-				{14, map[string]string{"search_type": "fast"}, 0.00535},
-				{15, map[string]string{"search_type": "fast"}, 0.00235},
+				{time.October, 15, nil, 0.00535},
+				{time.October, 15, map[string]string{"search_type": "web"}, 0.00535},
+				{time.September, 24, map[string]string{"search_type": "fast"}, 0.00235},
+				{time.October, 14, map[string]string{"search_type": "fast"}, 0.00235},
+				{time.October, 15, map[string]string{"search_type": "fast"}, 0.00235},
 			} {
 				price, err := genai_prices.Calculate(genai_prices.PriceRequest{
 					Usage: extracted.Usage, Model: extracted.Model, ProviderID: extracted.ProviderID,
-					Timestamp: time.Date(2026, 10, context.day, 0, 0, 0, 0, time.UTC), PriceContext: context.context,
+					Timestamp: time.Date(2026, context.month, context.day, 0, 0, 0, 0, time.UTC), PriceContext: context.context,
 				})
 				if err != nil {
 					t.Fatal(err)

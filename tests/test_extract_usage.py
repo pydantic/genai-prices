@@ -606,14 +606,15 @@ def test_perplexity_responses_usage_and_price(with_details: bool) -> None:
         )
     else:
         assert extracted.usage == Usage(input_tokens=1_000, output_tokens=100)
-    for day, context, expected_total in [
-        (15, None, '0.00535'),
-        (15, {'search_type': 'web'}, '0.00535'),
-        (14, {'search_type': 'fast'}, '0.00535'),
-        (15, {'search_type': 'fast'}, '0.00235'),
+    for month, day, context, expected_total in [
+        (10, 15, None, '0.00535'),
+        (10, 15, {'search_type': 'web'}, '0.00535'),
+        (9, 24, {'search_type': 'fast'}, '0.00235'),
+        (10, 14, {'search_type': 'fast'}, '0.00235'),
+        (10, 15, {'search_type': 'fast'}, '0.00235'),
     ]:
         price = extracted.calc_price(
-            genai_request_timestamp=datetime(2026, 10, day, tzinfo=timezone.utc), price_context=context
+            genai_request_timestamp=datetime(2026, month, day, tzinfo=timezone.utc), price_context=context
         )
         assert price.input_price == (Decimal('0.0001') if with_details else Decimal('0.00025'))
         assert price.output_price == Decimal('0.00025')
