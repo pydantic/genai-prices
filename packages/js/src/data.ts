@@ -25767,6 +25767,40 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'tts-1',
+        match: {
+          or: [
+            {
+              equals: 'tts-1',
+            },
+            {
+              equals: 'tts-1-1106',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/tts-1.',
+        prices: {
+          input_mchars: 15,
+        },
+      },
+      {
+        id: 'tts-1-hd',
+        match: {
+          or: [
+            {
+              equals: 'tts-1-hd',
+            },
+            {
+              equals: 'tts-1-hd-1106',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/tts-1-hd.',
+        prices: {
+          input_mchars: 30,
+        },
+      },
+      {
         id: 'whisper-1',
         match: {
           equals: 'whisper-1',

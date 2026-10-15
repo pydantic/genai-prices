@@ -14357,6 +14357,18 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
+                id='tts-1',
+                match=ClauseOr(or_=[ClauseEquals(equals='tts-1'), ClauseEquals(equals='tts-1-1106')]),
+                price_comments='See https://developers.openai.com/api/docs/models/tts-1.',
+                prices=ModelPrice(input_mchars=Decimal('15')),
+            ),
+            ModelInfo(
+                id='tts-1-hd',
+                match=ClauseOr(or_=[ClauseEquals(equals='tts-1-hd'), ClauseEquals(equals='tts-1-hd-1106')]),
+                price_comments='See https://developers.openai.com/api/docs/models/tts-1-hd.',
+                prices=ModelPrice(input_mchars=Decimal('30')),
+            ),
+            ModelInfo(
                 id='whisper-1',
                 match=ClauseEquals(equals='whisper-1'),
                 price_comments='See https://developers.openai.com/api/docs/models/whisper-1.',
