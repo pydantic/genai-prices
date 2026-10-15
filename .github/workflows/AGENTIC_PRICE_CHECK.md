@@ -59,6 +59,8 @@ proxy-aware fetcher as `web_fetch`, adds Coder's filesystem and shell tools, and
 toolchain, and Git identity settings while excluding provider credential variables. The public engine supplies
 the launcher, MCP composition, session recorder, and model routing. The pinned proxy retains its 500-request
 limit; there is no workflow output-token cap.
+This custom engine does not enforce gh-aw's `tools.bash` patterns. Coder supplies the shell; AWF controls network access,
+and the trusted safe-output handler enforces the proposed file scope.
 
 The fetcher permits only HTTPS origins from the provider manifest, rejects credentials and non-public DNS results,
 and repeats these checks on every redirect. It delegates final DNS and routing to AWF's required proxy; there is no
@@ -95,9 +97,10 @@ The separate `price_check.usage` span records cumulative `agent_usage.json` comp
 `price_check.usage.uncached_input`, `cached_input`, `cache_creation` and `output`, labelled with
 `price_check.usage.source = gh-aw.agent_usage`. Do not add that rollup to individual proxy counts.
 Historical proxy versions reported zero input/cache counts; those zeros do not establish zero consumption.
-The `invoke_agent` span records canonical tool execution counts and whether a terminal safe output exists.
+The `invoke_agent` span records canonical tool execution counts and `price_check.terminal_output_emitted`.
+That field means the agent emitted a terminal item; check the separate `safe_outputs` job for acceptance or rejection.
 Coder's CodeMode calls appear as `run_code`; full nested tool inputs and outputs remain in the canonical session artifact.
-The `agent` artifact includes `agent/telemetry.json` with the compact per-run accounting and tool counts, so future
+The `agent` artifact includes `mcp-logs/price-check-telemetry.json` with the compact per-run accounting and tool counts, so future
 investigations can start there without processing the full transcript. Dollar fields remain client estimates.
 
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
@@ -154,6 +157,11 @@ The safe-output file allowlist permits only the covered providers, generated v2 
 price regression assertions. It blocks code, dependencies, workflows, agent instructions, and registry changes. There is no
 fallback issue when PR creation fails. Its existing 10 MiB patch limit accommodates the generated full-data snapshot.
 Failures remain visible in Actions; Slack is reserved for created PRs.
+
+The preflight snapshots the same allowlist and initial source SHA before agent execution. It reuses gh-aw's file-policy
+validator and runs before commits, from AWF's read-only mounted directory. The agent also checks scope before validation.
+Candidates requiring regression files outside the existing allowlist are deferred. The trusted safe-output handler remains
+the final scope gate; the preflight gives the agent feedback while it can still correct the proposal.
 
 Unreadable sources, ambiguous mappings, missing fields, and potential removals are not safe edits. They appear in a PR's
 skipped-findings section if another change can be verified, or in the noop summary otherwise. A partial check is not reported

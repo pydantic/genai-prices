@@ -30,6 +30,36 @@ pre-agent-steps:
     run: |
       npm install --ignore-scripts --no-save --package-lock=false --no-audit --no-fund --prefix "$RUNNER_TEMP/gh-aw/price-check-fetch" undici@6.28.0
       echo "NODE_PATH=$RUNNER_TEMP/gh-aw/price-check-fetch/node_modules${NODE_PATH:+:$NODE_PATH}" >> "$GITHUB_ENV"
+  - name: Install the price-check scope preflight
+    run: |
+      uv run python - <<'PY'
+      import json
+      import os
+      import shlex
+      import shutil
+      import subprocess
+      from pathlib import Path
+      from ruamel.yaml import YAML
+
+      directory = Path(os.environ['RUNNER_TEMP']) / 'gh-aw/price-check-scope'
+      directory.mkdir()
+      frontmatter = Path('.github/workflows/agentic-price-check.md').read_text().partition('\n---\n')[0].removeprefix('---\n')
+      workflow = YAML(typ='safe').load(frontmatter)
+      policy = directory / 'policy.json'
+      policy.write_text(json.dumps({
+          'base_sha': os.environ['GITHUB_SHA'],
+          'allowed_files': workflow['safe-outputs']['create-pull-request']['allowed-files'],
+          'helper_path': str(directory.parent / 'actions/manifest_file_helpers.cjs'),
+      }))
+      script = directory / 'check.cjs'
+      shutil.copyfile('scripts/price_check_scope.cjs', script)
+      hook = directory / 'pre-commit'
+      hook.write_text('#!/bin/sh\nexec node ' + shlex.quote(str(script)) + ' ' + shlex.quote(str(policy)) + ' --staged\n')
+      hook.chmod(0o755)
+      subprocess.run(['git', 'config', 'core.hooksPath', str(directory)], check=True)
+      with Path(os.environ['GITHUB_ENV']).open('a') as output:
+          output.write(f'PRICE_CHECK_SCOPE_COMMAND=node {shlex.quote(str(script))} {shlex.quote(str(policy))}\n')
+      PY
 tools:
   bash:
     - 'cat:*'
@@ -157,7 +187,8 @@ post-steps:
             cacheCreationInputTokens: usage.cache_write_tokens, outputTokens: usage.output_tokens,
           } };
           const output = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_output.json', 'utf8'));
-          const completed = output.items?.some((item) => ['noop', 'create_pull_request'].includes(item.type)) === true;
+          const terminalEmitted = output.items?.some((item) => ['noop', 'create_pull_request'].includes(item.type)) === true;
+          const succeeded = log.some((record) => record.type === 'session.result' && record.data?.status === 'success');
           const requests = [...new Map(readRecords(
             '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'
           ).map((record) => [record.spanId, record])).values()];
@@ -184,9 +215,9 @@ post-steps:
             if (record.type === 'tool.execution_start' && typeof name === 'string')
               toolCounts[name] = (toolCounts[name] ?? 0) + 1;
           }
-          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: completed ? 1 : 2, attributes: [
+          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: succeeded ? 1 : 2, attributes: [
             buildAttr('gen_ai.operation.name', 'invoke_agent'), buildAttr('gen_ai.agent.name', 'Price Check'),
-            buildAttr('price_check.completion_confirmed', completed),
+            buildAttr('price_check.terminal_output_emitted', terminalEmitted),
             buildAttr('price_check.tool_counts', JSON.stringify(toolCounts)),
           ] });
           for (const [model, usage] of Object.entries(modelUsage)) {
@@ -212,8 +243,8 @@ post-steps:
             resourceSpans: payloads.flatMap((payload) => payload.resourceSpans),
           });
           if (fs.existsSync('/tmp/gh-aw/otlp-export-errors.jsonl')) throw new Error('Logfire export failed; inspect OTLP export errors.');
-          fs.mkdirSync('/tmp/gh-aw/agent', { recursive: true });
-          fs.writeFileSync('/tmp/gh-aw/agent/telemetry.json', JSON.stringify({
+          fs.mkdirSync('/tmp/gh-aw/mcp-logs', { recursive: true });
+          fs.writeFileSync('/tmp/gh-aw/mcp-logs/price-check-telemetry.json', JSON.stringify({
             run_id: process.env.GITHUB_RUN_ID, trace_id: traceId, exported_request_spans: requests.length,
             usage_source: 'gh-aw.agent_usage', model_usage: modelUsage, tool_counts: toolCounts,
             cost_is_client_estimate: true,
@@ -274,6 +305,10 @@ changes and new models in one PR titled `Update provider prices`. Read the manif
 complete Steps 1-3a for one provider before moving to the next, recording findings as you go. After every provider is covered,
 follow the shared Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
+
+Keep every changed file within this workflow's `create-pull-request.allowed-files` list.
+Defer a candidate if its required regression updates need a file outside that list.
+Run `$PRICE_CHECK_SCOPE_COMMAND` before validation and before committing. Restore and defer candidates that fail this preflight.
 
 ## Step 1 - read the manifest and recorded data
 

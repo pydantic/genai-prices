@@ -14,7 +14,7 @@ WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
 def read_workflow(filename: str) -> dict[str, Any]:
     content = (WORKFLOWS / filename).read_text()
     if filename.endswith('.md'):
-        content = content.split('---', 2)[1]
+        content = content.partition('\n---\n')[0].removeprefix('---\n')
     yaml: Any = YAML(typ='safe')
     return cast(dict[str, Any], yaml.load(content))
 
@@ -286,7 +286,8 @@ const script = JSON.parse(process.env.EXPORT_SCRIPT);
 const files = {
   '/tmp/gh-aw/agent-session.jsonl': [
     'debug output', 'null',
-    JSON.stringify({type: 'tool.execution_start', data: {toolName: 'web_fetch'}})
+    JSON.stringify({type: 'tool.execution_start', data: {toolName: 'web_fetch'}}),
+    JSON.stringify({type: 'session.result', data: {status: 'success'}})
   ].join('\n'),
   '/tmp/gh-aw/agent_usage.json': JSON.stringify({primary_model: 'model', input_tokens: 11,
     cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 7}),
@@ -320,14 +321,17 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     .map(({key, value}) => [key, value]));
   const agent = spans.find((span) => span.spanName === 'invoke_agent');
   const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
+  const terminalEmitted = agent.attributes.find(({key}) => key === 'price_check.terminal_output_emitted').value;
+  const marker = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
   files['/tmp/gh-aw/agent_output.json'] = JSON.stringify({items: [{type: 'report_incomplete'}]});
+  files['/tmp/gh-aw/agent-session.jsonl'] = files['/tmp/gh-aw/agent-session.jsonl'].replace('"status":"success"', '"status":"error"');
   await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
   const partialStatus = payload.resourceSpans.find((span) => span.spanName === 'invoke_agent').statusCode;
   let incomplete = false;
   files['/tmp/gh-aw/agent_usage.json'] = '{}';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, toolCounts, completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
+    usage, toolCounts, terminalEmitted, marker, completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
 })();
 """
     result = subprocess.run(
@@ -352,4 +356,6 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert output['completedStatus'] == 1
     assert output['partialStatus'] == 2
     assert output['toolCounts'] == {'web_fetch': 1}
+    assert output['terminalEmitted'] is True
+    assert output['marker']['exported_request_spans'] == 1
     assert any('telemetry incomplete' in summary for summary in output['summaries'])
