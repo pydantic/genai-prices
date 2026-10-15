@@ -6,7 +6,7 @@ engine:
   id: pydantic-ai
   version: '0.56.0'
   env:
-    PAI_AGENT: scripts.price_check_agent:agent
+    PAI_AGENT: scripts.price_check_tls_probe:agent
     ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
     ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
 # gh-aw exports canonical usage from the host. Exclude exporter variables from
