@@ -9,16 +9,24 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-one covered provider records hourly from 06:00
+This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-five covered provider records hourly from 06:00
 through 18:00 inclusive, Monday through Friday in `America/Los_Angeles`, and on manual dispatch. gh-aw v0.82.2 preserves
 the schedule's native timezone field in the compiled workflow and follows daylight saving time: the window is 14:00–02:00
 UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
 runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions schedule syntax]. The workflow combines
-verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
+verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Manual and scheduled
+runs target the repository's default branch, `main`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
 Runs remain serial, with up to 100 pending runs in the concurrency group; GitHub cancels additional runs once the queue is
 full. See [GitHub Actions concurrency].
+
+One manual [workflow run 38748564180](https://github.com/pydantic/genai-prices/actions/runs/38748564180) on
+`codex/price-check-coverage-runtime` on 2026-10-15 took 89m30s. Its telemetry recorded 1,004 model API
+request spans, including 620 HTTP 429 responses and two HTTP 502 responses, alongside 34 research-task launches and a peak
+of 17 active tasks. The run shows rate-limit pressure during concurrent research; the workflow disables Claude's `Agent`
+and `Task` tools to keep research in one execution context. This measurement describes one run and does not predict future
+runtime.
 
 ## Configuration
 
@@ -62,9 +70,11 @@ no personal-token expiry to monitor.
 
 The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, OpenAI Decisions, Anthropic, Google
 (Gemini), Mistral, DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare
-Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, and Databricks.
+Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks, TypeSafe, Z.AI, Meta, and Modal.
 
 You define each provider's scope, official URLs, and pricing mappings in `.github/agentic-price-check-providers.yml`.
+Each run reads that manifest once, completes research provider by provider, and starts one full validation pass after edits
+and diff review are complete. Each official response is reused for the in-scope models it covers.
 The workflow creates at most one PR per run. It skips while any PR authored by `app/genai-prices-automation` remains open,
 including proposals from the previous three workflows. Renaming a PR does not bypass this guard. Merge or close those
 proposals to resume checks. The workflow does not merge PRs, force-push branches, or close older proposals.
@@ -90,7 +100,8 @@ The workflow prompt and shared instructions in `.github/workflows/shared/price-u
 
 The safe-output file allowlist permits only the covered providers, generated v2 and bundled data, the provider inventory, and
 price regression assertions. It blocks code, dependencies, workflows, agent instructions, and registry changes. There is no
-fallback issue when PR creation fails. Failures remain visible in Actions; Slack is reserved for created PRs.
+fallback issue when PR creation fails. Its existing 10 MiB patch limit accommodates the generated full-data snapshot.
+Failures remain visible in Actions; Slack is reserved for created PRs.
 
 Unreadable sources, ambiguous mappings, missing fields, and potential removals are not safe edits. They appear in a PR's
 skipped-findings section if another change can be verified, or in the noop summary otherwise. A partial check is not reported

@@ -45,10 +45,17 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     pr = source['safe-outputs']['create-pull-request']
     assert pr['max'] == 1
     assert pr['draft'] is False
+    base_branch = pr.get('base-branch')
+    assert base_branch is None or (isinstance(base_branch, str) and '${' not in base_branch)
     assert pr['fallback-as-issue'] is False
+    assert pr['max-patch-size'] == 10240
+    assert source['engine']['args'] == ['--disallowedTools', 'Agent,Task']
     assert 'github-token' not in pr
     assert 'PRICE_UPDATE_TOKEN' not in json.dumps(compiled)
-    app = read_workflow('shared/price-update.md')['safe-outputs']['github-app']
+    shared = read_workflow('shared/price-update.md')
+    go_setup = next(step for step in shared['pre-agent-steps'] if step.get('uses', '').startswith('actions/setup-go@'))
+    assert go_setup['with'] == {'go-version': '1.25.x', 'cache': False}
+    app = shared['safe-outputs']['github-app']
     assert app == {
         'client-id': '${{ vars.PRICE_UPDATE_APP_CLIENT_ID }}',
         'private-key': '${{ secrets.PRICE_UPDATE_APP_PRIVATE_KEY }}',
@@ -58,6 +65,23 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     token_step = next(
         step for step in compiled['jobs']['safe_outputs']['steps'] if step.get('id') == 'safe-outputs-app-token'
     )
+    handler_config_step = next(
+        step
+        for step in compiled['jobs']['safe_outputs']['steps']
+        if 'GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG' in step.get('env', {})
+    )
+    handler_config = json.loads(handler_config_step['env']['GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG'])
+    compiled_base_branch = handler_config['create_pull_request'].get('base_branch')
+    assert compiled_base_branch == base_branch
+    assert handler_config['create_pull_request']['max_patch_size'] == 10240
+    execution_step = next(step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'agentic_execution')
+    execution_command = execution_step['run']
+    assert '--disallowedTools Agent,Task' in execution_command
+    allowed_tools_start = execution_command.index('--allowed-tools')
+    allowed_tools_end = execution_command.index('--debug-file', allowed_tools_start)
+    allowed_tools = execution_command[allowed_tools_start:allowed_tools_end]
+    assert 'Bash(' in allowed_tools
+    assert 'WebFetch' in allowed_tools
     assert token_step['with'] == {
         'client-id': app['client-id'],
         'private-key': app['private-key'],
@@ -99,11 +123,23 @@ def test_provider_allowlist_matches_manifest() -> None:
     assert {path for path in allowed if path.endswith('.yml')} == {
         provider['file'] for provider in manifest['providers']
     }
-    assert len(manifest['providers']) == 21
-    assert len({provider['file'] for provider in manifest['providers']}) == 21
-    assert {'OpenAI', 'OpenAI Decisions', 'Anthropic', 'Google (Gemini)', 'Mistral'} <= {
-        provider['name'] for provider in manifest['providers']
+    assert len(manifest['providers']) == 25
+    assert len({provider['file'] for provider in manifest['providers']}) == 25
+    provider_names = {provider['name'] for provider in manifest['providers']}
+    required_names = {
+        'OpenAI',
+        'OpenAI Decisions',
+        'Anthropic',
+        'Google (Gemini)',
+        'Mistral',
+        'TypeSafe',
+        'Z.AI',
+        'Meta',
+        'Modal',
     }
+    assert required_names <= provider_names
+    assert 'QuickSilver Pro' not in provider_names
+    assert 'prices/providers/quicksilverpro.yml' not in {provider['file'] for provider in manifest['providers']}
     for provider in manifest['providers']:
         for url in provider['sources']:
             assert urlparse(cast(str, url)).netloc in source['network']['allowed']
@@ -112,6 +148,47 @@ def test_provider_allowlist_matches_manifest() -> None:
 def test_price_checks_use_one_scheduled_workflow() -> None:
     assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.md')} == {'agentic-price-check.md'}
     assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.lock.yml')} == {'agentic-price-check.lock.yml'}
+
+
+def test_price_update_validation_commands_stop_on_failure(tmp_path: Path) -> None:
+    shared_path = WORKFLOWS / 'shared/price-update.md'
+    shared = shared_path.read_text()
+    step5 = shared.split('## Step 5 - build, test, and create one PR\n', maxsplit=1)
+    assert len(step5) == 2
+    step5_content = step5[1].split('\n## ', maxsplit=1)[0]
+    validation = re.search(r'```bash\n(.*?)\n```', step5_content, flags=re.DOTALL)
+    assert validation is not None
+    script = validation.group(1)
+    command_log = tmp_path / 'commands.log'
+    stub = tmp_path / 'command'
+    stub.write_text(
+        '#!/bin/sh\n'
+        'printf \'%s %s\\n\' "${0##*/}" "$*" >> "$COMMAND_LOG"\n'
+        'if [ "${FAIL_COMMAND:-}" = "${0##*/} $*" ]; then exit 17; fi\n'
+    )
+    stub.chmod(0o755)
+    for command in ('make', 'npm'):
+        (tmp_path / command).symlink_to(stub)
+
+    expected_commands = [
+        'make build',
+        'make lint',
+        'make typecheck',
+        'make lint-go',
+        'make test',
+        'npm run ci',
+        'make test-go',
+    ]
+    env = {**os.environ, 'PATH': f'{tmp_path}{os.pathsep}{os.environ["PATH"]}', 'COMMAND_LOG': str(command_log)}
+    result = subprocess.run(['bash', '-o', 'pipefail', '-c', script], env=env, capture_output=True, text=True)
+    assert result.returncode == 0
+    assert command_log.read_text().splitlines() == expected_commands
+
+    command_log.write_text('')
+    failing_env = {**env, 'FAIL_COMMAND': 'make test'}
+    result = subprocess.run(['bash', '-o', 'pipefail', '-c', script], env=failing_env, capture_output=True, text=True)
+    assert result.returncode == 17
+    assert command_log.read_text().splitlines() == expected_commands[:5]
 
 
 def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
