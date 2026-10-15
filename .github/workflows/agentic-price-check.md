@@ -9,6 +9,7 @@ on:
       timezone: America/Los_Angeles
   permissions:
     pull-requests: read
+  skip-if-match: 'is:pr is:open author:app/genai-prices-automation'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
 permissions:
