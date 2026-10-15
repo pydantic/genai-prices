@@ -2860,8 +2860,10 @@ def test_gemini_tts_prices(model_ref: str, input_mtok: Decimal, output_mtok: Dec
     ],
 )
 def test_openai_tts_prices(model_ref: str, expected_model_id: str, input_mchars: Decimal) -> None:
-    price = calc_price(Usage(input_characters=1_000_000), model_ref, provider_id='openai')
+    # No provider given: the model ref alone has to find OpenAI
+    price = calc_price(Usage(input_characters=1_000_000), model_ref)
 
+    assert price.provider.id == 'openai'
     assert price.model.id == expected_model_id
     assert price.total_price == input_mchars
 

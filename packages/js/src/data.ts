@@ -20136,6 +20136,9 @@ export const data: Provider[] = [
           equals: 'whisper-1',
         },
         {
+          starts_with: 'tts-1',
+        },
+        {
           regex: '^o[134]',
         },
       ],
