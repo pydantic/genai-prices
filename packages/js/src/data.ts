@@ -12747,12 +12747,14 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
+          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview. Live API video and image input tokens bill at the same $3 per 1M tokens as audio input: the Vertex AI pricing page lists a "1M input video/image tokens" row alongside "1M input audio tokens" for Gemini 2.5 Flash Live API, and the Gemini API page prices "Gemini 2.5 Flash Native Audio (Live)" audio/video input at $3.00.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 2,
           input_audio_mtok: 3,
           output_audio_mtok: 12,
+          input_image_mtok: 3,
+          input_video_mtok: 3,
         },
       },
       {

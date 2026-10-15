@@ -7323,12 +7323,14 @@ providers: list[Provider] = [
                 ),
                 name='Gemini Live 2.5 Flash',
                 description="Google's Live API model for low-latency bidirectional voice and video interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served from the `global` location). The prefix match also covers the AI Studio preview ids (`gemini-live-2.5-flash-preview*`).",
-                price_comments='See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
+                price_comments='See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview. Live API video and image input tokens bill at the same $3 per 1M tokens as audio input: the Vertex AI pricing page lists a "1M input video/image tokens" row alongside "1M input audio tokens" for Gemini 2.5 Flash Live API, and the Gemini API page prices "Gemini 2.5 Flash Native Audio (Live)" audio/video input at $3.00.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'),
                     output_mtok=Decimal('2'),
                     input_audio_mtok=Decimal('3'),
                     output_audio_mtok=Decimal('12'),
+                    input_image_mtok=Decimal('3'),
+                    input_video_mtok=Decimal('3'),
                 ),
             ),
             ModelInfo(
