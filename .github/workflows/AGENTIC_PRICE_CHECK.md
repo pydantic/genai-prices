@@ -161,7 +161,8 @@ Failures remain visible in Actions; Slack is reserved for created PRs.
 
 The preflight snapshots the same allowlist and initial source SHA before agent execution. It reuses gh-aw's file-policy
 validator and runs before commits, from AWF's read-only mounted directory. The agent also checks scope before validation.
-Candidates requiring regression files outside the existing allowlist are deferred. The trusted safe-output handler remains
+The allowlist includes the existing `tests/test_price_check_additions.py` regression file. Candidates requiring other
+regression files outside the allowlist are deferred. The trusted safe-output handler remains
 the final scope gate; the preflight gives the agent feedback while it can still correct the proposal.
 
 Unreadable sources, ambiguous mappings, missing fields, and potential removals are not safe edits. They appear in a PR's

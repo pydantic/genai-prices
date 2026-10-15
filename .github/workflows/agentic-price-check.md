@@ -122,6 +122,7 @@ safe-outputs:
       - README.md
       - tests/test_price_calc.py
       - tests/test_price_regressions.py
+      - tests/test_price_check_additions.py
       - tests/dataset/usages.json
       - packages/js/src/__tests__/**
       - packages/go/*_test.go
@@ -307,6 +308,7 @@ follow the shared Steps 4-5. Complete the evidence check in Step 3a before editi
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
 Keep every changed file within this workflow's `create-pull-request.allowed-files` list.
+Update existing pricing regression tests, including `tests/test_price_check_additions.py`, when prices change.
 Defer a candidate if its required regression updates need a file outside that list.
 Run `$PRICE_CHECK_SCOPE_COMMAND` before validation and before committing. Restore and defer candidates that fail this preflight.
 

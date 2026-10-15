@@ -140,6 +140,8 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert 'prices/new_data/v2/data_slim.json' in pr['allowed-files']
     assert 'prices/new_data/v2/*.json' not in pr['allowed-files']
     assert 'packages/go/internal/data/prices.json' in pr['allowed-files']
+    assert 'tests/test_price_check_additions.py' in pr['allowed-files']
+    assert 'tests/*.py' not in pr['allowed-files']
     assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
     assert source['imports'] == [
         'shared/price-check-engine.md',
