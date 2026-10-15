@@ -1,7 +1,7 @@
 # Agentic price-update workflow
 
 ```bash
-gh secret set FIREWORKS_API_KEY
+gh secret set ZAI_API_KEY
 gh variable set PRICE_UPDATE_APP_CLIENT_ID --body Iv23libntR0K6oyQrZWX
 gh secret set PRICE_UPDATE_APP_PRIVATE_KEY < /path/to/genai-prices-automation.private-key.pem
 gh secret set SLACK_WEBHOOK_URL
@@ -9,17 +9,23 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-one covered provider records **daily** and on manual
-dispatch. It combines verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
+This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-one covered provider records hourly from 06:00
+through 18:00 inclusive, Monday through Friday in `America/Los_Angeles`, and on manual dispatch. gh-aw v0.82.2 preserves
+the schedule's native timezone field in the compiled workflow and follows daylight saving time: the window is 14:00–02:00
+UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
+runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions schedule syntax]. The workflow combines
+verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
+Runs remain serial, with up to 100 pending runs in the concurrency group; GitHub cancels additional runs once the queue is
+full. See [GitHub Actions concurrency].
 
 ## Configuration
 
 | Variable or secret             | Purpose                                                                                             |
 | ------------------------------ | --------------------------------------------------------------------------------------------------- |
 | `AGENTIC_WORKFLOWS_ENABLED`    | Set this repository variable to `true` to enable the checks.                                        |
-| `FIREWORKS_API_KEY`            | Repository secret for Claude Code through Fireworks using `minimax-m3`.                             |
+| `ZAI_API_KEY`                  | Repository secret for Claude Code using GLM-5.3-Flash through Z.ai's Anthropic-compatible API.      |
 | `PRICE_UPDATE_APP_CLIENT_ID`   | Repository variable containing the GenAI Prices Automation App's client ID: `Iv23libntR0K6oyQrZWX`. |
 | `PRICE_UPDATE_APP_PRIVATE_KEY` | Repository secret containing the App's complete PEM private key.                                    |
 | `SLACK_WEBHOOK_URL`            | Slack incoming-webhook URL for the channel that should receive price-update PR links.               |
@@ -28,6 +34,11 @@ You choose the Slack channel when you create the incoming webhook. Store its URL
 The notification job uses the `price-updates` GitHub environment. You can restrict that environment to your default branch
 and store the webhook secret there instead of at repository scope. The job fails if the secret is missing or Slack rejects
 the request. It does not undo a successfully created PR.
+
+The engine remains Claude Code (`engine.id: claude`). `engine.model`, `ANTHROPIC_MODEL`, and all three
+`ANTHROPIC_DEFAULT_*_MODEL` overrides select `glm-5.3-flash` at `https://api.z.ai/api/anthropic`. This follows the
+[pydantic-ai Z.ai engine configuration],
+Z.ai's [GLM-5.3-Flash model documentation][zai-model], and its [API endpoint and model-switching guide][zai-api].
 
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
 `pydantic/genai-prices` with **Contents: read/write** and **Pull requests: read/write**. You can generate a private key in
@@ -95,15 +106,15 @@ gh aw compile --no-check-update agentic-price-check
 The `.md` files are source. The `.lock.yml` files are compiled output. Never edit a lock file by hand. Compile this
 workflow with the pinned version; other workflows can use a different compiler version.
 
-**Keep gh-aw v0.82.2 and `max-ai-credits: -1` / `max-daily-ai-credits: -1`.** The Fireworks `minimax-m3` model is not in gh-aw's
-pricing catalog. Its API proxy otherwise rejects requests with `HTTP 400 unknown_model_ai_credits`. The firewall pinned by
-v0.82.2, version 0.27.22, drops the credit cap when it is `-1`. Newer firewalls no longer drop it. Both the compiler pin and
-these credit settings are required until gh-aw adds the model to its catalog.
+**Keep gh-aw v0.82.2 and `max-ai-credits: -1` / `max-daily-ai-credits: -1`.** GLM-5.3-Flash is absent from the v0.82.2
+model-pricing catalog, so its API proxy rejects requests with `HTTP 400 unknown_model_ai_credits` when the AI-credits
+guardrail is active. The firewall pinned by v0.82.2, version 0.27.22, drops the credit cap when it is `-1`. Newer
+firewalls no longer drop it. Both the compiler pin and these credit settings are required while this workflow uses GLM-5.3-Flash.
 
-To use Anthropic directly, edit the workflow's `engine:` block. Set `ANTHROPIC_API_KEY` to your Anthropic secret and remove
-`api-target`, `ANTHROPIC_BASE_URL`, and the `ANTHROPIC_MODEL` / `ANTHROPIC_DEFAULT_*_MODEL` overrides. Then recompile.
-You can re-enable threat detection with a model that gh-aw prices; it is disabled for Minimax because its separate detection
-credit guardrail cannot accept the unpriced model.
+To use Anthropic directly, edit the workflow's `engine:` block. Set `engine.model` to a supported Claude model, set
+`ANTHROPIC_API_KEY` to your Anthropic secret, and remove `api-target`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, and the
+`ANTHROPIC_DEFAULT_*_MODEL` overrides. Then recompile. You can re-enable threat detection with a model that gh-aw prices;
+threat detection is disabled because its separate credit guardrail cannot price GLM-5.3-Flash.
 
 To add a provider, update `.github/agentic-price-check-providers.yml`, add its source domains to `network.allowed`, and
 add its YAML path to `create-pull-request.allowed-files`. Then recompile.
@@ -113,3 +124,10 @@ add its YAML path to `create-pull-request.allowed-files`. Then recompile.
 `web-fetch` does not execute JavaScript. A pricing page rendered entirely in JavaScript can appear empty. Point the workflow
 at an official static documentation page when one exists. Never replace an unreadable official source with cached snippets,
 aggregator prices, or remembered values.
+
+[gh-aw schedule syntax]: https://github.com/github/gh-aw/blob/main/docs/src/content/docs/reference/schedule-syntax.md
+[GitHub Actions schedule syntax]: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule
+[GitHub Actions concurrency]: https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+[pydantic-ai Z.ai engine configuration]: https://github.com/pydantic/pydantic-ai/blob/main/.github/workflows/shared/engine-zai.md
+[zai-model]: https://docs.z.ai/guides/vlm/glm-5.3-flash
+[zai-api]: https://docs.z.ai/devpack/latest-model

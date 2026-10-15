@@ -4,7 +4,9 @@ name: 'Price Check'
 description: 'Check twenty-one provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
-  schedule: daily
+  schedule:
+    - cron: '0 6-18 * * 1-5'
+      timezone: America/Los_Angeles
   permissions:
     pull-requests: read
   skip-if-match: 'is:pr is:open author:app/genai-prices-automation'
@@ -16,6 +18,7 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
+  queue: max
 checkout:
   fetch-depth: 1
 imports:
@@ -31,7 +34,7 @@ tools:
     - 'uv:*'
   web-fetch:
 safe-outputs:
-  # Minimax is unpriced in gh-aw's separate detection guardrail.
+  # GLM-5.3-Flash is unpriced in gh-aw v0.82.2's separate detection guardrail.
   threat-detection: false
   report-failure-as-issue: false
   noop:
@@ -90,7 +93,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 timeout-minutes: 90
 max-turns: 500
-# Disable gh-aw's AI-credits guardrail: the Fireworks minimax model isn't in gh-aw's
+# Disable gh-aw's AI-credits guardrail: GLM-5.3-Flash is absent from gh-aw v0.82.2's
 # pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
 # unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
 # compiler pinned to v0.82.2 (firewall 0.27.22); see AGENTIC_PRICE_CHECK.md.
@@ -98,23 +101,22 @@ max-ai-credits: -1
 max-daily-ai-credits: -1
 engine:
   id: claude
-  # Claude Code pointed at Fireworks's Anthropic-compatible endpoint, matching
-  # the pydantic/platform agentic fleet. The maintainer must add a
-  # FIREWORKS_API_KEY repo secret (or swap this block for a direct
-  # ANTHROPIC_API_KEY). gh-aw's preflight only checks the env var is non-empty.
-  model: claude-sonnet-4-5
-  api-target: api.fireworks.ai
+  # Claude Code uses GLM-5.3-Flash through Z.ai's Anthropic-compatible endpoint.
+  # The maintainer must add a ZAI_API_KEY repository secret. gh-aw's preflight
+  # only checks that the env var is non-empty.
+  model: glm-5.3-flash
+  api-target: api.z.ai
   env:
-    ANTHROPIC_BASE_URL: https://api.fireworks.ai/inference
-    ANTHROPIC_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
-    ANTHROPIC_MODEL: accounts/fireworks/models/minimax-m3
-    ANTHROPIC_DEFAULT_OPUS_MODEL: accounts/fireworks/models/minimax-m3
-    ANTHROPIC_DEFAULT_SONNET_MODEL: accounts/fireworks/models/minimax-m3
-    ANTHROPIC_DEFAULT_HAIKU_MODEL: accounts/fireworks/models/minimax-m3
+    ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
+    ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
+    ANTHROPIC_MODEL: glm-5.3-flash
+    ANTHROPIC_DEFAULT_OPUS_MODEL: glm-5.3-flash
+    ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
+    ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-5.3-flash
 network:
   allowed:
     - defaults
-    - api.fireworks.ai
+    - api.z.ai
     - platform.openai.com
     - developers.openai.com
     - platform.claude.com

@@ -19,18 +19,27 @@ def read_workflow(filename: str) -> dict[str, Any]:
     return cast(dict[str, Any], yaml.load(content))
 
 
-def test_daily_price_updates_create_pr_before_notifying_slack() -> None:
+def test_price_updates_create_pr_before_notifying_slack() -> None:
     source = read_workflow('agentic-price-check.md')
     compiled = read_workflow('agentic-price-check.lock.yml')
-    assert source['on']['schedule'] == 'daily'
+    expected_schedule = [{'cron': '0 6-18 * * 1-5', 'timezone': 'America/Los_Angeles'}]
+    assert source['on']['schedule'] == expected_schedule
+    assert compiled['on']['schedule'] == expected_schedule
+    assert 'workflow_dispatch' in source['on']
+    assert 'workflow_dispatch' in compiled['on']
     assert source['if'] == "${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}"
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
     assert 'Bash(git diff:*)' in json.dumps(compiled['jobs']['agent'])
     assert source['on']['skip-if-match'] == 'is:pr is:open author:app/genai-prices-automation'
-    assert compiled['on']['schedule'][0]['cron'].split()[2:] == ['*', '*', '*']
-    assert source['concurrency']['cancel-in-progress'] is False
+    expected_concurrency = {
+        'group': '${{ github.workflow }}',
+        'cancel-in-progress': False,
+        'queue': 'max',
+    }
+    assert source['concurrency'] == expected_concurrency
+    assert compiled['concurrency'] == expected_concurrency
     assert 'create-issue' not in source['safe-outputs']
     assert source['safe-outputs']['report-failure-as-issue'] is False
     pr = source['safe-outputs']['create-pull-request']
