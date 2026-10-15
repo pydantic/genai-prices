@@ -7095,7 +7095,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemini-3.8-flash-lite-tts'),
                 name='Gemini 3.8 Flash-Lite TTS',
                 description='Token-priced text-to-speech model, the lightest member of the Gemini 3.8 family.',
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31 and batch is half input and output at both rate levels.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
                 prices=[
                     ConditionalPrice(
                         constraint=None, prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('6'))
@@ -7116,6 +7116,26 @@ providers: list[Provider] = [
                         prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('3')),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
                     ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('3')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(input_mtok=Decimal('1.8'), output_mtok=Decimal('21.6')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('10.8')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7123,7 +7143,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemini-3.8-flash-tts'),
                 name='Gemini 3.8 Flash TTS',
                 description='Token-priced text-to-speech model in the Gemini 3.8 Flash family.',
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31 and batch is half input and output at both rate levels.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
                 prices=[
                     ConditionalPrice(
                         constraint=None, prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('9'))
@@ -7142,6 +7162,26 @@ providers: list[Provider] = [
                     PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('4.5')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('9')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('4.5')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(input_mtok=Decimal('1.8'), output_mtok=Decimal('32.4')),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('16.2')),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 15)),
                     ),
                 ],
@@ -7296,9 +7336,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemini-nano-banana-2.1'),
                 name='Gemini Nano Banana 2.1',
                 description="Google's latest image generation and editing model, with text/thinking output tokens priced separately from image output tokens.",
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text. Batch halves input, text output and image output.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text. Batch halves input, text output and image output. Google Web and Image Search grounding is $14 per 1,000 billable search queries; callers supply the count after account-wide free allowances.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), output_mtok=Decimal('7.5'), output_image_mtok=Decimal('30')
+                    input_mtok=Decimal('1.5'),
+                    output_mtok=Decimal('7.5'),
+                    output_image_mtok=Decimal('30'),
+                    web_searches_kcount=Decimal('14'),
                 ),
                 price_variants=[
                     PriceVariant(
@@ -11501,6 +11544,7 @@ providers: list[Provider] = [
                 name='Kimi K2.6',
                 description="Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k26.md',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
                 ),
@@ -21305,7 +21349,8 @@ providers: list[Provider] = [
                 id='jev-1.14.0',
                 match=ClauseOr(or_=[ClauseEquals(equals='jev-1.14.0'), ClauseEquals(equals='jev-preview')]),
                 name='Jev 1.14.0',
-                price_comments='Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13.',
+                context_window=32000,
+                price_comments='Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
         ],
@@ -21748,12 +21793,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='grok-4.20-multi-agent',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='grok-4.20-multi-agent'),
-                        ClauseEquals(equals='grok-4.20-multi-agent-0309'),
-                    ]
-                ),
+                match=ClauseEquals(equals='grok-4.20-multi-agent'),
                 name='Grok 4.20 Multi-Agent',
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
                 context_window=1000000,

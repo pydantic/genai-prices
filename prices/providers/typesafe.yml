@@ -47,9 +47,11 @@ models:
       or:
         - equals: jev-1.14.0
         - equals: jev-preview
+    context_window: 32000
     prices_checked: 2026-10-15
     price_comments: >-
       Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042
       input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13.
+      The default context limit is 32k for state plus one question, within the 64k per-request limit.
     prices:
       input_mtok: 0.042

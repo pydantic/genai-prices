@@ -327,13 +327,9 @@ models:
       Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents
       operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
     match:
-      or:
-        - equals: grok-4.20-multi-agent
-        - equals: grok-4.20-multi-agent-0309
+      equals: grok-4.20-multi-agent
     context_window: 1000000
-    # The dated catalog id grok-4.20-multi-agent-0309 prices identically:
-    # https://docs.x.ai/developers/models
-    prices_checked: 2026-10-15
+    prices_checked: 2026-06-09
     prices:
       input_mtok: 2
       cache_read_mtok: 0.2

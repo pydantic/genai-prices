@@ -1531,7 +1531,7 @@ models:
     prices_checked: 2026-10-15
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
-      2026-12-31 and batch is half input and output at both rate levels.
+      2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.
     prices:
       - prices:
           input_mtok: 0.5
@@ -1553,6 +1553,26 @@ models:
         prices:
           input_mtok: 0.25
           output_mtok: 3
+      - when: { service_tier: flex }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 3
+      - when: { service_tier: priority }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 1.8
+          output_mtok: 21.6
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.9
+          output_mtok: 10.8
 
   - id: gemini-3.8-flash-tts
     name: Gemini 3.8 Flash TTS
@@ -1562,7 +1582,7 @@ models:
     prices_checked: 2026-10-15
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
-      2026-12-31 and batch is half input and output at both rate levels.
+      2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.
     prices:
       - prices:
           input_mtok: 0.5
@@ -1584,6 +1604,26 @@ models:
         prices:
           input_mtok: 0.25
           output_mtok: 4.5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 4.5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 1.8
+          output_mtok: 32.4
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.9
+          output_mtok: 16.2
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live
@@ -1772,11 +1812,13 @@ models:
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking
       output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text.
-      Batch halves input, text output and image output.
+      Batch halves input, text output and image output. Google Web and Image Search grounding is $14 per
+      1,000 billable search queries; callers supply the count after account-wide free allowances.
     prices:
       input_mtok: 1.5
       output_mtok: 7.5
       output_image_mtok: 30
+      web_searches_kcount: 14
     price_variants:
       - when: { processing: batch }
         constraint: { start_date: 2026-10-15 }

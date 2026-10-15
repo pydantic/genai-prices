@@ -12303,7 +12303,7 @@ export const data: Provider[] = [
           equals: 'gemini-3.8-flash-lite-tts',
         },
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31 and batch is half input and output at both rate levels.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
         prices: [
           {
             prices: {
@@ -12349,6 +12349,58 @@ export const data: Provider[] = [
               type: 'start_date',
             },
           },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 6,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 3,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.8,
+              output_mtok: 21.6,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.9,
+              output_mtok: 10.8,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
         ],
       },
       {
@@ -12359,7 +12411,7 @@ export const data: Provider[] = [
           equals: 'gemini-3.8-flash-tts',
         },
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31 and batch is half input and output at both rate levels.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
         prices: [
           {
             prices: {
@@ -12399,6 +12451,58 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.25,
               output_mtok: 4.5,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 9,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 4.5,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.8,
+              output_mtok: 32.4,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.9,
+              output_mtok: 16.2,
             },
             constraint: {
               start_date: '2026-10-15',
@@ -12660,11 +12764,12 @@ export const data: Provider[] = [
           equals: 'gemini-nano-banana-2.1',
         },
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text. Batch halves input, text output and image output.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text. Batch halves input, text output and image output. Google Web and Image Search grounding is $14 per 1,000 billable search queries; callers supply the count after account-wide free allowances.',
         prices: {
           input_mtok: 1.5,
           output_mtok: 7.5,
           output_image_mtok: 30,
+          web_searches_kcount: 14,
         },
         price_variants: [
           {
@@ -19891,6 +19996,7 @@ export const data: Provider[] = [
           starts_with: 'kimi-k2.6',
         },
         context_window: 262144,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k26.md',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -37698,8 +37804,9 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 32000,
         price_comments:
-          'Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13.',
+          'Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
         prices: {
           input_mtok: 0.042,
         },
@@ -38470,14 +38577,7 @@ export const data: Provider[] = [
         description:
           "Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
         match: {
-          or: [
-            {
-              equals: 'grok-4.20-multi-agent',
-            },
-            {
-              equals: 'grok-4.20-multi-agent-0309',
-            },
-          ],
+          equals: 'grok-4.20-multi-agent',
         },
         context_window: 1000000,
         prices: {
