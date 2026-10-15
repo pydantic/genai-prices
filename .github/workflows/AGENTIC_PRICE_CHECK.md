@@ -2,10 +2,10 @@
 
 ```bash
 gh secret set ZAI_API_KEY
+gh secret set LOGFIRE_OTLP_AUTHORIZATION
 gh variable set PRICE_UPDATE_APP_CLIENT_ID --body Iv23libntR0K6oyQrZWX
 gh secret set PRICE_UPDATE_APP_PRIVATE_KEY < /path/to/genai-prices-automation.private-key.pem
 gh secret set SLACK_WEBHOOK_URL
-gh secret set LOGFIRE_OTLP_AUTHORIZATION
 gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
@@ -27,6 +27,9 @@ One manual [workflow run 38748564180](https://github.com/pydantic/genai-prices/a
 request spans, including 620 HTTP 429 responses and two HTTP 502 responses, alongside 34 research-task launches and a peak
 of 17 active tasks. Price Check uses `Coder(sub_agents=False)` to keep research in one execution context.
 This historical measurement describes one Claude Code run and does not predict CLAI 2 runtime.
+
+See [performance measurements and implementation plan](AGENTIC_PRICE_CHECK_PERFORMANCE.md) for the subsequent
+51m55s run, whole-run token accounting, evidence gaps, and the proposed deterministic checks and bounded parallelism.
 
 ## Configuration
 
@@ -61,6 +64,30 @@ limit; there is no workflow output-token cap.
 the public definition. gh-aw v0.91.1 validates root environment secrets before loading imported engine metadata,
 and does not inherit the public version into this configuration. Keep the model preference in the source workflow.
 Keep `excluded-env` in the routing import too: this engine ignores the root field in v0.91.1.
+
+### Logfire telemetry
+
+After the agent exits, a trusted step exports API-proxy request spans, an agent span and canonical gh-aw usage to the dedicated
+[genai-prices Logfire project](https://logfire-eu.pydantic.info/logfire/genai-prices).
+`LOGFIRE_OTLP_AUTHORIZATION` supplies the project's write credential. MCP access is a separate authorization:
+grant the Logfire MCP connection access to `logfire/genai-prices` before querying these runs.
+Pass the fully qualified `project: logfire/genai-prices` to MCP queries. The unqualified name can be rejected even when
+the error lists that name as available. Run `codex mcp login logfire` if authorization still targets another project.
+The credential exists only in the export step, outside the agent sandbox. The pinned compiler's native OTLP configuration
+would expose exporter headers through its agent environment, so this workflow does not use that configuration.
+Export failures appear in the run summary and export step without blocking independently validated price updates.
+
+Filter telemetry by `gh-aw.repository = pydantic/genai-prices` and the exact `gh-aw.run.id`.
+Check both span attributes and resource attributes because components can put run identifiers in either place.
+Confirm a run's request spans arrive before treating export configuration as verified.
+The separate `price_check.usage` span records cumulative `agent_usage.json` components under
+`price_check.usage.uncached_input`, `cached_input`, `cache_creation` and `output`, labelled with
+`price_check.usage.source = gh-aw.agent_usage`. Do not add that rollup to individual proxy counts.
+Historical proxy versions reported zero input/cache counts; those zeros do not establish zero consumption.
+The `invoke_agent` span records canonical tool execution counts and whether a terminal safe output exists.
+Coder's CodeMode calls appear as `run_code`; full nested tool inputs and outputs remain in the canonical session artifact.
+The `agent` artifact includes `agent/telemetry.json` with the compact per-run accounting and tool counts, so future
+investigations can start there without processing the full transcript. Dollar fields remain client estimates.
 
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
 `pydantic/genai-prices` with **Contents: read/write** and **Pull requests: read/write**. You can generate a private key in
@@ -158,11 +185,8 @@ Confirm that safe outputs processed a real noop or created a PR. A noop must ski
 a created PR must pass its actual URL to the unchanged Slack workflow. Preserve run URLs and source SHAs
 when recording verification.
 
-gh-aw exports job spans and canonical usage totals from the host to the `logfire/genai-prices` project at
-`https://logfire-eu.pydantic.info`, using `LOGFIRE_OTLP_AUTHORIZATION`. The exporter variables are excluded from
-the agent container so model-controlled tools cannot read ingestion credentials from ancestor processes.
-The service is `gh-aw.agentic-price-check`, with the Actions run identity. Native in-process model/tool export is
-deliberately disabled; inspect the canonical session artifact for individual requests and tool activity.
+The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
+Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.
 The canonical session and usage artifacts remain available without an exporter. Missing Logfire rows or zero-valued
 provider usage fields do not prove zero consumption. Compare only runs that reached the agent, and distinguish
 reported tokens from Coding Plan quota consumption.

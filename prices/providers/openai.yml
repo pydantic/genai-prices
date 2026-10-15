@@ -144,6 +144,16 @@ models:
       input_mtok: 0.5
       output_mtok: 0.5
 
+  - id: babbage-002
+    match:
+      equals: babbage-002
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+
   - id: chatgpt-4o-latest
     name: ChatGPT-4o
     description: >-
@@ -198,6 +208,16 @@ models:
     prices:
       input_mtok: 20
       output_mtok: 20
+
+  - id: davinci-002
+    match:
+      equals: davinci-002
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 2
+      output_mtok: 2
 
   - id: "ft:gpt-3.5-turbo-"
     description: GPT-3.5 Turbo fine tuned.

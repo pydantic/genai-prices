@@ -99,6 +99,21 @@ models:
       output_mtok: 1.2
     prices_checked: 2026-09-29
 
+  - id: deepseek-ai/DeepSeek-V4.1-Flash-Fast
+    name: DeepSeek V4.1 Flash Fast
+    description: Faster speed tier of DeepSeek V4.1 Flash sharing its base model's weights.
+    match:
+      equals: deepseek-ai/DeepSeek-V4.1-Flash-Fast
+    context_window: 1048000
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates and context window from https://www.baseten.co/pricing/ and
+      https://docs.baseten.co/inference/model-apis/overview.
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.014
+      output_mtok: 2.4
+
   - id: moonshotai/Kimi-K2.6
     name: Kimi K2.6
     match:
@@ -151,6 +166,21 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.12
       output_mtok: 2.4
+
+  - id: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
+    name: Nemotron 3.5 Super VL
+    description: NVIDIA's multimodal Nemotron 3.5 Super model served through Baseten Model APIs.
+    match:
+      equals: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
+    context_window: 1048000
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates and context window from https://www.baseten.co/pricing/ and
+      https://docs.baseten.co/inference/model-apis/overview.
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.04
+      output_mtok: 0.5
 
   - id: openai/gpt-oss-120b
     name: GPT OSS 120B

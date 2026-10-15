@@ -5510,6 +5510,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-Fast',
+        name: 'DeepSeek V4.1 Flash Fast',
+        description: "Faster speed tier of DeepSeek V4.1 Flash sharing its base model's weights.",
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-Fast',
+        },
+        context_window: 1048000,
+        price_comments:
+          'Rates and context window from https://www.baseten.co/pricing/ and https://docs.baseten.co/inference/model-apis/overview.',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.014,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'moonshotai/Kimi-K2.6',
         name: 'Kimi K2.6',
         match: {
@@ -5565,6 +5581,22 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.12,
           output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B',
+        name: 'Nemotron 3.5 Super VL',
+        description: "NVIDIA's multimodal Nemotron 3.5 Super model served through Baseten Model APIs.",
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B',
+        },
+        context_window: 1048000,
+        price_comments:
+          'Rates and context window from https://www.baseten.co/pricing/ and https://docs.baseten.co/inference/model-apis/overview.',
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.5,
         },
       },
       {
@@ -8985,6 +9017,53 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-5.5',
+        name: 'Claude Haiku 5.5',
+        match: {
+          equals: 'claude-haiku-5.5',
+        },
+        price_comments:
+          'Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed at the higher rate. https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing',
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.625,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 100000,
+                price: 0.05,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 100000,
+                price: 2.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'claude-opus-4.7',
         name: 'Claude Opus 4.7',
         match: {
@@ -9161,6 +9240,20 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.075,
           output_mtok: 3.75,
+        },
+      },
+      {
+        id: 'gemini-4-argon',
+        name: 'Gemini 4 Argon',
+        match: {
+          equals: 'gemini-4-argon',
+        },
+        price_comments:
+          'Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026; the page does not publish the post-promotion Copilot rates, so none are scheduled here. Copilot does not charge for cache writes on the Gemini models.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
         },
       },
       {
@@ -11851,6 +11944,34 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3.1-flash-tts-preview',
+        name: 'Gemini 3.1 Flash TTS Preview',
+        description: 'Preview token-priced text-to-speech model in the Gemini 3.1 Flash family.',
+        match: {
+          equals: 'gemini-3.1-flash-tts-preview',
+        },
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; batch is half input and output.',
+        prices: {
+          input_mtok: 1,
+          output_mtok: 20,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 10,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
         id: 'gemini-3.1-pro-preview',
         name: 'Gemini 3.1 Pro Preview',
         description:
@@ -12104,7 +12225,14 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'gemini-3.8-flash',
+              and: [
+                {
+                  starts_with: 'gemini-3.8-flash',
+                },
+                {
+                  regex: '^(?!.*-[tT][tT][sS](?:$|-))',
+                },
+              ],
             },
             {
               equals: 'gemini-flash-latest',
@@ -12162,6 +12290,222 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-3.8-flash-lite-tts',
+        name: 'Gemini 3.8 Flash-Lite TTS',
+        description: 'Token-priced text-to-speech model, the lightest member of the Gemini 3.8 family.',
+        match: {
+          equals: 'gemini-3.8-flash-lite-tts',
+        },
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 12,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 6,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 3,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 6,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 3,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.8,
+              output_mtok: 21.6,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.9,
+              output_mtok: 10.8,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-3.8-flash-tts',
+        name: 'Gemini 3.8 Flash TTS',
+        description: 'Token-priced text-to-speech model in the Gemini 3.8 Flash family.',
+        match: {
+          equals: 'gemini-3.8-flash-tts',
+        },
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through 2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 18,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 9,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 4.5,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 9,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 4.5,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.8,
+              output_mtok: 32.4,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.9,
+              output_mtok: 16.2,
+            },
+            constraint: {
+              start_date: '2026-10-15',
               type: 'start_date',
             },
           },
@@ -12410,6 +12754,39 @@ export const data: Provider[] = [
           input_audio_mtok: 3,
           output_audio_mtok: 12,
         },
+      },
+      {
+        id: 'gemini-nano-banana-2.1',
+        name: 'Gemini Nano Banana 2.1',
+        description:
+          "Google's latest image generation and editing model, with text/thinking output tokens priced separately from image output tokens.",
+        match: {
+          equals: 'gemini-nano-banana-2.1',
+        },
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text. Batch halves input, text output and image output. Google Web and Image Search grounding is $14 per 1,000 billable search queries; callers supply the count after account-wide free allowances.',
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 7.5,
+          output_image_mtok: 30,
+          web_searches_kcount: 14,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.75,
+              output_mtok: 3.75,
+              output_image_mtok: 15,
+            },
+            constraint: {
+              start_date: '2026-10-15',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'gemini-omni-flash-preview',
@@ -19619,6 +19996,7 @@ export const data: Provider[] = [
           starts_with: 'kimi-k2.6',
         },
         context_window: 262144,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k26.md',
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
@@ -20371,6 +20749,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'babbage-002',
+        match: {
+          equals: 'babbage-002',
+        },
+        price_comments: 'Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.',
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'chatgpt-4o-latest',
         name: 'ChatGPT-4o',
         description:
@@ -20450,6 +20839,17 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 20,
           output_mtok: 20,
+        },
+      },
+      {
+        id: 'davinci-002',
+        match: {
+          equals: 'davinci-002',
+        },
+        price_comments: 'Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.',
+        prices: {
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -37346,7 +37746,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://docs.typesafe.ai/models'],
     api_pattern: 'https://api\\.typesafe\\.ai',
     price_comments:
-      'TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases and currently point at `jev-1.13.0`; a versioned id is billed the same.',
+      'TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; per https://docs.typesafe.ai/models, `jev-latest` currently points at `jev-1.13.0` while `jev-preview` points at `jev-1.14.0`. Every version bills at the same $0.042 input rate.',
     model_match: {
       starts_with: 'jev-',
     },
@@ -37384,12 +37784,29 @@ export const data: Provider[] = [
             {
               equals: 'jev-latest',
             },
+          ],
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.042,
+        },
+      },
+      {
+        id: 'jev-1.14.0',
+        name: 'Jev 1.14.0',
+        match: {
+          or: [
+            {
+              equals: 'jev-1.14.0',
+            },
             {
               equals: 'jev-preview',
             },
           ],
         },
         context_window: 32000,
+        price_comments:
+          'Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
         prices: {
           input_mtok: 0.042,
         },
@@ -38069,11 +38486,21 @@ export const data: Provider[] = [
         description:
           'Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
         match: {
-          equals: 'grok-4.20',
+          or: [
+            {
+              equals: 'grok-4.20',
+            },
+            {
+              equals: 'grok-4.20-0309-reasoning',
+            },
+            {
+              equals: 'grok-4.20-0309-non-reasoning',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
-          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing',
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price identically: https://docs.x.ai/developers/models',
         prices: {
           input_mtok: {
             base: 1.25,
@@ -38499,9 +38926,17 @@ export const data: Provider[] = [
         id: 'grok-voice-latest',
         name: 'Grok Voice',
         match: {
-          equals: 'grok-voice-latest',
+          or: [
+            {
+              equals: 'grok-voice-latest',
+            },
+            {
+              equals: 'grok-voice-3.0',
+            },
+          ],
         },
-        price_comments: 'See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing.',
+        price_comments:
+          'See https://docs.x.ai/developers/release-notes and https://docs.x.ai/developers/pricing#voice-pricing. grok-voice-3.0 bills at $0.08/min ($4.80/hr) plus $0.004 per text input, the same as the current grok-voice-latest rates: https://docs.x.ai/developers/pricing#voice-pricing',
         prices: [
           {
             prices: {
