@@ -201,13 +201,17 @@ models:
       MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output,
       a 1M-token context window, and long-horizon agentic work.
     match:
-      equals: minimax-m3
+      or:
+        - equals: MiniMax-M3
+        - equals: minimax-m3
     context_window: 1000000
-    prices_checked: 2026-07-01
+    prices_checked: 2026-10-15
     price_comments: >-
       Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo,
       2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens
-      bill at 2x per MiniMax's length-based tiering.
+      bill at 2x per MiniMax's length-based tiering. Re-verified against the same page on 2026-10-15
+      (rates unchanged); the page labels the model "MiniMax-M3", which was added to the match on
+      2026-10-15 alongside the existing lowercase id.
     prices:
       input_mtok:
         base: 0.3

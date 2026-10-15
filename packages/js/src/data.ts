@@ -5787,11 +5787,13 @@ export const data: Provider[] = [
           ],
         },
         context_window: 131072,
-        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        price_comments:
+          'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context. The Cerebras public models API (https://api.cerebras.ai/public/v1/models, checked 2026-10-15) no longer lists this model; prices kept for historical usage.',
         prices: {
           input_mtok: 0.99,
           output_mtok: 1.49,
         },
+        deprecated: true,
       },
       {
         id: 'gpt-oss-120b',
@@ -6207,6 +6209,19 @@ export const data: Provider[] = [
         price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
         prices: {
           input_mtok: 0.15,
+        },
+      },
+      {
+        id: '@cf/daily-co/phonellm-mini-alpha-2',
+        name: 'PhoneLLM Mini Alpha 2',
+        match: {
+          equals: '@cf/daily-co/phonellm-mini-alpha-2',
+        },
+        price_comments:
+          'Rates from https://developers.cloudflare.com/workers-ai/platform/pricing/ (LLM model pricing): $0.060 per 1M input tokens, $0.240 per 1M output tokens.',
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.24,
         },
       },
       {
@@ -10748,6 +10763,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-4-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-haiku-4-5',
+            },
+            {
+              contains: 'claude-haiku-4.5',
+            },
+          ],
+        },
+        context_window: 200000,
+        price_comments:
+          'Vertex AI Global endpoint rates from https://cloud.google.com/vertex-ai/generative-ai/pricing (Claude models, Global tab): input $1 / 1M tokens, output $5 / 1M tokens, 5-minute cache writes $1.25 / 1M tokens, 1-hour cache writes $2 / 1M tokens, cache hits $0.10 / 1M tokens. The Vertex table also publishes batch rates (half of input and output); batch variants are not modelled for Vertex Claude entries in this file.',
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+          cache_write_1h_mtok: 2,
+        },
+      },
+      {
         id: 'claude-haiku-5-5',
         match: {
           or: [
@@ -11268,6 +11306,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.025,
@@ -11276,6 +11316,7 @@ export const data: Provider[] = [
           cache_audio_read_mtok: 0.175,
           web_searches_kcount: 35,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.0-flash-lite',
@@ -11286,10 +11327,13 @@ export const data: Provider[] = [
           contains: 'gemini-2.0-flash-lite',
         },
         context_window: 1000000,
+        price_comments:
+          'Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
         prices: {
           input_mtok: 0.075,
           output_mtok: 0.3,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-flash',
@@ -11738,6 +11782,8 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments:
+          'Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
         prices: [
           {
             prices: {
@@ -11807,6 +11853,7 @@ export const data: Provider[] = [
             },
           },
         ],
+        deprecated: true,
       },
       {
         id: 'gemini-3.1-flash-image-preview',
@@ -12620,11 +12667,18 @@ export const data: Provider[] = [
         name: 'Gemini Embedding 2',
         description: "Google's multimodal embedding model for text, images, audio, video, and documents.",
         match: {
-          equals: 'gemini-embedding-2',
+          or: [
+            {
+              equals: 'gemini-embedding-2',
+            },
+            {
+              equals: 'gemini-embedding-2-preview',
+            },
+          ],
         },
         context_window: 8192,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves every input modality.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves every input modality. The models catalog (https://ai.google.dev/gemini-api/docs/models) names the endpoint `gemini-embedding-2-preview` and the pricing page `gemini-embedding-2`; both were added to the match on 2026-10-15 at the published Embedding 2 rates.',
         prices: {
           input_mtok: 0.2,
           input_audio_mtok: 6.5,
@@ -12789,6 +12843,21 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gemini-omni-1.1-flash',
+        name: 'Gemini Omni Flash',
+        description: "Google's video generation and editing model with multimodal input.",
+        match: {
+          equals: 'gemini-omni-1.1-flash',
+        },
+        price_comments:
+          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Omni Flash, GA): input $1.50 / 1M tokens across text, image, video and audio; output $9 / 1M tokens (text) and $17.50 / 1M tokens (video). The models catalog names `gemini-omni-1.1-flash` as the GA endpoint of the Omni Flash family.',
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 9,
+          output_video_mtok: 17.5,
+        },
+      },
+      {
         id: 'gemini-omni-flash-preview',
         name: 'Gemini Omni Flash Preview',
         description: "Google's video generation and editing model with multimodal input.",
@@ -12862,6 +12931,60 @@ export const data: Provider[] = [
             ],
           },
         },
+      },
+      {
+        id: 'gemini-robotics-er-2-preview',
+        match: {
+          equals: 'gemini-robotics-er-2-preview',
+        },
+        price_comments:
+          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.1,
+              output_mtok: 5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-robotics-er-2-streaming-preview',
+        match: {
+          equals: 'gemini-robotics-er-2-streaming-preview',
+        },
+        price_comments:
+          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'gemma-2-27b-it',
@@ -18477,11 +18600,18 @@ export const data: Provider[] = [
         description:
           'MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and long-horizon agentic work.',
         match: {
-          equals: 'minimax-m3',
+          or: [
+            {
+              equals: 'MiniMax-M3',
+            },
+            {
+              equals: 'minimax-m3',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
-          'Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
+          'Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering. Re-verified against the same page on 2026-10-15 (rates unchanged); the page labels the model "MiniMax-M3", which was added to the match on 2026-10-15 alongside the existing lowercase id.',
         prices: {
           input_mtok: {
             base: 0.3,
@@ -18652,6 +18782,21 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'codestral-embed-2505',
+        name: 'Codestral Embed 2505',
+        description: "Mistral's code-specialized embedding model for code retrieval and semantic search.",
+        match: {
+          equals: 'codestral-embed-2505',
+        },
+        context_window: 8000,
+        price_comments:
+          'Rates from https://docs.mistral.ai/inference/pricing (Codestral Embed: input $0.15 / 1M tokens, cached input $0.015 / 1M tokens) and https://docs.mistral.ai/models/codestral-embed-25-05 (embedding model, 8k context; embeddings bill input tokens only).',
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+        },
       },
       {
         id: 'devstral-2512',
@@ -20044,11 +20189,14 @@ export const data: Provider[] = [
           equals: 'kimi-k3',
         },
         context_window: 1048576,
-        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
+        price_comments:
+          'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md. Re-verified on 2026-10-15: input, cached input and output rates are unchanged; the page now also publishes 5-minute cache writes at $3 / 1M tokens and 1-hour cache writes at $6 / 1M tokens, both added on 2026-10-15.',
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
         },
       },
       {
@@ -20771,6 +20919,22 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 5,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'chatgpt-image-latest',
+        match: {
+          equals: 'chatgpt-image-latest',
+        },
+        price_comments:
+          'Rates from https://developers.openai.com/api/docs/pricing (image generation, Standard table): text input $5 / 1M tokens, cached text input $1.25 / 1M tokens, text output $10 / 1M tokens, image input $8 / 1M image tokens, cached image input $2 / 1M image tokens, image output $32 / 1M image tokens. Model ID confirmed in the models catalog at https://developers.openai.com/api/docs/models.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+          output_image_mtok: 32,
         },
       },
       {
@@ -22123,6 +22287,19 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5-search-api',
+        match: {
+          equals: 'gpt-5-search-api',
+        },
+        price_comments:
+          'Rates from https://developers.openai.com/api/docs/pricing (Specialized models, Standard): input $1.25 / 1M tokens, cached input $0.125 / 1M tokens, output $10 / 1M tokens. The pricing page names this exact model ID; it has no dedicated page in the models catalog.',
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'gpt-5.1',
         name: 'GPT-5.1',
         description: 'The best model for coding and agentic tasks across industries',
@@ -23160,6 +23337,18 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber',
+        match: {
+          equals: 'gpt-5.5-cyber',
+        },
+        price_comments:
+          'Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page publishes no cached-input or cache-write rate for this model.',
+        prices: {
+          input_mtok: 12.5,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -23238,6 +23427,20 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-5.6-cyber',
+        match: {
+          equals: 'gpt-5.6-cyber',
+        },
+        price_comments:
+          'Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, cached input $1.25 / 1M tokens, cache writes $15.625 / 1M tokens (1.25x input), output $75 / 1M tokens. The page publishes no long-context rates for this model.',
+        prices: {
+          input_mtok: 12.5,
+          cache_write_mtok: 15.625,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
       },
       {
         id: 'gpt-5.6-luna',
@@ -25249,9 +25452,17 @@ export const data: Provider[] = [
         description:
           "GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model used in ChatGPT.",
         match: {
-          equals: 'gpt-chat-latest',
+          or: [
+            {
+              equals: 'gpt-chat-latest',
+            },
+            {
+              equals: 'chat-latest',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+        price_comments:
+          "Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published. Verified against OpenAI on 2026-10-15: the official Model ID is `chat-latest` (https://developers.openai.com/api/docs/models/chat-latest) and the published rates match this entry's $5 / $0.50 cached / $30 output per 1M tokens.",
         prices: {
           input_mtok: 5,
           cache_read_mtok: 0.5,
@@ -25514,6 +25725,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-live-transcribe',
+        match: {
+          equals: 'gpt-live-transcribe',
+        },
+        price_comments:
+          'Live transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-live-transcribe.',
+        prices: {
+          audio_hours: 1.02,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         description:
@@ -25640,6 +25862,28 @@ export const data: Provider[] = [
           output_audio_mtok: 20,
           input_image_mtok: 0.8,
           cache_image_read_mtok: 0.08,
+        },
+      },
+      {
+        id: 'gpt-realtime-translate',
+        match: {
+          equals: 'gpt-realtime-translate',
+        },
+        price_comments:
+          'Realtime translation sessions are billed per minute at $0.034/minute = $2.04/hour (0.034 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-translate.',
+        prices: {
+          audio_hours: 2.04,
+        },
+      },
+      {
+        id: 'gpt-realtime-whisper',
+        match: {
+          equals: 'gpt-realtime-whisper',
+        },
+        price_comments:
+          'Realtime transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
+        prices: {
+          audio_hours: 1.02,
         },
       },
       {
@@ -26164,6 +26408,28 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'tts-1',
+        match: {
+          equals: 'tts-1',
+        },
+        price_comments:
+          'Text-to-speech input is billed per 1M characters: $15 / 1M characters (https://developers.openai.com/api/docs/pricing, Text-to-speech models).',
+        prices: {
+          input_mchars: 15,
+        },
+      },
+      {
+        id: 'tts-1-hd',
+        match: {
+          equals: 'tts-1-hd',
+        },
+        price_comments:
+          'Text-to-speech input is billed per 1M characters: $30 / 1M characters (https://developers.openai.com/api/docs/pricing, Text-to-speech models).',
+        prices: {
+          input_mchars: 30,
         },
       },
       {
@@ -38169,33 +38435,6 @@ export const data: Provider[] = [
         ],
       },
       {
-        api_flavor: 'responses',
-        root: 'usage',
-        model_path: 'model',
-        mappings: [
-          {
-            path: 'input_tokens',
-            dest: 'input_tokens',
-            required: true,
-          },
-          {
-            path: ['input_tokens_details', 'cached_tokens'],
-            dest: 'cache_read_tokens',
-            required: false,
-          },
-          {
-            path: ['output_tokens_details', 'reasoning_tokens'],
-            dest: 'output_reasoning_tokens',
-            required: false,
-          },
-          {
-            path: 'output_tokens',
-            dest: 'output_tokens',
-            required: true,
-          },
-        ],
-      },
-      {
         api_flavor: 'realtime',
         root: 'usage',
         model_path: 'model',
@@ -39048,6 +39287,152 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'GLM-4-32B-0414-128K',
+        name: 'GLM-4-32B-0414-128K',
+        description: 'Z.AI GLM-4 32B 128K-context model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-32B-0414-128K',
+            },
+            {
+              equals: 'glm-4-32b-0414-128k',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing. The page publishes no cached-input rate for this model.',
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'GLM-4.5',
+        name: 'GLM-4.5',
+        description: 'Z.AI GLM-4.5 model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5',
+            },
+            {
+              equals: 'glm-4.5',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'GLM-4.5-Air',
+        name: 'GLM-4.5-Air',
+        description: 'Z.AI GLM-4.5-Air model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5-Air',
+            },
+            {
+              equals: 'glm-4.5-air',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'GLM-4.5-AirX',
+        name: 'GLM-4.5-AirX',
+        description: 'Z.AI GLM-4.5-AirX model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5-AirX',
+            },
+            {
+              equals: 'glm-4.5-airx',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 1.1,
+          cache_read_mtok: 0.22,
+          output_mtok: 4.5,
+        },
+      },
+      {
+        id: 'GLM-4.5-X',
+        name: 'GLM-4.5-X',
+        description: 'Z.AI GLM-4.5-X model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5-X',
+            },
+            {
+              equals: 'glm-4.5-x',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 2.2,
+          cache_read_mtok: 0.45,
+          output_mtok: 8.9,
+        },
+      },
+      {
+        id: 'GLM-4.5V',
+        name: 'GLM-4.5V',
+        description: 'Z.AI GLM-4.5V vision model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5V',
+            },
+            {
+              equals: 'glm-4.5v',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'GLM-4.6',
+        name: 'GLM-4.6',
+        description: 'Z.AI GLM-4.6 model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.6',
+            },
+            {
+              equals: 'glm-4.6',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
+      {
         id: 'GLM-4.6V',
         name: 'GLM-4.6V',
         description: 'Z.AI vision model with video, image, text and file input and native tool use.',
@@ -39067,6 +39452,111 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.05,
           output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'GLM-4.6V-FlashX',
+        name: 'GLM-4.6V-FlashX',
+        description: 'Z.AI GLM-4.6V-FlashX vision model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.6V-FlashX',
+            },
+            {
+              equals: 'glm-4.6v-flashx',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.04,
+          cache_read_mtok: 0.004,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'GLM-4.7',
+        name: 'GLM-4.7',
+        description: 'Z.AI GLM-4.7 model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.7',
+            },
+            {
+              equals: 'glm-4.7',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'GLM-4.7-FlashX',
+        name: 'GLM-4.7-FlashX',
+        description: 'Z.AI GLM-4.7-FlashX model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.7-FlashX',
+            },
+            {
+              equals: 'glm-4.7-flashx',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'GLM-5',
+        name: 'GLM-5',
+        description: 'Z.AI GLM-5 model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5',
+            },
+            {
+              equals: 'glm-5',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.2,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'GLM-5.1',
+        name: 'GLM-5.1',
+        description: 'Z.AI GLM-5.1 model listed on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.1',
+            },
+            {
+              equals: 'glm-5.1',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
         },
       },
       {
@@ -39150,6 +39640,48 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'GLM-5.3-FlashX',
+        name: 'GLM-5.3-FlashX',
+        description: 'Z.AI variant of GLM-5.3-Flash with separate standard rates on the international platform pricing page.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.3-FlashX',
+            },
+            {
+              equals: 'glm-5.3-flashx',
+            },
+          ],
+        },
+        price_comments: 'https://docs.z.ai/guides/overview/pricing',
+        prices: {
+          input_mtok: 0.37,
+          cache_read_mtok: 0.075,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'GLM-OCR',
+        name: 'GLM-OCR',
+        description: 'Z.AI optical character recognition model with uniform input and output pricing.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-OCR',
+            },
+            {
+              equals: 'glm-ocr',
+            },
+          ],
+        },
+        price_comments:
+          'https://docs.z.ai/guides/overview/pricing and https://docs.z.ai/guides/vlm/glm-ocr ("Pricing is uniform for both API input and output, costing just $0.03 per million tokens").',
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.03,
+        },
       },
     ],
   },
