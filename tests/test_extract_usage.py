@@ -572,6 +572,56 @@ def test_cloudflare_decisions_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.24')
 
 
+@pytest.mark.parametrize('with_details', [True, False])
+def test_perplexity_responses_usage_and_price(with_details: bool) -> None:
+    # Constructed from the Agent model/schema and Perplexity's own synthetic usage test, not a recording:
+    # https://docs.perplexity.ai/docs/agent-api/models
+    # https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/tests/test_perplexity_usage.py
+    # Web search uses tool_calls_details.search_web.invocation, not Sonar's num_search_queries:
+    # https://docs.perplexity.ai/docs/agent-api/tools/web-search
+    response_data: dict[str, Any] = {
+        'object': 'response',
+        'model': 'perplexity/sonar',
+        'usage': {
+            'input_tokens': 1_000,
+            'input_tokens_details': {'cache_read_input_tokens': 800, 'cached_tokens': 300},
+            'output_tokens': 100,
+            'output_tokens_details': {'reasoning_tokens': 50},
+            'tool_calls_details': {'search_web': {'invocation': 2}},
+            'total_tokens': 1_100,
+        },
+    }
+    if not with_details:
+        del response_data['usage']['input_tokens_details']
+        del response_data['usage']['output_tokens_details']
+        del response_data['usage']['tool_calls_details']
+
+    extracted = extract_usage(response_data, provider_id='perplexity', api_flavor='responses')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'perplexity/sonar'
+    if with_details:
+        assert extracted.usage == Usage(
+            input_tokens=1_000, cache_read_tokens=800, output_tokens=100, output_reasoning_tokens=50, web_searches=2
+        )
+    else:
+        assert extracted.usage == Usage(input_tokens=1_000, output_tokens=100)
+    for month, day, context, expected_total in [
+        (10, 15, None, '0.00535'),
+        (10, 15, {'search_type': 'web'}, '0.00535'),
+        (9, 23, {'search_type': 'fast'}, '0.00535'),
+        (9, 24, {'search_type': 'fast'}, '0.00235'),
+        (10, 14, {'search_type': 'fast'}, '0.00235'),
+        (10, 15, {'search_type': 'fast'}, '0.00235'),
+    ]:
+        price = extracted.calc_price(
+            genai_request_timestamp=datetime(2026, month, day, tzinfo=timezone.utc), price_context=context
+        )
+        assert price.input_price == (Decimal('0.0001') if with_details else Decimal('0.00025'))
+        assert price.output_price == Decimal('0.00025')
+        assert price.total_price == (Decimal(expected_total) if with_details else Decimal('0.0005'))
+
+
 def test_perplexity_decisions_usage() -> None:
     response_data = {
         'model': 'pplx-decider-v1.1-27b',

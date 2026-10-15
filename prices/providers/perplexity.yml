@@ -3,9 +3,11 @@ name: Perplexity
 id: perplexity
 pricing_urls:
   - https://docs.perplexity.ai/docs/getting-started/pricing
+  - https://docs.perplexity.ai/docs/agent-api/models
+  - https://docs.perplexity.ai/docs/agent-api/tools/web-search
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
-  Prices per request vary based on usage, this is not represented here,
+  Sonar Chat Completions prices per request vary based on usage, this is not represented here,
   instead we just take the highest price shown for `requests_kcount`.
 extractors:
   # https://docs.perplexity.ai/api-reference/sonar-post
@@ -34,6 +36,26 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
+  # /v1/responses aliases /v1/agent: https://docs.perplexity.ai/docs/agent-api/openai-compatibility
+  # Cache reads and reasoning are subsets of their parent totals, unlike Sonar Deep Research's additive categories.
+  # https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/providers/perplexity/events.py
+  # Use the current cache_read_input_tokens field only; do not also add the cached_tokens compatibility alias.
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cache_read_input_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+      - path: [tool_calls_details, search_web, invocation]
+        dest: web_searches
+        required: false
   # https://docs.perplexity.ai/docs/decisions/quickstart — `usage.input_tokens` / `usage.output_tokens`.
   # Output tokens are free. The Sonar extractor stays on `prompt_tokens` / `completion_tokens`.
   - api_flavor: decisions
@@ -66,6 +88,37 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+
+  - id: perplexity/sonar
+    name: Sonar (Agent API)
+    match:
+      equals: perplexity/sonar
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Agent API native Sonar uses a different model ID and rates from Sonar Chat Completions.
+      https://docs.perplexity.ai/docs/agent-api/models
+      Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand.
+      Pass price_context search_type=fast for Fast Search, including presets that select it.
+      The response invocation count does not identify the search type. Without context, standard web search is estimated.
+      https://docs.perplexity.ai/docs/agent-api/tools/web-search
+      The Fast Search variant starts at the documented public launch boundary, 2026-09-24.
+      https://github.com/perplexityai/modelcontextprotocol/pull/146
+      The Agent changelog confirms the $1 rate in September but does not separately date the Agent billing start.
+      https://docs.perplexity.ai/docs/resources/changelog#september-2026
+      Earlier dates retain the standard estimate; this does not establish a previous Fast Search rate.
+      Only tokens, cache reads, and web search are represented; other Agent tools are not priced.
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.0625
+      output_mtok: 2.5
+      web_searches_kcount: 2.5
+    price_variants:
+      - when: { search_type: fast }
+        constraint: { start_date: 2026-09-24 }
+        prices:
+          web_searches_kcount: 1
+      - when: { search_type: web }
+        prices: {}
 
   - id: pplx-decider-v1-27b
     name: Decider V1 27B
