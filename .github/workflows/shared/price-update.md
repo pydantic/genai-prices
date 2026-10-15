@@ -76,16 +76,16 @@ issue or send a Slack message for a noop.
 Finish all research, edits, and the final diff review before starting validation. Run the full validation sequence once after
 the final edit, then rerun the checks affected by any later fix or regenerated files.
 
-After editing the provider YAML, run all checks in one Bash invocation with `set -e`:
+After editing the provider YAML, run all checks in one Bash invocation, chaining each command with `&&` so execution stops at
+the first failure:
 
 ```bash
-set -e
-make build
-make lint
-make typecheck
-make lint-go
-make test
-npm run ci
+make build &&
+make lint &&
+make typecheck &&
+make lint-go &&
+make test &&
+npm run ci &&
 make test-go
 ```
 

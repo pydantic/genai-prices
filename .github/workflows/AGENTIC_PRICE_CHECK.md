@@ -15,6 +15,8 @@ the schedule's native timezone field in the compiled workflow and follows daylig
 UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
 runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions schedule syntax]. The workflow combines
 verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
+Manual runs on another branch create the pricing PR against that selected branch; scheduled runs on the default branch target
+`main`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
 Runs remain serial, with up to 100 pending runs in the concurrency group; GitHub cancels additional runs once the queue is
