@@ -42,7 +42,6 @@ safe-outputs:
   create-pull-request:
     max: 1
     draft: false
-    base-branch: ${{ github.ref_name }}
     fallback-as-issue: false
     max-patch-size: 10240
     protected-files:
@@ -107,6 +106,7 @@ max-ai-credits: -1
 max-daily-ai-credits: -1
 engine:
   id: claude
+  args: ['--disallowedTools', 'Agent,Task']
   # Claude Code uses GLM-5.3-Flash through Z.ai's Anthropic-compatible endpoint.
   # The maintainer must add a ZAI_API_KEY repository secret. gh-aw's preflight
   # only checks that the env var is non-empty.

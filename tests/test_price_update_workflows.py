@@ -45,9 +45,11 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     pr = source['safe-outputs']['create-pull-request']
     assert pr['max'] == 1
     assert pr['draft'] is False
-    assert pr['base-branch'] == '${{ github.ref_name }}'
+    base_branch = pr.get('base-branch')
+    assert base_branch is None or (isinstance(base_branch, str) and '${' not in base_branch)
     assert pr['fallback-as-issue'] is False
     assert pr['max-patch-size'] == 10240
+    assert source['engine']['args'] == ['--disallowedTools', 'Agent,Task']
     assert 'github-token' not in pr
     assert 'PRICE_UPDATE_TOKEN' not in json.dumps(compiled)
     shared = read_workflow('shared/price-update.md')
@@ -69,8 +71,17 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
         if 'GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG' in step.get('env', {})
     )
     handler_config = json.loads(handler_config_step['env']['GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG'])
-    assert handler_config['create_pull_request']['base_branch'] == pr['base-branch']
+    compiled_base_branch = handler_config['create_pull_request'].get('base_branch')
+    assert compiled_base_branch == base_branch
     assert handler_config['create_pull_request']['max_patch_size'] == 10240
+    execution_step = next(step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'agentic_execution')
+    execution_command = execution_step['run']
+    assert '--disallowedTools Agent,Task' in execution_command
+    allowed_tools_start = execution_command.index('--allowed-tools')
+    allowed_tools_end = execution_command.index('--debug-file', allowed_tools_start)
+    allowed_tools = execution_command[allowed_tools_start:allowed_tools_end]
+    assert 'Bash(' in allowed_tools
+    assert 'WebFetch' in allowed_tools
     assert token_step['with'] == {
         'client-id': app['client-id'],
         'private-key': app['private-key'],
