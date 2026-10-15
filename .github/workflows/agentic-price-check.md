@@ -22,7 +22,12 @@ concurrency:
 checkout:
   fetch-depth: 1
 imports:
+  - shared/price-check-engine.md
+  - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main
   - shared/price-update.md
+pre-agent-steps:
+  - name: Install Price Check web fetching
+    run: python3 -P -m pip install --quiet --user --disable-pip-version-check 'pydantic-ai-slim[web-fetch]>=2.54.0'
 tools:
   bash:
     - 'cat:*'
@@ -34,9 +39,10 @@ tools:
     - 'uv:*'
   web-fetch:
 safe-outputs:
-  # GLM-5.3-Flash is unpriced in gh-aw v0.82.2's separate detection guardrail.
   threat-detection: false
   report-failure-as-issue: false
+  report-incomplete:
+    create-issue: false
   noop:
     report-as-issue: false
   create-pull-request:
@@ -97,32 +103,36 @@ jobs:
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 timeout-minutes: 90
-max-turns: 500
-# Disable gh-aw's AI-credits guardrail: GLM-5.3-Flash is absent from gh-aw v0.82.2's
-# pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
-# unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
-# compiler pinned to v0.82.2 (firewall 0.27.22); see AGENTIC_PRICE_CHECK.md.
+# Keep credit budgets disabled. Explicit pricing supports usage accounting for
+# GLM without model substitution; these figures are API equivalents, not plan charges.
 max-ai-credits: -1
 max-daily-ai-credits: -1
+models:
+  # USD per million tokens, https://docs.z.ai/guides/overview/pricing (2026-10-15).
+  default-ai-credits-pricing:
+    input: 0.15
+    cache_read: 0.03
+    output: 0.50
+  providers:
+    anthropic:
+      models:
+        glm-5.3-flash:
+          # The reporting overlay uses USD per token.
+          cost:
+            input: 0.00000015
+            cache_read: 0.00000003
+            output: 0.00000050
 engine:
-  id: claude
-  args: ['--disallowedTools', 'Agent,Task']
-  # Claude Code uses GLM-5.3-Flash through Z.ai's Anthropic-compatible endpoint.
-  # The maintainer must add a ZAI_API_KEY repository secret. gh-aw's preflight
-  # only checks that the env var is non-empty.
-  model: glm-5.3-flash
-  api-target: api.z.ai
-  env:
-    ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
-    ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
-    ANTHROPIC_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_OPUS_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-5.3-flash
+  model: anthropic/glm-5.3-flash
+sandbox:
+  agent:
+    token-steering: false
 network:
   allowed:
     - defaults
     - api.z.ai
+    - logfire-api.pydantic.dev
+    - logfire-us.pydantic.dev
     - platform.openai.com
     - developers.openai.com
     - platform.claude.com
