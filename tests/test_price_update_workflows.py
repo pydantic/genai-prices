@@ -33,7 +33,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
     assert 'skip-if-match' not in source['on']
     expected_concurrency = {
-        'group': '${{ github.workflow }}',
+        'group': '${{ github.workflow }}-tls-diagnostic',
         'cancel-in-progress': False,
         'queue': 'max',
     }

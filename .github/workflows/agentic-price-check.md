@@ -15,7 +15,7 @@ permissions:
   contents: read
   pull-requests: read
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-tls-diagnostic
   cancel-in-progress: false
   queue: max
 checkout:
