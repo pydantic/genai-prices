@@ -2,6 +2,7 @@
 
 ```bash
 gh secret set ZAI_API_KEY
+gh secret set LOGFIRE_OTLP_AUTHORIZATION
 gh variable set PRICE_UPDATE_APP_CLIENT_ID --body Iv23libntR0K6oyQrZWX
 gh secret set PRICE_UPDATE_APP_PRIVATE_KEY < /path/to/genai-prices-automation.private-key.pem
 gh secret set SLACK_WEBHOOK_URL

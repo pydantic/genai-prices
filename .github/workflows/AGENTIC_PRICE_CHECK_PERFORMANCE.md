@@ -93,6 +93,7 @@ For the archived follow-up, pass `start_timestamp: 2026-10-15T16:15:00Z` and
 SELECT attributes->>'gen_ai.request.model' AS model,
        attributes->>'price_check.usage.uncached_input' AS uncached_input,
        attributes->>'price_check.usage.cached_input' AS cached_input,
+       attributes->>'price_check.usage.cache_creation' AS cache_creation,
        attributes->>'price_check.usage.output' AS output
 FROM records
 WHERE span_name = 'price_check.usage'

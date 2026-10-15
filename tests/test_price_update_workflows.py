@@ -273,11 +273,13 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   const spans = payload.resourceSpans;
   const usage = Object.fromEntries(spans.find((span) => span.spanName === 'price_check.usage').attributes
     .map(({key, value}) => [key, value]));
+  const agent = spans.find((span) => span.spanName === 'invoke_agent');
+  const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
   let incomplete = false;
   files['/tmp/gh-aw/agent-stdio.log'] = 'no result';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, incomplete, summaries}));
+    usage, toolCounts, incomplete, summaries}));
 })();
 """
     result = subprocess.run(
@@ -299,4 +301,5 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
         'price_check.usage.output': 7,
     }
     assert output['incomplete'] is True
+    assert output['toolCounts'] == {'WebFetch': 1}
     assert any('telemetry incomplete' in summary for summary in output['summaries'])

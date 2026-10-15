@@ -17,6 +17,9 @@
         "output_tokens": 580912
       },
       "successful_message_requests": 374,
+      "total_api_request_spans": 1004,
+      "count_tokens_requests": 6,
+      "model_catalog_requests": 2,
       "http_429_responses": 620,
       "http_502_responses": 2,
       "explicit_research_task_launches": 34,
@@ -36,6 +39,9 @@
         "output_tokens": 126439
       },
       "successful_message_requests": 180,
+      "total_api_request_spans": 188,
+      "count_tokens_requests": 6,
+      "model_catalog_requests": 2,
       "http_429_responses": 0,
       "http_502_responses": 0,
       "explicit_research_task_launches": 0,
