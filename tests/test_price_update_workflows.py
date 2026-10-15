@@ -91,6 +91,20 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_agent:agent'
     assert execution_step['env']['ANTHROPIC_API_KEY'] == '${{ secrets.ZAI_API_KEY }}'
     assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.56.0'
+    assert source['observability']['otlp']['endpoint'] == {
+        'url': 'https://logfire-eu.pydantic.info',
+        'headers': {'Authorization': '${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'},
+    }
+    assert compiled['env']['OTEL_EXPORTER_OTLP_ENDPOINT'] == 'https://logfire-eu.pydantic.info'
+    assert compiled['env']['OTEL_EXPORTER_OTLP_HEADERS'] == ('Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}')
+    excluded_env = read_workflow('shared/price-check-engine.md')['excluded-env']
+    assert excluded_env == [
+        'GH_AW_OTLP_ENDPOINTS',
+        'OTEL_EXPORTER_OTLP_ENDPOINT',
+        'OTEL_EXPORTER_OTLP_HEADERS',
+    ]
+    for name in excluded_env:
+        assert f'--exclude-env {name}' in execution_command
     config_line = next(
         line
         for line in execution_command.splitlines()

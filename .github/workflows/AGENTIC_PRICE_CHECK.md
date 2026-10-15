@@ -5,6 +5,7 @@ gh secret set ZAI_API_KEY
 gh variable set PRICE_UPDATE_APP_CLIENT_ID --body Iv23libntR0K6oyQrZWX
 gh secret set PRICE_UPDATE_APP_PRIVATE_KEY < /path/to/genai-prices-automation.private-key.pem
 gh secret set SLACK_WEBHOOK_URL
+gh secret set LOGFIRE_OTLP_AUTHORIZATION
 gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
@@ -14,8 +15,8 @@ through 18:00 inclusive, Monday through Friday in `America/Los_Angeles`, and on 
 the schedule's native timezone field in the compiled workflow and follows daylight saving time: the window is 14:00–02:00
 UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
 runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions schedule syntax]. The workflow combines
-verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Manual and scheduled
-scheduled runs target `main`. Manual dispatch uses `main` unless you select a branch with `--ref`.
+verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Scheduled runs target
+`main`. Manual dispatch uses `main` unless you select a branch with `--ref`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
 Runs remain serial, with up to 100 pending runs in the concurrency group; GitHub cancels additional runs once the queue is
@@ -36,8 +37,7 @@ This historical measurement describes one Claude Code run and does not predict C
 | `PRICE_UPDATE_APP_CLIENT_ID`   | Repository variable containing the GenAI Prices Automation App's client ID: `Iv23libntR0K6oyQrZWX`. |
 | `PRICE_UPDATE_APP_PRIVATE_KEY` | Repository secret containing the App's complete PEM private key.                                    |
 | `SLACK_WEBHOOK_URL`            | Slack incoming-webhook URL for the channel that should receive price-update PR links.               |
-| `GH_AW_DEFAULT_OTLP_ENDPOINT`  | Optional repository variable or secret selecting the Logfire OTLP endpoint.                         |
-| `GH_AW_DEFAULT_OTLP_HEADERS`   | Repository secret containing OTLP authorization headers for that endpoint.                          |
+| `LOGFIRE_OTLP_AUTHORIZATION`   | Repository secret containing the complete `Bearer …` authorization value for Logfire.               |
 
 You choose the Slack channel when you create the incoming webhook. Store its URL as a secret, never in a workflow or prompt.
 The notification job uses the `price-updates` GitHub environment. You can restrict that environment to your default branch
@@ -60,6 +60,7 @@ limit; there is no workflow output-token cap.
 `shared/price-check-engine.md` holds routing configuration and an explicit package pin. Import that file before
 the public definition. gh-aw v0.91.1 validates root environment secrets before loading imported engine metadata,
 and does not inherit the public version into this configuration. Keep the model preference in the source workflow.
+Keep `excluded-env` in the routing import too: this engine ignores the root field in v0.91.1.
 
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
 `pydantic/genai-prices` with **Contents: read/write** and **Pull requests: read/write**. You can generate a private key in
@@ -132,12 +133,14 @@ workflow with the pinned version; other workflows can use a different compiler v
 
 The public engine requires gh-aw v0.91.1 or newer for canonical sessions and schema-valid merged usage.
 This workflow pins v0.91.1 and firewall 0.28.31. Keep `max-ai-credits: -1` and `max-daily-ai-credits: -1`:
-the compiler omits the per-run credit budget and disables token steering. A custom upstream also disables
+the compiler omits the configurable per-run credit budget and disables token steering. AWF still enforces
+its fixed, non-configurable 10,000-credit ceiling. A custom upstream also disables
 model fallback, preserving `glm-5.3-flash`.
 
 `models.default-ai-credits-pricing` supplies fallback accounting in USD per million tokens, avoiding
-`unknown_model_ai_credits` for an unrecognized model. `models.providers.anthropic` supplies the reporting
-overlay in USD per token. Both use Z.ai's [published API rates][zai-pricing], checked on 2026-10-15.
+`unknown_model_ai_credits` for an unrecognized model. `models.providers.anthropic` supplies an accounting
+overlay in USD per token, used for reporting and credit enforcement. Both use Z.ai's [published API rates][zai-pricing],
+checked on 2026-10-15.
 These are API-equivalent accounting figures, not Coding Plan charges or quota measurements. Threat detection
 remains disabled under the existing safe-output policy.
 
@@ -155,9 +158,11 @@ Confirm that safe outputs processed a real noop or created a PR. A noop must ski
 a created PR must pass its actual URL to the unchanged Slack workflow. Preserve run URLs and source SHAs
 when recording verification.
 
-The compiler exports telemetry when `GH_AW_DEFAULT_OTLP_ENDPOINT` and its authorization headers are configured.
-The network permits `logfire-api.pydantic.dev` and `logfire-us.pydantic.dev`; use the endpoint for your Logfire project.
-The public engine instruments model and tool activity under `gh-aw.agentic-price-check`, with the Actions run identity.
+gh-aw exports job spans and canonical usage totals from the host to the `logfire/genai-prices` project at
+`https://logfire-eu.pydantic.info`, using `LOGFIRE_OTLP_AUTHORIZATION`. The exporter variables are excluded from
+the agent container so model-controlled tools cannot read ingestion credentials from ancestor processes.
+The service is `gh-aw.agentic-price-check`, with the Actions run identity. Native in-process model/tool export is
+deliberately disabled; inspect the canonical session artifact for individual requests and tool activity.
 The canonical session and usage artifacts remain available without an exporter. Missing Logfire rows or zero-valued
 provider usage fields do not prove zero consumption. Compare only runs that reached the agent, and distinguish
 reported tokens from Coding Plan quota consumption.

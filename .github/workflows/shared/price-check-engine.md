@@ -9,4 +9,10 @@ engine:
     PAI_AGENT: scripts.price_check_agent:agent
     ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
     ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
+# gh-aw exports canonical usage from the host. Exclude exporter variables from
+# the tool container, including Linux ancestor-process environments.
+excluded-env:
+  - GH_AW_OTLP_ENDPOINTS
+  - OTEL_EXPORTER_OTLP_ENDPOINT
+  - OTEL_EXPORTER_OTLP_HEADERS
 ---

@@ -103,8 +103,8 @@ jobs:
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 timeout-minutes: 90
-# Keep credit budgets disabled. Explicit pricing supports usage accounting for
-# GLM without model substitution; these figures are API equivalents, not plan charges.
+# Disable configurable credit budgets. AWF retains its fixed 10,000-credit cap;
+# these API-equivalent rates support accounting and enforcement, not plan charges.
 max-ai-credits: -1
 max-daily-ai-credits: -1
 models:
@@ -117,7 +117,7 @@ models:
     anthropic:
       models:
         glm-5.3-flash:
-          # The reporting overlay uses USD per token.
+          # The accounting overlay uses USD per token, including credit enforcement.
           cost:
             input: 0.00000015
             cache_read: 0.00000003
@@ -127,12 +127,16 @@ engine:
 sandbox:
   agent:
     token-steering: false
+observability:
+  otlp:
+    endpoint:
+      url: https://logfire-eu.pydantic.info
+      headers:
+        Authorization: ${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}
 network:
   allowed:
     - defaults
     - api.z.ai
-    - logfire-api.pydantic.dev
-    - logfire-us.pydantic.dev
     - platform.openai.com
     - developers.openai.com
     - platform.claude.com
