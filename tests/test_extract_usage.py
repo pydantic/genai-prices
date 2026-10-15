@@ -1833,6 +1833,43 @@ def test_accumulate_extracted_usage():
         _ = Usage() + 1
 
 
+@pytest.mark.parametrize('with_details', [True, False])
+def test_xai_responses_usage_and_price(with_details: bool) -> None:
+    # Model and usage excerpt from the public POST /v1/responses example:
+    # https://docs.x.ai/developers/rest-api-reference/inference/responses
+    # output_tokens includes reasoning, unlike xAI's native and chat completion counts:
+    # https://docs.x.ai/cookbook/examples/prompt-caching
+    response_data: dict[str, Any] = {
+        'model': 'grok-4.20-0309-reasoning',
+        'usage': {
+            'input_tokens': 131,
+            'input_tokens_details': {'cached_tokens': 128},
+            'output_tokens': 624,
+            'output_tokens_details': {'reasoning_tokens': 246},
+            'total_tokens': 755,
+        },
+    }
+    if not with_details:
+        del response_data['usage']['input_tokens_details']
+        del response_data['usage']['output_tokens_details']
+
+    extracted = extract_usage(response_data, provider_id='x-ai', api_flavor='responses')
+
+    assert extracted.provider.extract_usage(response_data, api_flavor='responses')[0] == 'grok-4.20-0309-reasoning'
+    assert extracted.model is not None
+    assert extracted.model.id == 'grok-4.20'
+    if with_details:
+        assert extracted.usage == Usage(
+            input_tokens=131, cache_read_tokens=128, output_tokens=624, output_reasoning_tokens=246
+        )
+    else:
+        assert extracted.usage == Usage(input_tokens=131, output_tokens=624)
+    price = extracted.calc_price()
+    assert price.input_price == (Decimal('0.00002935') if with_details else Decimal('0.00016375'))
+    assert price.output_price == Decimal('0.00156')
+    assert price.total_price == (Decimal('0.00158935') if with_details else Decimal('0.00172375'))
+
+
 def test_xai_native():
     provider = next(provider for provider in providers if provider.id == 'x-ai')
     response_data = {

@@ -694,6 +694,35 @@ describe('extractUsage', () => {
   describe('xAI provider', () => {
     const xaiProvider: Provider = data.find((provider) => provider.id === 'x-ai')!
 
+    it.each([true, false])('should extract and price responses usage with details=%s', (withDetails) => {
+      // Model and usage excerpt: https://docs.x.ai/developers/rest-api-reference/inference/responses
+      // https://docs.x.ai/cookbook/examples/prompt-caching confirms reasoning is included in output_tokens.
+      const responseData = {
+        model: 'grok-4.20-0309-reasoning',
+        usage: {
+          input_tokens: 131,
+          ...(withDetails ? { input_tokens_details: { cached_tokens: 128 } } : {}),
+          output_tokens: 624,
+          ...(withDetails ? { output_tokens_details: { reasoning_tokens: 246 } } : {}),
+          total_tokens: 755,
+        },
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData, 'responses')
+
+      expect(model).toBe('grok-4.20-0309-reasoning')
+      expect(usage).toEqual(
+        withDetails
+          ? { cache_read_tokens: 128, input_tokens: 131, output_reasoning_tokens: 246, output_tokens: 624 }
+          : { input_tokens: 131, output_tokens: 624 }
+      )
+      const price = calcPrice(usage, model!, { provider: xaiProvider })
+      expect(price!.model.id).toBe('grok-4.20')
+      expect(price!.input_price).toBeCloseTo(withDetails ? 0.00002935 : 0.00016375, 12)
+      expect(price!.output_price).toBeCloseTo(0.00156, 12)
+      expect(price!.total_price).toBeCloseTo(withDetails ? 0.00158935 : 0.00172375, 12)
+    })
+
     it('should add native reasoning tokens to aggregate output', () => {
       const responseData = {
         model: 'grok-4-fast-reasoning',
