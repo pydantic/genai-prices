@@ -30,7 +30,9 @@ class WebFetchResult(TypedDict):
 
 
 page_adapter = TypeAdapter(WebFetchResult)
-manifest = ManifestSources.model_validate(yaml.safe_load(Path('.github/agentic-price-check-providers.yml').read_text()))
+manifest = ManifestSources.model_validate(
+    yaml.safe_load((Path(__file__).resolve().parents[1] / '.github/agentic-price-check-providers.yml').read_text())
+)
 allowed_hosts = tuple(
     sorted({source.host for provider in manifest.providers for source in provider.sources if source.host is not None})
 )
