@@ -49,6 +49,22 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
+  # https://docs.x.ai/developers/rest-api-reference/inference/responses
+  # Normal Responses output_tokens already includes reasoning, unlike native/chat completion counts.
+  # https://docs.x.ai/cookbook/examples/prompt-caching
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
   # https://docs.x.ai/developers/rest-api-reference/inference/voice#response.done
   # `billable_audio_seconds` is a running total for the session, not an increment: three turns of 0.71s,
   # 0.71s and 0.87s of audio report 1, 2 and 3 (observed live on `grok-voice-latest`, 2026-09-25). Price
