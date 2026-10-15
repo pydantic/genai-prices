@@ -18,6 +18,7 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
+  queue: max
 checkout:
   fetch-depth: 1
 imports:

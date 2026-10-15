@@ -17,6 +17,8 @@ runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions sch
 verified new models and rate changes into one ready-for-review PR titled `Update provider prices`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped
 findings in the PR body and noop reasons in the workflow run's summary.
+Runs remain serial, with up to 100 pending runs in the concurrency group; GitHub cancels additional runs once the queue is
+full. See [GitHub Actions concurrency].
 
 ## Configuration
 
@@ -125,6 +127,7 @@ aggregator prices, or remembered values.
 
 [gh-aw schedule syntax]: https://github.com/github/gh-aw/blob/main/docs/src/content/docs/reference/schedule-syntax.md
 [GitHub Actions schedule syntax]: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule
+[GitHub Actions concurrency]: https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
 [pydantic-ai Z.ai engine configuration]: https://github.com/pydantic/pydantic-ai/blob/main/.github/workflows/shared/engine-zai.md
 [zai-model]: https://docs.z.ai/guides/vlm/glm-5.3-flash
 [zai-api]: https://docs.z.ai/devpack/latest-model
