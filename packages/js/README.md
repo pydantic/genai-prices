@@ -276,3 +276,10 @@ genai-prices openai:gpt-5 --input-tokens 1000 --output-tokens 100
 genai-prices list
 genai-prices list openai
 ```
+
+In `provider:model` arguments, the first colon separates the provider from the model.
+Any remaining colons are part of the model ID, for example in an OpenAI fine-tuned model:
+
+```bash
+genai-prices calc openai:ft:gpt-4o-2024-08-06:org:custom:id --input-tokens 1000 --output-tokens 100
+```

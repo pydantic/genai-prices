@@ -114,8 +114,10 @@ function main(): never {
     for (const modelArg of models) {
       let providerId: string | undefined
       let modelId = modelArg
-      if (modelId.includes(':')) {
-        ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
+      const colonIndex = modelArg.indexOf(':')
+      if (colonIndex !== -1) {
+        providerId = modelArg.slice(0, colonIndex)
+        modelId = modelArg.slice(colonIndex + 1)
       }
       try {
         const result = calcPrice(usage, modelId, { providerId, timestamp })
