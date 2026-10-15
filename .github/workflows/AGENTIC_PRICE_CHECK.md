@@ -99,7 +99,8 @@ The separate `price_check.usage` span records cumulative `agent_usage.json` comp
 Historical proxy versions reported zero input/cache counts; those zeros do not establish zero consumption.
 The `invoke_agent` span records canonical tool execution counts and `price_check.terminal_output_emitted`.
 That field means the agent emitted a terminal item; check the separate `safe_outputs` job for acceptance or rejection.
-Coder's CodeMode calls appear as `run_code`; full nested tool inputs and outputs remain in the canonical session artifact.
+Coder's CodeMode calls appear as `run_code`. The canonical session contains each call's code and returned output;
+nested tool responses that the code does not return are not recorded separately.
 The `agent` artifact includes `mcp-logs/price-check-telemetry.json` with the compact per-run accounting and tool counts, so future
 investigations can start there without processing the full transcript. Dollar fields remain client estimates.
 
