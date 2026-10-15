@@ -2851,6 +2851,24 @@ def test_gemini_tts_prices(model_ref: str, input_mtok: Decimal, output_mtok: Dec
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'expected_model_id', 'input_mchars'),
+    [
+        ('tts-1', 'tts-1', Decimal('15')),
+        ('tts-1-1106', 'tts-1', Decimal('15')),
+        ('tts-1-hd', 'tts-1-hd', Decimal('30')),
+        ('tts-1-hd-1106', 'tts-1-hd', Decimal('30')),
+    ],
+)
+def test_openai_tts_prices(model_ref: str, expected_model_id: str, input_mchars: Decimal) -> None:
+    # No provider given: the model ref alone has to find OpenAI
+    price = calc_price(Usage(input_characters=1_000_000), model_ref)
+
+    assert price.provider.id == 'openai'
+    assert price.model.id == expected_model_id
+    assert price.total_price == input_mchars
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_model_id'),
     [
         ('GEMINI-2.5-FLASH-LITE-PREVIEW-06-17', 'gemini-2.5-flash-lite'),

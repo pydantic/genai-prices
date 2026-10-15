@@ -20136,6 +20136,9 @@ export const data: Provider[] = [
           equals: 'whisper-1',
         },
         {
+          starts_with: 'tts-1',
+        },
+        {
           regex: '^o[134]',
         },
       ],
@@ -25764,6 +25767,40 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'tts-1',
+        match: {
+          or: [
+            {
+              equals: 'tts-1',
+            },
+            {
+              equals: 'tts-1-1106',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/tts-1.',
+        prices: {
+          input_mchars: 15,
+        },
+      },
+      {
+        id: 'tts-1-hd',
+        match: {
+          or: [
+            {
+              equals: 'tts-1-hd',
+            },
+            {
+              equals: 'tts-1-hd-1106',
+            },
+          ],
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/tts-1-hd.',
+        prices: {
+          input_mchars: 30,
         },
       },
       {

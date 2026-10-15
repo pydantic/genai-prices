@@ -11647,7 +11647,12 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(
-            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+            or_=[
+                ClauseStartsWith(starts_with='gpt-'),
+                ClauseEquals(equals='whisper-1'),
+                ClauseStartsWith(starts_with='tts-1'),
+                ClauseRegex(regex='^o[134]'),
+            ]
         ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
@@ -14355,6 +14360,18 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='tts-1',
+                match=ClauseOr(or_=[ClauseEquals(equals='tts-1'), ClauseEquals(equals='tts-1-1106')]),
+                price_comments='See https://developers.openai.com/api/docs/models/tts-1.',
+                prices=ModelPrice(input_mchars=Decimal('15')),
+            ),
+            ModelInfo(
+                id='tts-1-hd',
+                match=ClauseOr(or_=[ClauseEquals(equals='tts-1-hd'), ClauseEquals(equals='tts-1-hd-1106')]),
+                price_comments='See https://developers.openai.com/api/docs/models/tts-1-hd.',
+                prices=ModelPrice(input_mchars=Decimal('30')),
             ),
             ModelInfo(
                 id='whisper-1',
