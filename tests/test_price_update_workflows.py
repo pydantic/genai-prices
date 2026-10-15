@@ -215,3 +215,88 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
         'unfurl_links': False,
         'unfurl_media': False,
     }
+
+
+def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
+    compiled = read_workflow('agentic-price-check.lock.yml')
+    assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(compiled.get('env', {}))
+    steps = compiled['jobs']['agent']['steps']
+    execution_index = next(i for i, step in enumerate(steps) if step.get('id') == 'agentic_execution')
+    export_index = next(i for i, step in enumerate(steps) if step.get('name') == 'Export price-check telemetry')
+    assert execution_index < export_index
+    for step in steps[:export_index]:
+        assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
+    assert steps[export_index]['env'] == {
+        'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
+    }
+    assert steps[export_index]['if'] == 'always()'
+    assert steps[export_index]['continue-on-error'] is True
+
+
+def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None:
+    workflow = read_workflow('agentic-price-check.md')
+    script = workflow['post-steps'][0]['with']['script']
+    driver = r"""
+const script = JSON.parse(process.env.EXPORT_SCRIPT);
+const files = {
+  '/tmp/gh-aw/agent-stdio.log': [
+    'debug output', 'null',
+    JSON.stringify({type: 'assistant', message: {content: [{type: 'tool_use', name: 'WebFetch'}]}}),
+    JSON.stringify({type: 'result', usage: {output_tokens: 2}, modelUsage: {
+      model: {inputTokens: 11, cacheReadInputTokens: 100, cacheCreationInputTokens: 0, outputTokens: 7}
+    }})
+  ].join('\n'),
+  '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl': [1, 1].map(() => JSON.stringify({
+    spanId: '1234567890abcdef', name: 'api_proxy.anthropic.request', startTimeMs: 1000, endTimeMs: 2000,
+    attributes: {'awf.request_id': 'request-1'}, status: {code: 1}, kind: 3
+  })).join('\n')
+};
+let payload;
+const summaries = [];
+const core = {summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
+const fakeRequire = (name) => {
+  if (name === 'node:fs') return {
+    readFileSync: (file) => files[file], existsSync: () => false,
+    mkdirSync: () => {}, writeFileSync: (file, value) => { files[file] = value; }
+  };
+  if (name.endsWith('send_otlp_span.cjs')) return {
+    buildAttr: (key, value) => ({key, value}),
+    buildOTLPPayload: (options) => ({resourceSpans: [options]}),
+    sendOTLPSpan: async (endpoint, data) => { payload = {endpoint, ...data}; }
+  };
+  return require(name);
+};
+const run = new (async () => {}).constructor('require', 'process', 'core', script);
+(async () => {
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_REPOSITORY: 'pydantic/genai-prices',
+    GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1', GITHUB_SHA: 'sha'}}, core);
+  const spans = payload.resourceSpans;
+  const usage = Object.fromEntries(spans.find((span) => span.spanName === 'price_check.usage').attributes
+    .map(({key, value}) => [key, value]));
+  let incomplete = false;
+  files['/tmp/gh-aw/agent-stdio.log'] = 'no result';
+  try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
+  console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
+    usage, incomplete, summaries}));
+})();
+"""
+    result = subprocess.run(
+        ['node', '-e', driver],
+        env={**os.environ, 'EXPORT_SCRIPT': json.dumps(script)},
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    output = json.loads(result.stdout)
+    assert output['endpoint'] == 'https://logfire-eu.pydantic.info'
+    assert output['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
+    assert output['usage'] == {
+        'gen_ai.request.model': 'model',
+        'price_check.usage.source': 'claude.modelUsage',
+        'price_check.usage.uncached_input': 11,
+        'price_check.usage.cached_input': 100,
+        'price_check.usage.cache_creation': 0,
+        'price_check.usage.output': 7,
+    }
+    assert output['incomplete'] is True
+    assert any('telemetry incomplete' in summary for summary in output['summaries'])

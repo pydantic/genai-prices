@@ -1,0 +1,58 @@
+{
+  "recorded_on": "2026-10-15",
+  "repository": "pydantic/genai-prices",
+  "model": "glm-5.3-flash",
+  "provider_count": 25,
+  "source": "GitHub Actions agent artifacts; not Logfire",
+  "accounting": "Last result.modelUsage per model; repeated cumulative result objects are not added",
+  "runs": [
+    {
+      "run_id": "38748564180",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/38748564180",
+      "agent_duration_seconds": 5370,
+      "model_usage": {
+        "input_tokens": 2617858,
+        "cache_read_input_tokens": 37988032,
+        "cache_creation_input_tokens": 0,
+        "output_tokens": 580912
+      },
+      "successful_message_requests": 374,
+      "http_429_responses": 620,
+      "http_502_responses": 2,
+      "explicit_research_task_launches": 34,
+      "peak_active_research_tasks": 17,
+      "web_fetch_calls": 106
+    },
+    {
+      "run_id": "38768031115",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/38768031115",
+      "sha": "614ae71063305ef9b79ecefc4d45531c16d3f060",
+      "agent_duration_seconds": 3115,
+      "workflow_duration_seconds": 3210,
+      "model_usage": {
+        "input_tokens": 513319,
+        "cache_read_input_tokens": 31472320,
+        "cache_creation_input_tokens": 0,
+        "output_tokens": 126439
+      },
+      "successful_message_requests": 180,
+      "http_429_responses": 0,
+      "http_502_responses": 0,
+      "explicit_research_task_launches": 0,
+      "web_fetch_calls": 39,
+      "unique_fetched_urls": 37,
+      "required_source_urls": 37,
+      "required_urls_not_fetched": [
+        "https://platform.kimi.ai/docs/pricing/chat-k27-code.md",
+        "https://platform.kimi.ai/docs/pricing/chat-k26.md"
+      ]
+    }
+  ],
+  "limitations": [
+    "Cached input counts are cumulative reads, not distinct source content.",
+    "Proxy output totals match modelUsage; proxy input and cache counters are zero and cannot validate input consumption.",
+    "Client costUSD estimates are not verified Z.ai invoices.",
+    "No separate reasoning-token subtotal is available.",
+    "These runs do not measure steady-state unchanged checks or isolate the effect of parallelism."
+  ]
+}

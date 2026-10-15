@@ -28,15 +28,19 @@ of 17 active tasks. The run shows rate-limit pressure during concurrent research
 and `Task` tools to keep research in one execution context. This measurement describes one run and does not predict future
 runtime.
 
+See [performance measurements and implementation plan](AGENTIC_PRICE_CHECK_PERFORMANCE.md) for the subsequent
+51m55s run, whole-run token accounting, evidence gaps, and the proposed deterministic checks and bounded parallelism.
+
 ## Configuration
 
-| Variable or secret             | Purpose                                                                                             |
-| ------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `AGENTIC_WORKFLOWS_ENABLED`    | Set this repository variable to `true` to enable the checks.                                        |
-| `ZAI_API_KEY`                  | Repository secret for Claude Code using GLM-5.3-Flash through Z.ai's Anthropic-compatible API.      |
-| `PRICE_UPDATE_APP_CLIENT_ID`   | Repository variable containing the GenAI Prices Automation App's client ID: `Iv23libntR0K6oyQrZWX`. |
-| `PRICE_UPDATE_APP_PRIVATE_KEY` | Repository secret containing the App's complete PEM private key.                                    |
-| `SLACK_WEBHOOK_URL`            | Slack incoming-webhook URL for the channel that should receive price-update PR links.               |
+| Variable or secret             | Purpose                                                                                               |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `AGENTIC_WORKFLOWS_ENABLED`    | Set this repository variable to `true` to enable the checks.                                          |
+| `ZAI_API_KEY`                  | Repository secret for Claude Code using GLM-5.3-Flash through Z.ai's Anthropic-compatible API.        |
+| `LOGFIRE_OTLP_AUTHORIZATION`   | Repository secret containing `Bearer <write-token>` for the dedicated `logfire/genai-prices` project. |
+| `PRICE_UPDATE_APP_CLIENT_ID`   | Repository variable containing the GenAI Prices Automation App's client ID: `Iv23libntR0K6oyQrZWX`.   |
+| `PRICE_UPDATE_APP_PRIVATE_KEY` | Repository secret containing the App's complete PEM private key.                                      |
+| `SLACK_WEBHOOK_URL`            | Slack incoming-webhook URL for the channel that should receive price-update PR links.                 |
 
 You choose the Slack channel when you create the incoming webhook. Store its URL as a secret, never in a workflow or prompt.
 The notification job uses the `price-updates` GitHub environment. You can restrict that environment to your default branch
@@ -47,6 +51,28 @@ The engine remains Claude Code (`engine.id: claude`). `engine.model`, `ANTHROPIC
 `ANTHROPIC_DEFAULT_*_MODEL` overrides select `glm-5.3-flash` at `https://api.z.ai/api/anthropic`. This follows the
 [pydantic-ai Z.ai engine configuration],
 Z.ai's [GLM-5.3-Flash model documentation][zai-model], and its [API endpoint and model-switching guide][zai-api].
+
+### Logfire telemetry
+
+After the agent exits, a trusted step exports API-proxy request spans, an agent span and cumulative CLI usage to the dedicated
+[genai-prices Logfire project](https://logfire-eu.pydantic.info/logfire/genai-prices).
+`LOGFIRE_OTLP_AUTHORIZATION` supplies the project's write credential. MCP access is a separate authorization:
+grant the Logfire MCP connection access to `logfire/genai-prices` before querying these runs.
+Pass the fully qualified `project: logfire/genai-prices` to MCP queries. The unqualified name can be rejected even when
+the error lists that name as available. Run `codex mcp login logfire` if authorization still targets another project.
+The credential exists only in the export step, outside the agent sandbox. The pinned compiler's native OTLP configuration
+would expose exporter headers through its agent environment, so this workflow does not use that configuration.
+Export failures appear in the run summary and export step without blocking independently validated price updates.
+
+Filter telemetry by `gh-aw.repository = pydantic/genai-prices` and the exact `gh-aw.run.id`.
+Check both span attributes and resource attributes because components can put run identifiers in either place.
+Confirm a run's request spans arrive before treating export configuration as verified.
+The proxy currently records zero input and cache counts for this Z.ai endpoint. Those zeros do not establish zero usage.
+The separate `price_check.usage` span records cumulative `modelUsage` components under `price_check.usage.uncached_input`,
+`cached_input`, `cache_creation` and `output`. Do not add that rollup to individual proxy output counts.
+The `invoke_agent` span also records tool-use counts; full tool inputs and outputs remain in the Actions artifact.
+The `agent` artifact includes `agent/telemetry.json` with the compact per-run accounting and tool counts, so future
+investigations can start there without processing the full transcript. Dollar fields remain client estimates.
 
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
 `pydantic/genai-prices` with **Contents: read/write** and **Pull requests: read/write**. You can generate a private key in
