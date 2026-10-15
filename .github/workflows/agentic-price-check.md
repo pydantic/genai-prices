@@ -43,6 +43,7 @@ safe-outputs:
     max: 1
     draft: false
     fallback-as-issue: false
+    max-patch-size: 10240
     protected-files:
       policy: blocked
       exclude: [README.md]
