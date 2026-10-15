@@ -42,6 +42,7 @@ safe-outputs:
   create-pull-request:
     max: 1
     draft: false
+    base-branch: codex/price-check-live-verification
     fallback-as-issue: false
     max-patch-size: 10240
     protected-files:
