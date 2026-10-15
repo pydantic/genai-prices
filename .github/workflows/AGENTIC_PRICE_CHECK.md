@@ -54,11 +54,22 @@ The workflow imports the public [Pydantic AI engine] and runs CLAI 2 with harnes
 The sandbox receives a placeholder key; the provider secret remains in the proxy.
 See Z.ai's [model documentation][zai-model] and [endpoint guide][zai-api].
 
-`PAI_AGENT: scripts.price_check_agent:agent` selects the workflow's tool composition. It adds Pydantic AI's
-local `web_fetch` tool to Coder's filesystem and shell tools, and disables delegation. The shell retains proxy,
+`PAI_AGENT: scripts.price_check_agent:agent` selects the workflow's tool composition. It binds gh-aw's published
+proxy-aware fetcher as `web_fetch`, adds Coder's filesystem and shell tools, and disables delegation. The shell retains proxy,
 toolchain, and Git identity settings while excluding provider credential variables. The public engine supplies
 the launcher, MCP composition, session recorder, and model routing. The pinned proxy retains its 500-request
 limit; there is no workflow output-token cap.
+
+The fetcher permits only HTTPS origins from the provider manifest, rejects credentials and non-public DNS results,
+and repeats these checks on every redirect. It delegates final DNS and routing to AWF's required proxy; there is no
+direct-network fallback. TLS certificate verification remains enabled. Fetch results include pagination metadata;
+use `start_index` to continue truncated content. Pydantic AI's default local fetcher pins an IP in CONNECT, which
+AWF deliberately denies; trusting the proxy's rejection certificate would not fix the denied request.
+
+The manifest origins are snapshotted before model execution as trusted operator configuration. The DNS preflight is defense in depth: Squid resolves the
+hostname independently, so it does not pin the proxy's final destination IP or prevent resolver divergence/rebinding.
+The tool's destination boundary is the exact official-origin allowlist plus verified HTTPS, rather than arbitrary-URL
+fetching. Keep that allowlist on redirects; supporting untrusted origins requires destination-IP enforcement at the proxy.
 
 `shared/price-check-engine.md` holds routing configuration and an explicit package pin. Import that file before
 the public definition. gh-aw v0.91.1 validates root environment secrets before loading imported engine metadata,
@@ -165,8 +176,10 @@ its fixed, non-configurable 10,000-credit ceiling. A custom upstream also disabl
 model fallback, preserving `glm-5.3-flash`.
 
 `models.default-ai-credits-pricing` supplies fallback accounting in USD per million tokens, avoiding
-`unknown_model_ai_credits` for an unrecognized model. `models.providers.anthropic` supplies an accounting
-overlay in USD per token, used for reporting and credit enforcement. Both use Z.ai's [published API rates][zai-pricing],
+`unknown_model_ai_credits` for an unrecognized model. Catalog pricing takes precedence over this fallback.
+`models.providers.anthropic` supplies an accounting
+overlay in USD per token, used for reporting and credit enforcement before catalog/fallback pricing for this provider.
+Both use Z.ai's [published API rates][zai-pricing],
 checked on 2026-10-15.
 These are API-equivalent accounting figures, not Coding Plan charges or quota measurements. Threat detection
 remains disabled under the existing safe-output policy.

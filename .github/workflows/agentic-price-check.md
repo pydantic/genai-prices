@@ -25,8 +25,10 @@ imports:
   - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main
   - shared/price-update.md
 pre-agent-steps:
-  - name: Install Price Check web fetching
-    run: python3 -P -m pip install --quiet --user --disable-pip-version-check 'pydantic-ai-slim[web-fetch]>=2.54.0'
+  - name: Install the gh-aw fetch transport
+    run: |
+      npm install --ignore-scripts --no-save --package-lock=false --no-audit --no-fund --prefix "$RUNNER_TEMP/gh-aw/price-check-fetch" undici@6.28.0
+      echo "NODE_PATH=$RUNNER_TEMP/gh-aw/price-check-fetch/node_modules${NODE_PATH:+:$NODE_PATH}" >> "$GITHUB_ENV"
 tools:
   bash:
     - 'cat:*'

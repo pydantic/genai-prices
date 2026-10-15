@@ -8,6 +8,8 @@ from pydantic_ai.capabilities import LocalWorkspace, WebFetch
 from pydantic_ai_harness import Coder
 from pydantic_ai_harness.shell import LLM_API_KEY_ENV_PATTERNS
 
+from scripts.price_check_web_fetch import web_fetch
+
 agent = Agent(
     name='price-check',
     capabilities=[
@@ -21,6 +23,6 @@ agent = Agent(
             },
         ),
         Coder(sub_agents=False),
-        WebFetch(native=False, local=True),
+        WebFetch(native=False, local=web_fetch),
     ],
 )

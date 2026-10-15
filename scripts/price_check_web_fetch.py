@@ -1,0 +1,55 @@
+"""Bind gh-aw's proxy-aware fetcher to the manifest's official HTTPS origins."""
+
+import asyncio
+import json
+from pathlib import Path
+
+import yaml
+from pydantic import BaseModel, HttpUrl, TypeAdapter
+from pydantic_ai.exceptions import ModelRetry
+from typing_extensions import TypedDict
+
+
+class ProviderSources(BaseModel):
+    sources: list[HttpUrl]
+
+
+class ManifestSources(BaseModel):
+    providers: list[ProviderSources]
+
+
+class WebFetchResult(TypedDict):
+    url: str
+    status: int
+    content_type: str
+    start_index: int
+    end_index: int
+    total_length: int
+    truncated: bool
+    content: str
+
+
+page_adapter = TypeAdapter(WebFetchResult)
+manifest = ManifestSources.model_validate(yaml.safe_load(Path('.github/agentic-price-check-providers.yml').read_text()))
+allowed_hosts = tuple(
+    sorted({source.host for provider in manifest.providers for source in provider.sources if source.host is not None})
+)
+
+
+async def web_fetch(url: str, start_index: int = 0, max_length: int = 20_000) -> WebFetchResult:
+    """Fetch an official HTTPS source through AWF. Use start_index to continue truncated pages; max_length is at most 20000."""
+    process = await asyncio.create_subprocess_exec(
+        'node',
+        str(Path(__file__).with_suffix('.cjs')),
+        stdin=asyncio.subprocess.PIPE,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    stdout, stderr = await process.communicate(
+        json.dumps(
+            {'url': url, 'start_index': start_index, 'max_length': max_length, 'allowedHosts': allowed_hosts}
+        ).encode()
+    )
+    if process.returncode:
+        raise ModelRetry(stderr.decode().strip())
+    return page_adapter.validate_json(stdout)
