@@ -31,12 +31,9 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
-    proposal_query = 'is:pr is:open author:app/genai-prices-automation'
-    assert source['on']['skip-if-match'] == proposal_query
+    assert 'skip-if-match' not in source['on']
     pre_activation = compiled['jobs']['pre_activation']
-    skip_step = next(step for step in pre_activation['steps'] if step.get('id') == 'check_skip_if_match')
-    assert skip_step['env']['GH_AW_SKIP_QUERY'] == proposal_query
-    assert "steps.check_skip_if_match.outputs.skip_check_ok == 'true'" in pre_activation['outputs']['activated']
+    assert not any(step.get('id') == 'check_skip_if_match' for step in pre_activation['steps'])
     assert "needs.pre_activation.outputs.activated == 'true'" in compiled['jobs']['activation']['if']
     expected_concurrency = {
         'group': '${{ github.workflow }}',
