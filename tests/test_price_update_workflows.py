@@ -33,7 +33,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
     assert 'skip-if-match' not in source['on']
     expected_concurrency = {
-        'group': '${{ github.workflow }}-tls-diagnostic',
+        'group': '${{ github.workflow }}',
         'cancel-in-progress': False,
         'queue': 'max',
     }
@@ -54,7 +54,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert engine['id'] == 'pydantic-ai'
     assert engine['version'] == '0.56.0'
     assert engine['env'] == {
-        'PAI_AGENT': 'scripts.price_check_tls_probe:agent',
+        'PAI_AGENT': 'scripts.price_check_agent:agent',
         'ANTHROPIC_BASE_URL': 'https://api.z.ai/api/anthropic',
         'ANTHROPIC_API_KEY': '${{ secrets.ZAI_API_KEY }}',
     }
@@ -88,7 +88,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert '--exclude-env ANTHROPIC_API_KEY' in execution_command
     assert '--anthropic-api-base-path /api/anthropic' in execution_command
     assert execution_step['env']['PAI_MODEL'] == 'anthropic/glm-5.3-flash'
-    assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_tls_probe:agent'
+    assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_agent:agent'
     assert execution_step['env']['ANTHROPIC_API_KEY'] == '${{ secrets.ZAI_API_KEY }}'
     assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.56.0'
     assert 'observability' not in source
