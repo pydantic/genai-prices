@@ -609,6 +609,7 @@ def test_perplexity_responses_usage_and_price(with_details: bool) -> None:
     for month, day, context, expected_total in [
         (10, 15, None, '0.00535'),
         (10, 15, {'search_type': 'web'}, '0.00535'),
+        (9, 23, {'search_type': 'fast'}, '0.00535'),
         (9, 24, {'search_type': 'fast'}, '0.00235'),
         (10, 14, {'search_type': 'fast'}, '0.00235'),
         (10, 15, {'search_type': 'fast'}, '0.00235'),

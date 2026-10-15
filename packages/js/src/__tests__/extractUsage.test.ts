@@ -844,6 +844,7 @@ describe('extractUsage', () => {
       for (const [month, day, priceContext, expectedTotal] of [
         [10, 15, undefined, 0.00535],
         [10, 15, { search_type: 'web' }, 0.00535],
+        [9, 23, { search_type: 'fast' }, 0.00535],
         [9, 24, { search_type: 'fast' }, 0.00235],
         [10, 14, { search_type: 'fast' }, 0.00235],
         [10, 15, { search_type: 'fast' }, 0.00235],
