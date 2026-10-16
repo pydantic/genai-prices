@@ -21730,6 +21730,23 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(
                         path=['input_token_details', 'text_tokens'], dest='input_text_tokens', required=False
