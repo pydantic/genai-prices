@@ -5,6 +5,8 @@ pre-agent-steps:
       npm install --ignore-scripts --no-save --package-lock=false --no-audit --no-fund --prefix "$RUNNER_TEMP/gh-aw/price-check-fetch" undici@6.28.0
       echo "NODE_PATH=$RUNNER_TEMP/gh-aw/price-check-fetch/node_modules${NODE_PATH:+:$NODE_PATH}" >> "$GITHUB_ENV"
   - name: Install the price-check scope preflight
+    env:
+      PRICE_CHECK_PENDING_BACKFILL: ${{ needs.backfill_requests.outputs.pending || '[]' }}
     run: |
       uv run python - <<'PY'
       import json
@@ -14,6 +16,7 @@ pre-agent-steps:
       import subprocess
       from pathlib import Path
       from ruamel.yaml import YAML
+      from scripts.price_check_scope_policy import allowed_price_check_files
 
       directory = Path(os.environ['RUNNER_TEMP']) / 'gh-aw/price-check-scope'
       directory.mkdir()
@@ -26,7 +29,10 @@ pre-agent-steps:
       policy = directory / 'policy.json'
       policy.write_text(json.dumps({
           'base_sha': os.environ['GITHUB_SHA'],
-          'allowed_files': workflow['safe-outputs']['create-pull-request']['allowed-files'],
+          'allowed_files': allowed_price_check_files(
+              Path.cwd(), workflow['safe-outputs']['create-pull-request']['allowed-files'],
+              source_file.name, json.loads(os.environ['PRICE_CHECK_PENDING_BACKFILL']),
+          ),
           'helper_path': str(directory.parent / 'actions/manifest_file_helpers.cjs'),
       }))
       script = directory / 'check.cjs'

@@ -105,4 +105,39 @@ post-steps:
           await core.summary.addRaw(`Logfire telemetry incomplete: ${error.message}\n`).write();
           throw error;
         }
+  - name: Stage the model price-check report
+    id: stage-model-price-report
+    if: always()
+    continue-on-error: true
+    uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+    with:
+      script: |
+        const fs = require('node:fs');
+        const path = require('node:path');
+        let descriptor;
+        try {
+          descriptor = fs.openSync('/tmp/gh-aw/agent/model-check-report.json', fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+          const stats = fs.fstatSync(descriptor);
+          if (!stats.isFile() || stats.size > 32 * 1024) throw new Error('Invalid report file');
+          const buffer = Buffer.alloc(32 * 1024 + 1);
+          const size = fs.readSync(descriptor, buffer, 0, buffer.length, 0);
+          if (size !== stats.size || size > 32 * 1024) throw new Error('Invalid report file');
+          const directory = fs.mkdtempSync(path.join(process.env.RUNNER_TEMP, 'price-check-report-'));
+          const output = path.join(directory, 'model-check-report.json');
+          fs.writeFileSync(output, buffer.subarray(0, size), { flag: 'wx', mode: 0o600 });
+          core.setOutput('path', output);
+        } catch {
+          core.setOutput('path', '');
+          core.warning('Model price-check report is missing or invalid; callback will retain unresolved discovery.');
+        } finally {
+          if (descriptor !== undefined) fs.closeSync(descriptor);
+        }
+  - name: Upload the model price-check report
+    if: ${{ always() && steps.stage-model-price-report.outputs.path != '' }}
+    continue-on-error: true
+    uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+    with:
+      name: model-price-check-report
+      path: ${{ steps.stage-model-price-report.outputs.path }}
+      if-no-files-found: ignore
 ---

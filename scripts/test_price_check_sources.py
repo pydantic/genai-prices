@@ -1,8 +1,14 @@
+import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
-from scripts.price_check_sources import load_provider_sources, official_source_hosts
+from scripts.price_check_sources import (
+    _SUPPLEMENTAL_HOST_EVIDENCE,
+    load_provider_sources,
+    official_source_hosts,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -63,12 +69,20 @@ def test_allowed_hosts_are_exact_source_hosts_and_explicit_supplements(tmp_path:
         'https://source.example:8443/prices',
     ],
 )
-def test_invalid_source_authorities_are_rejected(tmp_path: Path, source: str) -> None:
-    root = _fixture_root(
-        tmp_path,
-        f'id: sample\nname: Sample\npricing_urls:\n  - {source}\n',
-        'providers: []\n',
-    )
+@pytest.mark.parametrize('source_location', ['pricing_urls', 'weekly sources'])
+def test_invalid_source_authorities_are_rejected(
+    tmp_path: Path, source: str, source_location: str
+) -> None:
+    if source_location == 'pricing_urls':
+        provider_yaml = f'id: sample\nname: Sample\npricing_urls:\n  - {source}\n'
+        weekly_yaml = 'providers: []\n'
+    else:
+        provider_yaml = 'id: sample\nname: Sample\npricing_urls: []\n'
+        weekly_yaml = (
+            'providers:\n  - name: Sample\n    file: prices/providers/sample.yml\n'
+            f'    sources:\n      - {source}\n'
+        )
+    root = _fixture_root(tmp_path, provider_yaml, weekly_yaml)
 
     with pytest.raises(ValueError, match='source URL'):
         load_provider_sources(root)
@@ -96,7 +110,9 @@ def test_weekly_snapshot_retains_mistral_redirect_host() -> None:
 
 
 def test_supplemental_hosts_have_repository_evidence() -> None:
-    hosts = official_source_hosts(ROOT)
+    for host, provider_file in _SUPPLEMENTAL_HOST_EVIDENCE.items():
+        content = (ROOT / provider_file).read_text()
+        urls = re.findall(r'https?://[A-Za-z0-9.-]+', content)
+        content_hosts = {urlparse(url).hostname for url in urls}
 
-    assert {'docs.aws.amazon.com', 'learn.microsoft.com', 'docs.together.ai', 'docs.fireworks.ai'} <= set(hosts)
-    assert 'prices.azure.com' not in hosts
+        assert host in content_hosts, f'{provider_file} has no URL hosted at {host}'

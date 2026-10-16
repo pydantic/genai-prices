@@ -12,6 +12,10 @@ from scripts.price_check_sources import load_provider_sources, official_source_h
 
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
 ROOT = WORKFLOWS.parents[1]
+ENGINE_IMPORT_PIN = '94fc592c15981441d462ee213859da0a18170d15'
+ENGINE_IMPORT_CACHE = (
+    ROOT / '.github/aw/imports/pydantic/pydantic-ai' / ENGINE_IMPORT_PIN / 'src_pydantic_ai_harness_gh-aw_pydantic.md'
+)
 
 
 def read_workflow(filename: str) -> dict[str, Any]:
@@ -152,12 +156,13 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
     assert source['imports'] == [
         'shared/price-check-engine.md',
-        'pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main',
+        f'pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@{ENGINE_IMPORT_PIN}',
         'shared/price-update.md',
         'shared/price-check-runtime.md',
         'shared/price-check-observability.md',
         'shared/price-check-network.md',
     ]
+    assert ENGINE_IMPORT_CACHE.is_file()
     runtime = read_workflow('shared/price-check-runtime.md')
     assert [step['name'] for step in runtime['pre-agent-steps']] == [
         'Install the gh-aw fetch transport',
@@ -165,7 +170,11 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
         'Snapshot trusted provider sources',
     ]
     observability = read_workflow('shared/price-check-observability.md')
-    assert [step['name'] for step in observability['post-steps']] == ['Export price-check telemetry']
+    assert [step['name'] for step in observability['post-steps']] == [
+        'Export price-check telemetry',
+        'Stage the model price-check report',
+        'Upload the model price-check report',
+    ]
     assert read_workflow('shared/price-check-network.md')['network']['allowed']
     backfill = source['jobs']['report_backfill']
     assert backfill['needs'] == ['backfill_requests', 'agent', 'safe_outputs']
@@ -239,12 +248,164 @@ def test_targeted_request_uses_all_provider_files_and_the_trusted_host_set() -> 
         'tests/dataset/usages.json',
     }
     network = read_workflow('shared/price-check-network.md')['network']['allowed']
-    assert set(official_source_hosts(ROOT)) <= set(network)
+    assert set(network) == set(official_source_hosts(ROOT)) | {'defaults', 'api.z.ai'}
     assert 'shared/price-check-network.md' in source['imports']
     assert (
         'Read `$RUNNER_TEMP/gh-aw/price-check/provider-sources.json`'
         in (WORKFLOWS / 'agentic-model-price-check.md').read_text()
     )
+
+
+def test_model_price_check_report_artifact_connects_upload_and_callbacks() -> None:
+    artifact_name = 'model-price-check-report'
+    report_path = '/tmp/gh-aw/agent/model-check-report.json'
+    download_path = '${{ runner.temp }}/genie-pricer-artifacts'
+    staged_report_path = '${{ steps.stage-model-price-report.outputs.path }}'
+    observability = read_workflow('shared/price-check-observability.md')
+    stage_steps = [
+        step for step in observability['post-steps'] if step.get('name') == 'Stage the model price-check report'
+    ]
+    assert len(stage_steps) == 1
+    stage = stage_steps[0]
+    assert stage['id'] == 'stage-model-price-report'
+    stage_script = stage['with']['script']
+    assert f"fs.openSync('{report_path}'" in stage_script
+    assert 'fs.constants.O_NOFOLLOW' in stage_script
+    assert 'fs.fstatSync(descriptor)' in stage_script
+    assert 'stats.isFile()' in stage_script
+    assert 'stats.size > 32 * 1024' in stage_script
+    uploads = [
+        step for step in observability['post-steps'] if step.get('name') == 'Upload the model price-check report'
+    ]
+    assert [(step['if'], step['with']['name'], step['with']['path']) for step in uploads] == [
+        (
+            "${{ always() && steps.stage-model-price-report.outputs.path != '' }}",
+            artifact_name,
+            staged_report_path,
+        )
+    ]
+
+    for source_file, compiled_file, callback_job in (
+        ('agentic-price-check.md', 'agentic-price-check.lock.yml', 'report_backfill'),
+        ('agentic-model-price-check.md', 'agentic-model-price-check.lock.yml', 'report_result'),
+    ):
+        source = read_workflow(source_file)
+        compiled = read_workflow(compiled_file)
+        assert 'shared/price-check-observability.md' in source['imports']
+        compiled_stages = [
+            step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'stage-model-price-report'
+        ]
+        assert len(compiled_stages) == 1
+        compiled_stage_script = compiled_stages[0]['with']['script']
+        assert f"fs.openSync('{report_path}'" in compiled_stage_script
+        assert 'fs.constants.O_NOFOLLOW' in compiled_stage_script
+        for workflow in (source, compiled):
+            downloads = [
+                step
+                for step in workflow['jobs'][callback_job]['steps']
+                if step.get('uses', '').startswith('actions/download-artifact@')
+            ]
+            assert [(step['with']['name'], step['with']['path']) for step in downloads] == [
+                (artifact_name, download_path)
+            ]
+        compiled_uploads = [
+            step
+            for step in compiled['jobs']['agent']['steps']
+            if step.get('name') == 'Upload the model price-check report'
+        ]
+        assert [(step['with']['name'], step['with']['path']) for step in compiled_uploads] == [
+            (artifact_name, staged_report_path)
+        ]
+
+
+def test_model_price_check_report_staging_rejects_untrusted_files(tmp_path: Path) -> None:
+    observability = read_workflow('shared/price-check-observability.md')
+    stage_script = next(
+        step['with']['script'] for step in observability['post-steps'] if step.get('id') == 'stage-model-price-report'
+    )
+    valid_report = tmp_path / 'valid-report.json'
+    valid_contents = json.dumps({'status': 'complete', 'providers': []})
+    valid_report.write_text(valid_contents)
+    symlink_report = tmp_path / 'symlink-report.json'
+    symlink_report.symlink_to(valid_report)
+    oversized_report = tmp_path / 'oversized-report.json'
+    oversized_report.write_bytes(b'x' * (32 * 1024 + 1))
+    special_report = tmp_path / 'special-report'
+    os.mkfifo(special_report)
+    runner_temp = tmp_path / 'runner-temp'
+    runner_temp.mkdir()
+    fixtures = [
+        {'name': 'regular', 'path': str(valid_report)},
+        {'name': 'symlink', 'path': str(symlink_report)},
+        {'name': 'oversized', 'path': str(oversized_report)},
+        {'name': 'special', 'path': str(special_report)},
+    ]
+    driver = r"""
+const fs = require('node:fs');
+const vm = require('node:vm');
+const sourcePath = '/tmp/gh-aw/agent/model-check-report.json';
+const script = JSON.parse(process.env.STAGE_SCRIPT);
+const fixtures = JSON.parse(process.env.FIXTURES);
+const output = {};
+for (const fixture of fixtures) {
+  let stagedPath = '';
+  const warnings = [];
+  const proxiedFs = new Proxy(fs, {
+    get(target, property) {
+      if (property === 'openSync') {
+        return (file, ...args) => target.openSync(
+          file === sourcePath ? fixture.path : file, ...args
+        );
+      }
+      const value = Reflect.get(target, property, target);
+      return typeof value === 'function' ? value.bind(target) : value;
+    }
+  });
+  const localRequire = (name) => name === 'node:fs' ? proxiedFs : require(name);
+  const core = {
+    setOutput(name, value) {
+      if (name !== 'path') throw new Error(`unexpected output ${name}`);
+      stagedPath = value;
+    },
+    warning(message) { warnings.push(message); }
+  };
+  vm.runInNewContext(script, {
+    require: localRequire,
+    process: {env: {RUNNER_TEMP: process.env.RUNNER_TEMP}},
+    Buffer,
+    core
+  });
+  output[fixture.name] = {
+    path: stagedPath,
+    contents: stagedPath ? fs.readFileSync(stagedPath, 'utf8') : '',
+    warnings
+  };
+}
+console.log(JSON.stringify(output));
+"""
+    result = subprocess.run(
+        ['node', '-e', driver],
+        env={
+            **os.environ,
+            'STAGE_SCRIPT': json.dumps(stage_script),
+            'FIXTURES': json.dumps(fixtures),
+            'RUNNER_TEMP': str(runner_temp),
+        },
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    outcomes = json.loads(result.stdout)
+    staged_path = Path(outcomes['regular']['path'])
+    assert staged_path.name == 'model-check-report.json'
+    assert staged_path.parent.parent == runner_temp
+    assert staged_path.read_text() == valid_contents
+    warning = 'Model price-check report is missing or invalid; callback will retain unresolved discovery.'
+    for name in ('symlink', 'oversized', 'special'):
+        assert outcomes[name]['path'] == ''
+        assert outcomes[name]['contents'] == ''
+        assert outcomes[name]['warnings'] == [warning]
 
 
 def test_targeted_request_is_claimed_before_a_read_only_agent() -> None:

@@ -213,7 +213,8 @@ provider usage fields do not prove zero consumption. Compare only runs that reac
 reported tokens from Coding Plan quota consumption.
 
 To add a provider to the ordinary weekly sweep, update `.github/agentic-price-check-providers.yml`, update the shared network policy if needed, and
-add its YAML path to `create-pull-request.allowed-files`. Then recompile.
+add its YAML path to `create-pull-request.allowed-files` in both `agentic-price-check.md` and
+`agentic-model-price-check.md`. Then recompile both workflows.
 
 ## Source limitations
 

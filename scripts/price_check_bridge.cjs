@@ -7,6 +7,8 @@ const BRIDGE_BASE = 'https://team.pydantic.work/api/webhooks/price-check'
 const AUDIENCE = BRIDGE_BASE
 const REPORT_NAME = 'model-check-report.json'
 const MAX_REPORT_BYTES = 32 * 1024
+const MAX_BACKFILL_REQUESTS = 10
+const MAX_BACKFILL_OUTPUT_BYTES = 64 * 1024
 const UUID_PATTERN = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 const PROVIDER_ID_PATTERN = /^[a-z0-9][a-z0-9_-]*$/
 const PR_URL_PATTERN = /^https:\/\/github\.com\/pydantic\/genai-prices\/pull\/[1-9][0-9]*$/
@@ -171,10 +173,55 @@ function validateBackfillResponse(result, knownIds) {
   })
 }
 
-async function readBackfill({ core, context: _context, fetchImpl = globalThis.fetch }) {
+function groupBackfillRows(pending) {
+  const byRequest = new Map()
+  for (const row of pending) {
+    const rows = byRequest.get(row.request_id) ?? []
+    rows.push(row)
+    byRequest.set(row.request_id, rows)
+  }
+  return [...byRequest.values()].map((rows) => {
+    const source = rows.find((row) => Object.hasOwn(row, 'source_url'))?.source_url
+    return rows.map((row, index) => {
+      const { source_url: _sourceURL, ...record } = row
+      return index === 0 && source !== undefined ? { ...record, source_url: source } : record
+    })
+  })
+}
+
+function boundBackfillRows(pending, runNumber) {
+  const groups = groupBackfillRows(pending)
+  if (groups.length === 0) return { rows: [], omitted: 0 }
+  const rotation = Number.isSafeInteger(runNumber) && runNumber > 0 ? runNumber % groups.length : 0
+  const rotated = [...groups.slice(rotation), ...groups.slice(0, rotation)]
+  const selected = []
+  let selectedGroups = 0
+  let omitted = 0
+  for (const group of rotated) {
+    if (selectedGroups >= MAX_BACKFILL_REQUESTS) {
+      omitted += 1
+      continue
+    }
+    const candidate = [...selected, ...group]
+    if (Buffer.byteLength(JSON.stringify(candidate), 'utf8') > MAX_BACKFILL_OUTPUT_BYTES) {
+      omitted += 1
+      continue
+    }
+    selected.push(...group)
+    selectedGroups += 1
+  }
+  return { rows: selected, omitted }
+}
+
+async function readBackfill({ core, context, fetchImpl = globalThis.fetch }) {
   const result = await bridgeRequest(core, 'GET', '/backfill', undefined, fetchImpl)
   const pending = validateBackfillResponse(result, knownProviderIds())
-  core.setOutput('pending', JSON.stringify(pending))
+  const batch = boundBackfillRows(pending, context?.runNumber)
+  if (batch.omitted > 0)
+    core.warning(
+      `Backfill output omitted ${batch.omitted} request group(s) due to output limits; they remain pending.`,
+    )
+  core.setOutput('pending', JSON.stringify(batch.rows))
 }
 
 function reportDirectory(artifactDirectory, env) {

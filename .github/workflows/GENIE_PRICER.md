@@ -32,13 +32,16 @@ undocumented aliases unchanged and reports missing verification; verified provid
 
 ## Delayed provider rollouts
 
-The agent writes `model-check-report.json` in its uploaded agent directory, listing plausible hosts whose requested model
+The agent writes `/tmp/gh-aw/agent/model-check-report.json`, uploaded as the dedicated
+`model-price-check-report` artifact, listing plausible hosts whose requested model
 or price is not yet verifiable. The trusted callback validates and stores those pending pairs. A missing or malformed
 report retains a model-discovery backlog entry and is reported as incomplete.
 
 The existing Monday 06:00 UTC workflow reads the backlog through an OIDC-authenticated job and checks those model/provider
-pairs in the same invocation as its ordinary sweep. It adds no schedule and does not sweep unrelated models at backlog
-providers. An absent listing or missing price keeps a pair pending.
+pairs in the same invocation as its ordinary sweep. Each run selects at most ten whole requests within a 64 KiB
+backlog output, rotating by workflow run number; omitted requests stay pending. It adds no schedule and does not sweep unrelated models at backlog
+providers. The copied preflight policy permits the weekly manifest and selected backlog providers; an incomplete
+provider-discovery request permits existing providers for that requested model. An absent listing or missing price keeps a pair pending.
 
 A weekly report associates newly verified pairs with the created PR; those pairs clear after that PR merges.
 An explicitly verified listing already present on main can clear its own pair. Closing a proposal without merging

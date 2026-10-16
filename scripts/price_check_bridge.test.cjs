@@ -11,6 +11,7 @@ const { claimRequest, readBackfill, reportBackfill, reportTargetedResult } = req
 const AUDIENCE = 'https://team.pydantic.work/api/webhooks/price-check'
 const REQUEST_ID = 'b0f40d4a-62b2-4f98-a893-38da3b4677f0'
 const OTHER_REQUEST_ID = 'c21a8884-30e0-4475-87f4-d128fa987c9f'
+const THIRD_REQUEST_ID = 'e276f125-cd7c-42d2-9ed2-8d3fba895b17'
 const CONTEXT = { payload: { client_payload: { request_id: REQUEST_ID, target_model: 'untrusted-model' } } }
 
 function makeCore() {
@@ -211,6 +212,104 @@ test('readBackfill rejects unsafe and unknown provider IDs', async () => {
     /Invalid provider ID/,
   )
   assert.deepEqual(core.outputs, {})
+})
+
+test('readBackfill rejects a syntactically valid provider ID absent from the trusted checkout', async () => {
+  const core = makeCore()
+  await assert.rejects(
+    readBackfill({
+      core,
+      context: {},
+      fetchImpl: async () =>
+        response({
+          pending: [{ request_id: REQUEST_ID, target_model: 'model', provider_id: 'unknown-provider' }],
+        }),
+    }),
+    /Invalid provider ID/,
+  )
+  assert.deepEqual(core.outputs, {})
+})
+
+test('readBackfill selects at most ten complete request groups and keeps one source URL per group', async () => {
+  const core = makeCore()
+  const pending = Array.from({ length: 12 }, (_, index) => {
+    const id = `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`
+    return [
+      { request_id: id, target_model: 'model-a', provider_id: 'openai', source_url: 'https://source.example/pricing' },
+      { request_id: id, target_model: 'model-a', provider_id: 'azure', source_url: 'https://source.example/pricing' },
+    ]
+  }).flat()
+  let calls = 0
+  await readBackfill({
+    core,
+    context: {},
+    fetchImpl: async () => {
+      calls += 1
+      return response({ pending })
+    },
+  })
+  const output = JSON.parse(core.outputs.pending)
+  const groups = new Map()
+  for (const row of output) groups.set(row.request_id, [...(groups.get(row.request_id) ?? []), row])
+
+  assert.equal(calls, 1)
+  assert.equal(core.audiences.length, 1)
+  assert.equal(groups.size, 10)
+  assert.ok([...groups.values()].every((rows) => rows.length === 2))
+  assert.ok([...groups.values()].every((rows) => rows.filter((row) => Object.hasOwn(row, 'source_url')).length === 1))
+  assert.equal(core.warnings.length, 1)
+  assert.match(core.warnings[0], /omitted 2 request group/)
+})
+
+test('readBackfill rotates whole request groups by the trusted run number', async () => {
+  const core = makeCore()
+  await readBackfill({
+    core,
+    context: { runNumber: 1 },
+    fetchImpl: async () =>
+      response({
+        pending: [REQUEST_ID, OTHER_REQUEST_ID, THIRD_REQUEST_ID].map((request_id) => ({
+          request_id,
+          target_model: 'model',
+          provider_id: 'openai',
+        })),
+      }),
+  })
+
+  assert.deepEqual(
+    JSON.parse(core.outputs.pending).map((row) => row.request_id),
+    [OTHER_REQUEST_ID, THIRD_REQUEST_ID, REQUEST_ID],
+  )
+})
+
+test('readBackfill skips an oversized group whole and respects the UTF-8 output limit', async () => {
+  const core = makeCore()
+  const largeId = '00000000-0000-4000-8000-000000000001'
+  const oversizedSource = `https://source.example/${'😀'.repeat(1000)}`
+  const largeGroup = Array.from({ length: 120 }, (_, index) => ({
+    request_id: largeId,
+    target_model: '😀'.repeat(128),
+    provider_id: index % 2 === 0 ? 'openai' : 'azure',
+    ...(index === 0 ? { source_url: oversizedSource } : {}),
+  }))
+  await readBackfill({
+    core,
+    context: {},
+    fetchImpl: async () =>
+      response({
+        pending: [...largeGroup, { request_id: REQUEST_ID, target_model: 'small-model', provider_id: 'openai' }],
+      }),
+  })
+  const serialized = core.outputs.pending
+  const output = JSON.parse(serialized)
+
+  assert.ok(Buffer.byteLength(serialized, 'utf8') <= 64 * 1024)
+  assert.deepEqual(
+    output.map((row) => row.request_id),
+    [REQUEST_ID],
+  )
+  assert.equal(core.warnings.length, 1)
+  assert.match(core.warnings[0], /omitted 1 request group/)
 })
 
 test('targeted report preserves a real PR and marks a missing report incomplete', async (t) => {

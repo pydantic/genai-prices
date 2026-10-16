@@ -21,7 +21,7 @@ checkout:
   fetch-depth: 1
 imports:
   - shared/price-check-engine.md
-  - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main
+  - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@94fc592c15981441d462ee213859da0a18170d15
   - shared/price-update.md
   - shared/price-check-runtime.md
   - shared/price-check-observability.md
@@ -151,7 +151,7 @@ jobs:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         continue-on-error: true
         with:
-          name: agent
+          name: model-price-check-report
           path: ${{ runner.temp }}/genie-pricer-artifacts
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
