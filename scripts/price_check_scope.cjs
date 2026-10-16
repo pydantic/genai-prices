@@ -14,20 +14,25 @@ try {
     throw new Error('Missing Price Check scope configuration')
   const { checkFileProtectionPostApply } = require(config.helper_path)
   const staged = process.argv.includes('--staged')
-  const diff = execFileSync('git', [
-    'diff',
-    '--no-ext-diff',
-    '--no-relative',
-    '--name-only',
-    '--no-renames',
-    '-z',
-    ...(staged ? ['--cached'] : []),
-    config.base_sha,
-    '--',
-  ])
+  const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim()
+  const diff = execFileSync(
+    'git',
+    [
+      'diff',
+      '--no-ext-diff',
+      '--no-relative',
+      '--name-only',
+      '--no-renames',
+      '-z',
+      ...(staged ? ['--cached'] : []),
+      config.base_sha,
+      '--',
+    ],
+    { cwd: root },
+  )
   const untracked = staged
     ? Buffer.alloc(0)
-    : execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z'])
+    : execFileSync('git', ['ls-files', '--others', '--exclude-standard', '-z'], { cwd: root })
   const files = [...new Set(Buffer.concat([diff, untracked]).toString('utf8').split('\0').filter(Boolean))]
   const result = checkFileProtectionPostApply(files, config)
   if (result.action !== 'allow')

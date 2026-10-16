@@ -32,9 +32,15 @@ class PriceCheckAgentTests(unittest.TestCase):
             {
                 'HTTPS_PROXY': 'http://proxy.example:3128',
                 'GIT_AUTHOR_NAME': 'Price Check',
+                'PRICE_CHECK_SCOPE_COMMAND': 'node /tmp/price-check-scope',
+                'SSL_CERT_FILE': '/tmp/ca-bundle.pem',
                 'ANTHROPIC_API_KEY': 'private-provider-key',
                 'OPENAI_API_KEY': 'private-provider-key',
                 'GH_AW_SESSION_FRAME_KEY': 'private-session-key',
+                'GITHUB_TOKEN': 'private-github-token',
+                'GH_AW_GITHUB_TOKEN': 'private-gh-aw-token',
+                'SLACK_WEBHOOK_URL': 'private-slack-webhook',
+                'LOGFIRE_OTLP_AUTHORIZATION': 'private-logfire-token',
             },
         ):
             agent = importlib.reload(price_check_agent).agent
@@ -50,16 +56,22 @@ class PriceCheckAgentTests(unittest.TestCase):
                         name='shell',
                         json_args=json.dumps(
                             {
-                                'command': "printf '%s|%s|%s|%s|%s' "
+                                'command': "printf '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s' "
                                 '"${HTTPS_PROXY-}" "${GIT_AUTHOR_NAME-}" '
+                                '"${PRICE_CHECK_SCOPE_COMMAND-}" "${SSL_CERT_FILE-}" '
                                 '"${ANTHROPIC_API_KEY-}" "${OPENAI_API_KEY-}" '
-                                '"${GH_AW_SESSION_FRAME_KEY-}"'
+                                '"${GH_AW_SESSION_FRAME_KEY-}" "${GITHUB_TOKEN-}" '
+                                '"${GH_AW_GITHUB_TOKEN-}" "${SLACK_WEBHOOK_URL-}" '
+                                '"${LOGFIRE_OTLP_AUTHORIZATION-}"'
                             }
                         ),
                     )
                 }
             else:
-                self.assertIn('http://proxy.example:3128|Price Check|||', str(returns[-1].content))
+                self.assertIn(
+                    'http://proxy.example:3128|Price Check|node /tmp/price-check-scope|/tmp/ca-bundle.pem|||||||',
+                    str(returns[-1].content),
+                )
                 self.assertNotIn('private-', str(returns[-1].content))
                 yield 'checked'
 

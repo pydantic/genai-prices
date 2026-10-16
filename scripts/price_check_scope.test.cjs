@@ -15,6 +15,7 @@ test('the compiler scope check allows pricing regressions and rejects unrelated 
   git('config', 'user.name', 'Scope test')
   git('config', 'user.email', 'scope@example.test')
   fs.mkdirSync(path.join(directory, 'tests'))
+  fs.writeFileSync(path.join(directory, 'README.md'), 'original\n')
   fs.writeFileSync(path.join(directory, 'tests/test_price_calc.py'), 'original\n')
   fs.writeFileSync(path.join(directory, 'tests/test_price_check_additions.py'), 'original\n')
   git('add', '.')
@@ -32,11 +33,12 @@ test('the compiler scope check allows pricing regressions and rejects unrelated 
       ),
     }),
   )
-  const check = (...args) =>
+  const checkFrom = (cwd, ...args) =>
     spawnSync(process.execPath, [path.join(__dirname, 'price_check_scope.cjs'), configFile, ...args], {
-      cwd: directory,
+      cwd,
       encoding: 'utf8',
     })
+  const check = (...args) => checkFrom(directory, ...args)
   fs.writeFileSync(path.join(directory, 'tests/test_price_calc.py'), 'updated\n')
   assert.equal(check().status, 0)
   fs.writeFileSync(path.join(directory, 'tests/test_price_check_additions.py'), 'updated\n')
@@ -48,6 +50,16 @@ test('the compiler scope check allows pricing regressions and rejects unrelated 
   git('reset', '-q', '--', 'tests/test_unrelated.py')
   fs.unlinkSync(path.join(directory, 'tests/test_unrelated.py'))
   assert.equal(check('--staged').status, 0)
+  fs.writeFileSync(path.join(directory, 'outside.txt'), 'blocked\n')
+  const untrackedFromSubdirectory = checkFrom(path.join(directory, 'tests'))
+  assert.notEqual(untrackedFromSubdirectory.status, 0)
+  assert.match(untrackedFromSubdirectory.stderr, /outside\.txt/)
+  fs.unlinkSync(path.join(directory, 'outside.txt'))
+  fs.writeFileSync(path.join(directory, 'README.md'), 'updated\n')
+  const trackedFromSubdirectory = checkFrom(path.join(directory, 'tests'))
+  assert.notEqual(trackedFromSubdirectory.status, 0)
+  assert.match(trackedFromSubdirectory.stderr, /README\.md/)
+  fs.writeFileSync(path.join(directory, 'README.md'), 'original\n')
   git('mv', 'tests/test_price_calc.py', 'tests/renamed.py')
   assert.match(check('--staged').stderr, /tests\/renamed.py/)
 })
