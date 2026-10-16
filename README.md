@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 19 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
-- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 51 models
+- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 52 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models
@@ -48,7 +48,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 21 models
 - [Fireworks](prices/providers/fireworks.yml) - 32 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 42 models
-- [Google](prices/providers/google.yml) - 65 models
+- [Google](prices/providers/google.yml) - 69 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -63,11 +63,11 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
-- [Mistral](prices/providers/mistral.yml) - 44 models
+- [Mistral](prices/providers/mistral.yml) - 45 models
 - [Modal](prices/providers/modal.yml) - 2 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 99 models
+- [OpenAI](prices/providers/openai.yml) - 108 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 719 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
@@ -77,7 +77,7 @@ The following providers are currently supported:
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models
-- [Z.AI](prices/providers/zai.yml) - 4 models
+- [Z.AI](prices/providers/zai.yml) - 18 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
 
 [comment]: <> (providers-end)

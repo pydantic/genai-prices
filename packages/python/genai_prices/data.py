@@ -3361,7 +3361,8 @@ providers: list[Provider] = [
                 name='Gemma 4 31B',
                 description="Google's Gemma 4 31B open model for chat, instruction following, and multilingual tasks, served with fast inference on Cerebras hardware (~1,850 tokens/second).",
                 context_window=131072,
-                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context. The Cerebras public models API (https://api.cerebras.ai/public/v1/models, checked 2026-10-15) no longer lists this model; prices kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.99'), output_mtok=Decimal('1.49')),
             ),
             ModelInfo(
@@ -3612,6 +3613,13 @@ providers: list[Provider] = [
                 context_window=64000,
                 price_comments='Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
                 prices=ModelPrice(input_mtok=Decimal('0.15')),
+            ),
+            ModelInfo(
+                id='@cf/daily-co/phonellm-mini-alpha-2',
+                match=ClauseEquals(equals='@cf/daily-co/phonellm-mini-alpha-2'),
+                name='PhoneLLM Mini Alpha 2',
+                price_comments='Rates from https://developers.cloudflare.com/workers-ai/platform/pricing/ (LLM model pricing): $0.060 per 1M input tokens, $0.240 per 1M output tokens.',
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.24')),
             ),
             ModelInfo(
                 id='@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
@@ -6194,6 +6202,21 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-haiku-4-5',
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='claude-haiku-4-5'), ClauseContains(contains='claude-haiku-4.5')]
+                ),
+                context_window=200000,
+                price_comments='Vertex AI Global endpoint rates from https://cloud.google.com/vertex-ai/generative-ai/pricing (Claude models, Global tab): input $1 / 1M tokens, output $5 / 1M tokens, 5-minute cache writes $1.25 / 1M tokens, 1-hour cache writes $2 / 1M tokens, cache hits $0.10 / 1M tokens. The Vertex table also publishes batch rates (half of input and output); batch variants are not modelled for Vertex Claude entries in this file.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('5'),
+                    cache_write_1h_mtok=Decimal('2'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-haiku-5-5',
                 match=ClauseOr(
                     or_=[
@@ -6462,6 +6485,8 @@ providers: list[Provider] = [
                 name='gemini 2.0 flash',
                 description="The newest generation of Google's Gemini models, featuring improved reasoning, instruction following, and factual accuracy, with the Flash variant optimized for cost-efficiency and performance.",
                 context_window=1000000,
+                price_comments='Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
                     cache_read_mtok=Decimal('0.025'),
@@ -6477,6 +6502,8 @@ providers: list[Provider] = [
                 name='gemini 2.0 flash lite',
                 description='A lighter, more cost-effective version of Gemini 2.0 Flash, designed for applications requiring high efficiency while maintaining good performance. Ideal for high-volume, cost-sensitive deployments.',
                 context_window=1000000,
+                price_comments='Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
@@ -6752,6 +6779,8 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 3 Pro Preview',
                 description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+                price_comments='Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15; kept for historical usage.',
+                deprecated=True,
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -7259,11 +7288,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-embedding-2',
-                match=ClauseEquals(equals='gemini-embedding-2'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-embedding-2'), ClauseEquals(equals='gemini-embedding-2-preview')]
+                ),
                 name='Gemini Embedding 2',
                 description="Google's multimodal embedding model for text, images, audio, video, and documents.",
                 context_window=8192,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves every input modality.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves every input modality. The models catalog (https://ai.google.dev/gemini-api/docs/models) names the endpoint `gemini-embedding-2-preview` and the pricing page `gemini-embedding-2`; both were added to the match on 2026-10-15 at the published Embedding 2 rates.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'),
                     input_audio_mtok=Decimal('6.5'),
@@ -7354,6 +7385,16 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gemini-omni-1.1-flash',
+                match=ClauseEquals(equals='gemini-omni-1.1-flash'),
+                name='Gemini Omni Flash',
+                description="Google's video generation and editing model with multimodal input.",
+                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Omni Flash, GA): input $1.50 / 1M tokens across text, image, video and audio; output $9 / 1M tokens (text) and $17.50 / 1M tokens (video). The models catalog names `gemini-omni-1.1-flash` as the GA endpoint of the Omni Flash family.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), output_mtok=Decimal('9'), output_video_mtok=Decimal('17.5')
+                ),
+            ),
+            ModelInfo(
                 id='gemini-omni-flash-preview',
                 match=ClauseStartsWith(starts_with='gemini-omni-flash-preview'),
                 name='Gemini Omni Flash Preview',
@@ -7386,6 +7427,38 @@ providers: list[Provider] = [
                     ),
                     output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=128000, price=Decimal('10'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-robotics-er-2-preview',
+                match=ClauseEquals(equals='gemini-robotics-er-2-preview'),
+                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('5')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-robotics-er-2-streaming-preview',
+                match=ClauseEquals(equals='gemini-robotics-er-2-streaming-preview'),
+                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint.',
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gemma-2-27b-it',
@@ -10688,11 +10761,11 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='minimax-m3',
-                match=ClauseEquals(equals='minimax-m3'),
+                match=ClauseOr(or_=[ClauseEquals(equals='MiniMax-M3'), ClauseEquals(equals='minimax-m3')]),
                 name='MiniMax M3',
                 description='MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and long-horizon agentic work.',
                 context_window=1000000,
-                price_comments='Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
+                price_comments='Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering. Re-verified against the same page on 2026-10-15 (rates unchanged); the page labels the model "MiniMax-M3", which was added to the match on 2026-10-15 alongside the existing lowercase id.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=512000, price=Decimal('0.6'))]),
                     cache_read_mtok=TieredPrices(
@@ -10781,6 +10854,17 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     )
                 ],
+            ),
+            ModelInfo(
+                id='codestral-embed-2505',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='codestral-embed-2505'), ClauseEquals(equals='codestral-embed')]
+                ),
+                name='Codestral Embed 2505',
+                description="Mistral's code-specialized embedding model for code retrieval and semantic search.",
+                context_window=8000,
+                price_comments='Rates from https://docs.mistral.ai/inference/pricing (Codestral Embed: input $0.15 / 1M tokens, cached input $0.015 / 1M tokens) and https://docs.mistral.ai/models/codestral-embed-25-05 (embedding model, 8k context; embeddings bill input tokens only).',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015')),
             ),
             ModelInfo(
                 id='devstral-2512',
@@ -11575,8 +11659,14 @@ providers: list[Provider] = [
                 name='Kimi K3',
                 description="Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
                 context_window=1048576,
-                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
-                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md. Re-verified on 2026-10-15: input, cached input and output rates are unchanged; the page now also publishes 5-minute cache writes at $3 / 1M tokens and 1-hour cache writes at $6 / 1M tokens, both added on 2026-10-15.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
+                ),
             ),
             ModelInfo(
                 id='moonshot-v1-128k',
@@ -11834,7 +11924,12 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(
-            or_=[ClauseStartsWith(starts_with='gpt-'), ClauseEquals(equals='whisper-1'), ClauseRegex(regex='^o[134]')]
+            or_=[
+                ClauseStartsWith(starts_with='gpt-'),
+                ClauseEquals(equals='whisper-1'),
+                ClauseStartsWith(starts_with='tts-1'),
+                ClauseRegex(regex='^o[134]'),
+            ]
         ),
         provider_match=ClauseContains(contains='openai'),
         extractors=[
@@ -11984,6 +12079,19 @@ providers: list[Provider] = [
                 description='OpenAI ChatGPT 4o is continually updated by OpenAI to point to the current version of GPT-4o used by ChatGPT. It therefore differs slightly from the API version of GPT-4o in that it has additional RLHF. It is intended for research and evaluation.',
                 context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='chatgpt-image-latest',
+                match=ClauseEquals(equals='chatgpt-image-latest'),
+                price_comments='Rates from https://developers.openai.com/api/docs/pricing (image generation, Standard table): text input $5 / 1M tokens, cached text input $1.25 / 1M tokens, text output $10 / 1M tokens, image input $8 / 1M image tokens, cached image input $2 / 1M image tokens, image output $32 / 1M image tokens. Model ID confirmed in the models catalog at https://developers.openai.com/api/docs/models.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('10'),
+                    input_image_mtok=Decimal('8'),
+                    cache_image_read_mtok=Decimal('2'),
+                    output_image_mtok=Decimal('32'),
+                ),
             ),
             ModelInfo(
                 id='codex-mini',
@@ -12700,6 +12808,14 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-5-search-api',
+                match=ClauseEquals(equals='gpt-5-search-api'),
+                price_comments='Rates from https://developers.openai.com/api/docs/pricing (Specialized models, Standard): input $1.25 / 1M tokens, cached input $0.125 / 1M tokens, output $10 / 1M tokens. The pricing page names this exact model ID; it has no dedicated page in the models catalog.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.1',
                 match=ClauseOr(
                     or_=[
@@ -13205,6 +13321,12 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-5.5-cyber',
+                match=ClauseEquals(equals='gpt-5.5-cyber'),
+                price_comments='Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page publishes no cached-input or cache-write rate for this model.',
+                prices=ModelPrice(input_mtok=Decimal('12.5'), output_mtok=Decimal('75')),
+            ),
+            ModelInfo(
                 id='gpt-5.5-pro',
                 match=ClauseOr(
                     or_=[
@@ -13237,6 +13359,17 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='gpt-5.6-cyber',
+                match=ClauseEquals(equals='gpt-5.6-cyber'),
+                price_comments='Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, cached input $1.25 / 1M tokens, cache writes $15.625 / 1M tokens (1.25x input), output $75 / 1M tokens. The page publishes no long-context rates for this model.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('12.5'),
+                    cache_write_mtok=Decimal('15.625'),
+                    cache_read_mtok=Decimal('1.25'),
+                    output_mtok=Decimal('75'),
+                ),
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
@@ -13995,10 +14128,10 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-chat-latest',
-                match=ClauseEquals(equals='gpt-chat-latest'),
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-chat-latest'), ClauseEquals(equals='chat-latest')]),
                 name='GPT Chat Latest',
                 description="GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model used in ChatGPT.",
-                price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
+                price_comments="Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published. Verified against OpenAI on 2026-10-15: the official Model ID is `chat-latest` (https://developers.openai.com/api/docs/models/chat-latest) and the published rates match this entry's $5 / $0.50 cached / $30 output per 1M tokens.",
                 prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
@@ -14184,6 +14317,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(audio_hours=Decimal('3')),
             ),
             ModelInfo(
+                id='gpt-live-transcribe',
+                match=ClauseEquals(equals='gpt-live-transcribe'),
+                price_comments='Live transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-live-transcribe.',
+                prices=ModelPrice(audio_hours=Decimal('1.02')),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='gpt-oss-120b'),
                 name='gpt-oss-120b',
@@ -14271,6 +14410,18 @@ providers: list[Provider] = [
                     input_image_mtok=Decimal('0.8'),
                     cache_image_read_mtok=Decimal('0.08'),
                 ),
+            ),
+            ModelInfo(
+                id='gpt-realtime-translate',
+                match=ClauseEquals(equals='gpt-realtime-translate'),
+                price_comments='Realtime translation sessions are billed per minute at $0.034/minute = $2.04/hour (0.034 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-translate.',
+                prices=ModelPrice(audio_hours=Decimal('2.04')),
+            ),
+            ModelInfo(
+                id='gpt-realtime-whisper',
+                match=ClauseEquals(equals='gpt-realtime-whisper'),
+                price_comments='Realtime transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
+                prices=ModelPrice(audio_hours=Decimal('1.02')),
             ),
             ModelInfo(
                 id='gpt-transcribe',
@@ -14554,6 +14705,18 @@ providers: list[Provider] = [
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='tts-1',
+                match=ClauseEquals(equals='tts-1'),
+                price_comments='Text-to-speech input is billed per 1M characters: $15 / 1M characters (https://developers.openai.com/api/docs/pricing, Text-to-speech models).',
+                prices=ModelPrice(input_mchars=Decimal('15')),
+            ),
+            ModelInfo(
+                id='tts-1-hd',
+                match=ClauseEquals(equals='tts-1-hd'),
+                price_comments='Text-to-speech input is billed per 1M characters: $30 / 1M characters (https://developers.openai.com/api/docs/pricing, Text-to-speech models).',
+                prices=ModelPrice(input_mchars=Decimal('30')),
             ),
             ModelInfo(
                 id='whisper-1',
@@ -22002,6 +22165,76 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='GLM-4-32B-0414-128K',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='GLM-4-32B-0414-128K'), ClauseEquals(equals='glm-4-32b-0414-128k')]
+                ),
+                name='GLM-4-32B-0414-128K',
+                description='Z.AI GLM-4 32B 128K-context model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing. The page publishes no cached-input rate for this model.',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='GLM-4.5',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5'), ClauseEquals(equals='glm-4.5')]),
+                name='GLM-4.5',
+                description='Z.AI GLM-4.5 model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.11'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.5-Air',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5-Air'), ClauseEquals(equals='glm-4.5-air')]),
+                name='GLM-4.5-Air',
+                description='Z.AI GLM-4.5-Air model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.1')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.5-AirX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5-AirX'), ClauseEquals(equals='glm-4.5-airx')]),
+                name='GLM-4.5-AirX',
+                description='Z.AI GLM-4.5-AirX model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.22'), output_mtok=Decimal('4.5')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.5-X',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5-X'), ClauseEquals(equals='glm-4.5-x')]),
+                name='GLM-4.5-X',
+                description='Z.AI GLM-4.5-X model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.2'), cache_read_mtok=Decimal('0.45'), output_mtok=Decimal('8.9')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.5V',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5V'), ClauseEquals(equals='glm-4.5v')]),
+                name='GLM-4.5V',
+                description='Z.AI GLM-4.5V vision model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.11'), output_mtok=Decimal('1.8')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.6',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.6'), ClauseEquals(equals='glm-4.6')]),
+                name='GLM-4.6',
+                description='Z.AI GLM-4.6 model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.11'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
                 id='GLM-4.6V',
                 match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.6V'), ClauseEquals(equals='glm-4.6v')]),
                 name='GLM-4.6V',
@@ -22010,6 +22243,54 @@ providers: list[Provider] = [
                 price_comments='Context length is 128K per https://docs.z.ai/guides/vlm/glm-4.6v.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.9')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.6V-FlashX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.6V-FlashX'), ClauseEquals(equals='glm-4.6v-flashx')]),
+                name='GLM-4.6V-FlashX',
+                description='Z.AI GLM-4.6V-FlashX vision model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.04'), cache_read_mtok=Decimal('0.004'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.7',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.7'), ClauseEquals(equals='glm-4.7')]),
+                name='GLM-4.7',
+                description='Z.AI GLM-4.7 model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.11'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.7-FlashX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.7-FlashX'), ClauseEquals(equals='glm-4.7-flashx')]),
+                name='GLM-4.7-FlashX',
+                description='Z.AI GLM-4.7-FlashX model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5'), ClauseEquals(equals='glm-5')]),
+                name='GLM-5',
+                description='Z.AI GLM-5 model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.2')),
+            ),
+            ModelInfo(
+                id='GLM-5.1',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.1'), ClauseEquals(equals='glm-5.1')]),
+                name='GLM-5.1',
+                description='Z.AI GLM-5.1 model listed on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
             ),
             ModelInfo(
@@ -22052,6 +22333,24 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='GLM-5.3-FlashX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3-FlashX'), ClauseEquals(equals='glm-5.3-flashx')]),
+                name='GLM-5.3-FlashX',
+                description='Z.AI variant of GLM-5.3-Flash with separate standard rates on the international platform pricing page.',
+                price_comments='https://docs.z.ai/guides/overview/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.37'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('1.25')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-OCR',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-OCR'), ClauseEquals(equals='glm-ocr')]),
+                name='GLM-OCR',
+                description='Z.AI optical character recognition model with uniform input and output pricing.',
+                price_comments='https://docs.z.ai/guides/overview/pricing and https://docs.z.ai/guides/vlm/glm-ocr ("Pricing is uniform for both API input and output, costing just $0.03 per million tokens").',
+                prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03')),
             ),
         ],
     ),

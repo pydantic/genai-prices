@@ -38,8 +38,12 @@ models:
         - starts_with: cerebras/gemma-4-31b
         - starts_with: cerebras:gemma-4-31b
     context_window: 131072
-    prices_checked: 2026-08-27
-    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.
+      The Cerebras public models API (https://api.cerebras.ai/public/v1/models, checked 2026-10-15)
+      no longer lists this model; prices kept for historical usage.
     prices:
       input_mtok: 0.99
       output_mtok: 1.49

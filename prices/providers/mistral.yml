@@ -86,6 +86,24 @@ models:
           cache_read_mtok: 0.015
           output_mtok: 0.45
 
+  - id: codestral-embed-2505
+    name: Codestral Embed 2505
+    description: >-
+      Mistral's code-specialized embedding model for code retrieval and semantic search.
+    match:
+      or:
+        - equals: codestral-embed-2505
+        - equals: codestral-embed
+    context_window: 8000
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://docs.mistral.ai/inference/pricing (Codestral Embed: input $0.15 / 1M tokens,
+      cached input $0.015 / 1M tokens) and https://docs.mistral.ai/models/codestral-embed-25-05
+      (embedding model, 8k context; embeddings bill input tokens only).
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+
   - id: devstral-2512
     name: Devstral 2 2512
     description: >-
