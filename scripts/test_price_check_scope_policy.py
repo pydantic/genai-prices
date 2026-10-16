@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.price_check_scope_policy import allowed_price_check_files, validate_price_check_transports
 from scripts.price_check_sources import load_provider_sources
@@ -28,14 +29,19 @@ def _pending(provider_id: str) -> list[dict[str, str]]:
 
 
 def test_weekly_scope_keeps_25_manifest_files_and_non_provider_paths() -> None:
-    all_provider_files = _all_provider_files()
+    all_provider_files = list(reversed(_all_provider_files()))
+    weekly_manifest = yaml.safe_load((ROOT / '.github/agentic-price-check-providers.yml').read_text())
+    expected_weekly_files = {provider['file'] for provider in weekly_manifest['providers']}
     allowed_files = ['README.md', *all_provider_files, 'tests/test_price_calc.py']
 
     filtered = allowed_price_check_files(ROOT, allowed_files, 'agentic-price-check.md', [])
 
     provider_files = [path for path in filtered if path.startswith('prices/providers/')]
-    assert len(provider_files) == 25
-    assert provider_files == [path for path in all_provider_files if path in set(provider_files)]
+    assert set(provider_files) == expected_weekly_files
+    assert provider_files == [path for path in all_provider_files if path in expected_weekly_files]
+    assert filtered == [
+        path for path in allowed_files if not path.startswith('prices/providers/') or path in expected_weekly_files
+    ]
     assert 'prices/providers/quicksilverpro.yml' not in filtered
     assert 'prices/providers/aws.yml' not in filtered
     assert 'README.md' in filtered
@@ -245,3 +251,26 @@ def test_transport_cli_uses_contract_environment_and_reports_scope_failure(tmp_p
 
     assert result.returncode == 1
     assert result.stderr.startswith('Price-check transport scope validation failed: ')
+    assert 'outside weekly scope: prices/providers/quicksilverpro.yml' in result.stderr
+
+    environment['PRICE_CHECK_PENDING_BACKFILL'] = json.dumps(_pending('quicksilverpro'))
+    allowed_result = subprocess.run(
+        [
+            sys.executable,
+            '-m',
+            'scripts.price_check_scope_policy',
+            '--validate-transports',
+            '--repo-root',
+            str(repo),
+            '--artifact-dir',
+            str(artifacts),
+        ],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert allowed_result.returncode == 0
+    assert 'Price-check transport scope validation passed.' in allowed_result.stdout
