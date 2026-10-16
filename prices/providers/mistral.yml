@@ -91,7 +91,9 @@ models:
     description: >-
       Mistral's code-specialized embedding model for code retrieval and semantic search.
     match:
-      equals: codestral-embed-2505
+      or:
+        - equals: codestral-embed-2505
+        - equals: codestral-embed
     context_window: 8000
     prices_checked: 2026-10-15
     price_comments: >-

@@ -18788,7 +18788,14 @@ export const data: Provider[] = [
         name: 'Codestral Embed 2505',
         description: "Mistral's code-specialized embedding model for code retrieval and semantic search.",
         match: {
-          equals: 'codestral-embed-2505',
+          or: [
+            {
+              equals: 'codestral-embed-2505',
+            },
+            {
+              equals: 'codestral-embed',
+            },
+          ],
         },
         context_window: 8000,
         price_comments:
@@ -20660,6 +20667,9 @@ export const data: Provider[] = [
         },
         {
           equals: 'whisper-1',
+        },
+        {
+          starts_with: 'tts-1',
         },
         {
           regex: '^o[134]',
