@@ -36,6 +36,9 @@ not a reason to skip the others.
 
 ## 1. Branch
 
+In a GitHub agentic workflow, keep its supplied checkout and follow the workflow's publication procedure.
+The trusted safe-output handler creates the PR. Do not run this skill's fetch, push, or `gh pr create` commands there.
+
 Contribute via a branch on `origin` (this repo is `pydantic/genai-prices`, no fork). Always base off
 freshly-fetched upstream:
 
@@ -62,7 +65,12 @@ Providers ship dated snapshot IDs (e.g. `grok-4.5-20260708`) that aren't in thei
 request returns the resolved dated ID in the response `model` field — capture it so the YAML `match`
 covers future dated snapshots.
 
-Key lives in `~/ai-coding-tools/.env` as `OPENROUTER_API_KEY`. Don't reference secret env vars in an
+In a GitHub agentic workflow, use only a probe tool or credential explicitly supplied by the workflow.
+Never read a developer's home-directory credentials from the agent. If no probe is available, verify published IDs
+from official catalogs, leave undocumented snapshot aliases unchanged, and record the missing snapshot verification.
+Do not defer verified provider prices because an undocumented alias could not be probed.
+
+For a local session, the key lives in `~/ai-coding-tools/.env` as `OPENROUTER_API_KEY`. Don't reference secret env vars in an
 inline command (a hook blocks it and `env-run` rejects it) — put the request in a script that consumes
 the var internally, then run it with `env-run`:
 
@@ -74,7 +82,7 @@ the var internally, then run it with `env-run`:
 ```bash
 curl -sS https://openrouter.ai/api/v1/chat/completions \
   -H "Authorization: Bearer ${OPENROUTER_API_KEY}" -H "Content-Type: application/json" \
-  -d '{"model":"<provider>/<model>","messages":[{"role":"user","content":"hi"}],"max_tokens":5}' \
+  -d '{"model":"<provider>/<model>","messages":[{"role":"user","content":"hi"}]}' \
   | jq '{id, model, provider}'
 ```
 
@@ -205,6 +213,9 @@ for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-l
 ```
 
 ## 6. Commit, push, PR
+
+In a GitHub agentic workflow, follow its commit and safe-output procedure instead of the local commands below.
+Include this skill's price evidence, provider coverage, alias verification, and rollout findings in the PR body.
 
 The pre-commit `build` hook regenerates twelve paths, so the first `git commit` will abort after it
 rewrites them; re-stage and commit again. Stage files explicitly — **never `git add -A`** (it leaks

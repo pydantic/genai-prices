@@ -8,7 +8,10 @@ from urllib.parse import urlparse
 
 from ruamel.yaml import YAML
 
+from scripts.price_check_sources import load_provider_sources, official_source_hosts
+
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
+ROOT = WORKFLOWS.parents[1]
 
 
 def read_workflow(filename: str) -> dict[str, Any]:
@@ -151,10 +154,31 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
         'shared/price-check-engine.md',
         'pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main',
         'shared/price-update.md',
+        'shared/price-check-runtime.md',
+        'shared/price-check-observability.md',
+        'shared/price-check-network.md',
     ]
+    runtime = read_workflow('shared/price-check-runtime.md')
+    assert [step['name'] for step in runtime['pre-agent-steps']] == [
+        'Install the gh-aw fetch transport',
+        'Install the price-check scope preflight',
+        'Snapshot trusted provider sources',
+    ]
+    observability = read_workflow('shared/price-check-observability.md')
+    assert [step['name'] for step in observability['post-steps']] == ['Export price-check telemetry']
+    assert read_workflow('shared/price-check-network.md')['network']['allowed']
+    backfill = source['jobs']['report_backfill']
+    assert backfill['needs'] == ['backfill_requests', 'agent', 'safe_outputs']
+    assert "needs.backfill_requests.outputs.pending != '[]'" in backfill['if']
+    assert source['jobs']['agent']['needs'] == ['backfill_requests']
+    backfill_text = (
+        (WORKFLOWS / 'agentic-price-check.md').read_text().split('## Requested-model rollout backfill\n', maxsplit=1)[1]
+    )
+    assert 'For backlog providers outside the weekly manifest, check only the specified model' in backfill_text
+    assert 'without sweeping unrelated models at those providers' in backfill_text
     assert 'SLACK_WEBHOOK_URL' not in json.dumps(compiled['jobs']['agent'])
     assert 'PRICE_UPDATE_APP_PRIVATE_KEY' not in json.dumps(compiled['jobs']['agent'])
-    assert compiled['jobs']['agent']['needs'] == 'activation'
+    assert compiled['jobs']['agent']['needs'] == ['activation', 'backfill_requests']
     assert 'notify_slack' not in compiled['jobs']['safe_outputs']['needs']
     assert 'created_pr_url' in compiled['jobs']['safe_outputs']['outputs']
     notify = compiled['jobs']['notify_slack']
@@ -171,9 +195,8 @@ def test_provider_allowlist_matches_manifest() -> None:
     manifest = read_workflow('../agentic-price-check-providers.yml')
     source = read_workflow('agentic-price-check.md')
     allowed = source['safe-outputs']['create-pull-request']['allowed-files']
-    assert {path for path in allowed if path.endswith('.yml')} == {
-        provider['file'] for provider in manifest['providers']
-    }
+    manifest_files = {provider['file'] for provider in manifest['providers']}
+    assert manifest_files <= {path for path in allowed if path.endswith('.yml')}
     assert len(manifest['providers']) == 25
     assert len({provider['file'] for provider in manifest['providers']}) == 25
     provider_names = {provider['name'] for provider in manifest['providers']}
@@ -190,15 +213,108 @@ def test_provider_allowlist_matches_manifest() -> None:
     }
     assert required_names <= provider_names
     assert 'QuickSilver Pro' not in provider_names
-    assert 'prices/providers/quicksilverpro.yml' not in {provider['file'] for provider in manifest['providers']}
+    assert 'prices/providers/quicksilverpro.yml' not in manifest_files
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    assert {
+        path for path in allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+    assert 'prices/providers/quicksilverpro.yml' in provider_files
+    network_hosts = set(read_workflow('shared/price-check-network.md')['network']['allowed'])
     for provider in manifest['providers']:
         for url in provider['sources']:
-            assert urlparse(cast(str, url)).netloc in source['network']['allowed']
+            assert urlparse(cast(str, url)).netloc in network_hosts
+
+
+def test_targeted_request_uses_all_provider_files_and_the_trusted_host_set() -> None:
+    source = read_workflow('agentic-model-price-check.md')
+    allowed = source['safe-outputs']['create-pull-request']['allowed-files']
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    assert {
+        path for path in allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+    assert {path for path in allowed if path.startswith('tests/')} == {
+        'tests/test_price_calc.py',
+        'tests/test_price_regressions.py',
+        'tests/test_price_check_additions.py',
+        'tests/dataset/usages.json',
+    }
+    network = read_workflow('shared/price-check-network.md')['network']['allowed']
+    assert set(official_source_hosts(ROOT)) <= set(network)
+    assert 'shared/price-check-network.md' in source['imports']
+    assert (
+        'Read `$RUNNER_TEMP/gh-aw/price-check/provider-sources.json`'
+        in (WORKFLOWS / 'agentic-model-price-check.md').read_text()
+    )
+
+
+def test_targeted_request_is_claimed_before_a_read_only_agent() -> None:
+    source = read_workflow('agentic-model-price-check.md')
+    source_text = (WORKFLOWS / 'agentic-model-price-check.md').read_text()
+    assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    assert source['run-name'] == 'Model prices ${{ github.event.client_payload.request_id }}'
+    assert source['jobs']['claim_request']['needs'] == 'activation'
+    assert source['jobs']['agent']['needs'] == ['claim_request']
+    assert source['jobs']['agent']['if'] == "needs.claim_request.outputs.claimed == 'true'"
+    assert '${{ needs.claim_request.outputs.request }}' in source_text
+    assert '${{ github.event.client_payload.target_model }}' not in source_text
+
+    targeted = read_workflow('agentic-model-price-check.lock.yml')
+    weekly = read_workflow('agentic-price-check.lock.yml')
+    targeted_jobs = targeted['jobs']
+    weekly_jobs = weekly['jobs']
+    assert targeted_jobs['agent']['permissions'] == {
+        'contents': 'read',
+        'pull-requests': 'read',
+    }
+    assert targeted_jobs['claim_request']['needs'] == 'activation'
+    assert targeted_jobs['claim_request']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert targeted_jobs['agent']['needs'] == ['activation', 'claim_request']
+    assert targeted_jobs['agent']['if'] == "needs.claim_request.outputs.claimed == 'true'"
+    assert targeted_jobs['report_result']['needs'] == ['agent', 'claim_request', 'safe_outputs']
+    assert targeted_jobs['report_result']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert weekly_jobs['agent']['permissions'] == targeted_jobs['agent']['permissions']
+    assert weekly_jobs['backfill_requests']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert weekly_jobs['report_backfill']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+
+    secret_references = re.compile(r'\$\{\{\s*secrets\.([A-Z0-9_]+)\s*\}\}')
+    targeted_agent_secrets = set(secret_references.findall(json.dumps(targeted_jobs['agent'])))
+    weekly_agent_secrets = set(secret_references.findall(json.dumps(weekly_jobs['agent'])))
+    assert targeted_agent_secrets == weekly_agent_secrets
+    assert not {'SLACK_WEBHOOK_URL', 'SLACK_BOT_TOKEN'} & targeted_agent_secrets
 
 
 def test_price_checks_use_one_scheduled_workflow() -> None:
-    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.md')} == {'agentic-price-check.md'}
-    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.lock.yml')} == {'agentic-price-check.lock.yml'}
+    source_workflows = {path.name: read_workflow(path.name) for path in WORKFLOWS.glob('agentic-*.md')}
+    assert {name for name, workflow in source_workflows.items() if 'schedule' in workflow['on']} == {
+        'agentic-price-check.md'
+    }
+    assert source_workflows['agentic-price-check.md']['on']['schedule'] == [{'cron': '0 6 * * 1', 'timezone': 'UTC'}]
+    targeted = source_workflows['agentic-model-price-check.md']
+    assert targeted['on']['repository_dispatch']['types'] == ['genie-pricer-model-request']
+    assert targeted['on']['bots'] == ['pydanty']
+    assert 'skip-if-match' not in targeted['on']
+
+    weekly_compiled = read_workflow('agentic-price-check.lock.yml')
+    targeted_compiled = read_workflow('agentic-model-price-check.lock.yml')
+    assert weekly_compiled['on']['schedule'] == source_workflows['agentic-price-check.md']['on']['schedule']
+    assert 'schedule' not in targeted_compiled['on']
+    assert targeted_compiled['on']['repository_dispatch']['types'] == ['genie-pricer-model-request']
+    assert {path.name for path in WORKFLOWS.glob('agentic-*.lock.yml')} == {
+        'agentic-price-check.lock.yml',
+        'agentic-model-price-check.lock.yml',
+    }
 
 
 def test_price_update_validation_commands_stop_on_failure(tmp_path: Path) -> None:
@@ -269,24 +385,25 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
 
 
 def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
-    compiled = read_workflow('agentic-price-check.lock.yml')
-    assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(compiled.get('env', {}))
-    steps = compiled['jobs']['agent']['steps']
-    execution_index = next(i for i, step in enumerate(steps) if step.get('id') == 'agentic_execution')
-    export_index = next(i for i, step in enumerate(steps) if step.get('name') == 'Export price-check telemetry')
-    assert execution_index < export_index
-    for step in steps[:export_index]:
-        assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
-    assert steps[export_index]['env'] == {
-        'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
-    }
-    assert steps[export_index]['if'] == 'always()'
-    assert steps[export_index]['continue-on-error'] is True
+    for filename in ('agentic-price-check.lock.yml', 'agentic-model-price-check.lock.yml'):
+        compiled = read_workflow(filename)
+        assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(compiled.get('env', {}))
+        steps = compiled['jobs']['agent']['steps']
+        execution_index = next(i for i, step in enumerate(steps) if step.get('id') == 'agentic_execution')
+        export_index = next(i for i, step in enumerate(steps) if step.get('name') == 'Export price-check telemetry')
+        assert execution_index < export_index
+        for step in steps[:export_index]:
+            assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
+        assert steps[export_index]['env'] == {
+            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
+        }
+        assert steps[export_index]['if'] == 'always()'
+        assert steps[export_index]['continue-on-error'] is True
 
 
 def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None:
-    workflow = read_workflow('agentic-price-check.md')
-    script = workflow['post-steps'][0]['with']['script']
+    observability = read_workflow('shared/price-check-observability.md')
+    script = observability['post-steps'][0]['with']['script']
     driver = r"""
 const script = JSON.parse(process.env.EXPORT_SCRIPT);
 const files = {
@@ -326,6 +443,7 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   const usage = Object.fromEntries(spans.find((span) => span.spanName === 'price_check.usage').attributes
     .map(({key, value}) => [key, value]));
   const agent = spans.find((span) => span.spanName === 'invoke_agent');
+  const resource = Object.fromEntries(agent.resourceAttributes.map(({key, value}) => [key, value]));
   const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
   const terminalEmitted = agent.attributes.find(({key}) => key === 'price_check.terminal_output_emitted').value;
   const marker = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
@@ -337,7 +455,8 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   files['/tmp/gh-aw/agent_usage.json'] = '{}';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, toolCounts, terminalEmitted, marker, completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
+    usage, toolCounts, terminalEmitted, marker, requestId: resource['price_check.request_id'],
+    completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
 })();
 """
     result = subprocess.run(
@@ -364,4 +483,5 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert output['toolCounts'] == {'web_fetch': 1}
     assert output['terminalEmitted'] is True
     assert output['marker']['exported_request_spans'] == 1
+    assert output['requestId'] == ''
     assert any('telemetry incomplete' in summary for summary in output['summaries'])
