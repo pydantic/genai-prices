@@ -4,8 +4,9 @@ import { parseArgs } from 'node:util'
 import type { Provider } from './types'
 
 import { version } from '../package.json'
+import { downloadProviderData } from './cliData'
 import { data as embeddedData } from './data'
-import { calcPrice } from './index'
+import { calcPrice, updatePrices, waitForUpdate } from './index'
 
 const HELP = `genai-prices <command>
 
@@ -60,7 +61,7 @@ function parseCliArgs(): ReturnType<typeof parseArgs<typeof PARSE_ARGS_CONFIG>> 
   }
 }
 
-function main(): never {
+async function main(): Promise<never> {
   const parsed = parseCliArgs()
   const { positionals, values } = parsed
   if (values.version) {
@@ -72,8 +73,26 @@ function main(): never {
     process.exit(0)
   }
 
-  if (positionals[0] === 'list') {
-    const providers = embeddedData
+  const isListCommand = positionals[0] === 'list'
+  const isCalcCommand = positionals[0] === 'calc'
+  const models = isCalcCommand ? positionals.slice(1) : positionals
+  let providers = embeddedData
+  if (values['auto-update'] && (isListCommand || models.length > 0)) {
+    const data = await downloadProviderData()
+    if (!Array.isArray(data)) {
+      throw new Error('Expected a provider array')
+    }
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data as Provider[])
+    })
+    const updatedProviders = await waitForUpdate()
+    if (updatedProviders === null) {
+      throw new Error('No provider data activated')
+    }
+    providers = updatedProviders
+  }
+
+  if (isListCommand) {
     const providerId = values.provider ?? positionals[1]
     if (providerId) {
       const p = providers.find((p: Provider) => p.id === providerId)
@@ -95,9 +114,6 @@ function main(): never {
     }
     process.exit(0)
   }
-
-  const isCalcCommand = positionals[0] === 'calc'
-  const models = isCalcCommand ? positionals.slice(1) : positionals
 
   if (models.length > 0) {
     const usage = {
@@ -154,4 +170,7 @@ function main(): never {
   process.exit(1)
 }
 
-main()
+main().catch((error: unknown) => {
+  console.error('Failed to update prices:', error instanceof Error ? error.message : String(error))
+  process.exit(1)
+})
