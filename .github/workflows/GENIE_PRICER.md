@@ -42,6 +42,8 @@ pairs in the same invocation as its ordinary sweep. Each run selects at most ten
 backlog output, rotating by workflow run number; omitted requests stay pending. It adds no schedule and does not sweep unrelated models at backlog
 providers. The copied preflight policy permits the weekly manifest and selected backlog providers; an incomplete
 provider-discovery request permits existing providers for that requested model. An absent listing or missing price keeps a pair pending.
+The trusted publisher independently checks the downloaded Git transports against that same provider policy before
+creating a PR, including actual changed paths from bundles and patches.
 
 A weekly report associates newly verified pairs with the created PR; those pairs clear after that PR merges.
 An explicitly verified listing already present on main can clear its own pair. Closing a proposal without merging

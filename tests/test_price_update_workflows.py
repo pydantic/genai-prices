@@ -256,6 +256,62 @@ def test_targeted_request_uses_all_provider_files_and_the_trusted_host_set() -> 
     )
 
 
+def test_weekly_publication_scope_gate_runs_before_safe_outputs() -> None:
+    gate_name = 'Verify weekly provider scope before publication'
+    gate_command = 'uv run --frozen python -m scripts.price_check_scope_policy --validate-transports'
+    gate_env = {'PRICE_CHECK_PENDING_BACKFILL': "${{ needs.backfill_requests.outputs.pending || '[]' }}"}
+    weekly_source = read_workflow('agentic-price-check.md')
+    weekly_compiled = read_workflow('agentic-price-check.lock.yml')
+    source_safe_outputs = weekly_source['safe-outputs']
+    compiled_safe_outputs = weekly_compiled['jobs']['safe_outputs']
+
+    assert source_safe_outputs['needs'] == ['backfill_requests']
+    source_steps = source_safe_outputs['steps']
+    assert [step['name'] for step in source_steps] == [
+        'Check out the policy source when the publisher checkout was skipped',
+        'Set up uv for the trusted provider scope check',
+        gate_name,
+    ]
+    assert source_steps[0]['if'] == "${{ !contains(needs.agent.outputs.output_types, 'create_pull_request') }}"
+    assert source_steps[0]['with'] == {'ref': '${{ github.sha }}', 'persist-credentials': False}
+    source_gate = source_steps[2]
+    assert source_gate['run'] == gate_command
+    assert source_gate['env'] == gate_env
+    assert 'if' not in source_gate
+    assert 'continue-on-error' not in source_gate
+
+    assert 'backfill_requests' in compiled_safe_outputs['needs']
+    compiled_steps = compiled_safe_outputs['steps']
+    compiled_gate_index = next(i for i, step in enumerate(compiled_steps) if step.get('name') == gate_name)
+    compiled_gate = compiled_steps[compiled_gate_index]
+    assert compiled_gate['run'] == gate_command
+    assert compiled_gate['env'] == gate_env
+    assert 'if' not in compiled_gate
+    assert 'continue-on-error' not in compiled_gate
+    checkout_indices = [
+        i for i, step in enumerate(compiled_steps) if step.get('uses', '').startswith('actions/checkout@')
+    ]
+    download_indices = [
+        i for i, step in enumerate(compiled_steps) if step.get('uses', '').startswith('actions/download-artifact@')
+    ]
+    process_index = next(i for i, step in enumerate(compiled_steps) if step.get('id') == 'process_safe_outputs')
+    assert checkout_indices
+    assert download_indices
+    assert max(checkout_indices + download_indices) < compiled_gate_index < process_index
+
+    targeted_source = read_workflow('agentic-model-price-check.md')
+    targeted_compiled = read_workflow('agentic-model-price-check.lock.yml')
+    assert 'backfill_requests' not in targeted_source['safe-outputs'].get('needs', [])
+    assert not any(step.get('name') == gate_name for step in targeted_source['safe-outputs'].get('steps', []))
+    assert 'backfill_requests' not in targeted_compiled['jobs']['safe_outputs']['needs']
+    assert not any(step.get('name') == gate_name for step in targeted_compiled['jobs']['safe_outputs']['steps'])
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    targeted_allowed = targeted_source['safe-outputs']['create-pull-request']['allowed-files']
+    assert {
+        path for path in targeted_allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+
+
 def test_model_price_check_report_artifact_connects_upload_and_callbacks() -> None:
     artifact_name = 'model-price-check-report'
     report_path = '/tmp/gh-aw/agent/model-check-report.json'

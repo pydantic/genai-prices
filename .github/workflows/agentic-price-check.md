@@ -39,6 +39,22 @@ tools:
     - 'uv:*'
   web-fetch:
 safe-outputs:
+  needs: [backfill_requests]
+  steps:
+    - name: Check out the policy source when the publisher checkout was skipped
+      if: ${{ !contains(needs.agent.outputs.output_types, 'create_pull_request') }}
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        ref: ${{ github.sha }}
+        persist-credentials: false
+    - name: Set up uv for the trusted provider scope check
+      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      with:
+        enable-cache: false
+    - name: Verify weekly provider scope before publication
+      env:
+        PRICE_CHECK_PENDING_BACKFILL: ${{ needs.backfill_requests.outputs.pending || '[]' }}
+      run: uv run --frozen python -m scripts.price_check_scope_policy --validate-transports
   threat-detection: false
   report-failure-as-issue: false
   report-incomplete:
