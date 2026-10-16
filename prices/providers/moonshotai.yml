@@ -207,11 +207,17 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
-    prices_checked: "2026-07-16"
-    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
+    prices_checked: "2026-10-15"
+    price_comments: >-
+      Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md. Re-verified on 2026-10-15: input,
+      cached input and output rates are unchanged; the page now also publishes 5-minute cache
+      writes at $3 / 1M tokens and 1-hour cache writes at $6 / 1M tokens, both added on
+      2026-10-15.
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30
+      cache_write_mtok: 3.00
+      cache_write_1h_mtok: 6.00
       output_mtok: 15.00
 
   - id: moonshot-v1-128k

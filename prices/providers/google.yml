@@ -457,6 +457,27 @@ models:
       cache_write_1h_mtok: 20
       output_mtok: 50
 
+  - id: claude-haiku-4-5
+    canonical_model: anthropic/claude-haiku-4-5
+    match:
+      or:
+        - contains: claude-haiku-4-5
+        - contains: claude-haiku-4.5
+    context_window: 200000
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Vertex AI Global endpoint rates from https://cloud.google.com/vertex-ai/generative-ai/pricing
+      (Claude models, Global tab): input $1 / 1M tokens, output $5 / 1M tokens, 5-minute cache writes
+      $1.25 / 1M tokens, 1-hour cache writes $2 / 1M tokens, cache hits $0.10 / 1M tokens. The Vertex
+      table also publishes batch rates (half of input and output); batch variants are not modelled for
+      Vertex Claude entries in this file.
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.1
+      cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
+      output_mtok: 5
+
   - id: claude-haiku-5-5
     canonical_model: anthropic/claude-haiku-5-5
     match:
@@ -822,7 +843,12 @@ models:
         - contains: gemini-2.0-flash-thinking
         - contains: gemini-2.0-flash-latest
     context_window: 1000000
-    prices_checked: 2026-09-29
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
     prices:
       input_mtok: 0.1
       input_audio_mtok: 0.7
@@ -840,7 +866,12 @@ models:
     match:
       contains: gemini-2.0-flash-lite
     context_window: 1000000
-    prices_checked: 2025-07-04
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
@@ -1146,7 +1177,12 @@ models:
       or:
         - starts_with: gemini-3-pro-preview
         - equals: gemini-3-pro-text-preview
-    prices_checked: 2026-09-29
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
     prices:
       - prices:
           input_mtok:
@@ -1702,13 +1738,17 @@ models:
     name: Gemini Embedding 2
     description: Google's multimodal embedding model for text, images, audio, video, and documents.
     match:
-      equals: gemini-embedding-2
+      or:
+        - equals: gemini-embedding-2
+        - equals: gemini-embedding-2-preview
     context_window: 8192
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-15
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
-      every input modality.
+      every input modality. The models catalog (https://ai.google.dev/gemini-api/docs/models) names the endpoint
+      `gemini-embedding-2-preview` and the pricing page `gemini-embedding-2`; both were added to the match on
+      2026-10-15 at the published Embedding 2 rates.
     prices:
       input_mtok: 0.2
       input_image_mtok: 0.45
@@ -1827,6 +1867,22 @@ models:
           output_mtok: 3.75
           output_image_mtok: 15
 
+  - id: gemini-omni-1.1-flash
+    name: Gemini Omni Flash
+    description: Google's video generation and editing model with multimodal input.
+    match:
+      equals: gemini-omni-1.1-flash
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Omni Flash, GA): input
+      $1.50 / 1M tokens across text, image, video and audio; output $9 / 1M tokens (text) and
+      $17.50 / 1M tokens (video). The models catalog names `gemini-omni-1.1-flash` as the GA endpoint of
+      the Omni Flash family.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 9
+      output_video_mtok: 17.5
+
   - id: gemini-omni-flash-preview
     name: Gemini Omni Flash Preview
     description: Google's video generation and editing model with multimodal input.
@@ -1881,6 +1937,47 @@ models:
         tiers:
           - start: 128000
             price: 10
+
+  - id: gemini-robotics-er-2-preview
+    match:
+      equals: gemini-robotics-er-2-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens
+      and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are
+      implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not
+      represent the cache storage fee.
+    prices:
+      - prices:
+          input_mtok: 1
+          cache_read_mtok: 0.1
+          output_mtok: 5
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$2.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          output_mtok: 10
+
+  - id: gemini-robotics-er-2-streaming-preview
+    match:
+      equals: gemini-robotics-er-2-streaming-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input
+      $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01.
+      No context-caching section is published for the streaming endpoint.
+    prices:
+      - prices:
+          input_mtok: 1
+          output_mtok: 5
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$2.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 2
+          output_mtok: 10
 
   - id: gemma-2-27b-it
     name: Gemma 2 27B
