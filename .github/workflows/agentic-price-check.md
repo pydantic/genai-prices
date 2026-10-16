@@ -5,8 +5,8 @@ description: 'Check twenty-five provider records against official pricing source
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6-18 * * 1-5'
-      timezone: America/Los_Angeles
+    - cron: '0 6 * * 1'
+      timezone: UTC
   permissions:
     pull-requests: read
   skip-if-match: 'is:pr is:open author:app/genai-prices-automation'
@@ -22,7 +22,44 @@ concurrency:
 checkout:
   fetch-depth: 1
 imports:
+  - shared/price-check-engine.md
+  - pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main
   - shared/price-update.md
+pre-agent-steps:
+  - name: Install the gh-aw fetch transport
+    run: |
+      npm install --ignore-scripts --no-save --package-lock=false --no-audit --no-fund --prefix "$RUNNER_TEMP/gh-aw/price-check-fetch" undici@6.28.0
+      echo "NODE_PATH=$RUNNER_TEMP/gh-aw/price-check-fetch/node_modules${NODE_PATH:+:$NODE_PATH}" >> "$GITHUB_ENV"
+  - name: Install the price-check scope preflight
+    run: |
+      uv run python - <<'PY'
+      import json
+      import os
+      import shlex
+      import shutil
+      import subprocess
+      from pathlib import Path
+      from ruamel.yaml import YAML
+
+      directory = Path(os.environ['RUNNER_TEMP']) / 'gh-aw/price-check-scope'
+      directory.mkdir()
+      frontmatter = Path('.github/workflows/agentic-price-check.md').read_text().partition('\n---\n')[0].removeprefix('---\n')
+      workflow = YAML(typ='safe').load(frontmatter)
+      policy = directory / 'policy.json'
+      policy.write_text(json.dumps({
+          'base_sha': os.environ['GITHUB_SHA'],
+          'allowed_files': workflow['safe-outputs']['create-pull-request']['allowed-files'],
+          'helper_path': str(directory.parent / 'actions/manifest_file_helpers.cjs'),
+      }))
+      script = directory / 'check.cjs'
+      shutil.copyfile('scripts/price_check_scope.cjs', script)
+      hook = directory / 'pre-commit'
+      hook.write_text('#!/bin/sh\nexec node ' + shlex.quote(str(script)) + ' ' + shlex.quote(str(policy)) + ' --staged\n')
+      hook.chmod(0o755)
+      subprocess.run(['git', 'config', 'core.hooksPath', str(directory)], check=True)
+      with Path(os.environ['GITHUB_ENV']).open('a') as output:
+          output.write(f'PRICE_CHECK_SCOPE_COMMAND=node {shlex.quote(str(script))} {shlex.quote(str(policy))}\n')
+      PY
 tools:
   bash:
     - 'cat:*'
@@ -34,9 +71,10 @@ tools:
     - 'uv:*'
   web-fetch:
 safe-outputs:
-  # GLM-5.3-Flash is unpriced in gh-aw v0.82.2's separate detection guardrail.
   threat-detection: false
   report-failure-as-issue: false
+  report-incomplete:
+    create-issue: false
   noop:
     report-as-issue: false
   create-pull-request:
@@ -84,6 +122,7 @@ safe-outputs:
       - README.md
       - tests/test_price_calc.py
       - tests/test_price_regressions.py
+      - tests/test_price_check_additions.py
       - tests/dataset/usages.json
       - packages/js/src/__tests__/**
       - packages/go/*_test.go
@@ -97,13 +136,25 @@ jobs:
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 timeout-minutes: 90
-max-turns: 500
-# Disable gh-aw's AI-credits guardrail: GLM-5.3-Flash is absent from gh-aw v0.82.2's
-# pricing catalog, so with the guardrail active the api-proxy rejects it (HTTP 400
-# unknown_model_ai_credits). -1 makes the firewall drop maxAiCredits. Requires the
-# compiler pinned to v0.82.2 (firewall 0.27.22); see AGENTIC_PRICE_CHECK.md.
+# Disable configurable credit budgets. AWF retains its fixed 10,000-credit cap;
+# these API-equivalent rates support accounting and enforcement, not plan charges.
 max-ai-credits: -1
 max-daily-ai-credits: -1
+models:
+  # USD per million tokens, https://docs.z.ai/guides/overview/pricing (2026-10-15).
+  default-ai-credits-pricing:
+    input: 0.15
+    cache_read: 0.03
+    output: 0.50
+  providers:
+    anthropic:
+      models:
+        glm-5.3-flash:
+          # The accounting overlay uses USD per token, including credit enforcement.
+          cost:
+            input: 0.00000015
+            cache_read: 0.00000003
+            output: 0.00000050
 post-steps:
   - name: Export price-check telemetry
     if: always()
@@ -127,11 +178,18 @@ post-steps:
               return record && typeof record === 'object' && !Array.isArray(record) ? [record] : [];
             } catch { return []; }
           });
-          const log = readRecords('/tmp/gh-aw/agent-stdio.log');
-          const result = log.filter((record) => record.type === 'result').at(-1);
-          if (!result?.modelUsage || !Object.keys(result.modelUsage).length) {
-            throw new Error('No cumulative Claude modelUsage; telemetry is incomplete.');
+          const log = readRecords('/tmp/gh-aw/agent-session.jsonl');
+          const usage = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_usage.json', 'utf8'));
+          if (typeof usage.primary_model !== 'string' || !usage.primary_model) {
+            throw new Error('No canonical primary model; telemetry is incomplete.');
           }
+          const modelUsage = { [usage.primary_model]: {
+            inputTokens: usage.input_tokens, cacheReadInputTokens: usage.cache_read_tokens,
+            cacheCreationInputTokens: usage.cache_write_tokens, outputTokens: usage.output_tokens,
+          } };
+          const output = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_output.json', 'utf8'));
+          const terminalEmitted = output.items?.some((item) => ['noop', 'create_pull_request'].includes(item.type)) === true;
+          const succeeded = log.some((record) => record.type === 'session.result' && record.data?.status === 'success');
           const requests = [...new Map(readRecords(
             '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'
           ).map((record) => [record.spanId, record])).values()];
@@ -154,16 +212,16 @@ post-steps:
           }));
           const toolCounts = {};
           for (const record of log) {
-            if (record.type !== 'assistant') continue;
-            for (const item of record.message?.content ?? []) {
-              if (item.type === 'tool_use') toolCounts[item.name] = (toolCounts[item.name] ?? 0) + 1;
-            }
+            const name = record.data?.toolName;
+            if (record.type === 'tool.execution_start' && typeof name === 'string')
+              toolCounts[name] = (toolCounts[name] ?? 0) + 1;
           }
-          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: result.is_error ? 2 : 1, attributes: [
+          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: succeeded ? 1 : 2, attributes: [
             buildAttr('gen_ai.operation.name', 'invoke_agent'), buildAttr('gen_ai.agent.name', 'Price Check'),
+            buildAttr('price_check.terminal_output_emitted', terminalEmitted),
             buildAttr('price_check.tool_counts', JSON.stringify(toolCounts)),
           ] });
-          for (const [model, usage] of Object.entries(result.modelUsage)) {
+          for (const [model, usage] of Object.entries(modelUsage)) {
             const counts = {
               uncached_input: usage.inputTokens, cached_input: usage.cacheReadInputTokens,
               cache_creation: usage.cacheCreationInputTokens, output: usage.outputTokens,
@@ -173,7 +231,7 @@ post-steps:
             }
             addSpan({ spanId: createHash('sha256').update(identity + model).digest('hex').slice(0, 16),
               parentSpanId: rootId, spanName: 'price_check.usage', attributes: [
-                buildAttr('gen_ai.request.model', model), buildAttr('price_check.usage.source', 'claude.modelUsage'),
+                buildAttr('gen_ai.request.model', model), buildAttr('price_check.usage.source', 'gh-aw.agent_usage'),
                 ...Object.entries(counts).map(([key, value]) => buildAttr('price_check.usage.' + key, value)),
               ] });
           }
@@ -186,10 +244,10 @@ post-steps:
             resourceSpans: payloads.flatMap((payload) => payload.resourceSpans),
           });
           if (fs.existsSync('/tmp/gh-aw/otlp-export-errors.jsonl')) throw new Error('Logfire export failed; inspect OTLP export errors.');
-          fs.mkdirSync('/tmp/gh-aw/agent', { recursive: true });
-          fs.writeFileSync('/tmp/gh-aw/agent/telemetry.json', JSON.stringify({
+          fs.mkdirSync('/tmp/gh-aw/mcp-logs', { recursive: true });
+          fs.writeFileSync('/tmp/gh-aw/mcp-logs/price-check-telemetry.json', JSON.stringify({
             run_id: process.env.GITHUB_RUN_ID, trace_id: traceId, exported_request_spans: requests.length,
-            usage_source: 'claude.modelUsage', model_usage: result.modelUsage, tool_counts: toolCounts,
+            usage_source: 'gh-aw.agent_usage', model_usage: modelUsage, tool_counts: toolCounts,
             cost_is_client_estimate: true,
           }, null, 2));
           await core.summary.addRaw(`Logfire: exported ${requests.length} request spans and cumulative usage.\n`).write();
@@ -198,20 +256,10 @@ post-steps:
           throw error;
         }
 engine:
-  id: claude
-  args: ['--disallowedTools', 'Agent,Task']
-  # Claude Code uses GLM-5.3-Flash through Z.ai's Anthropic-compatible endpoint.
-  # The maintainer must add a ZAI_API_KEY repository secret. gh-aw's preflight
-  # only checks that the env var is non-empty.
-  model: glm-5.3-flash
-  api-target: api.z.ai
-  env:
-    ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic
-    ANTHROPIC_API_KEY: ${{ secrets.ZAI_API_KEY }}
-    ANTHROPIC_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_OPUS_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_SONNET_MODEL: glm-5.3-flash
-    ANTHROPIC_DEFAULT_HAIKU_MODEL: glm-5.3-flash
+  model: anthropic/glm-5.3-flash
+sandbox:
+  agent:
+    token-steering: false
 network:
   allowed:
     - defaults
@@ -258,6 +306,11 @@ changes and new models in one PR titled `Update provider prices`. Read the manif
 complete Steps 1-3a for one provider before moving to the next, recording findings as you go. After every provider is covered,
 follow the shared Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
+
+Keep every changed file within this workflow's `create-pull-request.allowed-files` list.
+Update existing pricing regression tests, including `tests/test_price_check_additions.py`, when prices change.
+Defer a candidate if its required regression updates need a file outside that list.
+Run `$PRICE_CHECK_SCOPE_COMMAND` before validation and before committing. Restore and defer candidates that fail this preflight.
 
 ## Step 1 - read the manifest and recorded data
 

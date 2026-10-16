@@ -14,7 +14,7 @@ WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
 def read_workflow(filename: str) -> dict[str, Any]:
     content = (WORKFLOWS / filename).read_text()
     if filename.endswith('.md'):
-        content = content.split('---', 2)[1]
+        content = content.partition('\n---\n')[0].removeprefix('---\n')
     yaml: Any = YAML(typ='safe')
     return cast(dict[str, Any], yaml.load(content))
 
@@ -22,7 +22,7 @@ def read_workflow(filename: str) -> dict[str, Any]:
 def test_price_updates_create_pr_before_notifying_slack() -> None:
     source = read_workflow('agentic-price-check.md')
     compiled = read_workflow('agentic-price-check.lock.yml')
-    expected_schedule = [{'cron': '0 6-18 * * 1-5', 'timezone': 'America/Los_Angeles'}]
+    expected_schedule = [{'cron': '0 6 * * 1', 'timezone': 'UTC'}]
     assert source['on']['schedule'] == expected_schedule
     assert compiled['on']['schedule'] == expected_schedule
     assert 'workflow_dispatch' in source['on']
@@ -31,8 +31,13 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
-    assert 'Bash(git diff:*)' in json.dumps(compiled['jobs']['agent'])
-    assert source['on']['skip-if-match'] == 'is:pr is:open author:app/genai-prices-automation'
+    proposal_query = 'is:pr is:open author:app/genai-prices-automation'
+    assert source['on']['skip-if-match'] == proposal_query
+    pre_activation = compiled['jobs']['pre_activation']
+    skip_step = next(step for step in pre_activation['steps'] if step.get('id') == 'check_skip_if_match')
+    assert skip_step['env']['GH_AW_SKIP_QUERY'] == proposal_query
+    assert "steps.check_skip_if_match.outputs.skip_check_ok == 'true'" in pre_activation['outputs']['activated']
+    assert "needs.pre_activation.outputs.activated == 'true'" in compiled['jobs']['activation']['if']
     expected_concurrency = {
         'group': '${{ github.workflow }}',
         'cancel-in-progress': False,
@@ -42,6 +47,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['concurrency'] == expected_concurrency
     assert 'create-issue' not in source['safe-outputs']
     assert source['safe-outputs']['report-failure-as-issue'] is False
+    assert source['safe-outputs']['report-incomplete'] == {'create-issue': False}
     pr = source['safe-outputs']['create-pull-request']
     assert pr['max'] == 1
     assert pr['draft'] is False
@@ -49,7 +55,15 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert base_branch is None or (isinstance(base_branch, str) and '${' not in base_branch)
     assert pr['fallback-as-issue'] is False
     assert pr['max-patch-size'] == 10240
-    assert source['engine']['args'] == ['--disallowedTools', 'Agent,Task']
+    assert source['engine']['model'] == 'anthropic/glm-5.3-flash'
+    engine = read_workflow('shared/price-check-engine.md')['engine']
+    assert engine['id'] == 'pydantic-ai'
+    assert engine['version'] == '0.56.0'
+    assert engine['env'] == {
+        'PAI_AGENT': 'scripts.price_check_agent:agent',
+        'ANTHROPIC_BASE_URL': 'https://api.z.ai/api/anthropic',
+        'ANTHROPIC_API_KEY': '${{ secrets.ZAI_API_KEY }}',
+    }
     assert 'github-token' not in pr
     assert 'PRICE_UPDATE_TOKEN' not in json.dumps(compiled)
     shared = read_workflow('shared/price-update.md')
@@ -76,12 +90,39 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert handler_config['create_pull_request']['max_patch_size'] == 10240
     execution_step = next(step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'agentic_execution')
     execution_command = execution_step['run']
-    assert '--disallowedTools Agent,Task' in execution_command
-    allowed_tools_start = execution_command.index('--allowed-tools')
-    allowed_tools_end = execution_command.index('--debug-file', allowed_tools_start)
-    allowed_tools = execution_command[allowed_tools_start:allowed_tools_end]
-    assert 'Bash(' in allowed_tools
-    assert 'WebFetch' in allowed_tools
+    assert 'pydantic-ai_harness.cjs clai2' in execution_command
+    assert '--exclude-env ANTHROPIC_API_KEY' in execution_command
+    assert '--anthropic-api-base-path /api/anthropic' in execution_command
+    assert execution_step['env']['PAI_MODEL'] == 'anthropic/glm-5.3-flash'
+    assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_agent:agent'
+    assert execution_step['env']['ANTHROPIC_API_KEY'] == '${{ secrets.ZAI_API_KEY }}'
+    assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.56.0'
+    assert 'observability' not in source
+    excluded_env = read_workflow('shared/price-check-engine.md')['excluded-env']
+    assert excluded_env == [
+        'GH_AW_OTLP_ENDPOINTS',
+        'OTEL_EXPORTER_OTLP_ENDPOINT',
+        'OTEL_EXPORTER_OTLP_HEADERS',
+    ]
+    for name in excluded_env:
+        assert f'--exclude-env {name}' in execution_command
+    config_line = next(
+        line
+        for line in execution_command.splitlines()
+        if 'awf-config.json' in line and line.strip().startswith('printf')
+    )
+    proxy = json.loads(config_line.split("' '", 1)[1].split("' >", 1)[0])['apiProxy']
+    assert proxy['maxRuns'] == 500
+    assert 'maxAiCredits' not in proxy
+    assert proxy['enableTokenSteering'] is False
+    assert proxy['modelFallback'] == {'enabled': False}
+    assert proxy['targets']['anthropic'] == {'host': 'api.z.ai'}
+    assert proxy['defaultAiCreditsPricing'] == {'input': 0.15, 'cachedInput': 0.03, 'output': 0.5}
+    assert proxy['providers']['anthropic']['models']['glm-5.3-flash']['cost'] == {
+        'input': 0.00000015,
+        'cache_read': 0.00000003,
+        'output': 0.00000050,
+    }
     assert token_step['with'] == {
         'client-id': app['client-id'],
         'private-key': app['private-key'],
@@ -99,8 +140,18 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert 'prices/new_data/v2/data_slim.json' in pr['allowed-files']
     assert 'prices/new_data/v2/*.json' not in pr['allowed-files']
     assert 'packages/go/internal/data/prices.json' in pr['allowed-files']
+    assert {path for path in pr['allowed-files'] if path.startswith('tests/')} == {
+        'tests/test_price_calc.py',
+        'tests/test_price_regressions.py',
+        'tests/test_price_check_additions.py',
+        'tests/dataset/usages.json',
+    }
     assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
-    assert source['imports'] == ['shared/price-update.md']
+    assert source['imports'] == [
+        'shared/price-check-engine.md',
+        'pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@main',
+        'shared/price-update.md',
+    ]
     assert 'SLACK_WEBHOOK_URL' not in json.dumps(compiled['jobs']['agent'])
     assert 'PRICE_UPDATE_APP_PRIVATE_KEY' not in json.dumps(compiled['jobs']['agent'])
     assert compiled['jobs']['agent']['needs'] == 'activation'
@@ -239,13 +290,14 @@ def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None
     driver = r"""
 const script = JSON.parse(process.env.EXPORT_SCRIPT);
 const files = {
-  '/tmp/gh-aw/agent-stdio.log': [
+  '/tmp/gh-aw/agent-session.jsonl': [
     'debug output', 'null',
-    JSON.stringify({type: 'assistant', message: {content: [{type: 'tool_use', name: 'WebFetch'}]}}),
-    JSON.stringify({type: 'result', usage: {output_tokens: 2}, modelUsage: {
-      model: {inputTokens: 11, cacheReadInputTokens: 100, cacheCreationInputTokens: 0, outputTokens: 7}
-    }})
+    JSON.stringify({type: 'tool.execution_start', data: {toolName: 'web_fetch'}}),
+    JSON.stringify({type: 'session.result', data: {status: 'success'}})
   ].join('\n'),
+  '/tmp/gh-aw/agent_usage.json': JSON.stringify({primary_model: 'model', input_tokens: 11,
+    cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 7}),
+  '/tmp/gh-aw/agent_output.json': JSON.stringify({items: [{type: 'noop'}]}),
   '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl': [1, 1].map(() => JSON.stringify({
     spanId: '1234567890abcdef', name: 'api_proxy.anthropic.request', startTimeMs: 1000, endTimeMs: 2000,
     attributes: {'awf.request_id': 'request-1'}, status: {code: 1}, kind: 3
@@ -275,11 +327,17 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     .map(({key, value}) => [key, value]));
   const agent = spans.find((span) => span.spanName === 'invoke_agent');
   const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
+  const terminalEmitted = agent.attributes.find(({key}) => key === 'price_check.terminal_output_emitted').value;
+  const marker = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
+  files['/tmp/gh-aw/agent_output.json'] = JSON.stringify({items: [{type: 'report_incomplete'}]});
+  files['/tmp/gh-aw/agent-session.jsonl'] = files['/tmp/gh-aw/agent-session.jsonl'].replace('"status":"success"', '"status":"error"');
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
+  const partialStatus = payload.resourceSpans.find((span) => span.spanName === 'invoke_agent').statusCode;
   let incomplete = false;
-  files['/tmp/gh-aw/agent-stdio.log'] = 'no result';
+  files['/tmp/gh-aw/agent_usage.json'] = '{}';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, toolCounts, incomplete, summaries}));
+    usage, toolCounts, terminalEmitted, marker, completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
 })();
 """
     result = subprocess.run(
@@ -294,12 +352,16 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert output['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
     assert output['usage'] == {
         'gen_ai.request.model': 'model',
-        'price_check.usage.source': 'claude.modelUsage',
+        'price_check.usage.source': 'gh-aw.agent_usage',
         'price_check.usage.uncached_input': 11,
         'price_check.usage.cached_input': 100,
         'price_check.usage.cache_creation': 0,
         'price_check.usage.output': 7,
     }
     assert output['incomplete'] is True
-    assert output['toolCounts'] == {'WebFetch': 1}
+    assert output['completedStatus'] == 1
+    assert output['partialStatus'] == 2
+    assert output['toolCounts'] == {'web_fetch': 1}
+    assert output['terminalEmitted'] is True
+    assert output['marker']['exported_request_spans'] == 1
     assert any('telemetry incomplete' in summary for summary in output['summaries'])
