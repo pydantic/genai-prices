@@ -5,8 +5,8 @@ description: 'Check twenty-five provider records against official pricing source
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6-18 * * 1-5'
-      timezone: America/Los_Angeles
+    - cron: '0 6 * * 1'
+      timezone: UTC
   permissions:
     pull-requests: read
   skip-if-match: 'is:pr is:open author:app/genai-prices-automation'

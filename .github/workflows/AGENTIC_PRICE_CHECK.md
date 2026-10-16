@@ -10,11 +10,9 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow checks all twenty-five covered provider records hourly from 06:00
-through 18:00 inclusive, Monday through Friday in `America/Los_Angeles`, and on manual dispatch. gh-aw v0.91.1 preserves
-the schedule's native timezone field in the compiled workflow and follows daylight saving time: the window is 14:00–02:00
-UTC the next day during PST and 13:00–01:00 UTC the next day during PDT. Friday's local schedule may therefore include
-runs on Saturday in UTC. See the [gh-aw schedule syntax] and [GitHub Actions schedule syntax]. The workflow combines
+This [gh-aw](https://github.com/github/gh-aw) workflow schedules a check of all twenty-five covered provider records
+each Monday at 06:00 UTC and supports manual dispatch. See the [gh-aw schedule syntax] and
+[GitHub Actions schedule syntax]. The workflow combines
 verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Scheduled runs target
 `main`. Manual dispatch uses `main` unless you select a branch with `--ref`.
 A separate job sends that PR's link to Slack. Runs with no verified changes send no notification. You can read skipped

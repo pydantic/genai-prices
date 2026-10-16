@@ -22,7 +22,7 @@ def read_workflow(filename: str) -> dict[str, Any]:
 def test_price_updates_create_pr_before_notifying_slack() -> None:
     source = read_workflow('agentic-price-check.md')
     compiled = read_workflow('agentic-price-check.lock.yml')
-    expected_schedule = [{'cron': '0 6-18 * * 1-5', 'timezone': 'America/Los_Angeles'}]
+    expected_schedule = [{'cron': '0 6 * * 1', 'timezone': 'UTC'}]
     assert source['on']['schedule'] == expected_schedule
     assert compiled['on']['schedule'] == expected_schedule
     assert 'workflow_dispatch' in source['on']
