@@ -159,7 +159,7 @@ The library uses intelligent provider matching:
 
 - Always specify `providerId` if you know it (e.g., `openai`, `google`, etc.) for best results
 - Use `provider:model` format in CLI for explicit provider selection
-- The async API with `--auto-update` provides the most up-to-date pricing
+- Use the CLI's `--auto-update` flag to download current pricing before calculating
 
 ### Custom Pricing / New Models
 
@@ -245,6 +245,12 @@ if (asyncResult === null) {
   - Check that the model name is correct and supported by the provider
 
 ## CLI
+
+By default, the CLI uses bundled pricing data without network access. Add `--auto-update` to a calculation
+or `list` command to download the current catalog once and wait for it before producing results. All models
+in that invocation use the same refreshed catalog. If downloading or activating the catalog fails, the CLI
+prints an error and exits with a nonzero status instead of using stale data. Network requests time out after
+10 seconds. The refreshed data is used only for that invocation; it is not saved to disk.
 
 The easiest way to run the latest version of the package as a CLI tool is through npx:
 
