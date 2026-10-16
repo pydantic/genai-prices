@@ -16746,6 +16746,22 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inception/mercury-2.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='inception/mercury-2.5'),
+                        ClauseEquals(equals='inception/mercury-2.5-20260908'),
+                        ClauseEquals(equals='inception/mercury-2.5-preview'),
+                    ]
+                ),
+                name='Mercury 2.5',
+                context_window=260000,
+                price_comments="Current launch rates are 80% off the list prices of $0.20 input, $0.02 cached input, and $0.75 output per million tokens. Inception does not state when the launch discount ends, so no future price change is scheduled here. OpenRouter serves the inception/mercury-2.5-preview slug, which Inception's models page links to, from the same endpoint at the same rates. https://openrouter.ai/api/v1/models/inception/mercury-2.5/endpoints https://docs.inceptionlabs.ai/get-started/models",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.04'), cache_read_mtok=Decimal('0.004'), output_mtok=Decimal('0.15')
+                ),
+            ),
+            ModelInfo(
                 id='inclusionai/ling-2.6-1t',
                 match=ClauseEquals(equals='inclusionai/ling-2.6-1t'),
                 name='Ling-2.6-1T',
