@@ -2,12 +2,15 @@
 
 import asyncio
 import json
+import re
+import time
 from pathlib import Path
 
 from pydantic import TypeAdapter
 from pydantic_ai.exceptions import ModelRetry
 from typing_extensions import TypedDict
 
+from scripts.price_check_coverage import record_fetch, start_fetch
 from scripts.price_check_sources import DEFAULT_ROOT, official_source_hosts
 
 
@@ -28,18 +31,36 @@ allowed_hosts = official_source_hosts(DEFAULT_ROOT)
 
 async def web_fetch(url: str, start_index: int = 0, max_length: int = 20_000) -> WebFetchResult:
     """Fetch an official HTTPS source through AWF. Use start_index to continue truncated pages; max_length is at most 20000."""
-    process = await asyncio.create_subprocess_exec(
-        'node',
-        str(Path(__file__).with_suffix('.cjs')),
-        stdin=asyncio.subprocess.PIPE,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await process.communicate(
-        json.dumps(
-            {'url': url, 'start_index': start_index, 'max_length': max_length, 'allowedHosts': allowed_hosts}
-        ).encode()
-    )
-    if process.returncode:
-        raise ModelRetry(stderr.decode().strip())
-    return page_adapter.validate_json(stdout)
+    attempt_id = start_fetch(url, start_index, max_length)
+    completion: dict[str, object] = {'type': 'finish', 'attempt_id': attempt_id, 'outcome': 'error'}
+    try:
+        process = await asyncio.create_subprocess_exec(
+            'node',
+            str(Path(__file__).with_suffix('.cjs')),
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await process.communicate(
+            json.dumps(
+                {'url': url, 'start_index': start_index, 'max_length': max_length, 'allowedHosts': allowed_hosts}
+            ).encode()
+        )
+        if process.returncode:
+            completion['error_kind'] = 'transport'
+            if match := re.match(rb'web_fetch received HTTP ([0-9]{3}) ', stderr):
+                completion['http_status'] = int(match[1])
+            raise ModelRetry(stderr.decode().strip())
+        page = page_adapter.validate_json(stdout)
+        completion.update({key: value for key, value in page.items() if key not in {'url', 'content', 'content_type'}})
+        completion['outcome'] = 'response'
+        return page
+    except asyncio.CancelledError:
+        completion['error_kind'] = 'cancelled'
+        raise
+    except Exception:
+        completion.setdefault('error_kind', 'invalid_response_or_execution')
+        raise
+    finally:
+        completion['time_ms'] = int(time.time() * 1000)
+        record_fetch(completion)

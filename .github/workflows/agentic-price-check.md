@@ -226,6 +226,39 @@ complete Steps 1-3a for one provider before moving to the next, recording findin
 follow the shared Steps 4-5. Complete the evidence check in Step 3a before editing any existing rate.
 Include incomplete findings in the PR body or the noop reason; do not edit unverified prices.
 
+## Coverage results
+
+Read `$RUNNER_TEMP/gh-aw/price-check-coverage/plan.json` for the complete expected provider and source scopes.
+After each provider, update `/tmp/gh-aw/agent/provider-results.json`. Preserve previous provider results.
+Use this shape, with one entry for every planned provider, including `_discovery` when selected:
+
+```json
+{
+  "providers": [
+    {
+      "provider_id": "openai",
+      "status": "partial",
+      "sources": [{ "url": "exact planned source URL", "status": "readable" }],
+      "backfill": [{ "request_id": "selected request ID", "status": "unresolved" }],
+      "price_changes": 0,
+      "new_models": 0,
+      "potential_removals": 0,
+      "unchecked_fields": 1,
+      "deferred_changes": 0
+    }
+  ]
+}
+```
+
+Use `checked` only after completing every in-scope comparison. Use `partial` for incomplete comparisons and
+`unresolved` when no reliable comparison is possible. Count findings, including deferred candidates whose timing lacks evidence.
+Assess every exact planned source as `readable`, `unreadable`, or `unresolved` for its stated purpose.
+HTTP success alone does not make a source readable. Record every selected backlog request under its provider's `backfill`.
+Use `checked`, `partial`, or `unresolved` for each request's model/provider comparison; use an empty array for no backlog.
+These results describe research completeness. Keep the separate rollout callback report required below.
+The fetch tool automatically records retrieval attempts and pagination without page content.
+Missing results and unconsumed page ranges remain incomplete in the durable coverage report.
+
 Keep every changed file within this workflow's `create-pull-request.allowed-files` list.
 Update existing pricing regression tests, including `tests/test_price_check_additions.py`, when prices change.
 Defer a candidate if its required regression updates need a file outside that list.

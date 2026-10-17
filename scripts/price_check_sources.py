@@ -3,9 +3,10 @@
 import argparse
 import json
 from pathlib import Path
+from typing import Annotated
 
 import yaml
-from pydantic import BaseModel, ConfigDict, HttpUrl, StrictStr, TypeAdapter
+from pydantic import BaseModel, ConfigDict, HttpUrl, StrictStr, StringConstraints, TypeAdapter
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 _http_url_adapter = TypeAdapter(HttpUrl)
@@ -41,6 +42,39 @@ class ProviderSource(BaseModel):
     name: str
     file: str
     sources: tuple[str, ...]
+
+
+class PendingBackfill(BaseModel):
+    model_config = ConfigDict(extra='ignore', strict=True)
+
+    request_id: Annotated[StrictStr, StringConstraints(min_length=1)]
+    target_model: Annotated[StrictStr, StringConstraints(min_length=1)]
+    provider_id: Annotated[StrictStr, StringConstraints(min_length=1)]
+
+
+def pending_backfill_rows(pending: object, known_ids: set[str]) -> list[PendingBackfill]:
+    """Validate the receiver's selected backlog without interpreting its extra fields."""
+    try:
+        rows = TypeAdapter(list[PendingBackfill]).validate_python(pending, strict=True)
+    except ValueError as exc:
+        raise ValueError('Pending price-check backfill rows are invalid') from exc
+    unknown_ids = {row.provider_id for row in rows} - known_ids - {'_discovery'}
+    if unknown_ids:
+        raise ValueError(f'Pending price-check backfill has unknown provider IDs: {sorted(unknown_ids)}')
+    return rows
+
+
+def weekly_provider_sources(root: Path = DEFAULT_ROOT) -> tuple[ProviderSource, ...]:
+    """Select the weekly manifest's exact required URLs, rather than every allowed URL."""
+    records = {record.file: record for record in load_provider_sources(root)}
+    manifest = _WeeklyManifest.model_validate(_load_document(root / '.github/agentic-price-check-providers.yml'))
+    unknown_files = {provider.file for provider in manifest.providers} - records.keys()
+    if unknown_files:
+        raise ValueError(f'Weekly manifest references unknown provider files: {sorted(unknown_files)}')
+    return tuple(
+        records[provider.file].model_copy(update={'sources': tuple(sorted(set(provider.sources)))})
+        for provider in manifest.providers
+    )
 
 
 # These exact hosts have official links in their provider YAML files. They are

@@ -48,4 +48,12 @@ pre-agent-steps:
     run: |
       mkdir -p "$RUNNER_TEMP/gh-aw/price-check"
       uv run python -m scripts.price_check_sources > "$RUNNER_TEMP/gh-aw/price-check/provider-sources.json"
+  - name: Prepare weekly coverage reporting
+    if: github.workflow == 'Price Check'
+    env:
+      PRICE_CHECK_PENDING_BACKFILL: ${{ needs.backfill_requests.outputs.pending || '[]' }}
+    run: |
+      mkdir -p "$RUNNER_TEMP/gh-aw/price-check-coverage"
+      uv run python -m scripts.price_check_coverage > "$RUNNER_TEMP/gh-aw/price-check-coverage/plan.json"
+      cp scripts/price_check_coverage.cjs "$RUNNER_TEMP/gh-aw/price-check-coverage/summarize.cjs"
 ---

@@ -10,13 +10,12 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Annotated
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, StringConstraints, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from pydantic_core import ValidationError
 
-from scripts.price_check_sources import load_provider_sources
+from scripts.price_check_sources import load_provider_sources, pending_backfill_rows, weekly_provider_sources
 
 _TARGETED_SOURCE = 'agentic-model-price-check.md'
 _WEEKLY_SOURCE = 'agentic-price-check.md'
@@ -25,18 +24,6 @@ _PROVIDER_FILE_PREFIX = 'prices/providers/'
 _DEFAULT_ARTIFACT_DIR = Path('/tmp/gh-aw')
 _MAX_TRANSPORT_BYTES = 10 * 1024 * 1024
 _OBJECT_ID = re.compile(r'^[0-9a-f]{40}$|^[0-9a-f]{64}$')
-
-
-class _ManifestProvider(BaseModel):
-    model_config = ConfigDict(extra='ignore', strict=True)
-
-    file: Annotated[StrictStr, StringConstraints(min_length=1)]
-
-
-class _WeeklyManifest(BaseModel):
-    model_config = ConfigDict(extra='ignore', strict=True)
-
-    providers: list[_ManifestProvider]
 
 
 class _CreatePullRequestConfig(BaseModel):
@@ -57,43 +44,8 @@ class _WorkflowConfig(BaseModel):
     safe_outputs: _SafeOutputsConfig = Field(alias='safe-outputs')
 
 
-class _PendingBackfillRow(BaseModel):
-    model_config = ConfigDict(extra='ignore', strict=True)
-
-    request_id: Annotated[StrictStr, StringConstraints(min_length=1)]
-    target_model: Annotated[StrictStr, StringConstraints(min_length=1)]
-    provider_id: Annotated[StrictStr, StringConstraints(min_length=1)]
-
-
-_PENDING_ROWS = TypeAdapter(list[_PendingBackfillRow])
-
-
 def _is_provider_yaml(path: str) -> bool:
     return path.startswith(_PROVIDER_FILE_PREFIX) and path.endswith(('.yml', '.yaml'))
-
-
-def _provider_files_from_weekly_manifest(root: Path, known_files: set[str]) -> set[str]:
-    manifest_path = root / '.github/agentic-price-check-providers.yml'
-    raw: object = yaml.safe_load(manifest_path.read_text())
-    manifest = _WeeklyManifest.model_validate(raw)
-    files = {provider.file for provider in manifest.providers}
-    unknown_files = files - known_files
-    if unknown_files:
-        raise ValueError(f'Weekly manifest references unknown provider files: {sorted(unknown_files)}')
-    return files
-
-
-def _pending_provider_ids(pending_backfill: object, known_ids: set[str]) -> set[str]:
-    try:
-        rows = _PENDING_ROWS.validate_python(pending_backfill, strict=True)
-    except ValidationError as exc:
-        raise ValueError('Pending price-check backfill rows are invalid') from exc
-
-    provider_ids = {row.provider_id for row in rows}
-    unknown_ids = provider_ids - known_ids - {_DISCOVERY_PROVIDER_ID}
-    if unknown_ids:
-        raise ValueError(f'Pending price-check backfill has unknown provider IDs: {sorted(unknown_ids)}')
-    return provider_ids
 
 
 def allowed_price_check_files(
@@ -119,8 +71,8 @@ def allowed_price_check_files(
         files_by_id[provider.id] = provider.file
         files_by_path[provider.file] = provider.id
 
-    ordinary_files = _provider_files_from_weekly_manifest(root, set(files_by_path))
-    pending_ids = _pending_provider_ids(pending_backfill, set(files_by_id))
+    ordinary_files = {provider.file for provider in weekly_provider_sources(root)}
+    pending_ids = {row.provider_id for row in pending_backfill_rows(pending_backfill, set(files_by_id))}
     if _DISCOVERY_PROVIDER_ID in pending_ids:
         allowed_provider_files = set(files_by_path)
     else:

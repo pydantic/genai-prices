@@ -26,8 +26,8 @@ request spans, including 620 HTTP 429 responses and two HTTP 502 responses, alon
 of 17 active tasks. Price Check uses `Coder(sub_agents=False)` to keep research in one execution context.
 This historical measurement describes one Claude Code run and does not predict CLAI 2 runtime.
 
-See [performance measurements and implementation plan](AGENTIC_PRICE_CHECK_PERFORMANCE.md) for the subsequent
-51m55s run, whole-run token accounting, evidence gaps, and the proposed deterministic checks and bounded parallelism.
+See [performance measurements and implementation plan](AGENTIC_PRICE_CHECK_PERFORMANCE.md) for historical measurements,
+current-engine accounting, and exact-source coverage. Historical Claude runs are not a baseline for the current engine.
 
 ## Configuration
 
@@ -102,6 +102,32 @@ nested tool responses that the code does not return are not recorded separately.
 The `agent` artifact includes `mcp-logs/price-check-telemetry.json` with the compact per-run accounting and tool counts, so future
 investigations can start there without processing the full transcript. Dollar fields remain client estimates.
 
+### Weekly coverage results
+
+Each weekly run publishes `coverage.json` in the `price-check-coverage` Actions artifact and a compact provider table in
+the run summary, including failed and incomplete checks. Preflight snapshots the manifest's exact required URLs and the
+selected rollout backlog before research. Outside-manifest backlog providers use the existing trusted source selection.
+Discovery requests remain explicit scopes; they do not expand the ordinary provider sweep.
+
+`web_fetch` records actual attempt starts and completions automatically. The ledger includes failures, interrupted attempts,
+requested offsets, returned ranges, total lengths, truncation and duration. Arbitrary follow-up URLs and exception text
+are omitted. A required source is `retrieved` only when successful nonempty ranges cover the whole response without gaps
+and agree on total length. Retries remain visible. Follow-up fetches never substitute for a missing exact required URL.
+Pages can change between requests; range coverage does not establish a stable source snapshot.
+
+Provider results are separately labelled as agent-reported. Each result assesses source readability, comparison status,
+selected backlog pairs, and counts of price changes, new models, potential removals, unchecked fields and deferred changes.
+A provider is complete only with full retrieval, readable source assessments, checked comparisons and no unchecked or
+deferred findings. Missing provider, source or backlog results remain explicit; HTTP success cannot establish verification.
+These files provide observability, not a security attestation: the agent controls its execution and can alter its workspace.
+The trusted post-agent summarizer reads bounded regular files and publishes only the defined metadata fields.
+The separate `model-price-check-report` artifact and rollout callbacks retain their existing contract.
+
+The existing trusted Logfire exporter adds `price_check.coverage` and one `price_check.provider_result` span per expected
+provider to the same run trace. The coverage span contains totals and missing/invalid input states. Provider spans include
+retrieval, agent-reported semantic status, compact source coverage, findings counts and selected backlog results.
+No response page content or additional credential enters these spans. Coverage export failure preserves usage export.
+
 [GenAI Prices Automation](https://github.com/apps/genai-prices-automation), App ID `1641661`, must be installed on
 `pydantic/genai-prices` with **Contents: read/write** and **Pull requests: read/write**. You can generate a private key in
 [the App's settings](https://github.com/organizations/pydantic/settings/apps/genai-prices-automation) under **Private keys**.
@@ -171,7 +197,7 @@ as clean. A missing model on a pricing page is never enough evidence to remove i
 
 ```bash
 gh extension install github/gh-aw --pin v0.91.1
-gh aw compile --no-check-update agentic-price-check
+gh aw compile --no-check-update agentic-price-check agentic-model-price-check
 ```
 
 The `.md` files are source. The `.lock.yml` files are compiled output. Never edit a lock file by hand. Compile this
@@ -195,7 +221,7 @@ remains disabled under the existing safe-output policy.
 ### Verify a branch run
 
 ```bash
-gh workflow run agentic-price-check.lock.yml --ref codex/price-check-clai2-engine
+gh workflow run agentic-price-check.lock.yml --ref YOUR_BRANCH
 ```
 
 Check that the `agent` job executed; a successful `pre_activation` followed by skipped jobs is not an engine test.
@@ -205,6 +231,11 @@ Inspect `usage/aw_session.jsonl` and the API-proxy audit for reported usage and 
 Confirm that safe outputs processed a real noop or created a PR. A noop must skip `notify_slack`;
 a created PR must pass its actual URL to the unchanged Slack workflow. Preserve run URLs and source SHAs
 when recording verification.
+
+Download `price-check-coverage` and compare every expected provider and source against the run summary and correlated
+Logfire coverage/provider spans. Missing reports and unreadable sources are incomplete research, even when the job succeeds.
+Use `agent_usage.json` or `mcp-logs/price-check-telemetry.json` for all four canonical usage components. Preserve the run URL,
+attempt, source SHA, model and engine version with each measurement. Do not infer a speed improvement from one run.
 
 The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
 Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.

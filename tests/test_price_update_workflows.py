@@ -168,9 +168,12 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
         'Install the gh-aw fetch transport',
         'Install the price-check scope preflight',
         'Snapshot trusted provider sources',
+        'Prepare weekly coverage reporting',
     ]
     observability = read_workflow('shared/price-check-observability.md')
     assert [step['name'] for step in observability['post-steps']] == [
+        'Summarize weekly price-check coverage',
+        'Upload weekly price-check coverage',
         'Export price-check telemetry',
         'Stage the model price-check report',
         'Upload the model price-check report',
@@ -612,7 +615,8 @@ def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
         for step in steps[:export_index]:
             assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
         assert steps[export_index]['env'] == {
-            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
+            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}',
+            'PRICE_CHECK_COVERAGE_PATH': '${{ steps.price-check-coverage.outputs.path }}',
         }
         assert steps[export_index]['if'] == 'always()'
         assert steps[export_index]['continue-on-error'] is True
@@ -620,7 +624,9 @@ def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
 
 def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None:
     observability = read_workflow('shared/price-check-observability.md')
-    script = observability['post-steps'][0]['with']['script']
+    script = next(
+        step['with']['script'] for step in observability['post-steps'] if step['name'] == 'Export price-check telemetry'
+    )
     driver = r"""
 const script = JSON.parse(process.env.EXPORT_SCRIPT);
 const files = {
@@ -638,17 +644,28 @@ const files = {
   })).join('\n')
 };
 let payload;
+let coverageMode = '';
 const summaries = [];
 const core = {summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
 const fakeRequire = (name) => {
   if (name === 'node:fs') return {
-    readFileSync: (file) => files[file], existsSync: () => false,
+    readFileSync: (file) => files[file], existsSync: (file) => Boolean(coverageMode) && file.endsWith('/plan.json'),
     mkdirSync: () => {}, writeFileSync: (file, value) => { files[file] = value; }
   };
   if (name.endsWith('send_otlp_span.cjs')) return {
     buildAttr: (key, value) => ({key, value}),
     buildOTLPPayload: (options) => ({resourceSpans: [options]}),
     sendOTLPSpan: async (endpoint, data) => { payload = {endpoint, ...data}; }
+  };
+  if (name.endsWith('summarize.cjs')) return {
+    readBounded: () => {
+      if (coverageMode === 'invalid') throw new Error('Invalid report');
+      return JSON.stringify({ledger_status: 'present', semantic_results_status: 'missing',
+        totals: {providers_expected: 1, providers_complete: 0}, providers: [{provider_id: 'openai',
+          retrieval_status: 'retrieved', semantic_status: 'missing', complete: false,
+          findings: null, sources: [{url: 'https://official.example/prices', retrieval_status: 'retrieved',
+            semantic_status: 'missing', attempts: [{content: 'must not export'}]}], backfill: []}]});
+    }
   };
   return require(name);
 };
@@ -668,12 +685,21 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   files['/tmp/gh-aw/agent-session.jsonl'] = files['/tmp/gh-aw/agent-session.jsonl'].replace('"status":"success"', '"status":"error"');
   await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
   const partialStatus = payload.resourceSpans.find((span) => span.spanName === 'invoke_agent').statusCode;
+  coverageMode = 'valid';
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_RUN_ID: '123'}}, core);
+  const coverageSpans = payload.resourceSpans;
+  const provider = coverageSpans.find((span) => span.spanName === 'price_check.provider_result');
+  const coverage = coverageSpans.find((span) => span.spanName === 'price_check.coverage');
+  coverageMode = 'invalid';
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
+  const unavailable = payload.resourceSpans.find((span) => span.spanName === 'price_check.coverage').attributes;
+  const usageSurvived = payload.resourceSpans.some((span) => span.spanName === 'price_check.usage');
   let incomplete = false;
   files['/tmp/gh-aw/agent_usage.json'] = '{}';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
     usage, toolCounts, terminalEmitted, marker, requestId: resource['price_check.request_id'],
-    completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
+    completedStatus: agent.statusCode, partialStatus, incomplete, summaries, provider, coverage, unavailable, usageSurvived}));
 })();
 """
     result = subprocess.run(
@@ -701,4 +727,13 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert output['terminalEmitted'] is True
     assert output['marker']['exported_request_spans'] == 1
     assert output['requestId'] == ''
+    provider = output['provider']
+    assert provider['parentSpanId'] == output['coverage']['spanId']
+    attributes = {attribute['key']: attribute['value'] for attribute in provider['attributes']}
+    assert attributes['price_check.provider_id'] == 'openai'
+    assert attributes['price_check.semantic_status'] == 'missing'
+    assert attributes['price_check.result_source'] == 'agent_report'
+    assert 'must not export' not in json.dumps(provider)
+    assert output['usageSurvived'] is True
+    assert output['unavailable'] == [{'key': 'price_check.coverage.ledger_status', 'value': 'unavailable'}]
     assert any('telemetry incomplete' in summary for summary in output['summaries'])
