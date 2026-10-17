@@ -1,0 +1,646 @@
+{
+  "recorded_on": "2026-10-17",
+  "repository": "pydantic/genai-prices",
+  "engine": {
+    "id": "pydantic-ai",
+    "version": "0.56.0",
+    "model": "anthropic/glm-5.3-flash",
+    "subagents": false
+  },
+  "test_controls": ["skip-if-match removed", "safe-outputs.staged=true", "report_backfill disabled"],
+  "source": "GitHub Actions artifacts; exact-run Logfire MCP, canonical session and unique proxy-usage crosschecks",
+  "accounting": "Canonical reported usage is separate from provider billing; unavailable usage remains null, never inferred zero",
+  "successful_performance_baseline_available": false,
+  "runs": [
+    {
+      "status": "quota_blocked_before_research",
+      "run_id": "39051923357",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/39051923357",
+      "run_attempt": 1,
+      "implementation_sha": "8b80d86ed936f69a2ea394ac65ece846f8dab690",
+      "verification_sha": "7111cf91e6e1d3fc01dc7f06e2da9f1648bc6599",
+      "created_at": "2026-10-17T17:01:17Z",
+      "completed_at": "2026-10-17T17:06:23Z",
+      "workflow_duration_seconds": 306,
+      "agent_job_duration_seconds": 212,
+      "api_requests": {
+        "total": 4,
+        "model_catalog": 1,
+        "model_messages": 3,
+        "successful_model_messages": 0,
+        "http_429": 3
+      },
+      "quota_error": {
+        "code": "1310",
+        "message": "Weekly/Monthly Limit Exhausted",
+        "reset_reported": "2026-10-21 01:38:02",
+        "reset_timezone": "unspecified"
+      },
+      "canonical_token_usage": null,
+      "token_usage_records": 0,
+      "coverage": {
+        "ledger_status": "missing",
+        "semantic_results_status": "missing",
+        "totals": {
+          "providers_expected": 25,
+          "providers_complete": 0,
+          "sources_expected": 37,
+          "sources_retrieved": 0,
+          "attempts": 0,
+          "failures": 0,
+          "incomplete_attempts": 0,
+          "follow_up_attempts": 0
+        }
+      },
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback",
+      "limitations": [
+        "No research or successful model inference completed; elapsed time is not a successful-run benchmark.",
+        "Missing token usage is unavailable rather than a numeric zero.",
+        "No selected rollout backlog; the live receiver and report callback were not verified.",
+        "Missing canonical usage handling was fixed and live-verified in run 39053454043."
+      ],
+      "logfire": {
+        "live_export_status": "failed_missing_canonical_usage"
+      },
+      "canonical_usage_source": null
+    },
+    {
+      "status": "balance_blocked_before_research",
+      "run_id": "39053454043",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/39053454043",
+      "run_attempt": 1,
+      "implementation_sha": "94fcc5ecb16a8870eacb8d5005fc581494e9dca2",
+      "verification_sha": "16be9da3ac716618247a7085baa1389078c5a9fa",
+      "created_at": "2026-10-17T17:22:14Z",
+      "completed_at": "2026-10-17T17:26:36Z",
+      "workflow_duration_seconds": 262,
+      "agent_job_duration_seconds": 168,
+      "api_requests": {
+        "total": 4,
+        "model_catalog": 1,
+        "model_messages": 3,
+        "successful_model_messages": 0,
+        "http_429": 3
+      },
+      "provider_error": {
+        "code": "1113",
+        "message": "Insufficient balance or no resource package. Please recharge."
+      },
+      "canonical_token_usage": null,
+      "token_usage_records": 0,
+      "coverage": {
+        "ledger_status": "missing",
+        "semantic_results_status": "missing",
+        "totals": {
+          "providers_expected": 25,
+          "providers_complete": 0,
+          "sources_expected": 37,
+          "sources_retrieved": 0,
+          "attempts": 0,
+          "failures": 0,
+          "incomplete_attempts": 0,
+          "follow_up_attempts": 0
+        }
+      },
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback",
+      "logfire": {
+        "live_export_status": "verified",
+        "project": "logfire/genai-prices",
+        "trace_id": "447b6b239a0a0ef91082bd8ebf7324af",
+        "span_counts": {
+          "invoke_agent": 1,
+          "price_check.coverage": 1,
+          "price_check.provider_result": 25,
+          "api_proxy.anthropic.request": 4,
+          "price_check.usage": 0
+        },
+        "usage_status": "missing",
+        "coverage_artifact_matches": true
+      },
+      "limitations": [
+        "No successful model inference or research; timings are startup failure, not performance baseline.",
+        "Token usage is unavailable rather than zero.",
+        "Selected rollout backlog and callback were not live-verified."
+      ],
+      "canonical_usage_source": null
+    },
+    {
+      "status": "cancelled_for_codemode_bridge_fix",
+      "run_id": "39054066763",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/39054066763",
+      "run_attempt": 1,
+      "implementation_sha": "94fcc5ecb16a8870eacb8d5005fc581494e9dca2",
+      "verification_sha": "16be9da3ac716618247a7085baa1389078c5a9fa",
+      "created_at": "2026-10-17T17:30:36Z",
+      "completed_at": "2026-10-17T17:39:28Z",
+      "workflow_duration_seconds": 532,
+      "agent_job_duration_seconds": 455,
+      "api_requests": {
+        "total": 23,
+        "model_catalog": 1,
+        "model_messages": 22,
+        "successful_model_messages": 22,
+        "http_429": 0
+      },
+      "canonical_token_usage": {
+        "input_tokens": 82045,
+        "cache_read_tokens": 956928,
+        "cache_write_tokens": 0,
+        "output_tokens": 4914
+      },
+      "tool_counts": {
+        "run_code": 22
+      },
+      "coverage": {
+        "ledger_status": "present",
+        "semantic_results_status": "missing",
+        "totals": {
+          "providers_expected": 25,
+          "providers_complete": 0,
+          "sources_expected": 37,
+          "sources_retrieved": 2,
+          "attempts": 4,
+          "failures": 0,
+          "incomplete_attempts": 0,
+          "follow_up_attempts": 0
+        }
+      },
+      "logfire": {
+        "live_export_status": "verified",
+        "project": "logfire/genai-prices",
+        "trace_id": "f53d132d473de8204fb85716de9781b3",
+        "all_four_usage_components_match": true
+      },
+      "integration_finding": "CodeMode Python filesystem/environment cannot access the trusted host plan/result paths directly; host fetch recording works but manual report writes stay in its VFS.",
+      "limitations": [
+        "Interrupted during early research to fix report collection; timings/tokens do not describe a completed provider sweep.",
+        "Selected rollout backlog and callback were not live-verified."
+      ],
+      "canonical_usage_source": "gh-aw.agent_usage",
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback"
+    },
+    {
+      "status": "completed_with_verification_only_validation_failure",
+      "completed_engine_sample_available": true,
+      "successful_performance_baseline_available": false,
+      "clean_production_baseline_available": false,
+      "run_id": "39055754395",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/39055754395",
+      "run_attempt": 1,
+      "implementation_sha": "6d77abb3713e4e1afc00020b042b21c1d5e57799",
+      "verification_sha": "49dea8a5e92d0b9d0a53baf0dbe6f38ae1ba3c3f",
+      "workflow_conclusion": "success",
+      "created_at": "2026-10-17T17:54:04Z",
+      "completed_at": "2026-10-17T19:13:33Z",
+      "workflow_duration_seconds": 4769,
+      "agent_job_duration_seconds": 4665,
+      "model_step_duration_seconds": 4484,
+      "model_step_started_at": "2026-10-17T17:57:34Z",
+      "model_step_completed_at": "2026-10-17T19:12:18Z",
+      "canonical_token_usage": {
+        "input_tokens": 2218036,
+        "cache_read_tokens": 26369920,
+        "cache_write_tokens": 0,
+        "output_tokens": 143240
+      },
+      "usage_crosschecks": {
+        "canonical_artifact_matches_logfire": true,
+        "canonical_artifact_matches_232_unique_successful_proxy_requests": true,
+        "session_input_includes_cache": true,
+        "session_input_tokens": 28587956,
+        "session_cache_read_tokens": 26369920,
+        "uncached_input_after_subtracting_cache": 2218036
+      },
+      "api_requests": {
+        "total": 234,
+        "model_catalog": 1,
+        "model_messages": 233,
+        "successful_model_messages": 232,
+        "http_502": 1,
+        "http_429": 0,
+        "failed_request_usage_available": false
+      },
+      "tool_counts": {
+        "run_code": 220,
+        "edit_file": 12
+      },
+      "failed_tool_calls": 10,
+      "validation_poll_calls": 16,
+      "validation_poll_count_method": "run_code starts containing both time.sleep and tail",
+      "first_full_validation_command_at": "2026-10-17T18:53:38.192908Z",
+      "coverage": {
+        "ledger_status": "present",
+        "semantic_results_status": "present",
+        "totals": {
+          "providers_expected": 25,
+          "providers_complete": 10,
+          "sources_expected": 37,
+          "sources_retrieved": 36,
+          "attempts": 81,
+          "failures": 4,
+          "incomplete_attempts": 0,
+          "follow_up_attempts": 13
+        },
+        "semantic_status_counts": {
+          "checked": 19,
+          "partial": 2,
+          "missing": 4
+        },
+        "missing_semantic_provider_ids": ["cerebras", "deepseek", "minimax", "typesafe"],
+        "providers": [
+          {
+            "provider_id": "anthropic",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 9,
+              "unchecked_fields": 38,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "arcee",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 2,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "avian",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 5
+            }
+          },
+          {
+            "provider_id": "baseten",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 2,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "cerebras",
+            "retrieval_status": "retrieved",
+            "semantic_status": "missing",
+            "complete": false,
+            "findings": null
+          },
+          {
+            "provider_id": "cloudflare",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 1
+            }
+          },
+          {
+            "provider_id": "cohere",
+            "retrieval_status": "retrieved",
+            "semantic_status": "partial",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 9,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "cursor",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "databricks",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "deepseek",
+            "retrieval_status": "retrieved",
+            "semantic_status": "missing",
+            "complete": false,
+            "findings": null
+          },
+          {
+            "provider_id": "github-copilot",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 16,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "google",
+            "retrieval_status": "partial",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 3,
+              "potential_removals": 1,
+              "unchecked_fields": 24,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "groq",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 25,
+              "unchecked_fields": 7,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "meta",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "minimax",
+            "retrieval_status": "retrieved",
+            "semantic_status": "missing",
+            "complete": false,
+            "findings": null
+          },
+          {
+            "provider_id": "mistral",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 1,
+              "potential_removals": 0,
+              "unchecked_fields": 30,
+              "deferred_changes": 1
+            }
+          },
+          {
+            "provider_id": "modal",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "moonshotai",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "openai",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 9,
+              "deferred_changes": 1
+            }
+          },
+          {
+            "provider_id": "openai-decisions",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "perplexity",
+            "retrieval_status": "retrieved",
+            "semantic_status": "partial",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 6,
+              "unchecked_fields": 20,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "typesafe",
+            "retrieval_status": "retrieved",
+            "semantic_status": "missing",
+            "complete": false,
+            "findings": null
+          },
+          {
+            "provider_id": "voyageai",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          },
+          {
+            "provider_id": "x-ai",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": false,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 32,
+              "deferred_changes": 1
+            }
+          },
+          {
+            "provider_id": "zai",
+            "retrieval_status": "retrieved",
+            "semantic_status": "checked",
+            "complete": true,
+            "findings": {
+              "price_changes": 0,
+              "new_models": 0,
+              "potential_removals": 0,
+              "unchecked_fields": 0,
+              "deferred_changes": 0
+            }
+          }
+        ],
+        "partial_source": {
+          "provider_id": "google",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "reason": "inconsistent total_length across paginated responses",
+          "observed_total_lengths": [64634, 77897, 60314]
+        },
+        "fetch_attempts": 81,
+        "unassigned_attempts": 13,
+        "distinct_fetched_url_count": null,
+        "aggregate_fetch_duration_ms": 64540,
+        "aggregate_fetch_duration_may_overlap": true,
+        "max_fetch_duration_ms": 1948
+      },
+      "logfire": {
+        "project": "logfire/genai-prices",
+        "live_export_status": "verified",
+        "trace_id": "baa7e223c46af00c9e18f996fbfe3b7a",
+        "url": "https://logfire-eu.pydantic.info/logfire/genai-prices/?q=trace_id%3D%27baa7e223c46af00c9e18f996fbfe3b7a%27&since=2026-10-17T17%3A54%3A04Z&until=2026-10-17T19%3A13%3A33Z",
+        "request_spans": 234,
+        "agent_spans": 1,
+        "usage_spans": 1,
+        "coverage_spans": 1,
+        "provider_result_spans": 25,
+        "all_four_usage_components_match": true,
+        "all_provider_rows_match": true,
+        "coverage_totals_match": true
+      },
+      "verified_latency": {
+        "longest_proxy_request_seconds": 287.886,
+        "longest_proxy_request_status": 502,
+        "longest_inter_event_gap_seconds": 311.595,
+        "earlier_live_dom_13_minute_pause_estimate_invalid": true
+      },
+      "verification_controls": ["on.skip-if-match removed", "safe-outputs.staged=true", "report_backfill.if=false"],
+      "validation": {
+        "production_head_ci": "passing separately from live verification",
+        "original_full_validation": "failed workflow guard assertion because verification ref removes skip-if-match",
+        "failing_test": "tests/test_price_update_workflows.py::test_price_updates_create_pr_before_notifying_slack",
+        "adjusted_retest_requested_at": "2026-10-17T19:03:19.896588Z",
+        "adjusted_retest": "pytest deselected the guard assertion; this is not full validation",
+        "agent_terminal_action": "noop; no pricing PR created"
+      },
+      "limitations": [
+        "Runtime and token totals include verification-only workflow-contract diagnosis and adjusted retesting.",
+        "Retrieval and semantic completeness differ: only 10 of 25 providers are complete under the collected contract.",
+        "Final agent prose claimed 25 compared and 23 checked; saved assessments contain 19 checked, 2 partial and 4 missing. The trusted report is authoritative.",
+        "Backlog lookup was unavailable; selected rollout backlog and callbacks were not live-verified.",
+        "This operational sample does not establish unchanged steady-state performance or a controlled speed comparison.",
+        "The final prompt adds discovery-catalog and terminal-reconciliation guidance after measured head 6d77abb3. These text changes were not live-model verified.",
+        "Canonical usage covers reported successful responses; failed-request token consumption and provider billing are not inferred."
+      ],
+      "post_measurement_prompt_changes": [
+        "discovery host-shell catalog guidance",
+        "terminal saved-result reconciliation"
+      ],
+      "final_prompt_live_verified": false,
+      "phase_accounting": {
+        "partition_method": "message request start time relative to the first full validation host command; no runtime subtraction or counterfactual speed estimate",
+        "phases": [
+          {
+            "name": "before_first_full_validation_request",
+            "message_requests": 201,
+            "successful_messages": 200,
+            "input_tokens": 1023890,
+            "cache_read_tokens": 22407744,
+            "cache_write_tokens": 0,
+            "output_tokens": 128880,
+            "aggregate_request_seconds": 3233.199,
+            "aggregate_request_seconds_may_overlap": true
+          },
+          {
+            "name": "from_first_full_validation_request",
+            "message_requests": 32,
+            "successful_messages": 32,
+            "input_tokens": 1194146,
+            "cache_read_tokens": 3962176,
+            "cache_write_tokens": 0,
+            "output_tokens": 14360,
+            "aggregate_request_seconds": 400.197,
+            "aggregate_request_seconds_may_overlap": true
+          }
+        ]
+      },
+      "canonical_usage_source": "gh-aw.agent_usage",
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback"
+    }
+  ],
+  "completed_engine_sample_available": true,
+  "clean_production_baseline_available": false
+}

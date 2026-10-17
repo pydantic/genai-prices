@@ -8,6 +8,7 @@ from scripts.price_check_sources import (
     _SUPPLEMENTAL_HOST_EVIDENCE,
     load_provider_sources,
     official_source_hosts,
+    weekly_provider_sources,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +45,18 @@ def test_weekly_sources_are_unioned_by_provider_file(tmp_path: Path) -> None:
     assert 'model-only.example' not in official_source_hosts(root)
 
 
+def test_duplicate_weekly_entries_keep_every_required_url(tmp_path: Path) -> None:
+    root = _fixture_root(
+        tmp_path,
+        'id: sample\nname: Sample\npricing_urls:\n  - https://allowed.example/prices\n',
+        'providers:\n  - file: prices/providers/sample.yml\n    sources:\n      - https://first.example/prices\n'
+        '  - file: prices/providers/sample.yml\n    sources:\n      - https://second.example/prices\n',
+    )
+    records = weekly_provider_sources(root)
+    assert len(records) == 1
+    assert records[0].sources == ('https://first.example/prices', 'https://second.example/prices')
+
+
 def test_allowed_hosts_are_exact_source_hosts_and_explicit_supplements(tmp_path: Path) -> None:
     root = _fixture_root(
         tmp_path,
@@ -70,17 +83,14 @@ def test_allowed_hosts_are_exact_source_hosts_and_explicit_supplements(tmp_path:
     ],
 )
 @pytest.mark.parametrize('source_location', ['pricing_urls', 'weekly sources'])
-def test_invalid_source_authorities_are_rejected(
-    tmp_path: Path, source: str, source_location: str
-) -> None:
+def test_invalid_source_authorities_are_rejected(tmp_path: Path, source: str, source_location: str) -> None:
     if source_location == 'pricing_urls':
         provider_yaml = f'id: sample\nname: Sample\npricing_urls:\n  - {source}\n'
         weekly_yaml = 'providers: []\n'
     else:
         provider_yaml = 'id: sample\nname: Sample\npricing_urls: []\n'
         weekly_yaml = (
-            'providers:\n  - name: Sample\n    file: prices/providers/sample.yml\n'
-            f'    sources:\n      - {source}\n'
+            f'providers:\n  - name: Sample\n    file: prices/providers/sample.yml\n    sources:\n      - {source}\n'
         )
     root = _fixture_root(tmp_path, provider_yaml, weekly_yaml)
 

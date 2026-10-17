@@ -1,10 +1,122 @@
 # Price check performance and follow-up plan
 
-The 25-provider check still spends most of its work inside the model loop. The next changes should collect and compare
-evidence in code, give provider agents only changed or unresolved work, and measure completeness alongside runtime.
-The implementation stages below are proposals. The current workflow still runs one agent and checks every provider.
+The weekly check runs Monday at 06:00 UTC (Sunday evening in Los Angeles), with manual dispatch available.
+It uses Pydantic AI harness `0.56.0`, `anthropic/glm-5.3-flash`, and `Coder(sub_agents=False)`.
+One sequential invocation checks the 25-provider manifest plus the selected requested-model rollout backlog.
+Exact-source retrieval coverage and agent-reported comparison results now accompany runtime and token accounting.
+No persistent evidence cache, provider concurrency, provider cadence tiers or engine change is part of this implementation.
 
-## Measured baseline
+## Current-engine verification
+
+Two 2026-10-17 attempts stopped before research on distinct provider account errors. The
+[machine-readable record](../price-check/benchmark-2026-10-17.json) preserves their implementation and verification SHAs,
+test controls, counters and limitations.
+
+| Attempt                                                                          | Provider rejection                                  | Agent job | Workflow | Live Logfire export                |
+| -------------------------------------------------------------------------------- | --------------------------------------------------- | --------: | -------: | ---------------------------------- |
+| [39051923357](https://github.com/pydantic/genai-prices/actions/runs/39051923357) | Quota exhausted, code 1310                          |     212 s |    306 s | Stopped on missing canonical usage |
+| [39053454043](https://github.com/pydantic/genai-prices/actions/runs/39053454043) | Insufficient balance or resource package, code 1113 |     168 s |    262 s | Verified with usage unavailable    |
+
+Each attempt made one successful catalog request and three HTTP 429 model-message attempts. No model-message request
+succeeded. Canonical token usage was absent and remains unavailable, rather than zero. These are startup-failure timings;
+neither attempt provides a successful research baseline or a speed comparison.
+
+Both coverage artifacts retained every expected provider and source: 25 providers, 37 exact URLs, no fetch attempts and
+no complete providers. Ledger and semantic-result inputs were correctly marked missing. Backlog retrieval fell back to an
+empty selection because the receiver was unavailable. These attempts do not verify rollout backlog selection or callbacks.
+Their test refs removed the open-PR skip guard, staged safe outputs and disabled the callback.
+
+The first attempt's exporter stopped on missing canonical usage. The corrected exporter was then verified in the second
+Actions run and through exact-run Logfire MCP readback: four real request spans, one agent span, one coverage span and
+25 provider-result spans. `usage_status` is `missing`; no usage span or token totals were invented. Logfire coverage counters
+match the artifact. These checks establish failure reporting.
+
+A third attempt, [39054066763](https://github.com/pydantic/genai-prices/actions/runs/39054066763), reached research after
+credential replacement. It was cancelled after 455 s of agent execution (532 s workflow) when report collection exposed
+a filesystem boundary: CodeMode's scratch `/tmp` and environment cannot access the host reporting paths directly.
+The host fetch ledger recorded four attempts and two retrieved sources; semantic results remained missing.
+All 22 model-message requests succeeded. Canonical usage was 82,045 uncached input, 956,928 cache-read input,
+zero cache-write input and 4,914 output tokens; all four components were verified in correlated Logfire spans.
+This interrupted integration sample is not a completed baseline.
+Its test ref also removed the skip guard, staged safe outputs and disabled the rollout callback.
+The selected backlog and callback were not live-verified.
+
+Weekly reporting now reads the trusted plan and persists assessments through host-backed tools called from CodeMode.
+A no-LLM test exercises the actual CLAI 0.56.0 composition, host persistence and rejection of an out-of-plan provider.
+
+### Completed operational sample
+
+A successful current-engine performance baseline is still pending.
+
+[Run 39055754395](https://github.com/pydantic/genai-prices/actions/runs/39055754395) completed with a terminal noop.
+It measured implementation `6d77abb3713e4e1afc00020b042b21c1d5e57799` through staged verification ref
+`49dea8a5e92d0b9d0a53baf0dbe6f38ae1ba3c3f`. The agent job took 77m45s, its engine execution step 74m44s and the workflow 79m29s.
+
+| Canonical token component |     Tokens |
+| ------------------------- | ---------: |
+| Uncached input            |  2,218,036 |
+| Cache-read input          | 26,369,920 |
+| Cache-write input         |          0 |
+| Output                    |    143,240 |
+
+All four components match the artifact, the 232 unique successful model-message usage records and Logfire readback.
+The session's 28,587,956 input tokens include cached reads; subtracting 26,369,920 yields the uncached input above.
+There were 234 unique API requests: one successful model-catalog request, 232 successful messages and one HTTP 502 message.
+No HTTP 429 was observed.
+
+Partitioning message requests by their start relative to the first full validation command at 18:53:38.192908 UTC gives:
+
+| Phase                        | Message requests (successful) | Uncached input | Cache reads |  Output |
+| ---------------------------- | ----------------------------: | -------------: | ----------: | ------: |
+| Before first full validation |                     201 (200) |      1,023,890 |  22,407,744 | 128,880 |
+| From first full validation   |                       32 (32) |      1,194,146 |   3,962,176 |  14,360 |
+
+Cache writes were zero in both phases. The validation/reporting phase contains over half the reported uncached input;
+this partition does not isolate retest cost, prove cache expiry or estimate runtime without validation.
+Sixteen `run_code` starts contained both `time.sleep` and `tail`, the defined count for validation polling.
+
+The durable report contains every expected provider: 10 of 25 complete, with semantic statuses 19 checked, two partial
+and four missing (`cerebras`, `deepseek`, `minimax`, `typesafe`). The agent's final claim of 23 checked plus two partial
+does not match the saved host records and is not the coverage result. An agent-reported checked status also remains
+incomplete when sources, unchecked fields or deferred findings prevent completion.
+
+Retrieval covered 36 of 37 required sources across 81 attempts, four failures and 13 follow-up attempts.
+Thirteen attempts were unassigned; their URLs are not retained, so total distinct fetched URLs are unknown.
+The sole partial source was Google's pricing page: reported lengths included 60,314, 64,634 and 77,897 characters.
+The ledger's consistency guard kept retrieval partial even though the agent assessed the source as readable.
+Fetch durations sum to 64.540s (overlap is possible), with a 1.948s maximum attempt.
+This sum is not a wall-time breakdown. Archived session events show a longest inter-event gap of 311.595s;
+the longest failed model request was the HTTP 502 at 287.886s. The live browser view omitted intervening events,
+so its apparent quiet intervals were not reliable timing evidence.
+
+Logfire trace `baa7e223c46af00c9e18f996fbfe3b7a` contains all 234 request spans, the usage/agent/coverage spans and
+25 provider-result spans. All provider statuses, coverage totals and canonical usage components match the artifacts.
+The selected rollout backlog fell back to empty; callbacks and Slack were skipped, and no pricing PR was created.
+
+The host-bridge verification ref deliberately removes the skip guard, which conflicts with
+`test_price_updates_create_pr_before_notifying_slack` in `tests/test_price_update_workflows.py`.
+The live agent reproduced that failure on the pristine test ref and reran pytest with that test deselected.
+Production head `6d77abb3` retains the guard and passed full validation and hosted CI.
+The verification-only diagnosis and retest add elapsed time; this run cannot establish clean production validation
+or a controlled performance comparison. The production guard and its test remain unchanged.
+Real provider findings and variable latency also prevent a steady-state duration claim from this single sample.
+The final prompt adds discovery-catalog and terminal-reconciliation instructions after the measured implementation;
+that final prompt was not live-validated, and no additional model run was made.
+
+The changing Google pagination lengths support investigating consistent per-run source snapshots as a follow-up.
+Other observed work included rediscovering unit ancestry/model matching and polling background validation;
+structured comparisons and validation supervision are separate follow-up opportunities.
+Importer HTTP in the Simon Willison tests is mocked; repeated full-YAML parsing is a possible validation cost,
+not evidence for the agent's network attribution. These observations do not add tools, caching or timeout changes here.
+
+Local no-LLM diagnostics used harness/CLAI `0.56.0`, Pydantic AI `2.56.0`, Anthropic SDK `1.15.0` and HTTPX2 `2.13.1`.
+These are locally resolved versions; the SDK version was not separately verified in the live job.
+The provider's defaults were 5 s connect and 600 s read/write/pool timeouts, with two SDK retries.
+A mocked pre-response timeout made three attempts. A loopback streaming check confirmed that read inactivity,
+rather than total response duration, triggers the read timeout. These settings do not attribute any live quiet interval;
+that requires the run's proxy timestamps. This PR does not change timeout settings.
+
+## Historical Claude measurements
 
 The [machine-readable measurements](../price-check/benchmark-2026-10-15.json) preserve the compact baseline independently
 of Actions artifact retention. Raw transcripts remain in Actions artifacts; credentials and raw transcripts do not belong
@@ -29,7 +141,7 @@ The first run reached 17 simultaneous research tasks. The follow-up disabled Cla
 This comparison shows reduced runtime and rate-limit pressure; it does not isolate causation or establish that one agent
 is optimal. Neither run measures an unchanged steady state.
 
-### Accounting method
+### Historical accounting method
 
 Download the `agent` artifact for the exact run, before its retention period expires:
 
@@ -70,22 +182,20 @@ in that accessible project. The measurements above came from Actions archives, n
 
 ## Implementation stages
 
-### 1. Make each run observable and reproducible
+### 1. Measure the current engine
 
 Export agent and request spans to the dedicated `logfire/genai-prices` project. Grant MCP access to the same project.
 Correlate repository, run ID, attempt and commit; add provider and phase when the provider execution boundary exists.
-Export cumulative CLI accounting separately from proxy counters until input/cache reporting is reconciled.
+Export canonical gh-aw accounting separately from proxy counters.
 Record tool names, duration, coverage, retries and validation outcomes alongside token usage.
 
-The first follow-up exports recorded proxy spans, cumulative per-model CLI usage and tool-use counts in a trusted post-agent
-step. The Logfire credential is scoped only to that step. A CLI smoke event and readback verified the dedicated instance's
-`.info` ingestion endpoint. MCP readback works with `project: logfire/genai-prices` after `codex mcp login logfire`.
-The unqualified `genai-prices` name is rejected despite appearing in the error's available-project list.
-The actual exporter was replayed against the archived follow-up without new LLM calls. MCP recovered 188 request spans,
-one agent span and one cumulative usage span. This validates export and readback; a future workflow run must still verify
-the compiled step inside Actions. Provider phase spans and individual tool durations remain follow-up work.
+The trusted post-agent step exports proxy spans, canonical `agent_usage.json` totals and tool-use counts.
+The Logfire credential remains scoped only to that step. Query MCP with `project: logfire/genai-prices`.
+The `price_check.usage` span labels the accounting source `gh-aw.agent_usage` and retains uncached input, cache reads,
+cache writes and output separately. Do not add these totals to proxy usage or substitute historical Claude `modelUsage`.
 
-For future runs, start with `agent/telemetry.json` inside the `agent` artifact or the `price_check.usage` span.
+For current runs, start with `mcp-logs/price-check-telemetry.json` inside the `agent` artifact,
+the separate `price-check-coverage` artifact, and the correlated `price_check.usage` and `price_check.coverage` spans.
 For the archived follow-up, pass `start_timestamp: 2026-10-15T16:15:00Z` and
 `end_timestamp: 2026-10-15T17:20:00Z` to MCP. Its default recent window will not find this historical run.
 
@@ -104,10 +214,20 @@ LIMIT 10
 Acceptance: query an exact run through MCP, recover its request count and complete token components, and locate failed
 tools or phases without downloading the whole transcript. Missing export must be visible in the run summary.
 
-### 2. Fetch and compare evidence in code
+### 2. Record exact-source coverage and provider results
 
-Add a manifest-driven fetch ledger with per-source retrieval and readability status. Fetch shared URLs once per run.
-Use a shared bounded HTTP pool and retry policy. A failed or partial source remains explicitly unresolved.
+The preflight snapshots the canonical weekly manifest's exact URLs and the selected backlog provider scopes.
+The fetch wrapper records starts, failures, returned ranges, truncation and duration without page contents.
+A trusted bounded reader reconciles every expected provider and exact URL, even when the agent stops before reporting.
+Transport retrieval and agent-reported readability/comparison status remain separate. Missing results, gaps in pagination,
+inconsistent response lengths and unresolved backlog comparisons cannot produce a complete provider result.
+See the [coverage contract](AGENTIC_PRICE_CHECK.md#weekly-coverage-results) for artifact fields and interpretation.
+
+Acceptance: a current-engine workflow run produces the coverage artifact and summary. Logfire readback for that exact
+run recovers coverage totals, every provider result, request spans and all four canonical usage components. Record source
+SHA and any test-ref-only activation or publication differences. This establishes a baseline, not a claimed speedup.
+
+### 3. Future deterministic comparisons
 
 Feed existing pure parsers for Arcee, Cloudflare, Cursor and Baseten into typed evidence records. Include canonical IDs,
 aliases, each price key and tier, units, scope, effective-date evidence and source URL. Reuse Decimal conversions and
@@ -119,55 +239,10 @@ date is a separate requirement. Add shape and completeness checks where a parser
 Acceptance: omissions, malformed source rows, wrong units and alias collisions produce explicit findings. Readable
 unchanged fixtures yield no candidates. Existing historical prices and scoped overrides remain intact.
 
-### 3. Bound provider agents and use one finisher
-
-Dispatch one due provider per task with its compact evidence and ownership of only its provider YAML. Share downloaded
-evidence. Return structured findings and a provider patch; prohibit nested delegation and shared-file edits.
-Start an experiment with three concurrent provider tasks, enforced by the controller rather than prompt wording.
-Measure concurrency one versus three against the same source snapshot and provider set.
-
-The pinned Claude CLI is 2.1.198. The native configurable subagent concurrency/depth limits require 2.1.217 or later.
-Verify a compatible CLI upgrade or enforce the provider-session pool outside the CLI before removing the current deny.
-Do not rely on an environment variable unsupported by the installed CLI.
-
-After provider tasks finish, one finisher combines their patches, checks coverage and evidence, builds generated files,
-updates affected regression assertions, and runs the full validation sequence. Provider agents do not run full builds,
-edit generated files, commit, or publish. A separate review examines the combined provider diff and evidence before
-publication. The finisher retains explicit unresolved findings even when it can propose independent verified changes.
-
-Add cheap environment/import and model-order preflight checks. The workflow already syncs dependencies, so diagnose
-the environment lifecycle before adding another installation step. Supervise validation in code and return compact errors.
-
-Acceptance: concurrency stays within the configured pool, only the finisher touches shared artifacts, every due provider
-has a result, and comparison against the sequential baseline measures coverage, tokens, retries and latency together.
-
-### 4. Reuse evidence and select providers by cadence
-
-Persist verified evidence with HTTP validators/content hashes and manifest, YAML, unit-registry and parser versions.
-Revalidate sources before reuse. Preserve unresolved/deferred findings and invalidate when a scheduled price takes effect.
-An error page, empty parse or incomplete prior check cannot produce a clean unchanged result.
-Skip model execution when due providers have complete, unchanged evidence and no unresolved work requiring judgment.
-
-Proposed initial cadence, within the existing weekday America/Los_Angeles window:
-
-| Provider group                          | Cadence         |
-| --------------------------------------- | --------------- |
-| OpenAI, Anthropic, Google, xAI and Meta | Hourly          |
-| Other covered providers                 | Every two hours |
-
-Treat OpenAI and OpenAI Decisions as one scheduling group while retaining separate coverage records.
-Use explicit manifest cadence/priority fields and a deterministic due-provider selector. Record the last successful
-verification, so failures do not postpone the next check or make a provider appear fresh. Provide a manual all-provider
-override. Select due providers before any model work and retain one coordinated publication path.
-
-Adjust tiers using observed usage and change frequency. Do not infer usage from provider nationality or company size.
-Keep freshness requirements separate from evidence caching: an unchanged source still needs its due revalidation.
-
-Acceptance: an unchanged verified fixture invokes no model, a changed or unresolved source reaches the relevant provider
-task, cache invalidation covers data/parser/time changes, and hourly/two-hour selection is tested at scheduling boundaries.
-
-Benchmark an unchanged run and a changed run after each stage. Compare complete provider coverage and correct findings
-before interpreting lower duration or fewer tokens as an improvement. Grok/X discovery remains a separate experiment.
+Persistent evidence reuse and bounded provider execution require separate design and measured comparisons against the
+current sequential engine. They must preserve historical-price evidence, explicit unresolved findings, one validation and
+publication path, and the weekly schedule. No hourly or two-hour provider selector is configured.
+Compare complete coverage and verified findings before interpreting duration or token differences as improvements.
 
 [first-run]: https://github.com/pydantic/genai-prices/actions/runs/38748564180
 [second-run]: https://github.com/pydantic/genai-prices/actions/runs/38768031115
