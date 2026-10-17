@@ -160,6 +160,10 @@ test('discovery is assessed from every selected backlog pair without a fixed sou
   const discovery = report.providers.find((provider) => provider.provider_id === '_discovery')
   assert.equal(discovery.retrieval_status, 'not_applicable')
   assert.equal(discovery.complete, true)
+  for (const backfill of [[], [{ request_id: 'discovery', status: 'unresolved' }]]) {
+    const incomplete = buildCoverage(plan, input([]), input([{ ...checked, backfill }]))
+    assert.equal(incomplete.providers.find((provider) => provider.provider_id === '_discovery').complete, false)
+  }
 })
 
 test('malformed, duplicated and unpaired events or results fail closed', () => {

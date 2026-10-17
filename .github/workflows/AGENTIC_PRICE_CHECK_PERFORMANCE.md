@@ -6,25 +6,31 @@ One sequential invocation checks the 25-provider manifest plus the selected requ
 Exact-source retrieval coverage and agent-reported comparison results now accompany runtime and token accounting.
 No persistent evidence cache, provider concurrency, provider cadence tiers or engine change is part of this implementation.
 
-## Current-engine startup attempt
+## Current-engine startup attempts
 
-The [2026-10-17 attempt](https://github.com/pydantic/genai-prices/actions/runs/39051923357) stopped before research because
-Z.ai returned `Weekly/Monthly Limit Exhausted` (code 1310). The [machine-readable record](../price-check/benchmark-2026-10-17.json)
-preserves its implementation and verification SHAs, test controls, counters and limitations.
-One catalog request succeeded; all three model-message attempts returned HTTP 429. No model-message request succeeded.
-Canonical token usage was absent and remains unavailable, rather than zero.
+Two 2026-10-17 attempts stopped before research on distinct provider account errors. The
+[machine-readable record](../price-check/benchmark-2026-10-17.json) preserves their implementation and verification SHAs,
+test controls, counters and limitations.
 
-The agent job took 212 seconds and the whole workflow took 306 seconds. These are startup-failure timings, not a successful
-research baseline or a speed comparison. The coverage artifact retained every expected provider and source: 25 providers,
-37 exact URLs, no fetch attempts, and no complete providers. Ledger and semantic-result inputs were correctly marked missing.
-Backlog retrieval fell back to an empty selection because the receiver was unavailable; this attempt does not verify rollout
-backlog selection or callbacks. Its test ref removed the open-PR skip guard, staged safe outputs and disabled the callback.
+| Attempt                                                                          | Provider rejection                                  | Agent job | Workflow | Live Logfire export                |
+| -------------------------------------------------------------------------------- | --------------------------------------------------- | --------: | -------: | ---------------------------------- |
+| [39051923357](https://github.com/pydantic/genai-prices/actions/runs/39051923357) | Quota exhausted, code 1310                          |     212 s |    306 s | Stopped on missing canonical usage |
+| [39053454043](https://github.com/pydantic/genai-prices/actions/runs/39053454043) | Insufficient balance or resource package, code 1113 |     168 s |    262 s | Verified with usage unavailable    |
 
-The live telemetry exporter stopped on the missing canonical usage file. The exporter now retains actual failure/request
-and coverage spans when usage is unavailable, without a usage span or invented token totals. An offline replay of the
-captured data preserved the coverage counters and produced failure, coverage and provider spans without sending telemetry.
-A new live run must verify the corrected exporter and establish a successful current-engine research baseline after quota
-is restored.
+Each attempt made one successful catalog request and three HTTP 429 model-message attempts. No model-message request
+succeeded. Canonical token usage was absent and remains unavailable, rather than zero. These are startup-failure timings;
+neither attempt provides a successful research baseline or a speed comparison.
+
+Both coverage artifacts retained every expected provider and source: 25 providers, 37 exact URLs, no fetch attempts and
+no complete providers. Ledger and semantic-result inputs were correctly marked missing. Backlog retrieval fell back to an
+empty selection because the receiver was unavailable. These attempts do not verify rollout backlog selection or callbacks.
+Their test refs removed the open-PR skip guard, staged safe outputs and disabled the callback.
+
+The first attempt's exporter stopped on missing canonical usage. The corrected exporter was then verified in the second
+Actions run and through exact-run Logfire MCP readback: four real request spans, one agent span, one coverage span and
+25 provider-result spans. `usage_status` is `missing`; no usage span or token totals were invented. Logfire coverage counters
+match the artifact. An offline, no-network replay of the first attempt independently preserved its coverage counters.
+These checks establish failure reporting; successful source retrieval and semantic verification still need a research run.
 
 ## Historical Claude measurements
 

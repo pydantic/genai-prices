@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 import time
 from pathlib import Path
 from uuid import uuid4
@@ -50,8 +51,8 @@ def record_fetch(event: dict[str, object]) -> None:
         FETCH_LEDGER.parent.mkdir(parents=True, exist_ok=True)
         with FETCH_LEDGER.open('a') as output:
             output.write(json.dumps(event, separators=(',', ':')) + '\n')
-    except OSError:
-        pass
+    except OSError as exc:
+        print(f'Price-check coverage ledger unavailable: {type(exc).__name__}', file=sys.stderr)
 
 
 def start_fetch(url: str, start_index: int, max_length: int) -> str:
@@ -72,8 +73,8 @@ def start_fetch(url: str, start_index: int, max_length: int) -> str:
                     'time_ms': int(time.time() * 1000),
                 }
             )
-    except (OSError, ValueError, KeyError, TypeError):
-        pass
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(f'Price-check coverage plan unavailable: {type(exc).__name__}', file=sys.stderr)
     return attempt_id
 
 

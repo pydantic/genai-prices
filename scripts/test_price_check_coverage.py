@@ -109,7 +109,7 @@ def test_cancelled_communication_kills_and_reaps_fetcher() -> None:
     process.wait.assert_awaited_once()
 
 
-def test_ledger_io_cannot_fail_a_successful_fetch(tmp_path: Path) -> None:
+def test_ledger_io_cannot_fail_a_successful_fetch(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     directory = tmp_path / 'gh-aw/price-check-coverage'
     directory.mkdir(parents=True)
     (directory / 'plan.json').write_text('{"providers": []}')
@@ -135,6 +135,12 @@ def test_ledger_io_cannot_fail_a_successful_fetch(tmp_path: Path) -> None:
         for malformed in ('invalid', '{}', '{"providers": [{"sources": null}]}'):
             (directory / 'plan.json').write_text(malformed)
             assert asyncio.run(web_fetch(response['url'])) == response
+    warning = capsys.readouterr().err
+    assert 'IsADirectoryError' in warning
+    assert 'JSONDecodeError' in warning
+    assert 'KeyError' in warning
+    assert 'TypeError' in warning
+    assert str(tmp_path) not in warning
 
 
 def test_follow_up_url_is_not_persisted_and_targeted_fetches_are_unchanged(tmp_path: Path) -> None:

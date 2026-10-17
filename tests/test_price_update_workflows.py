@@ -716,7 +716,8 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   const failedRequest = missingSpans.find((span) => span.spanName === 'api_proxy.anthropic.request');
   let incomplete = false;
   files['/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'] = '';
-  try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
+  try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); }
+  catch (error) { incomplete = error.message === 'No API request spans; telemetry is incomplete.'; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
     usage, toolCounts, terminalEmitted, marker, requestId: resource['price_check.request_id'],
     completedStatus: agent.statusCode, partialStatus, incomplete, summaries, warnings, provider, coverage, unavailable, usageSurvived,

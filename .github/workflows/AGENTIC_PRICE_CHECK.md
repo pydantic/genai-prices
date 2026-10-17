@@ -242,10 +242,10 @@ Logfire coverage/provider spans. Missing reports and unreadable sources are inco
 Use `agent_usage.json` or `mcp-logs/price-check-telemetry.json` for all four canonical usage components. Preserve the run URL,
 attempt, source SHA, model and engine version with each measurement. Do not infer a speed improvement from one run.
 
-The [2026-10-17 verification attempt](https://github.com/pydantic/genai-prices/actions/runs/39051923357) reached the agent but
-Z.ai rejected every model-message attempt with quota exhaustion. Its coverage artifact records all providers as incomplete;
-token usage is unavailable. See the [attempt record and limitations](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-startup-attempt).
-This verifies incomplete-run reporting, not a successful research baseline. Restore provider quota before another model run.
+The [2026-10-17 startup attempts](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-startup-attempts) reached the agent but
+Z.ai rejected every model-message attempt: quota exhaustion in the first run, insufficient balance/resource package in the
+second. Coverage artifacts mark all providers incomplete and token usage unavailable. The second run verified real failure,
+coverage and provider spans in Logfire without inventing token totals. Neither attempt establishes a successful research baseline.
 
 The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
 Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.
