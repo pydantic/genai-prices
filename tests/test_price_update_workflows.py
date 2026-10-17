@@ -646,10 +646,14 @@ const files = {
 let payload;
 let coverageMode = '';
 const summaries = [];
-const core = {summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
+const warnings = [];
+const core = {warning(value) { warnings.push(value); }, summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
 const fakeRequire = (name) => {
   if (name === 'node:fs') return {
-    readFileSync: (file) => files[file], existsSync: (file) => Boolean(coverageMode) && file.endsWith('/plan.json'),
+    readFileSync: (file) => {
+      if (!(file in files)) throw Object.assign(new Error('Missing file'), {code: 'ENOENT'});
+      return files[file];
+    }, existsSync: (file) => Boolean(coverageMode) && file.endsWith('/plan.json'),
     mkdirSync: () => {}, writeFileSync: (file, value) => { files[file] = value; }
   };
   if (name.endsWith('send_otlp_span.cjs')) return {
@@ -694,12 +698,30 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
   await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
   const unavailable = payload.resourceSpans.find((span) => span.spanName === 'price_check.coverage').attributes;
   const usageSurvived = payload.resourceSpans.some((span) => span.spanName === 'price_check.usage');
-  let incomplete = false;
+  coverageMode = 'valid';
   files['/tmp/gh-aw/agent_usage.json'] = '{}';
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
+  const invalidUsage = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
+  const invalidHasUsageSpan = payload.resourceSpans.some((span) => span.spanName === 'price_check.usage');
+  delete files['/tmp/gh-aw/agent_usage.json'];
+  files['/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'] = JSON.stringify({
+    spanId: '1234567890abcdef', name: 'api_proxy.anthropic.request', startTimeMs: 1000, endTimeMs: 2000,
+    attributes: {'http.response.status_code': 429}, status: {code: 2}, kind: 3
+  });
+  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
+  const missingUsage = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
+  const missingSpans = payload.resourceSpans;
+  const missingAgent = missingSpans.find((span) => span.spanName === 'invoke_agent');
+  const missingHasUsageSpan = missingSpans.some((span) => span.spanName === 'price_check.usage');
+  const failedRequest = missingSpans.find((span) => span.spanName === 'api_proxy.anthropic.request');
+  let incomplete = false;
+  files['/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'] = '';
   try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
   console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
     usage, toolCounts, terminalEmitted, marker, requestId: resource['price_check.request_id'],
-    completedStatus: agent.statusCode, partialStatus, incomplete, summaries, provider, coverage, unavailable, usageSurvived}));
+    completedStatus: agent.statusCode, partialStatus, incomplete, summaries, warnings, provider, coverage, unavailable, usageSurvived,
+    invalidUsage, invalidHasUsageSpan, missingUsage, missingHasUsageSpan, missingAgent,
+    missingNames: missingSpans.map((span) => span.spanName), failedRequest}));
 })();
 """
     result = subprocess.run(
@@ -726,6 +748,7 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert output['toolCounts'] == {'web_fetch': 1}
     assert output['terminalEmitted'] is True
     assert output['marker']['exported_request_spans'] == 1
+    assert output['marker']['usage_status'] == 'available'
     assert output['requestId'] == ''
     provider = output['provider']
     assert provider['parentSpanId'] == output['coverage']['spanId']
@@ -735,5 +758,25 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
     assert attributes['price_check.result_source'] == 'agent_report'
     assert 'must not export' not in json.dumps(provider)
     assert output['usageSurvived'] is True
-    assert output['unavailable'] == [{'key': 'price_check.coverage.ledger_status', 'value': 'unavailable'}]
+    assert output['unavailable'] == [
+        {'key': 'price_check.coverage.ledger_status', 'value': 'unavailable'},
+        {'key': 'price_check.coverage.error_kind', 'value': 'invalid_report'},
+    ]
+    assert any('Coverage telemetry unavailable (invalid_report)' in warning for warning in output['warnings'])
+    assert output['invalidHasUsageSpan'] is False
+    assert output['invalidUsage']['usage_status'] == 'invalid'
+    assert output['invalidUsage']['model_usage'] == {}
+    assert output['missingHasUsageSpan'] is False
+    assert output['missingUsage']['usage_status'] == 'missing'
+    assert output['missingUsage']['usage_source'] is None
+    assert output['missingUsage']['model_usage'] == {}
+    assert output['missingUsage']['exported_request_spans'] == 1
+    assert 'api_proxy.anthropic.request' in output['missingNames']
+    assert 'price_check.coverage' in output['missingNames']
+    assert 'price_check.provider_result' in output['missingNames']
+    assert output['failedRequest']['statusCode'] == 2
+    assert output['failedRequest']['attributes'] == [{'key': 'http.response.status_code', 'value': 429}]
+    missing_attributes = {attribute['key']: attribute['value'] for attribute in output['missingAgent']['attributes']}
+    assert missing_attributes['price_check.usage.status'] == 'missing'
+    assert output['missingAgent']['statusCode'] == 2
     assert any('telemetry incomplete' in summary for summary in output['summaries'])

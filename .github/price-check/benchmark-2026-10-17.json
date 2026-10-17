@@ -1,0 +1,60 @@
+{
+  "recorded_on": "2026-10-17",
+  "repository": "pydantic/genai-prices",
+  "status": "quota_blocked_before_research",
+  "successful_performance_baseline_available": false,
+  "run_id": "39051923357",
+  "url": "https://github.com/pydantic/genai-prices/actions/runs/39051923357",
+  "run_attempt": 1,
+  "implementation_sha": "8b80d86ed936f69a2ea394ac65ece846f8dab690",
+  "verification_sha": "7111cf91e6e1d3fc01dc7f06e2da9f1648bc6599",
+  "engine": {
+    "id": "pydantic-ai",
+    "version": "0.56.0",
+    "model": "anthropic/glm-5.3-flash",
+    "subagents": false
+  },
+  "test_controls": ["skip-if-match removed", "safe-outputs.staged=true", "report_backfill disabled"],
+  "created_at": "2026-10-17T17:01:17Z",
+  "completed_at": "2026-10-17T17:06:23Z",
+  "workflow_duration_seconds": 306,
+  "agent_job_duration_seconds": 212,
+  "api_requests": {
+    "total": 4,
+    "model_catalog": 1,
+    "model_messages": 3,
+    "successful_model_messages": 0,
+    "http_429": 3
+  },
+  "quota_error": {
+    "code": "1310",
+    "message": "Weekly/Monthly Limit Exhausted",
+    "reset_reported": "2026-10-21 01:38:02",
+    "reset_timezone": "unspecified"
+  },
+  "canonical_token_usage": null,
+  "token_usage_records": 0,
+  "coverage": {
+    "ledger_status": "missing",
+    "semantic_results_status": "missing",
+    "totals": {
+      "providers_expected": 25,
+      "providers_complete": 0,
+      "sources_expected": 37,
+      "sources_retrieved": 0,
+      "attempts": 0,
+      "failures": 0,
+      "incomplete_attempts": 0,
+      "follow_up_attempts": 0
+    }
+  },
+  "selected_backfill": [],
+  "backfill_read_status": "unavailable_fallback",
+  "logfire_live_export_status": "failed_missing_canonical_usage",
+  "limitations": [
+    "No research or successful model inference completed; elapsed time is not a successful-run benchmark.",
+    "Missing token usage is unavailable rather than a numeric zero.",
+    "No selected rollout backlog; the live receiver and report callback were not verified.",
+    "Subsequent reporting fixes require captured-data replay and separate provenance."
+  ]
+}

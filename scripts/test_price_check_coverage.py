@@ -1,7 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
@@ -28,7 +28,9 @@ def test_plan_uses_exact_weekly_sources_and_selected_backlog() -> None:
     assert providers['openai']['backfill'] == [pending[2]]
 
 
-@pytest.mark.parametrize('outcome', ['success', 'transport', 'invalid', 'execution', 'cancelled'])
+@pytest.mark.parametrize(
+    'outcome', ['success', 'transport', 'policy', 'invalid', 'invalid_range', 'execution', 'cancelled']
+)
 def test_fetch_records_actual_attempt_without_contents_or_errors(tmp_path: Path, outcome: str) -> None:
     directory = tmp_path / 'gh-aw/price-check-coverage'
     directory.mkdir(parents=True)
@@ -46,10 +48,14 @@ def test_fetch_records_actual_attempt_without_contents_or_errors(tmp_path: Path,
         'content': 'private page',
     }
     process = AsyncMock()
-    process.returncode = 1 if outcome == 'transport' else 0
+    if outcome == 'invalid_range':
+        response['end_index'] = 99
+    process.returncode = 1 if outcome in {'transport', 'policy'} else 0
     process.communicate.return_value = (
         b'invalid' if outcome == 'invalid' else json.dumps(response).encode(),
-        b'web_fetch received HTTP 503 from pricing.example private error',
+        b'private policy error'
+        if outcome == 'policy'
+        else b'web_fetch received HTTP 503 from pricing.example private error',
     )
     subprocess = AsyncMock(return_value=process)
     if outcome == 'execution':
@@ -76,6 +82,59 @@ def test_fetch_records_actual_attempt_without_contents_or_errors(tmp_path: Path,
         assert events[1]['truncated'] is True
     elif outcome == 'transport':
         assert events[1]['http_status'] == 503
+    elif outcome in {'policy', 'invalid', 'invalid_range', 'execution'}:
+        assert events[1]['error_kind'] == 'invalid_response_or_execution'
+
+
+@pytest.mark.parametrize('start,max_length', [(-1, 20000), (2**53, 20000), (0, 20001), (0, 0), (1.5, 100)])
+def test_invalid_arguments_do_not_pollute_ledger(tmp_path: Path, start: int, max_length: int) -> None:
+    with (
+        patch.dict('os.environ', {'RUNNER_TEMP': str(tmp_path)}),
+        patch('scripts.price_check_web_fetch.asyncio.create_subprocess_exec', new_callable=AsyncMock) as subprocess,
+    ):
+        with pytest.raises(Exception, match='safe integer'):
+            asyncio.run(web_fetch('https://pricing.example/', start_index=start, max_length=max_length))
+        subprocess.assert_not_called()
+
+
+def test_cancelled_communication_kills_and_reaps_fetcher() -> None:
+    process = AsyncMock()
+    process.kill = Mock()
+    process.returncode = None
+    process.communicate.side_effect = asyncio.CancelledError()
+    with patch('scripts.price_check_web_fetch.asyncio.create_subprocess_exec', AsyncMock(return_value=process)):
+        with pytest.raises(asyncio.CancelledError):
+            asyncio.run(web_fetch('https://pricing.example/'))
+    process.kill.assert_called_once()
+    process.wait.assert_awaited_once()
+
+
+def test_ledger_io_cannot_fail_a_successful_fetch(tmp_path: Path) -> None:
+    directory = tmp_path / 'gh-aw/price-check-coverage'
+    directory.mkdir(parents=True)
+    (directory / 'plan.json').write_text('{"providers": []}')
+    response = {
+        'url': 'https://pricing.example/',
+        'status': 200,
+        'content_type': 'text/plain',
+        'start_index': 0,
+        'end_index': 1,
+        'total_length': 1,
+        'truncated': False,
+        'content': 'x',
+    }
+    process = AsyncMock()
+    process.returncode = 0
+    process.communicate.return_value = (json.dumps(response).encode(), b'')
+    with (
+        patch.dict('os.environ', {'RUNNER_TEMP': str(tmp_path)}),
+        patch.object(coverage, 'FETCH_LEDGER', tmp_path),
+        patch('scripts.price_check_web_fetch.asyncio.create_subprocess_exec', AsyncMock(return_value=process)),
+    ):
+        assert asyncio.run(web_fetch(response['url'])) == response
+        for malformed in ('invalid', '{}', '{"providers": [{"sources": null}]}'):
+            (directory / 'plan.json').write_text(malformed)
+            assert asyncio.run(web_fetch(response['url'])) == response
 
 
 def test_follow_up_url_is_not_persisted_and_targeted_fetches_are_unchanged(tmp_path: Path) -> None:

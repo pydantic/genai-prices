@@ -6,6 +6,26 @@ One sequential invocation checks the 25-provider manifest plus the selected requ
 Exact-source retrieval coverage and agent-reported comparison results now accompany runtime and token accounting.
 No persistent evidence cache, provider concurrency, provider cadence tiers or engine change is part of this implementation.
 
+## Current-engine startup attempt
+
+The [2026-10-17 attempt](https://github.com/pydantic/genai-prices/actions/runs/39051923357) stopped before research because
+Z.ai returned `Weekly/Monthly Limit Exhausted` (code 1310). The [machine-readable record](../price-check/benchmark-2026-10-17.json)
+preserves its implementation and verification SHAs, test controls, counters and limitations.
+One catalog request succeeded; all three model-message attempts returned HTTP 429. No model-message request succeeded.
+Canonical token usage was absent and remains unavailable, rather than zero.
+
+The agent job took 212 seconds and the whole workflow took 306 seconds. These are startup-failure timings, not a successful
+research baseline or a speed comparison. The coverage artifact retained every expected provider and source: 25 providers,
+37 exact URLs, no fetch attempts, and no complete providers. Ledger and semantic-result inputs were correctly marked missing.
+Backlog retrieval fell back to an empty selection because the receiver was unavailable; this attempt does not verify rollout
+backlog selection or callbacks. Its test ref removed the open-PR skip guard, staged safe outputs and disabled the callback.
+
+The live telemetry exporter stopped on the missing canonical usage file. The exporter now retains actual failure/request
+and coverage spans when usage is unavailable, without a usage span or invented token totals. An offline replay of the
+captured data preserved the coverage counters and produced failure, coverage and provider spans without sending telemetry.
+A new live run must verify the corrected exporter and establish a successful current-engine research baseline after quota
+is restored.
+
 ## Historical Claude measurements
 
 The [machine-readable measurements](../price-check/benchmark-2026-10-15.json) preserve the compact baseline independently

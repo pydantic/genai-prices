@@ -15,11 +15,15 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from pydantic_core import ValidationError
 
-from scripts.price_check_sources import load_provider_sources, pending_backfill_rows, weekly_provider_sources
+from scripts.price_check_sources import (
+    DISCOVERY_PROVIDER_ID,
+    load_provider_sources,
+    pending_backfill_rows,
+    weekly_provider_sources,
+)
 
 _TARGETED_SOURCE = 'agentic-model-price-check.md'
 _WEEKLY_SOURCE = 'agentic-price-check.md'
-_DISCOVERY_PROVIDER_ID = '_discovery'
 _PROVIDER_FILE_PREFIX = 'prices/providers/'
 _DEFAULT_ARTIFACT_DIR = Path('/tmp/gh-aw')
 _MAX_TRANSPORT_BYTES = 10 * 1024 * 1024
@@ -73,7 +77,7 @@ def allowed_price_check_files(
 
     ordinary_files = {provider.file for provider in weekly_provider_sources(root)}
     pending_ids = {row.provider_id for row in pending_backfill_rows(pending_backfill, set(files_by_id))}
-    if _DISCOVERY_PROVIDER_ID in pending_ids:
+    if DISCOVERY_PROVIDER_ID in pending_ids:
         allowed_provider_files = set(files_by_path)
     else:
         allowed_provider_files = ordinary_files | {files_by_id[provider_id] for provider_id in pending_ids}

@@ -95,6 +95,9 @@ The separate `price_check.usage` span records cumulative `agent_usage.json` comp
 `price_check.usage.uncached_input`, `cached_input`, `cache_creation` and `output`, labelled with
 `price_check.usage.source = gh-aw.agent_usage`. Do not add that rollup to individual proxy counts.
 Historical proxy versions reported zero input/cache counts; those zeros do not establish zero consumption.
+If canonical usage is missing or invalid, the exporter keeps real request, agent and coverage spans and omits
+`price_check.usage`. The agent span's `price_check.usage.status` and telemetry artifact's `usage_status` explain availability;
+`usage_source` is null and `model_usage` is empty when unavailable. No zero token counts are inferred from missing data.
 The `invoke_agent` span records canonical tool execution counts and `price_check.terminal_output_emitted`.
 That field means the agent emitted a terminal item; check the separate `safe_outputs` job for acceptance or rejection.
 Coder's CodeMode calls appear as `run_code`. The canonical session contains each call's code and returned output;
@@ -117,8 +120,10 @@ Pages can change between requests; range coverage does not establish a stable so
 
 Provider results are separately labelled as agent-reported. Each result assesses source readability, comparison status,
 selected backlog pairs, and counts of price changes, new models, potential removals, unchecked fields and deferred changes.
-A provider is complete only with full retrieval, readable source assessments, checked comparisons and no unchecked or
-deferred findings. Missing provider, source or backlog results remain explicit; HTTP success cannot establish verification.
+A provider with planned URLs is complete only with full retrieval, readable source assessments, checked comparisons and
+no unchecked or deferred findings. The `_discovery` scope has no fixed source list; its completion requires checked
+selected backlog results and no unchecked or deferred findings. Missing provider, source or backlog results remain explicit;
+HTTP success cannot establish verification.
 These files provide observability, not a security attestation: the agent controls its execution and can alter its workspace.
 The trusted post-agent summarizer reads bounded regular files and publishes only the defined metadata fields.
 The separate `model-price-check-report` artifact and rollout callbacks retain their existing contract.
@@ -201,7 +206,7 @@ gh aw compile --no-check-update agentic-price-check agentic-model-price-check
 ```
 
 The `.md` files are source. The `.lock.yml` files are compiled output. Never edit a lock file by hand. Compile this
-workflow with the pinned version; other workflows can use a different compiler version.
+pair with gh-aw v0.91.1; unrelated workflows can use a different compiler version.
 
 The public engine requires gh-aw v0.91.1 or newer for canonical sessions and schema-valid merged usage.
 This workflow pins v0.91.1 and firewall 0.28.31. Keep `max-ai-credits: -1` and `max-daily-ai-credits: -1`:
@@ -236,6 +241,11 @@ Download `price-check-coverage` and compare every expected provider and source a
 Logfire coverage/provider spans. Missing reports and unreadable sources are incomplete research, even when the job succeeds.
 Use `agent_usage.json` or `mcp-logs/price-check-telemetry.json` for all four canonical usage components. Preserve the run URL,
 attempt, source SHA, model and engine version with each measurement. Do not infer a speed improvement from one run.
+
+The [2026-10-17 verification attempt](https://github.com/pydantic/genai-prices/actions/runs/39051923357) reached the agent but
+Z.ai rejected every model-message attempt with quota exhaustion. Its coverage artifact records all providers as incomplete;
+token usage is unavailable. See the [attempt record and limitations](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-startup-attempt).
+This verifies incomplete-run reporting, not a successful research baseline. Restore provider quota before another model run.
 
 The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
 Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.

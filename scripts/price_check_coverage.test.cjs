@@ -150,6 +150,18 @@ test('one provider result cannot silently complete selected backlog comparisons'
   )
 })
 
+test('discovery is assessed from every selected backlog pair without a fixed source list', () => {
+  const checked = result({
+    provider_id: '_discovery',
+    sources: [],
+    backfill: [{ request_id: 'discovery', status: 'checked' }],
+  })
+  const report = buildCoverage(plan, input([]), input([checked]))
+  const discovery = report.providers.find((provider) => provider.provider_id === '_discovery')
+  assert.equal(discovery.retrieval_status, 'not_applicable')
+  assert.equal(discovery.complete, true)
+})
+
 test('malformed, duplicated and unpaired events or results fail closed', () => {
   assert.throws(() => parseEvents('bad json'))
   assert.throws(() => parsedEvents([{ ...page(1)[1], end_index: 99 }]))

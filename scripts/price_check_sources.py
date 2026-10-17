@@ -9,6 +9,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, HttpUrl, StrictStr, StringConstraints, TypeAdapter
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
+DISCOVERY_PROVIDER_ID = '_discovery'
 _http_url_adapter = TypeAdapter(HttpUrl)
 
 
@@ -58,7 +59,7 @@ def pending_backfill_rows(pending: object, known_ids: set[str]) -> list[PendingB
         rows = TypeAdapter(list[PendingBackfill]).validate_python(pending, strict=True)
     except ValueError as exc:
         raise ValueError('Pending price-check backfill rows are invalid') from exc
-    unknown_ids = {row.provider_id for row in rows} - known_ids - {'_discovery'}
+    unknown_ids = {row.provider_id for row in rows} - known_ids - {DISCOVERY_PROVIDER_ID}
     if unknown_ids:
         raise ValueError(f'Pending price-check backfill has unknown provider IDs: {sorted(unknown_ids)}')
     return rows
@@ -71,9 +72,12 @@ def weekly_provider_sources(root: Path = DEFAULT_ROOT) -> tuple[ProviderSource, 
     unknown_files = {provider.file for provider in manifest.providers} - records.keys()
     if unknown_files:
         raise ValueError(f'Weekly manifest references unknown provider files: {sorted(unknown_files)}')
+    sources_by_file: dict[str, set[str]] = {}
+    for provider in manifest.providers:
+        sources_by_file.setdefault(provider.file, set()).update(provider.sources)
     return tuple(
-        records[provider.file].model_copy(update={'sources': tuple(sorted(set(provider.sources)))})
-        for provider in manifest.providers
+        records[file].model_copy(update={'sources': tuple(sorted(sources))})
+        for file, sources in sources_by_file.items()
     )
 
 

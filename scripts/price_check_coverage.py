@@ -44,30 +44,36 @@ def coverage_directory() -> Path | None:
 
 def record_fetch(event: dict[str, object]) -> None:
     """Append one small event; never record response content or exception text."""
-    if coverage_directory() is None:
-        return
-    FETCH_LEDGER.parent.mkdir(parents=True, exist_ok=True)
-    with FETCH_LEDGER.open('a') as output:
-        output.write(json.dumps(event, separators=(',', ':')) + '\n')
+    try:
+        if coverage_directory() is None:
+            return
+        FETCH_LEDGER.parent.mkdir(parents=True, exist_ok=True)
+        with FETCH_LEDGER.open('a') as output:
+            output.write(json.dumps(event, separators=(',', ':')) + '\n')
+    except OSError:
+        pass
 
 
 def start_fetch(url: str, start_index: int, max_length: int) -> str:
     """Identify exact required URLs without persisting arbitrary tool input URLs."""
     attempt_id = uuid4().hex
-    directory = coverage_directory()
-    if directory is not None:
-        plan = json.loads((directory / 'plan.json').read_text())
-        sources = {source for provider in plan['providers'] for source in provider['sources']}
-        record_fetch(
-            {
-                'type': 'start',
-                'attempt_id': attempt_id,
-                'source': url if url in sources else None,
-                'start_index': start_index,
-                'max_length': max_length,
-                'time_ms': int(time.time() * 1000),
-            }
-        )
+    try:
+        directory = coverage_directory()
+        if directory is not None:
+            plan = json.loads((directory / 'plan.json').read_text())
+            sources = {source for provider in plan['providers'] for source in provider['sources']}
+            record_fetch(
+                {
+                    'type': 'start',
+                    'attempt_id': attempt_id,
+                    'source': url if url in sources else None,
+                    'start_index': start_index,
+                    'max_length': max_length,
+                    'time_ms': int(time.time() * 1000),
+                }
+            )
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
     return attempt_id
 
 

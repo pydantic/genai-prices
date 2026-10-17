@@ -48,14 +48,23 @@ post-steps:
             } catch { return []; }
           });
           const log = readRecords('/tmp/gh-aw/agent-session.jsonl');
-          const usage = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_usage.json', 'utf8'));
-          if (typeof usage.primary_model !== 'string' || !usage.primary_model) {
-            throw new Error('No canonical primary model; telemetry is incomplete.');
+          let usageStatus = 'available';
+          const modelUsage = Object.create(null);
+          try {
+            const usage = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_usage.json', 'utf8'));
+            if (typeof usage.primary_model !== 'string' || !usage.primary_model ||
+                ![usage.input_tokens, usage.cache_read_tokens, usage.cache_write_tokens, usage.output_tokens]
+                  .every((value) => Number.isSafeInteger(value) && value >= 0)) {
+              throw new Error('Invalid canonical usage');
+            }
+            modelUsage[usage.primary_model] = {
+              inputTokens: usage.input_tokens, cacheReadInputTokens: usage.cache_read_tokens,
+              cacheCreationInputTokens: usage.cache_write_tokens, outputTokens: usage.output_tokens,
+            };
+          } catch (error) {
+            usageStatus = error.code === 'ENOENT' ? 'missing' : 'invalid';
+            core.warning(`Canonical token usage unavailable (${usageStatus}); exporting recorded spans without token totals.`);
           }
-          const modelUsage = { [usage.primary_model]: {
-            inputTokens: usage.input_tokens, cacheReadInputTokens: usage.cache_read_tokens,
-            cacheCreationInputTokens: usage.cache_write_tokens, outputTokens: usage.output_tokens,
-          } };
           const output = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_output.json', 'utf8'));
           const terminalEmitted = output.items?.some((item) => ['noop', 'create_pull_request'].includes(item.type)) === true;
           const succeeded = log.some((record) => record.type === 'session.result' && record.data?.status === 'success');
@@ -95,6 +104,7 @@ post-steps:
             buildAttr('gen_ai.operation.name', 'invoke_agent'), buildAttr('gen_ai.agent.name', 'Price Check'),
             buildAttr('price_check.terminal_output_emitted', terminalEmitted),
             buildAttr('price_check.tool_counts', JSON.stringify(toolCounts)),
+            buildAttr('price_check.usage.status', usageStatus),
           ] });
           const coverageDirectory = path.join(process.env.RUNNER_TEMP, 'gh-aw/price-check-coverage');
           if (fs.existsSync(path.join(coverageDirectory, 'plan.json'))) {
@@ -123,10 +133,14 @@ post-steps:
                 buildAttr('price_check.backfill', JSON.stringify(provider.backfill)),
               ],
             });
-            } catch {
+            } catch (error) {
+              const reason = error instanceof SyntaxError ? 'invalid_json'
+                : error.code === 'ENOENT' ? 'missing_report' : 'invalid_report';
+              core.warning(`Coverage telemetry unavailable (${reason}); inspect the coverage summary and artifact steps.`);
               addSpan({ spanId: createHash('sha256').update(identity + ':coverage-unavailable').digest('hex').slice(0, 16),
                 parentSpanId: rootId, spanName: 'price_check.coverage', attributes: [
                   buildAttr('price_check.coverage.ledger_status', 'unavailable'),
+                  buildAttr('price_check.coverage.error_kind', reason),
                 ] });
             }
           }
@@ -135,9 +149,6 @@ post-steps:
               uncached_input: usage.inputTokens, cached_input: usage.cacheReadInputTokens,
               cache_creation: usage.cacheCreationInputTokens, output: usage.outputTokens,
             };
-            if (!Object.values(counts).every((value) => Number.isSafeInteger(value) && value >= 0)) {
-              throw new Error('Invalid cumulative usage; telemetry is incomplete.');
-            }
             addSpan({ spanId: createHash('sha256').update(identity + model).digest('hex').slice(0, 16),
               parentSpanId: rootId, spanName: 'price_check.usage', attributes: [
                 buildAttr('gen_ai.request.model', model), buildAttr('price_check.usage.source', 'gh-aw.agent_usage'),
@@ -156,10 +167,13 @@ post-steps:
           fs.mkdirSync('/tmp/gh-aw/mcp-logs', { recursive: true });
           fs.writeFileSync('/tmp/gh-aw/mcp-logs/price-check-telemetry.json', JSON.stringify({
             run_id: process.env.GITHUB_RUN_ID, trace_id: traceId, exported_request_spans: requests.length,
-            usage_source: 'gh-aw.agent_usage', model_usage: modelUsage, tool_counts: toolCounts,
+            usage_status: usageStatus, usage_source: usageStatus === 'available' ? 'gh-aw.agent_usage' : null,
+            model_usage: modelUsage, tool_counts: toolCounts,
             cost_is_client_estimate: true,
           }, null, 2));
-          await core.summary.addRaw(`Logfire: exported ${requests.length} request spans and cumulative usage.\n`).write();
+          const usageSummary = usageStatus === 'available' ? 'canonical cumulative usage'
+            : `canonical usage unavailable (${usageStatus})`;
+          await core.summary.addRaw(`Logfire: exported ${requests.length} request spans; ${usageSummary}.\n`).write();
         } catch (error) {
           await core.summary.addRaw(`Logfire telemetry incomplete: ${error.message}\n`).write();
           throw error;
