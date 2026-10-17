@@ -1,5 +1,5 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"ba094ecbce1f1dc15fabae1f1c2cb84dec92464316d6497be4b5e11753a788b7","body_hash":"c337b9d3e7482084e03b7539c1dca72f336ec4fca51f99435a134cc4c9a89185","compiler_version":"v0.91.1","strict":true,"agent_id":"pydantic-ai","agent_model":"anthropic/glm-5.3-flash","engine_versions":{"pydantic-ai":"0.56.0"},"agent_image_runner":"ubuntu-latest"}
-# gh-aw-manifest: {"version":1,"secrets":["COPILOT_GITHUB_TOKEN","GH_AW_CI_TRIGGER_TOKEN","GH_AW_DEFAULT_OTLP_ENDPOINT","GH_AW_DEFAULT_OTLP_HEADERS","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN","LOGFIRE_OTLP_AUTHORIZATION","PRICE_UPDATE_APP_PRIVATE_KEY","SLACK_WEBHOOK_URL","ZAI_API_KEY"],"actions":[{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/checkout","sha":"de0fac2e4500dabe0009e67214ff5f5447ce83dd","version":"v6.0.2"},{"repo":"actions/create-github-app-token","sha":"bcd2ba49218906704ab6c1aa796996da409d3eb1","version":"v3.2.0"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-go","sha":"924ae3a1cded613372ab5595356fb5720e22ba16","version":"v6.0.0"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/setup-node","sha":"820762786026740c76f36085b0efc47a31fe5020","version":"v7.0.0"},{"repo":"actions/setup-python","sha":"5fda3b95a4ea91299a34e894583c3862153e4b97","version":"v7.0.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"astral-sh/setup-uv","sha":"08807647e7069bb48b6ef5acd8ec9567f424441b","version":"v8.1.0"},{"repo":"github/gh-aw-actions/setup","sha":"d7cc687a9bc76b9d56e6c496649403392f654b35","version":"v0.91.1"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.28.31","digest":"sha256:c4ab1d48d533cc7daaa5f2e1193d1a644888242fb8813d49c6de46d129224b76","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.28.31@sha256:c4ab1d48d533cc7daaa5f2e1193d1a644888242fb8813d49c6de46d129224b76"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.31","digest":"sha256:a5a37489635109334a5e2b5cb2eaba32e8c8f1a89d8dea6009baa962a8904c4a","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.31@sha256:a5a37489635109334a5e2b5cb2eaba32e8c8f1a89d8dea6009baa962a8904c4a"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.28.31","digest":"sha256:90a46d2e6e910ace2c09c2dcf6b56dc374ed513d9da642a4e9fcfcd6e9248a9d","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.28.31@sha256:90a46d2e6e910ace2c09c2dcf6b56dc374ed513d9da642a4e9fcfcd6e9248a9d"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.4.28","digest":"sha256:69920365d9f0143ed853743c319b2bd4614ca7f9537474ad8eff0c47da84c5a4","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.4.28@sha256:69920365d9f0143ed853743c319b2bd4614ca7f9537474ad8eff0c47da84c5a4"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:11c2c544876cdbaffefe0f7f1283b74838c209654b4934a78e23ed11f750490f","pinned_image":"ghcr.io/github/gh-aw-node@sha256:11c2c544876cdbaffefe0f7f1283b74838c209654b4934a78e23ed11f750490f"},{"image":"ghcr.io/github/github-mcp-server:v1.12.2","digest":"sha256:508a0857ec762b1ab1cece29193345b501fab1dd9d1228a7b617062954cecac6","pinned_image":"ghcr.io/github/github-mcp-server:v1.12.2@sha256:508a0857ec762b1ab1cece29193345b501fab1dd9d1228a7b617062954cecac6"}],"mcp_servers":[{"name":"github","tools":["get_commit","get_file_contents","get_latest_release","get_me","get_pull_request","get_pull_request_comments","get_pull_request_diff","get_pull_request_files","get_pull_request_review_comments","get_pull_request_reviews","get_pull_request_status","get_release_by_tag","get_tag","issue_read","list_branches","list_commits","list_issue_types","list_issues","list_pull_requests","list_releases","list_starred_repositories","list_tags","pull_request_read","search_code","search_issues","search_pull_requests","search_repositories"]},{"name":"safeoutputs","tools":["create_pull_request","missing_data","missing_tool","noop","report_incomplete"]}],"threat_detection":{"mode":"disabled"}}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"925d611890ef612de5332ee8fddd8cf87aa9cee6562754ea39f6a05c92c7a035","body_hash":"c337b9d3e7482084e03b7539c1dca72f336ec4fca51f99435a134cc4c9a89185","compiler_version":"v0.91.1","strict":true,"agent_id":"pydantic-ai","agent_model":"anthropic/glm-5.3-flash","engine_versions":{"pydantic-ai":"0.56.0"},"agent_image_runner":"ubuntu-latest"}
+# gh-aw-manifest: {"version":1,"secrets":["COPILOT_GITHUB_TOKEN","GH_AW_DEFAULT_OTLP_ENDPOINT","GH_AW_DEFAULT_OTLP_HEADERS","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN","LOGFIRE_OTLP_AUTHORIZATION","PRICE_UPDATE_APP_PRIVATE_KEY","SLACK_WEBHOOK_URL","ZAI_API_KEY"],"actions":[{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/checkout","sha":"de0fac2e4500dabe0009e67214ff5f5447ce83dd","version":"v6.0.2"},{"repo":"actions/create-github-app-token","sha":"bcd2ba49218906704ab6c1aa796996da409d3eb1","version":"v3.2.0"},{"repo":"actions/download-artifact","sha":"3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c","version":"v8.0.1"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-go","sha":"924ae3a1cded613372ab5595356fb5720e22ba16","version":"v6.0.0"},{"repo":"actions/setup-node","sha":"48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e","version":"v6.4.0"},{"repo":"actions/setup-node","sha":"820762786026740c76f36085b0efc47a31fe5020","version":"v7.0.0"},{"repo":"actions/setup-python","sha":"5fda3b95a4ea91299a34e894583c3862153e4b97","version":"v7.0.0"},{"repo":"actions/upload-artifact","sha":"043fb46d1a93c77aae656e7c1c64a875d1fc6a0a","version":"v7.0.1"},{"repo":"astral-sh/setup-uv","sha":"08807647e7069bb48b6ef5acd8ec9567f424441b","version":"v8.1.0"},{"repo":"github/gh-aw-actions/setup","sha":"d7cc687a9bc76b9d56e6c496649403392f654b35","version":"v0.91.1"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.28.31","digest":"sha256:c4ab1d48d533cc7daaa5f2e1193d1a644888242fb8813d49c6de46d129224b76","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.28.31@sha256:c4ab1d48d533cc7daaa5f2e1193d1a644888242fb8813d49c6de46d129224b76"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.31","digest":"sha256:a5a37489635109334a5e2b5cb2eaba32e8c8f1a89d8dea6009baa962a8904c4a","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.28.31@sha256:a5a37489635109334a5e2b5cb2eaba32e8c8f1a89d8dea6009baa962a8904c4a"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.28.31","digest":"sha256:90a46d2e6e910ace2c09c2dcf6b56dc374ed513d9da642a4e9fcfcd6e9248a9d","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.28.31@sha256:90a46d2e6e910ace2c09c2dcf6b56dc374ed513d9da642a4e9fcfcd6e9248a9d"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.4.28","digest":"sha256:69920365d9f0143ed853743c319b2bd4614ca7f9537474ad8eff0c47da84c5a4","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.4.28@sha256:69920365d9f0143ed853743c319b2bd4614ca7f9537474ad8eff0c47da84c5a4"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:11c2c544876cdbaffefe0f7f1283b74838c209654b4934a78e23ed11f750490f","pinned_image":"ghcr.io/github/gh-aw-node@sha256:11c2c544876cdbaffefe0f7f1283b74838c209654b4934a78e23ed11f750490f"},{"image":"ghcr.io/github/github-mcp-server:v1.12.2","digest":"sha256:508a0857ec762b1ab1cece29193345b501fab1dd9d1228a7b617062954cecac6","pinned_image":"ghcr.io/github/github-mcp-server:v1.12.2@sha256:508a0857ec762b1ab1cece29193345b501fab1dd9d1228a7b617062954cecac6"}],"mcp_servers":[{"name":"github","tools":["get_commit","get_file_contents","get_latest_release","get_me","get_pull_request","get_pull_request_comments","get_pull_request_diff","get_pull_request_files","get_pull_request_review_comments","get_pull_request_reviews","get_pull_request_status","get_release_by_tag","get_tag","issue_read","list_branches","list_commits","list_issue_types","list_issues","list_pull_requests","list_releases","list_starred_repositories","list_tags","pull_request_read","search_code","search_issues","search_pull_requests","search_repositories"]},{"name":"safeoutputs","tools":["create_pull_request","missing_data","missing_tool","noop","report_incomplete"]}],"threat_detection":{"mode":"disabled"}}
 # This file was automatically generated by gh-aw (v0.91.1). DO NOT EDIT. To debug this workflow, load the skill at https://github.com/github/gh-aw/blob/main/debug.md
 #
 #    ___                   _   _
@@ -36,7 +36,6 @@
 #
 # Secrets used:
 #   - COPILOT_GITHUB_TOKEN
-#   - GH_AW_CI_TRIGGER_TOKEN
 #   - GH_AW_DEFAULT_OTLP_ENDPOINT
 #   - GH_AW_DEFAULT_OTLP_HEADERS
 #   - GH_AW_GITHUB_MCP_SERVER_TOKEN
@@ -77,7 +76,6 @@ on:
   schedule:
     - cron: "0 6 * * 1"
       timezone: UTC
-  # skip-if-match: is:pr is:open author:app/genai-prices-automation # Skip-if-match processed as search check in pre-activation job
   workflow_dispatch:
     inputs:
       aw_context:
@@ -154,7 +152,7 @@ jobs:
           GH_AW_INFO_WORKFLOW_NAME: "Price Check"
           GH_AW_INFO_EXPERIMENTAL: "false"
           GH_AW_INFO_SUPPORTS_TOOLS_ALLOWLIST: "false"
-          GH_AW_INFO_STAGED: "false"
+          GH_AW_INFO_STAGED: "true"
           GH_AW_INFO_ALLOWED_DOMAINS: '["ai.google.dev","api-docs.deepseek.com","api.arcee.ai","api.cerebras.ai","api.z.ai","avian.io","aws.amazon.com","azure.microsoft.com","cloud.google.com","cohere.com","console.groq.com","cursor.com","defaults","dev.meta.ai","developers.cloudflare.com","developers.openai.com","docs.arcee.ai","docs.aws.amazon.com","docs.baseten.co","docs.bigmodel.cn","docs.databricks.com","docs.doubleword.ai","docs.fireworks.ai","docs.github.com","docs.mistral.ai","docs.perplexity.ai","docs.together.ai","docs.typesafe.ai","docs.voyageai.com","docs.x.ai","docs.z.ai","fireworks.ai","go","help.openai.com","huggingface.co","inference-docs.cerebras.ai","learn.microsoft.com","mistral.ai","modal.com","novita.ai","oai.endpoints.kepler.ai.cloud.ovh.net","open.bigmodel.cn","openai.com","openrouter.ai","platform.claude.com","platform.kimi.ai","platform.minimax.io","platform.openai.com","quicksilverpro.io","router.huggingface.co","www.anthropic.com","www.baseten.co","www.cerebras.ai","www.databricks.com","www.together.ai"]'
           GH_AW_INFO_FIREWALL_ENABLED: "false"
           GH_AW_INFO_AWF_VERSION: ""
@@ -1673,6 +1671,7 @@ jobs:
           GH_AW_MAX_TURNS: ${{ vars.GH_AW_DEFAULT_MAX_TURNS || '' }}
           GH_AW_PROMPT: /tmp/gh-aw/aw-prompts/prompt.txt
           GH_AW_SAFE_OUTPUTS: ${{ steps.set-runtime-paths.outputs.GH_AW_SAFE_OUTPUTS }}
+          GH_AW_SAFE_OUTPUTS_STAGED: true
           GITHUB_WORKSPACE: ${{ github.workspace }}
           NO_PROXY: localhost,127.0.0.1,host.docker.internal,host.docker.internal:10000,host.docker.internal:10001,host.docker.internal:10002,host.docker.internal:10003,172.30.0.30,172.30.0.30:10000,172.30.0.30:10001,172.30.0.30:10002,172.30.0.30:10003
           PAI_AGENT: scripts.price_check_agent:agent
@@ -1895,8 +1894,6 @@ jobs:
             /tmp/gh-aw/otlp-export-errors.jsonl
             /tmp/gh-aw/safeoutputs.jsonl
             /tmp/gh-aw/agent_output.json
-            /tmp/gh-aw/aw-*.patch
-            /tmp/gh-aw/aw-*.bundle
             /tmp/gh-aw/awf-config.json
             /tmp/gh-aw/sandbox/firewall/logs/
             /tmp/gh-aw/sandbox/firewall/audit/
@@ -1951,9 +1948,8 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       actions: read
-      contents: write
+      contents: read
       issues: write
-      pull-requests: write
     concurrency:
       group: "gh-aw-conclusion-agentic-price-check"
       cancel-in-progress: false
@@ -1989,8 +1985,7 @@ jobs:
           owner: pydantic
           repositories: genai-prices
           github-api-url: ${{ github.api_url }}
-          permission-contents: write
-          permission-pull-requests: write
+          permission-contents: read
       - name: Download agent output artifact
         id: download-agent-output
         continue-on-error: true
@@ -2236,7 +2231,7 @@ jobs:
     env:
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
     outputs:
-      activated: ${{ steps.check_membership.outputs.is_team_member == 'true' && steps.check_skip_if_match.outputs.skip_check_ok == 'true' }}
+      activated: ${{ steps.check_membership.outputs.is_team_member == 'true' }}
       matched_command: ''
       setup-parent-span-id: ${{ steps.setup.outputs.parent-span-id || steps.setup.outputs.span-id }}
       setup-span-id: ${{ steps.setup.outputs.span-id }}
@@ -2268,28 +2263,13 @@ jobs:
             setupGlobals(core, github, context, exec, io, getOctokit);
             const { main } = require(path.join(actionsDir, 'check_membership.cjs'));
             await main();
-      - name: Check skip-if-match query
-        id: check_skip_if_match
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          GH_AW_SKIP_QUERY: "is:pr is:open author:app/genai-prices-automation"
-          GH_AW_WORKFLOW_NAME: "Price Check"
-          GH_AW_SKIP_MAX_MATCHES: "1"
-        with:
-          script: |
-            const path = require('path');
-            const actionsDir = path.join(process.env.RUNNER_TEMP, 'gh-aw', 'actions');
-            const { setupGlobals } = require(path.join(actionsDir, 'setup_globals.cjs'));
-            setupGlobals(core, github, context, exec, io, getOctokit);
-            const { main } = require(path.join(actionsDir, 'check_skip_if_match.cjs'));
-            await main();
 
   report_backfill:
     needs:
       - agent
       - backfill_requests
       - safe_outputs
-    if: ${{ always() && needs.backfill_requests.outputs.pending != '' && needs.backfill_requests.outputs.pending != '[]' }}
+    if: ${{ false }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -2331,8 +2311,7 @@ jobs:
     if: (!cancelled()) && needs.agent.result != 'skipped'
     runs-on: ubuntu-slim
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     timeout-minutes: 45
     env:
       GH_AW_AGENT_AIC: ${{ needs.agent.outputs.aic }}
@@ -2343,6 +2322,7 @@ jobs:
       GH_AW_ENGINE_MODEL: "anthropic/glm-5.3-flash"
       GH_AW_ENGINE_VERSION: "0.56.0"
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
+      GH_AW_SAFE_OUTPUTS_STAGED: "true"
       GH_AW_WORKFLOW_EMOJI: "🏷️"
       GH_AW_WORKFLOW_ID: "agentic-price-check"
       GH_AW_WORKFLOW_NAME: "Price Check"
@@ -2398,12 +2378,6 @@ jobs:
           if [ -f "/tmp/gh-aw/agent_output.json" ]; then
             echo "GH_AW_AGENT_OUTPUT=/tmp/gh-aw/agent_output.json" >> "$GITHUB_OUTPUT"
           fi
-      - name: Download patch artifact
-        continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: agent
-          path: /tmp/gh-aw/
       - name: Generate GitHub App token
         id: safe-outputs-app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -2413,22 +2387,7 @@ jobs:
           owner: pydantic
           repositories: genai-prices
           github-api-url: ${{ github.api_url }}
-          permission-contents: write
-          permission-pull-requests: write
-      - name: Checkout repository (gh-aw default)
-        if: (!cancelled()) && needs.agent.result != 'skipped' && contains(needs.agent.outputs.output_types, 'create_pull_request')
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: true
-          fetch-depth: 1
-          token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-      - name: Configure Git credentials
-        if: (!cancelled()) && needs.agent.result != 'skipped' && contains(needs.agent.outputs.output_types, 'create_pull_request')
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_SERVER_URL: ${{ github.server_url }}
-          GIT_TOKEN: ${{ steps.safe-outputs-app-token.outputs.token }}
-        run: bash "${RUNNER_TEMP}/gh-aw/actions/configure_git_credentials.sh"
+          permission-contents: read
       - name: Configure GH_HOST for enterprise compatibility
         id: ghes-host-config
         shell: bash
@@ -2463,8 +2422,7 @@ jobs:
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_API_URL: ${{ github.api_url }}
           GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_pull_request\":{\"allowed_files\":[\"prices/providers/anthropic.yml\",\"prices/providers/arcee.yml\",\"prices/providers/avian.yml\",\"prices/providers/aws.yml\",\"prices/providers/azure.yml\",\"prices/providers/baseten.yml\",\"prices/providers/cerebras.yml\",\"prices/providers/cloudflare.yml\",\"prices/providers/cohere.yml\",\"prices/providers/cursor.yml\",\"prices/providers/databricks.yml\",\"prices/providers/deepseek.yml\",\"prices/providers/doubleword.yml\",\"prices/providers/fireworks.yml\",\"prices/providers/github_copilot.yml\",\"prices/providers/google.yml\",\"prices/providers/groq.yml\",\"prices/providers/huggingface_cerebras.yml\",\"prices/providers/huggingface_fireworks-ai.yml\",\"prices/providers/huggingface_groq.yml\",\"prices/providers/huggingface_hyperbolic.yml\",\"prices/providers/huggingface_nebius.yml\",\"prices/providers/huggingface_novita.yml\",\"prices/providers/huggingface_nscale.yml\",\"prices/providers/huggingface_ovhcloud.yml\",\"prices/providers/huggingface_publicai.yml\",\"prices/providers/huggingface_sambanova.yml\",\"prices/providers/huggingface_together.yml\",\"prices/providers/meta.yml\",\"prices/providers/minimax.yml\",\"prices/providers/mistral.yml\",\"prices/providers/modal.yml\",\"prices/providers/moonshotai.yml\",\"prices/providers/novita.yml\",\"prices/providers/openai.yml\",\"prices/providers/openai_decisions.yml\",\"prices/providers/openrouter.yml\",\"prices/providers/ovhcloud.yml\",\"prices/providers/perplexity.yml\",\"prices/providers/quicksilverpro.yml\",\"prices/providers/together.yml\",\"prices/providers/typesafe.yml\",\"prices/providers/voyageai.yml\",\"prices/providers/x_ai.yml\",\"prices/providers/zai.yml\",\"prices/providers/zhipuai.yml\",\"prices/new_data/v2/data.json\",\"prices/new_data/v2/data_slim.json\",\"packages/python/genai_prices/data.py\",\"packages/python/genai_prices/data_units.py\",\"packages/js/src/data.ts\",\"packages/js/src/dataUnits.ts\",\"packages/go/internal/data/prices.json\",\"packages/go/data_units.go\",\"README.md\",\"tests/test_price_calc.py\",\"tests/test_price_regressions.py\",\"tests/test_price_check_additions.py\",\"tests/dataset/usages.json\",\"packages/js/src/__tests__/**\",\"packages/go/*_test.go\"],\"draft\":false,\"fallback_as_issue\":false,\"max\":1,\"max_patch_files\":100,\"max_patch_size\":10240,\"protect_top_level_dot_folders\":true,\"protected_files\":[\"package.json\",\"bun.lockb\",\"bunfig.toml\",\"deno.json\",\"deno.jsonc\",\"deno.lock\",\"global.json\",\"NuGet.Config\",\"Directory.Packages.props\",\"mix.exs\",\"mix.lock\",\"go.mod\",\"go.sum\",\"stack.yaml\",\"stack.yaml.lock\",\"pom.xml\",\"build.gradle\",\"build.gradle.kts\",\"settings.gradle\",\"settings.gradle.kts\",\"gradle.properties\",\"package-lock.json\",\"yarn.lock\",\"pnpm-lock.yaml\",\"npm-shrinkwrap.json\",\"requirements.txt\",\"Pipfile\",\"Pipfile.lock\",\"pyproject.toml\",\"setup.py\",\"setup.cfg\",\"Gemfile\",\"Gemfile.lock\",\"uv.lock\",\"CODEOWNERS\",\"DESIGN.md\",\"CONTRIBUTING.md\",\"SECURITY.md\",\"CODE_OF_CONDUCT.md\",\"AGENTS.md\"],\"protected_files_policy\":\"blocked\"},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":2,\"report-as-issue\":\"false\"},\"report_incomplete\":{}}"
-          GH_AW_CI_TRIGGER_TOKEN: ${{ secrets.GH_AW_CI_TRIGGER_TOKEN }}
-          GITHUB_TOKEN: ${{ steps.safe-outputs-app-token.outputs.token }}
+          GH_AW_SAFE_OUTPUTS_STAGED: "true"
         with:
           github-token: ${{ steps.safe-outputs-app-token.outputs.token }}
           script: |
@@ -2474,14 +2432,3 @@ jobs:
             setupGlobals(core, github, context, exec, io, getOctokit);
             const { main } = require(path.join(actionsDir, 'process_safe_outputs.cjs'));
             await main();
-      - name: Upload Safe Outputs Items
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: safe-outputs-items
-          path: |
-            /tmp/gh-aw/safe-output-items.jsonl
-            /tmp/gh-aw/temporary-id-map.json
-            /tmp/gh-aw/safe-output-errors.json
-          if-no-files-found: ignore
-          retention-days: ${{ vars.GH_AW_DEFAULT_ARTIFACT_RETENTION_DAYS || '0' }}
