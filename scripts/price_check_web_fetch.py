@@ -4,18 +4,11 @@ import asyncio
 import json
 from pathlib import Path
 
-import yaml
-from pydantic import BaseModel, HttpUrl, TypeAdapter
+from pydantic import TypeAdapter
 from pydantic_ai.exceptions import ModelRetry
 from typing_extensions import TypedDict
 
-
-class ProviderSources(BaseModel):
-    sources: list[HttpUrl]
-
-
-class ManifestSources(BaseModel):
-    providers: list[ProviderSources]
+from scripts.price_check_sources import DEFAULT_ROOT, official_source_hosts
 
 
 class WebFetchResult(TypedDict):
@@ -30,12 +23,7 @@ class WebFetchResult(TypedDict):
 
 
 page_adapter = TypeAdapter(WebFetchResult)
-manifest = ManifestSources.model_validate(
-    yaml.safe_load((Path(__file__).resolve().parents[1] / '.github/agentic-price-check-providers.yml').read_text())
-)
-allowed_hosts = tuple(
-    sorted({source.host for provider in manifest.providers for source in provider.sources if source.host is not None})
-)
+allowed_hosts = official_source_hosts(DEFAULT_ROOT)
 
 
 async def web_fetch(url: str, start_index: int = 0, max_length: int = 20_000) -> WebFetchResult:

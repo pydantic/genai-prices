@@ -11,7 +11,7 @@ gh workflow run agentic-price-check.lock.yml
 ```
 
 This [gh-aw](https://github.com/github/gh-aw) workflow schedules a check of all twenty-five covered provider records
-each Monday at 06:00 UTC and supports manual dispatch. See the [gh-aw schedule syntax] and
+each Monday at 06:00 UTC and supports manual dispatch. The same invocation also revisits pending requested-model rollouts from Genie Pricer. See the [gh-aw schedule syntax] and
 [GitHub Actions schedule syntax]. The workflow combines
 verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Scheduled runs target
 `main`. Manual dispatch uses `main` unless you select a branch with `--ref`.
@@ -122,7 +122,7 @@ no personal-token expiry to monitor.
 
 ## Coverage
 
-The single workflow is `.github/workflows/agentic-price-check.md`. It covers OpenAI, OpenAI Decisions, Anthropic, Google
+The weekly workflow is `.github/workflows/agentic-price-check.md`. [Genie Pricer](GENIE_PRICER.md) provides a separate targeted Slack entrypoint. It covers OpenAI, OpenAI Decisions, Anthropic, Google
 (Gemini), Mistral, DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare
 Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks, TypeSafe, Z.AI, Meta, and Modal.
 
@@ -212,8 +212,9 @@ The canonical session and usage artifacts remain available without an exporter. 
 provider usage fields do not prove zero consumption. Compare only runs that reached the agent, and distinguish
 reported tokens from Coding Plan quota consumption.
 
-To add a provider, update `.github/agentic-price-check-providers.yml`, add its source domains to `network.allowed`, and
-add its YAML path to `create-pull-request.allowed-files`. Then recompile.
+To add a provider to the ordinary weekly sweep, update `.github/agentic-price-check-providers.yml`, update the shared network policy if needed, and
+add its YAML path to `create-pull-request.allowed-files` in both `agentic-price-check.md` and
+`agentic-model-price-check.md`. Then recompile both workflows.
 
 ## Source limitations
 
