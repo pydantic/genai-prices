@@ -245,11 +245,16 @@ Logfire coverage/provider spans. Missing reports and unreadable sources are inco
 Use `agent_usage.json` or `mcp-logs/price-check-telemetry.json` for all four canonical usage components. Preserve the run URL,
 attempt, source SHA, model and engine version with each measurement. Do not infer a speed improvement from one run.
 
-The [2026-10-17 startup attempts](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-startup-attempts) reached the agent but
+The [2026-10-17 verification record](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-verification) preserves two startup attempts where
 Z.ai rejected every model-message attempt: quota exhaustion in the first run, insufficient balance/resource package in the
 second. Coverage artifacts mark all providers incomplete and token usage unavailable. The second run verified real failure,
 coverage and provider spans in Logfire without inventing token totals. A third run reached successful model requests
-and source retrieval, then was cancelled to fix CodeMode host-report persistence. None establishes a completed baseline.
+and source retrieval, then was cancelled to fix CodeMode host-report persistence.
+The fourth run completed with a noop and verified host reporting and Logfire accounting: 10 of 25 providers complete,
+36 of 37 sources retrieved, and four provider assessments missing. Its full validation hit the temporary ref's removed
+skip-guard assertion and used an adjusted retest; it is an operational sample with that confounder, not clean production validation
+or a controlled speed comparison. Use saved provider rows and the trusted coverage summary over the agent's final narrative.
+The final prompt's discovery and terminal-reconciliation clarifications were added after that measured run.
 
 The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
 Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.

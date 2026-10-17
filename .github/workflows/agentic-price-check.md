@@ -258,6 +258,13 @@ These results describe research completeness. Keep the separate rollout callback
 The fetch tool automatically records retrieval attempts and pagination without page content.
 Missing results and unconsumed page ranges remain incomplete in the durable coverage report.
 
+Before the terminal safe output, read `/tmp/gh-aw/agent/provider-results.json` through the host `shell` callable.
+Reconcile saved provider IDs and statuses against `await get_coverage_plan()`.
+Retry failed `record_provider_result` calls. Base final PR/noop provider counts on saved records.
+List missing or unresolved providers, incomplete source assessments, unchecked fields and deferred changes.
+Do not claim complete verification when any planned provider is missing or incomplete.
+Agent-reported `checked` alone does not establish completeness.
+
 Keep every changed file within this workflow's `create-pull-request.allowed-files` list.
 Update existing pricing regression tests, including `tests/test_price_check_additions.py`, when prices change.
 Defer a candidate if its required regression updates need a file outside that list.
@@ -357,6 +364,9 @@ for its own listing; do not use its price as evidence of a different provider's 
 
 For a `_discovery` pair, read `.claude/skills/add-price-model/SKILL.md` and identify every plausible hosting provider for
 that one model. This repeats incomplete model-host discovery, without sweeping unrelated models at those providers.
+Read the full trusted provider catalog through the host `shell` callable:
+`cat "$RUNNER_TEMP/gh-aw/price-check/provider-sources.json"`.
+The `_discovery` plan entry has no provider file or fixed source list; use the catalog for canonical providers and sources.
 Add verified available listings using the same historical-price and cross-language validation rules as the ordinary check.
 Keep unshipped, unreadable, or unpriced rollouts pending. A missing catalog listing is never evidence that backfill is done.
 

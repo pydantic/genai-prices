@@ -6,7 +6,7 @@ One sequential invocation checks the 25-provider manifest plus the selected requ
 Exact-source retrieval coverage and agent-reported comparison results now accompany runtime and token accounting.
 No persistent evidence cache, provider concurrency, provider cadence tiers or engine change is part of this implementation.
 
-## Current-engine startup attempts
+## Current-engine verification
 
 Two 2026-10-17 attempts stopped before research on distinct provider account errors. The
 [machine-readable record](../price-check/benchmark-2026-10-17.json) preserves their implementation and verification SHAs,
@@ -38,10 +38,81 @@ The host fetch ledger recorded four attempts and two retrieved sources; semantic
 All 22 model-message requests succeeded. Canonical usage was 82,045 uncached input, 956,928 cache-read input,
 zero cache-write input and 4,914 output tokens; all four components were verified in correlated Logfire spans.
 This interrupted integration sample is not a completed baseline.
+Its test ref also removed the skip guard, staged safe outputs and disabled the rollout callback.
+The selected backlog and callback were not live-verified.
 
 Weekly reporting now reads the trusted plan and persists assessments through host-backed tools called from CodeMode.
 A no-LLM test exercises the actual CLAI 0.56.0 composition, host persistence and rejection of an out-of-plan provider.
-A completed research sweep with semantic results is still needed for the current-engine baseline.
+
+### Completed operational sample
+
+[Run 39055754395](https://github.com/pydantic/genai-prices/actions/runs/39055754395) completed with a terminal noop.
+It measured implementation `6d77abb3713e4e1afc00020b042b21c1d5e57799` through staged verification ref
+`49dea8a5e92d0b9d0a53baf0dbe6f38ae1ba3c3f`. The agent job took 77m45s, its engine execution step 74m44s and the workflow 79m29s.
+
+| Canonical token component |     Tokens |
+| ------------------------- | ---------: |
+| Uncached input            |  2,218,036 |
+| Cache-read input          | 26,369,920 |
+| Cache-write input         |          0 |
+| Output                    |    143,240 |
+
+All four components match the artifact, the 232 unique successful model-message usage records and Logfire readback.
+The session's 28,587,956 input tokens include cached reads; subtracting 26,369,920 yields the uncached input above.
+There were 234 unique API requests: one successful model-catalog request, 232 successful messages and one HTTP 502 message.
+No HTTP 429 was observed.
+
+Partitioning message requests by their start relative to the first full validation command at 18:53:38.192908 UTC gives:
+
+| Phase                        | Message requests (successful) | Uncached input | Cache reads |  Output |
+| ---------------------------- | ----------------------------: | -------------: | ----------: | ------: |
+| Before first full validation |                     201 (200) |      1,023,890 |  22,407,744 | 128,880 |
+| From first full validation   |                       32 (32) |      1,194,146 |   3,962,176 |  14,360 |
+
+Cache writes were zero in both phases. The validation/reporting phase contains over half the reported uncached input;
+this partition does not isolate retest cost, prove cache expiry or estimate runtime without validation.
+Sixteen `run_code` starts contained both `time.sleep` and `tail`, the defined count for validation polling.
+
+The durable report contains every expected provider: 10 of 25 complete, with semantic statuses 19 checked, two partial
+and four missing (`cerebras`, `deepseek`, `minimax`, `typesafe`). The agent's final claim of 23 checked plus two partial
+does not match the saved host records and is not the coverage result. An agent-reported checked status also remains
+incomplete when sources, unchecked fields or deferred findings prevent completion.
+
+Retrieval covered 36 of 37 required sources across 81 attempts, four failures and 13 follow-up attempts.
+Thirteen attempts were unassigned; their URLs are not retained, so total distinct fetched URLs are unknown.
+The sole partial source was Google's pricing page: reported lengths included 60,314, 64,634 and 77,897 characters.
+The ledger's consistency guard kept retrieval partial even though the agent assessed the source as readable.
+Fetch durations sum to 64.540s (overlap is possible), with a 1.948s maximum attempt.
+This sum is not a wall-time breakdown. Archived session events show a longest inter-event gap of 311.595s;
+the longest failed model request was the HTTP 502 at 287.886s. The live browser view omitted intervening events,
+so its apparent quiet intervals were not reliable timing evidence.
+
+Logfire trace `baa7e223c46af00c9e18f996fbfe3b7a` contains all 234 request spans, the usage/agent/coverage spans and
+25 provider-result spans. All provider statuses, coverage totals and canonical usage components match the artifacts.
+The selected rollout backlog fell back to empty; callbacks and Slack were skipped, and no pricing PR was created.
+
+The host-bridge verification ref deliberately removes the skip guard, which conflicts with
+`test_price_updates_create_pr_before_notifying_slack` in `tests/test_price_update_workflows.py`.
+The live agent reproduced that failure on the pristine test ref and reran pytest with that test deselected.
+Production head `6d77abb3` retains the guard and passed full validation and hosted CI.
+The verification-only diagnosis and retest add elapsed time; this run cannot establish clean production validation
+or a controlled performance comparison. The production guard and its test remain unchanged.
+Real provider findings and variable latency also prevent a steady-state duration claim from this single sample.
+The final prompt adds discovery-catalog and terminal-reconciliation instructions after the measured implementation;
+that final prompt was not live-validated, and no additional model run was made.
+
+The changing Google pagination lengths support investigating consistent per-run source snapshots as a follow-up.
+Other observed work included rediscovering unit ancestry/model matching and polling background validation;
+structured comparisons and validation supervision are separate follow-up opportunities.
+Importer HTTP in the Simon Willison tests is mocked; repeated full-YAML parsing is a possible validation cost,
+not evidence for the agent's network attribution. These observations do not add tools, caching or timeout changes here.
+
+Local no-LLM diagnostics used harness/CLAI `0.56.0`, Pydantic AI `2.56.0`, Anthropic SDK `1.15.0` and HTTPX2 `2.13.1`.
+These are locally resolved versions; the SDK version was not separately verified in the live job.
+The provider's defaults were 5 s connect and 600 s read/write/pool timeouts, with two SDK retries.
+A mocked pre-response timeout made three attempts. A loopback streaming check confirmed that read inactivity,
+rather than total response duration, triggers the read timeout. These settings do not attribute any live quiet interval;
+that requires the run's proxy timestamps. This PR does not change timeout settings.
 
 ## Historical Claude measurements
 

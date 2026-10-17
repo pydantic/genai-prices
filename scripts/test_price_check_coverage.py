@@ -1,4 +1,5 @@
 import asyncio
+import errno
 import json
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
@@ -92,8 +93,13 @@ def test_host_result_reads_are_bounded_regular_files(tmp_path: Path, invalid: st
         file.mkdir()
     else:
         file.write_bytes(b'x' * 1025)
-    with pytest.raises((OSError, ValueError)):
-        coverage.read_bounded(file, 1024)
+    if invalid == 'symlink':
+        with pytest.raises(OSError) as failure:
+            coverage.read_bounded(file, 1024)
+        assert failure.value.errno == errno.ELOOP
+    else:
+        with pytest.raises(ValueError, match='^Invalid coverage file$'):
+            coverage.read_bounded(file, 1024)
 
 
 @pytest.mark.parametrize(

@@ -63,6 +63,9 @@ class PriceCheckAgentTests(unittest.TestCase):
                 ],
             }
             plan_file.write_text(json.dumps(plan))
+            catalog_file = root / 'gh-aw/price-check/provider-sources.json'
+            catalog_file.parent.mkdir(parents=True)
+            catalog_file.write_text('{"proof":"trusted-host-provider-catalog"}')
             result_file = root / 'host/provider-results.json'
             code = """import json
 import os
@@ -70,6 +73,7 @@ from pathlib import Path
 plan = json.loads(await get_coverage_plan())
 print('host-plan', plan['providers'][0]['backfill'][0]['target_model'])
 print('vfs', os.environ.get('RUNNER_TEMP'), Path(PLAN_PATH).exists())
+print(await shell(command='cat "$RUNNER_TEMP/gh-aw/price-check/provider-sources.json"'))
 result = {
     'provider_id': 'openai', 'status': 'partial',
     'sources': [{'url': plan['providers'][0]['sources'][0], 'status': 'readable'}],
@@ -101,13 +105,15 @@ except Exception:
                     self.assertIn('vfs None False', output)
                     self.assertIn('Saved provider result: openai', output)
                     self.assertIn('out-of-plan rejected', output)
+                    self.assertIn('{"proof":"trusted-host-provider-catalog"}', output)
                     yield 'checked'
 
             with (
                 patch.dict(os.environ, {'RUNNER_TEMP': str(root)}),
                 patch.object(price_check_coverage, 'PROVIDER_RESULTS', result_file),
             ):
-                result = price_check_agent.agent.run_sync(
+                host_agent = importlib.reload(price_check_agent).agent
+                result = host_agent.run_sync(
                     'Exercise host reporting.',
                     model=FunctionModel(stream_function=call_code),
                     capabilities=speculative_capabilities(
