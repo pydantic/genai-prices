@@ -265,9 +265,16 @@ You can also install it globally and then use the `genai-prices` command:
 npm i -g @pydantic/genai-prices
 ```
 
+For calculations, `--provider` sets the default provider for models without a `provider:model` prefix.
+A prefix overrides the default for that model; subsequent unqualified models use the default again.
+Use the `provider:model` form when a model ID contains a colon.
+
 ```bash
 # Basic usage
 genai-prices gpt-5 --input-tokens 1000 --output-tokens 100
+
+# Set a default provider
+genai-prices calc trinity-large-thinking --provider arcee --input-tokens 1000 --output-tokens 100
 
 # Specify provider explicitly
 genai-prices openai:gpt-5 --input-tokens 1000 --output-tokens 100
