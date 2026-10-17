@@ -28,6 +28,74 @@ def test_plan_uses_exact_weekly_sources_and_selected_backlog() -> None:
     assert providers['openai']['backfill'] == [pending[2]]
 
 
+@pytest.mark.parametrize('invalid', ['provider', 'source', 'request', 'duplicate', 'count', 'extra'])
+def test_host_results_preserve_previous_and_reject_unplanned_data(tmp_path: Path, invalid: str) -> None:
+    directory = tmp_path / 'gh-aw/price-check-coverage'
+    directory.mkdir(parents=True)
+    (directory / 'plan.json').write_text(
+        json.dumps(
+            {
+                'providers': [
+                    {'provider_id': provider_id, 'sources': ['https://pricing.example/'], 'backfill': []}
+                    for provider_id in ('one', 'two')
+                ],
+            }
+        )
+    )
+    file = tmp_path / 'provider-results.json'
+    result = {
+        'provider_id': 'one',
+        'status': 'partial',
+        'sources': [{'url': 'https://pricing.example/', 'status': 'readable'}],
+        'backfill': [],
+        'price_changes': 0,
+        'new_models': 0,
+        'potential_removals': 0,
+        'unchecked_fields': 1,
+        'deferred_changes': 0,
+    }
+    with patch.dict('os.environ', {'RUNNER_TEMP': str(tmp_path)}), patch.object(coverage, 'PROVIDER_RESULTS', file):
+        coverage.record_provider_result(coverage.ProviderResult.model_validate(result))
+        result['provider_id'] = 'two'
+        coverage.record_provider_result(coverage.ProviderResult.model_validate(result))
+        result['unchecked_fields'] = 2
+        coverage.record_provider_result(coverage.ProviderResult.model_validate(result))
+        previous = file.read_text()
+        if invalid == 'provider':
+            result['provider_id'] = 'outside'
+        elif invalid == 'source':
+            result['sources'] = [{'url': 'https://private.example/', 'status': 'readable'}]
+        elif invalid == 'request':
+            result['backfill'] = [{'request_id': 'outside', 'status': 'checked'}]
+        elif invalid == 'duplicate':
+            result['sources'] *= 2
+        elif invalid == 'count':
+            result['price_changes'] = True
+        else:
+            result['page_contents'] = 'private-page'
+        with pytest.raises(ValueError):
+            coverage.record_provider_result(coverage.ProviderResult.model_validate(result))
+    assert file.read_text() == previous
+    rows = json.loads(previous)['providers']
+    assert [row['provider_id'] for row in rows] == ['one', 'two']
+    assert [row['unchecked_fields'] for row in rows] == [1, 2]
+
+
+@pytest.mark.parametrize('invalid', ['symlink', 'directory', 'oversize'])
+def test_host_result_reads_are_bounded_regular_files(tmp_path: Path, invalid: str) -> None:
+    file = tmp_path / 'result'
+    if invalid == 'symlink':
+        target = tmp_path / 'private'
+        target.write_text('private')
+        file.symlink_to(target)
+    elif invalid == 'directory':
+        file.mkdir()
+    else:
+        file.write_bytes(b'x' * 1025)
+    with pytest.raises((OSError, ValueError)):
+        coverage.read_bounded(file, 1024)
+
+
 @pytest.mark.parametrize(
     'outcome', ['success', 'transport', 'policy', 'invalid', 'invalid_range', 'execution', 'cancelled']
 )

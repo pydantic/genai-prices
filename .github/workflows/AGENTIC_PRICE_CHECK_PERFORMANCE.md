@@ -29,8 +29,19 @@ Their test refs removed the open-PR skip guard, staged safe outputs and disabled
 The first attempt's exporter stopped on missing canonical usage. The corrected exporter was then verified in the second
 Actions run and through exact-run Logfire MCP readback: four real request spans, one agent span, one coverage span and
 25 provider-result spans. `usage_status` is `missing`; no usage span or token totals were invented. Logfire coverage counters
-match the artifact. An offline, no-network replay of the first attempt independently preserved its coverage counters.
-These checks establish failure reporting; successful source retrieval and semantic verification still need a research run.
+match the artifact. These checks establish failure reporting.
+
+A third attempt, [39054066763](https://github.com/pydantic/genai-prices/actions/runs/39054066763), reached research after
+credential replacement. It was cancelled after 455 s of agent execution (532 s workflow) when report collection exposed
+a filesystem boundary: CodeMode's scratch `/tmp` and environment cannot access the host reporting paths directly.
+The host fetch ledger recorded four attempts and two retrieved sources; semantic results remained missing.
+All 22 model-message requests succeeded. Canonical usage was 82,045 uncached input, 956,928 cache-read input,
+zero cache-write input and 4,914 output tokens; all four components were verified in correlated Logfire spans.
+This interrupted integration sample is not a completed baseline.
+
+Weekly reporting now reads the trusted plan and persists assessments through host-backed tools called from CodeMode.
+A no-LLM test exercises the actual CLAI 0.56.0 composition, host persistence and rejection of an out-of-plan provider.
+A completed research sweep with semantic results is still needed for the current-engine baseline.
 
 ## Historical Claude measurements
 

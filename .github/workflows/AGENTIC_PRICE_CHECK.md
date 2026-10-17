@@ -118,6 +118,9 @@ are omitted. A required source is `retrieved` only when successful nonempty rang
 and agree on total length. Retries remain visible. Follow-up fetches never substitute for a missing exact required URL.
 Pages can change between requests; range coverage does not establish a stable source snapshot.
 
+The agent reads the host plan with `await get_coverage_plan()` and persists each assessment with
+`await record_provider_result(result=...)` inside CodeMode. Direct sandbox `/tmp` files are scratch files.
+The plan supplies selected backlog data without relying on prompt template expansion.
 Provider results are separately labelled as agent-reported. Each result assesses source readability, comparison status,
 selected backlog pairs, and counts of price changes, new models, potential removals, unchecked fields and deferred changes.
 A provider with planned URLs is complete only with full retrieval, readable source assessments, checked comparisons and
@@ -245,7 +248,8 @@ attempt, source SHA, model and engine version with each measurement. Do not infe
 The [2026-10-17 startup attempts](AGENTIC_PRICE_CHECK_PERFORMANCE.md#current-engine-startup-attempts) reached the agent but
 Z.ai rejected every model-message attempt: quota exhaustion in the first run, insufficient balance/resource package in the
 second. Coverage artifacts mark all providers incomplete and token usage unavailable. The second run verified real failure,
-coverage and provider spans in Logfire without inventing token totals. Neither attempt establishes a successful research baseline.
+coverage and provider spans in Logfire without inventing token totals. A third run reached successful model requests
+and source retrieval, then was cancelled to fix CodeMode host-report persistence. None establishes a completed baseline.
 
 The trusted host exporter described above uses service `gh-aw.agentic-price-check`, with the Actions run identity.
 Native in-process model/tool export is deliberately disabled; exporter variables are excluded from the agent container.

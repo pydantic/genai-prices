@@ -2,10 +2,16 @@
 
 import json
 import os
+import stat
 import sys
+import tempfile
+import threading
 import time
 from pathlib import Path
+from typing import Annotated, Literal
 from uuid import uuid4
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from scripts.price_check_sources import (
     DEFAULT_ROOT,
@@ -15,6 +21,102 @@ from scripts.price_check_sources import (
 )
 
 FETCH_LEDGER = Path('/tmp/gh-aw/agent/price-check-fetch-attempts.jsonl')
+PROVIDER_RESULTS = Path('/tmp/gh-aw/agent/provider-results.json')
+_RESULT_LOCK = threading.Lock()
+Count = Annotated[int, Field(strict=True, ge=0, le=2**53 - 1)]
+
+
+class SourceAssessment(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    url: str
+    status: Literal['readable', 'unreadable', 'unresolved']
+
+
+class BackfillAssessment(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    request_id: str
+    status: Literal['checked', 'partial', 'unresolved']
+
+
+class ProviderResult(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    provider_id: str
+    status: Literal['checked', 'partial', 'unresolved']
+    sources: list[SourceAssessment]
+    backfill: list[BackfillAssessment]
+    price_changes: Count
+    new_models: Count
+    potential_removals: Count
+    unchecked_fields: Count
+    deferred_changes: Count
+
+
+class ProviderResults(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    providers: list[ProviderResult]
+
+
+def read_bounded(file: Path, limit: int) -> str:
+    descriptor = os.open(file, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
+            raise ValueError('Invalid coverage file')
+        content = os.read(descriptor, limit + 1)
+        if len(content) != info.st_size or len(content) > limit:
+            raise ValueError('Invalid coverage file')
+        return content.decode()
+    finally:
+        os.close(descriptor)
+
+
+def get_coverage_plan() -> str:
+    """Read the host's weekly coverage plan, including exact sources and selected rollout requests, as JSON.
+
+    Call this function from run_code. The sandbox's own environment and scratch filesystem do not contain this plan.
+    """
+    directory = coverage_directory()
+    if directory is None:
+        raise ValueError('Weekly coverage plan unavailable')
+    return read_bounded(directory / 'plan.json', 256 * 1024)
+
+
+def record_provider_result(result: ProviderResult) -> str:
+    """Save one provider assessment on the host for the durable coverage artifact.
+
+    Call after each provider. Replaces that provider's previous assessment while preserving other results.
+    Use only provider IDs, source URLs and request IDs from get_coverage_plan. Never include page contents.
+    """
+    plan = json.loads(get_coverage_plan())
+    provider = next((row for row in plan['providers'] if row['provider_id'] == result.provider_id), None)
+    if provider is None:
+        raise ValueError('Provider is outside the coverage plan')
+    urls = [source.url for source in result.sources]
+    requests = [request.request_id for request in result.backfill]
+    if len(set(urls)) != len(urls) or not set(urls) <= set(provider['sources']):
+        raise ValueError('Sources are outside the coverage plan or duplicated')
+    if len(set(requests)) != len(requests) or not set(requests) <= {row['request_id'] for row in provider['backfill']}:
+        raise ValueError('Requests are outside the coverage plan or duplicated')
+    with _RESULT_LOCK:
+        try:
+            previous = ProviderResults.model_validate_json(read_bounded(PROVIDER_RESULTS, 128 * 1024))
+        except FileNotFoundError:
+            previous = ProviderResults(providers=[])
+        providers = [row for row in previous.providers if row.provider_id != result.provider_id] + [result]
+        content = ProviderResults(providers=providers).model_dump_json()
+        if len(content.encode()) > 128 * 1024:
+            raise ValueError('Provider results exceed the artifact limit')
+        PROVIDER_RESULTS.parent.mkdir(parents=True, exist_ok=True)
+        temporary: Path | None = None
+        try:
+            with tempfile.NamedTemporaryFile(mode='w', dir=PROVIDER_RESULTS.parent, delete=False) as output:
+                temporary = Path(output.name)
+                output.write(content)
+            temporary.replace(PROVIDER_RESULTS)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+    return f'Saved provider result: {result.provider_id}'
 
 
 def coverage_plan(root: Path, pending: object) -> dict[str, object]:

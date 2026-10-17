@@ -8,7 +8,7 @@
     "subagents": false
   },
   "test_controls": ["skip-if-match removed", "safe-outputs.staged=true", "report_backfill disabled"],
-  "source": "GitHub Actions artifacts; second attempt independently verified through Logfire MCP",
+  "source": "GitHub Actions artifacts; second and third attempts independently verified through Logfire MCP",
   "accounting": "Missing canonical gh-aw usage remains null; proxy counters do not establish token totals",
   "successful_performance_baseline_available": false,
   "runs": [
@@ -54,13 +54,15 @@
       },
       "selected_backfill": [],
       "backfill_read_status": "unavailable_fallback",
-      "logfire_live_export_status": "failed_missing_canonical_usage",
       "limitations": [
         "No research or successful model inference completed; elapsed time is not a successful-run benchmark.",
         "Missing token usage is unavailable rather than a numeric zero.",
         "No selected rollout backlog; the live receiver and report callback were not verified.",
-        "Subsequent reporting fixes require captured-data replay and separate provenance."
-      ]
+        "Missing canonical usage handling was fixed and live-verified in run 39053454043."
+      ],
+      "logfire": {
+        "live_export_status": "failed_missing_canonical_usage"
+      }
     },
     {
       "status": "balance_blocked_before_research",
@@ -121,6 +123,62 @@
         "Token usage is unavailable rather than zero.",
         "Selected rollout backlog and callback were not live-verified."
       ]
+    },
+    {
+      "status": "cancelled_for_codemode_bridge_fix",
+      "run_id": "39054066763",
+      "url": "https://github.com/pydantic/genai-prices/actions/runs/39054066763",
+      "run_attempt": 1,
+      "implementation_sha": "94fcc5ecb16a8870eacb8d5005fc581494e9dca2",
+      "verification_sha": "16be9da3ac716618247a7085baa1389078c5a9fa",
+      "created_at": "2026-10-17T17:30:36Z",
+      "completed_at": "2026-10-17T17:39:28Z",
+      "workflow_duration_seconds": 532,
+      "agent_job_duration_seconds": 455,
+      "api_requests": {
+        "total": 23,
+        "model_catalog": 1,
+        "model_messages": 22,
+        "successful_model_messages": 22,
+        "http_429": 0
+      },
+      "canonical_token_usage": {
+        "input_tokens": 82045,
+        "cache_read_tokens": 956928,
+        "cache_write_tokens": 0,
+        "output_tokens": 4914
+      },
+      "tool_counts": {
+        "run_code": 22
+      },
+      "coverage": {
+        "ledger_status": "present",
+        "semantic_results_status": "missing",
+        "totals": {
+          "providers_expected": 25,
+          "providers_complete": 0,
+          "sources_expected": 37,
+          "sources_retrieved": 2,
+          "attempts": 4,
+          "failures": 0,
+          "incomplete_attempts": 0,
+          "follow_up_attempts": 0
+        }
+      },
+      "logfire": {
+        "live_export_status": "verified",
+        "project": "logfire/genai-prices",
+        "trace_id": "f53d132d473de8204fb85716de9781b3",
+        "all_four_usage_components_match": true
+      },
+      "integration_finding": "CodeMode Python filesystem/environment cannot access the trusted host plan/result paths directly; host fetch recording works but manual report writes stay in its VFS.",
+      "limitations": [
+        "Interrupted during early research to fix report collection; timings/tokens do not describe a completed provider sweep.",
+        "Selected rollout backlog and callback were not live-verified."
+      ],
+      "canonical_usage_source": "gh-aw agent_usage.json",
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback"
     }
   ]
 }

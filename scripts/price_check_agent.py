@@ -6,6 +6,7 @@ from pydantic_ai import Agent
 from pydantic_ai.capabilities import LocalWorkspace, WebFetch
 from pydantic_ai_harness import Coder
 
+from scripts.price_check_coverage import get_coverage_plan, record_provider_result
 from scripts.price_check_web_fetch import web_fetch
 
 SHELL_ENV_NAMES = frozenset(
@@ -44,6 +45,7 @@ SHELL_ENV_NAMES = frozenset(
 
 agent = Agent(
     name='price-check',
+    tools=[get_coverage_plan, record_provider_result],
     capabilities=[
         LocalWorkspace(
             '.',
