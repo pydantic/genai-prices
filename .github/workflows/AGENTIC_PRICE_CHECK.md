@@ -251,8 +251,9 @@ second. Coverage artifacts mark all providers incomplete and token usage unavail
 coverage and provider spans in Logfire without inventing token totals. A third run reached successful model requests
 and source retrieval, then was cancelled to fix CodeMode host-report persistence.
 The fourth run completed with a noop and verified host reporting and Logfire accounting: 10 of 25 providers complete,
-36 of 37 sources retrieved, and four provider assessments missing. Its full validation hit the temporary ref's removed
-skip-guard assertion and used an adjusted retest; it is an operational sample with that confounder, not clean production validation
+36 of 37 sources retrieved, and four provider assessments missing. Its original full validation failed the temporary ref's removed
+skip-guard assertion. The adjusted retest deselected that test and was not full validation. It is an operational sample
+with that confounder, not clean production validation
 or a controlled speed comparison. Use saved provider rows and the trusted coverage summary over the agent's final narrative.
 The final prompt's discovery and terminal-reconciliation clarifications were added after that measured run.
 

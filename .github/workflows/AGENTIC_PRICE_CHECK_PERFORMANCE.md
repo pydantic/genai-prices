@@ -46,6 +46,8 @@ A no-LLM test exercises the actual CLAI 0.56.0 composition, host persistence and
 
 ### Completed operational sample
 
+A successful current-engine performance baseline is still pending.
+
 [Run 39055754395](https://github.com/pydantic/genai-prices/actions/runs/39055754395) completed with a terminal noop.
 It measured implementation `6d77abb3713e4e1afc00020b042b21c1d5e57799` through staged verification ref
 `49dea8a5e92d0b9d0a53baf0dbe6f38ae1ba3c3f`. The agent job took 77m45s, its engine execution step 74m44s and the workflow 79m29s.

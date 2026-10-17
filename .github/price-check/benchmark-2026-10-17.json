@@ -62,7 +62,8 @@
       ],
       "logfire": {
         "live_export_status": "failed_missing_canonical_usage"
-      }
+      },
+      "canonical_usage_source": null
     },
     {
       "status": "balance_blocked_before_research",
@@ -122,7 +123,8 @@
         "No successful model inference or research; timings are startup failure, not performance baseline.",
         "Token usage is unavailable rather than zero.",
         "Selected rollout backlog and callback were not live-verified."
-      ]
+      ],
+      "canonical_usage_source": null
     },
     {
       "status": "cancelled_for_codemode_bridge_fix",
@@ -176,7 +178,7 @@
         "Interrupted during early research to fix report collection; timings/tokens do not describe a completed provider sweep.",
         "Selected rollout backlog and callback were not live-verified."
       ],
-      "canonical_usage_source": "gh-aw agent_usage.json",
+      "canonical_usage_source": "gh-aw.agent_usage",
       "selected_backfill": [],
       "backfill_read_status": "unavailable_fallback"
     },
@@ -204,7 +206,6 @@
         "cache_write_tokens": 0,
         "output_tokens": 143240
       },
-      "usage_source": "gh-aw.agent_usage",
       "usage_crosschecks": {
         "canonical_artifact_matches_logfire": true,
         "canonical_artifact_matches_232_unique_successful_proxy_requests": true,
@@ -569,7 +570,7 @@
         "project": "logfire/genai-prices",
         "live_export_status": "verified",
         "trace_id": "baa7e223c46af00c9e18f996fbfe3b7a",
-        "url": "https://logfire-eu.pydantic.info/logfire/genai-prices/?q=trace_id%3D%27baa7e223c46af00c9e18f996fbfe3b7a%27&since=2026-10-17T17%3A58%3A02.325000%2B00%3A00&until=2026-10-18T19%3A12%3A12.630000%2B00%3A00",
+        "url": "https://logfire-eu.pydantic.info/logfire/genai-prices/?q=trace_id%3D%27baa7e223c46af00c9e18f996fbfe3b7a%27&since=2026-10-17T17%3A54%3A04Z&until=2026-10-17T19%3A13%3A33Z",
         "request_spans": 234,
         "agent_spans": 1,
         "usage_spans": 1,
@@ -634,7 +635,10 @@
             "aggregate_request_seconds_may_overlap": true
           }
         ]
-      }
+      },
+      "canonical_usage_source": "gh-aw.agent_usage",
+      "selected_backfill": [],
+      "backfill_read_status": "unavailable_fallback"
     }
   ],
   "completed_engine_sample_available": true,
