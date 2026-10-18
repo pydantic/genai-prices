@@ -31,7 +31,7 @@ def test_avian_parses_per_million_prices_and_skips_unpriced_models() -> None:
     )
 
 
-def test_avian_adds_new_models_and_appends_a_dated_price_on_rate_change(tmp_path: Path) -> None:
+def test_avian_adds_new_models_and_appends_a_dated_price_keeping_unreported_keys(tmp_path: Path) -> None:
     provider_path = tmp_path / 'avian.yml'
     provider_path.write_text(
         """\
@@ -41,7 +41,7 @@ api_pattern: avian
 models:
   - id: deepseek/deepseek-v4-flash
     match: {equals: deepseek/deepseek-v4-flash}
-    prices: {input_mtok: 0.0805, cache_read_mtok: 0.0165, output_mtok: 0.161}
+    prices: {input_mtok: 0.0805, cache_read_mtok: 0.0165, output_mtok: 0.161, web_searches_kcount: 5}
 """
     )
 
@@ -54,12 +54,12 @@ models:
     assert model is not None
     assert isinstance(model.prices, list)
     assert model.prices[0].constraint is None
-    assert model.prices[0].prices == ModelPrice(
-        input_mtok=Decimal('0.0805'), cache_read_mtok=Decimal('0.0165'), output_mtok=Decimal('0.161')
+    assert model.prices[0].prices == ModelPrice.model_validate(
+        {'input_mtok': '0.0805', 'cache_read_mtok': '0.0165', 'output_mtok': '0.161', 'web_searches_kcount': '5'}
     )
     assert model.prices[1].constraint == StartDateConstraint(start_date=date.today())
-    assert model.prices[1].prices == ModelPrice(
-        input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+    assert model.prices[1].prices == ModelPrice.model_validate(
+        {'input_mtok': '0.14', 'cache_read_mtok': '0.0028', 'output_mtok': '0.28', 'web_searches_kcount': '5'}
     )
     new = ProviderYaml(provider_path).provider.find_model('new/model')
     assert new is not None
