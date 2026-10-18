@@ -1,3 +1,5 @@
+# Cassettes are recorded traffic; text fixers must not rewrite them.
+exclude: "^tests/cassettes/"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0

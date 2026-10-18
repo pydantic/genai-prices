@@ -1620,11 +1620,26 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-flash',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.0805,
-          cache_read_mtok: 0.0165,
-          output_mtok: 0.161,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.0805,
+              cache_read_mtok: 0.0165,
+              output_mtok: 0.161,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.0028,
+              output_mtok: 0.28,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v4-pro',
@@ -1648,11 +1663,26 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v4-pro-0813',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.594,
-          cache_read_mtok: 0.0198,
-          output_mtok: 1.782,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.594,
+              cache_read_mtok: 0.0198,
+              output_mtok: 1.782,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.561,
+              cache_read_mtok: 0.0187,
+              output_mtok: 1.683,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v4.1-flash',
@@ -1764,11 +1794,26 @@ export const data: Provider[] = [
           equals: 'xiaomi/mimo-v2.5-pro',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.0036,
-          output_mtok: 0.87,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.0036,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.36975,
+              cache_read_mtok: 0.00306,
+              output_mtok: 0.7395,
+            },
+          },
+        ],
       },
       {
         id: 'xiaomi/mimo-v2.6-flash',
@@ -1778,11 +1823,26 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
-        prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.0028,
+              output_mtok: 0.28,
+            },
+          },
+        ],
       },
       {
         id: 'xiaomi/mimo-v2.6-pro',
@@ -1792,11 +1852,26 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments: 'Rates and context window from the model table at https://avian.io/docs.',
-        prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.0036,
-          output_mtok: 0.87,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.0036,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.36975,
+              cache_read_mtok: 0.00306,
+              output_mtok: 0.7395,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-4.7',
@@ -20276,6 +20351,7 @@ export const data: Provider[] = [
     models: [
       {
         id: 'Sao10K/L3-8B-Stheno-v3.2',
+        name: 'Llama 3 8B Stheno V3.2',
         match: {
           equals: 'Sao10K/L3-8B-Stheno-v3.2',
         },
@@ -20283,6 +20359,43 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'baichuan/baichuan-m2-32b',
+        name: 'Baichuan M2 32B',
+        match: {
+          equals: 'baichuan/baichuan-m2-32b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.07,
+        },
+      },
+      {
+        id: 'baidu/cobuddy',
+        name: 'CoBuddy',
+        match: {
+          equals: 'baidu/cobuddy',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.28,
+          cache_read_mtok: 0.07,
+          output_mtok: 1.13,
+        },
+      },
+      {
+        id: 'baidu/ernie-4.5-21B-a3b',
+        name: 'ERNIE 4.5 21B A3B',
+        match: {
+          equals: 'baidu/ernie-4.5-21B-a3b',
+        },
+        context_window: 120000,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.28,
         },
       },
       {
@@ -20296,14 +20409,59 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'deepseek/deepseek-r1',
+        id: 'deepseek/deepseek-ocr-2',
+        name: 'DeepSeek OCR 2',
         match: {
-          equals: 'deepseek/deepseek-r1',
+          equals: 'deepseek/deepseek-ocr-2',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-r1',
+        name: 'DeepSeek R1',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-r1',
+            },
+            {
+              equals: 'deepseek/deepseek-r1/community',
+            },
+          ],
         },
         context_window: 64000,
         prices: {
           input_mtok: 4,
           output_mtok: 4,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-r1-0528',
+        name: 'DeepSeek R1 0528',
+        match: {
+          equals: 'deepseek/deepseek-r1-0528',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.35,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-r1-0528-qwen3-8b',
+        name: 'DeepSeek R1 Distill Qwen3 8B 0528',
+        match: {
+          equals: 'deepseek/deepseek-r1-0528-qwen3-8b',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.09,
         },
       },
       {
@@ -20350,7 +20508,102 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek/deepseek-r1-turbo',
+        name: 'DeepSeek R1 Turbo',
+        match: {
+          equals: 'deepseek/deepseek-r1-turbo',
+        },
+        context_window: 64000,
+        prices: {
+          input_mtok: 0.7,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          equals: 'deepseek/deepseek-v4-flash-0731',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.44,
+          cache_read_mtok: 0.028,
+          output_mtok: 1.32,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash-0731-p',
+        name: 'deepseek/deepseek-v4-flash-0731-p',
+        match: {
+          equals: 'deepseek/deepseek-v4-flash-0731-p',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.44,
+          cache_read_mtok: 0.0148,
+          output_mtok: 1.32,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek/deepseek-v4-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.6,
+          cache_read_mtok: 0.135,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-pro-0813-p',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4.1-flash',
+            },
+            {
+              equals: 'deepseek/deepseek-v4.1-flash-dst',
+            },
+            {
+              equals: 'deepseek/deepseek-v4.1-flash-p',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'deepseek/deepseek_v3',
+        name: 'DeepSeek V3',
         match: {
           equals: 'deepseek/deepseek_v3',
         },
@@ -20371,7 +20624,56 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemma-3-12b-it',
+        name: 'Gemma 3 12B',
+        match: {
+          equals: 'google/gemma-3-12b-it',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'google/gemma-3-27b-it',
+        name: 'Gemma 3 27B',
+        match: {
+          equals: 'google/gemma-3-27b-it',
+        },
+        context_window: 98304,
+        prices: {
+          input_mtok: 0.119,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'google/gemma-4-26b-a4b-it',
+        name: 'Gemma 4 26B A4B',
+        match: {
+          equals: 'google/gemma-4-26b-a4b-it',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'google/gemma-4-31b-it',
+        name: 'Gemma 4 31B',
+        match: {
+          equals: 'google/gemma-4-31b-it',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'gryphe/mythomax-l2-13b',
+        name: 'MythoMax L2 13B',
         match: {
           equals: 'gryphe/mythomax-l2-13b',
         },
@@ -20379,6 +20681,71 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.09,
           output_mtok: 0.09,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.0-flash',
+        name: 'Ling 3.0 Flash',
+        match: {
+          equals: 'inclusionai/ling-3.0-flash',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.06,
+          cache_read_mtok: 0.012,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.0-flash-fin',
+        name: 'Ling 3.0 Flash Fin',
+        match: {
+          equals: 'inclusionai/ling-3.0-flash-fin',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.0-flash-sante',
+        name: 'Ling 3.0 Flash Sante',
+        match: {
+          equals: 'inclusionai/ling-3.0-flash-sante',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.0-flash-vl',
+        name: 'Ling 3.0 Flash VL',
+        match: {
+          equals: 'inclusionai/ling-3.0-flash-vl',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.1-flash',
+        name: 'Ling 3.1 Flash',
+        match: {
+          equals: 'inclusionai/ling-3.1-flash',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.06,
+          output_mtok: 0.9,
         },
       },
       {
@@ -20425,6 +20792,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta-llama/llama-3.1-8b-instruct',
+        name: 'Llama 3.1 8B Instruct',
         match: {
           or: [
             {
@@ -20436,10 +20804,24 @@ export const data: Provider[] = [
           ],
         },
         context_window: 16384,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.05,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.05,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.02,
+              output_mtok: 0.05,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.1-8b-instruct-bf16',
@@ -20463,6 +20845,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta-llama/llama-3.2-1b-instruct',
+        name: 'Llama 3.2 1B Instruct\t',
         match: {
           equals: 'meta-llama/llama-3.2-1b-instruct',
         },
@@ -20485,17 +20868,57 @@ export const data: Provider[] = [
       },
       {
         id: 'meta-llama/llama-3.3-70b-instruct',
+        name: 'Llama 3.3 70B Instruct',
         match: {
           equals: 'meta-llama/llama-3.3-70b-instruct',
         },
         context_window: 12288,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.39,
+              output_mtok: 0.39,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.135,
+              output_mtok: 0.4,
+            },
+          },
+        ],
+      },
+      {
+        id: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
+        name: 'Llama 4 Maverick Instruct',
+        match: {
+          equals: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.39,
-          output_mtok: 0.39,
+          input_mtok: 0.27,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        name: 'Llama 4 Scout Instruct',
+        match: {
+          equals: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.59,
         },
       },
       {
         id: 'microsoft/wizardlm-2-8x22b',
+        name: 'WizardLM 2 8x22B',
         match: {
           equals: 'microsoft/wizardlm-2-8x22b',
         },
@@ -20503,6 +20926,139 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.62,
           output_mtok: 0.62,
+        },
+      },
+      {
+        id: 'mindai/macaron-v1-tall',
+        name: 'Macaron V1 Tall',
+        match: {
+          equals: 'mindai/macaron-v1-tall',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2475,
+          cache_read_mtok: 0.044,
+          output_mtok: 1.43,
+        },
+      },
+      {
+        id: 'mindai/macaron-v1-venti',
+        name: 'Macaron V1 Venti',
+        match: {
+          equals: 'mindai/macaron-v1-venti',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.825,
+          cache_read_mtok: 0.165,
+          output_mtok: 2.475,
+        },
+      },
+      {
+        id: 'ming-image-0.1-design',
+        name: 'ming image 0.1 design',
+        match: {
+          or: [
+            {
+              equals: 'ming-image-0.1-design',
+            },
+            {
+              equals: 'ming-image-0.1-design-layer',
+            },
+          ],
+        },
+        context_window: 0,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'minimax/minimax-m2.5',
+        name: 'MiniMax M2.5',
+        match: {
+          equals: 'minimax/minimax-m2.5',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'minimax/minimax-m2.7',
+        name: 'MiniMax M2.7',
+        match: {
+          equals: 'minimax/minimax-m2.7',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.06,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'minimax/minimax-m2.7-highspeed',
+        name: 'MiniMax M2.7-highspeed',
+        match: {
+          equals: 'minimax/minimax-m2.7-highspeed',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'minimax/minimax-m3',
+        name: 'MiniMax M3',
+        match: {
+          equals: 'minimax/minimax-m3',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 524288,
+                price: 0.6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.06,
+            tiers: [
+              {
+                start: 524288,
+                price: 0.12,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1.2,
+            tiers: [
+              {
+                start: 524288,
+                price: 2.4,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'minimaxai/minimax-m1-80k',
+        name: 'MiniMax M1',
+        match: {
+          equals: 'minimaxai/minimax-m1-80k',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.55,
+          output_mtok: 2.2,
         },
       },
       {
@@ -20527,7 +21083,104 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k2-0905',
+        name: 'Kimi K2 Instruct 0905',
+        match: {
+          equals: 'moonshotai/kimi-k2-0905',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2-instruct',
+        name: 'Kimi K2 Instruct',
+        match: {
+          equals: 'moonshotai/kimi-k2-instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.57,
+          output_mtok: 2.3,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2-thinking',
+        name: 'Kimi K2 Thinking',
+        match: {
+          equals: 'moonshotai/kimi-k2-thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.5',
+        name: 'Kimi K2.5',
+        match: {
+          equals: 'moonshotai/kimi-k2.5',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'moonshotai/kimi-k2.6',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.8,
+          cache_read_mtok: 0.16,
+          output_mtok: 3.4,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.7-code',
+        name: 'Kimi K2.7 Code',
+        match: {
+          equals: 'moonshotai/kimi-k2.7-code',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.19,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-p',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'nousresearch/hermes-2-pro-llama-3-8b',
+        name: 'Hermes 2 Pro Llama 3 8B',
         match: {
           equals: 'nousresearch/hermes-2-pro-llama-3-8b',
         },
@@ -20549,6 +21202,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nvidia/nemotron-3-nano-30b-a3b',
+        name: 'NVIDIA Nemotron 3 Nano 30B A3B',
+        match: {
+          equals: 'nvidia/nemotron-3-nano-30b-a3b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'OpenAI GPT OSS 120B',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'openchat/openchat-7b',
         match: {
           equals: 'openchat/openchat-7b',
@@ -20557,6 +21234,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.06,
+        },
+      },
+      {
+        id: 'paddlepaddle/paddleocr-vl',
+        name: 'PaddleOCR VL',
+        match: {
+          equals: 'paddlepaddle/paddleocr-vl',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.02,
+          output_mtok: 0.02,
         },
       },
       {
@@ -20593,7 +21282,181 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen/qwen-mt-plus',
+        name: 'Qwen MT Plus',
+        match: {
+          equals: 'qwen/qwen-mt-plus',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'qwen/qwen3-omni-30b-a3b-thinking',
+        name: 'Qwen3 Omni 30B A3B Thinking',
+        match: {
+          equals: 'qwen/qwen3-omni-30b-a3b-thinking',
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.97,
+        },
+      },
+      {
+        id: 'qwen/qwen3-vl-30b-a3b-instruct',
+        name: 'Qwen3 VL 30B A3B Instruct',
+        match: {
+          equals: 'qwen/qwen3-vl-30b-a3b-instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'qwen/qwen3.5-122b-a10b',
+        name: 'Qwen3.5 122B A10B',
+        match: {
+          equals: 'qwen/qwen3.5-122b-a10b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'qwen/qwen3.5-27b',
+        name: 'Qwen3.5 27B',
+        match: {
+          equals: 'qwen/qwen3.5-27b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'qwen/qwen3.5-35b-a3b',
+        name: 'Qwen3.5 35B A3B',
+        match: {
+          equals: 'qwen/qwen3.5-35b-a3b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'qwen/qwen3.5-397b-a17b',
+        name: 'Qwen3.5 397B A17B',
+        match: {
+          equals: 'qwen/qwen3.5-397b-a17b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 3.6,
+        },
+      },
+      {
+        id: 'qwen/qwen3.6-27b',
+        name: 'Qwen3.6 27B',
+        match: {
+          equals: 'qwen/qwen3.6-27b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 3.6,
+        },
+      },
+      {
+        id: 'qwen/qwen3.6-35b-a3b',
+        name: 'Qwen3.6 35B A3B',
+        match: {
+          equals: 'qwen/qwen3.6-35b-a3b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.248,
+          output_mtok: 1.485,
+        },
+      },
+      {
+        id: 'qwen/qwen3.7-max',
+        name: 'Qwen3.7 Max',
+        match: {
+          equals: 'qwen/qwen3.7-max',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.25,
+          output_mtok: 3.75,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-2.4t-a95b',
+        name: 'Qwen3.8 2.4T A95B',
+        match: {
+          equals: 'qwen/qwen3.8-2.4t-a95b',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-27b',
+        name: 'Qwen3.8 27B',
+        match: {
+          equals: 'qwen/qwen3.8-27b',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.42,
+          cache_read_mtok: 0.085,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-flash',
+        name: 'Qwen3.8 Flash',
+        match: {
+          equals: 'qwen/qwen3.8-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.016,
+          output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-max',
+        name: 'Qwen3.8 Max',
+        match: {
+          equals: 'qwen/qwen3.8-max',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'sao10k/l3-70b-euryale-v2.1',
+        name: 'Llama 3 70B Euryale V2.1',
         match: {
           equals: 'sao10k/l3-70b-euryale-v2.1',
         },
@@ -20636,6 +21499,32 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'stepfun/step-3.7-flash',
+        name: 'Step 3.7 Flash',
+        match: {
+          equals: 'stepfun/step-3.7-flash',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.04,
+          output_mtok: 1.15,
+        },
+      },
+      {
+        id: 'stepfun/step-5-preview',
+        name: 'Step 5 Preview',
+        match: {
+          equals: 'stepfun/step-5-preview',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.1,
+          output_mtok: 2.7,
+        },
+      },
+      {
         id: 'teknium/openhermes-2.5-mistral-7b',
         match: {
           equals: 'teknium/openhermes-2.5-mistral-7b',
@@ -20644,6 +21533,253 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.17,
           output_mtok: 0.17,
+        },
+      },
+      {
+        id: 'tencent/hy3',
+        name: 'Hy3',
+        match: {
+          equals: 'tencent/hy3',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.035,
+          output_mtok: 0.58,
+        },
+      },
+      {
+        id: 'tencent/hy4-preview',
+        name: 'Hy4 Preview',
+        match: {
+          equals: 'tencent/hy4-preview',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.834,
+          cache_read_mtok: 0.042,
+          output_mtok: 2.501,
+        },
+      },
+      {
+        id: 'xiaomimimo/mimo-v2.5',
+        name: 'Xiaomi MiMo V2.5',
+        match: {
+          equals: 'xiaomimimo/mimo-v2.5',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.168,
+          cache_read_mtok: 0.0034,
+          output_mtok: 0.336,
+        },
+      },
+      {
+        id: 'xiaomimimo/mimo-v2.5-pro',
+        name: 'Xiaomi MiMo V2.5 Pro',
+        match: {
+          equals: 'xiaomimimo/mimo-v2.5-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.522,
+          cache_read_mtok: 0.0043,
+          output_mtok: 1.044,
+        },
+      },
+      {
+        id: 'xiaomimimo/mimo-v2.6-flash',
+        name: 'MiMo V2.6 Flash',
+        match: {
+          equals: 'xiaomimimo/mimo-v2.6-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'xiaomimimo/mimo-v2.6-pro',
+        name: 'MiMo V2.6 Pro',
+        match: {
+          equals: 'xiaomimimo/mimo-v2.6-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
+      },
+      {
+        id: 'zai-org/autoglm-phone-9b-multilingual',
+        name: 'AutoGLM Phone 9B Multilingual',
+        match: {
+          equals: 'zai-org/autoglm-phone-9b-multilingual',
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.035,
+          output_mtok: 0.138,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.5-air',
+        name: 'GLM 4.5 Air',
+        match: {
+          equals: 'zai-org/glm-4.5-air',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.13,
+          cache_read_mtok: 0.025,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.5v',
+        name: 'GLM 4.5V',
+        match: {
+          equals: 'zai-org/glm-4.5v',
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.6',
+        name: 'GLM 4.6',
+        match: {
+          equals: 'zai-org/glm-4.6',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.55,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.6v',
+        name: 'GLM 4.6V',
+        match: {
+          equals: 'zai-org/glm-4.6v',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.055,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.7',
+        name: 'GLM 4.7',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-4.7',
+            },
+            {
+              equals: 'zai-org/glm-4.7-h',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.11,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'zai-org/glm-4.7-flash',
+        name: 'GLM 4.7 Flash',
+        match: {
+          equals: 'zai-org/glm-4.7-flash',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5',
+        name: 'GLM 5',
+        match: {
+          equals: 'zai-org/glm-5',
+        },
+        context_window: 202800,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.2,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.1',
+        name: 'GLM 5.1',
+        match: {
+          equals: 'zai-org/glm-5.1',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 1.38,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.2',
+        name: 'GLM 5.2',
+        match: {
+          equals: 'zai-org/glm-5.2',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3',
+        name: 'GLM 5.3',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3',
+            },
+            {
+              equals: 'zai-org/glm-5.3-p',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'zai-org/glm-5.3-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
