@@ -6,7 +6,7 @@ import warnings
 from collections.abc import Iterator, Mapping, Sequence
 from copy import copy
 from dataclasses import InitVar, dataclass, field
-from datetime import date, datetime, time, timezone
+from datetime import UTC, date, datetime, time
 from decimal import Decimal
 from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
@@ -761,7 +761,7 @@ class ModelInfo:
         price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
-        genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
+        genai_request_timestamp = genai_request_timestamp or datetime.now(tz=UTC)
 
         if price_context and not any(self is model for model in provider.models):
             model_price = self.get_prices(genai_request_timestamp)
@@ -1102,15 +1102,15 @@ class StartDateConstraint:
     def active(self, request_timestamp: datetime) -> bool:
         # UTC date, matching the JS package (instant vs UTC midnight). Naive timestamps are UTC.
         if request_timestamp.tzinfo is not None:
-            request_timestamp = request_timestamp.astimezone(timezone.utc)
+            request_timestamp = request_timestamp.astimezone(UTC)
         return request_timestamp.date() >= self.start_date
 
 
 def _utc_timetz(value: time) -> time:
     """`value` as a UTC-aware time of day. Naive times are UTC."""
     if value.tzinfo is None:
-        return value.replace(tzinfo=timezone.utc)
-    return datetime.combine(date(1970, 1, 1), value).astimezone(timezone.utc).timetz()
+        return value.replace(tzinfo=UTC)
+    return datetime.combine(date(1970, 1, 1), value).astimezone(UTC).timetz()
 
 
 @dataclass
@@ -1126,8 +1126,8 @@ class TimeOfDateConstraint:
         # Convert both sides to UTC before comparing so an offset that crosses midnight stays
         # inside the day. Naive timestamps and naive constraint times are UTC.
         if request_timestamp.tzinfo is None:
-            request_timestamp = request_timestamp.replace(tzinfo=timezone.utc)
-        request_time = request_timestamp.astimezone(timezone.utc).timetz()
+            request_timestamp = request_timestamp.replace(tzinfo=UTC)
+        request_time = request_timestamp.astimezone(UTC).timetz()
         start_time = _utc_timetz(self.start_time)
         end_time = _utc_timetz(self.end_time)
         if end_time < start_time:

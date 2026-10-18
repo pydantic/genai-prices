@@ -196,7 +196,7 @@ closure rules.
 - Price changes are pinned by assertions in `tests/test_price_calc.py`, `tests/test_price_regressions.py`,
   `packages/js/src/__tests__/` and `packages/go/api_test.go`. Update the expected values; don't weaken or delete
   the assertion.
-- Use `make test-all-python` to test across Python 3.10-3.14
+- Use `make test-all-python` to test across Python 3.11-3.15
 
 ### Python/JS/Go parity
 
