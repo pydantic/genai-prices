@@ -756,3 +756,26 @@ def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_pass
 
     assert output.read_text() == f'newly-failing={newly_failing}\n'
     assert '--event schedule --status completed --limit 1' in calls.read_text()
+    assert ('run view 41 ' in calls.read_text()) == bool(previous_run)
+
+
+def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path) -> None:
+    fake_gh = tmp_path / 'gh'
+    fake_gh.write_text('#!/bin/bash\nif [ "$2" = list ]; then printf 41; else exit 1; fi\n')
+    fake_gh.chmod(0o755)
+    output = tmp_path / 'output'
+    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+
+    result = subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'GITHUB_OUTPUT': str(output),
+            'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+        },
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert not output.exists()

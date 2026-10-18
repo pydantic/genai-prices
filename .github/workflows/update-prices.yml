@@ -167,8 +167,13 @@ jobs:
         run: |
           run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
             --status completed --limit 1 --json databaseId --jq '.[0].databaseId')"
-          if [ -n "$run_id" ] && gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
-            --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion' | grep -qx failure; then
+          conclusions=''
+          if [ -n "$run_id" ]; then
+            # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.
+            conclusions="$(gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
+              --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion')"
+          fi
+          if grep -qx failure <<< "$conclusions"; then
             echo 'newly-failing=false' >> "$GITHUB_OUTPUT"
           else
             echo 'newly-failing=true' >> "$GITHUB_OUTPUT"
