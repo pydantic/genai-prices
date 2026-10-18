@@ -56,23 +56,30 @@ tokens separately. Any extractor that maps `completion_tokens` must also map the
 If an API response does not report usage, leave that flavor unsupported and document the limitation instead of inventing a
 mapping.
 
-## Add deterministic updates when possible
+## Add an automatic price update
 
-When the official source is public and structured, add `prices/src/prices/source_<provider>.py`:
+Every provider needs a way to update its prices automatically. Look for an official source a script can read without
+credentials, in this order: a pricing API or `/v1/models` response with prices, a Markdown docs page (`.md`, `llms.txt`), then
+JSON embedded in the official pricing page. Treat an HTML fallback served for a `.md` URL as unreadable.
 
-- fetch with `httpx2`
-- parse prices as `Decimal`
-- update `prices_checked` while preserving curated names, aliases, context windows, and lifecycle flags
-- append changed rates as dated conditional prices instead of overwriting pricing history
-- add newly discovered in-scope models
-- refuse empty or suspiciously small results before writing
+Add `prices/src/prices/source_<provider>.py`, following `source_novita.py` (JSON) or `source_cloudflare.py` (Markdown):
+
+- fetch with `httpx2` and parse prices as `Decimal`
+- return `ModelInfo` entries from a public `parse_*` function and write them with `ProviderYaml.upsert_models`, which adds new
+  models, appends changed rates as dated conditional prices, and keeps curated keys the source does not report
+- emit only the keys the source reports, and parse tiers when the source has them instead of flattening them
+- set a `MIN_MODEL_COUNT` so an empty or truncated response refuses to write
 - fail loudly when the source is unreadable or changes shape
 
-Expose `get_<provider>_prices` through `prices.__main__`. Add `<provider>-get` to `Makefile` and include it in
-`get-all-prices`.
+Expose `get_<provider>_prices` through `prices.__main__`. Add `<provider>-get` to `Makefile`, include it in `get-all-prices`,
+and add `<provider>` to the `matrix.importer` list in `.github/workflows/update-prices.yml`, which runs every importer hourly
+and keeps one rolling PR.
 
-Test the real HTTP boundary with `@pytest.mark.vcr`. Record the official response, inspect the cassette, remove credentials and
-transient cookies, commit it, and prove replay with:
+Pin tests that assert the provider's current rates to an explicit timestamp. Otherwise the first hourly rate change breaks CI
+on the rolling PR.
+
+Test the real HTTP boundary with `@pytest.mark.vcr`, recorded with `cassetter`. Record the official response, inspect the
+cassette, commit it, and prove replay with:
 
 ```bash
 uv run pytest tests/test_source_<provider>.py --record-mode=none
@@ -81,22 +88,24 @@ uv run pytest tests/test_source_<provider>.py --record-mode=none
 Use compact synthetic inputs only for pure parser and update-behavior tests. Do not replace the external request with a
 hand-written HTTP mock.
 
+A provider without an importer is the exception. If no source a script can read exists, list the URLs you checked in the PR
+and rely on agentic monitoring alone.
+
 ## Add agentic monitoring
 
-Add the provider to `.github/agentic-price-check-providers.yml` with its YAML path, exact official sources, supported scope, and
-unit-mapping notes. Add every source domain to `network.allowed` in
-`.github/workflows/agentic-price-check-direct-providers.md`.
+The weekly agentic check is the fallback for what an importer cannot see: announced future prices, promotions, and new units
+or tiers. Add the provider to `.github/agentic-price-check-providers.yml` with its YAML path, exact official sources, supported
+scope, and unit-mapping notes. Add every source domain to `network.allowed` in `.github/workflows/shared/price-check-network.md`
+and the YAML path to `create-pull-request.allowed-files` in `.github/workflows/agentic-price-check.md`.
 
-Update the workflow's provider count and `.github/workflows/AGENTIC_PRICE_CHECK.md`. Compile the generated lock file with the
-pinned repository version. Never hand-edit the lock file.
+Update `.github/workflows/AGENTIC_PRICE_CHECK.md`. Compile the lock files with gh-aw `v0.91.1`, the version pinned in them. Never
+hand-edit a lock file.
 
 ```bash
-gh aw compile agentic-price-check-direct-providers --no-check-update
-gh aw compile agentic-price-check-direct-providers --no-check-update --no-emit --validate --actionlint
+gh aw compile agentic-price-check agentic-model-price-check --no-check-update
 ```
 
-The agentic workflow is read-only. It reports price discrepancies, new models, potential removals, unchecked fields, and
-unreadable sources through one rolling issue.
+The agentic workflow opens at most one PR of verified price updates per run.
 
 ## Verify every runtime
 
