@@ -95,13 +95,16 @@ and rely on agentic monitoring alone.
 
 The weekly agentic check is the fallback for what an importer cannot see: announced future prices, promotions, and new units
 or tiers. Add the provider to `.github/agentic-price-check-providers.yml` with its YAML path, exact official sources, supported
-scope, and unit-mapping notes. Add every source domain to `network.allowed` in `.github/workflows/shared/price-check-network.md`
-and the YAML path to `create-pull-request.allowed-files` in `.github/workflows/agentic-price-check.md`.
+scope, and unit-mapping notes. Add every source domain to `network.allowed` in `.github/workflows/shared/price-check-network.md`.
+Add the YAML path to `create-pull-request.allowed-files` in both `.github/workflows/agentic-price-check.md` and
+`.github/workflows/agentic-model-price-check.md`, or targeted model checks cannot open a PR for the provider.
 
-Update `.github/workflows/AGENTIC_PRICE_CHECK.md`. Compile the lock files with gh-aw `v0.91.1`, the version pinned in them. Never
-hand-edit a lock file.
+Update the hard-coded provider count in `.github/workflows/agentic-price-check.md` and
+`.github/workflows/AGENTIC_PRICE_CHECK.md`. Compile the lock files with gh-aw `v0.91.1`, the version pinned in them, so a
+different local compiler cannot rewrite them. Never hand-edit a lock file.
 
 ```bash
+gh extension install github/gh-aw --pin v0.91.1 --force
 gh aw compile agentic-price-check agentic-model-price-check --no-check-update
 ```
 
