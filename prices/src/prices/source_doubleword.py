@@ -13,7 +13,7 @@ from prices.utils import get_markdown, package_dir
 
 DOCS_URL = 'https://docs.doubleword.ai'
 MODELS_URL = f'{DOCS_URL}/inference-api/models.md'
-MIN_MODEL_COUNT = 8
+MIN_MODEL_COUNT = 12
 HEADER = '| Model | Realtime | Async | Batch (24h) |'
 PRICE = r'\\?\$([0-9]+(?:\.[0-9]+)?)'
 
@@ -38,7 +38,7 @@ def parse_models(catalog: str, get_page: Callable[[str], str]) -> list[ModelInfo
         model_id = re.search(r'/playground\?model=([^&)]+)', page)
         if model_id is None:
             raise RuntimeError(f'Doubleword model page {path} has no playground model ID')
-        context_window = re.search(r'Max Total Tokens: (\d+)', page)
+        context_window = re.search(r'(?:\*\*)?Max Total Tokens:(?:\*\*)? (\d+)', page)
         input_mtok, cache_read_mtok, output_mtok = (Decimal(rate) or None for rate in rates.groups())
         models.append(
             ModelInfo(

@@ -1,14 +1,15 @@
 from __future__ import annotations
 
+import re
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_openai_decisions
-from prices.prices_types import ModelPrice, Tier, TieredPrices
+from prices.prices_types import ConditionalPrice, ModelPrice, StartDateConstraint, Tier, TieredPrices
+from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 MODEL_MARKDOWN = """\
@@ -41,9 +42,27 @@ def test_openai_decisions_rejects_unexpected_pricing_shapes(replace: tuple[str, 
 @pytest.mark.vcr()
 def test_openai_decisions_main_fetches_recorded_model_pages(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'openai_decisions.yml'
-    copyfile(package_dir / 'providers/openai_decisions.yml', provider_path)
+    current = (package_dir / 'providers/openai_decisions.yml').read_text()
+    stale = re.sub(r'prices_checked: \S+', 'prices_checked: 2026-01-01', current).replace('price: 0.2', 'price: 0.3')
+    assert stale.count('2026-01-01') == stale.count('price: 0.3') == 1
+    provider_path.write_text(stale)
 
     source_openai_decisions.main(provider_path)
 
     assert capsys.readouterr().out == 'OpenAI Decisions prices updated: 0 added, 1 updated\n'
-    assert provider_path.read_text().count('start: 272000') == 1
+    model = ProviderYaml(provider_path).provider.find_model('gpt-6-luna')
+    assert model is not None
+    assert model.prices_checked == date.today()
+    assert model.prices == [
+        ConditionalPrice(
+            prices=ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.3'))])
+            )
+        ),
+        ConditionalPrice(
+            constraint=StartDateConstraint(start_date=date.today()),
+            prices=ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))])
+            ),
+        ),
+    ]

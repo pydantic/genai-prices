@@ -4802,6 +4802,7 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8'),
                 name='Qwen3 VL 235B A22B Instruct',
+                context_window=262144,
                 prices=[
                     ConditionalPrice(
                         constraint=None, prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('1.2'))

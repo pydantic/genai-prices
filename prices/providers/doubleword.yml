@@ -63,6 +63,7 @@ models:
     name: Qwen3 VL 235B A22B Instruct
     match:
       equals: Qwen/Qwen3-VL-235B-A22B-Instruct-FP8
+    context_window: 262144
     prices_checked: 2026-10-18
     prices:
       - prices:

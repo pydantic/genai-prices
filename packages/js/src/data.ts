@@ -8256,6 +8256,7 @@ export const data: Provider[] = [
         match: {
           equals: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
         },
+        context_window: 262144,
         prices: [
           {
             prices: {
