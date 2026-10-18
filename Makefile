@@ -87,9 +87,17 @@ baseten-get: ## get baseten model prices
 cursor-get: ## get cursor model prices
 	uv run -m prices get_cursor_prices
 
+.PHONY: doubleword-get
+doubleword-get: ## get doubleword realtime model prices
+	uv run -m prices get_doubleword_prices
+
 .PHONY: novita-get
 novita-get: ## get novita model prices
 	uv run -m prices get_novita_prices
+
+.PHONY: openai-decisions-get
+openai-decisions-get: ## get openai decisions model prices
+	uv run -m prices get_openai_decisions_prices
 
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
@@ -99,8 +107,16 @@ ovhcloud-get: ## get ovhcloud ai endpoints prices
 quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
+.PHONY: typesafe-get
+typesafe-get: ## get typesafe model prices
+	uv run -m prices get_typesafe_prices
+
+.PHONY: voyageai-get
+voyageai-get: ## get voyage ai model prices
+	uv run -m prices get_voyageai_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get novita-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

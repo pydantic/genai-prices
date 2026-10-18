@@ -61,6 +61,7 @@ func TestCursorGrok47LongContextPrices(t *testing.T) {
 }
 
 func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
+	pinned := time.Date(2026, 10, 18, 0, 0, 0, 0, time.UTC)
 	usage := genai_prices.Usage{
 		genai_prices.UsageInputTokens:      1_000,
 		genai_prices.UsageCacheReadTokens:  200,
@@ -68,7 +69,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 		genai_prices.UsageOutputTokens:     100,
 	}
 	decisions, err := genai_prices.Calculate(genai_prices.PriceRequest{
-		Usage: usage, Model: "gpt-6-luna", ProviderID: " OPENAI-DECISIONS ",
+		Usage: usage, Model: "gpt-6-luna", ProviderID: " OPENAI-DECISIONS ", Timestamp: pinned,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -82,7 +83,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 			genai_prices.UsageCacheReadTokens: 200,
 			genai_prices.UsageOutputTokens:    100,
 		},
-		Model: "gpt-6-luna", ProviderID: "openai",
+		Model: "gpt-6-luna", ProviderID: "openai", Timestamp: pinned,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -104,7 +105,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 				genai_prices.UsageCacheReadTokens:  100_000,
 				genai_prices.UsageCacheWriteTokens: 50_000,
 			},
-			Model: "gpt-6-luna", ProviderID: "openai-decisions",
+			Model: "gpt-6-luna", ProviderID: "openai-decisions", Timestamp: pinned,
 		})
 		if err != nil {
 			t.Fatal(err)

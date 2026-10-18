@@ -48,7 +48,7 @@ models:
     match:
       equals: gpt-6-luna
     context_window: 1050000
-    prices_checked: 2026-10-09
+    prices_checked: 2026-10-18
     price_comments: >-
       Decisions input is billed at the standard GPT-6 Luna input rate, with the 2x rate applying above 272K input tokens.
       Cache subsets are included in input pricing and have no separate charge. Regional-processing +10% premiums are not
