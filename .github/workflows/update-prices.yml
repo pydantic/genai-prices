@@ -152,7 +152,7 @@ jobs:
 
   importer-failure:
     needs: import
-    if: needs.import.result == 'failure' && github.event_name == 'schedule'
+    if: ${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
@@ -165,9 +165,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          previous="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
-            --status completed --limit 1 --json conclusion --jq '.[0].conclusion')"
-          echo "newly-failing=$([ "$previous" != failure ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
+            --status completed --limit 1 --json databaseId --jq '.[0].databaseId')"
+          if [ -n "$run_id" ] && gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
+            --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion' | grep -qx failure; then
+            echo 'newly-failing=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'newly-failing=true' >> "$GITHUB_OUTPUT"
+          fi
 
   notify-failure:
     needs: importer-failure

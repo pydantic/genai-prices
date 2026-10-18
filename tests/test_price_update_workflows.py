@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urlparse
 
+import pytest
 from ruamel.yaml import YAML
 
 from scripts.price_check_sources import load_provider_sources, official_source_hosts
@@ -709,11 +710,49 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     workflow = read_workflow('update-prices.yml')
     check = workflow['jobs']['importer-failure']
     assert check['needs'] == 'import'
-    assert check['if'] == "needs.import.result == 'failure' && github.event_name == 'schedule'"
+    assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
     assert check['permissions'] == {'actions': 'read'}
-    assert '--event schedule' in check['steps'][0]['run']
-    assert '--status completed --limit 1' in check['steps'][0]['run']
     notify = workflow['jobs']['notify-failure']
     assert notify['if'] == "needs.importer-failure.outputs.newly-failing == 'true'"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
     assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
+
+
+@pytest.mark.parametrize(
+    ('previous_run', 'previous_import_conclusions', 'newly_failing'),
+    [
+        ('', '', 'true'),
+        ('41', 'success\nsuccess', 'true'),
+        ('41', 'success\nfailure', 'false'),
+    ],
+)
+def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_passed(
+    tmp_path: Path, previous_run: str, previous_import_conclusions: str, newly_failing: str
+) -> None:
+    fake_gh = tmp_path / 'gh'
+    fake_gh.write_text(
+        '#!/bin/bash\n'
+        'echo "$*" >> "$GH_CALLS"\n'
+        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; else printf "$PREVIOUS_IMPORTS\\n"; fi\n'
+    )
+    fake_gh.chmod(0o755)
+    output = tmp_path / 'output'
+    calls = tmp_path / 'calls'
+    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'GITHUB_OUTPUT': str(output),
+            'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+            'GH_CALLS': str(calls),
+            'PREVIOUS_RUN': previous_run,
+            'PREVIOUS_IMPORTS': previous_import_conclusions,
+        },
+        check=True,
+    )
+
+    assert output.read_text() == f'newly-failing={newly_failing}\n'
+    assert '--event schedule --status completed --limit 1' in calls.read_text()
