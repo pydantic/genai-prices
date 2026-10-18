@@ -1,6 +1,6 @@
 import re
 from datetime import UTC, date, datetime, time, timedelta, timezone
-from decimal import Decimal
+from decimal import Decimal, localcontext
 
 import pytest
 from inline_snapshot import snapshot
@@ -1922,6 +1922,47 @@ def test_calc_unit_price_uses_shortest_decimal_fractional_count() -> None:
 
 def test_calc_unit_price_uses_decimal_fractional_count_directly() -> None:
     assert calc_unit_price(Decimal('3.6'), Decimal('0.1'), total_input_tokens=0, per=3_600) == Decimal('0.0001')
+
+
+def test_calc_unit_price_ignores_ambient_decimal_context() -> None:
+    with localcontext() as context:
+        context.prec = 3
+        unit_price = calc_unit_price(Decimal('2.5'), 1_234_567, total_input_tokens=0, per=1_000_000)
+
+    assert unit_price == Decimal('3.0864175')
+
+
+def test_calc_unit_price_with_tiered_prices_ignores_ambient_decimal_context() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'))])
+
+    with localcontext() as context:
+        context.prec = 3
+        unit_price = calc_unit_price(price, 1_234_567, total_input_tokens=101, per=1_000_000)
+
+    assert unit_price == Decimal('2.469134')
+
+
+def test_calc_price_ignores_ambient_decimal_context() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    expected = calc_price(usage, 'gpt-4o', provider_id='openai')
+
+    with localcontext() as context:
+        context.prec = 3
+        narrowed = calc_price(usage, 'gpt-4o', provider_id='openai')
+
+    assert narrowed.input_price == expected.input_price
+    assert narrowed.output_price == expected.output_price
+    assert narrowed.total_price == expected.total_price
+
+
+def test_model_price_calc_price_ignores_ambient_decimal_context() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    model_price = ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('15'))
+    expected = model_price.calc_price(usage)
+
+    with localcontext() as context:
+        context.prec = 3
+        assert model_price.calc_price(usage) == expected
 
 
 def test_model_price_handles_fractional_duration() -> None:

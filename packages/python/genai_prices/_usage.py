@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import math
-from collections.abc import Iterable
-from decimal import MAX_EMAX, MIN_EMIN, Context, Decimal, localcontext
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
+from decimal import MAX_EMAX, MIN_EMIN, Context, Decimal, DefaultContext, localcontext
 from numbers import Integral
 
 UsageValue = int | float | Decimal
+
+# The stdlib default, so prices do not depend on the caller's decimal context.
+_PRICE_PRECISION = DefaultContext.prec
 
 
 def validate_usage_value(usage_key: str, value: object) -> UsageValue:
@@ -71,6 +75,17 @@ def _usage_context(values: tuple[Decimal, ...]) -> Context:
     max_adjusted = max(value.adjusted() for value in values)
     precision = max_adjusted - min(exponents) + 1 + len(str(len(values)))
     return Context(prec=max(precision, 1), Emax=MAX_EMAX, Emin=MIN_EMIN)
+
+
+@contextmanager
+def price_arithmetic_context() -> Iterator[None]:
+    """Evaluate price arithmetic in a private decimal context.
+
+    Usage arithmetic already ignores the caller's context; prices have to as well, otherwise an
+    application-wide precision setting silently rounds every calculated price.
+    """
+    with localcontext(Context(prec=_PRICE_PRECISION, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+        yield
 
 
 def _decimal_result_as_float(value: Decimal) -> float:
