@@ -87,7 +87,7 @@ def test_copilot_refuses_to_guess_ids_for_unlisted_models(monkeypatch: pytest.Mo
     copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
     monkeypatch.setattr(
         source_github_copilot,
-        'fetch_markdown',
+        'get_markdown',
         {source_github_copilot.PRICING_URL: HEADER + row('GPT-9 Nova', 'Default', 'Not applicable')}.get,
     )
 

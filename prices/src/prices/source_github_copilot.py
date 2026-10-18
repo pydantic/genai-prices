@@ -7,7 +7,7 @@ from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import fetch_markdown, markdown_tables, package_dir
+from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = (
     'https://docs.github.com/api/article/body?pathname=/en/copilot/reference/copilot-billing/models-and-pricing'
@@ -80,7 +80,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
 
 def main(provider_path: Path | None = None) -> None:
-    models = parse_pricing_markdown(fetch_markdown(PRICING_URL))
+    models = parse_pricing_markdown(get_markdown(PRICING_URL))
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/github_copilot.yml')
     if unknown := [model.id for model in models if provider_yaml.provider.find_model(model.id) is None]:
         raise RuntimeError(f'GitHub Copilot pricing lists models missing from the provider YAML: {", ".join(unknown)}')

@@ -87,6 +87,10 @@ baseten-get: ## get baseten model prices
 cursor-get: ## get cursor model prices
 	uv run -m prices get_cursor_prices
 
+.PHONY: doubleword-get
+doubleword-get: ## get doubleword realtime model prices
+	uv run -m prices get_doubleword_prices
+
 .PHONY: github-copilot-get
 github-copilot-get: ## get github copilot prices
 	uv run -m prices get_github_copilot_prices
@@ -107,6 +111,10 @@ minimax-get: ## get minimax prices
 moonshotai-get: ## get moonshot ai prices
 	uv run -m prices get_moonshotai_prices
 
+.PHONY: openai-decisions-get
+openai-decisions-get: ## get openai decisions model prices
+	uv run -m prices get_openai_decisions_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
@@ -115,12 +123,20 @@ ovhcloud-get: ## get ovhcloud ai endpoints prices
 quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
+.PHONY: typesafe-get
+typesafe-get: ## get typesafe model prices
+	uv run -m prices get_typesafe_prices
+
+.PHONY: voyageai-get
+voyageai-get: ## get voyage ai model prices
+	uv run -m prices get_voyageai_prices
+
 .PHONY: zai-get
 zai-get: ## get z.ai prices
 	uv run -m prices get_zai_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get github-copilot-get meta-get minimax-get moonshotai-get novita-get ovhcloud-get quicksilverpro-get zai-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

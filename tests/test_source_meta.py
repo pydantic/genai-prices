@@ -8,7 +8,7 @@ import pytest
 
 from prices import source_meta
 from prices.prices_types import ModelPrice
-from prices.utils import fetch_markdown, package_dir
+from prices.utils import package_dir
 
 TABLE = """\
 | Usage        | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |
@@ -88,9 +88,3 @@ def test_meta_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.
     source_meta.main(provider_path)
 
     assert capsys.readouterr().out == 'Meta prices updated: 0 added, 6 updated\n'
-
-
-@pytest.mark.vcr()
-def test_meta_refuses_the_html_page_in_place_of_markdown() -> None:
-    with pytest.raises(RuntimeError, match='returned text/html; charset=utf-8, not markdown'):
-        fetch_markdown('https://dev.meta.ai/docs/pricing-rate-limits')

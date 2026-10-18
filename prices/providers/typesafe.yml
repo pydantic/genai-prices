@@ -19,8 +19,8 @@ extractors:
         dest: output_tokens
 price_comments: >-
   TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
-  move with releases; per https://docs.typesafe.ai/models, `jev-latest` currently points at `jev-1.13.0` while
-  `jev-preview` points at `jev-1.14.0`. Every version bills at the same $0.042 input rate.
+  move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which
+  `make typesafe-get` keeps in sync.
 
 models:
   - id: jev-1.13.0
@@ -34,10 +34,8 @@ models:
     # limit a growing conversation hits; the 64k only binds when the questions themselves are very large. Measured
     # live on jev-1.13.0: 32,878 input tokens were accepted, and the next size up was refused with HTTP 400
     # `max_tokens_exceeded`.
-    # https://docs.typesafe.ai/models: `jev-preview` moved to `jev-1.14.0`, which is checked 2026-10-15;
-    # `jev-latest` still points here.
     context_window: 32000
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.042
 
@@ -48,10 +46,10 @@ models:
         - equals: jev-1.14.0
         - equals: jev-preview
     context_window: 32000
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-18
     price_comments: >-
       Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042
-      input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13.
-      The default context limit is 32k for state plus one question, within the 64k per-request limit.
+      input rate as every Jev version. The default context limit is 32k for state plus one question, within the
+      64k per-request limit.
     prices:
       input_mtok: 0.042

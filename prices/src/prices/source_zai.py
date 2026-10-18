@@ -7,7 +7,7 @@ from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import fetch_markdown, markdown_tables, package_dir
+from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://docs.z.ai/guides/overview/pricing.md'
 MIN_MODEL_COUNT = 10
@@ -47,7 +47,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
 
 def main(provider_path: Path | None = None) -> None:
-    models = parse_pricing_markdown(fetch_markdown(PRICING_URL))
+    models = parse_pricing_markdown(get_markdown(PRICING_URL))
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/zai.yml')
     added, updated = provider_yaml.upsert_models(models, source='Z.ai', min_count=MIN_MODEL_COUNT)
     print(f'Z.ai prices updated: {added} added, {updated} updated')

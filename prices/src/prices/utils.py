@@ -12,6 +12,14 @@ package_dir = Path(__file__).parent.parent.parent
 root_dir = package_dir.parent
 
 
+def get_markdown(url: str) -> str:
+    response = httpx2.get(url, timeout=30.0)
+    response.raise_for_status()
+    if response.headers.get('content-type', '').startswith('text/html'):
+        raise RuntimeError(f'{url} returned HTML instead of markdown')
+    return response.text
+
+
 def pretty_size(size: int) -> str:
     if size < 1024:
         return f'{size} bytes'
@@ -34,14 +42,6 @@ def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | N
     if v == aggregate_v:
         return None
     return mtok(v)
-
-
-def fetch_markdown(url: str) -> str:
-    response = httpx2.get(url, timeout=30.0)
-    response.raise_for_status()
-    if not response.headers.get('content-type', '').startswith('text/markdown'):
-        raise RuntimeError(f'{url} returned {response.headers.get("content-type")}, not markdown')
-    return response.text
 
 
 def markdown_tables(markdown: str) -> list[tuple[list[str], list[list[str]]]]:

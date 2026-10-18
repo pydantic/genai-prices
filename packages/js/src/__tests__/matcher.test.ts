@@ -217,12 +217,15 @@ describe('Provider Matching', () => {
 
       const price = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna', {
         providerId: ' OPENAI-DECISIONS ',
+        timestamp: new Date('2026-10-18T00:00:00Z'),
       })
       expect(price?.provider.id).toBe('openai-decisions')
       expect(price?.total_price).toBeCloseTo(0.0001, 10)
       expect(calcPrice({ input_tokens: 1 }, 'gpt-6-sol', { providerId: 'openai-decisions' })).toBeNull()
 
-      const inferredPrice = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna')
+      const inferredPrice = calcPrice({ cache_read_tokens: 200, input_tokens: 1_000, output_tokens: 100 }, 'gpt-6-luna', {
+        timestamp: new Date('2026-10-18T00:00:00Z'),
+      })
       expect(inferredPrice?.provider.id).toBe('openai')
       expect(inferredPrice?.total_price).toBeCloseTo(0.000132, 10)
 
@@ -232,6 +235,7 @@ describe('Provider Matching', () => {
       ]) {
         const tierPrice = calcPrice({ cache_read_tokens: 100_000, cache_write_tokens: 50_000, input_tokens: inputTokens }, 'gpt-6-luna', {
           providerId: 'openai-decisions',
+          timestamp: new Date('2026-10-18T00:00:00Z'),
         })
         expect(tierPrice?.total_price).toBeCloseTo(expectedTotal, 10)
       }

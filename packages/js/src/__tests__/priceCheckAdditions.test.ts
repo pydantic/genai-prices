@@ -48,7 +48,7 @@ it.each([
 })
 
 it.each(['jev-1.14.0', 'jev-preview'])('preserves the default context limit for %s', (model) => {
-  const price = calcPrice({ input_tokens: 1_000_000 }, model, { providerId: 'typesafe' })
+  const price = calcPrice({ input_tokens: 1_000_000 }, model, { providerId: 'typesafe', timestamp: new Date('2026-10-18T00:00:00Z') })
   expect(price?.model.id).toBe('jev-1.14.0')
   expect(price?.model.context_window).toBe(32_000)
   expect(price?.total_price).toBe(0.042)

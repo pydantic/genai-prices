@@ -125,7 +125,7 @@ def test_minimax_refuses_conflicting_rates_for_one_shared_model(
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 /', '\\$0.4 /')
     )
-    monkeypatch.setattr(source_minimax, 'fetch_markdown', {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy)}.get)
+    monkeypatch.setattr(source_minimax, 'get_markdown', {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy)}.get)
 
     with pytest.raises(RuntimeError, match='MiniMax prices MiniMax-M2.5 and MiniMax-M2.1 differently'):
         source_minimax.main(provider_path)

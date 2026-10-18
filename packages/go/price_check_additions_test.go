@@ -79,7 +79,10 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 		t.Fatalf("unverified alias: got %v, want ErrModelNotFound", err)
 	}
 	for _, model := range []string{"jev-1.14.0", "jev-preview"} {
-		price, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: model, ProviderID: "typesafe", Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}})
+		price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Model: model, ProviderID: "typesafe", Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
+			Timestamp: time.Date(2026, 10, 18, 0, 0, 0, 0, time.UTC),
+		})
 		if err != nil {
 			t.Fatal(err)
 		}

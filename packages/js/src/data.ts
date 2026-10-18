@@ -8256,10 +8256,25 @@ export const data: Provider[] = [
         match: {
           equals: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
         },
-        prices: {
-          input_mtok: 0.6,
-          output_mtok: 1.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.6,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.21,
+              cache_read_mtok: 0.12,
+              output_mtok: 1.9,
+            },
+          },
+        ],
       },
       {
         id: 'Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
@@ -8281,6 +8296,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
+        name: 'Qwen3.5 35B A3B dottxt',
+        match: {
+          equals: 'Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
+        },
+        prices: {
+          input_mtok: 0.35,
+          cache_read_mtok: 0.2,
+          output_mtok: 1.2,
         },
       },
       {
@@ -8311,10 +8338,24 @@ export const data: Provider[] = [
         match: {
           equals: 'Qwen/Qwen3.6-35B-A3B-FP8',
         },
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.14,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'Qwen/Qwen3.8-27B-FP8',
@@ -8366,6 +8407,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.13,
+          output_mtok: 3.96,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
@@ -8384,9 +8437,35 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-4-31B-it',
         },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.12,
+              output_mtok: 0.35,
+            },
+          },
+        ],
+      },
+      {
+        id: 'meta-models/Muse-Glimmer-30B',
+        name: 'Muse Glimmer 30B',
+        match: {
+          equals: 'meta-models/Muse-Glimmer-30B',
+        },
         prices: {
-          input_mtok: 0.14,
-          output_mtok: 0.4,
+          input_mtok: 0.11,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.32,
         },
       },
       {
@@ -8437,6 +8516,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+        name: 'Nemotron 3 Ultra 550B A55B',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+        },
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.13,
+          output_mtok: 2.2,
+        },
+      },
+      {
         id: 'openai/gpt-oss-20b',
         name: 'GPT OSS 20B',
         match: {
@@ -8470,6 +8561,30 @@ export const data: Provider[] = [
           input_mtok: 0.93,
           cache_read_mtok: 0.19,
           output_mtok: 3,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: 'zai-org/GLM-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.28,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'zai-org/GLM-5.3-Flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -39150,7 +39265,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://docs.typesafe.ai/models'],
     api_pattern: 'https://api\\.typesafe\\.ai',
     price_comments:
-      'TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; per https://docs.typesafe.ai/models, `jev-latest` currently points at `jev-1.13.0` while `jev-preview` points at `jev-1.14.0`. Every version bills at the same $0.042 input rate.',
+      "TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync.",
     model_match: {
       starts_with: 'jev-',
     },
@@ -39210,7 +39325,7 @@ export const data: Provider[] = [
         },
         context_window: 32000,
         price_comments:
-          'Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
+          'Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
         prices: {
           input_mtok: 0.042,
         },

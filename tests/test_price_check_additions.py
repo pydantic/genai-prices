@@ -50,7 +50,9 @@ def test_moonshot_verified_rates(model: str, total: str) -> None:
 
 @pytest.mark.parametrize('model', ['jev-1.14.0', 'jev-preview'])
 def test_typesafe_114_default_context(model: str) -> None:
-    price = calc_price(Usage(input_tokens=1_000_000), model, provider_id='typesafe')
+    price = calc_price(
+        Usage(input_tokens=1_000_000), model, provider_id='typesafe', genai_request_timestamp=datetime(2026, 10, 18)
+    )
     assert price.model.id == 'jev-1.14.0'
     assert price.model.context_window == 32_000
     assert price.total_price == Decimal('0.042')
