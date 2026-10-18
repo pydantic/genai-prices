@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Decimal, localcontext
+from decimal import ROUND_DOWN, Decimal, localcontext
 
 import pytest
 from inline_snapshot import snapshot
@@ -1848,6 +1848,26 @@ def test_model_price_calc_price_ignores_ambient_decimal_context() -> None:
     with localcontext() as context:
         context.prec = 3
         assert model_price.calc_price(usage) == expected
+
+
+def test_price_arithmetic_ignores_ambient_rounding_and_exponent_bounds() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    expected = calc_price(usage, 'gpt-4o', provider_id='openai')
+    expected_unit_price = calc_unit_price(Decimal('2'), 1, total_input_tokens=0, per=3)
+
+    with localcontext() as context:
+        # Narrow enough that leaking this context would round, overflow, or raise on the same inputs.
+        context.prec = 3
+        context.rounding = ROUND_DOWN
+        context.Emax = 2
+        context.Emin = -2
+
+        narrowed = calc_price(usage, 'gpt-4o', provider_id='openai')
+        unit_price = calc_unit_price(Decimal('2'), 1, total_input_tokens=0, per=3)
+
+    assert narrowed == expected
+    # 2/3 is inexact at 28 digits: narrowed precision or ROUND_DOWN both change this value.
+    assert unit_price == expected_unit_price == Decimal('0.6666666666666666666666666667')
 
 
 def test_model_price_handles_fractional_duration() -> None:

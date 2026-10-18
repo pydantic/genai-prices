@@ -8,9 +8,6 @@ from numbers import Integral
 
 UsageValue = int | float | Decimal
 
-# The stdlib default, so prices do not depend on the caller's decimal context.
-_PRICE_PRECISION = DefaultContext.prec
-
 
 def validate_usage_value(usage_key: str, value: object) -> UsageValue:
     if isinstance(value, bool):
@@ -82,9 +79,12 @@ def price_arithmetic_context() -> Iterator[None]:
     """Evaluate price arithmetic in a private decimal context.
 
     Usage arithmetic already ignores the caller's context; prices have to as well, otherwise an
-    application-wide precision setting silently rounds every calculated price.
+    application-wide precision setting silently rounds every calculated price. The context takes its
+    defaults from ``DefaultContext`` at call time, with the widest exponent range, so the caller's
+    thread-local context is ignored while a process-wide default applies the same way whenever this
+    module was imported.
     """
-    with localcontext(Context(prec=_PRICE_PRECISION, Emax=MAX_EMAX, Emin=MIN_EMIN)):
+    with localcontext(Context(prec=DefaultContext.prec, Emax=MAX_EMAX, Emin=MIN_EMIN)):
         yield
 
 
