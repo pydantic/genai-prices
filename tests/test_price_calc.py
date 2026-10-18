@@ -112,7 +112,7 @@ def test_muse_spark_standard_and_contributor_prices(
 
 
 def test_openai_decisions_price_and_usage_extraction():
-    pinned = datetime(2026, 10, 18, tzinfo=timezone.utc)
+    pinned = datetime(2026, 10, 18, tzinfo=UTC)
     decisions_usage = Usage(input_tokens=1_000, cache_read_tokens=200, output_tokens=100)
     decisions_price = calc_price(
         decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ', genai_request_timestamp=pinned
