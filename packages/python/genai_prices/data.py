@@ -4498,8 +4498,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(0, 30, tzinfo=datetime.UTC),
+                            end_time=datetime.time(16, 30, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('1.1')
@@ -4522,8 +4522,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(1, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
@@ -4531,8 +4531,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(6, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
@@ -4560,8 +4560,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(0, 30, tzinfo=datetime.UTC),
+                            end_time=datetime.time(16, 30, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.55'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('2.19')
@@ -4622,8 +4622,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(1, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
@@ -4631,8 +4631,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(6, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
@@ -4663,8 +4663,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(1, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(4, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(1, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(4, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
@@ -4672,8 +4672,8 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=TimeOfDateConstraint(
-                            start_time=datetime.time(6, 0, tzinfo=datetime.timezone.utc),
-                            end_time=datetime.time(10, 0, tzinfo=datetime.timezone.utc),
+                            start_time=datetime.time(6, 0, tzinfo=datetime.UTC),
+                            end_time=datetime.time(10, 0, tzinfo=datetime.UTC),
                         ),
                         prices=ModelPrice(
                             input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')

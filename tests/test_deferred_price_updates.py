@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import pytest
@@ -25,7 +25,7 @@ def test_price_check_preserves_rates_without_an_effective_date(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id=provider_id,
-        genai_request_timestamp=datetime.fromisoformat(request_date).replace(tzinfo=timezone.utc),
+        genai_request_timestamp=datetime.fromisoformat(request_date).replace(tzinfo=UTC),
     )
 
     assert result.input_price == Decimal(input_rate) + Decimal(cache_rate)
