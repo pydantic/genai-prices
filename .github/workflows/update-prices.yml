@@ -26,7 +26,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        importer: [arcee, avian, baseten, cerebras, cloudflare, cursor, huggingface, novita, ovhcloud, quicksilverpro]
+        # baseten, cursor, huggingface, ovhcloud and quicksilverpro stay manual until they preserve price history and
+        # survive their current upstream shape.
+        importer: [arcee, avian, cerebras, cloudflare, novita]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -106,6 +108,7 @@ jobs:
           uv sync --all-packages
           npm ci
           make collapse-models build
+          uv run python tests/dataset/extract_usages.py
       - if: steps.apply.outputs.importers != ''
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0

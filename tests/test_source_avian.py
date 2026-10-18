@@ -41,6 +41,7 @@ api_pattern: avian
 models:
   - id: deepseek/deepseek-v4-flash
     match: {equals: deepseek/deepseek-v4-flash}
+    price_comments: No longer listed in the Avian model catalog at https://avian.io/docs (checked 2026-07-17 and 2026-08-25); last known rates are kept so historical usage still prices.
     prices: {input_mtok: 0.0805, cache_read_mtok: 0.0165, output_mtok: 0.161, web_searches_kcount: 5}
 """
     )
@@ -64,7 +65,9 @@ models:
     new = ProviderYaml(provider_path).provider.find_model('new/model')
     assert new is not None
     assert new.prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
-    assert '&id' not in provider_path.read_text()
+    saved = provider_path.read_text()
+    assert '&id' not in saved
+    assert all(line == line.rstrip() for line in saved.splitlines())
 
 
 def test_avian_refuses_a_suspiciously_small_catalog(tmp_path: Path) -> None:
