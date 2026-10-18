@@ -779,3 +779,11 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
 
     assert result.returncode != 0
     assert not output.exists()
+
+
+def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
+    steps = read_workflow('update-prices.yml')['jobs']['pull-request']['steps']
+    script = next(step['run'] for step in steps if 'make collapse-models build' in step.get('run', ''))
+    assert script.index('make collapse-models build') < script.index(
+        'uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py'
+    )
