@@ -3,11 +3,7 @@ name: MoonshotAi
 id: moonshotai
 pricing_urls:
   - https://platform.kimi.ai/docs/models.md
-  - https://platform.kimi.ai/docs/pricing/chat-k3.md
-  - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
-  - https://platform.kimi.ai/docs/pricing/chat-k26.md
-  - https://platform.kimi.ai/docs/pricing/chat-k25.md
-  - https://platform.kimi.ai/docs/pricing/chat-v1.md
+  - https://platform.kimi.ai/docs/pricing/chat.md
 api_pattern: 'https://api\.moonshot\.'
 model_match:
   or:
@@ -161,7 +157,7 @@ models:
     match:
       starts_with: kimi-k2.6
     context_window: 262144
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-18
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k26.md"
     prices:
       input_mtok: 0.95
@@ -177,7 +173,7 @@ models:
     match:
       equals: kimi-k2.7-code
     context_window: 262144
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-18
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
     prices:
       input_mtok: 0.95
@@ -192,7 +188,7 @@ models:
     match:
       equals: kimi-k2.7-code-highspeed
     context_window: 262144
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-18
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
     prices:
       input_mtok: 1.90
@@ -207,7 +203,7 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
-    prices_checked: "2026-10-15"
+    prices_checked: 2026-10-18
     price_comments: >-
       Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md. Re-verified on 2026-10-15: input,
       cached input and output rates are unchanged; the page now also publishes 5-minute cache

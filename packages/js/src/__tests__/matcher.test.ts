@@ -53,7 +53,10 @@ describe('Provider Matching', () => {
     ['openrouter', 'meta/muse-spark-1.3-contributor-20260902', 0.2927],
   ])('prices %s Muse Spark model %s', (providerId, modelRef, expectedTotal) => {
     const usage = { cache_read_tokens: 100_000, input_tokens: 1_000_000, output_tokens: 1_000_000, web_searches: 1 }
-    expect(calcPrice(usage, modelRef, { providerId })?.total_price).toBeCloseTo(expectedTotal, 10)
+    expect(calcPrice(usage, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+      expectedTotal,
+      10
+    )
   })
 
   it('prices the October Meta and Mistral models with their confirmed routes', () => {
@@ -61,7 +64,10 @@ describe('Provider Matching', () => {
     const meta = actualProviders.find((provider) => provider.id === 'meta')!
     expect(matchModel(meta.models, 'muse-wonder-1.0')?.context_window).toBe(1_048_576)
     expect(
-      calcPrice({ ...tokenUsage, web_searches: 1 }, 'muse-wonder-1.0', { providerApiUrl: 'https://api.meta.ai/v1' })?.total_price
+      calcPrice({ ...tokenUsage, web_searches: 1 }, 'muse-wonder-1.0', {
+        providerApiUrl: 'https://api.meta.ai/v1',
+        timestamp: new Date('2026-10-17T00:00:00Z'),
+      })?.total_price
     ).toBeCloseTo(23.6225, 10)
     expect(
       calcPrice({ ...tokenUsage, web_searches: 1 }, 'meta/muse-wonder-20261012', { providerId: 'openrouter' })?.total_price

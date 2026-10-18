@@ -42,6 +42,7 @@ it.each([
   expect(
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'moonshotai',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })?.total_price
   ).toBeCloseTo(total, 12)
 })

@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import re
 from decimal import Decimal
+from itertools import takewhile
 from pathlib import Path
 from typing import Any, Literal, TypeVar
+
+import httpx2
 
 package_dir = Path(__file__).parent.parent.parent
 root_dir = package_dir.parent
@@ -30,6 +34,36 @@ def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | N
     if v == aggregate_v:
         return None
     return mtok(v)
+
+
+def fetch_markdown(url: str) -> str:
+    response = httpx2.get(url, timeout=30.0)
+    response.raise_for_status()
+    if not response.headers.get('content-type', '').startswith('text/markdown'):
+        raise RuntimeError(f'{url} returned {response.headers.get("content-type")}, not markdown')
+    return response.text
+
+
+def markdown_tables(markdown: str) -> list[tuple[list[str], list[list[str]]]]:
+    """Return every GFM table in `markdown` as its header cells and non-empty body rows."""
+    lines = [line.strip() for line in markdown.splitlines()] + ['']
+    tables: list[tuple[list[str], list[list[str]]]] = []
+    for index, line in enumerate(lines[:-1]):
+        if not line.startswith('|') or not re.fullmatch(r'\|(?: *:?-+:? *\|)+', lines[index + 1]):
+            continue
+        header = _table_cells(line)
+        rows = [
+            _table_cells(row_line)
+            for row_line in takewhile(lambda row_line: row_line.startswith('|'), lines[index + 2 :])
+        ]
+        if bad := next((row for row in rows if len(row) != len(header)), None):
+            raise ValueError(f'Table row has {len(bad)} cells, header has {len(header)}: {bad}')
+        tables.append((header, [row for row in rows if any(row)]))
+    return tables
+
+
+def _table_cells(line: str) -> list[str]:
+    return [cell.strip() for cell in line.removeprefix('|').removesuffix('|').split('|')]
 
 
 T = TypeVar('T')

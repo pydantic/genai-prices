@@ -13,13 +13,18 @@ from .source_baseten import get_baseten_prices
 from .source_cerebras import get_cerebras_prices
 from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
+from .source_github_copilot import get_github_copilot_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
+from .source_meta import get_meta_prices
+from .source_minimax import get_minimax_prices
+from .source_moonshotai import get_moonshotai_prices
 from .source_novita import get_novita_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 from .source_ovhcloud import get_ovhcloud_prices
 from .source_quicksilverpro import get_quicksilverpro_prices
 from .source_simonw_prices import get_simonw_prices
+from .source_zai import get_zai_prices
 
 
 def main():
@@ -34,13 +39,18 @@ def main():
         get_cerebras_prices,
         get_cloudflare_prices,
         get_cursor_prices,
+        get_github_copilot_prices,
         get_huggingface_prices,
         get_litellm_prices,
+        get_meta_prices,
+        get_minimax_prices,
+        get_moonshotai_prices,
         get_novita_prices,
         get_openrouter_prices,
         get_ovhcloud_prices,
         get_quicksilverpro_prices,
         get_simonw_prices,
+        get_zai_prices,
         update_price_discrepancies,
         check_for_price_discrepancies,
         package_data,

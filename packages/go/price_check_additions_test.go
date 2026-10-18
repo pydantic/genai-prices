@@ -64,7 +64,9 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 		{"moonshotai", "kimi-k2.7-code-highspeed", tokenUsage, 9.52},
 		{"x-ai", "grok-4.20-multi-agent", genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageOutputTokens: 1_000_000}, 6.4},
 	} {
-		price, err := genai_prices.Calculate(genai_prices.PriceRequest{Usage: test.usage, Model: test.model, ProviderID: test.provider})
+		price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: test.usage, Model: test.model, ProviderID: test.provider, Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+		})
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -148,7 +148,10 @@ class ProviderYaml:
                 assert isinstance(model.prices, ModelPrice)
                 # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
                 reported = {key: value for key, value in model.prices if value is not None}
-                model = model.model_copy(update={'prices': ModelPrice(**{**dict(current), **reported})})
+                # The existing match already covers this id, so an `equals` clause for it would only add noise.
+                model = model.model_copy(
+                    update={'prices': ModelPrice(**{**dict(current), **reported}), 'match': matching_model.match}
+                )
                 self.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
                 models_updated += 1
         self.save()
