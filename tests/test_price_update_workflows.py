@@ -711,6 +711,7 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     assert check['needs'] == 'import'
     assert check['if'] == "needs.import.result == 'failure' && github.event_name == 'schedule'"
     assert check['permissions'] == {'actions': 'read'}
+    assert '--event schedule' in check['steps'][0]['run']
     assert '--status completed --limit 1' in check['steps'][0]['run']
     notify = workflow['jobs']['notify-failure']
     assert notify['if'] == "needs.importer-failure.outputs.newly-failing == 'true'"

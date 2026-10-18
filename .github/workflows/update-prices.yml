@@ -165,7 +165,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          previous="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main \
+          previous="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
             --status completed --limit 1 --json conclusion --jq '.[0].conclusion')"
           echo "newly-failing=$([ "$previous" != failure ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
