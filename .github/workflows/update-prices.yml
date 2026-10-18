@@ -149,3 +149,43 @@ jobs:
       pr-url: ${{ needs.pull-request.outputs.created-pr-url }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  importer-failure:
+    needs: import
+    if: ${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: read
+    outputs:
+      newly-failing: ${{ steps.previous.outputs.newly-failing }}
+    steps:
+      # ponytail: alerts on the first failing run only; a second importer breaking while one is still red stays silent.
+      - id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
+            --status completed --limit 1 --json databaseId --jq '.[0].databaseId')"
+          conclusions=''
+          if [ -n "$run_id" ]; then
+            # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.
+            conclusions="$(gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
+              --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion')"
+          fi
+          if grep -qx failure <<< "$conclusions"; then
+            echo 'newly-failing=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'newly-failing=true' >> "$GITHUB_OUTPUT"
+          fi
+
+  notify-failure:
+    needs: importer-failure
+    if: needs.importer-failure.outputs.newly-failing == 'true'
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      message: "A GenAI Prices importer started failing:"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
