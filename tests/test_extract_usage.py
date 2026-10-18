@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -66,9 +66,9 @@ def test_github_copilot_chat_usage() -> None:
     assert extracted.model is not None
     assert extracted.model.id == 'claude-haiku-4.5'
     assert extracted.usage == Usage(input_tokens=15, cache_read_tokens=4, output_tokens=8)
-    assert extracted.calc_price(
-        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=timezone.utc)
-    ).total_price == Decimal('0.0000514')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.0000514'
+    )
 
 
 def test_github_copilot_responses_usage() -> None:
@@ -97,9 +97,9 @@ def test_github_copilot_responses_usage() -> None:
         output_tokens=11,
         output_reasoning_tokens=4,
     )
-    assert extracted.calc_price(
-        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=timezone.utc)
-    ).total_price == Decimal('0.00017575')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00017575'
+    )
 
 
 @pytest.mark.parametrize('api_flavor', ['default', 'chat'])
@@ -1877,8 +1877,8 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
     for model_ref, timestamp, expected_total in [
         ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
         ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
-        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
-        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=UTC), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=UTC), Decimal('0.088')),
     ]:
         price = calc_price(
             usage,

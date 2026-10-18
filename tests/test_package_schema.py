@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from pydantic_core import from_json
@@ -26,7 +26,7 @@ def test_legacy_provider_payload_remains_runtime_compatible() -> None:
         Usage(input_tokens=1_000_000, output_tokens=500_000, cache_read_tokens=200_000),
         openai,
         # v1 gpt-4o prices are unconditional, but pin the timestamp so conditional pricing could never make this flaky
-        genai_request_timestamp=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        genai_request_timestamp=datetime(2026, 1, 1, tzinfo=UTC),
     )
 
     # 0.8 MTok uncached input @ $2.50 + 0.2 MTok cache read @ $1.25; 0.5 MTok output @ $10

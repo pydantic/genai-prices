@@ -221,7 +221,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
                 Usage(**case.usage_dict),
                 provider_id=case.provider_id,
                 model_ref=case.model_ref,
-                genai_request_timestamp=datetime.datetime(2025, 11, 6, 12, 0, 0, tzinfo=datetime.timezone.utc),
+                genai_request_timestamp=datetime.datetime(2025, 11, 6, 12, 0, 0, tzinfo=datetime.UTC),
             )
         except LookupError:
             pass

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import pytest
@@ -43,7 +43,7 @@ def test_moonshot_verified_rates(model: str, total: str) -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
         model,
         provider_id='moonshotai',
-        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=timezone.utc),
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
     assert price.total_price == Decimal(total)
 
