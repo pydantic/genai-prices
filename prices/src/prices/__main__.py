@@ -8,11 +8,14 @@ from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
 from .source_arcee import get_arcee_prices
+from .source_avian import get_avian_prices
 from .source_baseten import get_baseten_prices
+from .source_cerebras import get_cerebras_prices
 from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
+from .source_novita import get_novita_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 from .source_ovhcloud import get_ovhcloud_prices
 from .source_quicksilverpro import get_quicksilverpro_prices
@@ -26,11 +29,14 @@ def main():
         collapse,
         detect_deprecated,
         get_arcee_prices,
+        get_avian_prices,
         get_baseten_prices,
+        get_cerebras_prices,
         get_cloudflare_prices,
         get_cursor_prices,
         get_huggingface_prices,
         get_litellm_prices,
+        get_novita_prices,
         get_openrouter_prices,
         get_ovhcloud_prices,
         get_quicksilverpro_prices,

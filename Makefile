@@ -63,6 +63,10 @@ simonw-prices-get: ## get simonw-prices
 huggingface-get: ## get huggingface prices
 	uv run -m prices get_huggingface_prices
 
+.PHONY: cerebras-get
+cerebras-get: ## get cerebras model prices
+	uv run -m prices get_cerebras_prices
+
 .PHONY: cloudflare-get
 cloudflare-get: ## get cloudflare workers ai prices
 	uv run -m prices get_cloudflare_prices
@@ -71,6 +75,10 @@ cloudflare-get: ## get cloudflare workers ai prices
 arcee-get: ## get arcee model prices
 	uv run -m prices get_arcee_prices
 
+.PHONY: avian-get
+avian-get: ## get avian model prices
+	uv run -m prices get_avian_prices
+
 .PHONY: baseten-get
 baseten-get: ## get baseten model prices
 	uv run -m prices get_baseten_prices
@@ -78,6 +86,10 @@ baseten-get: ## get baseten model prices
 .PHONY: cursor-get
 cursor-get: ## get cursor model prices
 	uv run -m prices get_cursor_prices
+
+.PHONY: novita-get
+novita-get: ## get novita model prices
+	uv run -m prices get_novita_prices
 
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
@@ -88,7 +100,7 @@ quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get baseten-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get novita-get ovhcloud-get quicksilverpro-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

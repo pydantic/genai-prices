@@ -20,7 +20,6 @@ dev = [
     "ipython>=8.18.1",
     "pytest>=8.4.1",
     "pytest-pretty>=1.3.0",
-    "pytest-recording>=0.13.4",
     "pydantic-settings>=2.11",
     "rich>=14.3.2",
     "rich-argparse>=1.7.2",
@@ -30,6 +29,8 @@ dev = [
     "packaging>=25.0",
     "jsonschema>=4.26.0",
     "types-jsonschema>=4.26.0.20260518",
+    "cassetter>=0.14.0",
+    "pyyaml>=6.0.2",
 ]
 
 [tool.uv]

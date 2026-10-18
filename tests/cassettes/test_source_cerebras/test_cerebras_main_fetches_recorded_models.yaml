@@ -1,0 +1,147 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://api.cerebras.ai/public/v1/models
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.cerebras.ai
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a4c9cdc13b190df3-AMS
+      connection:
+      - keep-alive
+      content-type:
+      - application/json
+      date:
+      - Sun, 18 Oct 2026 19:03:33 GMT
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      x-content-type-options:
+      - nosniff
+    body:
+      type: json
+      content:
+        object: list
+        data:
+        - id: gpt-oss-120b
+          object: model
+          created: 1754438400
+          owned_by: OpenAI
+          name: OpenAI GPT OSS
+          description: >-
+            This model excels at efficient reasoning across science, math, and coding
+            applications. It's ideal for real-time coding assistance, processing large documents
+            for Q&A and summarization, agentic research workflows, and regulated on-premises
+            workloads.
+          hugging_face_id: openai/gpt-oss-120b
+          pricing:
+            prompt: "0.00000035"
+            completion: "0.00000075"
+          capabilities:
+            streaming: true
+            function_calling: true
+            structured_outputs: true
+            vision: false
+            json_mode: true
+            tools: true
+            tool_choice: true
+            parallel_tool_calls: false
+            response_format: true
+            reasoning: true
+          supported_parameters:
+            temperature: true
+            top_p: true
+            seed: true
+            stop: true
+            max_completion_tokens: true
+            logprobs: false
+            top_logprobs: false
+            frequency_penalty: true
+            presence_penalty: true
+            logit_bias: true
+            repetition_penalty: false
+          architecture:
+            modality: text
+            tokenizer: GPT
+            instruct_type: harmony
+          limits:
+            max_context_length: 131072
+            max_completion_tokens: 40960
+            requests_per_minute: null
+            tokens_per_minute: null
+          datacenter_locations: []
+          deprecated: false
+          preview: false
+          quantization: FP16/8 (weights only)
+        - id: qwen-3.8-27b
+          object: model
+          created: 0
+          owned_by: Cerebras
+          name: Qwen 3.8 27B
+          description: >-
+            This model excels at vision-language understanding, coding, research, and
+            long-horizon agentic tasks.
+          hugging_face_id: Qwen/Qwen3.8-27B
+          pricing:
+            prompt: "0.00000099"
+            completion: "0.00000149"
+          capabilities:
+            streaming: true
+            function_calling: true
+            structured_outputs: true
+            vision: true
+            json_mode: true
+            tools: true
+            tool_choice: true
+            parallel_tool_calls: true
+            response_format: true
+            reasoning: true
+          supported_parameters:
+            temperature: true
+            top_p: true
+            seed: true
+            stop: true
+            max_completion_tokens: true
+            logprobs: true
+            top_logprobs: true
+            frequency_penalty: true
+            presence_penalty: true
+            logit_bias: true
+            repetition_penalty: false
+          architecture:
+            modality: text+vision
+            tokenizer: Qwen
+            instruct_type: qwen
+          limits:
+            max_context_length: 65536
+            max_completion_tokens: 32768
+            requests_per_minute: null
+            tokens_per_minute: null
+          datacenter_locations: []
+          deprecated: false
+          preview: false
+          quantization: FP16/FP8
+  recorded_at: 2026-10-18T19:03:33.444759+00:00
