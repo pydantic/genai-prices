@@ -20,6 +20,8 @@ yaml.map_indent = 2
 yaml.sequence_indent = 4
 yaml.sequence_dash_offset = 2
 yaml.width = 120
+# A dated price shares its `date` object with `prices_checked`; without this ruamel emits `&id001` anchors.
+yaml.representer.ignore_aliases = lambda *_: True  # pyright: ignore[reportUnknownMemberType, reportUnknownLambdaType]
 
 
 def get_providers_yaml() -> dict[str, ProviderYaml]:
@@ -129,6 +131,28 @@ class ProviderYaml:
         else:
             self._extra_prices.append(model)
             return 1
+
+    def upsert_models(self, models: list[ModelInfo], *, source: str, min_count: int) -> tuple[int, int]:
+        """Add new models and update existing ones, keeping a dated entry for every rate change, then save."""
+        if len(models) < min_count:
+            raise RuntimeError(f'{source} returned only {len(models)} priced models; expected at least {min_count}')
+        models_added = 0
+        models_updated = 0
+        for model in models:
+            matching_model = self.provider.find_model(model.id)
+            if matching_model is None:
+                models_added += self.add_model(model)
+            else:
+                current = matching_model.prices
+                current = current[-1].prices if isinstance(current, list) else current
+                assert isinstance(model.prices, ModelPrice)
+                # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
+                reported = {key: value for key, value in model.prices if value is not None}
+                model = model.model_copy(update={'prices': ModelPrice(**{**dict(current), **reported})})
+                self.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
+                models_updated += 1
+        self.save()
+        return models_added, models_updated
 
     def add_price(self, model_id: str, price: ModelPrice) -> None:
         self.add_model(ModelInfo(id=model_id, prices=price, match=ClauseEquals(equals=model_id)))
