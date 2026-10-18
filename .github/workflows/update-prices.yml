@@ -149,3 +149,33 @@ jobs:
       pr-url: ${{ needs.pull-request.outputs.created-pr-url }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  importer-failure:
+    needs: import
+    if: needs.import.result == 'failure' && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: read
+    outputs:
+      newly-failing: ${{ steps.previous.outputs.newly-failing }}
+    steps:
+      # ponytail: alerts on the first failing run only; a second importer breaking while one is still red stays silent.
+      - id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          previous="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main \
+            --status completed --limit 1 --json conclusion --jq '.[0].conclusion')"
+          echo "newly-failing=$([ "$previous" != failure ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+  notify-failure:
+    needs: importer-failure
+    if: needs.importer-failure.outputs.newly-failing == 'true'
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      message: "A GenAI Prices importer started failing:"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
