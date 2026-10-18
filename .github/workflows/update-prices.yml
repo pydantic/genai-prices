@@ -30,6 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          ref: main
           persist-credentials: false
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
@@ -44,6 +45,7 @@ jobs:
           IMPORTER: ${{ matrix.importer }}
         run: |
           mkdir -p "$RUNNER_TEMP/patches"
+          : > "$RUNNER_TEMP/patches/$IMPORTER.patch"
           git add --intent-to-add prices/providers
           if git diff -U0 -- prices/providers | grep -E '^[-+] ' | grep -qvE '^[-+] +prices_checked: '; then
             git diff --binary -- prices/providers > "$RUNNER_TEMP/patches/$IMPORTER.patch"
@@ -52,7 +54,7 @@ jobs:
         with:
           name: patch-${{ matrix.importer }}
           path: ${{ runner.temp }}/patches
-          if-no-files-found: ignore
+          if-no-files-found: error
 
   pull-request:
     needs: import
@@ -66,6 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          ref: main
           persist-credentials: false
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -77,7 +80,7 @@ jobs:
         run: |
           applied=()
           for patch in "$RUNNER_TEMP"/patches/*.patch; do
-            [ -e "$patch" ] || continue
+            [ -s "$patch" ] || continue
             name="$(basename "$patch" .patch)"
             if git apply --index "$patch"; then
               applied+=("$name")

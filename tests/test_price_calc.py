@@ -1073,6 +1073,7 @@ def test_avian_prices(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id='avian',
+        genai_request_timestamp=datetime(2026, 10, 18, tzinfo=timezone.utc),
     )
 
     assert price.provider.id == 'avian'

@@ -130,7 +130,8 @@ You define each provider's scope, official URLs, and pricing mappings in `.githu
 Each run reads that manifest once, completes research provider by provider, and starts one full validation pass after edits
 and diff review are complete. Each official response is reused for the in-scope models it covers.
 The workflow creates at most one PR per run. It skips while any PR authored by `app/genai-prices-automation` remains open,
-including proposals from the previous three workflows. Renaming a PR does not bypass this guard. Merge or close those
+including proposals from the previous three workflows. The hourly `Update prices` PR on `automation/hourly-price-update`
+is the exception: it does not block this check. Renaming a PR does not bypass this guard. Merge or close those
 proposals to resume checks. The workflow does not merge PRs, force-push branches, or close older proposals.
 
 These checks complement `make check-for-price-discrepancies`, which uses aggregators such as LiteLLM and OpenRouter.

@@ -359,6 +359,7 @@ describe('generated data split', () => {
   ])('prices Avian $model', ({ cacheReadRate, contextWindow, inputRate, model, outputRate }) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'avian',
+      timestamp: new Date('2026-10-18T00:00:00Z'),
     })
 
     expect(result?.provider.id).toBe('avian')

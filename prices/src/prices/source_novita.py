@@ -25,9 +25,9 @@ def parse_models(models: list[dict[str, Any]]) -> list[ModelInfo]:
         model_infos.append(
             ModelInfo(
                 id=model['id'],
-                name=model.get('display_name'),
+                name=(model.get('display_name') or '').strip() or None,
                 match=ClauseEquals(equals=model['id']),
-                context_window=model.get('context_size'),
+                context_window=model.get('context_size') or None,
                 prices=prices,
                 prices_checked=date.today(),
             )

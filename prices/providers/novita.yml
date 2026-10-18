@@ -474,7 +474,6 @@ models:
       or:
         - equals: ming-image-0.1-design
         - equals: ming-image-0.1-design-layer
-    context_window: 0
     prices:
       input_mtok: 1
       output_mtok: 1

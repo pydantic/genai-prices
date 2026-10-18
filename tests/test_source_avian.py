@@ -61,7 +61,9 @@ models:
     assert model.prices[1].prices == ModelPrice(
         input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
     )
-    assert ProviderYaml(provider_path).provider.find_model('new/model') is not None
+    new = ProviderYaml(provider_path).provider.find_model('new/model')
+    assert new is not None
+    assert new.prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
     assert '&id' not in provider_path.read_text()
 
 

@@ -21,7 +21,7 @@ def rates(prompt: str, completion: str, cache_read: str | None = None) -> dict[s
     return pricing
 
 
-def test_novita_parses_flat_prices_and_skips_free_models() -> None:
+def test_novita_parses_flat_prices_skips_free_models_and_drops_unknown_context() -> None:
     models = source_novita.parse_models(
         [
             {
@@ -31,18 +31,20 @@ def test_novita_parses_flat_prices_and_skips_free_models() -> None:
                 'pricing': rates('0.15', '0.5', '0.03'),
             },
             {'id': 'free', 'pricing': rates('0', '0')},
+            {'id': 'image', 'display_name': 'image\t', 'context_size': 0, 'pricing': rates('1', '1')},
         ]
     )
 
     assert [(model.id, model.name, model.context_window) for model in models] == [
-        ('zai-org/glm-5.3-flash', 'GLM 5.3 Flash', 1048576)
+        ('zai-org/glm-5.3-flash', 'GLM 5.3 Flash', 1048576),
+        ('image', 'image', None),
     ]
     assert models[0].prices == ModelPrice(
         input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
     )
 
 
-def test_novita_billing_bands_become_tiers() -> None:
+def test_novita_billing_bands_become_tiers_only_where_a_base_rate_exists() -> None:
     [model] = source_novita.parse_models(
         [
             {

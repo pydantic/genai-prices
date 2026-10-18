@@ -12141,7 +12141,6 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                context_window=0,
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
