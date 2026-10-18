@@ -9,7 +9,7 @@ import pytest
 
 from prices import source_zai
 from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
-from prices.utils import package_dir
+from prices.utils import markdown_tables, package_dir
 
 HEADER = """\
 | Model | Input | Cached Input | Cached Input Storage | Output |
@@ -62,6 +62,10 @@ def test_zai_parses_token_tables_and_skips_free_and_non_token_models() -> None:
         input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.50')
     )
     assert models[1].prices == ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1'))
+    assert models[2].prices == ModelPrice(
+        input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.11'), output_mtok=Decimal('2.2')
+    )
+    assert markdown_tables(PRICING_MARKDOWN)[1][1] == [['GLM-4.5', '\\$0.6', '\\$0.11', 'Free | for now', '\\$2.2']]
     assert models[3].prices == ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03'))
     assert models[3].prices_checked == date.today()
 
