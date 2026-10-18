@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime, time, timedelta, timezone
-from decimal import Decimal
+from decimal import ROUND_DOWN, Decimal, localcontext
 
 import pytest
 from inline_snapshot import snapshot
@@ -1807,6 +1807,67 @@ def test_calc_unit_price_uses_shortest_decimal_fractional_count() -> None:
 
 def test_calc_unit_price_uses_decimal_fractional_count_directly() -> None:
     assert calc_unit_price(Decimal('3.6'), Decimal('0.1'), total_input_tokens=0, per=3_600) == Decimal('0.0001')
+
+
+def test_calc_unit_price_ignores_ambient_decimal_context() -> None:
+    with localcontext() as context:
+        context.prec = 3
+        unit_price = calc_unit_price(Decimal('2.5'), 1_234_567, total_input_tokens=0, per=1_000_000)
+
+    assert unit_price == Decimal('3.0864175')
+
+
+def test_calc_unit_price_with_tiered_prices_ignores_ambient_decimal_context() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'))])
+
+    with localcontext() as context:
+        context.prec = 3
+        unit_price = calc_unit_price(price, 1_234_567, total_input_tokens=101, per=1_000_000)
+
+    assert unit_price == Decimal('2.469134')
+
+
+def test_calc_price_ignores_ambient_decimal_context() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    expected = calc_price(usage, 'gpt-4o', provider_id='openai')
+
+    with localcontext() as context:
+        context.prec = 3
+        narrowed = calc_price(usage, 'gpt-4o', provider_id='openai')
+
+    assert narrowed.input_price == expected.input_price
+    assert narrowed.output_price == expected.output_price
+    assert narrowed.total_price == expected.total_price
+
+
+def test_model_price_calc_price_ignores_ambient_decimal_context() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    model_price = ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('15'))
+    expected = model_price.calc_price(usage)
+
+    with localcontext() as context:
+        context.prec = 3
+        assert model_price.calc_price(usage) == expected
+
+
+def test_price_arithmetic_ignores_ambient_rounding_and_exponent_bounds() -> None:
+    usage = Usage(input_tokens=1_234_567, cache_read_tokens=300_000, output_tokens=123_456)
+    expected = calc_price(usage, 'gpt-4o', provider_id='openai')
+    expected_unit_price = calc_unit_price(Decimal('2'), 1, total_input_tokens=0, per=3)
+
+    with localcontext() as context:
+        # Narrow enough that leaking this context would round, overflow, or raise on the same inputs.
+        context.prec = 3
+        context.rounding = ROUND_DOWN
+        context.Emax = 2
+        context.Emin = -2
+
+        narrowed = calc_price(usage, 'gpt-4o', provider_id='openai')
+        unit_price = calc_unit_price(Decimal('2'), 1, total_input_tokens=0, per=3)
+
+    assert narrowed == expected
+    # 2/3 is inexact at 28 digits: narrowed precision or ROUND_DOWN both change this value.
+    assert unit_price == expected_unit_price == Decimal('0.6666666666666666666666666667')
 
 
 def test_model_price_handles_fractional_duration() -> None:
