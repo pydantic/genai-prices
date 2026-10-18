@@ -2,7 +2,7 @@ from __future__ import annotations as _annotations
 
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from functools import cache
 from typing import Any
 from urllib.parse import urlsplit
@@ -63,7 +63,7 @@ class DataSnapshot:
         price_context: types.PriceContext | None = None,
     ) -> types.PriceCalculation:
         """Calculate the price for the given usage."""
-        genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
+        genai_request_timestamp = genai_request_timestamp or datetime.now(tz=UTC)
 
         provider, model = self.find_provider_model(model_ref, None, provider_id, provider_api_url)
         return model.calc_price(

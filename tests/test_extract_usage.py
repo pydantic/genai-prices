@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -1873,8 +1873,8 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
     for model_ref, timestamp, expected_total in [
         ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
         ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
-        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
-        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=UTC), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=UTC), Decimal('0.088')),
     ]:
         price = calc_price(
             usage,

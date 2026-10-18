@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -40,7 +40,7 @@ def openrouter_model(
         id=model_id,
         canonical_slug=canonical_slug or model_id,
         name=f'Test: {model_id}',
-        created=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        created=datetime(2026, 1, 1, tzinfo=UTC),
         description='Test description\n\nMore details',
         context_length=1_000_000,
         pricing=pricing or OpenRouterPricing(prompt=Decimal('0.000001'), completion=Decimal('0.000002')),
