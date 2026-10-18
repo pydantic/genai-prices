@@ -10,7 +10,7 @@ from prices.update import ProviderYaml
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://dev.meta.ai/docs/pricing-rate-limits.md'
-MIN_MODEL_COUNT = 3
+MIN_MODEL_COUNT = 6
 TOKEN_TABLE_HEADER = ['Usage', 'Standard mode (per 1M tokens)', 'Contributor mode (per 1M tokens)']
 ROWS = {'Cached input': 'cache_read_mtok', 'Input': 'input_mtok', 'Output': 'output_mtok'}
 
@@ -34,6 +34,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         if not model_ids:
             raise RuntimeError(f'No Meta model ids listed for {family_name}')
         for model_id in model_ids:
+            if any(model.id == model_id for model in models):
+                raise RuntimeError(f'Duplicate Meta model in pricing data: {model_id}')
             column = 2 if model_id.endswith('-contributor') else 1
             rates = {ROWS[row[0]]: _price(row[column], model_id) for row in tables[0]}
             rates['web_searches_kcount'] = Decimal(web_search.group(1))

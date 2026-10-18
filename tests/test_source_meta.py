@@ -70,6 +70,10 @@ Models: `muse-spark-1.3` in Standard mode; `muse-spark-1.3-contributor` in Contr
         ),
         (page(f'### Muse Spark\n\nModels: Muse Spark 1.3.\n\n{TABLE}'), 'No Meta model ids listed for Muse Spark'),
         (
+            page(f'### Muse Spark\n\nModels: `muse-spark-1.3` and `muse-spark-1.3`.\n\n{TABLE}'),
+            'Duplicate Meta model in pricing data: muse-spark-1.3',
+        ),
+        (
             page(f'### Muse Spark\n\nModel: `muse-spark-1.3-contributor`.\n\n{TABLE.replace("$0.002", "Free")}'),
             'Unexpected Meta price for muse-spark-1.3-contributor: Free',
         ),

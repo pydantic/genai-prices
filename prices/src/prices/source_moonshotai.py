@@ -31,7 +31,13 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     for columns_source, rows_source in tables:
         columns = re.findall(r'title: "([^"]+)"', columns_source)
-        if set(columns) - PRICE_COLUMNS.keys() != INFO_COLUMNS:
+        keys = [PRICE_COLUMNS[column] for column in columns if column in PRICE_COLUMNS]
+        if (
+            set(columns) - PRICE_COLUMNS.keys() != INFO_COLUMNS
+            or len(set(columns)) != len(columns)
+            or len(set(keys)) != len(keys)
+            or not {'input_mtok', 'output_mtok'} <= set(keys)
+        ):
             raise RuntimeError(f'Unexpected Moonshot AI pricing columns: {columns}')
         for row_source in rows_source.strip().splitlines():
             row = row_source.strip().removeprefix('[').removesuffix('],')

@@ -32,7 +32,11 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     flat: dict[str, Rates] = {}
     tiered: dict[str, list[tuple[str, int, Rates]]] = {}
     for header, rows in markdown_tables(standard):
-        if header[0] != 'Model' or not set(header[1:]) <= PRICE_COLUMNS.keys():
+        if (
+            header[0] != 'Model'
+            or len(set(header)) != len(header)
+            or not {'Input', 'Output'} <= set(header[1:]) <= PRICE_COLUMNS.keys()
+        ):
             raise RuntimeError(f'Unexpected MiniMax LLM pricing columns: {header}')
         for row in rows:
             if not (model := re.fullmatch(r'\*\*([A-Za-z0-9.-]+)\*\*(.*)', row[0])):
@@ -63,11 +67,13 @@ def main(provider_path: Path | None = None) -> None:
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/minimax.yml')
     # Several legacy page rows share one YAML model; they must agree or the shared entry would be mispriced.
     shared: dict[str, ModelInfo] = {}
-    for model in models:
+    for index, model in enumerate(models):
         if (existing := provider_yaml.provider.find_model(model.id)) is not None:
             if existing.id in shared and shared[existing.id].prices != model.prices:
                 raise RuntimeError(f'MiniMax prices {shared[existing.id].id} and {model.id} differently')
             shared[existing.id] = model
+            # A tracked model keeps its curated match rather than gaining the page's case aliases.
+            models[index] = model.model_copy(update={'match': ClauseEquals(equals=model.id)})
     added, updated = provider_yaml.upsert_models(models, source='MiniMax', min_count=MIN_MODEL_COUNT)
     print(f'MiniMax prices updated: {added} added, {updated} updated')
 

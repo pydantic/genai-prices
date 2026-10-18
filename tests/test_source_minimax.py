@@ -88,6 +88,8 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
         ('## Audio\n', 'has no LLM section'),
         (page('<Tab title="Batch">\n</Tab>'), 'tab other than Standard and Priority'),
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
+        (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
+        (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page(FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', 'MiniMax-M2.7')), 'Unexpected MiniMax model cell'),
         (page(FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', '**MiniMax-M2.7** (beta)')), 'pricing row'),
         (page(FLAT_HEADER + M27_ROW * 2), r'Unexpected MiniMax pricing row: \*\*MiniMax-M2.7\*\*'),
@@ -139,3 +141,4 @@ def test_minimax_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
     source_minimax.main(provider_path)
 
     assert capsys.readouterr().out == 'MiniMax prices updated: 0 added, 8 updated\n'
+    assert 'equals: MiniMax-M2.7-highspeed' not in provider_path.read_text()

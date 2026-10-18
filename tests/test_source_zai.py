@@ -22,6 +22,13 @@ PRICING_MARKDOWN = f"""\
 | GLM-5.3-Flash | \\$0.15 | \\$0.03 | Limited-time Free | \\$0.50 |
 | GLM-4-32B-0414-128K | \\$0.1 | - | - | \\$0.1 |
 
+Model | Input | Cached Input | Cached Input Storage | Output
+:- | :- | :- | :- | :-
+GLM-4.5 | \\$0.6 | \\$0.11 | Free \\| for now | \\$2.2
+
+Prices | are per 1M tokens
+| :- |
+
 ### Built-in Tools
 
 | Tool | Cost |
@@ -46,7 +53,7 @@ PRICING_MARKDOWN = f"""\
 def test_zai_parses_token_tables_and_skips_free_and_non_token_models() -> None:
     models = source_zai.parse_pricing_markdown(PRICING_MARKDOWN)
 
-    assert [model.id for model in models] == ['GLM-5.3-Flash', 'GLM-4-32B-0414-128K', 'GLM-OCR']
+    assert [model.id for model in models] == ['GLM-5.3-Flash', 'GLM-4-32B-0414-128K', 'GLM-4.5', 'GLM-OCR']
     assert models[0].name == 'GLM-5.3-Flash'
     assert models[0].match == ClauseOr.model_validate(
         {'or': [ClauseEquals(equals='GLM-5.3-Flash'), ClauseEquals(equals='glm-5.3-flash')]}
@@ -55,8 +62,8 @@ def test_zai_parses_token_tables_and_skips_free_and_non_token_models() -> None:
         input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.50')
     )
     assert models[1].prices == ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1'))
-    assert models[2].prices == ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03'))
-    assert models[2].prices_checked == date.today()
+    assert models[3].prices == ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03'))
+    assert models[3].prices_checked == date.today()
 
 
 @pytest.mark.parametrize(

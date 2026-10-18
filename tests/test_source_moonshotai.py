@@ -34,6 +34,15 @@ K2_COLUMNS = """\
 { title: "Output Price", width: "14%" },
 { title: "Context Window", width: "18%" },
 """
+K2_REORDERED_COLUMNS = """\
+{ title: "Output Price", width: "14%" },
+{ title: "Model", width: "24%" },
+{ title: "Context Window", width: "18%" },
+{ title: "Input Price (Cache Miss)", width: "16%" },
+{ title: "Unit", width: "12%" },
+{ title: "Input Price (Cache Hit)", width: "16%" },
+"""
+K2_REORDERED_ROW = '[<>{"$"}4.00</>, "kimi-k2.6", "262,144 tokens", <>{"$"}0.95</>, "1M tokens", <>{"$"}0.16</>],'
 K2_ROW = '["kimi-k2.6", "1M tokens", <>{"$"}0.16</>, <>{"$"}0.95</>, <>{"$"}4.00</>, "262,144 tokens"],'
 
 
@@ -43,7 +52,9 @@ def doc_table(columns: str, *rows: str) -> str:
 
 
 def test_moonshot_maps_columns_by_title() -> None:
-    models = source_moonshotai.parse_pricing_markdown(doc_table(K3_COLUMNS, K3_ROW) + doc_table(K2_COLUMNS, K2_ROW))
+    models = source_moonshotai.parse_pricing_markdown(
+        doc_table(K3_COLUMNS, K3_ROW) + doc_table(K2_REORDERED_COLUMNS, K2_REORDERED_ROW)
+    )
 
     assert [(model.id, model.context_window) for model in models] == [('kimi-k3', 1048576), ('kimi-k2.6', 262144)]
     assert models[0].prices == ModelPrice.model_validate(
@@ -67,6 +78,18 @@ def test_moonshot_maps_columns_by_title() -> None:
         ('## Model Pricing\n', 'has no DocTable price tables'),
         (
             doc_table(K2_COLUMNS.replace('Output Price', 'Batch Price'), K2_ROW),
+            'Unexpected Moonshot AI pricing columns',
+        ),
+        (
+            doc_table(K2_COLUMNS.replace('{ title: "Output Price", width: "14%" },\n', ''), K2_ROW),
+            'Unexpected Moonshot AI pricing columns',
+        ),
+        (
+            doc_table(K2_COLUMNS.replace('Input Price (Cache Hit)', 'Input Price (Cache Miss)'), K2_ROW),
+            'Unexpected Moonshot AI pricing columns',
+        ),
+        (
+            doc_table(K2_COLUMNS.replace('Input Price (Cache Hit)', 'Input Price'), K2_ROW),
             'Unexpected Moonshot AI pricing columns',
         ),
         (doc_table(K2_COLUMNS, K2_ROW.replace(', "262,144 tokens"', '')), 'Unexpected Moonshot AI pricing row'),
