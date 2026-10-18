@@ -68,7 +68,7 @@ def test_typesafe_rejects_unexpected_page_shapes(markdown: str, error: str) -> N
         source_typesafe.parse_models_markdown(markdown)
 
 
-def test_typesafe_moves_aliases_to_the_model_they_point_at(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_typesafe_moves_aliases_and_drops_unlisted_ones(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     provider_path = tmp_path / 'typesafe.yml'
     provider_path.write_text(
         """\
@@ -76,8 +76,15 @@ id: typesafe
 name: TypeSafe
 api_pattern: typesafe
 models:
+  - id: jev-1.11.0
+    match: {equals: jev-1.11.0}
+    prices: {input_mtok: 0.042}
+
   - id: jev-1.12.0
-    match: {equals: jev-1.12.0}
+    match:
+      or:
+        - equals: jev-1.12.0
+        - equals: jev-legacy
     prices: {input_mtok: 0.042}
 
   - id: jev-1.13.0
@@ -101,6 +108,7 @@ models:
 
     provider = ProviderYaml(provider_path).provider
     assert [model.match for model in provider.models] == [
+        ClauseEquals(equals='jev-1.11.0'),
         ClauseEquals(equals='jev-1.12.0'),
         ClauseEquals(equals='jev-1.13.0'),
         ClauseOr.model_validate(
@@ -123,3 +131,18 @@ def test_typesafe_main_fetches_recorded_models_page(tmp_path: Path, capsys: pyte
     source_typesafe.main(provider_path)
 
     assert capsys.readouterr().out == 'TypeSafe prices updated: 0 added, 2 updated\n'
+    provider = ProviderYaml(provider_path).provider
+    assert [(model.id, model.match, model.prices, model.prices_checked) for model in provider.models] == [
+        (
+            'jev-1.13.0',
+            ClauseOr.model_validate({'or': [ClauseEquals(equals='jev-1.13.0'), ClauseEquals(equals='jev-latest')]}),
+            ModelPrice(input_mtok=Decimal('0.042')),
+            date.today(),
+        ),
+        (
+            'jev-1.14.0',
+            ClauseOr.model_validate({'or': [ClauseEquals(equals='jev-1.14.0'), ClauseEquals(equals='jev-preview')]}),
+            ModelPrice(input_mtok=Decimal('0.042')),
+            date.today(),
+        ),
+    ]

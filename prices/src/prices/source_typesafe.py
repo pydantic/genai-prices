@@ -59,7 +59,7 @@ def main(provider_path: Path | None = None) -> None:
         model_id = cast(str, yaml_model['id'])
         clauses = cast(list[dict[str, Any]], cast(dict[str, Any], yaml_model['match']).get('or', []))
         if clauses:
-            kept = [c for c in clauses if targets.get(c.get('equals', ''), model_id) == model_id]
+            kept = [c for c in clauses if c.get('equals') == model_id or targets.get(c.get('equals', '')) == model_id]
             yaml_model['match'] = kept[0] if len(kept) == 1 else {'or': kept}
     added, updated = provider_yaml.upsert_models(models, source='TypeSafe', min_count=MIN_MODEL_COUNT)
     print(f'TypeSafe prices updated: {added} added, {updated} updated')

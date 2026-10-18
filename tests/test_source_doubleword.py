@@ -9,7 +9,17 @@ import pytest
 
 from prices import source_doubleword
 from prices.prices_types import ModelPrice
+from prices.update import ProviderYaml
 from prices.utils import package_dir
+
+NEW_MODEL_IDS = (
+    'Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
+    'deepseek-ai/DeepSeek-V4-Pro-0813',
+    'meta-models/Muse-Glimmer-30B',
+    'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+    'zai-org/GLM-5.3',
+    'zai-org/GLM-5.3-Flash',
+)
 
 CATALOG = """\
 ## Model Catalog
@@ -31,6 +41,7 @@ PAGES = {
         'Open this model in the [Playground](https://app.doubleword.ai/playground?model=zai-org%2FGLM-5.2-FP8&from=x).'
     ),
     'https://docs.doubleword.ai/inference-api/models/embedding.md': (
+        '**Max Total Tokens:** 32768\n'
         'Open this model in the [Playground](https://app.doubleword.ai/playground?model=Qwen%2FQwen3-Embedding-8B).'
     ),
 }
@@ -46,7 +57,12 @@ def test_doubleword_parses_realtime_prices_and_api_ids_from_model_pages() -> Non
             1048576,
             ModelPrice(input_mtok=Decimal('0.93'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('3.00')),
         ),
-        ('Qwen/Qwen3-Embedding-8B', 'Embedding', None, ModelPrice(input_mtok=Decimal('0.04'))),
+        (
+            'Qwen/Qwen3-Embedding-8B',
+            'Embedding',
+            32768,
+            ModelPrice(input_mtok=Decimal('0.04')),
+        ),
     ]
     assert models[0].prices_checked == date.today()
 
@@ -73,7 +89,19 @@ def test_doubleword_rejects_a_model_page_without_an_api_id() -> None:
 def test_doubleword_main_fetches_recorded_catalog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'doubleword.yml'
     copyfile(package_dir / 'providers/doubleword.yml', provider_path)
+    provider_yaml = ProviderYaml(provider_path)
+    for model_id in NEW_MODEL_IDS:
+        provider_yaml.remove_model(model_id)
+    provider_yaml.save()
 
     source_doubleword.main(provider_path)
 
-    assert capsys.readouterr().out == 'Doubleword prices updated: 0 added, 15 updated\n'
+    assert capsys.readouterr().out == 'Doubleword prices updated: 6 added, 9 updated\n'
+    provider = ProviderYaml(provider_path).provider
+    glm = provider.find_model('zai-org/GLM-5.3')
+    assert glm is not None
+    assert glm.name == 'GLM 5.3'
+    assert glm.prices == ModelPrice(
+        input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('4.4')
+    )
+    assert all(provider.find_model(model_id) is not None for model_id in NEW_MODEL_IDS)

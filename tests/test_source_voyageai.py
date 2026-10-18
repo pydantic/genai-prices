@@ -5,6 +5,7 @@ from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
 
+import httpx2
 import pytest
 
 from prices import source_voyageai
@@ -79,4 +80,18 @@ def test_voyageai_main_rejects_an_html_page(monkeypatch: pytest.MonkeyPatch, tmp
     monkeypatch.setattr(source_voyageai, 'PRICING_URL', url)
 
     with pytest.raises(RuntimeError, match=f'{url} returned HTML instead of markdown'):
+        source_voyageai.main(tmp_path / 'unused.yml')
+
+
+def test_voyageai_main_rejects_html_whatever_the_media_type_case(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    def get(url: str, **_: object) -> httpx2.Response:
+        return httpx2.Response(
+            200, headers={'Content-Type': 'Text/HTML'}, text='<p>hi</p>', request=httpx2.Request('GET', url)
+        )
+
+    monkeypatch.setattr(httpx2, 'get', get)
+
+    with pytest.raises(RuntimeError, match='returned HTML instead of markdown'):
         source_voyageai.main(tmp_path / 'unused.yml')
