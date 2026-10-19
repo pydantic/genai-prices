@@ -37,6 +37,7 @@ jobs:
           - doubleword
           - fireworks
           - github-copilot
+          - google
           - groq
           - huggingface
           - meta

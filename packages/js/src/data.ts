@@ -13155,12 +13155,14 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
+          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview. Both price video input at the $3 audio rate, and Vertex prices image input the same.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 2,
           input_audio_mtok: 3,
           output_audio_mtok: 12,
+          input_image_mtok: 3,
+          input_video_mtok: 3,
         },
       },
       {
