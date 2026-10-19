@@ -1,0 +1,164 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://docs.voyageai.com/docs/pricing.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - docs.voyageai.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      alt-svc:
+      - h3=":443"; ma=86400
+      cache-control:
+      - no-cache
+      cf-cache-status:
+      - REVALIDATED
+      cf-ray:
+      - a4ca2255af798cb0-AMS
+      connection:
+      - keep-alive
+      content-language:
+      - en
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Sun, 18 Oct 2026 20:01:18 GMT
+      etag:
+      - "\"92b8c20a276eec298067714163411dc7d86da712:expanded|ae104586\""
+      link:
+      - >-
+        <https://docs.voyageai.com/.well-known/api-catalog>; rel="api-catalog",
+        <https://docs.voyageai.com>; rel="service-doc",
+        <https://docs.voyageai.com/.well-known/agent-skills/index.json>; rel="agent-skills",
+        <https://docs.voyageai.com/docs/pricing>; rel="canonical"
+      rndr-id:
+      - 46707bf6-f5f8-46ff
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=31536000
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-dns-prefetch-control:
+      - "off"
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - Deny
+      x-ratelimit-limit:
+      - "100"
+      x-ratelimit-remaining:
+      - "98"
+      x-ratelimit-reset:
+      - "1790782909"
+      x-render-origin-server:
+      - Render
+      x-robots-tag:
+      - noindex, nofollow
+      x-xss-protection:
+      - 1; mode=block
+    body:
+      type: text
+      content: |-
+        ---
+        updatedAt: 2026-09-29T15:38:11.000Z
+        agentTools:
+          projectIndex: https://docs.voyageai.com/llms.txt
+        ---
+        
+        # Pricing
+        
+        Voyage model pricing is usage-based, with charges billed to the account linked to the API key used for access.
+        
+        # Text Embeddings
+        
+        We charge for requests to the Voyage text embedding endpoint based on the number of tokens in the documents/queries. The first 200 million tokens for `voyage-4-large`, `voyage-4`, `voyage-4-lite`, `voyage-context-4`, and `voyage-code-3`, or the first 50 million tokens for `voyage-multilingual-2`, `voyage-finance-2`, `voyage-law-2`, and `voyage-code-2`, are free for every account. Subsequent usage is priced per token, as shown in the following table.
+        
+        | Model                                                       | Price per thousand tokens | Price per million tokens | Number of free tokens |
+        | ----------------------------------------------------------- | ------------------------- | ------------------------ | --------------------- |
+        | `voyage-4-large`                                            | $0.00012                  | $0.12                    | 200 million           |
+        | `voyage-4`                                                  | $0.00006                  | $0.06                    | 200 million           |
+        | `voyage-4-lite`                                             | $0.00002                  | $0.02                    | 200 million           |
+        | `voyage-context-4`                                          | $0.00012                  | $0.12                    | 200 million           |
+        | `voyage-code-4`                                             | $0.00012                  | $0.12                    | 200 million           |
+        | `voyage-finance-2`<br />`voyage-law-2`<br />`voyage-code-2` | $0.00012                  | $0.12                    | 50 million            |
+        
+        # Multimodal Embeddings
+        
+        We charge for requests to the Voyage multimodal endpoint based on the number of tokens in the text and the number of pixels in images and videos. The first 200M text tokens and 150B pixels for `voyage-multimodal-3.5` and `voyage-multimodal-3` are free for every account. Subsequent usage is priced per token and per pixel, as shown in the following table. For pricing purposes, each video frame is considered an image.
+        
+        | Model                                              | Price per million tokens | Price per billion pixels | Number of free tokens and pixels |
+        | -------------------------------------------------- | ------------------------ | ------------------------ | -------------------------------- |
+        | `voyage-multimodal-3.5`<br />`voyage-multimodal-3` | $0.12                    | $0.60                    | 200M text tokens and 150B pixels |
+        
+        Images with fewer than 50,000 pixels will be upscaled, processed, and charged as a 50,000-pixel image. Images containing over 2 million pixels will be downsampled and charged as 2 million-pixel images. Therefore, the minimum and maximum costs per image are $0.00003 and $0.0012, respectively. The following table provides examples of image pricing.
+        
+        | Image resolution | Number of pixels | Price per image | Price per thousand images |
+        | ---------------- | ---------------- | --------------- | ------------------------- |
+        | 200px x 200px    | 40,000           | $0.00003        | $0.03                     |
+        | 1000px x 1000px  | 1 million        | $0.0006         | $0.60                     |
+        | 2000px x 2000px  | 4 million        | $0.0012         | $1.20                     |
+        | 4000px x 4000px  | 16 million       | $0.0012         | $1.20                     |
+        
+        For example, the cost to vectorize a single input with 1000 text tokens ($0.00012) and two 4 million-pixel images (2 x $0.0012) would be $0.00252.
+        
+        # Rerankers
+        
+        Pricing for the Voyage reranker endpoint is based on the total number of processed tokens, calculated as “(the number of query tokens × the number of documents) + sum of the number of tokens in all documents.” The first 200 million tokens for `rerank-2.5`, `rerank-2.5-lite`, `rerank-2`, and `rerank-2-lite` are free for each account. Subsequent usage is priced per token, as shown in the following table.
+        
+        | Model           | Price per thousand tokens | Price per million tokens | Estimated price per request\* | Number of free tokens |
+        | --------------- | ------------------------- | ------------------------ | ----------------------------- | --------------------- |
+        | `rerank-3`      | $0.00005                  | $0.05                    | $0.0025                       | 200 million           |
+        | `rerank-3-lite` | $0.00002                  | $0.02                    | $0.001                        | 200 million           |
+        
+        * This price estimate assumes each request includes 100 documents and that the sum of the number of tokens in the query and the number of tokens in each document is 500.
+        
+        # Batch and Files API
+        
+        Our <Anchor target="_blank" href="https://docs.voyageai.com/docs/batch-inference">Batch API</Anchor> provides a simple way to process multiple requests efficiently to our <Anchor target="_blank" href="https://docs.voyageai.com/docs/batch-inference#/model-availability">current models</Anchor>. It offers a 12-hour completion window and a **33% discount** compared to our standard endpoints.
+        
+        Free token credits do not apply to Batch API usage. All successfully processed Batch API tokens are billed at the applicable discounted batch rate and do not deduct from your free token balance.
+        
+        Our <Anchor target="_blank" href="https://docs.voyageai.com/reference/files">Files API</Anchor> provides access to a lightweight file storage service to upload batch processing requests, download results, and manage related files. You can store an unlimited number of files, each retained for 30 days before automatic deletion. Storage is priced at **$0.05 per GB per month**.
+        
+        ***
+        
+        ## Older models
+        
+        The following table shows the pricing for older models. Please note that we do not offer free tokens for them.
+        
+        | Model                                                                                                                            | Price per thousand tokens | Price per million tokens |
+        | :------------------------------------------------------------------------------------------------------------------------------- | :------------------------ | :----------------------- |
+        | `voyage-context-3`                                                                                                               | $0.00018                  | $0.18                    |
+        | `voyage-code-3`                                                                                                                  | $0.00018                  | $0.18                    |
+        | `voyage-3-large`                                                                                                                 | $0.00018                  | $0.18                    |
+        | `voyage-3.5`                                                                                                                     | $0.00006                  | $0.06                    |
+        | `voyage-3.5-lite`                                                                                                                | $0.00002                  | $0.02                    |
+        | `voyage-multilingual-2`<br />`voyage-large-2-instruct`<br />`voyage-large-2`                                                     | $0.00012                  | $0.12                    |
+        | `voyage-01`<br />`voyage-lite-01`<br />`voyage-lite-01-instruct`<br />`voyage-02`<br />`voyage-lite-02-instruct`<br />`voyage-2` | $0.0001                   | $0.1                     |
+        | `voyage-3`                                                                                                                       | $0.00006                  | $0.06                    |
+        | `rerank-1`<br />`rerank-2`<br />`rerank-2.5`                                                                                     | $0.00005                  | $0.05                    |
+        | `voyage-3-lite`<br />`rerank-lite-1`<br />`rerank-2-lite`<br />`rerank-2.5-lite`                                                 | $0.00002                  | $0.02                    |
+        
+        ***
+        
+        # Fine-tuned models
+        
+        For fine-tuned models with dedicated instances and support channels, please get in touch with our [sales team](mailto:contact@voyageai.com).
+  recorded_at: 2026-10-18T20:01:18.111351+00:00

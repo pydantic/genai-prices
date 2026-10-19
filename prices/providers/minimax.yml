@@ -2,7 +2,7 @@
 name: MiniMax
 id: minimax
 pricing_urls:
-  - https://platform.minimax.io/docs/guides/pricing-paygo
+  - https://platform.minimax.io/docs/pricing/overview
 api_pattern: 'https://api\.minimax(i)?\.(?:com|io)'
 price_comments: >-
   Prices sourced from MiniMax international platform USD pricing
@@ -93,7 +93,7 @@ models:
         - equals: MiniMax-M2.5
         - equals: minimax-m2.5
     context_window: 204800
-    prices_checked: "2026-05-23"
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.30
       cache_read_mtok: 0.03
@@ -109,7 +109,7 @@ models:
         - contains: "M2.1-highspeed"
         - contains: "m2.1-highspeed"
     context_window: 204800
-    prices_checked: "2026-05-23"
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.03
@@ -125,7 +125,7 @@ models:
         - contains: "M2.5-highspeed"
         - contains: "m2.5-highspeed"
     context_window: 204800
-    prices_checked: "2026-05-23"
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.03
@@ -143,7 +143,7 @@ models:
         - equals: MiniMax-M2.7
         - equals: minimax-m2.7
     context_window: 204800
-    prices_checked: "2026-05-23"
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.30
       cache_read_mtok: 0.06
@@ -159,12 +159,28 @@ models:
         - contains: "M2.7-highspeed"
         - contains: "m2.7-highspeed"
     context_window: 204800
-    prices_checked: "2026-05-23"
+    prices_checked: 2026-10-18
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.06
       cache_write_mtok: 0.375
       output_mtok: 2.40
+
+  - id: MiniMax-M3.1-Flash
+    name: MiniMax-M3.1-Flash
+    description: >-
+      Frontier multimodal coding model with 1M context window and tunable thinking depth. An ultra-efficient open-weight model
+      for everyday work.
+    match:
+      or:
+        - equals: MiniMax-M3.1-Flash
+        - equals: minimax-m3.1-flash
+    context_window: 1000000
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
 
   - id: minimax-01
     name: MiniMax-01
@@ -174,7 +190,8 @@ models:
       equals: minimax-01
     context_window: 1000192
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    price_comments: >-
+      Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
     prices:
       input_mtok: 0.2
       output_mtok: 1.1
@@ -190,7 +207,8 @@ models:
     # No context_window: MiniMax states only separate caps for this model (1M max input tokens, 80K max output
     # tokens), never a single total window, so no value can be recorded without picking a convention.
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    price_comments: >-
+      Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
     prices:
       input_mtok: 0.4
       output_mtok: 2.2
@@ -201,13 +219,17 @@ models:
       MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output,
       a 1M-token context window, and long-horizon agentic work.
     match:
-      equals: minimax-m3
+      or:
+        - equals: MiniMax-M3
+        - equals: minimax-m3
     context_window: 1000000
-    prices_checked: 2026-07-01
+    prices_checked: 2026-10-19
     price_comments: >-
       Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo,
       2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens
-      bill at 2x per MiniMax's length-based tiering.
+      bill at 2x per MiniMax's length-based tiering. Re-verified against the same page on 2026-10-15
+      (rates unchanged); the page labels the model "MiniMax-M3", which was added to the match on
+      2026-10-15 alongside the existing lowercase id.
     prices:
       input_mtok:
         base: 0.3

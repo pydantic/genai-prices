@@ -128,6 +128,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.75
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -139,3 +140,4 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.5
+    prices_checked: 2026-10-19

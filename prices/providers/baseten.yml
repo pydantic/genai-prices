@@ -54,7 +54,7 @@ models:
     match:
       equals: deepseek-ai/DeepSeek-V4-Flash-0731
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.13
       cache_read_mtok: 0.028
@@ -82,7 +82,7 @@ models:
     match:
       equals: deepseek-ai/DeepSeek-V4-Pro-0813
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.32
       cache_read_mtok: 0.132
@@ -91,13 +91,15 @@ models:
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek V4.1 Flash
     match:
-      equals: deepseek-ai/DeepSeek-V4.1-Flash
+      or:
+        - equals: deepseek-ai/DeepSeek-V4.1-Flash
+        - equals: deepseek-ai/DeepSeek-V4.1-Flash-1017
     context_window: 1048000
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.007
       output_mtok: 1.2
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash-Fast
     name: DeepSeek V4.1 Flash Fast
@@ -105,7 +107,7 @@ models:
     match:
       equals: deepseek-ai/DeepSeek-V4.1-Flash-Fast
     context_window: 1048000
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       Rates and context window from https://www.baseten.co/pricing/ and
       https://docs.baseten.co/inference/model-apis/overview.
@@ -113,6 +115,17 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.014
       output_mtok: 2.4
+
+  - id: meta-models/muse-spark-open
+    name: Muse Spark Open
+    match:
+      equals: meta-models/muse-spark-open
+    context_window: 1048000
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.15
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
 
   - id: moonshotai/Kimi-K2.6
     name: Kimi K2.6
@@ -150,7 +163,7 @@ models:
     match:
       equals: moonshotai/Kimi-K3
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 3
       cache_read_mtok: 0.3
@@ -161,7 +174,7 @@ models:
     match:
       equals: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B
     context_window: 202000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.6
       cache_read_mtok: 0.12
@@ -173,7 +186,7 @@ models:
     match:
       equals: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
     context_window: 1048000
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       Rates and context window from https://www.baseten.co/pricing/ and
       https://docs.baseten.co/inference/model-apis/overview.
@@ -187,11 +200,22 @@ models:
     match:
       equals: openai/gpt-oss-120b
     context_window: 128000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     price_comments: The pricing table does not publish a separate cached-input rate for this model.
     prices:
       input_mtok: 0.1
       output_mtok: 0.5
+
+  - id: reflection/Beam-1.0
+    name: Beam
+    match:
+      equals: reflection/Beam-1.0
+    context_window: 1048000
+    prices:
+      input_mtok: 1.3
+      cache_read_mtok: 0.13
+      output_mtok: 4.3
+    prices_checked: 2026-10-19
 
   - id: thinkingmachines/inkling
     name: Inkling
@@ -246,7 +270,7 @@ models:
     match:
       equals: zai-org/GLM-5.2
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.14
@@ -257,7 +281,7 @@ models:
     match:
       equals: zai-org/GLM-5.2-Fast
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 2.1
       cache_read_mtok: 0.21
@@ -268,7 +292,7 @@ models:
     match:
       equals: zai-org/GLM-5.3
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.14
@@ -283,14 +307,14 @@ models:
       input_mtok: 2.1
       cache_read_mtok: 0.21
       output_mtok: 6.6
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM 5.3 Flash
     match:
       equals: zai-org/GLM-5.3-Flash
     context_window: 1048000
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.03

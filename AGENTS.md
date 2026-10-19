@@ -100,10 +100,9 @@ make collapse-models                   # Collapse duplicate similar models
 
 `make help` lists every target. These importers run against live third-party APIs and nothing in CI
 exercises them, so they break silently when an upstream schema changes — if one returns suspiciously
-little, suspect the importer before the data. The importers that rewrite tracked `prices/providers/*.yml`
-(`huggingface-get`, `ovhcloud-get`, `quicksilverpro-get`) exit non-zero instead of writing when the upstream
-catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard.py`); set
-`PRICES_ALLOW_MODEL_COUNT_DROP=1` to override a genuine catalog cut.
+little, suspect the importer before the data. Every importer goes through `ProviderYaml.upsert_models`, which
+never deletes a model, adds a dated entry for each rate change, and exits non-zero when the source returns fewer
+models than the importer's `MIN_MODEL_COUNT`.
 
 ## Important Notes
 
@@ -138,6 +137,11 @@ catalog is empty or has shrunk by more than half (`prices/src/prices/write_guard
   variant entries and prepend dated entries for changed tier rates: variants use the first matching
   value per price key. Record a source confirming any tier whose rates stayed unchanged, and test
   each affected context before and after the change in Python, JavaScript and Go.
+- The importers do this automatically through `ProviderYaml.upsert_models`
+  (`prices/src/prices/variants.py`). When a standard rate changes, a variant whose rates are all one share
+  of the standard rates gets a dated entry at that share of the new rates. A 50% batch discount and a 2x
+  priority surcharge are examples, and the provider's cent rounding is allowed for. A variant with no single
+  share, such as flat batch rates on tiered standard rates, is logged as `update them by hand`.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
 
@@ -196,7 +200,7 @@ closure rules.
 - Price changes are pinned by assertions in `tests/test_price_calc.py`, `tests/test_price_regressions.py`,
   `packages/js/src/__tests__/` and `packages/go/api_test.go`. Update the expected values; don't weaken or delete
   the assertion.
-- Use `make test-all-python` to test across Python 3.10-3.14
+- Use `make test-all-python` to test across Python 3.11-3.15
 
 ### Python/JS/Go parity
 

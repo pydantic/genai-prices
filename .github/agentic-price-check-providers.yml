@@ -55,7 +55,7 @@ providers:
     file: prices/providers/mistral.yml
     scope: Public Mistral API models with standard on-demand prices.
     sources:
-      - https://mistral.ai/pricing/api
+      - https://docs.mistral.ai/inference/pricing
     notes: >-
       Map the standard API table's input and output columns, in USD per 1M tokens, to input_mtok and output_mtok.
       Exclude Batch and provisioned capacity. Preserve existing special-rate records. Aliases such as mistral-large-latest

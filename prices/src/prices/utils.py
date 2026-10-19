@@ -1,11 +1,23 @@
 from __future__ import annotations
 
+import re
 from decimal import Decimal
+from itertools import takewhile
 from pathlib import Path
 from typing import Any, Literal, TypeVar
 
+import httpx2
+
 package_dir = Path(__file__).parent.parent.parent
 root_dir = package_dir.parent
+
+
+def get_markdown(url: str) -> str:
+    response = httpx2.get(url, timeout=30.0)
+    response.raise_for_status()
+    if response.headers.get('content-type', '').lower().startswith('text/html'):
+        raise RuntimeError(f'{url} returned HTML instead of markdown')
+    return response.text
 
 
 def pretty_size(size: int) -> str:
@@ -30,6 +42,35 @@ def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | N
     if v == aggregate_v:
         return None
     return mtok(v)
+
+
+def markdown_tables(markdown: str) -> list[tuple[list[str], list[list[str]]]]:
+    """Return every GFM table in `markdown` as its header cells and non-empty body rows."""
+    lines = [line.strip() for line in markdown.splitlines()] + ['']
+    tables: list[tuple[list[str], list[list[str]]]] = []
+    for index, line in enumerate(lines[:-1]):
+        separator = lines[index + 1]
+        if '|' not in separator or not re.fullmatch(r'\|? *:?-+:? *(?:\| *:?-+:? *)*\|?', separator):
+            continue
+        header = _table_cells(line)
+        if len(header) != len(_table_cells(separator)):
+            continue
+        rows = [_table_cells(row_line) for row_line in takewhile(_has_cell_delimiter, lines[index + 2 :])]
+        if bad := next((row for row in rows if len(row) != len(header)), None):
+            raise ValueError(f'Table row has {len(bad)} cells, header has {len(header)}: {bad}')
+        tables.append((header, [row for row in rows if any(row)]))
+    return tables
+
+
+def _has_cell_delimiter(line: str) -> bool:
+    return re.search(r'(?<!\\)\|', line) is not None
+
+
+def _table_cells(line: str) -> list[str]:
+    line = line.removeprefix('|')
+    if line.endswith('|') and not line.endswith('\\|'):
+        line = line[:-1]
+    return [cell.strip().replace('\\|', '|') for cell in re.split(r'(?<!\\)\|', line)]
 
 
 T = TypeVar('T')

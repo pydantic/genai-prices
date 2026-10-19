@@ -63,13 +63,33 @@ simonw-prices-get: ## get simonw-prices
 huggingface-get: ## get huggingface prices
 	uv run -m prices get_huggingface_prices
 
+.PHONY: cerebras-get
+cerebras-get: ## get cerebras model prices
+	uv run -m prices get_cerebras_prices
+
 .PHONY: cloudflare-get
 cloudflare-get: ## get cloudflare workers ai prices
 	uv run -m prices get_cloudflare_prices
 
+.PHONY: anthropic-get
+anthropic-get: ## get anthropic model prices
+	uv run -m prices get_anthropic_prices
+
 .PHONY: arcee-get
 arcee-get: ## get arcee model prices
 	uv run -m prices get_arcee_prices
+
+.PHONY: aws-get
+aws-get: ## get aws bedrock model prices
+	uv run -m prices get_aws_prices
+
+.PHONY: avian-get
+avian-get: ## get avian model prices
+	uv run -m prices get_avian_prices
+
+.PHONY: azure-get
+azure-get: ## get microsoft azure prices from the azure retail prices api
+	uv run -m prices get_azure_prices
 
 .PHONY: baseten-get
 baseten-get: ## get baseten model prices
@@ -79,6 +99,34 @@ baseten-get: ## get baseten model prices
 cursor-get: ## get cursor model prices
 	uv run -m prices get_cursor_prices
 
+.PHONY: doubleword-get
+doubleword-get: ## get doubleword realtime model prices
+	uv run -m prices get_doubleword_prices
+
+.PHONY: github-copilot-get
+github-copilot-get: ## get github copilot prices
+	uv run -m prices get_github_copilot_prices
+
+.PHONY: novita-get
+novita-get: ## get novita model prices
+	uv run -m prices get_novita_prices
+
+.PHONY: meta-get
+meta-get: ## get meta model api prices
+	uv run -m prices get_meta_prices
+
+.PHONY: minimax-get
+minimax-get: ## get minimax prices
+	uv run -m prices get_minimax_prices
+
+.PHONY: moonshotai-get
+moonshotai-get: ## get moonshot ai prices
+	uv run -m prices get_moonshotai_prices
+
+.PHONY: openai-decisions-get
+openai-decisions-get: ## get openai decisions model prices
+	uv run -m prices get_openai_decisions_prices
+
 .PHONY: ovhcloud-get
 ovhcloud-get: ## get ovhcloud ai endpoints prices
 	uv run -m prices get_ovhcloud_prices
@@ -87,8 +135,63 @@ ovhcloud-get: ## get ovhcloud ai endpoints prices
 quicksilverpro-get: ## get quicksilver pro prices
 	uv run -m prices get_quicksilverpro_prices
 
+.PHONY: typesafe-get
+typesafe-get: ## get typesafe model prices
+	uv run -m prices get_typesafe_prices
+
+.PHONY: voyageai-get
+voyageai-get: ## get voyage ai model prices
+	uv run -m prices get_voyageai_prices
+
+.PHONY: zai-get
+zai-get: ## get z.ai prices
+	uv run -m prices get_zai_prices
+
+.PHONY: google-get
+google-get: ## get google gemini api prices
+	uv run -m prices get_google_prices
+
+.PHONY: groq-get
+groq-get: ## get groq model prices
+	uv run -m prices get_groq_prices
+
+.PHONY: perplexity-get
+perplexity-get: ## get perplexity sonar prices
+	uv run -m prices get_perplexity_prices
+
+.PHONY: together-get
+together-get: ## get together ai model prices
+	uv run -m prices get_together_prices
+
+.PHONY: mistral-get
+mistral-get: ## get mistral model prices
+	uv run -m prices get_mistral_prices
+.PHONY: openai-get
+openai-get: ## get openai model prices
+	uv run -m prices get_openai_prices
+
+.PHONY: xai-get
+xai-get: ## get xai model prices
+	uv run -m prices get_xai_prices
+
+.PHONY: databricks-get
+databricks-get: ## get databricks foundation model api prices
+	uv run -m prices get_databricks_prices
+
+.PHONY: fireworks-get
+fireworks-get: ## get fireworks serverless prices
+	uv run -m prices get_fireworks_prices
+
+.PHONY: modal-get
+modal-get: ## get modal shared endpoint prices
+	uv run -m prices get_modal_prices
+
+.PHONY: openrouter-provider-get
+openrouter-provider-get: ## get openrouter provider prices
+	uv run -m prices get_openrouter_provider_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get baseten-get cloudflare-get cursor-get ovhcloud-get quicksilverpro-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get azure-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get aws-get openai-get mistral-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies
@@ -129,12 +232,12 @@ coverage-report: ## Report coverage for all Python code
 	@uv run coverage report
 
 .PHONY: test-all-python
-test-all-python: ## Run tests on Python 3.10 to 3.14
-	UV_PROJECT_ENVIRONMENT=.venv310 uv run --python 3.10 --all-extras --all-packages coverage run -p -m pytest
+test-all-python: ## Run tests on Python 3.11 to 3.15
 	UV_PROJECT_ENVIRONMENT=.venv311 uv run --python 3.11 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv312 uv run --python 3.12 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv314 uv run --python 3.14 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv315 uv run --python 3.15 --all-extras --all-packages coverage run -p -m pytest
 	@uv run coverage combine
 	@$(MAKE) coverage-report
 

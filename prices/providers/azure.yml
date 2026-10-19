@@ -3,7 +3,7 @@ name: Microsoft Azure
 id: azure
 pricing_urls:
   - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing
-api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com|services\.ai\.azure\.com)
+api_pattern: '(https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com|services\.ai\.azure\.com)'
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.
   Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models
@@ -136,7 +136,7 @@ models:
         - equals: text-embedding-ada
         - equals: text-embedding-ada-002
         - equals: text-embedding-ada-002-v2
-    prices_checked: 2025-07-13
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.1
 
@@ -192,7 +192,7 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
-    prices_checked: 2025-07-03
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 15
       cache_read_mtok: 7.5
@@ -204,7 +204,7 @@ models:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
-    prices_checked: 2025-07-03
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
@@ -230,7 +230,7 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
-    prices_checked: 2025-07-05
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
@@ -242,7 +242,7 @@ models:
       or:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
-    prices_checked: 2025-07-03
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
@@ -254,10 +254,10 @@ models:
       or:
         - contains: o4-mini
         - contains: o4-mini-2025-04-16
-    prices_checked: 2025-07-05
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.1
-      cache_read_mtok: 0.28
+      cache_read_mtok: 0.275
       output_mtok: 4.4
 
   - id: phi-3-medium-128k-instruct
@@ -270,8 +270,9 @@ models:
       equals: phi-3-medium-128k-instruct
     context_window: 131072
     prices:
-      input_mtok: 1
-      output_mtok: 1
+      input_mtok: 0.17
+      output_mtok: 0.68
+    prices_checked: 2026-10-19
 
   - id: phi-3-mini-128k-instruct
     name: Phi-3 Mini 128K Instruct
@@ -283,8 +284,9 @@ models:
       equals: phi-3-mini-128k-instruct
     context_window: 131072
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
+      input_mtok: 0.13
+      output_mtok: 0.52
+    prices_checked: 2026-10-19
 
   - id: phi-3.5-mini-128k-instruct
     name: Phi-3.5 Mini 128K Instruct
@@ -297,8 +299,9 @@ models:
       equals: phi-3.5-mini-128k-instruct
     context_window: 131072
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
+      input_mtok: 0.13
+      output_mtok: 0.52
+    prices_checked: 2026-10-19
 
   - id: phi-4
     name: Phi 4
@@ -309,8 +312,9 @@ models:
       equals: phi-4
     context_window: 16384
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.14
+      input_mtok: 0.125
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
 
   - id: phi-4-mini-instruct
     name: Phi 4 Mini Instruct
@@ -320,11 +324,10 @@ models:
     match:
       equals: phi-4-mini-instruct
     context_window: 131072
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.
+    prices_checked: 2026-10-19
     prices:
-      input_mtok: 0.08
-      output_mtok: 0.35
+      input_mtok: 0.075
+      output_mtok: 0.3
 
   - id: phi-4-multimodal-instruct
     name: Phi 4 Multimodal Instruct
@@ -342,8 +345,10 @@ models:
       equals: phi-4-multimodal-instruct
     context_window: 131072
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.1
+      input_mtok: 0.08
+      input_audio_mtok: 4
+      output_mtok: 0.32
+    prices_checked: 2026-10-19
 
   - id: phi-4-reasoning-plus
     name: Phi 4 Reasoning Plus
@@ -352,12 +357,15 @@ models:
       learning to boost accuracy on math, science, and code reasoning tasks. It
       uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs
       structured into a step-by-step reasoning trace and final answer.
+    # A different model from phi-4 (32K vs 16K context) that Azure happens to price the same.
+    collapse: false
     match:
       equals: phi-4-reasoning-plus
     context_window: 32768
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.35
+      input_mtok: 0.125
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
 
   - id: phi-4-reasoning-plus:free
     name: Phi 4 Reasoning Plus (free)
@@ -389,7 +397,7 @@ models:
     canonical_model: openai/text-embedding-3-large
     match:
       equals: text-embedding-3-large
-    prices_checked: 2025-07-13
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.13
 
@@ -397,7 +405,7 @@ models:
     canonical_model: openai/text-embedding-3-small
     match:
       equals: text-embedding-3-small
-    prices_checked: 2025-07-13
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.02
 

@@ -1,0 +1,4342 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://router.huggingface.co/v1/models
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - router.huggingface.co
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      access-control-allow-origin:
+      - "*"
+      access-control-expose-headers:
+      - >-
+        X-Repo-Commit,X-Request-Id,X-Error-Code,X-Error-Message,X-Total-Count,ETag,Link,Accept-Ranges,Content-Range,X-Linked-Size,X-Linked-ETag,X-Xet-Hash
+      connection:
+      - keep-alive
+      content-length:
+      - "96757"
+      content-type:
+      - application/json; charset=utf-8
+      cross-origin-opener-policy:
+      - same-origin
+      date:
+      - Mon, 19 Oct 2026 06:41:54 GMT
+      etag:
+      - W/"15d32-PNAXYvMfxfMN/CFTYt7d6ZNA+ZM"
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      strict-transport-security:
+      - max-age=31536000
+      vary:
+      - Origin
+      via:
+      - 1.1 bec13cdbd4d650c71ed35e5a7991d3ca.cloudfront.net (CloudFront)
+      x-amz-cf-id:
+      - 4uxzq8MjHto9Y6X9b0_24x5ojXWxka5AoSFHjepkgiz-qBrmHL56GQ==
+      x-amz-cf-pop:
+      - AMS58-P2
+      x-cache:
+      - Miss from cloudfront
+      x-powered-by:
+      - huggingface-moon
+      x-request-id:
+      - Root=1-6ad5bbb2-5ebb702d1ec4e630302059e5
+      x-robots-tag:
+      - none
+    body:
+      type: json
+      content:
+        object: list
+        data:
+        - id: meta-models/Muse-Spark-Open-816B-A42B
+          object: model
+          created: 1789500199
+          owned_by: meta-models
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.25
+              output: 4.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 385
+            throughput: 194.10082937824177
+            is_model_author: false
+        - id: Qwen/Qwen3.8-27B
+          object: model
+          created: 1785918179
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1000000
+            pricing:
+              input: 0.42
+              output: 3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1210.2
+            throughput: 26.004692379181325
+            is_model_author: false
+          - provider: cerebras
+            status: live
+            context_length: 65536
+            pricing:
+              input: 0.99
+              output: 1.49
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 154.2
+            throughput: 803.9325222126909
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.47
+              output: 3.19
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 470.5
+            throughput: 53.9350412283862
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.2
+              output: 2.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 364.25
+            throughput: 33.838093454546794
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4.1-Flash
+          object: model
+          created: 1789006678
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1542.4
+            throughput: 85.85611204007039
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 1048576
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1481.2
+            throughput: 76.86240195571024
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1822
+            throughput: 216.4502164502165
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.2
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 602
+            throughput: 50.17902654788231
+            is_model_author: false
+        - id: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4
+          object: model
+          created: 1791819150
+          owned_by: nvidia
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.2
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 371.6
+            throughput: 308.89628300854855
+            is_model_author: false
+        - id: inclusionAI/Ling-3.1-flash
+          object: model
+          created: 1791890201
+          owned_by: inclusionAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.3
+              output: 0.9
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 957.8
+            throughput: 81.50039656450983
+            is_model_author: false
+        - id: meta-llama/Llama-3.1-8B-Instruct
+          object: model
+          created: 1721292960
+          owned_by: meta-llama
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 16384
+            pricing:
+              input: 0.02
+              output: 0.05
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 526.4
+            throughput: 165.58330031833552
+            is_model_author: false
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.06
+              output: 0.06
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 579.6
+            throughput: 149.62689990058396
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.02
+              output: 0.05
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 443.8
+            throughput: 23.89199329760904
+            is_model_author: false
+        - id: zai-org/GLM-5.3-Flash
+          object: model
+          created: 1787640194
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.15
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1830
+            throughput: 50.32695632486369
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1048575
+            pricing:
+              input: 0.15
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 266.8
+            throughput: 167.24436764464195
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 1048576
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 429.8
+            throughput: 126.90376840017666
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2191.8
+            throughput: 48.16618800025948
+            is_model_author: true
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.15
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 503.2
+            throughput: 81.67780645094363
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.15
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 627.2
+            throughput: 27.057467138604466
+            is_model_author: false
+        - id: zai-org/GLM-5.3
+          object: model
+          created: 1787640170
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1474.6
+            throughput: 66.22893516699665
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1048575
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 450.6
+            throughput: 92.83635774630086
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 1048576
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 664.8
+            throughput: 38.29931513255484
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2157.4
+            throughput: 53.53060324524971
+            is_model_author: true
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 935.2
+            throughput: 76.47228616024957
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.9
+              output: 4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1598.4
+            throughput: 59.4853542971061
+            is_model_author: false
+        - id: moonshotai/Kimi-K3
+          object: model
+          created: 1781332977
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 3
+              output: 15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 465.8
+            throughput: 36.591032501099335
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 3
+              output: 15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1208.6
+            throughput: 28.723117782358845
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 3
+              output: 15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 726.4
+            throughput: 78.4349018747408
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 2.8499999999999996
+              output: 14.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 447.4
+            throughput: 41.397049350874155
+            is_model_author: false
+        - id: XiaomiMiMo/MiMo-V2.6-Pro-RL
+          object: model
+          created: 1790005173
+          owned_by: XiaomiMiMo
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.435
+              output: 0.87
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1260.25
+            throughput: 25.74479767235605
+            is_model_author: false
+        - id: meta-models/Muse-Glimmer-30B
+          object: model
+          created: 1786297895
+          owned_by: meta-models
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.35
+              output: 1.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 451.8
+            throughput: 94.5970612701718
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 341.6
+            throughput: 102.009979910111
+            is_model_author: false
+        - id: google/gemma-4-31B-it
+          object: model
+          created: 1773253356
+          owned_by: google
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.14
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 4686
+            throughput: 25.820682496431814
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.2
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 327
+            throughput: 16.66660524733802
+            is_model_author: false
+        - id: Qwen/Qwen3.6-35B-A3B
+          object: model
+          created: 1776232759
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.285
+              output: 1.71
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 477
+            throughput: 169.8571569195496
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.1
+              output: 0.95
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 381.6
+            throughput: 130.70384412023014
+            is_model_author: false
+        - id: Qwen/Qwen3.5-9B
+          object: model
+          created: 1772197106
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.17
+              output: 0.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 392.6
+            throughput: 103.9042540586092
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.12
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 404
+            throughput: 30.35992615203793
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.1
+              output: 0.15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 366.6
+            throughput: 21.265600075619467
+            is_model_author: false
+        - id: openai/gpt-oss-120b
+          object: model
+          created: 1754346786
+          owned_by: openai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: groq
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.15
+              output: 0.75
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 311.2
+            throughput: 420.4005456529502
+            is_model_author: false
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 651.2
+            throughput: 222.57812046350256
+            is_model_author: false
+          - provider: cerebras
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.35
+              output: 0.75
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 200.6
+            throughput: 1142.701698649524
+            is_model_author: false
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.1
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 555.6
+            throughput: 109.71818503966738
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.15
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 200.2
+            throughput: 184.78473458625064
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.15
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 345.4
+            throughput: 159.85589476795514
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.171
+              output: 0.684
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 359.6
+            throughput: 165.9888268658711
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 128072
+            pricing:
+              input: 0.1
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 223.2
+            throughput: 255.6001649147053
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.09
+              output: 0.47
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 408.8
+            throughput: 17.486454618784464
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.037
+              output: 0.16999999999999998
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2702
+            throughput: 28.88837531777213
+            is_model_author: false
+        - id: google/gemma-4-26B-A4B-it
+          object: model
+          created: 1773264357
+          owned_by: google
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.13
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 681.6
+            throughput: 134.80212547527665
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.285
+              output: 0.57
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 419.8
+            throughput: 148.32296782724853
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.07
+              output: 0.33999999999999997
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 318.2
+            throughput: 67.43867710517573
+            is_model_author: false
+        - id: openai/gpt-oss-20b
+          object: model
+          created: 1754346809
+          owned_by: openai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: groq
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.1
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 179.6
+            throughput: 784.9384562592226
+            is_model_author: false
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 537.4
+            throughput: 165.38043869116686
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 286.6666666666667
+            throughput: 65.5786579051786
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.03
+              output: 0.14
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 321.2
+            throughput: 131.8361367478331
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4-Pro
+          object: model
+          created: 1776837885
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.6
+              output: 3.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 890.2
+            throughput: 43.29247583347245
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.2999999999999998
+              output: 2.5999999999999996
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 513.6
+            throughput: 76.12394381335992
+            is_model_author: false
+        - id: XiaomiMiMo/MiMo-V2.6-Flash-RL
+          object: model
+          created: 1790005191
+          owned_by: XiaomiMiMo
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.14
+              output: 0.28
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 3372
+            throughput: 36.50967506389193
+            is_model_author: false
+        - id: moonshotai/Kimi-K2-Instruct
+          object: model
+          created: 1752195312
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.57
+              output: 2.3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1135.2
+            throughput: 36.95144042896147
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4-Flash-Vision-Exp
+          object: model
+          created: 1788156978
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.43999999999999995
+              output: 1.32
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 616.4
+            throughput: 140.8522734315126
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V3.1-Terminus
+          object: model
+          created: 1758516964
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.27
+              output: 0.95
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1114
+            throughput: 32.98281463717815
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-R1
+          object: model
+          created: 1737344767
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 64000
+            pricing:
+              input: 0.7
+              output: 2.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1140.4
+            throughput: 15.466996675921251
+            is_model_author: false
+        - id: Qwen/Qwen3.8-2.4T-A95B
+          object: model
+          created: 1786153852
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1000000
+            pricing:
+              input: 2
+              output: 6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2140.4
+            throughput: 32.39363357768563
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1010000
+            pricing:
+              input: 2
+              output: 6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 385.4
+            throughput: 160.19922428759008
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 262144
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 689.6
+            throughput: 102.60855796479557
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 2
+              output: 5.999999999999999
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1495
+            throughput: 59.224163458691145
+            is_model_author: false
+        - id: Qwen/Qwen3-Coder-30B-A3B-Instruct
+          object: model
+          created: 1753945495
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.228
+              output: 0.912
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 370.6
+            throughput: 137.2559745225179
+            is_model_author: false
+        - id: moonshotai/Kimi-K2.5
+          object: model
+          created: 1767247563
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.6
+              output: 3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1262.8
+            throughput: 34.95570083064123
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.45
+              output: 2.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 270.4
+            throughput: 125.43433960064526
+            is_model_author: false
+        - id: zai-org/GLM-4.7
+          object: model
+          created: 1766389552
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 204800
+            pricing:
+              input: 0.6
+              output: 2.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 3412
+            throughput: 27.19834299955624
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 202752
+            pricing:
+              input: 0.4
+              output: 1.75
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1261.4
+            throughput: 11.708245807511648
+            is_model_author: false
+        - id: meta-llama/Llama-3.3-70B-Instruct
+          object: model
+          created: 1732637327
+          owned_by: meta-llama
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 12288
+            pricing:
+              input: 0.135
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 635.2
+            throughput: 47.1237754808855
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 131072
+            pricing:
+              input: 1.0399999999999998
+              output: 1.0399999999999998
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1552.75
+            throughput: 42.71408991802369
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 1.026
+              output: 1.026
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 4796
+            throughput: 54.85981308411215
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.74
+              output: 0.74
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 929
+            throughput: 19.676277727876645
+            is_model_author: false
+        - id: MiniMaxAI/MiniMax-M3
+          object: model
+          created: 1780386571
+          owned_by: MiniMaxAI
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1000000
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1072.2
+            throughput: 78.62904146077108
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 524288
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 391.2
+            throughput: 80.30051742291393
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 512000
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 759.2
+            throughput: 110.98678874453962
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 524288
+            pricing:
+              input: 0.28
+              output: 1.1
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 4840.6
+            throughput: 14.666240422709382
+            is_model_author: false
+        - id: speakleash/Bielik-11B-v3.0-Instruct
+          object: model
+          created: 1762506329
+          owned_by: speakleash
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: publicai
+            status: live
+            pricing:
+              input: 0.4
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1025.6
+            throughput: 50.07241630979663
+            is_model_author: false
+        - id: nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16
+          object: model
+          created: 1785567321
+          owned_by: nvidia
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: fireworks-ai
+            status: live
+            context_length: 262144
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 314
+            throughput: 349.9777757120276
+            is_model_author: false
+        - id: prism-ml/Ternary-Bonsai-27B-gguf
+          object: model
+          created: 1783124641
+          owned_by: prism-ml
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0
+              output: 0
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 398
+            throughput: 37.95025454947647
+            is_model_author: false
+        - id: ibm-granite/granite-4.2-8b
+          object: model
+          created: 1786120149
+          owned_by: ibm-granite
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.060000000000000005
+              output: 0.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 287.2
+            throughput: 36.78967484063541
+            is_model_author: false
+        - id: Qwen/Qwen3-14B
+          object: model
+          created: 1745725365
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.07
+              output: 0.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 661.2
+            throughput: 92.63402740626556
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.12
+              output: 0.24
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 222.2
+            throughput: 62.67100971701008
+            is_model_author: false
+        - id: openai/gpt-oss-safeguard-20b
+          object: model
+          created: 1758221468
+          owned_by: openai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: groq
+            status: live
+            context_length: 131072
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 251.8
+            throughput: 747.5540369747434
+            is_model_author: false
+        - id: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4
+          object: model
+          created: 1780498473
+          owned_by: nvidia
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: fireworks-ai
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.6
+              output: 2.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 470
+            throughput: 83.75260559500319
+            is_model_author: false
+        - id: Qwen/Qwen3-235B-A22B
+          object: model
+          created: 1745726026
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 32000
+            pricing:
+              input: 0.2
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 718.8
+            throughput: 16.098964783987146
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: zai-org/GLM-4.7-Flash
+          object: model
+          created: 1768804090
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 200000
+            pricing:
+              input: 0.07
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 737
+            throughput: 115.96892032935172
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 3632
+            throughput: 58.48295221942803
+            is_model_author: true
+          - provider: deepinfra
+            status: live
+            context_length: 202752
+            pricing:
+              input: 0.060000000000000005
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 554.2
+            throughput: 33.786994203372686
+            is_model_author: false
+        - id: zai-org/GLM-4.5
+          object: model
+          created: 1752981936
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1746.75
+            throughput: 40.79307930997635
+            is_model_author: true
+        - id: google/gemma-3-4b-it
+          object: model
+          created: 1740086407
+          owned_by: google
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.1
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 413
+            throughput: 19.57483459264769
+            is_model_author: false
+        - id: microsoft/phi-4
+          object: model
+          created: 1733917649
+          owned_by: microsoft
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 16384
+            pricing:
+              input: 0.07
+              output: 0.14
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 441
+            throughput: 77.38040795915235
+            is_model_author: false
+        - id: thinkingmachines/Inkling
+          object: model
+          created: 1784035394
+          owned_by: thinkingmachines
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 524288
+            pricing:
+              input: 1
+              output: 4.05
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 350.2
+            throughput: 105.8370885379362
+            is_model_author: false
+          - provider: fireworks-ai
+            status: live
+            context_length: 1048576
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 478.6
+            throughput: 90.8045315583286
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 524288
+            pricing:
+              input: 0.95
+              output: 4.05
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 882.2
+            throughput: 67.1223808646427
+            is_model_author: false
+        - id: Qwen/Qwen3.5-27B
+          object: model
+          created: 1771926116
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.3
+              output: 2.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1008.6
+            throughput: 67.42162943310345
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.26
+              output: 2.5999999999999996
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 430.8
+            throughput: 57.94291694743572
+            is_model_author: false
+        - id: zai-org/GLM-5.2
+          object: model
+          created: 1781595560
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1591.6
+            throughput: 50.222203247331365
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1048575
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 225.8
+            throughput: 242.7596679277596
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2488.8
+            throughput: 53.2384378672492
+            is_model_author: true
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 2.052
+              output: 6.27
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 490.6
+            throughput: 131.57267849375847
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.4
+              output: 4.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 918.4
+            throughput: 80.15449056144682
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.7499999999999999
+              output: 2.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 373.8
+            throughput: 81.37256638989238
+            is_model_author: false
+        - id: zai-org/GLM-5.1
+          object: model
+          created: 1775208527
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 202752
+            pricing:
+              input: 1.05
+              output: 3.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1060
+            throughput: 65.12112529304507
+            is_model_author: false
+        - id: Qwen/Qwen2.5-Coder-7B-Instruct
+          object: model
+          created: 1726580329
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.01
+              output: 0.03
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 511.8
+            throughput: 151.83585479786623
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: zai-org/GLM-5.3-BF16
+          object: model
+          created: 1787640235
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2739
+            throughput: 41.174469864188794
+            is_model_author: true
+        - id: google/gemma-3-12b-it
+          object: model
+          created: 1740856294
+          owned_by: google
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 584.6
+            throughput: 29.827291797905104
+            is_model_author: false
+        - id: Qwen/Qwen3-8B
+          object: model
+          created: 1745725341
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.07
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 688.4
+            throughput: 100.0914099471153
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: Qwen/Qwen3-VL-235B-A22B-Instruct
+          object: model
+          created: 1758513272
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.2
+              output: 0.8799999999999999
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2261
+            throughput: 5.972628747725655
+            is_model_author: false
+        - id: Qwen/Qwen3-4B-Thinking-2507
+          object: model
+          created: 1754391747
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.01
+              output: 0.03
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 541.4
+            throughput: 119.62003844405204
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: Qwen/Qwen3.5-397B-A17B
+          object: model
+          created: 1771217712
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.6
+              output: 3.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1658
+            throughput: 56.324919693231905
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.684
+              output: 4.104
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 461.2
+            throughput: 110.79653109657065
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.71
+              output: 4.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 469.8
+            throughput: 96.06762589035026
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.45
+              output: 2.9999999999999996
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 546.8
+            throughput: 62.835785162641415
+            is_model_author: false
+        - id: moonshotai/Kimi-K2.6
+          object: model
+          created: 1776140616
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.8
+              output: 3.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1683
+            throughput: 33.29781566329248
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.7499999999999999
+              output: 3.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 358
+            throughput: 49.057589674102765
+            is_model_author: false
+        - id: Sao10K/L3-8B-Stheno-v3.2
+          object: model
+          created: 1717583457
+          owned_by: Sao10K
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 8192
+            pricing:
+              input: 0.05
+              output: 0.05
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 491
+            throughput: 104.45849645586104
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: zai-org/GLM-4.6
+          object: model
+          created: 1759170171
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 204800
+            pricing:
+              input: 0.55
+              output: 2.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 3911.3333333333335
+            throughput: 25.199574450316288
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2596.2
+            throughput: 38.29637985807327
+            is_model_author: true
+          - provider: deepinfra
+            status: live
+            context_length: 202752
+            pricing:
+              input: 0.5
+              output: 2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 490.4
+            throughput: 37.42324398246661
+            is_model_author: false
+        - id: inclusionAI/Ling-3.0-flash
+          object: model
+          created: 1785687281
+          owned_by: inclusionAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.06
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 762.2
+            throughput: 209.63855022422013
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.060000000000000005
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 270.2
+            throughput: 26.042746430505822
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4-Flash
+          object: model
+          created: 1776837860
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.09
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 901.2
+            throughput: 21.26315659000857
+            is_model_author: false
+        - id: tencent/Hy4-preview
+          object: model
+          created: 1787820760
+          owned_by: tencent
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1000000
+            pricing:
+              input: 0.834
+              output: 2.501
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2273.8
+            throughput: 32.31926349314908
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.834
+              output: 2.5010000000000003
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2073.6
+            throughput: 23.432516116814803
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+          object: model
+          created: 1737364574
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.15
+              output: 0.15
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 620.8
+            throughput: 162.12769729626373
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+          object: model
+          created: 1743600857
+          owned_by: meta-llama
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.18
+              output: 0.59
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 866.3333333333334
+            throughput: 13.480872899034267
+            is_model_author: false
+          - provider: nscale
+            status: live
+            context_length: 890000
+            pricing:
+              input: 0.09
+              output: 0.29
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 598
+            throughput: 71.13076722380632
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 327680
+            pricing:
+              input: 0.1
+              output: 0.3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 536.6
+            throughput: 30.59853342114352
+            is_model_author: false
+        - id: google/gemma-3-27b-it
+          object: model
+          created: 1740856219
+          owned_by: google
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.08
+              output: 0.16
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 562.8
+            throughput: 20.17355130579669
+            is_model_author: false
+        - id: CohereLabs/tiny-aya-global
+          object: model
+          created: 1770973981
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 160.2
+            throughput: 133.99259931826344
+            is_model_author: true
+        - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+          object: model
+          created: 1737364707
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.2
+              output: 0.2
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 715
+            throughput: 92.45376658500793
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: thinkingmachines/Inkling-Small
+          object: model
+          created: 1785191624
+          owned_by: thinkingmachines
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 524288
+            pricing:
+              input: 0.45
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 324.4
+            throughput: 43.44915289176068
+            is_model_author: false
+        - id: ibm-granite/granite-4.2-3b
+          object: model
+          created: 1786120003
+          owned_by: ibm-granite
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.03
+              output: 0.12
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 267.6
+            throughput: 36.88197367385408
+            is_model_author: false
+        - id: Qwen/Qwen3-4B-Instruct-2507
+          object: model
+          created: 1754391483
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.01
+              output: 0.03
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 609.4
+            throughput: 149.95221304192256
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4-Flash-0731
+          object: model
+          created: 1785483024
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.44
+              output: 1.32
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 836.8
+            throughput: 90.77884992994666
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.14
+              output: 0.27999999999999997
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 655.2
+            throughput: 36.24183470505761
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 724.4
+            throughput: 164.92720712473616
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.13
+              output: 0.26
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 472.4
+            throughput: 173.1386510575609
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.060000000000000005
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1501
+            throughput: 48.257890165041985
+            is_model_author: false
+        - id: Qwen/Qwen3.5-35B-A3B
+          object: model
+          created: 1771925965
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.25
+              output: 2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1241.8
+            throughput: 60.164660975657526
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.14
+              output: 1
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 199
+            throughput: 70.84061346287356
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-R1-0528
+          object: model
+          created: 1748425602
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.7
+              output: 2.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1253
+            throughput: 18.443106403148057
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.5
+              output: 2.15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 871.4
+            throughput: 19.51113596905255
+            is_model_author: false
+        - id: meta-llama/Llama-Guard-4-12B
+          object: model
+          created: 1745407825
+          owned_by: meta-llama
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.18
+              output: 0.18
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 232
+            throughput: 8.37057749914052
+            is_model_author: false
+        - id: moonshotai/Kimi-K2.7-Code
+          object: model
+          created: 1781164307
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.95
+              output: 4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1569.4
+            throughput: 45.92647004327664
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.6799999999999999
+              output: 3.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 914
+            throughput: 26.126968024757225
+            is_model_author: false
+        - id: Qwen/Qwen2.5-VL-72B-Instruct
+          object: model
+          created: 1737951124
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 32768
+            pricing:
+              input: 1.01
+              output: 1.01
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 463.4
+            throughput: 34.21170886823973
+            is_model_author: false
+        - id: Qwen/Qwen3.6-27B
+          object: model
+          created: 1776757843
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: ovhcloud
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.47
+              output: 3.19
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 393.2
+            throughput: 58.25004649075936
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.32
+              output: 3.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 210.8
+            throughput: 83.63456525332144
+            is_model_author: false
+        - id: stepfun-ai/Step-3.5-Flash
+          object: model
+          created: 1769933025
+          owned_by: stepfun-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.1
+              output: 0.3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1020.6
+            throughput: 21.92844444967779
+            is_model_author: false
+        - id: Qwen/Qwen2.5-Coder-3B-Instruct
+          object: model
+          created: 1730879378
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 32768
+            pricing:
+              input: 0.01
+              output: 0.03
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 543.4
+            throughput: 178.5550415339738
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: MiniMaxAI/MiniMax-M2.5
+          object: model
+          created: 1770876324
+          owned_by: MiniMaxAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 204800
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1364.4
+            throughput: 36.821025980939126
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: Qwen/Qwen3-30B-A3B
+          object: model
+          created: 1745725385
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.12
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 486.4
+            throughput: 41.04800602607549
+            is_model_author: false
+        - id: zai-org/GLM-5
+          object: model
+          created: 1770785746
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 202800
+            pricing:
+              input: 1
+              output: 3.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1326.4
+            throughput: 43.0915189947799
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 4181
+            throughput: 55.34340583319498
+            is_model_author: true
+          - provider: deepinfra
+            status: live
+            context_length: 202752
+            pricing:
+              input: 0.6
+              output: 2.08
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 505.6
+            throughput: 108.2603752870044
+            is_model_author: false
+        - id: tencent/Hy3
+          object: model
+          created: 1782998634
+          owned_by: tencent
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.13
+              output: 0.53
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1364
+            throughput: 25.0475503973618
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V4-Pro-0813
+          object: model
+          created: 1786590306
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.32
+              output: 3.96
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1575.6
+            throughput: 43.38511768756494
+            is_model_author: false
+          - provider: together
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.32
+              output: 3.96
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 717.75
+            throughput: 56.43385928454212
+            is_model_author: false
+          - provider: baseten
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.32
+              output: 3.96
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 410.2
+            throughput: 105.27099030348442
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1.2999999999999998
+              output: 2.5999999999999996
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 352.4
+            throughput: 39.907149023446145
+            is_model_author: false
+        - id: Qwen/Qwen3-32B
+          object: model
+          created: 1745725979
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.08
+              output: 0.25
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 652.8
+            throughput: 47.596660134486264
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 40960
+            pricing:
+              input: 0.08
+              output: 0.28
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 375
+            throughput: 19.847821657161624
+            is_model_author: false
+        - id: Qwen/Qwen3.5-122B-A10B
+          object: model
+          created: 1771926217
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.4
+              output: 3.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 745.6
+            throughput: 103.62506123884648
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.29
+              output: 2.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 266.8
+            throughput: 39.48336079430245
+            is_model_author: false
+        - id: NousResearch/Hermes-3-Llama-3.1-70B
+          object: model
+          created: 1722263277
+          owned_by: NousResearch
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.7
+              output: 0.7
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 368.8
+            throughput: 33.654479967014936
+            is_model_author: false
+        - id: Qwen/Qwen3-VL-30B-A3B-Instruct
+          object: model
+          created: 1759229521
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.2
+              output: 0.7
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1190.8
+            throughput: 39.079327382138686
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.15
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 251.2
+            throughput: 35.49942760847641
+            is_model_author: false
+        - id: stepfun-ai/Step-3.7-Flash
+          object: model
+          created: 1779502426
+          owned_by: stepfun-ai
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.2
+              output: 1.15
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 785.4
+            throughput: 14.8699915340998
+            is_model_author: false
+        - id: Qwen/Qwen2.5-72B-Instruct
+          object: model
+          created: 1726487791
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 32768
+            pricing:
+              input: 0.36
+              output: 0.4
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1072.6
+            throughput: 43.14157712726848
+            is_model_author: false
+        - id: zai-org/GLM-4.6V-Flash
+          object: model
+          created: 1765089004
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.3
+              output: 0.9
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 814.6
+            throughput: 52.04700954746925
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V3
+          object: model
+          created: 1735131143
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.32
+              output: 0.8899999999999999
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1205.4
+            throughput: 25.381784112910427
+            is_model_author: false
+        - id: zai-org/AutoGLM-Phone-9B-Multilingual
+          object: model
+          created: 1765253781
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 65536
+            pricing:
+              input: 0.035
+              output: 0.138
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 485.8
+            throughput: 81.36350796233542
+            is_model_author: false
+        - id: Qwen/Qwen3-235B-A22B-Thinking-2507
+          object: model
+          created: 1753419545
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.23
+              output: 2.3
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 255.4
+            throughput: 164.64601979917956
+            is_model_author: false
+        - id: CohereLabs/command-a-plus-05-2026-w4a4
+          object: model
+          created: 1779079876
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 372.8
+            throughput: 158.07918728191845
+            is_model_author: true
+        - id: Qwen/Qwen3-Next-80B-A3B-Instruct
+          object: model
+          created: 1757432456
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.09
+              output: 1.1
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 748.2
+            throughput: 91.18665289715622
+            is_model_author: false
+        - id: CohereLabs/c4ai-command-r7b-12-2024
+          object: model
+          created: 1733932505
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 198.2
+            throughput: 108.92098296854108
+            is_model_author: true
+        - id: MiniMaxAI/MiniMax-M2.7
+          object: model
+          created: 1775705832
+          owned_by: MiniMaxAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 204800
+            pricing:
+              input: 0.3
+              output: 1.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1026.8
+            throughput: 43.785424004335106
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 196608
+            pricing:
+              input: 0.25
+              output: 1
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 492
+            throughput: 31.46027752667884
+            is_model_author: false
+        - id: zai-org/GLM-4.5-Air
+          object: model
+          created: 1752981955
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.13
+              output: 0.85
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2256.4
+            throughput: 67.66871578132339
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1528.6
+            throughput: 87.4195477306973
+            is_model_author: true
+        - id: XiaomiMiMo/MiMo-V2.5-Pro
+          object: model
+          created: 1777294373
+          owned_by: XiaomiMiMo
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.522
+              output: 1.044
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 4203
+            throughput: 20.43276598353119
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 1
+              output: 2.9999999999999996
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 784.2
+            throughput: 22.657800469087427
+            is_model_author: false
+        - id: zai-org/GLM-5.2-FP8
+          object: model
+          created: 1781594433
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2601.3333333333335
+            throughput: 55.48654436957661
+            is_model_author: true
+        - id: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16
+          object: model
+          created: 1780498204
+          owned_by: nvidia
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 1
+              output: 5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 683.8
+            throughput: 127.33598911104934
+            is_model_author: false
+        - id: zai-org/GLM-4.5V
+          object: model
+          created: 1754834130
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 65536
+            pricing:
+              input: 0.6
+              output: 1.8
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1906.4
+            throughput: 41.73257007050229
+            is_model_author: false
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1987
+            throughput: 59.55166810527646
+            is_model_author: true
+        - id: alpindale/WizardLM-2-8x22B
+          object: model
+          created: 1713235019
+          owned_by: alpindale
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 65535
+            pricing:
+              input: 0.62
+              output: 0.62
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 2816
+            throughput: 13.876332311324395
+            is_model_author: false
+        - id: ibm-granite/granite-4.2-30b
+          object: model
+          created: 1786120190
+          owned_by: ibm-granite
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.16
+              output: 0.6499999999999999
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 263.4
+            throughput: 30.769861187405695
+            is_model_author: false
+        - id: zai-org/GLM-4.6V
+          object: model
+          created: 1765092045
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2394.8
+            throughput: 44.10228877802867
+            is_model_author: true
+        - id: zai-org/GLM-5.3-Flash-BF16
+          object: model
+          created: 1787640305
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 2160.2
+            throughput: 43.608351998704435
+            is_model_author: true
+        - id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+          object: model
+          created: 1737364182
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.05
+              output: 0.05
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 670.8
+            throughput: 124.56200400972575
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: Qwen/Qwen3-235B-A22B-Instruct-2507
+          object: model
+          created: 1753080416
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 32768
+            pricing:
+              input: 0.2
+              output: 0.6
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 762
+            throughput: 14.748747748451075
+            is_model_author: false
+          - provider: scaleway
+            status: live
+            pricing:
+              input: 0.855
+              output: 2.565
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 375
+            throughput: 86.23094550987578
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.09
+              output: 0.55
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 562.2
+            throughput: 19.79280313013782
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V3.2
+          object: model
+          created: 1764556489
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.26
+              output: 0.38
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 564
+            throughput: 17.21674155949245
+            is_model_author: false
+        - id: aisingapore/Gemma-SEA-LION-v4-27B-IT
+          object: model
+          created: 1754898060
+          owned_by: aisingapore
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: publicai
+            status: live
+            pricing:
+              input: 0.2
+              output: 0.4
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 1579.2
+            throughput: 51.4891213147283
+            is_model_author: false
+        - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+          object: model
+          created: 1743540422
+          owned_by: meta-llama
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.27
+              output: 0.85
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 518.2
+            throughput: 69.2735199804578
+            is_model_author: false
+        - id: Qwen/Qwen2.5-Coder-32B-Instruct
+          object: model
+          created: 1730879390
+          owned_by: Qwen
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: nscale
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.06
+              output: 0.2
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 570.4
+            throughput: 47.20084439944525
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+        - id: deepseek-ai/DeepSeek-V3-0324
+          object: model
+          created: 1742808502
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.24
+              output: 0.9
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 550.2
+            throughput: 65.76268404813445
+            is_model_author: false
+        - id: swiss-ai/Apertus-8B-Instruct-2509
+          object: model
+          created: 1755077423
+          owned_by: swiss-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: publicai
+            status: live
+            pricing:
+              input: 0.1
+              output: 0.2
+            is_free: false
+            supports_tools: false
+            supports_structured_output: true
+            first_token_latency_ms: 1457.4
+            throughput: 108.60050187201507
+            is_model_author: false
+        - id: CohereLabs/aya-vision-32b
+          object: model
+          created: 1740951400
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 196.6
+            throughput: 42.04628105327963
+            is_model_author: true
+        - id: CohereLabs/c4ai-command-r-08-2024
+          object: model
+          created: 1724053211
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 194
+            throughput: 44.64038148342093
+            is_model_author: true
+        - id: deepseek-ai/DeepSeek-V3.1
+          object: model
+          created: 1755743872
+          owned_by: deepseek-ai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 163840
+            pricing:
+              input: 0.25
+              output: 0.95
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 968.6
+            throughput: 21.220618905442613
+            is_model_author: false
+        - id: aisingapore/Qwen-SEA-LION-v4-32B-IT
+          object: model
+          created: 1760597914
+          owned_by: aisingapore
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: publicai
+            status: live
+            pricing:
+              input: 0.25
+              output: 0.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1567.6
+            throughput: 38.7263783655006
+            is_model_author: false
+        - id: CohereLabs/command-a-vision-07-2025
+          object: model
+          created: 1753689307
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 254
+            throughput: 46.27571398737959
+            is_model_author: true
+        - id: CohereLabs/aya-expanse-32b
+          object: model
+          created: 1729665764
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 173.8
+            throughput: 48.50999388061516
+            is_model_author: true
+        - id: inclusionAI/Ling-3.0-flash-VL
+          object: model
+          created: 1788535477
+          owned_by: inclusionAI
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.075
+              output: 0.22
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 927.4
+            throughput: 216.2999611185949
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 131072
+            pricing:
+              input: 0.060000000000000005
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 1298.6
+            throughput: 27.517489663766103
+            is_model_author: false
+        - id: XiaomiMiMo/MiMo-V2.5
+          object: model
+          created: 1777297058
+          owned_by: XiaomiMiMo
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1048576
+            pricing:
+              input: 0.168
+              output: 0.336
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1472.5
+            throughput: 25.22100502822166
+            is_model_author: false
+          - provider: featherless-ai
+            status: live
+            is_free: false
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.14
+              output: 0.28
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 467
+            throughput: 11.168912327727476
+            is_model_author: false
+        - id: CohereLabs/command-a-plus-05-2026-bf16
+          object: model
+          created: 1778502664
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 184.2
+            throughput: 112.3824707826224
+            is_model_author: true
+        - id: CohereLabs/c4ai-command-r7b-arabic-02-2025
+          object: model
+          created: 1740643869
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 171
+            throughput: 124.47201179521072
+            is_model_author: true
+        - id: inclusionAI/Ling-3.0-flash-Fin
+          object: model
+          created: 1788415793
+          owned_by: inclusionAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.075
+              output: 0.22
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1016.4
+            throughput: 114.14224280827462
+            is_model_author: false
+          - provider: deepinfra
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.060000000000000005
+              output: 0.18
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 477
+            throughput: 29.90496526592049
+            is_model_author: false
+        - id: CohereLabs/command-a-plus-05-2026-fp8
+          object: model
+          created: 1779079857
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 179
+            throughput: 154.1863505589103
+            is_model_author: true
+        - id: CohereLabs/c4ai-command-a-03-2025
+          object: model
+          created: 1741684205
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 262.2
+            throughput: 58.211188549073334
+            is_model_author: true
+        - id: zai-org/GLM-4.5V-FP8
+          object: model
+          created: 1754833284
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 2004
+            throughput: 59.74309334819727
+            is_model_author: true
+        - id: prism-ml/Ternary-Bonsai-27B-AWQ-4bit
+          object: model
+          created: 1783799882
+          owned_by: prism-ml
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: together
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0
+              output: 0
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 343.75
+            throughput: 87.65095123912135
+            is_model_author: false
+        - id: CohereLabs/command-a-reasoning-08-2025
+          object: model
+          created: 1755012430
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 202
+            throughput: 105.55773931171277
+            is_model_author: true
+        - id: MiniMaxAI/MiniMax-M1-80k
+          object: model
+          created: 1749802874
+          owned_by: MiniMaxAI
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 1000000
+            pricing:
+              input: 0.55
+              output: 2.2
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1202.4
+            throughput: 29.95022131423081
+            is_model_author: false
+        - id: zai-org/GLM-4.6V-FP8
+          object: model
+          created: 1765092078
+          owned_by: zai-org
+          architecture:
+            input_modalities:
+            - text
+            - image
+            output_modalities:
+            - text
+          providers:
+          - provider: zai-org
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: false
+            first_token_latency_ms: 1937
+            throughput: 52.59147263517623
+            is_model_author: true
+        - id: CohereLabs/command-a-translate-08-2025
+          object: model
+          created: 1756300537
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 219.8
+            throughput: 70.04470535767999
+            is_model_author: true
+        - id: moonshotai/Kimi-K2-Instruct-0905
+          object: model
+          created: 1756870476
+          owned_by: moonshotai
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: novita
+            status: live
+            context_length: 262144
+            pricing:
+              input: 0.6
+              output: 2.5
+            is_free: false
+            supports_tools: true
+            supports_structured_output: true
+            first_token_latency_ms: 979.4
+            throughput: 57.202107267644166
+            is_model_author: false
+        - id: CohereLabs/tiny-aya-water
+          object: model
+          created: 1770982737
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 166.8
+            throughput: 133.66508779950894
+            is_model_author: true
+        - id: CohereLabs/tiny-aya-earth
+          object: model
+          created: 1770982744
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 158.4
+            throughput: 133.9664312343789
+            is_model_author: true
+        - id: CohereLabs/tiny-aya-fire
+          object: model
+          created: 1770982746
+          owned_by: CohereLabs
+          architecture:
+            input_modalities:
+            - text
+            output_modalities:
+            - text
+          providers:
+          - provider: cohere
+            status: live
+            is_free: false
+            supports_tools: false
+            supports_structured_output: false
+            first_token_latency_ms: 164.8
+            throughput: 133.66275877408626
+            is_model_author: true
+  recorded_at: 2026-10-19T06:41:54.900533+00:00

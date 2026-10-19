@@ -125,7 +125,9 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 25,
         output_tokens: 100,
       })
-      expect(calcPrice(usage, model!, { providerId: 'openai-decisions' })?.total_price).toBeCloseTo(0.0001, 10)
+      expect(
+        calcPrice(usage, model!, { providerId: 'openai-decisions', timestamp: new Date('2026-10-18T00:00:00Z') })?.total_price
+      ).toBeCloseTo(0.0001, 10)
     })
 
     it('should extract GitHub Copilot chat usage', () => {
@@ -149,7 +151,7 @@ describe('extractUsage', () => {
         output_tokens: 8,
       })
 
-      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot', timestamp: new Date('2026-10-17T00:00:00Z') })
       expect(price?.total_price).toBeCloseTo(0.0000514, 10)
     })
 
@@ -179,7 +181,7 @@ describe('extractUsage', () => {
         output_tokens: 11,
       })
 
-      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot', timestamp: new Date('2026-10-17T00:00:00Z') })
       expect(price?.model.id).toBe('gpt-5.4')
       expect(price?.total_price).toBeCloseTo(0.00017575, 10)
     })
@@ -266,7 +268,10 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 30,
         output_tokens: 80,
       })
-      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.00348512, 12)
+      expect(calcPrice(usage, model!, { providerId: 'databricks', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+        0.00348512,
+        12
+      )
     })
 
     it('should extract Databricks chat usage without cache or reasoning fields', () => {
@@ -280,7 +285,10 @@ describe('extractUsage', () => {
 
       expect(model).toBe('databricks-gpt-oss-120b')
       expect(usage).toEqual({ input_tokens: 7, output_tokens: 74 })
-      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.00004545, 12)
+      expect(calcPrice(usage, model!, { providerId: 'databricks', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+        0.00004545,
+        12
+      )
     })
 
     it('should extract Databricks Open Responses usage', () => {
@@ -300,7 +308,10 @@ describe('extractUsage', () => {
 
       expect(model).toBe('databricks-kimi-k3')
       expect(usage).toEqual({ cache_read_tokens: 40, input_tokens: 100, output_reasoning_tokens: 20, output_tokens: 50 })
-      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.000942, 12)
+      expect(calcPrice(usage, model!, { providerId: 'databricks', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+        0.000942,
+        12
+      )
     })
 
     it('should extract Databricks embeddings usage', () => {
@@ -315,7 +326,10 @@ describe('extractUsage', () => {
 
       expect(model).toBe('databricks-gte-large-en')
       expect(usage).toEqual({ input_tokens: 1_000_000 })
-      expect(calcPrice(usage, model!, { providerId: 'databricks' })?.total_price).toBeCloseTo(0.13, 12)
+      expect(calcPrice(usage, model!, { providerId: 'databricks', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+        0.13,
+        12
+      )
     })
 
     // 0.5M five-minute and 0.5M one-hour cache writes. The regional Bedrock endpoint carries a 10% premium.
@@ -347,7 +361,9 @@ describe('extractUsage', () => {
         input_tokens: 1_000_000,
         output_tokens: 0,
       })
-      expect(calcPrice(usage, extractedModel!, { providerId })?.total_price).toBeCloseTo(expectedPrice)
+      expect(calcPrice(usage, extractedModel!, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price).toBeCloseTo(
+        expectedPrice
+      )
     })
 
     it('should extract usage with cache tokens', () => {
@@ -1280,7 +1296,9 @@ describe('extractUsage', () => {
         input_tokens: 1_000_000,
         output_tokens: 0,
       })
-      expect(calcPrice(usage, extractedModel!, { providerId: 'aws' })?.total_price).toBeCloseTo(expectedPrice)
+      expect(
+        calcPrice(usage, extractedModel!, { providerId: 'aws', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price
+      ).toBeCloseTo(expectedPrice)
     })
 
     it('should extract Converse usage with cache read tokens', () => {

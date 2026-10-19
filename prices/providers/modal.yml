@@ -44,6 +44,36 @@ extractors:
         dest: output_tokens
 
 models:
+  - id: Qwen/Qwen3.8-2.4T-A95B
+    name: Qwen3.8-Max
+    match:
+      equals: Qwen/Qwen3.8-2.4T-A95B
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.25
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4.1-Flash
+    name: DeepSeek V4.1 Flash
+    match:
+      equals: deepseek-ai/DeepSeek-V4.1-Flash
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: meta-models/Muse-Spark-Open-816B-A42B
+    name: Muse Spark Open
+    match:
+      equals: meta-models/Muse-Spark-Open-816B-A42B
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.15
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
+
   - id: moonshotai/Kimi-K3
     name: Kimi K3
     description: >-
@@ -51,7 +81,7 @@ models:
     match:
       equals: moonshotai/Kimi-K3
     context_window: 1048576
-    prices_checked: 2026-08-12
+    prices_checked: 2026-10-19
     price_comments: >-
       Modal Shared Endpoint pricing. Reasoning tokens use the same $15/MTok rate as completion tokens.
       See https://modal.com/library/moonshot/kimi-k3.
@@ -60,16 +90,46 @@ models:
       cache_read_mtok: 0.30
       output_mtok: 15.00
 
+  - id: nvidia/GLM-5.3-Flash-NVFP4
+    name: GLM 5.3 Flash NVFP4
+    match:
+      equals: nvidia/GLM-5.3-Flash-NVFP4
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.03
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
+
   - id: thinkingmachines/Inkling-NVFP4
     name: Inkling NVFP4
     description: >-
       Thinking Machines Lab's reasoning model, served by Modal as a Shared Endpoint.
     match:
       equals: thinkingmachines/Inkling-NVFP4
-    prices_checked: 2026-08-12
+    prices_checked: 2026-10-19
     price_comments: >-
       Modal Shared Endpoint dashboard pricing. Reasoning tokens use the same $5/MTok rate as completion tokens.
     prices:
       input_mtok: 1.20
       cache_read_mtok: 0.27
       output_mtok: 5.00
+
+  - id: zai-org/GLM-5.3
+    name: GLM 5.3
+    match:
+      equals: zai-org/GLM-5.3
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.3-Flash
+    name: GLM 5.3 Flash
+    match:
+      equals: zai-org/GLM-5.3-Flash
+    prices:
+      input_mtok: 0.45
+      cache_read_mtok: 0.09
+      output_mtok: 1.5
+    prices_checked: 2026-10-19

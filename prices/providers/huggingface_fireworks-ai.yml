@@ -85,6 +85,18 @@ extractors:
         dest: output_tokens
         required: true
 models:
+  - id: MiniMaxAI/MiniMax-M3
+    name: MiniMax-M3
+    match:
+      or:
+        - equals: minimaxai/minimax-m3
+        - equals: minimaxai/minimax-m3-fast
+    context_window: 512000
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
     match:
@@ -96,6 +108,30 @@ models:
       input_mtok: 0.9
       output_mtok: 0.9
 
+  - id: moonshotai/Kimi-K3
+    name: Kimi-K3
+    match:
+      or:
+        - equals: moonshotai/kimi-k3
+        - equals: moonshotai/kimi-k3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4
+    name: NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4
+    match:
+      or:
+        - equals: nvidia/nvidia-nemotron-3-ultra-550b-a55b-nvfp4
+        - equals: nvidia/nvidia-nemotron-3-ultra-550b-a55b-nvfp4-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.6
+      output_mtok: 2.4
+    prices_checked: 2026-10-19
+
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
     match:
@@ -106,6 +142,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b

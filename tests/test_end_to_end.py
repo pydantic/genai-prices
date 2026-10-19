@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from inline_snapshot import snapshot
@@ -80,7 +81,7 @@ def test_anthropic_caching_write_ttl_breakdown():
             output_tokens=50,
         )
     )
-    price = extracted_usage.calc_price()
+    price = extracted_usage.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC))
     assert price.input_price == snapshot(Decimal('0.00165'))
     assert price.output_price == snapshot(Decimal('0.00075'))
     assert price.total_price == snapshot(Decimal('0.00240'))

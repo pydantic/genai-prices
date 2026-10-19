@@ -166,6 +166,7 @@ describe('generated data split', () => {
   ])('prices GitHub Copilot $model', ({ expectedTotalPrice, model }) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'github-copilot',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })
 
     expect(result?.model.id).toBe(model)
@@ -178,6 +179,7 @@ describe('generated data split', () => {
   ])('prices GitHub Copilot GPT-5.6 Luna at the 200K long-context boundary', ({ expectedTotalPrice, inputTokens }) => {
     const result = calcPrice({ cache_write_tokens: 1_000, input_tokens: inputTokens, output_tokens: 1_000 }, 'gpt-5.6-luna', {
       providerId: 'github-copilot',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })
 
     expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)
@@ -326,19 +328,19 @@ describe('generated data split', () => {
 
   it.each([
     {
-      cacheReadRate: 0.0165,
+      cacheReadRate: 0.0028,
       contextWindow: 1_000_000,
-      inputRate: 0.0805,
+      inputRate: 0.14,
       model: 'deepseek/deepseek-v4-flash',
-      outputRate: 0.161,
+      outputRate: 0.28,
     },
     { cacheReadRate: 0.10875, contextWindow: 1_000_000, inputRate: 1.305, model: 'deepseek/deepseek-v4-pro', outputRate: 2.61 },
     {
-      cacheReadRate: 0.0198,
+      cacheReadRate: 0.0187,
       contextWindow: 1_000_000,
-      inputRate: 0.594,
+      inputRate: 0.561,
       model: 'deepseek/deepseek-v4-pro-0813',
-      outputRate: 1.782,
+      outputRate: 1.683,
     },
     { cacheReadRate: 0.012, contextWindow: 163_000, inputRate: 0.23, model: 'deepseek/deepseek-v3.2', outputRate: 0.33 },
     { cacheReadRate: 0.15, contextWindow: 196_000, inputRate: 0.27, model: 'minimax/minimax-m2.5', outputRate: 1.08 },
@@ -349,10 +351,17 @@ describe('generated data split', () => {
     { cacheReadRate: 0.225, contextWindow: 262_000, inputRate: 0.45, model: 'moonshotai/kimi-k2.5', outputRate: 2.2 },
     { cacheReadRate: 0.16, contextWindow: 262_000, inputRate: 0.95, model: 'moonshotai/kimi-k2.6', outputRate: 4 },
     { cacheReadRate: 0.05, contextWindow: 1_000_000, inputRate: 0.2, model: 'xiaomi/mimo-v2.5', outputRate: 0.4 },
-    { cacheReadRate: 0.0036, contextWindow: 1_000_000, inputRate: 0.435, model: 'xiaomi/mimo-v2.5-pro', outputRate: 0.87 },
+    {
+      cacheReadRate: 0.00306,
+      contextWindow: 1_000_000,
+      inputRate: 0.36975,
+      model: 'xiaomi/mimo-v2.5-pro',
+      outputRate: 0.7395,
+    },
   ])('prices Avian $model', ({ cacheReadRate, contextWindow, inputRate, model, outputRate }) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'avian',
+      timestamp: new Date('2026-10-18T00:00:00Z'),
     })
 
     expect(result?.provider.id).toBe('avian')
@@ -446,7 +455,10 @@ describe('generated data split', () => {
     ['openai/gpt-oss-safeguard-20b', 0.375],
     ['openai/gpt-oss-120b', 0.75],
   ])('prices Groq %s on its own record', (model, expected) => {
-    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, { providerId: 'groq' })
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'groq',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
+    })
 
     expect(result?.model.id).toBe(model)
     expect(result?.total_price).toBeCloseTo(expected, 12)
@@ -461,7 +473,7 @@ describe('generated data split', () => {
     { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
   ])('prices $model transcription duration', ({ billedSeconds, hourlyRate, model, usage }) => {
     const originalUsage = { ...usage }
-    const result = calcPrice(usage, model, { providerId: 'groq' })
+    const result = calcPrice(usage, model, { providerId: 'groq', timestamp: new Date('2026-10-17T00:00:00Z') })
     const expectedPrice = (hourlyRate * billedSeconds) / 3_600
 
     expect(result?.input_price).toBeCloseTo(expectedPrice, 15)
@@ -728,7 +740,10 @@ describe('generated data split', () => {
     { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'amazon.titan-embed-text-v2:0' },
     { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'us.amazon.titan-embed-text-v2:0' },
   ])('does not price Titan Text Embeddings V2 as V1 for $model', ({ expectedModel, expectedPrice, model }) => {
-    const result = calcPrice({ input_tokens: 1_000_000 }, model, { providerId: 'aws' })
+    const result = calcPrice({ input_tokens: 1_000_000 }, model, {
+      providerId: 'aws',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
+    })
 
     expect(result?.model.id).toBe(expectedModel)
     expect(result?.total_price).toBe(expectedPrice)

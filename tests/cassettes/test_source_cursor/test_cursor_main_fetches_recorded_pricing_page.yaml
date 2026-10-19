@@ -1,9 +1,11 @@
+version: 1
 interactions:
 - request:
-    body: ''
+    method: GET
+    uri: https://cursor.com/docs/models-and-pricing.md
     headers:
       accept:
-      - '*/*'
+      - "*/*"
       accept-encoding:
       - gzip, deflate
       connection:
@@ -12,116 +14,23 @@ interactions:
       - cursor.com
       user-agent:
       - python-httpx2/2.2.0
-    method: GET
-    uri: https://cursor.com/docs/models-and-pricing.md
-  response:
     body:
-      string: !!binary |
-        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
+      type: none
+  response:
+    status: 200
     headers:
       age:
-      - '1683'
+      - "479"
       cache-control:
       - public, max-age=3600
-      content-encoding:
-      - gzip
       content-type:
       - text/markdown; charset=utf-8
       date:
-      - Fri, 28 Aug 2026 07:51:54 GMT
+      - Mon, 19 Oct 2026 06:33:54 GMT
       link:
-      - </llms.txt>; rel="describedby"; type="text/plain"; title="llms.txt", </docs/sitemap.xml>;
-        rel="sitemap"; type="application/xml"
+      - >-
+        </llms.txt>; rel="describedby"; type="text/plain"; title="llms.txt",
+        </docs/sitemap.xml>; rel="sitemap"; type="application/xml"
       server:
       - Vercel
       strict-transport-security:
@@ -135,8 +44,199 @@ interactions:
       x-vercel-cache:
       - HIT
       x-vercel-id:
-      - fra1::iad1::ckmxv-1787905197540-8ccf6f1ed374
-    status:
-      code: 200
-      message: OK
-version: 1
+      - fra1::iad1::xwthg-1792392113677-b6147883269c
+    body:
+      type: text
+      content: |
+        # Models & Pricing
+        
+        Cursor supports frontier models from OpenAI, Anthropic, Google, SpaceXSI, and more. Cursor is sold as part of [The X Subscription](https://cursor.com/help/the-x-subscription/overview.md), one subscription for Grok, Cursor, and X. Paid plans include a weekly pool of usage for Cursor models, shared across Grok and Cursor. Third-party models aren't included; on Premium and above you can use them at API list price, paid from prepaid credit.
+        
+        On Pro, Pro+, Ultra, Start, or a Teams Standard or Premium seat? Those are [legacy Cursor plans](https://cursor.com/docs/account/pricing/legacy-cursor-plans.md). They keep working as they are, with two monthly usage pools and on-demand usage.
+        
+        ## Plans
+        
+        | Plan           | Price                          | Included usage          | Third-party models                                                                                           |
+        | :------------- | :----------------------------- | :---------------------- | :----------------------------------------------------------------------------------------------------------- |
+        | **Free**       | $0                             | Limited                 | Not available                                                                                                |
+        | **Plus**       | $8/mo                          | Base                    | Not available                                                                                                |
+        | **Premium**    | $30/mo                         | 4x Plus                 | API list price, from prepaid credit                                                                          |
+        | **Super**      | $100/mo                        | 15x Plus                | API list price, from prepaid credit                                                                          |
+        | **Ultra**      | $200/mo                        | 50x Plus                | API list price, from prepaid credit                                                                          |
+        | **Teams**      | $30, $100, or $200 per seat/mo | Matches the seat's tier | API list price plus the [Cursor Token Rate](https://cursor.com/docs/models-and-pricing.md#cursor-token-rate) |
+        | **Enterprise** | Custom                         | Pooled                  | API list price plus the Cursor Token Rate                                                                    |
+        
+        Annual billing is available at $80/yr for Plus, $300/yr for Premium, $1,000/yr for Super, and $2,000/yr for Ultra. Prices exclude tax.
+        
+        - **Free.** Agent and Chat with limited usage.
+        - **Plus.** Agent with Cursor's own models (Grok 4.7, Grok 4.6, Grok 4.5, and Composer 2.5) at fixed settings: Fast is off, effort is medium, and Grok 4.7 uses the 256k context window. Also Grok Chat, Voice, Imagine, Build, and Grok API access. No Auto, Cloud Agents, Automations, Bugbot, Origin, third-party models, or your own API keys.
+        - **Premium.** Everything in Plus, with 4x the usage. Adds Cloud Agents and Automations, code hosting on [Origin](https://cursor.com/docs/origin.md), code review with [Bugbot](https://cursor.com/docs/bugbot.md), third-party models at API list price, and Grok Bot.
+        - **Super.** Everything in Premium, with 15x Plus usage and priority model access at peak times.
+        - **Ultra.** Everything in Super, with 50x Plus usage and earliest access to new products and models.
+        
+        Premium suits new Agent users, Super suits daily Agent users, and Ultra suits power users running several agents or Automations. See [cursor.com/pricing](https://cursor.com/pricing) for the full feature comparison, including Grok and X benefits.
+        
+        ## Included usage
+        
+        Each paid plan includes one pool of usage for Cursor models. The pool is shared across everything on your subscription: Agent in the editor, CLI, Cloud Agents, Grok Bot, and the Grok apps. It refreshes weekly, so one heavy day doesn't use up your month.
+        
+        Different models draw from the pool at different rates. Your remaining usage and next reset date are shown in your editor settings and under **Usage** at [grok.com/dashboard](https://grok.com/dashboard).
+        
+        ### Cursor models
+        
+        The pool covers Grok 4.7, Grok 4.6, Grok 4.5, and Composer 2.5. On Teams and Enterprise plans, [Cursor Router](https://cursor.com/docs/cursor-router.md) picks among Cursor models and third-party models for each Balance or Intelligence request based on your optimization mode; a third-party route bills as [third-party usage](https://cursor.com/docs/models-and-pricing.md#third-party-models).
+        
+        | Model                                                       | Provider | Input | Cache write | Cache read | Output | Notes                                                                                                                                                                                                                         |
+        | ----------------------------------------------------------- | -------- | ----- | ----------- | ---------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | [Grok 4.7](https://x.ai/news/grok-4-7)                      | Cursor   | $2    | -           | $0.5       | $6     | Jointly trained by Cursor and SpaceXAI; Long context (>256k input tokens) is billed at 2x standard rates, up to 500k; Fast mode is available at 2x pricing; Fast mode for long context (>256k) is billed at 3x standard rates |
+        | [Grok 4.7 (Fast)](https://x.ai/news/grok-4-7)               | Cursor   | $4    | -           | $1         | $12    | Jointly trained by Cursor and SpaceXAI; Long context (>256k input tokens) is billed at 2x standard rates, up to 500k; Fast mode is available at 2x pricing; Fast mode for long context (>256k) is billed at 3x standard rates |
+        | [Grok 4.7 500k](https://x.ai/news/grok-4-7)                 | Cursor   | $4    | -           | $1         | $12    | Jointly trained by Cursor and SpaceXAI; Long context (>256k input tokens) is billed at 2x standard rates, up to 500k; Fast mode is available at 2x pricing; Fast mode for long context (>256k) is billed at 3x standard rates |
+        | [Grok 4.7 500k (Fast)](https://x.ai/news/grok-4-7)          | Cursor   | $6    | -           | $1.5       | $18    | Jointly trained by Cursor and SpaceXAI; Long context (>256k input tokens) is billed at 2x standard rates, up to 500k; Fast mode is available at 2x pricing; Fast mode for long context (>256k) is billed at 3x standard rates |
+        | Grok 4.6                                                    | Cursor   | $2    | -           | $0.5       | $6     | Jointly trained by Cursor and SpaceXAI                                                                                                                                                                                        |
+        | Grok 4.6 (Fast)                                             | Cursor   | $4    | -           | $1         | $12    | Jointly trained by Cursor and SpaceXAI                                                                                                                                                                                        |
+        | Grok 4.5                                                    | Cursor   | $2    | -           | $0.5       | $6     | Jointly trained by Cursor and SpaceXAI                                                                                                                                                                                        |
+        | Grok 4.5 (Fast)                                             | Cursor   | $4    | -           | $1         | $18    | Jointly trained by Cursor and SpaceXAI                                                                                                                                                                                        |
+        | [Composer 2.5](https://cursor.com/blog/composer-2-5)        | Cursor   | $0.5  | -           | $0.2       | $2.5   | -                                                                                                                                                                                                                             |
+        | [Composer 2.5 (Fast)](https://cursor.com/blog/composer-2-5) | Cursor   | $3    | -           | $0.5       | $15    | -                                                                                                                                                                                                                             |
+        
+        These rates apply when you buy additional usage beyond the weekly pool.
+        
+        ## Third-party models
+        
+        Third-party models like Claude, GPT, and Gemini aren't part of the included pool. On Premium and above, they're available in Cursor at the model's API list price from the first request, paid from your [prepaid credit](https://cursor.com/docs/models-and-pricing.md#top-ups-and-spending-caps). Plus and Free don't include third-party models.
+        
+        ### Model pricing
+        
+        All prices are per million tokens:
+        
+        | Model                                                                                         | Provider  | Input | Cache write | Cache read | Output | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | --------------------------------------------------------------------------------------------- | --------- | ----- | ----------- | ---------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+        | [Claude 4 Sonnet](https://www.anthropic.com/claude/sonnet)                                    | Anthropic | $3    | $3.75       | $0.3       | $15    | Hidden by default; Thinking variant counts as 2 requests in legacy pricing                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+        | [Claude 4 Sonnet 1M](https://www.anthropic.com/claude/sonnet)                                 | Anthropic | $6    | $7.5        | $0.6       | $22.5  | Hidden by default; Thinking variant counts as 2 requests in legacy pricing; This model can be very expensive due to the large context window; The cost is 2x when the input exceeds 200k tokens                                                                                                                                                                                                                                                                                                                                               |
+        | [Claude 4.5 Haiku](https://www.anthropic.com/claude/haiku)                                    | Anthropic | $1    | $1.25       | $0.1       | $5     | Hidden by default; Bedrock/Vertex: regional endpoints +10% surcharge; Cache: writes 1.25x, reads 0.1x                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | [Claude 4.5 Opus](https://www.anthropic.com/claude/opus)                                      | Anthropic | $5    | $6.25       | $0.5       | $25    | Hidden by default; Requires Max Mode on legacy request-based plans                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+        | [Claude 4.5 Sonnet](https://www.anthropic.com/claude/sonnet)                                  | Anthropic | $3    | $3.75       | $0.3       | $15    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Claude 4.6 Opus](https://www.anthropic.com/claude/opus)                                      | Anthropic | $5    | $6.25       | $0.5       | $25    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Claude 4.6 Sonnet](https://www.anthropic.com/claude/sonnet)                                  | Anthropic | $3    | $3.75       | $0.3       | $15    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Claude 4.7 Opus](https://www.anthropic.com/claude/opus)                                      | Anthropic | $5    | $6.25       | $0.5       | $25    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Claude Fable 5](https://www.anthropic.com/claude/fable)                                      | Anthropic | $10   | $12.5       | $1         | $50    | Hidden by default; Requires data retention approval for Enterprise customers, Teams and individual customers with Privacy Mode enabled; Anthropic stores agent input and output data for harm-prevention processes; this data is not used to train or improve Anthropic models or products; Requests that trip a security guardrail are automatically routed to Claude Opus; About 2x the cost of Claude Opus 5; Requires Max Mode on legacy request-based plans                                                                              |
+        | [Claude Fable 5.1](https://www.anthropic.com/claude/fable)                                    | Anthropic | $10   | $12.5       | $0.25      | $50    | Requires data retention approval for Enterprise customers, Teams and individual customers with Privacy Mode enabled; Anthropic stores agent input and output data for harm-prevention processes; this data is not used to train or improve Anthropic models or products; Requests that trip a security guardrail are automatically routed to Claude Opus; Prompt-cache reads are $0.25/M, 75% below the standard cache-read rate; About 2.5x the cost of Claude Opus 5.5 on input and output; Requires Max Mode on legacy request-based plans |
+        | [Claude Haiku 5.5](https://www.anthropic.com/claude/haiku)                                    | Anthropic | $0.1  | $0.125      | $0.01      | $0.5   | Requires Max Mode on legacy request-based plans; Requests above 100k input tokens bill at 5x the standard rates ($0.50/M input, $0.625/M cache write, $0.05/M cache read, $2.50/M output); 90% cheaper than Claude 4.5 Haiku on input and output for requests up to 100k input tokens                                                                                                                                                                                                                                                         |
+        | [Claude Opus 4.7 (fast mode)](https://www.anthropic.com/claude/opus)                          | Anthropic | $30   | $37.5       | $3         | $150   | Hidden by default; Requires Max Mode on legacy request-based plans; Limited research preview; Up to 1M tokens with extended context at the same per-token rates as shorter context                                                                                                                                                                                                                                                                                                                                                            |
+        | [Claude Opus 4.8](https://www.anthropic.com/claude/opus)                                      | Anthropic | $5    | $6.25       | $0.5       | $25    | Hidden by default; Requires Max Mode on legacy request-based plans; Fast mode (\`claude-opus-4-8-fast\`) requires Max Mode on legacy request-based plans; Fast mode is 3x lower per-token pricing than Opus 4.7 fast mode; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                      |
+        | [Claude Opus 5](https://www.anthropic.com/claude/opus)                                        | Anthropic | $5    | $6.25       | $0.5       | $25    | Hidden by default; Requires Max Mode on legacy request-based plans; Fast mode (\`claude-opus-5-fast\`) requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                                                                                         |
+        | [Claude Opus 5.5](https://www.anthropic.com/claude/opus)                                      | Anthropic | $4    | $5          | $0.2       | $20    | Requires Max Mode on legacy request-based plans; Fast mode (\`claude-opus-5-5-fast\`) requires Max Mode on legacy request-based plans; 20% cheaper than Claude Opus 5 on input and output; Prompt-cache reads are $0.20/M (0.05x input), down from 0.10x input on Claude Opus 5; Regional and US-only endpoints are priced 10% higher ($4.40/M input, $22/M output); Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                            |
+        | [Claude Sonnet 5](https://www.anthropic.com/claude/sonnet)                                    | Anthropic | $2    | $2.5        | $0.2       | $10    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge); Uses an updated tokenizer, so the same input can map to more tokens                                                                                                                                                                                                                                                                                                        |
+        | [Claude Sonnet 5.5](https://www.anthropic.com/claude/sonnet)                                  | Anthropic | $2    | $2.5        | $0.1       | $10    | Requires Max Mode on legacy request-based plans; Same input and output rates as Claude Sonnet 5, with cache reads at $0.10/M instead of $0.20/M; US-only endpoints are priced 10% higher ($2.20/M input, $11/M output); Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge)                                                                                                                                                                                                                         |
+        | [Gemini 2.5 Flash](https://developers.googleblog.com/en/start-building-with-gemini-25-flash/) | Google    | $0.3  | -           | $0.03      | $2.5   | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3 Flash](https://ai.google.dev/gemini-api/docs)                                       | Google    | $0.5  | -           | $0.05      | $3     | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3 Pro](https://ai.google.dev/gemini-api/docs)                                         | Google    | $2    | -           | $0.2       | $12    | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3 Pro Image Preview](https://ai.google.dev/gemini-api/docs)                           | Google    | $2    | -           | $0.2       | $12    | Hidden by default; Native image generation model optimized for speed, flexibility, and contextual understanding; Text input and output priced the same as Gemini 3 Pro; Image output: $120/1M tokens (\~$0.134 per 1K/2K image, \~$0.24 per 4K image); Preview models may change before becoming stable and have more restrictive rate limits                                                                                                                                                                                                 |
+        | [Gemini 3.1 Pro](https://ai.google.dev/gemini-api/docs)                                       | Google    | $2    | -           | $0.2       | $12    | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3.5 Flash](https://ai.google.dev/gemini-api/docs)                                     | Google    | $1.5  | -           | $0.15      | $9     | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3.5 Flash Lite](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite)   | Google    | $0.3  | -           | $0.03      | $2.5   | Hidden by default; Used only for the Auto-review classifier. It is not selectable as a chat or agent model                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+        | [Gemini 3.6 Flash](https://ai.google.dev/gemini-api/docs)                                     | Google    | $1.5  | -           | $0.15      | $7.5   | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs)                                     | Google    | $0.75 | -           | $0.075     | $3.75  | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 3.8 Flash](https://ai.google.dev/gemini-api/docs)                                     | Google    | $0.75 | -           | $0.075     | $3.75  | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Gemini 4 Argon](https://ai.google.dev/gemini-api/docs)                                       | Google    | $2    | -           | $0.1       | $10    | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [GLM 5.2](https://z.ai)                                                                       | Z.ai      | $1.4  | -           | $0.26      | $4.4   | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [GLM 5.3](https://z.ai)                                                                       | Z.ai      | $1.4  | -           | $0.26      | $4.4   | Hidden by default; Same per-token rates as GLM 5.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+        | [GLM 5.3 Flash](https://z.ai)                                                                 | Z.ai      | $0.15 | -           | $0.029     | $0.5   | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [GPT-5](https://openai.com/index/gpt-5/)                                                      | OpenAI    | $1.25 | -           | $0.125     | $10    | Hidden by default; Agentic and reasoning capabilities; Available reasoning effort variant is gpt-5-high                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+        | [GPT-5 Fast](https://openai.com/index/gpt-5/)                                                 | OpenAI    | $2.5  | -           | $0.25      | $20    | Hidden by default; Faster speed but 2x price; Available reasoning effort variants are gpt-5-high-fast, gpt-5-low-fast                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | [GPT-5 Mini](https://openai.com/index/gpt-5/)                                                 | OpenAI    | $0.25 | -           | $0.025     | $2     | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [GPT-5-Codex](https://platform.openai.com/docs/models/gpt-5-codex)                            | OpenAI    | $1.25 | -           | $0.125     | $10    | Hidden by default; Agentic and reasoning capabilities                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | [GPT-5.1 Codex](https://platform.openai.com/docs/models/gpt-5-codex)                          | OpenAI    | $1.25 | -           | $0.125     | $10    | Hidden by default; Agentic and reasoning capabilities                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | [GPT-5.1 Codex Max](https://platform.openai.com/docs/models/gpt-5-codex)                      | OpenAI    | $1.25 | -           | $0.125     | $10    | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [GPT-5.1 Codex Mini](https://platform.openai.com/docs/models/gpt-5-codex)                     | OpenAI    | $0.25 | -           | $0.025     | $2     | Hidden by default; Agentic and reasoning capabilities; 4x rate limits compared to GPT-5.1 Codex                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+        | [GPT-5.2](https://openai.com/index/gpt-5/)                                                    | OpenAI    | $1.75 | -           | $0.175     | $14    | Hidden by default; Agentic and reasoning capabilities; Available reasoning effort variant is gpt-5.2-high                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+        | [GPT-5.2 Codex](https://platform.openai.com/docs/models/gpt-5-codex)                          | OpenAI    | $1.75 | -           | $0.175     | $14    | Hidden by default; Agentic and reasoning capabilities                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+        | [GPT-5.3 Codex](https://platform.openai.com/docs/models/gpt-5-codex)                          | OpenAI    | $1.75 | -           | $0.175     | $14    | Hidden by default; Requires Max Mode on legacy request-based plans; Agentic and reasoning capabilities; Available reasoning effort variant is gpt-5.3-codex-high                                                                                                                                                                                                                                                                                                                                                                              |
+        | [GPT-5.4](https://developers.openai.com/api/docs/models/gpt-5.4)                              | OpenAI    | $2.5  | -           | $0.25      | $15    | Hidden by default; Requires Max Mode on legacy request-based plans; Agentic and reasoning capabilities; 90% discount on cached input tokens; Fast mode is 15% faster with 2x pricing; Long context supports up to 1M tokens with 2x input pricing                                                                                                                                                                                                                                                                                             |
+        | [GPT-5.4 Mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini)                    | OpenAI    | $0.75 | -           | $0.075     | $4.5   | Hidden by default; Smaller, faster variant of GPT-5.4; 90% discount on cached input tokens                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+        | [GPT-5.4 Nano](https://developers.openai.com/api/docs/models/gpt-5.4-nano)                    | OpenAI    | $0.2  | -           | $0.02      | $1.25  | Hidden by default; Smallest GPT-5.4 variant, optimized for cost; 90% discount on cached input tokens                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+        | [GPT-5.5](https://developers.openai.com/api/docs/models/gpt-5.5)                              | OpenAI    | $5    | -           | $0.5       | $30    | Hidden by default; Requires Max Mode on legacy request-based plans; Agentic and reasoning capabilities; More token-efficient than GPT-5.4 on comparable tasks; Improved persistence on long-running tasks; Fast mode is available at higher rates; Long context supports up to 1M tokens with 2x input pricing                                                                                                                                                                                                                                |
+        | [GPT-5.6 Luna](https://openai.com/index/previewing-gpt-5-6-sol/)                              | OpenAI    | $0.2  | $0.25       | $0.02      | $1.2   | Requires Max Mode on legacy request-based plans; Smallest GPT-5.6 variant, optimized for cost and speed; Agentic and reasoning capabilities; Fast mode is available at 2x pricing; Long context supports up to 1M tokens with 2x input pricing; Fast mode is available for long context (>272k) at 2x Fast input pricing; Cache writes are billed at 1.25x the uncached input rate                                                                                                                                                            |
+        | [GPT-5.6 Sol](https://openai.com/index/previewing-gpt-5-6-sol/)                               | OpenAI    | $4    | $5          | $0.4       | $20    | Requires Max Mode on legacy request-based plans; Agentic and reasoning capabilities; Fast mode is available at 2x pricing; Long context supports up to 1M tokens with 2x input pricing; Fast mode is available for long context (>272k) at 2x Fast input pricing; Cache writes are billed at 1.25x the uncached input rate; Promotional pricing through November 21, 2026                                                                                                                                                                     |
+        | [GPT-5.6 Terra](https://openai.com/index/previewing-gpt-5-6-sol/)                             | OpenAI    | $2    | $2.5        | $0.2       | $12    | Requires Max Mode on legacy request-based plans; Mid-tier GPT-5.6 variant between Sol and Luna; Agentic and reasoning capabilities; Fast mode is available at 2x pricing; Long context supports up to 1M tokens with 2x input pricing; Fast mode is available for long context (>272k) at 2x Fast input pricing; Cache writes are billed at 1.25x the uncached input rate                                                                                                                                                                     |
+        | Kimi K2.7 Code                                                                                | Moonshot  | $0.95 | -           | $0.19      | $4     | Hidden by default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+        | [Kimi K3](https://www.moonshot.ai)                                                            | Moonshot  | $3    | -           | $0.3       | $15    | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens with extended context at the same per-token rates (no long-context surcharge); No separate cache-write fee                                                                                                                                                                                                                                                                                                                                                |
+        | [Muse Spark 1.3](https://dev.meta.ai/docs/models)                                             | Meta      | $1.25 | -           | $0.15      | $4.25  | Hidden by default; Requires Max Mode on legacy request-based plans; Up to 1M tokens in Max Mode at the same per-token rates (no long-context surcharge); Cached input is billed at $0.15 per million tokens with no separate cache-write charge                                                                                                                                                                                                                                                                                               |
+        | [Muse Wonder](https://dev.meta.ai/docs/models)                                                | Meta      | $4    | -           | $0.2       | $20    | Up to 1M tokens in Max Mode at the same per-token rates (no long-context surcharge); Cached input is billed at $0.20 per million tokens with no separate cache-write charge                                                                                                                                                                                                                                                                                                                                                                   |
+        
+        Opting in to regional data residency incurs a 10% uplift on Model pricing for eligible Models. See [Privacy and Data Governance](https://cursor.com/docs/enterprise/privacy-and-data-governance.md) for details on supported regions, Models, functions and data residency policies.
+        
+        ## Top-ups and spending caps
+        
+        Top-ups add prepaid credit to your subscription. Credit pays for two kinds of additional usage:
+        
+        - **Third-party models** in Cursor, from the first request, at API list price.
+        - **Cursor models beyond your weekly pool**, at the rates in the table above.
+        
+        Buy credit when you choose, or turn on **Auto Top-up** to refill when your balance drops below a threshold you set. A **monthly additional usage limit** caps how much paid additional usage you can consume each month, regardless of how much credit you hold. Manage all three under **Additional usage credits** at [grok.com/dashboard/billing](https://grok.com/dashboard/billing). On Teams, admins manage a shared prepaid balance and one cap for the whole team.
+        
+        ### What happens when I reach my limit?
+        
+        When your weekly pool runs out, you can:
+        
+        - **Wait for the reset.** Your pool refreshes weekly.
+        - **Use prepaid credit.** Keep working at the same per-model rates with top-ups or Auto Top-up.
+        - **Upgrade your plan.** Move to a higher tier for a larger weekly pool.
+        
+        Requests are never downgraded in quality or speed. See [Usage and limits](https://cursor.com/help/models-and-usage/usage-limits.md) for how to check usage and what the limit notification means.
+        
+        ## Teams
+        
+        Teams are priced per seat. Each member gets a Premium, Super, or Ultra seat at the same price and with the same weekly usage as the matching individual plan, and you can mix seat tiers on one team. Plus isn't available for teams.
+        
+        Team plans add centralized billing and administration, a team marketplace for internal rules, skills, and plugins, usage analytics, team-wide privacy mode enforcement, custom Chat data retention, and SAML/OIDC SSO. Enterprise adds pooled usage across Grok and Cursor, invoicing, SCIM, granular spend controls, and advanced security controls.
+        
+        We recommend Teams for any customer that is happy self-serving and [Enterprise](https://cursor.com/contact-sales?source=docs-models-pricing) for customers that need priority support, pooled usage, invoicing, SCIM, or advanced security controls. Learn more about [Team pricing](https://cursor.com/docs/account/teams/pricing.md).
+        
+        ## Cursor Token Rate
+        
+        On Teams and Enterprise plans, third-party model requests include a Cursor Token Rate of $0.25 per million tokens. This rate applies on top of model API pricing for additional usage and BYOK usage. Individual plans don't pay it.
+        
+        The Cursor Token Rate applies when you select a third-party model directly, and when Cursor Router (Balance or Intelligence) routes to a third-party model. Cost mode requests are exempt, and so are Cursor models, including Grok and Composer.
+        
+        ## Auto modes
+        
+        Auto has three modes: Cost, Balance, and Intelligence. See [Cursor Router](https://cursor.com/docs/cursor-router.md) for how these modes work.
+        
+        Cost mode (classic Auto) bills as a Cursor-model request and draws from your weekly pool whatever model serves it. On Teams and Enterprise with Cursor Router on, Balance and Intelligence bill at the routed model's list price: a route to a Cursor model draws from the weekly pool, and a route to a third-party model is third-party usage paid from prepaid credit. Individual plans have Cost mode only. See [Model pricing](https://cursor.com/docs/models-and-pricing.md#model-pricing) for per-model rates. Third-party routes also incur the [Cursor Token Rate](https://cursor.com/docs/models-and-pricing.md#cursor-token-rate) on Teams and Enterprise.
+        
+        ## Legacy Cursor plans
+        
+        Hobby, Start, Pro, Pro+, Ultra, and Teams Standard and Premium seats continue for existing customers. They include two monthly usage pools, Cursor Models and Other Models, and use on-demand usage instead of top-ups. See [Legacy Cursor plans](https://cursor.com/docs/account/pricing/legacy-cursor-plans.md) for how they work and how they map to The X Subscription.
+        
+        ## Legacy request-based pricing
+        
+        ### Max Mode
+        
+        Max Mode is available only on legacy request-based plans. It extends a model's context window beyond the default limit and is billed at the model's API rate plus 20%. See [Max Mode on legacy plans](https://cursor.com/help/ai-features/max-mode.md) for details.
+        
+        ## FAQ
+        
+        ### Is my weekly pool shared with Grok?
+        
+        Yes. Grok Chat, Imagine, Voice, Grok Bot, and Cursor all draw from the same weekly pool for Cursor models. Usage rates vary by product. The Grok API is billed separately and doesn't draw from the pool.
+        
+        ### Can I use third-party models on Plus?
+        
+        No. Plus includes Cursor's own models only (Grok 4.7, Grok 4.6, Grok 4.5, and Composer 2.5), at fixed settings. Upgrade to Premium or higher to use third-party models, billed at API list price from prepaid credit, and to choose Fast mode and effort levels.
+        
+        ### Where are models hosted?
+        
+        Models are hosted by the model provider, a trusted partner, or Cursor. See our list of [sub-processors](https://trust.cursor.com/subprocessors) for details.
+        
+        ### Where can I find pricing terms?
+        
+        For enterprise pricing details, billing terms, and fee calculations, see the [Pricing Policy](https://cursor.com/terms/pricing).
+        
+        
+        ---
+        
+        ## Sitemap
+        
+        [Overview of all docs pages](/llms.txt)
+  recorded_at: 2026-10-19T06:41:53.816599+00:00

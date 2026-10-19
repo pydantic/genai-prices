@@ -18,7 +18,7 @@ dynamic = ["version"]
 description = "Calculate prices for calling LLM inference APIs."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
@@ -26,11 +26,11 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -45,13 +45,14 @@ classifiers = [
 dependencies = [
     "httpx2>=2.0",
     "pydantic>=2.10",
+    "pydantic>=2.14; python_version >= '3.15'",
 ]
 
 [project.optional-dependencies]
 cli = [
     "pydantic-settings>=2.11",
     "rich>=14.3.2",
-    "rich-argparse>=1.7.2",
+    "rich-argparse>=1.8.0",
 ]
 
 [project.scripts]
