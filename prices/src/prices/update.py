@@ -12,7 +12,16 @@ from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, TieredPrices, match_logic_schema
+from .prices_types import (
+    ClauseEquals,
+    ClauseOr,
+    ModelInfo,
+    ModelPrice,
+    Provider,
+    StartDateConstraint,
+    TieredPrices,
+    match_logic_schema,
+)
 from .utils import package_dir
 
 yaml = YAML()
@@ -80,8 +89,7 @@ class ProviderYaml:
             assert isinstance(model.prices, ModelPrice)
             new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
             if preserve_price_history:
-                current_model = self.provider.find_model(lookup_id)
-                assert current_model is not None
+                [current_model] = [m for m in self.provider.models if m.id == lookup_id]
                 current_prices = (
                     current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
                 )
@@ -89,6 +97,13 @@ class ProviderYaml:
                     conditional_price = {'constraint': {'start_date': model.prices_checked}, 'prices': new_prices}
                     if isinstance(prices, CommentedMap):
                         yaml_model['prices'] = [{'prices': prices}, conditional_price]
+                    elif (
+                        isinstance(current_model.prices, list)
+                        and isinstance(constraint := current_model.prices[-1].constraint, StartDateConstraint)
+                        and constraint.start_date == model.prices_checked
+                    ):
+                        # A second change on the same day would otherwise add an entry that can never match.
+                        cast(CommentedSeq, prices)[-1] = conditional_price
                     else:
                         cast(CommentedSeq, prices).append(conditional_price)  # pyright: ignore[reportUnknownMemberType]
             elif isinstance(prices, CommentedMap):
@@ -146,7 +161,10 @@ class ProviderYaml:
         matches.sort(key=lambda match: match[1] is not None and match[1].id != match[0].id)
         for model, matching_model in matches:
             if matching_model is None:
-                models_added += self.add_model(model)
+                assert isinstance(model.prices, ModelPrice)
+                models_added += self.add_model(
+                    model.model_copy(update={'prices': without_redundant_cache_rates(model.prices)})
+                )
                 continue
             current = matching_model.prices
             curated = dict(current[-1].prices if isinstance(current, list) else current)
@@ -172,7 +190,7 @@ class ProviderYaml:
                 )
                 continue
             # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
-            prices = ModelPrice(**(curated | reported | tiered))
+            prices = without_redundant_cache_rates(ModelPrice(**(curated | reported | tiered)))
             if previous := updated_prices.get(matching_model.id):
                 if previous != prices:
                     print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')
@@ -218,6 +236,14 @@ class ProviderYaml:
         self.data['models'] = existing_models
 
         self.path.write_text(get_provider_yaml_string(self.data))
+
+
+def without_redundant_cache_rates(prices: ModelPrice) -> ModelPrice:
+    """Drop a cache rate equal to the input rate: the input rate already prices those tokens."""
+    keys = ['cache_read_mtok']
+    if not any(key.startswith('cache_write_') for key in prices.model_extra or {}):
+        keys.append('cache_write_mtok')
+    return prices.model_copy(update={key: None for key in keys if dict(prices)[key] == prices.input_mtok})
 
 
 class ProviderYamlDict(TypedDict):

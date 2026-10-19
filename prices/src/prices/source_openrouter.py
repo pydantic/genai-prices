@@ -301,15 +301,8 @@ def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
             if base is None:
                 raise RuntimeError(f'OpenRouter overrides {field} for {model.id} without a base rate')
             tiered[key] = TieredPrices(base=base, tiers=sorted(tiers, key=lambda tier: tier.start))
-        prices = prices.model_copy(update=tiered)
-        # A cache rate equal to the input rate is redundant: the input rate already prices those tokens.
-        redundant = {
-            key: None for key in ('cache_read_mtok', 'cache_write_mtok') if dict(prices)[key] == prices.input_mtok
-        }
         model_infos.append(
-            model_info.model_copy(
-                update={'prices': prices.model_copy(update=redundant), 'prices_checked': date.today()}
-            )
+            model_info.model_copy(update={'prices': prices.model_copy(update=tiered), 'prices_checked': date.today()})
         )
     return model_infos
 
