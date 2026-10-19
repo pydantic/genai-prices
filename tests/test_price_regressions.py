@@ -1,5 +1,5 @@
 from copy import copy
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
 import pytest
@@ -763,6 +763,7 @@ def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, e
         ),
         model_ref=model_ref,
         provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.model.id == model_id
@@ -781,7 +782,12 @@ def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, e
 )
 def test_aws_claude_india_inference_profile_ids(model_ref: str, model_id: str, expected: str) -> None:
     """Bedrock's India (`in.`) inference profiles in ap-south-1 take the regional rate, like the other geographies."""
-    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
 
     assert price.model.id == model_id
     assert price.total_price == Decimal(expected)
@@ -987,7 +993,12 @@ def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime
     ],
 )
 def test_aws_titan_embed_text_v2_does_not_use_v1_prices(model_ref: str, model_id: str, expected_price: str) -> None:
-    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
 
     assert price.model.id == model_id
     assert price.total_price == Decimal(expected_price)

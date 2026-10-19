@@ -873,14 +873,24 @@ def test_aws_gpt_6_context_boundary(
 ) -> None:
     """AWS bills 272K input tokens or fewer at the short-context rate."""
     for tokens, rate in ((272_000, short_input_rate), (272_001, long_input_rate)):
-        price = calc_price(Usage(input_tokens=tokens), model_ref=model_ref, provider_id='aws')
+        price = calc_price(
+            Usage(input_tokens=tokens),
+            model_ref=model_ref,
+            provider_id='aws',
+            genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+        )
 
         assert price.model.id == model_id
         assert price.input_price == rate * tokens / 1_000_000
 
 
 def test_aws_titan_embed_text_v2_price() -> None:
-    price = calc_price(Usage(input_tokens=1_000_000), model_ref='amazon.titan-embed-text-v2:0', provider_id='aws')
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref='amazon.titan-embed-text-v2:0',
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
 
     assert price.model.id == 'amazon.titan-embed-text-v2:0'
     assert price.model.context_window == 8192

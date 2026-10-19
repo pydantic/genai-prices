@@ -448,7 +448,7 @@ func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.model, func(t *testing.T) {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.model, ProviderID: "aws",
+				Usage: usage, Model: test.model, ProviderID: "aws", Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -699,6 +699,7 @@ func TestAWSTitanEmbedTextV2DoesNotUseV1Prices(t *testing.T) {
 				Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
 				Model:      test.model,
 				ProviderID: "aws",
+				Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -898,6 +899,7 @@ func TestAWSConverseCacheWriteTTL(t *testing.T) {
 		}
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 			Usage: extracted.Usage, Model: extracted.Model, ProviderID: extracted.ProviderID,
+			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)

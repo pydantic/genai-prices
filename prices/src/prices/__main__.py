@@ -9,6 +9,7 @@ from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
 from .source_arcee import get_arcee_prices
 from .source_avian import get_avian_prices
+from .source_aws import get_aws_prices
 from .source_baseten import get_baseten_prices
 from .source_cerebras import get_cerebras_prices
 from .source_cloudflare import get_cloudflare_prices
@@ -43,6 +44,7 @@ def main():
         detect_deprecated,
         get_arcee_prices,
         get_avian_prices,
+        get_aws_prices,
         get_baseten_prices,
         get_cerebras_prices,
         get_cloudflare_prices,

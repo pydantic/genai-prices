@@ -272,7 +272,9 @@ def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -
         cache_read_tokens=0,
         output_tokens=0,
     )
-    assert extracted.calc_price().total_price == expected_price
+    assert (
+        extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == expected_price
+    )
 
 
 @pytest.mark.parametrize(
@@ -309,7 +311,9 @@ def test_anthropic_platform_cache_write_ttl(provider_id: str, model: str, expect
         cache_read_tokens=0,
         output_tokens=0,
     )
-    assert extracted.calc_price().total_price == expected_price
+    assert (
+        extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == expected_price
+    )
 
 
 @pytest.mark.parametrize(
@@ -1598,7 +1602,9 @@ def test_bedrock():
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == snapshot('amazon.nova-lite-v1:0')
-    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.00002454'))
+    assert extracted_usage.calc_price(
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)
+    ).total_price == snapshot(Decimal('0.00002454'))
 
 
 anthropic_response_data = {

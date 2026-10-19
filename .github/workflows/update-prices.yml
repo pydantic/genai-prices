@@ -29,6 +29,7 @@ jobs:
         importer:
           - arcee
           - avian
+          - aws
           - baseten
           - cerebras
           - cloudflare
