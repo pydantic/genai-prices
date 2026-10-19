@@ -135,6 +135,10 @@ voyageai-get: ## get voyage ai model prices
 zai-get: ## get z.ai prices
 	uv run -m prices get_zai_prices
 
+.PHONY: google-get
+google-get: ## get google gemini api prices
+	uv run -m prices get_google_prices
+
 .PHONY: groq-get
 groq-get: ## get groq model prices
 	uv run -m prices get_groq_prices
@@ -160,7 +164,7 @@ openrouter-provider-get: ## get openrouter provider prices
 	uv run -m prices get_openrouter_provider_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

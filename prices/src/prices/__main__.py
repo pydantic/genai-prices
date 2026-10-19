@@ -15,6 +15,7 @@ from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
 from .source_doubleword import get_doubleword_prices
 from .source_github_copilot import get_github_copilot_prices
+from .source_google import get_google_prices
 from .source_groq import get_groq_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
@@ -50,6 +51,7 @@ def main():
         get_cursor_prices,
         get_doubleword_prices,
         get_github_copilot_prices,
+        get_google_prices,
         get_groq_prices,
         get_huggingface_prices,
         get_litellm_prices,
