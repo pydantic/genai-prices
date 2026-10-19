@@ -55,7 +55,7 @@ models:
     name: Qwen3 Embedding 8B
     match:
       equals: Qwen/Qwen3-Embedding-8B
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.04
 
@@ -64,12 +64,11 @@ models:
     match:
       equals: Qwen/Qwen3-VL-235B-A22B-Instruct-FP8
     context_window: 262144
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 0.60
           output_mtok: 1.20
-
       - constraint:
           start_date: 2026-10-18
         prices:
@@ -103,7 +102,7 @@ models:
       input_mtok: 0.35
       cache_read_mtok: 0.2
       output_mtok: 1.2
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3.5-397B-A17B
     name: Qwen3.5 397B A17B
@@ -127,12 +126,11 @@ models:
     name: Qwen3.6 35B A3B
     match:
       equals: Qwen/Qwen3.6-35B-A3B-FP8
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 0.25
           output_mtok: 2.00
-
       - constraint:
           start_date: 2026-10-18
         prices:
@@ -144,7 +142,7 @@ models:
     match:
       equals: Qwen/Qwen3.8-27B-FP8
     context_window: 262144
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Realtime pricing. See https://docs.doubleword.ai/inference-api/models/qwen-qwen3-8-27b-fp8.
     prices:
@@ -165,7 +163,7 @@ models:
     name: DeepSeek V4 Flash 0731
     match:
       equals: deepseek-ai/DeepSeek-V4-Flash-0731
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731.
     prices:
@@ -190,13 +188,13 @@ models:
       input_mtok: 1.32
       cache_read_mtok: 0.13
       output_mtok: 3.96
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek V4.1 Flash
     match:
       equals: deepseek-ai/DeepSeek-V4.1-Flash
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.
     prices:
@@ -208,12 +206,11 @@ models:
     name: Gemma 4 31B IT
     match:
       equals: google/gemma-4-31B-it
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 0.14
           output_mtok: 0.40
-
       - constraint:
           start_date: 2026-10-18
         prices:
@@ -228,7 +225,17 @@ models:
       input_mtok: 0.11
       cache_read_mtok: 0.01
       output_mtok: 0.32
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
+
+  - id: meta/muse-spark-open
+    name: Muse Spark Open
+    match:
+      equals: meta/muse-spark-open
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.15
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
 
   - id: mistralai/Devstral-2-123B-Instruct-2512
     name: Devstral 2 123B Instruct 2512
@@ -253,7 +260,7 @@ models:
     match:
       equals: moonshotai/kimi-k3
     context_window: 1048576
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Realtime pricing. See https://docs.doubleword.ai/inference-api/models/moonshotai-kimi-k3.
     prices:
@@ -278,7 +285,7 @@ models:
       input_mtok: 0.5
       cache_read_mtok: 0.13
       output_mtok: 2.2
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-20b
     name: GPT OSS 20B
@@ -303,7 +310,7 @@ models:
     match:
       equals: zai-org/GLM-5.2-FP8
     context_window: 1048576
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.
     prices:
@@ -319,7 +326,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.28
       output_mtok: 4.4
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM 5.3 Flash
@@ -329,4 +336,4 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
