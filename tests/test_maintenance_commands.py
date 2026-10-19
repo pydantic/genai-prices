@@ -49,6 +49,12 @@ id: example
 name: Example
 api_pattern: example
 models:
+  - id: aliased
+    match: {or: [{equals: aliased}]}
+    prices: {input_mtok: 3}
+  - id: aliased-snapshot
+    match: {equals: aliased-snapshot}
+    prices: {input_mtok: 3}
   - id: not-collapsible
     match: {equals: not-collapsible}
     prices: {input_mtok: 1}
@@ -74,15 +80,19 @@ models:
 
     monkeypatch.setattr(collapse, 'get_providers_yaml', lambda: {'example': provider_yaml})
     collapse.collapse()
-    assert capsys.readouterr().out == 'Provider example:\n  1 models combined\n\nTotal models combined: 1\n'
+    assert capsys.readouterr().out == 'Provider example:\n  2 models combined\n\nTotal models combined: 2\n'
     saved = ProviderYamlFile(provider_path)
     assert [model.id for model in saved.provider.models] == [
+        'aliased',
         'not-collapsible',
         'parent',
         'parent:different',
         'parent:variant',
     ]
     assert saved.provider.find_model('parent:matching') is not None
+    assert saved.provider.find_model('aliased-snapshot') is not None
+    with pytest.raises(LookupError, match="Model with ID 'missing' not found"):
+        saved.update_model('missing', saved.provider.models[0])
 
     empty_provider = ProviderYaml(Provider(id='empty', name='Empty', models=[]))
     monkeypatch.setattr(collapse, 'get_providers_yaml', lambda: {'empty': empty_provider})
