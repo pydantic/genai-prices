@@ -127,9 +127,11 @@ jobs:
           shopt -s nullglob
           patches=("$RUNNER_TEMP"/patches/*.patch)
           notes=("$RUNNER_TEMP"/patches/*.notes)
+          complete=true
           if [ "$IMPORT_RESULT" != success ] || [ "${#patches[@]}" != "$EXPECTED_COUNT" ] || [ "${#notes[@]}" != "$EXPECTED_COUNT" ]; then
-            echo '::error::Incomplete importer evidence; preserving the existing price proposal'
-            exit 1
+            # Failed importers upload nothing, so their pending changes leave the proposal until they recover.
+            echo '::warning::Some importers failed; publishing the others without closing the price proposal'
+            complete=false
           fi
           applied=()
           for patch in "${patches[@]}"; do
@@ -138,6 +140,7 @@ jobs:
             git apply --index "$patch"
             applied+=("$name")
           done
+          echo "complete=$complete" >> "$GITHUB_OUTPUT"
           echo "importers=${applied[*]}" >> "$GITHUB_OUTPUT"
       - if: steps.apply.outputs.importers != ''
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
@@ -168,11 +171,15 @@ jobs:
       - name: Write the pull request description
         env:
           IMPORTERS: ${{ steps.apply.outputs.importers }}
+          COMPLETE: ${{ steps.apply.outputs.complete }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           {
             printf 'Prices fetched from official provider APIs and docs by [this run](%s).\n\n' "$RUN_URL"
             printf 'Importers with changes: %s\n\n' "$IMPORTERS"
+            if [ "$COMPLETE" != true ]; then
+              printf 'Some importers failed in this run, so their changes are missing until they recover.\n\n'
+            fi
             printf 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
             if notes="$(cat "$RUNNER_TEMP"/patches/*.notes 2>/dev/null)" && [ -n "$notes" ]; then
               printf '\n## Needs a manual update\n\nThese rates changed but could not be updated automatically:\n\n'
@@ -182,6 +189,7 @@ jobs:
       - id: pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          COMPLETE: ${{ steps.apply.outputs.complete }}
         run: |
           git config user.name 'genai-prices-automation[bot]'
           git config user.email 'genai-prices-automation[bot]@users.noreply.github.com'
@@ -189,7 +197,8 @@ jobs:
           pr="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
           git add --all
           if git diff --cached --quiet; then
-            if [ -n "$pr" ]; then
+            # Only a run where every importer succeeded shows that nothing remains to publish.
+            if [ -n "$pr" ] && [ "$COMPLETE" = true ]; then
               gh pr close "$pr" --comment 'No automatically publishable changes remain. Unresolved source differences are tracked in the manual price review issue.'
             fi
             exit 0
@@ -217,7 +226,7 @@ jobs:
 
   manual-updates:
     needs: import
-    if: ${{ !cancelled() && needs.import.result == 'success' }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -233,32 +242,57 @@ jobs:
       - id: report
         env:
           GH_TOKEN: ${{ github.token }}
+          IMPORT_RESULT: ${{ needs.import.result }}
           EXPECTED_COUNT: ${{ needs.import.outputs.expected-count }}
         run: |
           shopt -s nullglob
           notes=("$RUNNER_TEMP"/patches/*.notes)
-          [ "${#notes[@]}" = "$EXPECTED_COUNT" ]
+          complete=false
+          if [ "$IMPORT_RESULT" = success ] && [ "${#notes[@]}" = "$EXPECTED_COUNT" ]; then
+            complete=true
+          fi
           title='Provider prices needing manual review'
           issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $title" \
             --json number,title,author | jq -r '.[] | select(.title == "Provider prices needing manual review" and (.author.login == "github-actions[bot]" or .author.login == "app/github-actions")) | .number')"
-          sort -u "${notes[@]}" | sed '/^$/d; s/^/- /' > "$RUNNER_TEMP/manual-notes.md"
+          previous_body="$RUNNER_TEMP/previous-manual-body.md"
+          : > "$previous_body"
+          if [ -n "$issue" ]; then
+            gh issue view "$issue" --repo "$GITHUB_REPOSITORY" --json body --jq .body | tr -d '\r' > "$previous_body"
+          fi
+          { grep '^- ' "$previous_body" || true; } | sort -u > "$RUNNER_TEMP/previous-manual-notes.md"
+          {
+            [ "${#notes[@]}" = 0 ] || sed '/^$/d; s/^/- /' "${notes[@]}"
+            # Failed importers report nothing, so a partial run keeps every finding already listed.
+            if [ "$complete" != true ]; then
+              cat "$RUNNER_TEMP/previous-manual-notes.md"
+            fi
+          } | sort -u > "$RUNNER_TEMP/manual-notes.md"
           body="$RUNNER_TEMP/manual-body.md"
           if [ ! -s "$RUNNER_TEMP/manual-notes.md" ]; then
-            if [ -n "$issue" ]; then
+            if [ -n "$issue" ] && [ "$complete" = true ]; then
               gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment 'All importers completed without reporting manual updates.'
             fi
             exit 0
           fi
           {
             printf 'The hourly price importers reported changes that need manual review.\n\n'
-            printf 'This report is refreshed after a complete successful import; unchanged reports do not notify again.\n\n'
+            printf 'A run where every importer succeeds replaces this list; a run with failing importers only adds to it. '
+            printf 'New findings are also posted as comments.\n\n'
             cat "$RUNNER_TEMP/manual-notes.md"
           } > "$body"
           cat "$body" >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$issue" ]; then
-            gh issue view "$issue" --repo "$GITHUB_REPOSITORY" --json body --jq .body > "$RUNNER_TEMP/previous-manual-body.md"
-            if [ "$(cat "$body")" != "$(cat "$RUNNER_TEMP/previous-manual-body.md")" ]; then
+            if [ "$(cat "$body")" != "$(cat "$previous_body")" ]; then
               gh issue edit "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+            fi
+            # Body edits notify nobody, so new findings also go out as a comment.
+            comm -13 "$RUNNER_TEMP/previous-manual-notes.md" "$RUNNER_TEMP/manual-notes.md" > "$RUNNER_TEMP/new-manual-notes.md"
+            if [ -s "$RUNNER_TEMP/new-manual-notes.md" ]; then
+              {
+                printf 'New findings since the last report:\n\n'
+                cat "$RUNNER_TEMP/new-manual-notes.md"
+              } > "$RUNNER_TEMP/manual-comment.md"
+              gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/manual-comment.md"
             fi
           else
             echo "created-issue-url=$(gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file "$body")" >> "$GITHUB_OUTPUT"

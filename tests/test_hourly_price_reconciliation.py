@@ -56,11 +56,12 @@ def workflow_env(tmp_path: Path) -> dict[str, str]:
         'ISSUES': str(tmp_path / 'issues'),
         'IMPORT_RESULT': 'success',
         'EXPECTED_COUNT': '1',
+        'COMPLETE': 'true',
     }
 
 
 @pytest.mark.parametrize('evidence', ['complete-empty', 'complete-change', 'failed', 'missing', 'conflict'])
-def test_publisher_requires_complete_applicable_evidence(
+def test_publisher_applies_available_patches_and_reports_completeness(
     tmp_path: Path, workflow_env: dict[str, str], evidence: str
 ) -> None:
     git(tmp_path, 'init', '-b', 'main')
@@ -70,7 +71,7 @@ def test_publisher_requires_complete_applicable_evidence(
     git(tmp_path, 'add', 'price')
     git(tmp_path, 'commit', '-m', 'base')
     patch = ''
-    if evidence in {'complete-change', 'conflict'}:
+    if evidence in {'complete-change', 'failed', 'conflict'}:
         (tmp_path / 'price').write_text('new\n')
         patch = git(tmp_path, 'diff', '--', 'price') + '\n'
         (tmp_path / 'price').write_text('conflict\n' if evidence == 'conflict' else 'old\n')
@@ -78,19 +79,23 @@ def test_publisher_requires_complete_applicable_evidence(
         (tmp_path / 'patches/source.patch').write_text(patch)
         (tmp_path / 'patches/source.notes').write_text('')
     if evidence == 'failed':
+        # Another importer failed; this one's patch still publishes.
         workflow_env['IMPORT_RESULT'] = 'failure'
     result = run_script(script('pull-request', 'apply'), tmp_path, workflow_env)
-    assert (result.returncode == 0) == evidence.startswith('complete')
-    if evidence.startswith('complete'):
-        assert (tmp_path / 'output').read_text() == ('importers=source\n' if patch else 'importers=\n')
-    else:
+    assert (result.returncode == 0) == (evidence != 'conflict')
+    if evidence == 'conflict':
         assert not (tmp_path / 'output').exists()
-        assert not (tmp_path / 'calls').exists()
+    else:
+        complete = 'true' if evidence.startswith('complete') else 'false'
+        importers = 'source' if patch else ''
+        assert (tmp_path / 'output').read_text() == f'complete={complete}\nimporters={importers}\n'
+        assert (git(tmp_path, 'diff', '--cached', '--name-only') == 'price') == bool(patch)
 
 
+@pytest.mark.parametrize('complete', ['true', 'false'])
 @pytest.mark.parametrize('existing', ['', '123'])
-def test_authoritative_empty_result_closes_stale_pr_without_an_empty_commit(
-    tmp_path: Path, workflow_env: dict[str, str], existing: str
+def test_only_a_complete_empty_result_closes_the_stale_pr(
+    tmp_path: Path, workflow_env: dict[str, str], existing: str, complete: str
 ) -> None:
     repo = tmp_path / 'repo'
     repo.mkdir()
@@ -101,12 +106,12 @@ def test_authoritative_empty_result_closes_stale_pr_without_an_empty_commit(
     git(repo, 'add', 'price')
     git(repo, 'commit', '-m', 'base')
     before = git(repo, 'rev-parse', 'HEAD')
-    workflow_env['EXISTING'] = existing
+    workflow_env.update({'EXISTING': existing, 'COMPLETE': complete})
     result = run_script(script('pull-request', 'pr'), repo, workflow_env)
     assert result.returncode == 0, result.stderr
     assert git(repo, 'rev-parse', 'HEAD') == before
     calls = (tmp_path / 'calls').read_text()
-    assert ('pr close 123' in calls) == bool(existing)
+    assert ('pr close 123' in calls) == (bool(existing) and complete == 'true')
     assert 'pr create' not in calls and 'pr edit' not in calls
 
 
@@ -157,39 +162,59 @@ def test_same_tree_still_refreshes_changed_notes_without_run_url_churn(
         assert (tmp_path / 'output').read_text() == 'created-pr-url=https://github.com/test/repo/123\n'
 
 
-@pytest.mark.parametrize('report', ['new', 'unchanged', 'changed', 'resolved', 'empty', 'incomplete'])
+NEW_FINDING = 'Source: kept a unchanged; update them by hand'
+OLD_FINDING = 'Other: kept b unchanged; update them by hand'
+
+
+def manual_body(*findings: str) -> str:
+    return (
+        'The hourly price importers reported changes that need manual review.\n\n'
+        'A run where every importer succeeds replaces this list; a run with failing importers only adds to it. '
+        'New findings are also posted as comments.\n\n' + ''.join(f'- {finding}\n' for finding in sorted(findings))
+    )
+
+
+# report: (findings this run, None for a missing artifact; findings already listed, None for no issue;
+#          import result; issue actions; findings listed afterwards)
+MANUAL_REPORTS: dict[str, tuple[list[str] | None, list[str] | None, str, set[str], list[str] | None]] = {
+    'new': ([NEW_FINDING], None, 'success', {'create'}, [NEW_FINDING]),
+    'unchanged': ([NEW_FINDING], [NEW_FINDING], 'success', set(), [NEW_FINDING]),
+    'replaced': ([NEW_FINDING], [OLD_FINDING], 'success', {'edit', 'comment'}, [NEW_FINDING]),
+    'resolved': ([], [OLD_FINDING], 'success', {'close'}, None),
+    'empty': ([], None, 'success', set(), None),
+    'partial-new': ([NEW_FINDING], [OLD_FINDING], 'failure', {'edit', 'comment'}, [NEW_FINDING, OLD_FINDING]),
+    'partial-missing': (None, [OLD_FINDING], 'failure', set(), [OLD_FINDING]),
+}
+
+
+@pytest.mark.parametrize('report', MANUAL_REPORTS)
 @pytest.mark.parametrize('actor', ['github-actions[bot]', 'app/github-actions'])
-def test_manual_only_reports_are_durable_and_deduplicated(
+def test_manual_reports_reconcile_on_complete_runs_and_only_add_on_partial_runs(
     tmp_path: Path, workflow_env: dict[str, str], report: str, actor: str
 ) -> None:
-    notes = '' if report in {'resolved', 'empty', 'incomplete'} else 'Source: kept m unchanged; update them by hand\n'
-    if report != 'incomplete':
-        (tmp_path / 'patches/source.notes').write_text(notes)
-    existing = report in {'unchanged', 'changed', 'resolved', 'incomplete'}
-    workflow_env['EXISTING'] = '123' if existing else ''
+    findings, listed, import_result, actions, expected = MANUAL_REPORTS[report]
+    if findings is not None:
+        (tmp_path / 'patches/source.notes').write_text(''.join(f'{finding}\n' for finding in findings))
+    workflow_env['IMPORT_RESULT'] = import_result
     (tmp_path / 'issues').write_text(
         json.dumps(
             [{'number': 123, 'title': 'Provider prices needing manual review', 'author': {'login': actor}}]
-            if existing
+            if listed is not None
             else []
         )
     )
-    body = (
-        'The hourly price importers reported changes that need manual review.\n\n'
-        'This report is refreshed after a complete successful import; unchanged reports do not notify again.\n\n'
-        '- Source: kept m unchanged; update them by hand\n'
-    )
-    (tmp_path / 'previous-body').write_text(body if report == 'unchanged' else 'Previous notes\n')
+    # Bodies edited in the GitHub UI come back with CRLF line endings.
+    (tmp_path / 'previous-body').write_text(manual_body(*listed).replace('\n', '\r\n') if listed is not None else '')
     result = run_script(script('manual-updates', 'report'), tmp_path, workflow_env)
-    assert (result.returncode == 0) == (report != 'incomplete')
-    calls = (tmp_path / 'calls').read_text() if (tmp_path / 'calls').exists() else ''
-    assert ('issue create' in calls) == (report == 'new')
-    assert ('issue edit' in calls) == (report == 'changed')
-    assert ('issue close' in calls) == (report == 'resolved')
-    if report == 'incomplete':
-        assert not calls
-    if notes:
-        assert (tmp_path / 'manual-body.md').read_text() == body
+    assert result.returncode == 0, result.stderr
+    calls = (tmp_path / 'calls').read_text()
+    assert {action for action in ['create', 'edit', 'comment', 'close'] if f'issue {action}' in calls} == actions
+    if expected is not None:
+        assert (tmp_path / 'manual-body.md').read_text() == manual_body(*expected)
+    if 'comment' in actions:
+        assert (
+            tmp_path / 'manual-comment.md'
+        ).read_text() == f'New findings since the last report:\n\n- {NEW_FINDING}\n'
 
 
 def test_status_functions_and_token_boundaries() -> None:
@@ -197,7 +222,7 @@ def test_status_functions_and_token_boundaries() -> None:
     jobs = workflow['jobs']
     for name in ['notify', 'notify-failure', 'notify-manual']:
         assert '!cancelled()' in jobs[name]['if']
-    assert jobs['manual-updates']['if'] == "${{ !cancelled() && needs.import.result == 'success' }}"
+    assert jobs['manual-updates']['if'] == '${{ !cancelled() }}'
     assert jobs['manual-updates']['permissions'] == {'issues': 'write'}
     assert jobs['import']['permissions'] == {'contents': 'read'}
     assert jobs['pull-request']['permissions'] == {'contents': 'read'}
