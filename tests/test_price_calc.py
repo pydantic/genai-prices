@@ -1779,6 +1779,7 @@ def test_claude_opus_5_one_hour_cache_write_price():
         Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_1h_tokens=1_000_000),
         model_ref='claude-opus-5',
         provider_id='anthropic',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.input_price == Decimal('10')
@@ -1790,6 +1791,7 @@ def test_claude_opus_5_five_minute_cache_write_price():
         Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_5m_tokens=1_000_000),
         model_ref='claude-opus-5',
         provider_id='anthropic',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.input_price == Decimal('6.25')

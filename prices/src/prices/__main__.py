@@ -7,6 +7,7 @@ from .detect_deprecated import detect_deprecated
 from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
+from .source_anthropic import get_anthropic_prices
 from .source_arcee import get_arcee_prices
 from .source_avian import get_avian_prices
 from .source_aws import get_aws_prices
@@ -46,6 +47,7 @@ def main():
         update_from_openrouter,
         collapse,
         detect_deprecated,
+        get_anthropic_prices,
         get_arcee_prices,
         get_avian_prices,
         get_aws_prices,
