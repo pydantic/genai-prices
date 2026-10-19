@@ -309,7 +309,9 @@ def test_anthropic_platform_cache_write_ttl(provider_id: str, model: str, expect
         cache_read_tokens=0,
         output_tokens=0,
     )
-    assert extracted.calc_price().total_price == expected_price
+    assert (
+        extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == expected_price
+    )
 
 
 @pytest.mark.parametrize(
@@ -380,7 +382,10 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.usage == expected_usage
     assert extracted_usage.provider.name == 'Anthropic'
 
-    assert extracted_usage.calc_price().total_price == expected_price
+    assert (
+        extracted_usage.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price
+        == expected_price
+    )
 
 
 def test_anthropic_native_thinking_tokens():
