@@ -71,7 +71,9 @@ class ProviderYaml:
         self._extra_prices = []
         self._removed_models = set()
 
-    def update_model(self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False) -> None:
+    def update_model(self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False) -> bool:
+        current_model = next((m for m in self.provider.models if m.id == lookup_id), None)
+        price_update_blocked = set_prices and current_model is not None and self._same_day_change(current_model, model)
         yaml_model = self._get_model(lookup_id)
         description = model.description
         if description:
@@ -84,7 +86,7 @@ class ProviderYaml:
             if field not in yaml_model and value is not None:
                 yaml_model.insert(position, field, value)  # pyright: ignore[reportUnknownMemberType]
 
-        if set_prices:
+        if set_prices and not price_update_blocked:
             prices = cast(Any, yaml_model['prices'])
             assert isinstance(model.prices, ModelPrice)
             new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
@@ -96,13 +98,6 @@ class ProviderYaml:
                 conditional_price = {'constraint': {'start_date': model.prices_checked}, 'prices': new_prices}
                 if isinstance(prices, CommentedMap):
                     yaml_model['prices'] = [{'prices': prices}, conditional_price]
-                elif (
-                    isinstance(current_model.prices, list)
-                    and isinstance(constraint := current_model.prices[-1].constraint, StartDateConstraint)
-                    and constraint.start_date == model.prices_checked
-                ):
-                    # A second change on the same day would otherwise add an entry that can never match.
-                    cast(CommentedSeq, prices)[-1] = conditional_price
                 else:
                     cast(CommentedSeq, prices).append(conditional_price)  # pyright: ignore[reportUnknownMemberType]
             assert model.prices_checked is not None, 'a price update needs the date it was checked'
@@ -114,7 +109,7 @@ class ProviderYaml:
         current_match = match_logic_schema.validate_python(current_match_yaml)
         if model.match == current_match:
             # matches are the same, nothing to do
-            return
+            return not price_update_blocked
 
         if isinstance(current_match, ClauseOr):
             or_list = cast(CommentedSeq, current_match_yaml['or'])
@@ -130,6 +125,7 @@ class ProviderYaml:
             clauses = model.match.or_ if isinstance(model.match, ClauseOr) else [model.match]
             match_or = ClauseOr.model_validate({'or': [current_match, *(c for c in clauses if c != current_match)]})
             yaml_model['match'] = match_or.model_dump(by_alias=True, mode='json')
+        return not price_update_blocked
 
     def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None:
         [model] = [m for m in self.provider.models if m.id == lookup_id]
@@ -144,7 +140,7 @@ class ProviderYaml:
             return 1
 
     def upsert_models(self, models: list[ModelInfo], *, source: str, min_count: int) -> tuple[int, int]:
-        """Add new models and update existing ones, keeping a dated entry for every rate change, then save."""
+        """Add models and date representable rate changes; report intraday changes for manual review."""
         if len(models) < min_count:
             raise RuntimeError(f'{source} returned only {len(models)} priced models; expected at least {min_count}')
         models_added = 0
@@ -190,16 +186,17 @@ class ProviderYaml:
                     print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')
                 continue
             updated_prices[matching_model.id] = prices
-            if matching_model.price_variants and prices != ModelPrice(**curated):
+            model = model.model_copy(update={'prices': prices})
+            price_update_blocked = self._same_day_change(matching_model, model)
+            if not price_update_blocked and matching_model.price_variants and prices != ModelPrice(**curated):
                 assert model.prices_checked is not None, 'a price update needs the date it was checked'
                 self._follow_price_variants(matching_model, ModelPrice(**curated), prices, model.prices_checked, source)
-            model = model.model_copy(update={'prices': prices})
             if model.match == ClauseEquals(equals=model.id):
                 # The existing match already covers this id, so an `equals` clause for it would only add noise.
                 current_match = match_logic_schema.validate_python(self._get_model(matching_model.id)['match'])
                 model = model.model_copy(update={'match': current_match})
-            self.update_model(matching_model.id, model, set_prices=True)
-            models_updated += 1
+            self.update_model(matching_model.id, model, set_prices=not price_update_blocked)
+            models_updated += not price_update_blocked
         self.save()
         return models_added, models_updated
 
@@ -209,13 +206,36 @@ class ProviderYaml:
     def remove_model(self, model_id: str) -> None:
         self._removed_models.add(model_id)
 
+    def _same_day_change(self, record: ModelInfo, model: ModelInfo) -> bool:
+        old = record.prices[-1].prices if isinstance(record.prices, list) else record.prices
+        assert isinstance(model.prices, ModelPrice)
+        if old == model.prices:
+            return False
+        constraints = [record.prices[-1].constraint] if isinstance(record.prices, list) else []
+        if record.price_variants:
+            changed_contexts = [when for when, _ in follow_standard_change(record.price_variants, old, model.prices)]
+            constraints.extend(
+                next(variant.constraint for variant in record.price_variants if variant.when == when)
+                for when in changed_contexts
+            )
+        if (model.prices_checked is not None and record.prices_checked == model.prices_checked) or any(
+            isinstance(c, StartDateConstraint) and c.start_date == model.prices_checked for c in constraints
+        ):
+            print(
+                f'{self.provider_id}: kept {record.id} unchanged: another price change on {model.prices_checked} cannot be represented '
+                f'by date-only constraints; update them by hand. Reported rates: '
+                f'{model.prices.model_dump(mode="json", exclude_none=True)}'
+            )
+            return True
+        return False
+
     def _follow_price_variants(
         self, record: ModelInfo, old: ModelPrice, new: ModelPrice, start: date, source: str
     ) -> None:
         """Date a new batch/flex/priority rate for every variant that is a fixed share of the standard rate."""
         assert record.price_variants is not None
         yaml_variants = cast(CommentedSeq, self._get_model(record.id)['price_variants'])
-        changes: list[tuple[int, bool, CommentedMap]] = []
+        changes: list[tuple[int, CommentedMap]] = []
         for when, prices in follow_standard_change(record.price_variants, old, new):
             if prices is None:
                 print(
@@ -223,20 +243,15 @@ class ProviderYaml:
                 )
                 continue
             index = next(i for i, variant in enumerate(record.price_variants) if variant.when == when)
-            constraint = record.price_variants[index].constraint
-            same_day = isinstance(constraint, StartDateConstraint) and constraint.start_date == start
             entry = CommentedMap(
                 when=flow_map(when),
                 constraint=flow_map({'start_date': start}),
                 prices=prices.model_dump(by_alias=True, mode='json', exclude_none=True),
             )
-            changes.append((index, same_day, entry))
+            changes.append((index, entry))
         # Variants resolve first to last, so the dated entry goes ahead of the one it supersedes.
-        for index, same_day, entry in sorted(changes, key=lambda change: change[0], reverse=True):
-            if same_day:
-                yaml_variants[index] = entry
-            else:
-                yaml_variants.insert(index, entry)  # pyright: ignore[reportUnknownMemberType]
+        for index, entry in sorted(changes, key=lambda change: change[0], reverse=True):
+            yaml_variants.insert(index, entry)  # pyright: ignore[reportUnknownMemberType]
 
     def _get_model(self, model_id: str) -> CommentedMap:
         for model in self.data['models']:

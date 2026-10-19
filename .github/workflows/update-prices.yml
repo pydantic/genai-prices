@@ -23,6 +23,8 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+    outputs:
+      expected-count: ${{ steps.patch.outputs.expected-count }}
     strategy:
       fail-fast: false
       matrix:
@@ -76,8 +78,10 @@ jobs:
         env:
           IMPORTER: ${{ matrix.importer }}
       - name: Keep the diff unless it only bumps prices_checked
+        id: patch
         env:
           IMPORTER: ${{ matrix.importer }}
+          EXPECTED_COUNT: ${{ strategy.job-total }}
         run: |
           mkdir -p "$RUNNER_TEMP/patches"
           : > "$RUNNER_TEMP/patches/$IMPORTER.patch"
@@ -85,6 +89,7 @@ jobs:
           if git diff -U0 -- prices/providers | grep -E '^[-+] ' | grep -qvE '^[-+] +prices_checked: '; then
             git diff --binary -- prices/providers > "$RUNNER_TEMP/patches/$IMPORTER.patch"
           fi
+          echo "expected-count=$EXPECTED_COUNT" >> "$GITHUB_OUTPUT"
           # Rates the importer saw change but couldn't write, listed on the price update PR for a person to apply.
           grep -E 'update them by hand|kept .+ unchanged|reports others' "$RUNNER_TEMP/importer.log" \
             > "$RUNNER_TEMP/patches/$IMPORTER.notes" || true
@@ -115,16 +120,23 @@ jobs:
           merge-multiple: true
       - name: Apply importer patches
         id: apply
+        env:
+          IMPORT_RESULT: ${{ needs.import.result }}
+          EXPECTED_COUNT: ${{ needs.import.outputs.expected-count }}
         run: |
+          shopt -s nullglob
+          patches=("$RUNNER_TEMP"/patches/*.patch)
+          notes=("$RUNNER_TEMP"/patches/*.notes)
+          if [ "$IMPORT_RESULT" != success ] || [ "${#patches[@]}" != "$EXPECTED_COUNT" ] || [ "${#notes[@]}" != "$EXPECTED_COUNT" ]; then
+            echo '::error::Incomplete importer evidence; preserving the existing price proposal'
+            exit 1
+          fi
           applied=()
-          for patch in "$RUNNER_TEMP"/patches/*.patch; do
+          for patch in "${patches[@]}"; do
             [ -s "$patch" ] || continue
             name="$(basename "$patch" .patch)"
-            if git apply --index "$patch"; then
-              applied+=("$name")
-            else
-              echo "::warning::The $name patch no longer applies to main"
-            fi
+            git apply --index "$patch"
+            applied+=("$name")
           done
           echo "importers=${applied[*]}" >> "$GITHUB_OUTPUT"
       - if: steps.apply.outputs.importers != ''
@@ -146,16 +158,14 @@ jobs:
           make collapse-models build
           # extract_usages.py exits non-zero after rewriting a stale file; a second run fails only on a real error.
           uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py
-      - if: steps.apply.outputs.importers != ''
-        id: app-token
+      - id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ vars.PRICE_UPDATE_APP_CLIENT_ID }}
           private-key: ${{ secrets.PRICE_UPDATE_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
-      - if: steps.apply.outputs.importers != ''
-        name: Write the pull request description
+      - name: Write the pull request description
         env:
           IMPORTERS: ${{ steps.apply.outputs.importers }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -163,39 +173,111 @@ jobs:
           {
             printf 'Prices fetched from official provider APIs and docs by [this run](%s).\n\n' "$RUN_URL"
             printf 'Importers with changes: %s\n\n' "$IMPORTERS"
-            printf 'Each rate change is a new dated entry, so past usage keeps its old price.\n'
+            printf 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
             if notes="$(cat "$RUNNER_TEMP"/patches/*.notes 2>/dev/null)" && [ -n "$notes" ]; then
               printf '\n## Needs a manual update\n\nThese rates changed but could not be updated automatically:\n\n'
               sed 's/^/- /' <<< "$notes"
             fi
           } > "$RUNNER_TEMP/pr-body.md"
-      - if: steps.apply.outputs.importers != ''
-        id: pr
+      - id: pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config user.name 'genai-prices-automation[bot]'
           git config user.email 'genai-prices-automation[bot]@users.noreply.github.com'
-          git switch -c "$BRANCH"
+          body="$RUNNER_TEMP/pr-body.md"
+          pr="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
           git add --all
-          git commit --quiet -m 'Update provider prices from official sources'
-          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          # The branch is rebuilt from main every hour, so only push when the result differs.
-          if git fetch --quiet "$remote" "$BRANCH" && [ "$(git rev-parse FETCH_HEAD^{tree})" = "$(git rev-parse HEAD^{tree})" ]; then
-            echo 'The open price update already has these changes'
+          if git diff --cached --quiet; then
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --comment 'No automatically publishable changes remain. Unresolved source differences are tracked in the manual price review issue.'
+            fi
             exit 0
           fi
-          git push --force "$remote" "HEAD:$BRANCH"
-          body="$RUNNER_TEMP/pr-body.md"
-          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
-            gh pr edit "$BRANCH" --body-file "$body"
+          git switch -c "$BRANCH"
+          git commit --quiet -m 'Update provider prices from official sources'
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Compare trees independently of the PR body: manual notes can change without a data change.
+          if [ -n "$pr" ]; then
+            git fetch --quiet "$remote" "$BRANCH"
+            if [ "$(git rev-parse FETCH_HEAD^{tree})" != "$(git rev-parse HEAD^{tree})" ]; then
+              git push --force "$remote" "HEAD:$BRANCH"
+            fi
+            gh pr view "$pr" --json body --jq .body > "$RUNNER_TEMP/previous-body.md"
+            # A new run link alone does not warrant an hourly edit.
+            sed -E 's@actions/runs/[0-9]+@actions/runs/RUN@g' "$body" > "$RUNNER_TEMP/body-normalized.md"
+            sed -E 's@actions/runs/[0-9]+@actions/runs/RUN@g' "$RUNNER_TEMP/previous-body.md" > "$RUNNER_TEMP/previous-normalized.md"
+            if [ "$(cat "$RUNNER_TEMP/body-normalized.md")" != "$(cat "$RUNNER_TEMP/previous-normalized.md")" ]; then
+              gh pr edit "$pr" --body-file "$body"
+            fi
           else
+            git push --force "$remote" "HEAD:$BRANCH"
             echo "created-pr-url=$(gh pr create --head "$BRANCH" --title 'Update provider prices from official sources' --body-file "$body")" >> "$GITHUB_OUTPUT"
           fi
 
+  manual-updates:
+    needs: import
+    if: ${{ !cancelled() && needs.import.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    outputs:
+      created-issue-url: ${{ steps.report.outputs.created-issue-url }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: patch-*
+          path: ${{ runner.temp }}/patches
+          merge-multiple: true
+      - id: report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_COUNT: ${{ needs.import.outputs.expected-count }}
+        run: |
+          shopt -s nullglob
+          notes=("$RUNNER_TEMP"/patches/*.notes)
+          [ "${#notes[@]}" = "$EXPECTED_COUNT" ]
+          title='Provider prices needing manual review'
+          issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $title" \
+            --json number,title,author | jq -r '.[] | select(.title == "Provider prices needing manual review" and (.author.login == "github-actions[bot]" or .author.login == "app/github-actions")) | .number')"
+          sort -u "${notes[@]}" | sed '/^$/d; s/^/- /' > "$RUNNER_TEMP/manual-notes.md"
+          body="$RUNNER_TEMP/manual-body.md"
+          if [ ! -s "$RUNNER_TEMP/manual-notes.md" ]; then
+            if [ -n "$issue" ]; then
+              gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment 'All importers completed without reporting manual updates.'
+            fi
+            exit 0
+          fi
+          {
+            printf 'The hourly price importers reported changes that need manual review.\n\n'
+            printf 'This report is refreshed after a complete successful import; unchanged reports do not notify again.\n\n'
+            cat "$RUNNER_TEMP/manual-notes.md"
+          } > "$body"
+          cat "$body" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$issue" ]; then
+            gh issue view "$issue" --repo "$GITHUB_REPOSITORY" --json body --jq .body > "$RUNNER_TEMP/previous-manual-body.md"
+            if [ "$(cat "$body")" != "$(cat "$RUNNER_TEMP/previous-manual-body.md")" ]; then
+              gh issue edit "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+            fi
+          else
+            echo "created-issue-url=$(gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file "$body")" >> "$GITHUB_OUTPUT"
+          fi
+
+  notify-manual:
+    needs: manual-updates
+    if: ${{ !cancelled() && needs.manual-updates.outputs.created-issue-url != '' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.manual-updates.outputs.created-issue-url }}
+      message: "GenAI Prices needs a manual price update:"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   notify:
     needs: pull-request
-    if: needs.pull-request.outputs.created-pr-url != ''
+    if: ${{ !cancelled() && needs.pull-request.outputs.created-pr-url != '' }}
     permissions: {}
     uses: ./.github/workflows/price-update-slack.yml
     with:
@@ -234,7 +316,7 @@ jobs:
 
   notify-failure:
     needs: importer-failure
-    if: needs.importer-failure.outputs.newly-failing == 'true'
+    if: ${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}
     permissions: {}
     uses: ./.github/workflows/price-update-slack.yml
     with:

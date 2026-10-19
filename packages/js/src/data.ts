@@ -6282,6 +6282,24 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/cloudflare/clairic',
+        name: 'clairic',
+        match: {
+          or: [
+            {
+              equals: '@cf/cloudflare/clairic',
+            },
+            {
+              equals: 'clairic',
+            },
+          ],
+        },
+        price_comments: 'Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
         id: '@cf/cloudflare/clef',
         name: 'Clef',
         match: {
@@ -45932,11 +45950,37 @@ export const data: Provider[] = [
           equals: 'claude-haiku-5-5',
         },
         context_window: 1000000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 0.025,
+          input_mtok: {
+            base: 0.025,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.125,
+              },
+            ],
+          },
           cache_write_mtok: 0.03125,
-          cache_read_mtok: 0.0025,
-          output_mtok: 0.125,
+          cache_read_mtok: {
+            base: 0.0025,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.0125,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.625,
+              },
+            ],
+          },
         },
       },
       {
@@ -46485,11 +46529,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-astra',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 10,
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 20,
+              },
+            ],
+          },
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1,
-          output_mtok: 50,
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 200000,
+                price: 75,
+              },
+            ],
+          },
         },
       },
       {
@@ -46499,11 +46569,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-luna',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 0.1,
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
           cache_write_mtok: 0.125,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.5,
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.75,
+              },
+            ],
+          },
         },
       },
       {
@@ -46513,11 +46609,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-sol',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.2,
-          output_mtok: 10,
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 15,
+              },
+            ],
+          },
         },
       },
       {
@@ -46527,11 +46649,37 @@ export const data: Provider[] = [
           equals: 'gpt-6.1-sol',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.1,
-          output_mtok: 10,
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 15,
+              },
+            ],
+          },
         },
       },
       {
@@ -46581,10 +46729,36 @@ export const data: Provider[] = [
           equals: 'grok-4.6',
         },
         context_window: 500000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -46594,10 +46768,36 @@ export const data: Provider[] = [
           equals: 'grok-4.7',
         },
         context_window: 500000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {

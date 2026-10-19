@@ -3,11 +3,11 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from typing import Any
 
 import httpx2
+from pydantic import BaseModel, ConfigDict, Field
 
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
+from prices.prices_types import ModelInfo, Tier, TieredPrices
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
@@ -24,29 +24,55 @@ PRICE_KEYS = {
 }
 
 
-def get_model_infos(models: list[dict[str, Any]]):
+class LongContext(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+
+    prompt_tokens_over: int = Field(strict=True, gt=0)
+    input_per_1m: Decimal = Field(ge=0)
+    output_per_1m: Decimal = Field(ge=0)
+    cache_read_per_1m: Decimal | None = Field(default=None, ge=0)
+    cache_write_per_1m: Decimal | None = Field(default=None, ge=0)
+
+
+def get_model_infos(models: list[dict[str, object]]):
     """Extract model information from the QuickSilver Pro catalog (`pricing.json`)."""
     for model in models:
         # Image generation is billed per image, which the registry has no unit for.
         if model.get('pricing_unit') != 'tokens':
             continue
 
-        prices = {
+        prices: dict[str, Decimal | TieredPrices] = {
             price_key: Decimal(str(model[catalog_key]))
             for catalog_key, price_key in PRICE_KEYS.items()
             if model.get(catalog_key)
         }
         if not prices:
             continue
+        if model.get('long_context') is not None:
+            tier = LongContext.model_validate(model['long_context'])
+            for price_key, rate in {
+                'input_mtok': tier.input_per_1m,
+                'output_mtok': tier.output_per_1m,
+                'cache_read_mtok': tier.cache_read_per_1m,
+                'cache_write_mtok': tier.cache_write_per_1m,
+            }.items():
+                if rate is None:
+                    continue
+                base = prices.get(price_key)
+                if not isinstance(base, Decimal):
+                    raise ValueError(f'{model["id"]}: long_context {price_key} has no base rate')
+                prices[price_key] = TieredPrices(base=base, tiers=[Tier(start=tier.prompt_tokens_over, price=rate)])
 
-        yield ModelInfo(
-            id=model['id'],
-            name=model.get('name') or model['id'],
-            match=ClauseEquals(equals=model['id']),
-            context_window=model.get('context_tokens'),
-            deprecated=True if model.get('lifecycle') == 'deprecated' else None,
-            prices=ModelPrice(**prices),
-            prices_checked=date.today(),
+        yield ModelInfo.model_validate(
+            {
+                'id': model['id'],
+                'name': model.get('name') or model['id'],
+                'match': {'equals': model['id']},
+                'context_window': model.get('context_tokens'),
+                'deprecated': True if model.get('lifecycle') == 'deprecated' else None,
+                'prices': prices,
+                'prices_checked': date.today(),
+            }
         )
 
 

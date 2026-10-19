@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 21 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
-- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 52 models
+- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 53 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models

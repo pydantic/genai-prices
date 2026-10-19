@@ -1973,3 +1973,27 @@ def test_perplexity_reasoning_pro_reports_reasoning_in_completion_tokens():
     extracted = extract_usage(response_data, provider_id='perplexity')
 
     assert extracted.usage == Usage(input_tokens=17, output_tokens=1_152)
+
+
+def test_cloudflare_clairic_native_decision_response() -> None:
+    # https://developers.cloudflare.com/workers-ai/models/clairic/
+    response: dict[str, object] = {
+        'result': {
+            'model': 'clairic',
+            'usage': {
+                'state_tokens': 61,
+                'image_tokens': 0,
+                'schema_tokens': 472,
+                'input_tokens': 655,
+                'output_tokens': 0,
+                'passes': 3,
+            },
+        },
+        'success': True,
+        'errors': [],
+        'messages': [],
+    }
+    result = extract_usage(response, provider_id='cloudflare', api_flavor='decisions')
+    assert result.model is not None and result.model.id == '@cf/cloudflare/clairic'
+    assert result.usage == Usage(input_tokens=655, output_tokens=0)
+    assert result.calc_price().total_price == Decimal('0.0000655')

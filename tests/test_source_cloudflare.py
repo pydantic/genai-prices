@@ -143,3 +143,13 @@ def test_cloudflare_updater_rejects_suspiciously_small_results(monkeypatch: pyte
 
     with pytest.raises(RuntimeError, match='returned only 0 token-priced models; expected at least 1'):
         source_cloudflare.update_cloudflare_provider(ProviderYaml(provider_path), [])
+
+
+@pytest.mark.parametrize('selector', ['clairic', 'clef-omni', 'future-decisions'])
+def test_cloudflare_native_selectors_are_imported_as_aliases(selector: str) -> None:
+    [model] = source_cloudflare.parse_pricing_markdown(
+        f'## Other model pricing\n| @cf/cloudflare/{selector} | $0.100 per M input tokens | 1 |'
+    )
+    assert model.is_match(selector)
+    assert model.is_match(f'@cf/cloudflare/{selector}')
+    assert not model.is_match(f'@cf/other/{selector}')
