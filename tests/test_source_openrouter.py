@@ -669,6 +669,67 @@ models:
     )
 
 
+def test_openrouter_keeps_rates_that_only_drifted_within_tolerance(tmp_path: Path) -> None:
+    provider_path = tmp_path / 'openrouter.yml'
+    provider_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: vendor/drift
+    match: {equals: vendor/drift}
+    context_window: 1000
+    prices: {input_mtok: 0.446, output_mtok: 0.892}
+  - id: vendor/jump
+    match: {equals: vendor/jump}
+    prices: {input_mtok: 0.0376, output_mtok: 0.08}
+  - id: vendor/new-key
+    match: {equals: vendor/new-key}
+    prices: {input_mtok: 1, output_mtok: 2}
+  - id: vendor/tiered
+    match: {equals: vendor/tiered}
+    prices: {input_mtok: {base: 1, tiers: [{start: 200000, price: 2}]}, output_mtok: 2}
+"""
+    )
+    provider_yaml = update.ProviderYaml(provider_path)
+    tiered = pricing_with_extras(
+        {'prompt': '0.00000101', 'overrides': [{'min_prompt_tokens': 200_000, 'prompt': '0.00000199'}]}
+    )
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model(
+                'vendor/drift',
+                pricing=OpenRouterPricing.model_validate({'prompt': '0.000000443', 'completion': '0.000000885'}),
+            ),
+            openrouter_model(
+                'vendor/jump',
+                pricing=OpenRouterPricing.model_validate({'prompt': '0.0000000344', 'completion': '0.00000008'}),
+            ),
+            openrouter_model('vendor/new-key', pricing=pricing_with_extras({'input_cache_read': '0.0000001'})),
+            openrouter_model('vendor/tiered', pricing=tiered),
+            openrouter_model('vendor/brand-new'),
+        ]
+    )
+
+    settled = [source_openrouter.settled(model, provider_yaml) for model in models]
+    assert provider_yaml.upsert_models(settled, source='OpenRouter', min_count=1) == (1, 4)
+
+    provider = update.ProviderYaml(provider_path).provider
+    prices = {model.id: model.prices for model in provider.models}
+    assert prices['vendor/drift'] == ModelPrice(input_mtok=Decimal('0.446'), output_mtok=Decimal('0.892'))
+    assert prices['vendor/tiered'] == ModelPrice(
+        input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200_000, price=Decimal('2'))]),
+        output_mtok=Decimal('2'),
+    )
+    assert isinstance(jump := prices['vendor/jump'], list)
+    assert jump[-1].prices == ModelPrice(input_mtok=Decimal('0.0344'), output_mtok=Decimal('0.08'))
+    assert isinstance(new_key := prices['vendor/new-key'], list)
+    assert new_key[-1].prices.cache_read_mtok == Decimal('0.1')
+    drift = provider.find_model('vendor/drift')
+    assert drift is not None and drift.context_window == 1000
+
+
 def test_upsert_revises_todays_price_and_drops_cache_rates_equal_to_input(tmp_path: Path) -> None:
     provider_path = tmp_path / 'openrouter.yml'
     provider_path.write_text(
@@ -721,6 +782,5 @@ def test_update_openrouter_provider_fetches_recorded_models(tmp_path: Path, caps
     source_openrouter.update_openrouter_provider(provider_path)
 
     assert capsys.readouterr().out == snapshot("""\
-OpenRouter: kept openai/gpt-5.1 at its own rates, alias openai/gpt-5.1-codex reports others
 OpenRouter prices updated: 0 added, 420 updated
 """)
