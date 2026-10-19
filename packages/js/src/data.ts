@@ -25815,11 +25815,26 @@ export const data: Provider[] = [
           equals: 'gpt-5.5-cyber',
         },
         price_comments:
-          'Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page publishes no cached-input or cache-write rate for this model.',
-        prices: {
-          input_mtok: 12.5,
-          output_mtok: 75,
-        },
+          'Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page published no cached-input rate on 2026-10-15; it lists $1.25 / 1M tokens from 2026-10-19. It publishes no cache-write rate for this model.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 12.5,
+              output_mtok: 75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 12.5,
+              cache_read_mtok: 1.25,
+              output_mtok: 75,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.5-pro',
@@ -28357,6 +28372,28 @@ export const data: Provider[] = [
           'Realtime transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
         prices: {
           audio_hours: 1.02,
+        },
+      },
+      {
+        id: 'gpt-rosalind-discovery',
+        match: {
+          equals: 'gpt-rosalind-discovery',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'gpt-rosalind-research',
+        match: {
+          equals: 'gpt-rosalind-research',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
         },
       },
       {

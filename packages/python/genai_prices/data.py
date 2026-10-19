@@ -14827,8 +14827,18 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-5.5-cyber',
                 match=ClauseEquals(equals='gpt-5.5-cyber'),
-                price_comments='Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page publishes no cached-input or cache-write rate for this model.',
-                prices=ModelPrice(input_mtok=Decimal('12.5'), output_mtok=Decimal('75')),
+                price_comments='Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input $12.50 / 1M tokens, output $75 / 1M tokens. The page published no cached-input rate on 2026-10-15; it lists $1.25 / 1M tokens from 2026-10-19. It publishes no cache-write rate for this model.',
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('12.5'), output_mtok=Decimal('75'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('75')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-5.5-pro',
@@ -15926,6 +15936,16 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-realtime-whisper'),
                 price_comments='Realtime transcription sessions are billed per minute of realtime audio at $0.017/minute = $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.',
                 prices=ModelPrice(audio_hours=Decimal('1.02')),
+            ),
+            ModelInfo(
+                id='gpt-rosalind-discovery',
+                match=ClauseEquals(equals='gpt-rosalind-discovery'),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('25')),
+            ),
+            ModelInfo(
+                id='gpt-rosalind-research',
+                match=ClauseEquals(equals='gpt-rosalind-research'),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('25')),
             ),
             ModelInfo(
                 id='gpt-transcribe',
