@@ -827,3 +827,24 @@ def test_hourly_update_lists_rates_that_need_a_manual_update(
         'Importers with changes: openai groq\n\n'
         'Each rate change is a new dated entry, so past usage keeps its old price.\n' + manual_section
     )
+
+
+def test_hourly_importer_failure_still_fails_the_step_when_its_output_is_saved(tmp_path: Path) -> None:
+    fake_make = tmp_path / 'make'
+    fake_make.write_text('#!/bin/bash\necho "Cursor pricing returned only 0 priced models"\nexit 1\n')
+    fake_make.chmod(0o755)
+    steps = read_workflow('update-prices.yml')['jobs']['import']['steps']
+    script = next(step['run'] for step in steps if 'importer.log' in step.get('run', '') and '-get' in step['run'])
+
+    result = subprocess.run(
+        ['bash', '-e', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'RUNNER_TEMP': str(tmp_path),
+            'IMPORTER': 'cursor',
+        },
+    )
+
+    assert result.returncode != 0
+    assert (tmp_path / 'importer.log').read_text() == 'Cursor pricing returned only 0 priced models\n'

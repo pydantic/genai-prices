@@ -70,7 +70,9 @@ jobs:
           version: "0.12.1"
           enable-cache: false
       - run: uv sync --all-packages
-      - run: make "${IMPORTER}-get" | tee "$RUNNER_TEMP/importer.log"
+      - run: |
+          set -o pipefail
+          make "${IMPORTER}-get" | tee "$RUNNER_TEMP/importer.log"
         env:
           IMPORTER: ${{ matrix.importer }}
       - name: Keep the diff unless it only bumps prices_checked
