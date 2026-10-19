@@ -19890,6 +19890,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'MiniMax-M3.1-Flash',
+        name: 'MiniMax-M3.1-Flash',
+        match: {
+          or: [
+            {
+              equals: 'MiniMax-M3.1-Flash',
+            },
+            {
+              equals: 'minimax-m3.1-flash',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'minimax-01',
         name: 'MiniMax-01',
         description: 'MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.',
@@ -31918,9 +31937,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.95526,
-              cache_read_mtok: 0.079605,
-              output_mtok: 1.91052,
+              input_mtok: 0.447876,
+              cache_read_mtok: 0.037323,
+              output_mtok: 0.895752,
             },
           },
         ],

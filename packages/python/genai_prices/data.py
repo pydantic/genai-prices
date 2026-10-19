@@ -11541,6 +11541,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='MiniMax-M3.1-Flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='MiniMax-M3.1-Flash'), ClauseEquals(equals='minimax-m3.1-flash')]
+                ),
+                name='MiniMax-M3.1-Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
                 id='minimax-01',
                 match=ClauseEquals(equals='minimax-01'),
                 name='MiniMax-01',
@@ -18055,9 +18065,9 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.95526'),
-                            cache_read_mtok=Decimal('0.079605'),
-                            output_mtok=Decimal('1.91052'),
+                            input_mtok=Decimal('0.447876'),
+                            cache_read_mtok=Decimal('0.037323'),
+                            output_mtok=Decimal('0.895752'),
                         ),
                     ),
                 ],
