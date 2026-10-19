@@ -1,281 +1,172 @@
 from __future__ import annotations
 
-import json
 import re
+from datetime import date
 from decimal import Decimal
-from typing import Any, TypedDict
+from pathlib import Path
+from typing import Any
 
-import boto3
-from mypy_boto3_bedrock import BedrockClient
-from mypy_boto3_bedrock.type_defs import FoundationModelSummaryTypeDef
-from mypy_boto3_pricing import PricingClient
+import httpx2
 
-from prices.prices_types import ClauseContains, ModelInfo, ModelPrice
-from prices.update import get_providers_yaml
+from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
+from prices.update import ProviderYaml
+from prices.utils import package_dir
 
-# TODO other regions (pricing client region will still be us-east-1)
-target_region = 'us-east-1'
+OFFER_URL = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/{offer}/current/us-east-1/index.json'
+MIN_MODEL_COUNT = 50
+UNIT_SCALES = {'1K tokens': Decimal(1000), '1M tokens': Decimal(1)}
+SKIPPED_USAGE = re.compile(r'batch|flex|priority|latencyoptimized|longctx|image|video|custom')
+
+# Price-list model name -> (Bedrock id billed at the us-east-1 rate, Bedrock id billed at the global cross-Region rate).
+MODEL_IDS: dict[str, dict[str, tuple[str, str | None]]] = {
+    'AmazonBedrock': {
+        'Nova Lite': ('amazon.nova-lite-v1:0', None),
+        'Nova Micro': ('amazon.nova-micro-v1:0', None),
+        'Nova Premier': ('amazon.nova-premier-v1:0', None),
+        'Nova Pro': ('amazon.nova-pro-v1:0', None),
+        'Nova Sonic': ('amazon.nova-sonic-v1:0', None),
+        'Nova Sonic 2.0': ('amazon.nova-2-sonic-v1:0', None),
+        'Nova 2.0 Lite': ('us.amazon.nova-2-lite-v1:0', 'global.amazon.nova-2-lite-v1:0'),
+        'Titan Embeddings G1 Text': ('amazon.titan-embed-text-v1', None),
+        'TitanEmbeddingsV2-Text-input': ('amazon.titan-embed-text-v2:0', None),
+        'Titan Text G1 Express': ('amazon.titan-text-express-v1', None),
+        'Titan Text G1 Lite': ('amazon.titan-text-lite-v1', None),
+        'R1': ('deepseek.r1-v1:0', None),
+        'Gemma 3 4B': ('google.gemma-3-4b-it', None),
+        'Gemma 3 12B': ('google.gemma-3-12b-it', None),
+        'Gemma 3 27B': ('google.gemma-3-27b-it', None),
+        'Llama 3 8B': ('meta.llama3-8b-instruct-v1:0', None),
+        'Llama 3 70B': ('meta.llama3-70b-instruct-v1:0', None),
+        'Llama 3.1 8B': ('meta.llama3-1-8b-instruct-v1:0', None),
+        'Llama 3.1 70B': ('meta.llama3-1-70b-instruct-v1:0', None),
+        'Llama 3.2 1B': ('meta.llama3-2-1b-instruct-v1:0', None),
+        'Llama 3.2 3B': ('meta.llama3-2-3b-instruct-v1:0', None),
+        'Llama 3.2 11B': ('meta.llama3-2-11b-instruct-v1:0', None),
+        'Llama 3.2 90B': ('meta.llama3-2-90b-instruct-v1:0', None),
+        'Llama 3.3 70B': ('meta.llama3-3-70b-instruct-v1:0', None),
+        'Llama 4 Maverick 17B': ('meta.llama4-maverick-17b-instruct-v1:0', None),
+        'Llama 4 Scout 17B': ('meta.llama4-scout-17b-instruct-v1:0', None),
+        'Devstral': ('mistral.devstral-2-123b', None),
+        'Magistral Small 1.2': ('mistral.magistral-small-2509', None),
+        'Ministral 3B 3.0': ('mistral.ministral-3-3b-instruct', None),
+        'Ministral 8B 3.0': ('mistral.ministral-3-8b-instruct', None),
+        'Ministral 14B 3.0': ('mistral.ministral-3-14b-instruct', None),
+        'Mistral 7B': ('mistral.mistral-7b-instruct-v0:2', None),
+        'Mistral Large': ('mistral.mistral-large-2402-v1:0', None),
+        'Mistral Large 3': ('mistral.mistral-large-3-675b-instruct', None),
+        'Mistral Small': ('mistral.mistral-small-2402-v1:0', None),
+        'Mixtral 8x7B': ('mistral.mixtral-8x7b-instruct-v0:1', None),
+        'Pixtral Large 25.02': ('mistral.pixtral-large-2502-v1:0', None),
+        'Voxtral Mini 1.0': ('mistral.voxtral-mini-3b-2507', None),
+        'Voxtral Small 1.0': ('mistral.voxtral-small-24b-2507', None),
+        'NVIDIA Nemotron Nano 2': ('nvidia.nemotron-nano-9b-v2:0', None),
+        'Nemotron Nano 3 30B': ('nvidia.nemotron-nano-3-30b:0', None),
+        'NVIDIA Nemotron 3 Super 120B A12B': ('nvidia.nemotron-super-3-120b:0', None),
+        'gpt-oss-20b': ('openai.gpt-oss-20b-1:0', None),
+        'gpt-oss-120b': ('openai.gpt-oss-120b-1:0', None),
+        'Qwen3 32B': ('qwen.qwen3-32b-v1:0', None),
+        'Qwen3 Coder 30B A3B': ('qwen.qwen3-coder-30b-a3b-v1:0', None),
+        'Qwen3 Coder 480B A35B': ('qwen.qwen3-coder-480b-a35b-v1:0', None),
+        'Qwen3 VL 235B A22B': ('qwen.qwen3-vl-235b-a22b-v1:0', None),
+    },
+    'AmazonBedrockFoundationModels': {
+        'Claude 3 Haiku': ('anthropic.claude-3-haiku-20240307-v1:0', None),
+        'Claude 3 Opus': ('anthropic.claude-3-opus-20240229-v1:0', None),
+        'Claude 3 Sonnet': ('anthropic.claude-3-sonnet-20240229-v1:0', None),
+        'Claude 3.5 Haiku': ('anthropic.claude-3-5-haiku-20241022-v1:0', None),
+        'Claude 3.5 Sonnet': ('anthropic.claude-3-5-sonnet-20240620-v1:0', None),
+        'Claude 3.5 Sonnet v2': ('anthropic.claude-3-5-sonnet-20241022-v2:0', None),
+        'Claude 3.7 Sonnet': ('anthropic.claude-3-7-sonnet-20250219-v1:0', None),
+        'Claude Opus 4': ('anthropic.claude-opus-4-20250514-v1:0', None),
+        'Claude Opus 4.1': ('anthropic.claude-opus-4-1-20250805-v1:0', None),
+        **{
+            name: (model_id, f'global.{model_id}')
+            for name, model_id in {
+                'Claude Fable 5': 'anthropic.claude-fable-5-v1:0',
+                'Claude Fable 5.1': 'anthropic.claude-fable-5-1-v1:0',
+                'Claude Haiku 4.5': 'anthropic.claude-haiku-4-5-20251001-v1:0',
+                'Claude Haiku 5.5': 'anthropic.claude-haiku-5-5',
+                'Claude Opus 4.5': 'anthropic.claude-opus-4-5-v1:0',
+                'Claude Opus 4.6': 'anthropic.claude-opus-4-6-v1:0',
+                'Claude Opus 4.7': 'anthropic.claude-opus-4-7-v1:0',
+                'Claude Opus 4.8': 'anthropic.claude-opus-4-8-v1:0',
+                'Claude Opus 5': 'anthropic.claude-opus-5',
+                'Claude Opus 5.5': 'anthropic.claude-opus-5-5',
+                'Claude Sonnet 4': 'anthropic.claude-sonnet-4-20250514-v1:0',
+                'Claude Sonnet 4.5': 'anthropic.claude-sonnet-4-5-20250929-v1:0',
+                'Claude Sonnet 4.6': 'anthropic.claude-sonnet-4-6-v1:0',
+                'Claude Sonnet 5': 'anthropic.claude-sonnet-5-v1:0',
+                'Claude Sonnet 5.5': 'anthropic.claude-sonnet-5-5',
+                'OpenAI GPT-6 Astra': 'openai.gpt-6-astra',
+            }.items()
+        },
+        'Palmyra X4': ('writer.palmyra-x4-v1:0', None),
+        'Palmyra X5': ('writer.palmyra-x5-v1:0', None),
+    },
+}
 
 
-class PricingEntry(TypedDict):
-    model: str
-    provider: str
-    attributes: dict[str, Any]
-    price_data: dict[str, Any]
-
-
-class ExtendedFoundationModelSummaryTypeDef(FoundationModelSummaryTypeDef):
-    prices: list[PricingEntry]
-    providerName: str  # pyright: ignore[reportGeneralTypeIssues]
-    modelName: str  # pyright: ignore[reportGeneralTypeIssues]
-
-
-def get_available_models(bedrock_client: BedrockClient):
-    response = bedrock_client.list_foundation_models()
-    for m in response['modelSummaries']:
-        status = m.get('modelLifecycle', {}).get('status')
-        # TODO check other statuses
-        if status != 'ACTIVE':
-            continue
-        # TODO check other inferenceTypesSupported values
-        if not {'ON_DEMAND', 'INFERENCE_PROFILE'}.intersection(m.get('inferenceTypesSupported', [])):
-            continue
-        yield ExtendedFoundationModelSummaryTypeDef(**m, prices=[])
-
-
-def get_bedrock_pricing_data(pricing_client: PricingClient):
-    paginator = pricing_client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonBedrock',
-        Filters=[
-            {'Type': 'TERM_MATCH', 'Field': 'ServiceCode', 'Value': 'AmazonBedrock'},
-            {'Type': 'TERM_MATCH', 'Field': 'regionCode', 'Value': target_region},
-        ],
-        FormatVersion='aws_v1',
-    )
-
-    for page in page_iterator:
-        for product_str in page['PriceList']:
-            yield json.loads(product_str)
-
-
-def parse_pricing_item(product: dict[str, Any]):
-    product_info = product.get('product', {})
-    attributes = product_info.get('attributes', {})
-
-    # Extract pricing terms (On-Demand only)
-    terms = product.get('terms', {})
-    on_demand = terms.get('OnDemand', {})
-
-    pricing_entries: list[PricingEntry] = []
-    for term_data in on_demand.values():
-        price_dimensions = term_data.get('priceDimensions', {})
-        for price_data in price_dimensions.values():
-            unit = price_data['unit']
-            if (
-                'token' not in unit.lower()
-                or attributes.get('featureType') == 'Training'
-                or attributes.get('feature') != 'On-demand Inference'
-            ):
+def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
+    rates: dict[str, dict[str, Decimal]] = {}
+    for offer_code, model_ids in MODEL_IDS.items():
+        offer = offers[offer_code]
+        for sku, terms in offer['terms']['OnDemand'].items():
+            attributes: dict[str, str] = offer['products'][sku]['attributes']
+            ids = model_ids.get(attributes.get('model') or attributes.get('titanModel') or '')
+            if ids is None:
                 continue
-            assert unit == '1K tokens'
-
-            model_keys = [k for k in attributes if 'model' in k.lower()]
-            assert len(model_keys) == 1, attributes
-            [model_key] = model_keys
-            assert model_key in {'model', 'titanModel'}, model_key
-            model = attributes[model_key]
-            if model.endswith(' Latency Optimized'):
-                # TODO investigate more
-                continue
-
-            if model == 'Nova Sonic 2.0':
-                # Currently this is missing the correct model to match against,
-                # which causes it to match against 'Nova Sonic' (v1) incorrectly.
-                continue
-
-            provider = attributes.get('provider', 'Amazon')
-            if provider == 'Mistral':
-                provider = 'Mistral AI'
-            if provider == 'Anthropic':
-                # These are all legacy models.
-                # Anthropic models prices aren't available via the API so aren't automated.
-                assert model in {
-                    'Claude 2.0',
-                    'Claude 2.1',
-                    'Claude 3 Sonnet',
-                    'Claude 3 Haiku',
-                    'Claude Instant',
-                }, model
-                continue
-            pricing_entries.append(
-                PricingEntry(model=model, provider=provider, attributes=attributes, price_data=price_data)
-            )
-
-    return pricing_entries
-
-
-def get_model(
-    price: PricingEntry, models: list[ExtendedFoundationModelSummaryTypeDef]
-) -> ExtendedFoundationModelSummaryTypeDef | None:
-    provider_models = [m for m in models if m.get('providerName') == price['provider']]
-    matches = [
-        m
-        for m in provider_models
-        if any(
-            canonical_model_name(price['model']) in canonical_model_name(model_name)
-            or canonical_model_name(model_name) in canonical_model_name(price['model'])
-            for model_name in [m['modelId'], m['modelName']]
+            usage = re.sub(r'[^a-z0-9]', '', re.sub(r'^USE1-(MP:USE1_)?', '', attributes['usagetype']).lower())
+            model_id = ids[1] if 'global' in usage else ids[0]
+            for term in terms.values():
+                for dimension in term['priceDimensions'].values():
+                    scale = UNIT_SCALES.get(dimension['unit'].replace('1k', '1K'))
+                    price = Decimal(dimension['pricePerUnit']['USD'])
+                    if model_id is None or scale is None or not price or SKIPPED_USAGE.search(usage):
+                        continue
+                    key = _price_key(usage)
+                    price = (price * scale).normalize()
+                    model_rates = rates.setdefault(model_id, {})
+                    if model_rates.setdefault(key, price) != price:
+                        raise RuntimeError(f'AWS price list has conflicting {key} rates for {model_id}')
+    return [
+        ModelInfo(
+            id=model_id,
+            match=ClauseEquals(equals=model_id),
+            prices=ModelPrice(**model_rates),
+            prices_checked=date.today(),
         )
+        for model_id, model_rates in rates.items()
     ]
-    assert (
-        price['model']
-        in {
-            'Titan Embeddings G1 Image',
-            'Titan Text G1 Premier',
-            'Titan Text G1 Lite',
-            'Titan Text G1 Express',
-            'TitanEmbeddingsV2-Text-input',
-            'Nova 2.0 Omni',
-            'Nova 2.0 Pro',
-            'Nova 2.0 Lite',
-        }
-    ) == (not matches), (price, matches, provider_models)
-    if not matches:
-        return None
-    if price['model'] == 'Mistral Large':  # pragma: no cover - legacy fixed-price payload is no longer returned
-        # Currently there are two Mistral Large models with different prices,
-        # but the prices of the newer model aren't available via the API yet.
-        assert len(matches) == 2
-        assert price['price_data'] in [
-            {
-                'appliesTo': [],
-                'beginRange': '0',
-                'description': '$0.004 per 1K tokens for Mistral Large input tokens in US East (N.Virginia)',
-                'endRange': 'Inf',
-                'pricePerUnit': {'USD': '0.0040000000'},
-                'rateCode': '4JGB54U6JUKURPCS.JRTCKXETXF.6YS6EN2CT7',
-                'unit': '1K tokens',
-            },
-            {
-                'appliesTo': [],
-                'beginRange': '0',
-                'description': '$0.012 per 1K tokens for Mistral Large output tokens in US East (N.Virginia)',
-                'endRange': 'Inf',
-                'pricePerUnit': {'USD': '0.0120000000'},
-                'rateCode': 'WHNSGG64M5QAAPU7.JRTCKXETXF.6YS6EN2CT7',
-                'unit': '1K tokens',
-            },
-        ]
-        matches = [m for m in matches if m['modelId'] == 'mistral.mistral-large-2402-v1:0']
-    assert len(matches) == 1, (price, matches, provider_models)
-    return matches[0]
 
 
-def get_model_infos(pricing_client: PricingClient, bedrock_client: BedrockClient):
-    models = list(get_available_models(bedrock_client))
-    raw_prices = list(get_bedrock_pricing_data(pricing_client))
-    parsed_prices = [x for p in raw_prices for x in parse_pricing_item(p)]
-    models_by_id = {m['modelId']: m for m in models}
-    assert len(models_by_id) == len(models), 'Duplicate model IDs found'
-    for p in parsed_prices:
-        model = get_model(p, models)
-        if not model:
-            continue
-        model['prices'].append(p)
-    model_infos: list[ModelInfo] = []
-    for model in models:
-        if not model['prices']:
-            continue
-        model_price = ModelPrice()
-        for price in model['prices']:
-            price_mtok = Decimal(price['price_data']['pricePerUnit']['USD']) * 1000
-            if not price_mtok:
-                continue
-            attributes = price['attributes']
-            inference_type = attributes.get('inferenceType', '').lower()
-            assert 'token' in inference_type, attributes
-            if 'flex' in inference_type or 'priority' in inference_type or 'batch' in inference_type:
-                # TODO
-                continue
-            key = get_usage_attr_from_inference_type(inference_type)
-            assert getattr(model_price, key) is None, (model_price, model, key, price)
-            setattr(model_price, key, price_mtok)
-        model_id = model['modelId']
-        simple_model_id = re.sub(r'(:\d)?$', '', model_id)
-        model_info = ModelInfo(
-            id=model_id, name=model['modelName'], prices=model_price, match=ClauseContains(contains=simple_model_id)
-        )
-        model_infos.append(model_info)
-
-    for model_info in model_infos:
-        assert model_info.match.is_match(model_info.id)
-        for other in model_infos:
-            if model_info is other:
-                continue
-            assert other.name
-            assert not model_info.match.is_match(other.id)
-            assert not model_info.match.is_match(other.name)
-
-    return model_infos
+def main(provider_path: Path | None = None) -> None:
+    offers: dict[str, dict[str, Any]] = {}
+    for offer_code in MODEL_IDS:
+        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0)
+        response.raise_for_status()
+        offers[offer_code] = response.json()
+    models = parse_price_lists(offers)
+    provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/aws.yml')
+    added, updated = provider_yaml.upsert_models(models, source='AWS', min_count=MIN_MODEL_COUNT)
+    print(f'AWS prices updated: {added} added, {updated} updated')
 
 
-def get_usage_attr_from_inference_type(inference_type: str) -> str:
-    attr = None
-    audio = 'audio' in inference_type or 'speech' in inference_type
-    if 'input' in inference_type:
-        if audio:
-            if 'cache' in inference_type:
-                assert 'write' not in inference_type
-                attr = 'cache_audio_read_mtok'
-            else:
-                attr = 'input_audio_mtok'
-        elif 'cache' in inference_type:
-            if 'read' in inference_type:
-                attr = 'cache_read_mtok'
-            elif 'write' in inference_type:
-                attr = 'cache_write_mtok'
-        else:
-            attr = 'input_mtok'
-    elif 'output' in inference_type:
-        if audio:
-            attr = 'output_audio_mtok'
-        else:
-            attr = 'output_mtok'
-    assert attr, inference_type
-    return attr
-
-
-def canonical_model_name(name: str):
-    return re.sub(r'\W+', '-', name).lower().strip('-')
-
-
-def main():
-    pricing_client = boto3.client('pricing', region_name='us-east-1')  # pyright: ignore[reportUnknownMemberType]
-    bedrock_client = boto3.client('bedrock', region_name=target_region)  # pyright: ignore[reportUnknownMemberType]
-    model_infos = get_model_infos(pricing_client, bedrock_client)
-    if not model_infos:
-        raise SystemExit('Bedrock returned no priced models; nothing written')
-    providers_yaml = get_providers_yaml()
-
-    provider_yaml = providers_yaml['aws']
-    models_added = 0
-    models_updated = 0
-    for model_info in model_infos:
-        assert isinstance(model_info.prices, ModelPrice)
-        try:
-            provider_yaml.update_model(model_info.id, model_info, set_prices=True)
-        except LookupError:
-            models_added += provider_yaml.add_model(model_info)
-        else:
-            models_updated += 1
-
-    if models_added:
-        print(f'  {models_added} models added')
-    if models_updated:
-        print(f'  {models_updated} models updated')
-    provider_yaml.save()
-
-
-if __name__ == '__main__':
+def get_aws_prices() -> None:  # pragma: no cover - thin CLI alias for main
+    """Download and update AWS Bedrock prices."""
     main()
+
+
+def _price_key(usage: str) -> str:
+    if 'cacheread' in usage:
+        return 'cache_read_mtok'
+    if 'cachewrite' in usage:
+        return 'cache_write_1h_mtok' if '1h' in usage else 'cache_write_mtok'
+    if 'speechinput' in usage or 'inputaudio' in usage:
+        return 'input_audio_mtok'
+    if 'speechoutput' in usage or 'outputaudio' in usage:
+        return 'output_audio_mtok'
+    if 'input' in usage:
+        return 'input_mtok'
+    if 'output' in usage:
+        return 'output_mtok'
+    raise RuntimeError(f'Unrecognised AWS token usage type {usage!r}')

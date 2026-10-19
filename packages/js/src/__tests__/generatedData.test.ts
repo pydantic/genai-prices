@@ -740,7 +740,10 @@ describe('generated data split', () => {
     { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'amazon.titan-embed-text-v2:0' },
     { expectedModel: 'amazon.titan-embed-text-v2:0', expectedPrice: 0.02, model: 'us.amazon.titan-embed-text-v2:0' },
   ])('does not price Titan Text Embeddings V2 as V1 for $model', ({ expectedModel, expectedPrice, model }) => {
-    const result = calcPrice({ input_tokens: 1_000_000 }, model, { providerId: 'aws' })
+    const result = calcPrice({ input_tokens: 1_000_000 }, model, {
+      providerId: 'aws',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
+    })
 
     expect(result?.model.id).toBe(expectedModel)
     expect(result?.total_price).toBe(expectedPrice)

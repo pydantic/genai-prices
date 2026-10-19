@@ -1250,7 +1250,9 @@ describe('extractUsage', () => {
         input_tokens: 1_000_000,
         output_tokens: 0,
       })
-      expect(calcPrice(usage, extractedModel!, { providerId: 'aws' })?.total_price).toBeCloseTo(expectedPrice)
+      expect(
+        calcPrice(usage, extractedModel!, { providerId: 'aws', timestamp: new Date('2026-10-17T00:00:00Z') })?.total_price
+      ).toBeCloseTo(expectedPrice)
     })
 
     it('should extract Converse usage with cache read tokens', () => {
