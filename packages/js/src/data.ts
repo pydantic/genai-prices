@@ -5291,7 +5291,7 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: {
           input_mtok: 1.1,
-          cache_read_mtok: 0.28,
+          cache_read_mtok: 0.275,
           output_mtok: 4.4,
         },
       },
@@ -5305,8 +5305,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 1,
-          output_mtok: 1,
+          input_mtok: 0.17,
+          output_mtok: 0.68,
         },
       },
       {
@@ -5319,8 +5319,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
+          input_mtok: 0.13,
+          output_mtok: 0.52,
         },
       },
       {
@@ -5333,8 +5333,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
+          input_mtok: 0.13,
+          output_mtok: 0.52,
         },
       },
       {
@@ -5347,8 +5347,8 @@ export const data: Provider[] = [
         },
         context_window: 16384,
         prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.14,
+          input_mtok: 0.125,
+          output_mtok: 0.5,
         },
       },
       {
@@ -5360,10 +5360,9 @@ export const data: Provider[] = [
           equals: 'phi-4-mini-instruct',
         },
         context_window: 131072,
-        price_comments: 'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
         prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.35,
+          input_mtok: 0.075,
+          output_mtok: 0.3,
         },
       },
       {
@@ -5376,8 +5375,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.1,
+          input_mtok: 0.08,
+          output_mtok: 0.32,
+          input_audio_mtok: 4,
         },
       },
       {
@@ -5390,8 +5390,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.35,
+          input_mtok: 0.125,
+          output_mtok: 0.5,
         },
       },
       {

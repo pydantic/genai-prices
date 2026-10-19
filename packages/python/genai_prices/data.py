@@ -3048,7 +3048,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseContains(contains='o4-mini'), ClauseContains(contains='o4-mini-2025-04-16')]),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('4.4')
+                    input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('4.4')
                 ),
             ),
             ModelInfo(
@@ -3057,7 +3057,7 @@ providers: list[Provider] = [
                 name='Phi-3 Medium 128K Instruct',
                 description='Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
+                prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.68')),
             ),
             ModelInfo(
                 id='phi-3-mini-128k-instruct',
@@ -3065,7 +3065,7 @@ providers: list[Provider] = [
                 name='Phi-3 Mini 128K Instruct',
                 description='Phi-3 Mini is a powerful 3.8B parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+                prices=ModelPrice(input_mtok=Decimal('0.13'), output_mtok=Decimal('0.52')),
             ),
             ModelInfo(
                 id='phi-3.5-mini-128k-instruct',
@@ -3073,7 +3073,7 @@ providers: list[Provider] = [
                 name='Phi-3.5 Mini 128K Instruct',
                 description='Phi-3.5 models are lightweight, state-of-the-art open models. These models were trained with Phi-3 datasets that include both synthetic data and the filtered, publicly available websites data, with a focus on high quality and reasoning-dense properties. Phi-3.5 Mini uses 3.8B parameters, and is a dense decoder-only transformer model using the same tokenizer as Phi-3 Mini.',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+                prices=ModelPrice(input_mtok=Decimal('0.13'), output_mtok=Decimal('0.52')),
             ),
             ModelInfo(
                 id='phi-4',
@@ -3081,7 +3081,7 @@ providers: list[Provider] = [
                 name='Phi 4',
                 description='Microsoft Research Phi-4 is designed to perform well in complex reasoning tasks and can operate efficiently in situations with limited memory or where quick responses are needed.',
                 context_window=16384,
-                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.14')),
+                prices=ModelPrice(input_mtok=Decimal('0.125'), output_mtok=Decimal('0.5')),
             ),
             ModelInfo(
                 id='phi-4-mini-instruct',
@@ -3089,8 +3089,7 @@ providers: list[Provider] = [
                 name='Phi 4 Mini Instruct',
                 description='Phi-4-mini-instruct is a lightweight open model built upon synthetic data and filtered publicly available websites, with a focus on high-quality, reasoning-dense data.',
                 context_window=131072,
-                price_comments='Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')),
+                prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='phi-4-multimodal-instruct',
@@ -3098,7 +3097,9 @@ providers: list[Provider] = [
                 name='Phi 4 Multimodal Instruct',
                 description='Phi-4 Multimodal Instruct is a versatile 5.6B parameter foundation model that combines advanced reasoning and instruction-following capabilities across both text and visual inputs, providing accurate text outputs. The unified architecture enables efficient, low-latency inference, suitable for edge and mobile deployments. Phi-4 Multimodal Instruct supports text inputs in multiple languages including Arabic, Chinese, English, French, German, Japanese, Spanish, and more, with visual input optimized primarily for English. It delivers impressive performance on multimodal tasks involving mathematical, scientific, and document reasoning, providing developers and enterprises a powerful yet compact model for sophisticated interactive applications. For more information, see the Phi-4 Multimodal blog post.',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.08'), output_mtok=Decimal('0.32'), input_audio_mtok=Decimal('4')
+                ),
             ),
             ModelInfo(
                 id='phi-4-reasoning-plus',
@@ -3106,7 +3107,7 @@ providers: list[Provider] = [
                 name='Phi 4 Reasoning Plus',
                 description='Phi-4-reasoning-plus is an enhanced 14B parameter model from Microsoft, fine-tuned from Phi-4 with additional reinforcement learning to boost accuracy on math, science, and code reasoning tasks. It uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs structured into a step-by-step reasoning trace and final answer.',
                 context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.35')),
+                prices=ModelPrice(input_mtok=Decimal('0.125'), output_mtok=Decimal('0.5')),
             ),
             ModelInfo(
                 id='phi-4-reasoning-plus:free',
