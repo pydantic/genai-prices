@@ -30,6 +30,7 @@ jobs:
           - anthropic
           - arcee
           - avian
+          - azure
           - aws
           - baseten
           - cerebras

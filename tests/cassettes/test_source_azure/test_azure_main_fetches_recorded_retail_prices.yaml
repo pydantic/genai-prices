@@ -1,0 +1,1562 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-3-Medium-128K-Instruct-Input+Tokens%27+or+meterName+eq+%27Phi-3-Medium-128K-Instruct-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1477"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:59 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083459Z-r1bd58d6446w9fzhhC1AMSpyn00000000ez000000000bgcu
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00068
+          unitPrice: 0.00068
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: 536c0624-416f-5ce8-8b78-8eab4706741e
+          meterName: Phi-3-Medium-128K-Instruct-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/0127
+          productName: Azure Phi Models
+          skuName: Phi-3-Medium-128K-Instruct-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3-Medium-128K-Instruct-Output
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00017
+          unitPrice: 0.00017
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: e2df76b0-5c45-5c60-a2b9-4d8719f4cf42
+          meterName: Phi-3-Medium-128K-Instruct-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/012L
+          productName: Azure Phi Models
+          skuName: Phi-3-Medium-128K-Instruct-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3-Medium-128K-Instruct-Input
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:34:59.282732+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-3-Mini-128K-Instruct-Input+Tokens%27+or+meterName+eq+%27Phi-3-Mini-128K-Instruct-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1465"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:59 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083459Z-r1bd58d6446kvcbjhC1AMS2x300000000ea0000000012dzd
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00013
+          unitPrice: 0.00013
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: 8f9bf35c-a687-5b0a-abcd-b571b0e160ca
+          meterName: Phi-3-Mini-128K-Instruct-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/012W
+          productName: Azure Phi Models
+          skuName: Phi-3-Mini-128K-Instruct-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3-Mini-128K-Instruct-Input
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00052
+          unitPrice: 0.00052
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: cd22d0d4-5614-5d7d-a755-43840e2c942f
+          meterName: Phi-3-Mini-128K-Instruct-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/0137
+          productName: Azure Phi Models
+          skuName: Phi-3-Mini-128K-Instruct-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3-Mini-128K-Instruct-Output
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:34:59.497662+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-3.5-Mini-128K-Instruct-Input+Tokens%27+or+meterName+eq+%27Phi-3.5-Mini-128K-Instruct-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1477"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:59 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083459Z-r1bd58d6446h9hxchC1AMSy9aw0000000egg00000000cfe6
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00052
+          unitPrice: 0.00052
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: 02ec5689-f3cc-57e6-bfd0-5200ea33f997
+          meterName: Phi-3.5-Mini-128K-Instruct-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/02JX
+          productName: Azure Phi Models
+          skuName: Phi-3.5-Mini-128K-Instruct-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3.5-Mini-128K-Instruct-Output
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00013
+          unitPrice: 0.00013
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-09-01T00:00:00Z
+          meterId: f66d3174-8fc8-55b9-9087-71e6255c644c
+          meterName: Phi-3.5-Mini-128K-Instruct-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/02K6
+          productName: Azure Phi Models
+          skuName: Phi-3.5-Mini-128K-Instruct-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-3.5-Mini-128K-Instruct-Input
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:35:00.003992+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-4-Input+Tokens%27+or+meterName+eq+%27Phi-4-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1351"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:00 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083500Z-r1bd58d6446bxpsdhC1AMSkhzs000000031g000000002fwz
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.000125
+          unitPrice: 0.000125
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 930bd662-02f3-5974-b4f9-be22ce526f44
+          meterName: Phi-4-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/049F
+          productName: Azure Phi Models
+          skuName: Phi-4-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Input
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0005
+          unitPrice: 0.0005
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: fdc51839-b079-5f0f-a179-28c5dde6c8e2
+          meterName: Phi-4-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/049J
+          productName: Azure Phi Models
+          skuName: Phi-4-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Output
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:35:00.255586+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-4-Mini+MM-Input+Tokens%27+or+meterName+eq+%27Phi-4-Mini+MM-Audio-In+Tokens%27+or+meterName+eq+%27Phi-4-Mini+MM-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2031"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:00 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083500Z-r1bd58d6446s95kmhC1AMS4s5g000000086g000000009za2
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00032
+          unitPrice: 0.00032
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 5298c298-930b-5529-aac0-d92508ee8e0d
+          meterName: Phi-4-Mini MM-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/0499
+          productName: Azure Phi Models
+          skuName: Phi-4-Mini MM-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Mini MM-Output
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00008
+          unitPrice: 0.00008
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 7a9f6996-e118-5903-b63e-5488ca5b1715
+          meterName: Phi-4-Mini MM-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/048W
+          productName: Azure Phi Models
+          skuName: Phi-4-Mini MM-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Mini MM-Input
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.004
+          unitPrice: 0.004
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-03-01T00:00:00Z
+          meterId: b01864b3-4f38-588a-964c-b6ead1ffaa05
+          meterName: Phi-4-Mini MM-Audio-In Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/0496
+          productName: Azure Phi Models
+          skuName: Phi-4-Mini MM-Audio-In
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Mini MM-Audio-In
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:35:00.560518+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-4-Mini-Input+Tokens%27+or+meterName+eq+%27Phi-4-Mini-Output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1379"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:00 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083500Z-r1bd58d6446w9fzhhC1AMSpyn00000000ez000000000bgfw
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0003
+          unitPrice: 0.0003
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 0bda3540-ae56-5cca-b70f-d9e991c4b934
+          meterName: Phi-4-Mini-Output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/048P
+          productName: Azure Phi Models
+          skuName: Phi-4-Mini-Output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Mini-Output
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.000075
+          unitPrice: 0.000075
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 189d3a7b-6632-5da9-9441-0360c8cfe16b
+          meterName: Phi-4-Mini-Input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/0494
+          productName: Azure Phi Models
+          skuName: Phi-4-Mini-Input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-Mini-Input
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:35:00.407649+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27Phi-4-reasoning-plus-input+Tokens%27+or+meterName+eq+%27Phi-4-reasoning-plus-output+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "1441"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:00 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083500Z-r1bd58d6446vc86thC1AMSfzy00000000en0000000005791
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.000125
+          unitPrice: 0.000125
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-06-01T00:00:00Z
+          meterId: abd61c8d-cd13-51e7-bfc1-d6c8b61a3edd
+          meterName: Phi-4-reasoning-plus-input Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/049X
+          productName: Azure Phi Models
+          skuName: Phi-4-reasoning-plus-input
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-reasoning-plus-input
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0005
+          unitPrice: 0.0005
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-06-01T00:00:00Z
+          meterId: c75edf58-faaa-5424-83e9-8bfda82a9884
+          meterName: Phi-4-reasoning-plus-output Tokens
+          productId: DZH318Z0LCK0
+          skuId: DZH318Z0LCK0/048Z
+          productName: Azure Phi Models
+          skuName: Phi-4-reasoning-plus-output
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: Phi-4-reasoning-plus-output
+        NextPageLink: null
+        Count: 2
+  recorded_at: 2026-10-19T08:35:00.779620+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27embedding-ada-glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "756"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:53 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083453Z-r1bd58d6446w9fzhhC1AMSpyn00000000ez000000000bfy8
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0001
+          unitPrice: 0.0001
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-06-01T00:00:00Z
+          meterId: 3121f456-a4ef-5c7f-b3a3-10237e873283
+          meterName: embedding-ada-glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/0HVM
+          productName: Azure OpenAI
+          skuName: embedding-ada-glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: embedding-ada-glbl
+        NextPageLink: null
+        Count: 1
+  recorded_at: 2026-10-19T08:34:53.453307+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27o1+1217+Inp+glbl+Tokens%27+or+meterName+eq+%27o1+1217+cached+Inp+glbl+Tokens%27+or+meterName+eq+%27o1+1217+Outp+glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2000"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:53 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083453Z-r1bd58d6446fc2m2hC1AMSab380000000ezg000000003b8q
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.015
+          unitPrice: 0.015
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-12-01T00:00:00Z
+          meterId: 64a11a5c-9a25-5f17-8445-7d8347614a2b
+          meterName: o1 1217 Inp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1J2F
+          productName: Azure OpenAI
+          skuName: o1 1217 Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 1216 Inp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.06
+          unitPrice: 0.06
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-12-01T00:00:00Z
+          meterId: 7dee1bc9-a42a-52ab-a2eb-ea09e137af3b
+          meterName: o1 1217 Outp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1J2D
+          productName: Azure OpenAI
+          skuName: o1 1217 Outp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 1216 Outp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0075
+          unitPrice: 0.0075
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-12-01T00:00:00Z
+          meterId: a1f5cc63-25c2-533a-acd4-63c562b7b3f6
+          meterName: o1 1217 cached Inp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1J2S
+          productName: Azure OpenAI
+          skuName: o1 1217 cached Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 1216 cached Inp glbl
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:34:53.636200+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27o1+mini+input+glbl+Tokens%27+or+meterName+eq+%27o1+mini+cached+input+glbl+Tokens%27+or+meterName+eq+%27o1+mini+output+glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2026"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:53 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083453Z-r1bd58d6446vc86thC1AMSfzy00000000egg00000000zqbz
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00055
+          unitPrice: 0.00055
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 758d566f-fe95-5322-a838-7a64804f9ce1
+          meterName: o1 mini cached input glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1FN5
+          productName: Azure OpenAI
+          skuName: o1 mini cached input glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 mini cached input glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0011
+          unitPrice: 0.0011
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 7d7b17d4-ef08-508a-8930-ed622c88ab33
+          meterName: o1 mini input glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1BD6
+          productName: Azure OpenAI
+          skuName: o1 mini input glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 mini input glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0044
+          unitPrice: 0.0044
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 890c5160-dd8a-5725-94a7-1984c80cce9e
+          meterName: o1 mini output glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1BD8
+          productName: Azure OpenAI
+          skuName: o1 mini output glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o1 mini output glbl
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:34:53.799931+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27o3+0416+Inp+glbl+Tokens%27+or+meterName+eq+%27o3+0416+cached+Inp+glbl+Tokens%27+or+meterName+eq+%27o3+0416+Outp+glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2002"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:55 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083454Z-r1bd58d6446kxw5lhC1AMS81s80000000kvg000000002r1h
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.002
+          unitPrice: 0.002
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-06-01T00:00:00Z
+          meterId: b22f98fe-6754-51d9-bfbf-12941afe29b6
+          meterName: o3 0416 Inp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1LB7
+          productName: Azure OpenAI
+          skuName: o3 0416 Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 0416 Inp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.008
+          unitPrice: 0.008
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-06-01T00:00:00Z
+          meterId: ceff002a-efe6-5d34-8130-f75fbdfb5169
+          meterName: o3 0416 Outp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1LB0
+          productName: Azure OpenAI
+          skuName: o3 0416 Outp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 0416 Outp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0005
+          unitPrice: 0.0005
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-06-01T00:00:00Z
+          meterId: f500b3e1-0c10-5e24-a8df-163520dc4e1d
+          meterName: o3 0416 cached Inp glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1LC9
+          productName: Azure OpenAI
+          skuName: o3 0416 cached Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 0416 cached Inp glbl
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:34:56.058630+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27o3+mini+0131+input+glbl+Tokens%27+or+meterName+eq+%27o3+mini+0131+cached+input+glbl+Tokens%27+or+meterName+eq+%27o3+mini+0131+output+glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2071"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:58 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083457Z-r1bd58d6446pqthwhC1AMSt4w800000002cg000000009sb1
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0044
+          unitPrice: 0.0044
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 02631426-b674-553b-bd9b-06d3438e9b62
+          meterName: o3 mini 0131 output glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1G14
+          productName: Azure OpenAI
+          skuName: o3 mini 0131 output glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 mini 0131 output glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00055
+          unitPrice: 0.00055
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 166374ca-80cb-59f6-a383-5a8dca1fccda
+          meterName: o3 mini 0131 cached input glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1G11
+          productName: Azure OpenAI
+          skuName: o3 mini 0131 cached input glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 mini 0131 cached input glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0011
+          unitPrice: 0.0011
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-02-01T00:00:00Z
+          meterId: 94b5fff5-98c7-579f-9e47-b7eaada02eab
+          meterName: o3 mini 0131 input glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/1G1H
+          productName: Azure OpenAI
+          skuName: o3 mini 0131 input glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o3 mini 0131 input glbl
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:34:58.563714+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27o4-mini+0416+Inp+glbl+Tokens%27+or+meterName+eq+%27o4-mini+0416+cached+Inp+glbl+Tokens%27+or+meterName+eq+%27o4-mini+0416+Outp+glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "2085"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:34:58 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083458Z-r1bd58d6446s95kmhC1AMS4s5g00000008dg0000000057wa
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "8"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0011
+          unitPrice: 0.0011
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 0c3328c3-8fc3-5f31-9ddb-ddad7ee7ace0
+          meterName: o4-mini 0416 Inp glbl Tokens
+          productId: DZH318Z0TDSR
+          skuId: DZH318Z0TDSR/008P
+          productName: Azure OpenAI Reasoning
+          skuName: o4-mini 0416 Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o4-mini 0416 Inp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.000275
+          unitPrice: 0.000275
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 5f3ff2bc-8aef-55a4-a3ce-8b5d00d25549
+          meterName: o4-mini 0416 cached Inp glbl Tokens
+          productId: DZH318Z0TDSR
+          skuId: DZH318Z0TDSR/0097
+          productName: Azure OpenAI Reasoning
+          skuName: o4-mini 0416 cached Inp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o4-mini 0416 cached Inp glbl
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.0044
+          unitPrice: 0.0044
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2025-04-01T00:00:00Z
+          meterId: 876029e5-746c-5a00-9c43-30c953652e7e
+          meterName: o4-mini 0416 Outp glbl Tokens
+          productId: DZH318Z0TDSR
+          skuId: DZH318Z0TDSR/008W
+          productName: Azure OpenAI Reasoning
+          skuName: o4-mini 0416 Outp glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: o4-mini 0416 Outp glbl
+        NextPageLink: null
+        Count: 3
+  recorded_at: 2026-10-19T08:34:58.860944+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27text-embedding-3-large-glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "785"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:01 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083501Z-r1bd58d6446x8sqdhC1AMSpgcn0000000et00000000099q2
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "9"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00013
+          unitPrice: 0.00013
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-06-01T00:00:00Z
+          meterId: 3bb5c055-3783-5f9b-bb9f-efc93d2784b9
+          meterName: text-embedding-3-large-glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/0HK4
+          productName: Azure OpenAI
+          skuName: text-embedding-3-large-glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: text-embedding-3-large-glbl
+        NextPageLink: null
+        Count: 1
+  recorded_at: 2026-10-19T08:35:01.179239+00:00
+- request:
+    method: GET
+    uri: >-
+      https://prices.azure.com/api/retail/prices?%24filter=serviceName+eq+%27Foundry+Models%27+and+armRegionName+eq+%27eastus%27+and+type+eq+%27Consumption%27+and+%28meterName+eq+%27text-embedding-3-small-glbl+Tokens%27%29
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - prices.azure.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      accept-ranges:
+      - bytes
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - "781"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:35:01 GMT
+      expires:
+      - "-1"
+      pragma:
+      - no-cache
+      vary:
+      - Accept-Encoding
+      x-aspnet-version:
+      - 4.0.30319
+      x-azure-ref:
+      - 20261019T083501Z-r1bd58d6446vc86thC1AMSfzy00000000emg000000008unk
+      x-cache:
+      - CONFIG_NOCACHE
+      x-ms-ratelimit-remaining-retailprices-requests:
+      - "8"
+      x-ms-ratelimit-retailprices-retry-after:
+      - "60"
+      x-powered-by:
+      - ASP.NET
+    body:
+      type: json
+      content:
+        BillingCurrency: USD
+        CustomerEntityId: Default
+        CustomerEntityType: Retail
+        Items:
+        - currencyCode: USD
+          tierMinimumUnits: 0.0
+          retailPrice: 0.00002
+          unitPrice: 0.00002
+          armRegionName: eastus
+          location: US East
+          effectiveStartDate: 2024-06-01T00:00:00Z
+          meterId: 2c42f4b3-1ada-5e4e-9696-6a0995ddd4c8
+          meterName: text-embedding-3-small-glbl Tokens
+          productId: DZH318Z0HHG7
+          skuId: DZH318Z0HHG7/0GP3
+          productName: Azure OpenAI
+          skuName: text-embedding-3-small-glbl
+          serviceName: Foundry Models
+          serviceId: DZH31600VF1F
+          serviceFamily: AI + Machine Learning
+          unitOfMeasure: 1K
+          type: Consumption
+          isPrimaryMeterRegion: true
+          armSkuName: text-embedding-3-small-glbl
+        NextPageLink: null
+        Count: 1
+  recorded_at: 2026-10-19T08:35:01.464931+00:00
