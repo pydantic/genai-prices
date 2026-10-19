@@ -10,6 +10,7 @@ from prices.update import ProviderYaml
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://platform.minimax.io/docs/pricing/overview.md'
+MODELS_URL = 'https://platform.minimax.io/docs/guides/text-generation.md'
 MIN_MODEL_COUNT = 2
 PRICE_COLUMNS = {
     'Input': 'input_mtok',
@@ -19,6 +20,8 @@ PRICE_COLUMNS = {
 }
 
 Rates = dict[str, Decimal]
+# HTML tags and Markdown links, keeping a link's label.
+MARKUP = re.compile(r'<[^>]+>|\[([^]]+)]\([^)]*\)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
@@ -62,8 +65,28 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     return models
 
 
+def parse_models_markdown(markdown: str) -> dict[str, tuple[int | None, str]]:
+    """Each model's context window and description from the text generation guide's model tables."""
+    details: dict[str, tuple[int | None, str]] = {}
+    for header, rows in markdown_tables(markdown):
+        if header != ['Model Name', 'Context Window', 'Description']:
+            continue
+        for name, context, description in rows:
+            name = MARKUP.sub(r'\1', name).replace('**', '').strip()
+            context = context.replace(',', '').replace(' ', '')
+            window = int(context[:-1]) * 1000 if context.endswith('K') else int(context) if context.isdigit() else None
+            details[name] = (window, MARKUP.sub(r'\1', description).replace('**', '').strip())
+    return details
+
+
 def main(provider_path: Path | None = None) -> None:
-    models = parse_pricing_markdown(get_markdown(PRICING_URL))
+    details = parse_models_markdown(get_markdown(MODELS_URL))
+    models = [
+        model.model_copy(update={'context_window': details[model.id][0], 'description': details[model.id][1]})
+        if model.id in details
+        else model
+        for model in parse_pricing_markdown(get_markdown(PRICING_URL))
+    ]
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/minimax.yml')
     # Several legacy page rows share one YAML model; they must agree or the shared entry would be mispriced.
     shared: dict[str, ModelInfo] = {}
