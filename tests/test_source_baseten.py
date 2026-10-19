@@ -3,14 +3,12 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_baseten
 from prices.prices_types import ModelPrice, StartDateConstraint
 from prices.update import ProviderYaml
-from prices.utils import package_dir
 
 CATALOG_MARKDOWN = """\
 export const SupportedModelsTable = () => {
@@ -135,11 +133,11 @@ def test_baseten_updater_adds_models(tmp_path: Path) -> None:
 @pytest.mark.vcr()
 def test_baseten_main_fetches_recorded_sources(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'baseten.yml'
-    copyfile(package_dir / 'providers/baseten.yml', provider_path)
+    provider_path.write_text('id: baseten\nname: Baseten\napi_pattern: baseten\nmodels: []\n')
 
     source_baseten.main(provider_path)
 
     assert capsys.readouterr().out == (
         "Skipping Baseten models without published prices: ['deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast']\n"
-        'Baseten prices updated: 3 added, 13 updated\n'
+        'Baseten prices updated: 16 added, 0 updated\n'
     )

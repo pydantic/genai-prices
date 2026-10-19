@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 from inline_snapshot import snapshot
@@ -12,7 +11,6 @@ from inline_snapshot import snapshot
 from prices import source_quicksilverpro
 from prices.prices_types import ClauseEquals, ModelPrice
 from prices.source_quicksilverpro import get_model_infos
-from prices.utils import package_dir
 
 from .fixtures import load_entries
 
@@ -72,11 +70,11 @@ def test_quicksilverpro_flags_deprecated_models():
 @pytest.mark.vcr()
 def test_quicksilverpro_main_fetches_recorded_catalog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'quicksilverpro.yml'
-    copyfile(package_dir / 'providers/quicksilverpro.yml', provider_path)
+    provider_path.write_text('id: quicksilverpro\nname: QuickSilver Pro\napi_pattern: quicksilverpro\nmodels: []\n')
 
     source_quicksilverpro.main(provider_path)
 
-    assert capsys.readouterr().out == snapshot('QuickSilver Pro prices updated: 29 added, 39 updated\n')
+    assert capsys.readouterr().out == snapshot('QuickSilver Pro prices updated: 68 added, 0 updated\n')
 
 
 def test_quicksilverpro_skips_token_models_without_rates():
