@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
@@ -10,7 +10,16 @@ import pytest
 from inline_snapshot import snapshot
 
 from prices import source_openrouter, source_prices, update
-from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Tier, TieredPrices
+from prices.prices_types import (
+    ClauseEquals,
+    ClauseOr,
+    ConditionalPrice,
+    ModelInfo,
+    ModelPrice,
+    StartDateConstraint,
+    Tier,
+    TieredPrices,
+)
 from prices.source_openrouter import (
     OpenRouterModel,
     OpenRouterPricing,
@@ -549,7 +558,6 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
         }
     )
     time_of_day = pricing_with_extras({'overrides': [{'utc_days': ['monday'], 'prompt': '0.000002'}]})
-    cache_like_input = pricing_with_extras({'input_cache_read': '0.000001', 'input_cache_write': '0.000001'})
 
     models = source_openrouter.parse_provider_models(
         [
@@ -557,7 +565,7 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
             openrouter_model('deepseek/off-peak', pricing=time_of_day),
             openrouter_model('openrouter/auto'),
             openrouter_model('vendor/dynamic', pricing=OpenRouterPricing(prompt=Decimal('-1'))),
-            openrouter_model('openai/gpt:batch', canonical_slug='openai/gpt-20260101', pricing=cache_like_input),
+            openrouter_model('openai/gpt:batch', canonical_slug='openai/gpt-20260101'),
         ]
     )
 
@@ -658,6 +666,50 @@ models:
     assert capsys.readouterr().out == (
         'OpenRouter: kept vendor/new-base unchanged, vendor/new-base reports a flat rate where it is tiered\n'
     )
+
+
+def test_upsert_revises_todays_price_and_drops_cache_rates_equal_to_input(tmp_path: Path) -> None:
+    provider_path = tmp_path / 'openrouter.yml'
+    provider_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: vendor/m
+    match: {equals: vendor/m}
+    prices: {input_mtok: 1, cache_read_mtok: 0.5, output_mtok: 2}
+"""
+    )
+
+    def report(model_id: str, input_mtok: str, cache_read_mtok: str) -> ModelInfo:
+        return ModelInfo(
+            id=model_id,
+            match=ClauseEquals(equals=model_id),
+            prices=ModelPrice(
+                input_mtok=Decimal(input_mtok), cache_read_mtok=Decimal(cache_read_mtok), output_mtok=Decimal(2)
+            ),
+            prices_checked=date.today(),
+        )
+
+    update.ProviderYaml(provider_path).upsert_models(
+        [report('vendor/m', '0.8', '0.4')], source='OpenRouter', min_count=1
+    )
+    update.ProviderYaml(provider_path).upsert_models(
+        [report('vendor/m', '0.6', '0.6'), report('vendor/new', '0.6', '0.6')], source='OpenRouter', min_count=1
+    )
+
+    provider = update.ProviderYaml(provider_path).provider
+    without_cache = ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal(2))
+    assert [model.prices for model in provider.models] == [
+        [
+            ConditionalPrice(
+                prices=ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal(2))
+            ),
+            ConditionalPrice(constraint=StartDateConstraint(start_date=date.today()), prices=without_cache),
+        ],
+        without_cache,
+    ]
 
 
 @pytest.mark.vcr()
