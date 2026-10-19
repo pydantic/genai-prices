@@ -80,14 +80,16 @@ def test_parse_pricing_page_rejects_duplicate_models() -> None:
         source_baseten.parse_pricing_page(PRICING_PAGE + PRICING_PAGE)
 
 
-def test_parse_models_rejects_catalog_mismatch() -> None:
-    with pytest.raises(RuntimeError, match=r'missing prices=\[.openai/gpt-oss-120b.\], missing catalog=\[\]'):
-        source_baseten.parse_models(
-            CATALOG_MARKDOWN, PRICING_PAGE.rsplit(r'\"__typename\":\"LibraryModelRecord\"', 1)[0]
-        )
+def test_parse_models_skips_catalog_models_without_prices(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_baseten.parse_models(
+        CATALOG_MARKDOWN, PRICING_PAGE.rsplit(r'\"__typename\":\"LibraryModelRecord\"', 1)[0]
+    )
+
+    assert [model.id for model in models] == ['zai-org/GLM-4.7']
+    assert capsys.readouterr().out == "Skipping Baseten models without published prices: ['openai/gpt-oss-120b']\n"
 
 
-def test_baseten_updater_preserves_existing_metadata(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_baseten_updater_preserves_existing_metadata(tmp_path: Path) -> None:
     provider_path = tmp_path / 'baseten.yml'
     provider_path.write_text(
         """\
@@ -105,10 +107,9 @@ models:
     prices: {input_mtok: 9}
 """
     )
-    monkeypatch.setattr(source_baseten, 'MIN_MODEL_COUNT', 1)
     [model] = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)[:1]
 
-    assert source_baseten.update_baseten_provider(ProviderYaml(provider_path), [model]) == (0, 1)
+    assert ProviderYaml(provider_path).upsert_models([model], source='Baseten sources', min_count=1) == (0, 1)
 
     updated = ProviderYaml(provider_path).provider.find_model('zai-org/GLM-4.7')
     assert updated is not None
@@ -122,38 +123,13 @@ models:
     assert updated.prices[-1].constraint.start_date == date.today()
 
 
-def test_baseten_updater_adds_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_baseten_updater_adds_models(tmp_path: Path) -> None:
     provider_path = tmp_path / 'baseten.yml'
     provider_path.write_text('id: baseten\nname: Baseten\napi_pattern: baseten\nmodels: []\n')
-    monkeypatch.setattr(source_baseten, 'MIN_MODEL_COUNT', 1)
     [model] = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)[:1]
 
-    assert source_baseten.update_baseten_provider(ProviderYaml(provider_path), [model]) == (1, 0)
+    assert ProviderYaml(provider_path).upsert_models([model], source='Baseten sources', min_count=1) == (1, 0)
     assert ProviderYaml(provider_path).provider.find_model(model.id) is not None
-
-
-def test_baseten_updater_rejects_suspiciously_small_results(tmp_path: Path) -> None:
-    provider_path = tmp_path / 'baseten.yml'
-    provider_path.write_text('id: baseten\nname: Baseten\napi_pattern: baseten\nmodels: []\n')
-
-    with pytest.raises(RuntimeError, match='Baseten sources returned only 0 models; expected at least 11'):
-        source_baseten.update_baseten_provider(ProviderYaml(provider_path), [])
-
-
-def test_baseten_updater_rejects_sharp_catalog_drop(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    provider_path = tmp_path / 'baseten.yml'
-    provider_path.write_text(
-        'id: baseten\nname: Baseten\napi_pattern: baseten\nmodels:\n'
-        + ''.join(
-            f'  - id: model-{index}\n    match: {{equals: model-{index}}}\n    prices: {{input_mtok: 1}}\n'
-            for index in range(3)
-        )
-    )
-    monkeypatch.setattr(source_baseten, 'MIN_MODEL_COUNT', 1)
-    [model] = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)[:1]
-
-    with pytest.raises(RuntimeError, match='Baseten sources returned only 1 models; tracked provider has 3'):
-        source_baseten.update_baseten_provider(ProviderYaml(provider_path), [model])
 
 
 @pytest.mark.vcr()
@@ -163,4 +139,7 @@ def test_baseten_main_fetches_recorded_sources(tmp_path: Path, capsys: pytest.Ca
 
     source_baseten.main(provider_path)
 
-    assert capsys.readouterr().out == 'Baseten prices updated: 0 added, 15 updated\n'
+    assert capsys.readouterr().out == (
+        "Skipping Baseten models without published prices: ['deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast']\n"
+        'Baseten prices updated: 3 added, 13 updated\n'
+    )

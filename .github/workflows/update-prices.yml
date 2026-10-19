@@ -26,9 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # baseten, cursor, huggingface, ovhcloud and quicksilverpro stay manual until they preserve price history and
-        # survive their current upstream shape.
-        importer: [arcee, avian, cerebras, cloudflare, novita]
+        importer: [arcee, avian, baseten, cerebras, cloudflare, cursor, huggingface, novita, ovhcloud, quicksilverpro]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
