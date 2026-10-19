@@ -19904,6 +19904,8 @@ export const data: Provider[] = [
       {
         id: 'MiniMax-M3.1-Flash',
         name: 'MiniMax-M3.1-Flash',
+        description:
+          'Frontier multimodal coding model with 1M context window and tunable thinking depth. An ultra-efficient open-weight model for everyday work.',
         match: {
           or: [
             {
@@ -19914,6 +19916,7 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
@@ -32004,7 +32007,7 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.0376,
+              input_mtok: 0.0344,
               cache_read_mtok: 0.0016,
               output_mtok: 0.08,
             },
