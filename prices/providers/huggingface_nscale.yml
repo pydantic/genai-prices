@@ -106,6 +106,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen2.5-Coder-3B-Instruct
     name: Qwen2.5-Coder-3B-Instruct
@@ -117,6 +118,7 @@ models:
     prices:
       input_mtok: 0.01
       output_mtok: 0.03
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen2.5-Coder-7B-Instruct
     name: Qwen2.5-Coder-7B-Instruct
@@ -128,6 +130,7 @@ models:
     prices:
       input_mtok: 0.01
       output_mtok: 0.03
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-14B
     name: Qwen3-14B
@@ -139,6 +142,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-235B-A22B
     name: Qwen3-235B-A22B
@@ -152,6 +156,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-32B
     name: Qwen3-32B
@@ -163,6 +168,7 @@ models:
     prices:
       input_mtok: 0.08
       output_mtok: 0.25
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-4B-Instruct-2507
     name: Qwen3-4B-Instruct-2507
@@ -174,6 +180,7 @@ models:
     prices:
       input_mtok: 0.01
       output_mtok: 0.03
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-4B-Thinking-2507
     name: Qwen3-4B-Thinking-2507
@@ -185,6 +192,7 @@ models:
     prices:
       input_mtok: 0.01
       output_mtok: 0.03
+    prices_checked: 2026-10-19
 
   - id: Qwen/Qwen3-8B
     name: Qwen3-8B
@@ -196,6 +204,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.18
+    prices_checked: 2026-10-19
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
@@ -218,6 +227,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
+    prices_checked: 2026-10-19
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
     name: DeepSeek-R1-Distill-Qwen-1.5B
@@ -229,6 +239,18 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+    name: DeepSeek-R1-Distill-Qwen-14B
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-14b
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-14b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
     name: DeepSeek-R1-Distill-Qwen-32B
@@ -251,6 +273,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.15
+    prices_checked: 2026-10-19
 
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
@@ -262,6 +285,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.06
+    prices_checked: 2026-10-19
 
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
@@ -284,6 +308,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.29
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -295,6 +320,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.4
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -306,3 +332,4 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.2
+    prices_checked: 2026-10-19
