@@ -20,6 +20,7 @@ from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_meta import get_meta_prices
 from .source_minimax import get_minimax_prices
+from .source_mistral import get_mistral_prices
 from .source_moonshotai import get_moonshotai_prices
 from .source_novita import get_novita_prices
 from .source_openai_decisions import get_openai_decisions_prices
@@ -54,6 +55,7 @@ def main():
         get_litellm_prices,
         get_meta_prices,
         get_minimax_prices,
+        get_mistral_prices,
         get_moonshotai_prices,
         get_novita_prices,
         get_openai_decisions_prices,

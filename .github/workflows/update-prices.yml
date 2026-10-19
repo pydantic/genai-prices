@@ -39,6 +39,7 @@ jobs:
           - huggingface
           - meta
           - minimax
+          - mistral
           - moonshotai
           - novita
           - openai-decisions

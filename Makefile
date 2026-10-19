@@ -147,6 +147,10 @@ perplexity-get: ## get perplexity sonar prices
 together-get: ## get together ai model prices
 	uv run -m prices get_together_prices
 
+.PHONY: mistral-get
+mistral-get: ## get mistral model prices
+	uv run -m prices get_mistral_prices
+
 .PHONY: xai-get
 xai-get: ## get xai model prices
 	uv run -m prices get_xai_prices
@@ -156,7 +160,7 @@ openrouter-provider-get: ## get openrouter provider prices
 	uv run -m prices get_openrouter_provider_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get mistral-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

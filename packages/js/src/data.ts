@@ -20059,6 +20059,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'zai-glm-5-3',
+        name: 'Z.ai GLM 5.3',
+        match: {
+          equals: 'zai-glm-5-3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.14,
+          output_mtok: 4.4,
+        },
+      },
     ],
   },
   {
