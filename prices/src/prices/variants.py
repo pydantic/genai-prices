@@ -30,10 +30,11 @@ def follow_standard_change(
             # Lists no rates of its own, so it already inherits every standard rate.
             continue
         pairs = [pair for key, rate in rates.items() for pair in rate_pairs(rate, old_rates.get(key))]
-        reshaped = any(
-            type(new_rates[key]) is not type(old_rates[key]) for key in rates if new_rates.get(key) is not None
-        )
-        if (share := common_share(pairs)) is None or reshaped:
+        share = common_share(pairs)
+        # A share only exists when every listed key has an old standard rate, so the shapes can be compared.
+        if share is None or any(
+            shape(new_rates[key]) != shape(old_rates[key]) for key in rates if new_rates.get(key) is not None
+        ):
             followed.append((variant.when, None))
             continue
         derived = ModelPrice.model_validate(
@@ -46,6 +47,11 @@ def follow_standard_change(
         if derived != variant.prices:
             followed.append((variant.when, derived))
     return followed
+
+
+def shape(value: PriceValue) -> list[int]:
+    """The tier starts of a rate (`[]` when flat), so a rate that gains, loses or moves a tier can't be scaled."""
+    return [tier.start for tier in value.tiers] if isinstance(value, TieredPrices) else []
 
 
 def rate_pairs(rate: PriceValue, standard: PriceValue | None) -> list[tuple[Decimal, Decimal | None]]:

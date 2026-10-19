@@ -102,6 +102,14 @@ models:
       - when: { service_tier: flex }
         prices:
           input_mtok: { base: 1, tiers: [{ start: 100000, price: 2 }] }
+  - id: tiered-again
+    match: { equals: tiered-again }
+    prices:
+      input_mtok: { base: 2, tiers: [{ start: 200000, price: 4 }] }
+    price_variants:
+      - when: { processing: batch }
+        prices:
+          input_mtok: { base: 1, tiers: [{ start: 200000, price: 2 }] }
   - id: uneven
     match: { equals: uneven }
     prices: { input_mtok: 1, output_mtok: 4 }
@@ -126,8 +134,12 @@ models:
         model('flat', input_mtok='0.4', cache_read_mtok='0.03', output_mtok='1.2'),
         model('tiered', input_mtok={'base': '3', 'tiers': [{'start': 200_000, 'price': '6'}]}),
         model('uneven', input_mtok='2'),
+        model(
+            'tiered-again',
+            input_mtok={'base': '2', 'tiers': [{'start': 128_000, 'price': '3'}, {'start': 200_000, 'price': '4'}]},
+        ),
     ]
-    assert ProviderYaml(provider_path).upsert_models(models, source='Mistral', min_count=1) == (0, 3)
+    assert ProviderYaml(provider_path).upsert_models(models, source='Mistral', min_count=1) == (0, 4)
 
     provider = ProviderYaml(provider_path).provider
     flat = provider.find_model('flat')
@@ -152,6 +164,7 @@ models:
         "Mistral: tiered {'service_tier': 'flex'} rates are not one share of the standard rates; update them by hand\n"
         "Mistral: uneven {'processing': 'batch'} rates are not one share of the standard rates; update them by hand\n"
         "Mistral: uneven {'service_tier': 'flex'} rates are not one share of the standard rates; update them by hand\n"
+        "Mistral: tiered-again {'processing': 'batch'} rates are not one share of the standard rates; update them by hand\n"
     )
 
     models[0] = model('flat', input_mtok='0.5', cache_read_mtok='0.03', output_mtok='1.2')
