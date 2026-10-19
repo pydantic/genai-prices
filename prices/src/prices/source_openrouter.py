@@ -273,6 +273,9 @@ def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
     for model in models:
         if model.provider_id() == 'openrouter' or model.pricing.has_negative_price():
             continue
+        if model.id.startswith('~'):
+            # A `~...-latest` alias redirects to another model, and its reported rates flip within minutes.
+            continue
         if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
             model = with_batch_cache_writes(model, base)
         overrides: list[dict[str, Any]] = (model.pricing.model_extra or {}).get('overrides') or []
