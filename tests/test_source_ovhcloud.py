@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 from inline_snapshot import snapshot
@@ -12,7 +11,6 @@ from inline_snapshot import snapshot
 from prices import source_ovhcloud
 from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
 from prices.source_ovhcloud import get_model_infos
-from prices.utils import package_dir
 
 from .fixtures import load_entries
 
@@ -60,11 +58,11 @@ def test_ovhcloud_mixed_case_id_also_matches_lowercase():
 @pytest.mark.vcr()
 def test_ovhcloud_main_fetches_recorded_catalog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'ovhcloud.yml'
-    copyfile(package_dir / 'providers/ovhcloud.yml', provider_path)
+    provider_path.write_text('id: ovhcloud\nname: OVHcloud\napi_pattern: ovh\nmodels: []\n')
 
     source_ovhcloud.main(provider_path)
 
-    assert capsys.readouterr().out == snapshot('OVHcloud prices updated: 5 added, 8 updated\n')
+    assert capsys.readouterr().out == snapshot('OVHcloud prices updated: 13 added, 0 updated\n')
 
 
 def test_ovhcloud_skips_models_without_pricing():

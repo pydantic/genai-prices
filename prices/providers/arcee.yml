@@ -50,7 +50,7 @@ models:
     name: DeepSeek V4 Flash
     match:
       equals: deepseek/deepseek-v4-flash-latest
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.14
       cache_read_mtok: 0.028
@@ -74,7 +74,7 @@ models:
       input_mtok: 1.32
       cache_read_mtok: 0.044
       output_mtok: 3.96
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v4.1-flash
     name: DeepSeek V4.1 Flash
@@ -84,13 +84,23 @@ models:
       input_mtok: 0.22
       cache_read_mtok: 0.007
       output_mtok: 0.66
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4.1-flash-1017
+    name: deepseek/deepseek-v4.1-flash-1017
+    match:
+      equals: deepseek/deepseek-v4.1-flash-1017
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.006
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k3
     name: Kimi K3
     match:
       equals: moonshotai/kimi-k3
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30
@@ -110,7 +120,7 @@ models:
     name: Trinity Large Thinking
     match:
       equals: trinity-large-thinking
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.06
@@ -120,7 +130,7 @@ models:
     name: GLM 5.2
     match:
       equals: zai-org/glm-5.2
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 1.40
       cache_read_mtok: 0.26
@@ -134,7 +144,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: zai-org/glm-5.3-flash
     name: GLM 5.3 Flash
@@ -144,4 +154,4 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
