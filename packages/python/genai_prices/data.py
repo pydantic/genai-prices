@@ -18095,7 +18095,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.044'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
+                            input_mtok=Decimal('0.0376'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
                         ),
                     ),
                 ],
@@ -20359,6 +20359,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
                 ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m3.1-flash:free',
+                match=ClauseEquals(equals='minimax/minimax-m3.1-flash:free'),
+                name='MiniMax M3.1 Flash (free)',
+                context_window=1000000,
+                prices=ModelPrice(),
             ),
             ModelInfo(
                 id='ministral-3b',
@@ -25172,7 +25179,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.048'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.2')
+                            input_mtok=Decimal('0.048'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.16')
                         ),
                     ),
                 ],
