@@ -734,6 +734,7 @@ func TestDatabricksPrices(t *testing.T) {
 			},
 			Model:      test.model,
 			ProviderID: "databricks",
+			Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -754,6 +755,7 @@ func TestDatabricksProviderSelection(t *testing.T) {
 		{Model: "databricks/databricks-gpt-oss-120b", ProviderID: "litellm"},
 	} {
 		request.Usage = genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}
+		request.Timestamp = time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC)
 		calculation, err := genai_prices.Calculate(request)
 		if err != nil {
 			t.Fatal(err)

@@ -1,12 +1,11 @@
 from datetime import date
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import httpx2
-from pydantic import HttpUrl
 
-from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
-from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
+from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
+from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 MODELS_URL = 'https://router.huggingface.co/v1/models'
@@ -62,34 +61,11 @@ def main(providers_dir: Path | None = None) -> None:
             continue
         path = providers_dir / f'huggingface_{provider}.yml'
         if not path.exists():
-            path.write_text(new_provider_yaml(provider, providers_dir))
+            # A new provider file also needs the price-check allowlists, which an unattended run can't update.
+            print(f'HuggingFace ({provider}) skipped: {path.name} does not exist, add it with the add-provider skill')
+            continue
         added, updated = ProviderYaml(path).upsert_models(infos, source=f'HuggingFace ({provider})', min_count=1)
         print(f'HuggingFace ({provider}) prices updated: {added} added, {updated} updated')
-
-
-def new_provider_yaml(provider: str, providers_dir: Path) -> str:
-    openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
-    assert openai_extractors
-    [chat_extractor] = [e for e in openai_extractors if e.api_flavor == 'chat']
-    provider_info = Provider(
-        id=f'huggingface_{provider}',
-        name=f'HuggingFace ({provider})',
-        api_pattern=rf'https://router\.huggingface\.co/{provider}',
-        models=[],
-        pricing_urls=[HttpUrl(MODELS_URL), HttpUrl('https://huggingface.co/inference/models')],
-        # Only the chat completions API is served, so it is also the `default` flavor (#324).
-        extractors=[chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor],
-        provider_match=ClauseAnd(
-            and_=[  # pyright: ignore[reportCallIssue]
-                ClauseContains(contains='huggingface'),
-                ClauseContains(contains=provider),
-            ],
-        ),
-    )
-    yaml_data = cast(
-        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
-    )
-    return '# yaml-language-server: $schema=.schema.json\n' + get_provider_yaml_string(yaml_data)
 
 
 def get_huggingface_prices():  # pragma: no cover - thin CLI alias for main

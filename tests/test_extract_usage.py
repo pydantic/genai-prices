@@ -183,7 +183,9 @@ def test_databricks_chat_usage(api_flavor: str) -> None:
     assert extracted.usage == Usage(
         input_tokens=12_011, cache_read_tokens=12_002, output_tokens=80, output_reasoning_tokens=30
     )
-    assert extracted.calc_price().total_price == Decimal('0.00348512')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00348512'
+    )
 
 
 def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
@@ -196,7 +198,9 @@ def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
     extracted = extract_usage(response_data, provider_id='databricks', api_flavor='chat')
 
     assert extracted.usage == Usage(input_tokens=7, output_tokens=74)
-    assert extracted.calc_price().total_price == Decimal('0.00004545')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00004545'
+    )
 
 
 def test_databricks_open_responses_usage() -> None:
@@ -222,7 +226,9 @@ def test_databricks_open_responses_usage() -> None:
     assert extracted.usage == Usage(
         input_tokens=100, cache_read_tokens=40, output_tokens=50, output_reasoning_tokens=20
     )
-    assert extracted.calc_price().total_price == Decimal('0.000942')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.000942'
+    )
 
 
 def test_databricks_embeddings_usage() -> None:
@@ -236,7 +242,9 @@ def test_databricks_embeddings_usage() -> None:
     extracted = extract_usage(response_data, provider_id='databricks', api_flavor='embeddings')
 
     assert extracted.usage == Usage(input_tokens=1_000_000)
-    assert extracted.calc_price().total_price == Decimal('0.13')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.13'
+    )
 
 
 @pytest.mark.parametrize(
@@ -481,7 +489,10 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
         output_tokens=1_000_000,
         output_reasoning_tokens=500_000,
     )
-    assert extracted_usage.calc_price().total_price == expected_price
+    assert (
+        extracted_usage.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price
+        == expected_price
+    )
 
 
 def test_cloudflare_chat_usage() -> None:

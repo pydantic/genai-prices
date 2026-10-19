@@ -1,0 +1,1222 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: >-
+      https://www.databricks.com/en-pricing-assets/page-data/product/pricing/foundation-model-serving/page-data.json
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.databricks.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      access-control-allow-origin:
+      - "*"
+      age:
+      - "177789"
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a4ce77abbcbef5e2-AMS
+      connection:
+      - keep-alive
+      content-disposition:
+      - inline; filename="page-data.json"
+      content-security-policy:
+      - "default-src 'unsafe-inline' 'unsafe-eval' vitals.vercel-insights.com https: data: wss://*.qualified.com *.arkoselabs.com; block-all-mixed-content; upgrade-insecure-requests"
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 08:38:36 GMT
+      etag:
+      - W/"ce24086946c5eecb4460cfe1e7674bc6"
+      last-modified:
+      - Sat, 17 Oct 2026 07:15:26 GMT
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - fra1::4mfrx-1792399116172-583aed4e46d2
+      x-xss-protection:
+      - 1; mode=block
+    body:
+      type: json
+      content:
+        componentChunkName: >-
+          component---packages-gatsby-theme-databricks-drupal-src-templates-general-page-js
+        path: /product/pricing/foundation-model-serving
+        result:
+          data:
+            drupal:
+              generalPage:
+                __typename: Drupal_NodePages
+                nid: 8605
+                title: Foundation Model Serving
+                fieldHeroBackgroundVariant: null
+                fieldSubtitle: null
+                entityMetatags:
+                - type: Drupal_MetaValue
+                  key: title
+                  value: Foundation Model Serving | Databricks
+                - type: Drupal_MetaValue
+                  key: description
+                  value: >-
+                    Explore Databricks Foundation Model Serving pricing. Scale AI model deployment
+                    with flexible, cost-effective plans designed for high-performance workloads.
+                - type: Drupal_MetaLink
+                  key: canonical
+                  value: https://www.databricks.com/product/pricing/foundation-model-serving
+                - type: Drupal_MetaProperty
+                  key: og:site_name
+                  value: Databricks
+                - type: Drupal_MetaProperty
+                  key: og:url
+                  value: https://www.databricks.com/product/pricing/foundation-model-serving
+                - type: Drupal_MetaProperty
+                  key: og:title
+                  value: Foundation Model Serving
+                - type: Drupal_MetaProperty
+                  key: og:description
+                  value: >-
+                    Explore Databricks Foundation Model Serving pricing. Scale AI model deployment
+                    with flexible, cost-effective plans designed for high-performance workloads.
+                - type: Drupal_MetaProperty
+                  key: og:image
+                  value: https://www.databricks.com/sites/default/files/2023-02/og-databricks_4.png
+                - type: Drupal_MetaProperty
+                  key: article:published_time
+                  value: Thu, 03/21/2024 - 21:03
+                - type: Drupal_MetaProperty
+                  key: article:modified_time
+                  value: Tue, 10/06/2026 - 17:35
+                - type: Drupal_MetaValue
+                  key: twitter:site
+                  value: "@databricks"
+                - type: Drupal_MetaValue
+                  key: twitter:creator
+                  value: "@databricks"
+                - type: Drupal_MetaValue
+                  key: p:domain_verify
+                  value: e0c70fe08ba27888b8abee84a0f866b3
+                fieldTopBannerDisplay: false
+                entityUrl:
+                  pathAlias: /product/pricing/foundation-model-serving
+                  pathInternal: /node/8605
+                  breadcrumb:
+                  - text: Databricks Pricing
+                    url:
+                      path: /product/pricing
+                      routed: true
+                  - text: Foundation Model Serving
+                    url:
+                      path: ""
+                      routed: true
+                fieldDisplayBackgroundImage: false
+                isDarkVariant: false
+                fieldBackgroundStyle: anchored_left
+                fieldHideGlobalAlert: false
+                fieldEnableNewSpacing: false
+                fieldHideCustomAlert: false
+                fieldCustomAlert: []
+                fieldGated: false
+                fieldUrl: null
+                fieldBlurb: null
+                fieldShowSidebarNavigation: false
+                fieldSpacings:
+                  entity:
+                    __typename: Drupal_ParagraphSpacings
+                    uuid: 9c1f34cb-0969-4d85-8218-6a4e705f35ef
+                    fieldTopSpacing: null
+                    fieldBottomSpacing: null
+                    fieldTopSpacingTablet: null
+                    fieldBottomSpacingTablet: null
+                    fieldTopSpacingDesktop: null
+                    fieldBottomSpacingDesktop: null
+                sitePromos: []
+                fieldComponents:
+                - entity:
+                    __typename: Drupal_ParagraphInPageNavigationContainer
+                    uuid: bbb65180-4328-4c63-9c12-6d7eecf22299
+                    fieldItem:
+                      entity:
+                        __typename: Drupal_ParagraphFromLibrary
+                        uuid: 63ddda5e-0c92-42ae-8cc5-c53c9dfc4e4e
+                        fieldRevisionReusableParagraph:
+                          __typename: Drupal_ParagraphsLibraryItem
+                          uuid: 32cd58d5-ae21-4ba7-9b75-0f46fadaee34
+                          paragraphs:
+                            entity:
+                              __typename: Drupal_ParagraphInPageNavigation
+                              uuid: 431a4c65-fafe-403f-90c9-776ce8af8e15
+                              fieldBoolean: false
+                              fieldItems:
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 71f9033c-ec7d-4e72-8743-bf2346513413
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing
+                                    title: Pricing Overview
+                                  fieldItems: []
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 292f96bd-e2c3-4a38-b539-abdbec6c0120
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/lakeflow-jobs
+                                    title: Data Engineering
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/lakeflow-jobs
+                                        title: Lakeflow Jobs
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/lakeflow-pipelines
+                                        title: Lakeflow Pipelines
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/lakeflow-connect
+                                        title: Lakeflow Connect
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: e96d4d23-87fb-4b29-95a8-6e49e9f20ef2
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/databricks-lakehouse
+                                    title: Data Warehousing
+                                  fieldItems: []
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 5b931e85-43f6-48f6-968f-d60ccc05c4f6
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/lakebase
+                                    title: Operational Database
+                                  fieldItems: []
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: eb572479-bb10-4a42-9031-a198d07ea37c
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/datascience-ml
+                                    title: Interactive workloads
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/datascience-ml
+                                        title: Compute for Data Science
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/databricks-apps
+                                        title: Databricks Apps
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: ee17fd98-32a9-43ab-a027-f6517b180c16
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/foundation-model-serving
+                                    title: Artificial Intelligence
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/ai-gateway
+                                        title: Unity Gateway
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/agent-bricks
+                                        title: Agent Bricks
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/ai-functions
+                                        title: AI Functions
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/model-serving
+                                        title: Model Serving
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/foundation-model-serving
+                                        title: Foundation Model Serving
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/proprietary-foundation-model-serving
+                                        title: Proprietary Foundation Model Serving
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/ai-search
+                                        title: AI Search
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/agent-evaluation
+                                        title: Agent Evaluation
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/foundation-model-training
+                                        title: Model Training
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/ai-runtime
+                                        title: AI Runtime
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 17c0a46c-e156-44bb-9aa7-d9b7ff690fd8
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/genie
+                                    title: Genie
+                                  fieldItems: []
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 8be11535-e00b-4d3e-ad63-f3263c3e1dfc
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/platform-addons
+                                    title: Platform
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/platform-addons
+                                        title: Tiers and Add-ons
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/managed-services
+                                        title: Managed Services
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/data-transfer-connectivity
+                                        title: Data Transfer and Connectivity
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/storage
+                                        title: Storage
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/delta-share-sap-business-data-cloud
+                                        title: Delta Share from SAP BDC
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 150c8983-9209-4c7a-8335-92a90d18b433
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/clean-rooms
+                                    title: Collaboration
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/clean-rooms
+                                        title: Clean Rooms
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/view-sharing
+                                        title: View Sharing
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 1203ebb4-834c-44ab-87f6-eeb766909453
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/beta-products
+                                    title: Beta Products
+                                  fieldItems: []
+                              - entity:
+                                  __typename: Drupal_ParagraphInPageNavigationItem
+                                  uuid: 2cf4bef7-91ce-4e5f-8f98-433fc7eeb564
+                                  fieldLink:
+                                    url:
+                                      path: /product/pricing/product-pricing/instance-types
+                                    title: Calculator
+                                  fieldItems:
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/product-pricing/instance-types
+                                        title: Databricks Pricing Calculator
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/genai-pricing-calculator
+                                        title: Generative AI Pricing Calculator
+                                  - entity:
+                                      fieldLink:
+                                        url:
+                                          path: /product/pricing/sap-databricks-pricing-calculator
+                                        title: SAP Databricks Sizing Calculator
+                        fieldSpacings:
+                          entity:
+                            __typename: Drupal_ParagraphSpacings
+                            uuid: e64eedc9-6fd7-4faa-b20b-81c021c1b14a
+                            fieldTopSpacing: null
+                            fieldBottomSpacing: null
+                            fieldTopSpacingTablet: null
+                            fieldBottomSpacingTablet: null
+                            fieldTopSpacingDesktop: null
+                            fieldBottomSpacingDesktop: null
+                    fieldItems:
+                    - entity:
+                        __typename: Drupal_ParagraphRichtext
+                        uuid: 9cf21b93-28a1-4cb7-9c13-b7d96190689a
+                        fieldTitle: Foundation Model Serving
+                        fieldBody:
+                          processed: >-
+                            <p><span class="b2">Serve state-of-the-art foundation models for both real-time
+                            and batch inference workload needs. This enables you to quickly and easily build
+                            applications that leverage high-quality generative AI models without the need to
+                            maintain your own model deployment.</span></p>
+                        fieldSpacings:
+                          entity:
+                            __typename: Drupal_ParagraphSpacings
+                            uuid: 74d2877d-be5e-458c-bff0-5d1f80da3ed5
+                            fieldTopSpacing: null
+                            fieldBottomSpacing: null
+                            fieldTopSpacingTablet: null
+                            fieldBottomSpacingTablet: null
+                            fieldTopSpacingDesktop: null
+                            fieldBottomSpacingDesktop: null
+                    - entity:
+                        __typename: Drupal_ParagraphPricingSection
+                        uuid: 7c39bdee-8ddc-4998-8d56-eb2a7a453c8f
+                        fieldRegionList: mosaicFoundationModel
+                        fieldTitle: null
+                        fieldKey: fm_serving
+                        fieldPricingFilters:
+                        - cloud
+                        - plan
+                        - region
+                        fieldAvailablePlans:
+                        - premium
+                        - enterprise
+                        fieldAvailableClouds:
+                        - azure
+                        - aws
+                        - google
+                        fieldItems:
+                        - entity:
+                            __typename: Drupal_ParagraphPricingBanner
+                            uuid: 4277f10d-a7b4-4472-bbb3-8196cd7e74c6
+                            fieldBody:
+                              processed: >-
+                                <h3>Limited time promotion - products on the GCP Enterprise tier offered at the
+                                same price as on the GCP Premium tier until June 30, 2026.</h3><p>Prices shown
+                                below are before the promotion.</p>
+                            fieldItem:
+                              entity:
+                                __typename: Drupal_ParagraphPricingVisibilityRule
+                                uuid: 9ab77edb-e52f-4317-8fd2-716a672e1871
+                                fieldPricingVisibility: visible
+                                fieldPricingPlans:
+                                - enterprise
+                                fieldPricingClouds:
+                                - google
+                                fieldPricingRegions: []
+                                fieldPricingModels: []
+                                fieldPricingVendors: []
+                                fieldPricingOther: []
+                        - entity:
+                            __typename: Drupal_ParagraphPricingCards
+                            uuid: 9cb8113f-3c10-46cb-b95a-9f056659e85c
+                            fieldWidthColumns: null
+                            fieldTitle: Two ways to purchase
+                            fieldPricingCardVariant: warm
+                            fieldItems:
+                            - entity:
+                                __typename: Drupal_ParagraphPricingCardItem
+                                uuid: b5bde79b-7212-46c5-b9e1-87989786f7e7
+                                fieldPillColor: null
+                                fieldIconName: null
+                                fieldEyebrow: null
+                                fieldKey: fmServingSku
+                                fieldBoolean: false
+                                fieldEnabled:
+                                - false
+                                fieldDisclaimer: null
+                                secondaryDisclaimer: null
+                                externalDisclaimer: null
+                                fieldSuperscript: null
+                                fieldIntro: null
+                                fieldTitle: Pay-Per-Token
+                                fieldSubtitle: null
+                                fieldDescription:
+                                  processed: "<p><strong>LLM Serving: </strong><span>Choose from a selection of the latest open LLMs. Priced per million tokens.</span></p>"
+                                fieldBody: null
+                                fieldLink: null
+                                fieldItem:
+                                  entity:
+                                    __typename: Drupal_ParagraphPricingVisibilityRule
+                                    uuid: 3961510a-af7d-46a6-b161-c0348e9cd7d8
+                                    fieldPricingVisibility: hidden
+                                    fieldPricingPlans: []
+                                    fieldPricingClouds: []
+                                    fieldPricingRegions: []
+                                    fieldPricingModels:
+                                    - Llama 3.1 405B
+                                    - Llama 3.1 70B
+                                    - Llama 3.2 3B
+                                    - Llama 4 Maverick
+                                    fieldPricingVendors: []
+                                    fieldPricingOther: []
+                            - entity:
+                                __typename: Drupal_ParagraphPricingCardItem
+                                uuid: 13d8697b-eb24-41e2-83af-cdc61a59a08d
+                                fieldPillColor: null
+                                fieldIconName: null
+                                fieldEyebrow: null
+                                fieldKey: fmServingSku
+                                fieldBoolean: false
+                                fieldEnabled:
+                                - false
+                                fieldDisclaimer: null
+                                secondaryDisclaimer: null
+                                externalDisclaimer: null
+                                fieldSuperscript: null
+                                fieldIntro: null
+                                fieldTitle: Provisioned Throughput <sup>(2,3)</sup>
+                                fieldSubtitle: null
+                                fieldDescription:
+                                  processed: "<p><strong>Production LLM Serving: </strong><span>Deploy production apps with high throughput capacity. Choose from a selection of the latest open LLMs. Priced per hour per model unit.</span></p>"
+                                fieldBody: null
+                                fieldLink: null
+                                fieldItem:
+                                  entity:
+                                    __typename: Drupal_ParagraphPricingVisibilityRule
+                                    uuid: c66a787e-1786-44a9-a9c7-fe3cc5b4d688
+                                    fieldPricingVisibility: hidden
+                                    fieldPricingPlans: []
+                                    fieldPricingClouds: []
+                                    fieldPricingRegions: []
+                                    fieldPricingModels:
+                                    - Llama 3.1 405B
+                                    fieldPricingVendors: []
+                                    fieldPricingOther: []
+                            - entity:
+                                __typename: Drupal_ParagraphPricingCardItem
+                                uuid: 8ae7f788-fa42-478b-a21a-bdd2fa483717
+                                fieldPillColor: null
+                                fieldIconName: null
+                                fieldEyebrow: null
+                                fieldKey: fmServingSku
+                                fieldBoolean: false
+                                fieldEnabled:
+                                - false
+                                fieldDisclaimer: null
+                                secondaryDisclaimer: null
+                                externalDisclaimer: null
+                                fieldSuperscript: null
+                                fieldIntro: null
+                                fieldTitle: Batch Inference <sup>(2)</sup>
+                                fieldSubtitle: null
+                                fieldDescription:
+                                  processed: >-
+                                    <p><span>Run Batch Inference for all types of models from within DBSQL, DB
+                                    Notebook, or deploy it as a scheduled workflow in a simple unified way via the same
+                                    API. Enjoy the simplicity of deployment without having to provision an LLM
+                                    endpoint. Priced per hour per model unit.</span></p>
+                                fieldBody: null
+                                fieldLink: null
+                                fieldItem:
+                                  entity:
+                                    __typename: Drupal_ParagraphPricingVisibilityRule
+                                    uuid: 3e811a48-0126-4aeb-9bc7-88b71abfac7f
+                                    fieldPricingVisibility: hidden
+                                    fieldPricingPlans: []
+                                    fieldPricingClouds: []
+                                    fieldPricingRegions: []
+                                    fieldPricingModels:
+                                    - Llama 3.1 405B
+                                    fieldPricingVendors: []
+                                    fieldPricingOther: []
+                        - entity:
+                            __typename: Drupal_ParagraphPricingRichtext
+                            uuid: a4e09b13-0271-4294-b37e-0e92b360d53b
+                            fieldTitle: null
+                            fieldDescription:
+                              processed: "<p>* <span>Displayed pricing does not guarantee product availability in that region. For product availability see here:&nbsp;</span><a href=\"https://docs.databricks.com/en/resources/feature-region-support.html\">AWS</a><span>,&nbsp;</span><a href=\"https://learn.microsoft.com/en-us/azure/databricks/resources/feature-region-support\">Azure</a><span>,&nbsp;</span><a href=\"https://docs.gcp.databricks.com/en/resources/feature-region-support.html\">GCP</a><span>,&nbsp;</span><a href=\"https://docs.databricks.com/sap/en#supported-regions\">SAP</a><br>1. Azure Databricks, as a first-party service on Microsoft Azure, offers unified billing and support by Microsoft<br>&nbsp; &nbsp;The Premium tier on Azure Databricks corresponds to the Enterprise tier on AWS and GCP<br>2.&nbsp;Hourly pricing is charged on a per-minute increment<br>3. Provisioned Throughput is sold in increments of model units. The amount of throughput per model unit varies by model and request shape (input tokens, output tokens, cache hit rate). Please use the <a href=\"https://www.databricks.com/product/pricing/genai-pricing-calculator\">GenAI Calculator</a> to estimate workload-specific throughput and total cost</p>"
+                            fieldItem: null
+                        - entity:
+                            __typename: Drupal_ParagraphPricingRichtext
+                            uuid: c69029bc-7776-4914-a40e-07afad6a77d5
+                            fieldTitle: null
+                            fieldDescription:
+                              processed: >-
+                                <div class="how-to-dbu-rates"><h3>How to use DBU rates</h3><p>Your final price
+                                equals the SKU price ($ per DBU, in the tiles above) multiplied by the DBU rate
+                                (DBU per million tokens or hours, from the table below).</p><p>For example, if
+                                your SKU price is <strong>$0.07 / DBU</strong> (<em>e.g. AWS, US East N.
+                                Virginia</em>)<strong>:</strong></p><ul><li
+                                data-list-item-id="ed6b7f7695e4215798c046281288327d0">Your final input token price for Kimi K3 is:<br>[$0.07 / DBU] × [42.857 DBU
+                                / M input tokens] = <strong>$3.00 / M input tokens.</strong></li><li
+                                data-list-item-id="e68b0135935b24e85463465f8efff199e">Your one-month Provisioned Throughput
+                                price for GLM-5.3 is:<br>[$0.07 / DBU] × [142.857 DBU / hour] = <strong>$10.00 /
+                                hour.</strong></li></ul></div>
+                            fieldItem: null
+                        - entity:
+                            __typename: Drupal_ParagraphPricingRichtext
+                            uuid: 61ef98b7-c604-432b-bee7-90fab6fb8a2e
+                            fieldTitle: null
+                            fieldDescription:
+                              processed: >-
+                                <h2>Foundation Model Serving DBU rates</h2><h3>Pay Per Token</h3><table
+                                class="table md:table-fixed"><thead><tr><th rowspan="2">Model</th><th
+                                style="text-align:center;" colspan="3">Pay Per Token (DBU Per 1M Tokens)</th></tr><tr><th
+                                style="text-align:right;">Input</th><th style="text-align:right;">Output</th><th
+                                style="text-align:right;">Cache read</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td
+                                style="text-align:right;">42.857</td><td style="text-align:right;">214.286</td><td
+                                style="text-align:right;">4.286</td></tr><tr><td>GLM-5.2, 5.3 ⌖</td><td
+                                style="text-align:right;">20.000</td><td style="text-align:right;">62.857</td><td
+                                style="text-align:right;">3.714</td></tr><tr><td>DeepSeek V4 Pro ⌖</td><td
+                                style="text-align:right;">18.857</td><td style="text-align:right;">56.571</td><td
+                                style="text-align:right;">1.886</td></tr><tr><td>Inkling ⌖</td><td
+                                style="text-align:right;">14.286</td><td style="text-align:right;">57.857</td><td
+                                style="text-align:right;">2.429</td></tr><tr><td>Kimi K2.7 ⌖</td><td
+                                style="text-align:right;">13.571</td><td style="text-align:right;">57.143</td><td
+                                style="text-align:right;">2.714</td></tr><tr><td>GLM-5.3 Flash ⌖</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">7.143</td><td
+                                style="text-align:right;">0.429</td></tr><tr><td>DeepSeek V4.1 Flash ⌖</td><td style="text-align:right;">4.286</td><td
+                                style="text-align:right;">17.143</td><td
+                                style="text-align:right;">0.429</td></tr><tr><td>DeepSeek V4 Flash ⌖</td><td style="text-align:right;">2.000</td><td
+                                style="text-align:right;">4.000</td><td style="text-align:right;">0.400</td></tr><tr><td>Qwen
+                                3.5 122B</td><td style="text-align:right;">3.143</td><td
+                                style="text-align:right;">31.429</td><td style="text-align:right;">-</td></tr><tr><td>Llama 4
+                                Maverick</td><td style="text-align:right;">7.143</td><td
+                                style="text-align:right;">21.429</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.3 70B</td><td
+                                style="text-align:right;">7.143</td><td style="text-align:right;">21.429</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Qwen 3 80B Instruct</td><td
+                                style="text-align:right;">2.143</td><td style="text-align:right;">17.143</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-120B</td><td
+                                style="text-align:right;">2.143</td><td style="text-align:right;">8.571</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Gemma 3 12B</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">7.143</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 3.1 8B</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">6.429</td><td style="text-align:right;">-</td></tr><tr><td>GPT-OSS-20B</td><td
+                                style="text-align:right;">1.000</td><td style="text-align:right;">4.286</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GTE</td><td
+                                style="text-align:right;">1.857</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>BGE Large</td><td style="text-align:right;">1.429</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Qwen 3
+                                0.6B Embedding</td><td style="text-align:right;">0.286</td><td
+                                style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr></tbody></table><h3>Priority Pay Per Token</h3><table class="table md:table-fixed"><thead><tr><th
+                                rowspan="2">Model</th><th style="text-align:center;" colspan="3">Priority Pay Per Token
+                                (DBU Per 1M Tokens)</th></tr><tr><th style="text-align:right;">Input</th><th
+                                style="text-align:right;">Output</th><th style="text-align:right;">Cache
+                                read</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td style="text-align:right;">75.000</td><td
+                                style="text-align:right;">375.000</td><td
+                                style="text-align:right;">7.500</td></tr><tr><td>GLM-5.2, 5.3 ⌖</td><td style="text-align:right;">35.000</td><td
+                                style="text-align:right;">110.000</td><td
+                                style="text-align:right;">6.500</td></tr><tr><td>GLM-5.3 Flash ⌖</td><td style="text-align:right;">3.750</td><td
+                                style="text-align:right;">12.500</td><td style="text-align:right;">0.750</td></tr><tr><td>Qwen
+                                3.5 122B</td><td style="text-align:right;">5.500</td><td
+                                style="text-align:right;">55.000</td><td
+                                style="text-align:right;">-</td></tr></tbody></table><h3>Provisioned Throughput</h3><table class="table md:table-fixed"><thead><tr><th
+                                rowspan="2">Model</th><th style="text-align:center;" colspan="3">Provisioned Throughput
+                                (DBU Per Hour Per 50 Model Units)</th></tr><tr><th
+                                style="text-align:right;">On-demand</th><th style="text-align:right;">1 month reservation</th><th
+                                style="text-align:right;">3 month reservation</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>GLM-5.2, 5.3 ⌖</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>GLM-5.3 Flash ⌖</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>DeepSeek V4.1 Flash ⌖</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>Qwen 3.5 122B</td><td
+                                style="text-align:right;">85.714</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 4 Maverick</td><td style="text-align:right;">85.714</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama
+                                3.3 70B</td><td style="text-align:right;">85.714</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Qwen 3 80B
+                                Instruct</td><td style="text-align:right;">104.762</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-120B</td><td
+                                style="text-align:right;">71.429</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Gemma 3 12B</td><td
+                                style="text-align:right;">71.429</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 3.1 8B</td><td style="text-align:right;">53.571</td><td
+                                style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-20B</td><td style="text-align:right;">53.571</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>GTE</td><td
+                                style="text-align:right;">100.000</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>BGE Large</td><td style="text-align:right;">24.000</td><td
+                                style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Qwen 3 0.6B Embedding</td><td style="text-align:right;">50.000</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.2
+                                3B</td><td style="text-align:right;">46.429</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.2 1B</td><td
+                                style="text-align:right;">42.857</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr></tbody></table><h3>Batch Inference</h3><table
+                                class="table md:table-fixed"><thead><tr><th>Model</th><th style="text-align:right;">Batch
+                                Inference (DBU Per Hour)</th></tr></thead><tbody><tr><td>Qwen 3.5 122B</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Llama 4 Maverick</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Llama 3.3 70B</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Qwen 3 80B Instruct</td><td
+                                style="text-align:right;">104.762</td></tr><tr><td>GPT-OSS-120B</td><td
+                                style="text-align:right;">71.429</td></tr><tr><td>Gemma 3 12B</td><td
+                                style="text-align:right;">71.429</td></tr><tr><td>Llama 3.1 8B</td><td
+                                style="text-align:right;">53.571</td></tr><tr><td>GPT-OSS-20B</td><td style="text-align:right;">53.571</td></tr><tr><td>GTE</td><td
+                                style="text-align:right;">100.000</td></tr><tr><td>BGE Large</td><td
+                                style="text-align:right;">24.000</td></tr><tr><td>Qwen 3 0.6B Embedding</td><td
+                                style="text-align:right;">50.000</td></tr><tr><td>Llama 3.2 3B</td><td
+                                style="text-align:right;">46.429</td></tr><tr><td>Llama 3.2 1B</td><td
+                                style="text-align:right;">42.857</td></tr></tbody></table><p>⌖ When regional processing (data residency) is
+                                enabled, models with the ⌖ label will have a 10% uplift applied (will be charged DBU
+                                rates 10% greater than those shown in the table above). For Azure customers, if you
+                                have an Azure Commit with Databricks, Databricks may make available this service
+                                as an ADI Service that integrates with Azure Databricks. The ADI Service is sold
+                                and invoiced by Databricks. Contact Sales to get access.</p>
+                            fieldItem:
+                              entity:
+                                __typename: Drupal_ParagraphPricingVisibilityRule
+                                uuid: d9988b95-bd59-4cf1-910b-8c974e0811a9
+                                fieldPricingVisibility: visible
+                                fieldPricingPlans:
+                                - standard
+                                - premium
+                                - enterprise
+                                fieldPricingClouds:
+                                - azure
+                                fieldPricingRegions: []
+                                fieldPricingModels: []
+                                fieldPricingVendors: []
+                                fieldPricingOther: []
+                        - entity:
+                            __typename: Drupal_ParagraphPricingRichtext
+                            uuid: e5102910-66a3-40c7-a5e3-2ca84d69bbcd
+                            fieldTitle: null
+                            fieldDescription:
+                              processed: >-
+                                <h2>Foundation Model Serving DBU rates</h2><h3>Pay Per Token</h3><table
+                                class="table md:table-fixed"><thead><tr><th rowspan="2">Model</th><th
+                                style="text-align:center;" colspan="3">Pay Per Token (DBU Per 1M Tokens)</th></tr><tr><th
+                                style="text-align:right;">Input</th><th style="text-align:right;">Output</th><th
+                                style="text-align:right;">Cache read</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td
+                                style="text-align:right;">42.857</td><td style="text-align:right;">214.286</td><td
+                                style="text-align:right;">4.286</td></tr><tr><td>GLM-5.2, 5.3</td><td
+                                style="text-align:right;">20.000</td><td style="text-align:right;">62.857</td><td
+                                style="text-align:right;">3.714</td></tr><tr><td>DeepSeek V4 Pro</td><td
+                                style="text-align:right;">18.857</td><td style="text-align:right;">56.571</td><td
+                                style="text-align:right;">1.886</td></tr><tr><td>Inkling</td><td
+                                style="text-align:right;">14.286</td><td style="text-align:right;">57.857</td><td
+                                style="text-align:right;">2.429</td></tr><tr><td>Kimi K2.7</td><td style="text-align:right;">13.571</td><td
+                                style="text-align:right;">57.143</td><td
+                                style="text-align:right;">2.714</td></tr><tr><td>GLM-5.3 Flash</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">7.143</td><td style="text-align:right;">0.429</td></tr><tr><td>DeepSeek
+                                V4.1 Flash</td><td style="text-align:right;">4.286</td><td
+                                style="text-align:right;">17.143</td><td style="text-align:right;">0.429</td></tr><tr><td>DeepSeek V4
+                                Flash</td><td style="text-align:right;">2.000</td><td
+                                style="text-align:right;">4.000</td><td style="text-align:right;">0.400</td></tr><tr><td>Qwen 3.5
+                                122B</td><td style="text-align:right;">3.143</td><td
+                                style="text-align:right;">31.429</td><td style="text-align:right;">-</td></tr><tr><td>Llama 4 Maverick</td><td
+                                style="text-align:right;">7.143</td><td style="text-align:right;">21.429</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 3.3 70B</td><td
+                                style="text-align:right;">7.143</td><td style="text-align:right;">21.429</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Qwen 3 80B Instruct</td><td
+                                style="text-align:right;">2.143</td><td style="text-align:right;">17.143</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-120B</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">8.571</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Gemma 3 12B</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">7.143</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.1
+                                8B</td><td style="text-align:right;">2.143</td><td
+                                style="text-align:right;">6.429</td><td style="text-align:right;">-</td></tr><tr><td>GPT-OSS-20B</td><td
+                                style="text-align:right;">1.000</td><td style="text-align:right;">4.286</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GTE</td><td style="text-align:right;">1.857</td><td
+                                style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>BGE Large</td><td style="text-align:right;">1.429</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Qwen 3 0.6B
+                                Embedding</td><td style="text-align:right;">0.286</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr></tbody></table><h3>Priority Pay Per
+                                Token</h3><table class="table md:table-fixed"><thead><tr><th
+                                rowspan="2">Model</th><th style="text-align:center;" colspan="3">Priority Pay Per Token (DBU Per 1M
+                                Tokens)</th></tr><tr><th style="text-align:right;">Input</th><th
+                                style="text-align:right;">Output</th><th style="text-align:right;">Cache
+                                read</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td style="text-align:right;">75.000</td><td
+                                style="text-align:right;">375.000</td><td
+                                style="text-align:right;">7.500</td></tr><tr><td>GLM-5.2, 5.3</td><td style="text-align:right;">35.000</td><td
+                                style="text-align:right;">110.000</td><td style="text-align:right;">6.500</td></tr><tr><td>GLM-5.3
+                                Flash</td><td style="text-align:right;">3.750</td><td
+                                style="text-align:right;">12.500</td><td style="text-align:right;">0.750</td></tr><tr><td>Qwen 3.5 122B</td><td
+                                style="text-align:right;">5.500</td><td style="text-align:right;">55.000</td><td
+                                style="text-align:right;">-</td></tr></tbody></table><h3>Provisioned
+                                Throughput</h3><table class="table md:table-fixed"><thead><tr><th rowspan="2">Model</th><th
+                                style="text-align:center;" colspan="3">Provisioned Throughput (DBU Per Hour Per 50
+                                Model Units)</th></tr><tr><th style="text-align:right;">On-demand</th><th
+                                style="text-align:right;">1 month reservation</th><th style="text-align:right;">3 month
+                                reservation</th></tr></thead><tbody><tr><td>Kimi K3 ⌖</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>GLM-5.2, 5.3</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>GLM-5.3 Flash</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>DeepSeek V4.1 Flash</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">142.857</td><td
+                                style="text-align:right;">128.571</td></tr><tr><td>Qwen 3.5 122B</td><td style="text-align:right;">85.714</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama 4
+                                Maverick</td><td style="text-align:right;">85.714</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.3 70B</td><td
+                                style="text-align:right;">85.714</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Qwen 3 80B Instruct</td><td
+                                style="text-align:right;">104.762</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-120B</td><td style="text-align:right;">71.429</td><td
+                                style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Gemma 3 12B</td><td style="text-align:right;">71.429</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Llama 3.1
+                                8B</td><td style="text-align:right;">53.571</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GPT-OSS-20B</td><td
+                                style="text-align:right;">53.571</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>GTE</td><td style="text-align:right;">100.000</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>BGE
+                                Large</td><td style="text-align:right;">24.000</td><td
+                                style="text-align:right;">-</td><td style="text-align:right;">-</td></tr><tr><td>Qwen 3 0.6B
+                                Embedding</td><td style="text-align:right;">50.000</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 3.2 3B</td><td
+                                style="text-align:right;">46.429</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr><tr><td>Llama 3.2 1B</td><td
+                                style="text-align:right;">42.857</td><td style="text-align:right;">-</td><td
+                                style="text-align:right;">-</td></tr></tbody></table><h3>Batch Inference</h3><table class="table
+                                md:table-fixed"><thead><tr><th>Model</th><th style="text-align:right;">Batch Inference (DBU Per
+                                Hour)</th></tr></thead><tbody><tr><td>Qwen 3.5 122B</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Llama 4 Maverick</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Llama 3.3 70B</td><td
+                                style="text-align:right;">85.714</td></tr><tr><td>Qwen 3 80B Instruct</td><td
+                                style="text-align:right;">104.762</td></tr><tr><td>GPT-OSS-120B</td><td style="text-align:right;">71.429</td></tr><tr><td>Gemma
+                                3 12B</td><td style="text-align:right;">71.429</td></tr><tr><td>Llama 3.1
+                                8B</td><td style="text-align:right;">53.571</td></tr><tr><td>GPT-OSS-20B</td><td
+                                style="text-align:right;">53.571</td></tr><tr><td>GTE</td><td
+                                style="text-align:right;">100.000</td></tr><tr><td>BGE Large</td><td
+                                style="text-align:right;">24.000</td></tr><tr><td>Qwen 3 0.6B Embedding</td><td
+                                style="text-align:right;">50.000</td></tr><tr><td>Llama 3.2 3B</td><td
+                                style="text-align:right;">46.429</td></tr><tr><td>Llama 3.2 1B</td><td
+                                style="text-align:right;">42.857</td></tr></tbody></table><p>⌖ When regional processing (data residency) is enabled, models with the ⌖
+                                label will have a 10% uplift applied (will be charged DBU rates 10% greater than
+                                those shown in the table above).</p>
+                            fieldItem:
+                              entity:
+                                __typename: Drupal_ParagraphPricingVisibilityRule
+                                uuid: 773e6d18-6af8-446b-90ea-9b0e79dcae05
+                                fieldPricingVisibility: visible
+                                fieldPricingPlans:
+                                - standard
+                                - premium
+                                - enterprise
+                                fieldPricingClouds:
+                                - aws
+                                - google
+                                fieldPricingRegions: []
+                                fieldPricingModels: []
+                                fieldPricingVendors: []
+                                fieldPricingOther: []
+                        - entity:
+                            __typename: Drupal_ParagraphPricingCta
+                            uuid: 37ebcbdb-237b-4f5d-8bd2-f52bc103892c
+                            fieldCtas:
+                            - url:
+                                path: /try-databricks
+                              title: Start free trial
+                            - url:
+                                path: /company/contact
+                              title: Contact us
+                            fieldItem: null
+                            fieldItems: []
+                            fieldTitle: null
+                            fieldDescription:
+                              processed: >-
+                                <p><span class="h4">Pay as you go with a 14-day free trial or contact us for
+                                committed-use discounts or custom requirements.</span></p>
+                        - entity:
+                            __typename: Drupal_ParagraphPricingAccordion
+                            uuid: 0acff740-9a49-41a4-9780-347614c4bd0c
+                            fieldTitle: Foundation Model Serving FAQ
+                            fieldItems:
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 5f925efa-6c32-4e19-9ccb-c871611994c3
+                                fieldTitle: How do model units work?
+                                fieldDescription:
+                                  processed: >-
+                                    <p dir="ltr"><span>The capacity of a Provisioned Throughpoint endpoint is
+                                    measured in model units. Each model unit gives a certain amount of throughput, which
+                                    depends on the model and workload. You can use the </span><a
+                                    href="https://www.databricks.com/product/pricing/genai-pricing-calculator"><span>GenAI
+                                    Calculator</span></a><span> to estimate workload-specific throughput per model unit. For
+                                    Reserved Provisioned Throughput, there is also a calculator conveniently available in
+                                    the product interface when configuring a new endpoint.&nbsp;</span></p><p
+                                    dir="ltr"><span>For most models, you can purchase Provisioned Throughput in increments of
+                                    50 model units. The price of Provisioned Throughput is given per 50 model units
+                                    per hour.</span></p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 6c3859b7-0127-4d9c-9705-91d12e5ad9f7
+                                fieldTitle: How can I estimate the total cost of Foundation Model Serving?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>You can use the <a
+                                    href="https://www.databricks.com/product/pricing/genai-pricing-calculator">Generative AI pricing calculator</a> to estimate the total cost
+                                    of Pay-Per-Token, Provisioned Throughput, and Batch Inference serving. For
+                                    Reserved Provisioned Throughput, you can also use the model unit and DBU calculator
+                                    that is available when configuring a new endpoint.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 6ec05235-83a2-4fb3-8e45-0c5efd34c85c
+                                fieldTitle: Are there different prices for different regions or in-geo serving?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>For certain models on certain clouds, there are different prices for
+                                    different regions. Our regional prices are based on the regional cost of infrastructure
+                                    supporting our serverless products. For other models, the price is the same in
+                                    every region, but in-geo endpoints that meet data residency requirements will be
+                                    charged a 10% higher DBU rate. For details on which models have regional prices and
+                                    which have data residency uplifts, please refer to the prices and DBU rate
+                                    tables above.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: c597669d-910d-40cb-a68f-82c44512f5ec
+                                fieldTitle: How will Foundation Model Serving be charged?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Usage of these services for most models will appear on your bill under the
+                                    Serverless Real-time Inference SKU (or under the Model Serving SKU on SAP
+                                    Databricks). For AWS / GCP customers, usage of the Kimi K3 model will appear on your bill
+                                    under the Moonshot Model Serving SKU. &nbsp;For Azure customers, if you have an
+                                    Azure Commit with Databricks, Databricks may make certain models available as an
+                                    ADI Service that integrates with Azure Databricks; in the ADI service, usage of
+                                    Kimi, Deepseek, Thinking Machines Lab, and Zhipu AI models will appear on your
+                                    bill under dedicated SKUs. For each SKU, the price per DBU in the base region (such
+                                    as us-east-1 for AWS, us-central1 for GCP, and eastus for Azure) is $0.07 / DBU.
+                                    On the Serverless Real-time Inference SKU, there will be regional variation in
+                                    price for other regions.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: ea3fdce2-25ca-4630-81f5-79b397450815
+                                fieldTitle: What if I need more provisioned throughput capacity for my Foundation Model?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>You can purchase incremental provisioned throughput capacity for each model
+                                    at the prices shown in the table.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 5b6663ef-c6fc-4d10-b5e5-bfb7496a1fa5
+                                fieldTitle: How does scale to zero work for Provisioned Throughput?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>If ‘scale to zero’ is selected, scale to zero happens automatically after 30
+                                    minutes of no requests, at which time the endpoint enters the fully
+                                    scaled-to-zero (idle) state. You are not charged during this time period. When a new request
+                                    is made, the endpoint exits this idle state and begins scaling up at which point
+                                    you begin getting charged</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: f0b4e917-b82e-4a4f-bacd-ea286165f12a
+                                fieldTitle: How will Function Calling be charged?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Where it is available, Function Calling injects tokenized content into the
+                                    prompt increasing the number of input tokens. Customers will be charged for the
+                                    additional tokens at Foundation Model Serving rates.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: ac9331b8-150b-4104-bcb2-28eb507b8d25
+                                fieldTitle: Will I be charged for data transfer and networking costs?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Customers may incur data transfer costs when they move data between
+                                    different regions or availability zones within the same cloud, move data out of a cloud,
+                                    or require public or private connectivity from their VPCs. Please refer to the
+                                    Data transfer and connectivity section on <a
+                                    href="https://www.databricks.com/product/pricing/data-transfer-connectivity">this</a> page for more details.&nbsp;</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 602b2214-5166-434a-a3be-63519524df35
+                                fieldTitle: >-
+                                  Will I be charged for the full hour if I use the PT endpoint for a fraction of
+                                  the hour?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>With On-Demand Provisioned Throughput, you will be charged only for the
+                                    fraction of the hour the PT endpoint is provisioned. For example, if you have
+                                    scale-to-zero enabled, you are charged for the duration with active requests coming in
+                                    plus 30 minutes at which point scale-to-zero kicks in. With Reserved Provisioned
+                                    Throughput, you will be charged for the duration of your reservation.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: bce42d22-6b22-4dc6-b702-382b9ad9ff35
+                                fieldTitle: What's the difference between Entry and Scaling bands in Provisioned Throughput?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>For certain legacy models, entry bands are the small, lower-cost throughput
+                                    bands designed to provide a more affordable starting point for customers. These
+                                    bands provide proportionally reduced throughput compared to scaling bands.This
+                                    concept is only available for certain models in certain regions. For models where
+                                    entry bands are available, Provisioned Throughput DBU rates are shown per entry
+                                    band per hour.</p><p>Scaling bands represent the standard throughput level
+                                    increments that can be provisioned for a model. Provisioned Throughput capacity scales up
+                                    and down in increments (hourly price and maximum token per second throughput) of
+                                    these scaling bands.</p><p>Please use the GenAI Calculator for specific
+                                    availability of entry bands and to estimate throughput for entry vs. scaling bands where
+                                    applicable.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 6371cf8f-68cd-48d3-b0d8-38beafde7e9f
+                                fieldTitle: >-
+                                  In regions where low-priced Entry bands are available, how does auto-scaling
+                                  bands work?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Entry bands are only available for the lowest, entry-level usage.
+                                    Provisioned Throughput does not scale in these small increments, but rather in the full
+                                    Scaling band increments. For instance, the available bands for Provisioned
+                                    Throughput serving of Llama-3.3-70B have hourly price (shown for US East) &amp; throughput
+                                    (for queries with 3500 input tokens and 300 output tokens) as follows:</p><p>-
+                                    $6/hr - 2,400 tok/s<br>- $24/hr - 9,500 tok/s<br>- $48/hr - 19,000 tok/s<br>-
+                                    $72/hr - 28,500 tok/s<br>- and so on</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: f62b9a2a-49dd-440d-b2ee-631a06861612
+                                fieldTitle: How does pricing for Batch Inference work?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Batch Inference determines the scale of Provisioned Throughput to be run at
+                                    any given point (i.e., how <span>many model units</span> to use) and scales up
+                                    and down automatically. This allows Batch Inference to complete jobs quickly. You
+                                    are charged for the model-specific price per hour per model unit times the
+                                    duration and number of model units used during that period.</p>
+                                fieldItem: null
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: 7b9950db-f39a-4c52-8d21-7e6f838e50d6
+                                fieldTitle: What is a Capacity Unit (CU)?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>A "Capacity Unit" is a pricing metric in SAP Business Data Cloud (BDC). It
+                                    measures the amount of data processed, storage, and computational resources
+                                    consumed within the platform. SAP BDC customers are billed directly by SAP for the
+                                    number of Capacity Units (CUs) consumed across all SAP BDC services.</p>
+                                fieldItem:
+                                  entity:
+                                    __typename: Drupal_ParagraphPricingVisibilityRule
+                                    uuid: b4dcbdf0-8a01-4d3c-b1b7-33226355478c
+                                    fieldPricingVisibility: visible
+                                    fieldPricingPlans: []
+                                    fieldPricingClouds: []
+                                    fieldPricingRegions: []
+                                    fieldPricingModels: []
+                                    fieldPricingVendors: []
+                                    fieldPricingOther:
+                                    - sap
+                            - entity:
+                                __typename: Drupal_ParagraphPricingAccordionItem
+                                uuid: ad2b6f92-b88d-4dad-bef7-72830d1ecb2c
+                                fieldTitle: How does Priority Pay-Per-Token work?
+                                fieldDescription:
+                                  processed: >-
+                                    <p>Priority Pay-Per-Token (PPT) offers enhanced performance with pay-as-you-go
+                                    flexibility. With Priority PPT, your requests are handled preferentially,
+                                    resulting in lower latency and greater reliability. Priority PPT is priced in units of
+                                    DBUs per million tokens.</p>
+                                fieldItem: null
+                        fieldSpacings:
+                          entity:
+                            __typename: Drupal_ParagraphSpacings
+                            uuid: 357f81dc-7975-46e6-b6fb-7314a35707a0
+                            fieldTopSpacing: "2.4"
+                            fieldBottomSpacing: null
+                            fieldTopSpacingTablet: null
+                            fieldBottomSpacingTablet: null
+                            fieldTopSpacingDesktop: null
+                            fieldBottomSpacingDesktop: null
+          pageContext:
+            langPrefix: ""
+            language: EN
+            pathAliasTranslations:
+            - status: true
+              entityLanguage:
+                id: en
+              entityUrl:
+                path: /product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: de
+              entityUrl:
+                path: /de/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: fr
+              entityUrl:
+                path: /fr/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: it
+              entityUrl:
+                path: /it/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: ja
+              entityUrl:
+                path: /jp/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: ko
+              entityUrl:
+                path: /kr/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: br
+              entityUrl:
+                path: /br/product/pricing/foundation-model-serving
+            - status: true
+              entityLanguage:
+                id: es
+              entityUrl:
+                path: /es/product/pricing/foundation-model-serving
+            id: "8605"
+            vid: "256444"
+            rev: DEFAULT
+            computeTypes:
+              default:
+                tid: 2812
+                name: Default Calculator
+                machineName: default
+                children:
+                - tid: 2813
+                  name: Data Engineering
+                  machineName: data_engineering
+                  children:
+                  - tid: 2847
+                    name: Jobs Serverless Compute
+                    machineName: null
+                  - tid: 2848
+                    name: Jobs Compute
+                    machineName: null
+                  - tid: 2849
+                    name: Jobs Compute Photon
+                    machineName: null
+                  - tid: 2850
+                    name: DLT Serverless Compute
+                    machineName: null
+                  - tid: 2851
+                    name: DLT Advanced Compute
+                    machineName: null
+                  - tid: 2852
+                    name: DLT Core Compute
+                    machineName: null
+                  - tid: 2853
+                    name: DLT Pro Compute
+                    machineName: null
+                  - tid: 2854
+                    name: DLT Advanced Compute Photon
+                    machineName: null
+                  - tid: 2855
+                    name: DLT Core Compute Photon
+                    machineName: null
+                  - tid: 2856
+                    name: DLT Pro Compute Photon
+                    machineName: null
+                - tid: 2814
+                  name: Data Warehousing
+                  machineName: data_warehousing
+                  children:
+                  - tid: 2832
+                    name: SQL Serverless Compute
+                    machineName: null
+                  - tid: 2833
+                    name: SQL Compute
+                    machineName: null
+                  - tid: 2834
+                    name: SQL Pro Compute
+                    machineName: null
+                - tid: 2815
+                  name: Interactive workloads
+                  machineName: interactive_workloads
+                  children:
+                  - tid: 2835
+                    name: Interactive Serverless Compute
+                    machineName: null
+                  - tid: 2836
+                    name: All-Purpose Compute
+                    machineName: null
+                  - tid: 2837
+                    name: All-Purpose Compute Photon
+                    machineName: null
+                - tid: 2845
+                  name: Classic ML
+                  machineName: null
+                  children:
+                  - tid: 2846
+                    name: Model Serving/Serverless Real-Time Inference
+                    machineName: null
+                - tid: 2861
+                  name: Database
+                  machineName: database
+                  children:
+                  - tid: 2860
+                    name: Database Serverless Compute
+                    machineName: database_serverless_compute
+                - tid: 2903
+                  name: Lakebase
+                  machineName: null
+                  children:
+                  - tid: 2904
+                    name: Lakebase
+                    machineName: null
+        staticQueryHashes:
+        - "2197321345"
+        - "3571753586"
+        - "3834171261"
+        - "527633433"
+        - "69577834"
+        slicesMap: {}
+  recorded_at: 2026-10-19T08:38:36.265149+00:00
