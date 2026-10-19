@@ -1933,9 +1933,16 @@ models:
         - equals: deepseek/deepseek-v4.1-flash-20260910
     context_window: 1048576
     prices:
-      input_mtok: 0.0448
-      cache_read_mtok: 0.0016
-      output_mtok: 0.08
+      - prices:
+          input_mtok: 0.0448
+          cache_read_mtok: 0.0016
+          output_mtok: 0.08
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.044
+          cache_read_mtok: 0.0016
+          output_mtok: 0.08
     prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v4.1-flash:batch
@@ -10141,7 +10148,7 @@ models:
       - constraint:
           start_date: 2026-10-19
         prices:
-          input_mtok: 0.0392
+          input_mtok: 0.048
           cache_read_mtok: 0.006
           output_mtok: 0.2
     context_window: 1310720
@@ -10348,8 +10355,15 @@ models:
       equals: ~deepseek/deepseek-v4-flash-latest
     context_window: 1048576
     prices:
-      input_mtok: 0.0065
-      output_mtok: 0.45
+      - prices:
+          input_mtok: 0.0065
+          output_mtok: 0.45
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.00688
+          cache_read_mtok: 0.00336
+          output_mtok: 0.12
     prices_checked: 2026-10-19
 
   - id: ~google/gemini-flash-latest
@@ -10404,9 +10418,9 @@ models:
       - constraint:
           start_date: 2026-10-19
         prices:
-          input_mtok: 0.217
-          cache_read_mtok: 0.207
-          output_mtok: 16
+          input_mtok: 0.239
+          cache_read_mtok: 0.21
+          output_mtok: 11.936
     context_window: 1048576
     prices_checked: 2026-10-19
 
@@ -10583,9 +10597,16 @@ models:
       equals: ~z-ai/glm-flash-latest
     context_window: 1048576
     prices:
-      input_mtok: 0.0392
-      cache_read_mtok: 0.006
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.0392
+          cache_read_mtok: 0.006
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.048
+          cache_read_mtok: 0.006
+          output_mtok: 0.2
     prices_checked: 2026-10-19
 
   - id: ~z-ai/glm-latest
@@ -10594,7 +10615,14 @@ models:
       equals: ~z-ai/glm-latest
     context_window: 1048576
     prices:
-      input_mtok: 0.04
-      cache_read_mtok: 0.025
-      output_mtok: 6
+      - prices:
+          input_mtok: 0.04
+          cache_read_mtok: 0.025
+          output_mtok: 6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.042
+          cache_read_mtok: 0.026
+          output_mtok: 6
     prices_checked: 2026-10-19
