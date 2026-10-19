@@ -29,12 +29,13 @@ dev = [
     "packaging>=25.0",
     "jsonschema>=4.26.0",
     "types-jsonschema>=4.26.0.20260518",
-    "cassetter>=0.14.0",
+    "cassetter>=0.15.1",
     "pyyaml>=6.0.2",
 ]
 
 [tool.uv]
 exclude-newer = "1 week"
+exclude-newer-package = { cassetter = false }
 required-version = ">=0.12.1"
 
 [tool.uv.workspace]
