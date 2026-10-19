@@ -206,4 +206,6 @@ def get_provider_yaml_string(data: ProviderYamlDict) -> str:
     yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
     # inject a new line between models
     yaml_data = re.sub(r'(\d|})\n( +- *id:)', r'\1\n\n\2', yaml_data)
+    # ruamel leaves a trailing space where it wraps a long scalar
+    yaml_data = re.sub(r'[ \t]+\n', '\n', yaml_data)
     return yaml_data

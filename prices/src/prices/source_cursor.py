@@ -7,75 +7,57 @@ from pathlib import Path
 
 import httpx2
 
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
+from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 PRICING_URL = 'https://cursor.com/docs/models-and-pricing.md'
 MIN_MODEL_COUNT = 6
+LONG_CONTEXT_START = 256_000
+PRICE_KEYS = ('input_mtok', 'cache_write_mtok', 'cache_read_mtok', 'output_mtok')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    section_match = re.search(r'^## Cursor Models\s*$\n(.*?)(?=^## |\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
+    section_match = re.search(r'^#+ Cursor Models\s*$\n(.*?)(?=^#|\Z)', markdown, flags=re.M | re.S | re.I)
     if section_match is None:
         return []
 
-    model_ids = {
-        'Grok 4.6': 'grok-4.6',
-        'Grok 4.6 (Fast)': 'grok-4.6-fast',
-        'Grok 4.5': 'grok-4.5',
-        'Grok 4.5 (Fast)': 'grok-4.5-fast',
-        'Composer 2.5': 'composer-2.5',
-        'Composer 2.5 (Fast)': 'composer-2.5-fast',
-    }
-    models: list[ModelInfo] = []
-    seen_ids: set[str] = set()
+    rows: dict[str, tuple[str, list[Decimal | None]]] = {}
     for line in section_match.group(1).splitlines():
         cells = line.split('|')
         if len(cells) < 8 or cells[2].strip() != 'Cursor':
             continue
-
-        source_name = re.sub(r'\[([^]]+)]\([^)]*\)', r'\1', cells[1].strip())
-        model_id = model_ids.get(source_name)
-        if model_id is None:
-            raise RuntimeError(f'Unknown Cursor model in pricing data: {source_name}')
-        if model_id in seen_ids:
+        name = re.sub(r'\[([^]]+)]\([^)]*\)', r'\1', cells[1].strip()).replace(' (Fast)', ' Fast')
+        model_id = name.lower().replace(' ', '-')
+        if model_id in rows:
             raise RuntimeError(f'Duplicate Cursor model in pricing data: {model_id}')
-        seen_ids.add(model_id)
-
         prices = [None if value.strip() == '-' else Decimal(value.strip().removeprefix('$')) for value in cells[3:7]]
+        rows[model_id] = name, prices
+
+    models: list[ModelInfo] = []
+    for model_id, (name, prices) in rows.items():
+        # "<model> 500k" rows are the rates for requests over 256k input tokens, not a separate model.
+        if '-500k' in model_id:
+            continue
+        long_context = rows.get(re.sub(r'(-fast)?$', r'-500k\1', model_id, count=1))
+        tiered: list[Decimal | TieredPrices | None] = list(prices)
+        if long_context is not None:
+            tiered = [
+                TieredPrices(base=base, tiers=[Tier(start=LONG_CONTEXT_START, price=tier)])
+                if base is not None and tier is not None
+                else base
+                for base, tier in zip(prices, long_context[1])
+            ]
         models.append(
             ModelInfo(
                 id=model_id,
-                name=source_name.replace(' (Fast)', ' Fast'),
+                name=name,
                 match=ClauseEquals(equals=model_id),
-                prices=ModelPrice(
-                    input_mtok=prices[0],
-                    cache_write_mtok=prices[1],
-                    cache_read_mtok=prices[2],
-                    output_mtok=prices[3],
-                ),
+                prices=ModelPrice(**dict(zip(PRICE_KEYS, tiered))),
                 prices_checked=date.today(),
             )
         )
     return models
-
-
-def update_cursor_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) -> tuple[int, int]:
-    if len(models) < MIN_MODEL_COUNT:
-        raise RuntimeError(f'Cursor pricing returned only {len(models)} models; expected at least {MIN_MODEL_COUNT}')
-
-    models_added = 0
-    models_updated = 0
-    for model in models:
-        matching_model = provider_yaml.provider.find_model(model.id)
-        if matching_model is None:
-            models_added += provider_yaml.add_model(model)
-        else:
-            provider_yaml.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
-            models_updated += 1
-    provider_yaml.save()
-    return models_added, models_updated
 
 
 def main(provider_path: Path | None = None) -> None:
@@ -83,7 +65,9 @@ def main(provider_path: Path | None = None) -> None:
     response.raise_for_status()
     models = parse_pricing_markdown(response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/cursor.yml')
-    models_added, models_updated = update_cursor_provider(provider_yaml, models)
+    models_added, models_updated = provider_yaml.upsert_models(
+        models, source='Cursor pricing', min_count=MIN_MODEL_COUNT
+    )
     print(f'Cursor prices updated: {models_added} added, {models_updated} updated')
 
 

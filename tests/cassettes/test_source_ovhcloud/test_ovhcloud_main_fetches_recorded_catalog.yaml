@@ -1,0 +1,357 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - oai.endpoints.kepler.ai.cloud.ovh.net
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      access-control-allow-origin:
+      - "*"
+      access-control-expose-headers:
+      - ratelimit-limit,ratelimit-remaining,ratelimit-reset,retry-after
+      connection:
+      - keep-alive
+      content-length:
+      - "6905"
+      content-type:
+      - application/json
+      date:
+      - Mon, 19 Oct 2026 06:41:57 GMT
+      server:
+      - kong/3.9.4
+      via:
+      - 1.1 kong/3.9.4
+      x-kong-proxy-latency:
+      - "2"
+      x-kong-request-id:
+      - c1de31577828507ccdd57b0b0cdbaa00
+      x-kong-upstream-latency:
+      - "2"
+    body:
+      type: json
+      content:
+        object: list
+        data:
+        - id: stable-diffusion-xl-base-v10
+          created: 1730297598
+          object: model
+          owned_by: stabilityai
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: Qwen3-Embedding-8B
+          created: 1774533326
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0.00000012"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 32768
+          max_completion_tokens: 0
+        - id: bge-m3
+          created: 1731944050
+          object: model
+          owned_by: BAAI
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0.00000001"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 8192
+          max_completion_tokens: 0
+        - id: bge-multilingual-gemma2
+          created: 1742826442
+          object: model
+          owned_by: BAAI
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0.00000001"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 8192
+          max_completion_tokens: 0
+        - id: nvr-tts-es-es
+          created: 1729515876
+          object: model
+          owned_by: NVIDIA Riva
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: nvr-tts-it-it
+          created: 1729515876
+          object: model
+          owned_by: NVIDIA Riva
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: nvr-tts-en-us
+          created: 1729515876
+          object: model
+          owned_by: NVIDIA Riva
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: nvr-tts-de-de
+          created: 1729515876
+          object: model
+          owned_by: NVIDIA Riva
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: whisper-large-v3
+          created: 1754992184
+          object: model
+          owned_by: OpenAi
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: whisper-large-v3-turbo
+          created: 1754992184
+          object: model
+          owned_by: OpenAi
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 0
+          max_completion_tokens: 0
+        - id: Qwen2.5-VL-72B-Instruct
+          created: 1743423983
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0.00000101"
+            image: "0"
+            prompt: "0.00000101"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 32768
+          max_completion_tokens: 32768
+        - id: Qwen3.5-9B
+          created: 1776853448
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0.00000018"
+            image: "0"
+            prompt: "0.00000012"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 262144
+          max_completion_tokens: 262144
+        - id: Qwen3Guard-Gen-8B
+          created: 1769078773
+          object: model
+          owned_by: qwen3guard
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 32768
+          max_completion_tokens: 16384
+        - id: Qwen3.8-27B
+          created: 1788356485
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0.00000319"
+            image: "0"
+            prompt: "0.00000047"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 262144
+          max_completion_tokens: 262144
+        - id: Qwen3Guard-Gen-0.6B
+          created: 1769078772
+          object: model
+          owned_by: qwen3guard
+          pricing:
+            currency_unit: USD
+            completion: "0"
+            image: "0"
+            prompt: "0"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 32768
+          max_completion_tokens: 16384
+        - id: gpt-oss-20b
+          created: 1756386145
+          object: model
+          owned_by: OpenAI
+          pricing:
+            currency_unit: USD
+            completion: "0.00000018"
+            image: "0"
+            prompt: "0.00000005"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 131072
+          max_completion_tokens: 131072
+        - id: Meta-Llama-3_3-70B-Instruct
+          created: 1743520231
+          object: model
+          owned_by: meta-llama
+          pricing:
+            currency_unit: USD
+            completion: "0.00000074"
+            image: "0"
+            prompt: "0.00000074"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 131072
+          max_completion_tokens: 131072
+        - id: Qwen3.5-397B-A17B
+          created: 1779113482
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0.00000425"
+            image: "0"
+            prompt: "0.00000071"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 262144
+          max_completion_tokens: 262144
+        - id: gpt-oss-120b
+          created: 1756386145
+          object: model
+          owned_by: OpenAI
+          pricing:
+            currency_unit: USD
+            completion: "0.00000047"
+            image: "0"
+            prompt: "0.00000009"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 131072
+          max_completion_tokens: 131072
+        - id: Qwen3.6-27B
+          created: 1780302734
+          object: model
+          owned_by: Qwen
+          pricing:
+            currency_unit: USD
+            completion: "0.00000319"
+            image: "0"
+            prompt: "0.00000047"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 262144
+          max_completion_tokens: 262144
+        - id: Mistral-Small-3.2-24B-Instruct-2506
+          created: 1752655627
+          object: model
+          owned_by: mistralai
+          pricing:
+            currency_unit: USD
+            completion: "0.00000031"
+            image: "0"
+            prompt: "0.0000001"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 131072
+          max_completion_tokens: 131072
+        - id: Mistral-Nemo-Instruct-2407
+          created: 1732101359
+          object: model
+          owned_by: mistralai
+          pricing:
+            currency_unit: USD
+            completion: "0.00000014"
+            image: "0"
+            prompt: "0.00000014"
+            request: "0"
+            input_cache_reads: "0"
+            input_cache_writes: "0"
+          context_length: 65536
+          max_completion_tokens: 65536
+  recorded_at: 2026-10-19T06:41:57.559426+00:00
