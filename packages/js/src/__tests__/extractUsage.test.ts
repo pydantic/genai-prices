@@ -151,7 +151,7 @@ describe('extractUsage', () => {
         output_tokens: 8,
       })
 
-      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot', timestamp: new Date('2026-10-17T00:00:00Z') })
       expect(price?.total_price).toBeCloseTo(0.0000514, 10)
     })
 
@@ -181,7 +181,7 @@ describe('extractUsage', () => {
         output_tokens: 11,
       })
 
-      const price = calcPrice(usage, model!, { providerId: 'github-copilot' })
+      const price = calcPrice(usage, model!, { providerId: 'github-copilot', timestamp: new Date('2026-10-17T00:00:00Z') })
       expect(price?.model.id).toBe('gpt-5.4')
       expect(price?.total_price).toBeCloseTo(0.00017575, 10)
     })

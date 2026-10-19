@@ -166,6 +166,7 @@ describe('generated data split', () => {
   ])('prices GitHub Copilot $model', ({ expectedTotalPrice, model }) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'github-copilot',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })
 
     expect(result?.model.id).toBe(model)
@@ -178,6 +179,7 @@ describe('generated data split', () => {
   ])('prices GitHub Copilot GPT-5.6 Luna at the 200K long-context boundary', ({ expectedTotalPrice, inputTokens }) => {
     const result = calcPrice({ cache_write_tokens: 1_000, input_tokens: inputTokens, output_tokens: 1_000 }, 'gpt-5.6-luna', {
       providerId: 'github-copilot',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })
 
     expect(result?.total_price).toBeCloseTo(expectedTotalPrice, 12)

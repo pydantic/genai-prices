@@ -1040,6 +1040,7 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 			Model:        test.model,
 			ProviderID:   test.providerID,
 			PriceContext: test.priceContext,
+			Timestamp:    time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)

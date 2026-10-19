@@ -18500,7 +18500,7 @@ export const data: Provider[] = [
   {
     id: 'minimax',
     name: 'MiniMax',
-    pricing_urls: ['https://platform.minimax.io/docs/guides/pricing-paygo'],
+    pricing_urls: ['https://platform.minimax.io/docs/pricing/overview'],
     api_pattern: 'https://api\\.minimax(i)?\\.(?:com|io)',
     price_comments:
       'Prices sourced from MiniMax international platform USD pricing (platform.minimax.io, May 2026). M2.1, M2.1-highspeed, and M2 are legacy models; prices inferred from CNY pricing at the equivalent 7.00 CNY/USD rate used by the international platform for current models.',
@@ -20169,14 +20169,7 @@ export const data: Provider[] = [
   {
     id: 'moonshotai',
     name: 'MoonshotAi',
-    pricing_urls: [
-      'https://platform.kimi.ai/docs/models.md',
-      'https://platform.kimi.ai/docs/pricing/chat-k3.md',
-      'https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
-      'https://platform.kimi.ai/docs/pricing/chat-k26.md',
-      'https://platform.kimi.ai/docs/pricing/chat-k25.md',
-      'https://platform.kimi.ai/docs/pricing/chat-v1.md',
-    ],
+    pricing_urls: ['https://platform.kimi.ai/docs/models.md', 'https://platform.kimi.ai/docs/pricing/chat.md'],
     api_pattern: 'https://api\\.moonshot\\.',
     model_match: {
       or: [

@@ -1,0 +1,169 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://platform.kimi.ai/docs/pricing/chat.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - platform.kimi.ai
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      age:
+      - "7252"
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a4ca26289ff4ad9f-AMS
+      connection:
+      - keep-alive
+      content-disposition:
+      - inline
+      content-security-policy:
+      - default-src 'none'
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Sun, 18 Oct 2026 20:03:54 GMT
+      link:
+      - >-
+        </docs/llms.txt>; rel="llms-txt", </docs/llms-full.txt>; rel="llms-full-txt",
+        </docs/.well-known/api-catalog>; rel="api-catalog",
+        </docs/.well-known/mcp/server-card.json>; rel="mcp-server-card", </docs/.well-known/agent-card.json>;
+        rel="agent-card", </docs/.well-known/agent-skills/index.json>; rel="agent-skills"
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+      - accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-internal-adhoc-canary:
+      - "332564028"
+      x-llms-txt:
+      - /docs/llms.txt
+      x-matched-path:
+      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-robots-tag:
+      - noindex
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - sin1::iad1::f55ps-1792353834439-718fa2341b9d
+    body:
+      type: text
+      content: |
+        > ## Documentation Index
+        > Fetch the complete documentation index at: https://platform.kimi.ai/docs/llms.txt
+        > Use this file to discover all available pages before exploring further.
+        
+        # Model Inference Pricing Explanation
+        
+        > Understand token billing, input and output charges, cache discounts, and pricing links for Kimi model inference.
+        
+        export const DocTable = ({columns = [], rows = []}) => {
+          return <div className="doc-table-wrap">
+              <table className="doc-table">
+                {columns.length > 0 ? <colgroup>
+                    {columns.map((column, index) => <col key={index} style={column.width ? {
+            width: column.width
+          } : undefined} />)}
+                  </colgroup> : null}
+                <thead>
+                  <tr>
+                    {columns.map((column, index) => <th key={index}>{column.title}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, rowIndex) => <tr key={rowIndex}>
+                      {row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}
+                    </tr>)}
+                </tbody>
+              </table>
+            </div>;
+        };
+        
+        ## Model Pricing
+        
+        ### K3 Series Models
+        
+        <DocTable
+          columns={[
+        { title: "Model", width: "12%" },
+        { title: "Unit", width: "10%" },
+        { title: "Cache Write Price (TTL 5min)", width: "13%" },
+        { title: "Cache Write Price (TTL 1h)", width: "13%" },
+        { title: "Cached Input Price", width: "13%" },
+        { title: "Input Price", width: "13%" },
+        { title: "Output Price", width: "10%" },
+        { title: "Context Window", width: "16%" },
+        ]}
+          rows={[
+        ["kimi-k3", "1M tokens", <>{"$"}3.00</>, <>{"$"}6.00</>, <>{"$"}0.30</>, <>{"$"}3.00</>, <>{"$"}15.00</>, "1,048,576 tokens"],
+        ]}
+        />
+        
+        Note: **Cache Write** refers to the cost of writing request prefixes into the [context cache](/docs/guide/context-caching). The Kimi API automatically caches repeated request prefixes, and cache entries come in two time-to-live (TTL) tiers — 5min and 1h. If no TTL is specified, the 5min tier applies by default. Input that hits the cache within its lifetime is billed only at the Cached Input Price: each hit automatically refreshes the cache entry's lifetime, with no additional cache write charge.
+        
+        ### K2 Series Models
+        
+        <DocTable
+          columns={[
+        { title: "Model", width: "24%" },
+        { title: "Unit", width: "12%" },
+        { title: "Input Price (Cache Hit)", width: "16%" },
+        { title: "Input Price (Cache Miss)", width: "16%" },
+        { title: "Output Price", width: "14%" },
+        { title: "Context Window", width: "18%" },
+        ]}
+          rows={[
+        ["kimi-k2.7-code", "1M tokens", <>{"$"}0.19</>, <>{"$"}0.95</>, <>{"$"}4.00</>, "262,144 tokens"],
+        ["kimi-k2.7-code-highspeed", "1M tokens", <>{"$"}0.38</>, <>{"$"}1.90</>, <>{"$"}8.00</>, "262,144 tokens"],
+        ["kimi-k2.6", "1M tokens", <>{"$"}0.16</>, <>{"$"}0.95</>, <>{"$"}4.00</>, "262,144 tokens"],
+        ]}
+        />
+        
+        Here, 1M = 1,000,000. The prices in the table represent the cost per 1M tokens consumed.
+        
+        **Explanation: Prices exclude applicable taxes. Specific tax obligations are subject to local tax regulations and will be calculated at checkout based on your jurisdiction.**
+        
+        ## Concepts
+        
+        <Note>
+          Model inference on the Kimi API platform is billed on a pay-as-you-go basis, with no subscription plan. It differs from products such as the Kimi membership and Kimi Code. [See the product comparison](/docs/guide/product-plans).
+        </Note>
+        
+        ### Billing Unit
+        
+        Token: A token represents a common sequence of characters. The number of tokens used for each English character may vary. For example, a single character like "antidisestablishmentarianism" might be broken down into several tokens, while a short and common phrase like "word" might use just one token. Generally speaking, for a typical English text, 1 token is roughly equivalent to 3-4 English characters. The exact number of tokens generated by each call can be obtained through the [Token Calculation API](/docs/api/estimate).
+        
+        ### Billing Logic
+        
+        Model inference APIs bill both Input and Output based on usage. For K3 series models, cache writes are billed separately by TTL (5min / 1h); cached input is billed at the cache-hit price only, with no additional cache write charge. If you upload and extract content from a document and then pass the extracted content as Input to the model, the document content will also be billed based on usage. File-related APIs (file content extraction and file storage) are **temporarily free**: if you only upload and extract a document, the file APIs themselves incur no charges.
+        
+        ## Model Notes
+        
+        See each model's guide for capabilities and recommended use cases:
+        
+        * [Kimi K3](/docs/guide/kimi-k3-quickstart)
+        * [Kimi K2.7 Code](/docs/guide/kimi-k2-7-code-quickstart)
+        * [Kimi K2.6](/docs/guide/kimi-k2-6-quickstart)
+  recorded_at: 2026-10-18T20:03:54.560488+00:00

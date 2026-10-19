@@ -91,9 +91,25 @@ cursor-get: ## get cursor model prices
 doubleword-get: ## get doubleword realtime model prices
 	uv run -m prices get_doubleword_prices
 
+.PHONY: github-copilot-get
+github-copilot-get: ## get github copilot prices
+	uv run -m prices get_github_copilot_prices
+
 .PHONY: novita-get
 novita-get: ## get novita model prices
 	uv run -m prices get_novita_prices
+
+.PHONY: meta-get
+meta-get: ## get meta model api prices
+	uv run -m prices get_meta_prices
+
+.PHONY: minimax-get
+minimax-get: ## get minimax prices
+	uv run -m prices get_minimax_prices
+
+.PHONY: moonshotai-get
+moonshotai-get: ## get moonshot ai prices
+	uv run -m prices get_moonshotai_prices
 
 .PHONY: openai-decisions-get
 openai-decisions-get: ## get openai decisions model prices
@@ -115,8 +131,12 @@ typesafe-get: ## get typesafe model prices
 voyageai-get: ## get voyage ai model prices
 	uv run -m prices get_voyageai_prices
 
+.PHONY: zai-get
+zai-get: ## get z.ai prices
+	uv run -m prices get_zai_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

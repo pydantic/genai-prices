@@ -46,7 +46,12 @@ def test_sync_success_with_provider():
 
 def test_october_model_prices_and_context_metadata():
     usage = Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000, web_searches=1)
-    meta_price = calc_price(usage, 'muse-wonder-1.0', provider_api_url='https://api.meta.ai/v1')
+    meta_price = calc_price(
+        usage,
+        'muse-wonder-1.0',
+        provider_api_url='https://api.meta.ai/v1',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
     assert meta_price.provider.id == 'meta'
     assert meta_price.model.context_window == 1_048_576
     assert meta_price.total_price == Decimal('23.6225')
@@ -105,7 +110,9 @@ def test_muse_spark_standard_and_contributor_prices(
     model_ref: str, provider_id: str | None, expected_model_id: str, expected_total: Decimal
 ):
     usage = Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000, web_searches=1)
-    price = calc_price(usage, model_ref, provider_id=provider_id)
+    price = calc_price(
+        usage, model_ref, provider_id=provider_id, genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)
+    )
     assert price.model.id == expected_model_id
     assert price.model.context_window == 1_048_576
     assert price.total_price == expected_total
@@ -255,6 +262,7 @@ def test_github_copilot_model_prices(model_ref: str, expected_total_price: Decim
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id='github-copilot',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.model.id == model_ref
@@ -274,6 +282,7 @@ def test_github_copilot_long_context_tier(input_tokens: int, expected_total_pric
         Usage(input_tokens=input_tokens, cache_write_tokens=1_000, output_tokens=1_000),
         model_ref='gpt-5.6-luna',
         provider_id='github-copilot',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.total_price == expected_total_price
@@ -1132,6 +1141,7 @@ def test_moonshotai_kimi_k27_code_price():
         Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
         model_ref='kimi-k2.7-code',
         provider_id='moonshotai',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.model.id == 'kimi-k2.7-code'
@@ -1145,6 +1155,7 @@ def test_moonshotai_kimi_k27_code_highspeed_price():
         Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
         model_ref='kimi-k2.7-code-highspeed',
         provider_id='moonshotai',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.model.id == 'kimi-k2.7-code-highspeed'
@@ -1297,6 +1308,7 @@ def test_zai_glm_52_price(provider_api_url: str):
         Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
         model_ref='glm-5.2',
         provider_api_url=provider_api_url,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.provider.id == 'zai'
@@ -1318,6 +1330,7 @@ def test_zai_glm_53_price(provider_api_url: str):
         Usage(input_tokens=1_000, cache_read_tokens=600, output_tokens=100),
         model_ref='glm-5.3',
         provider_api_url=provider_api_url,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.provider.id == 'zai'
