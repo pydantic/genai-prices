@@ -22,6 +22,7 @@ from .source_meta import get_meta_prices
 from .source_minimax import get_minimax_prices
 from .source_moonshotai import get_moonshotai_prices
 from .source_novita import get_novita_prices
+from .source_openai import get_openai_prices
 from .source_openai_decisions import get_openai_decisions_prices
 from .source_openrouter import get_openrouter_prices, get_openrouter_provider_prices, update_from_openrouter
 from .source_ovhcloud import get_ovhcloud_prices
@@ -56,6 +57,7 @@ def main():
         get_minimax_prices,
         get_moonshotai_prices,
         get_novita_prices,
+        get_openai_prices,
         get_openai_decisions_prices,
         get_openrouter_prices,
         get_openrouter_provider_prices,
