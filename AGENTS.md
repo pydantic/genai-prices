@@ -137,6 +137,11 @@ models than the importer's `MIN_MODEL_COUNT`.
   variant entries and prepend dated entries for changed tier rates: variants use the first matching
   value per price key. Record a source confirming any tier whose rates stayed unchanged, and test
   each affected context before and after the change in Python, JavaScript and Go.
+- The importers do this automatically through `ProviderYaml.upsert_models`
+  (`prices/src/prices/variants.py`). When a standard rate changes, a variant whose rates are all one share
+  of the standard rates gets a dated entry at that share of the new rates. A 50% batch discount and a 2x
+  priority surcharge are examples, and the provider's cent rounding is allowed for. A variant with no single
+  share, such as flat batch rates on tiered standard rates, is logged as `update them by hand`.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
 
