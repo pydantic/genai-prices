@@ -299,4 +299,5 @@ def get_provider_yaml_string(data: ProviderYamlDict) -> str:
     # ruamel keeps a model's trailing blank line on the price entry that used to end it
     yaml_data = re.sub(r'\n\n( +- constraint:)', r'\n\1', yaml_data)
     # match prettier, so an unchanged file round-trips byte for byte
+    yaml_data = re.sub(r"(?<=[-:{,] )'([^'\"\\\n]*)'(?=$| ?[,}])", r'"\1"', yaml_data, flags=re.MULTILINE)
     return re.sub(r'^( *(?:- )?[\w-]+: )\{([^{} \n][^{}\n]*)\}$', r'\1{ \2 }', yaml_data, flags=re.MULTILINE)

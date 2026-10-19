@@ -91,6 +91,8 @@ models:
         ProviderYaml(provider_path), source_cloudflare.parse_pricing_markdown(PRICING_MARKDOWN)
     ) == (1, 2)
 
+    assert '- id: "@cf/example/classifier"' in provider_path.read_text()
+    assert "'" not in provider_path.read_text()
     provider = ProviderYaml(provider_path).provider
     assert [model.id for model in provider.models] == [
         '@cf/example/classifier',
