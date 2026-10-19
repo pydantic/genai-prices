@@ -378,6 +378,7 @@ def test_databricks_model_prices(model_ref: str, expected_total_price: Decimal) 
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id='databricks',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.total_price == expected_total_price
@@ -393,7 +394,10 @@ def test_databricks_model_prices(model_ref: str, expected_total_price: Decimal) 
 )
 def test_databricks_api_url(provider_api_url: str) -> None:
     price = calc_price(
-        Usage(input_tokens=1_000_000), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url
+        Usage(input_tokens=1_000_000),
+        model_ref='databricks-gpt-oss-120b',
+        provider_api_url=provider_api_url,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.provider.id == 'databricks'
@@ -1119,7 +1123,7 @@ def test_avian_prices(
         ('accounts/fireworks/routers/kimi-k2p6-fast', Decimal('2'), Decimal('0.3'), Decimal('8')),
         ('accounts/fireworks/routers/kimi-k2p7-code-fast', Decimal('1.9'), Decimal('0.38'), Decimal('8')),
         ('accounts/fireworks/routers/kimi-k3-fast', Decimal('4.5'), Decimal('0.45'), Decimal('22.5')),
-        ('accounts/fireworks/routers/kimi-k3-us', Decimal('3.3'), Decimal('0.33'), Decimal('16.5')),
+        ('accounts/fireworks/routers/kimi-k3-us', Decimal('4.5'), Decimal('0.45'), Decimal('22.5')),
         ('accounts/fireworks/models/gpt-oss-120b', Decimal('0.15'), Decimal('0.014'), Decimal('0.6')),
         ('accounts/fireworks/models/gpt-oss-20b', Decimal('0.07'), Decimal('0.035'), Decimal('0.3')),
     ],
@@ -1133,6 +1137,7 @@ def test_fireworks_serverless_prices(
     price = calc_price(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.provider.id == 'fireworks'

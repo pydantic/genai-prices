@@ -8713,6 +8713,54 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4p1-flash',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'deepseek-v4p1-flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4p1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'deepseek-v4p1-flash-us',
+        name: 'DeepSeek V4.1 Flash US',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-us',
+        },
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.009,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'ember-1',
+        name: 'Ember-1',
+        match: {
+          equals: 'accounts/fireworks/models/ember-1',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'gemma-3-27b-it',
         name: 'Gemma 3 27B Instruct',
         match: {
@@ -8801,6 +8849,66 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p3',
+        name: 'GLM 5.3',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'glm-5p3-fast',
+        name: 'GLM 5.3 Fast',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-fast',
+        },
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.39,
+          output_mtok: 6.6,
+        },
+      },
+      {
+        id: 'glm-5p3-flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'glm-5p3-flash-us',
+        name: 'GLM 5.3 Flash US',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-flash-us',
+        },
+        prices: {
+          input_mtok: 0.225,
+          cache_read_mtok: 0.045,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'glm-5p3-us',
+        name: 'GLM 5.3 US',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-us',
+        },
+        prices: {
+          input_mtok: 2.1,
+          cache_read_mtok: 0.39,
+          output_mtok: 6.6,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'OpenAI gpt-oss-120b',
         description:
@@ -8810,11 +8918,26 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         price_comments: 'Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
-        prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.014,
-          output_mtok: 0.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.014,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-oss-20b',
@@ -8954,12 +9077,28 @@ export const data: Provider[] = [
           equals: 'accounts/fireworks/routers/kimi-k3-us',
         },
         context_window: 1040000,
-        price_comments: 'US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
-        prices: {
-          input_mtok: 3.3,
-          cache_read_mtok: 0.33,
-          output_mtok: 16.5,
-        },
+        price_comments:
+          'US-only serverless pricing. Since 2026-09-01 US-only models cost 1.5x the base model. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 3.3,
+              cache_read_mtok: 0.33,
+              output_mtok: 16.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-09-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4.5,
+              cache_read_mtok: 0.45,
+              output_mtok: 22.5,
+            },
+          },
+        ],
       },
       {
         id: 'llama-v3p1-8b-instruct',
@@ -9047,6 +9186,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nemotron-lightning-3p5-30b-a3b',
+        name: 'NVIDIA Nemotron 3.5 Lightning 30B A3B',
+        match: {
+          equals: 'accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b',
+        },
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.2,
+        },
+      },
+      {
         id: 'qwen2p5-vl-72b-instruct',
         name: 'Qwen2.5-VL 72B Instruct',
         description: "Latest Qwen's VLM model",
@@ -9099,6 +9250,18 @@ export const data: Provider[] = [
           input_mtok: 0.4,
           cache_read_mtok: 0.08,
           output_mtok: 1.6,
+        },
+      },
+      {
+        id: 'qwen3p8-max',
+        name: 'Qwen 3.8 Max',
+        match: {
+          equals: 'accounts/fireworks/models/qwen3p8-max',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
         },
       },
     ],
@@ -20137,6 +20300,42 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'Qwen/Qwen3.8-2.4T-A95B',
+        name: 'Qwen3.8-Max',
+        match: {
+          equals: 'Qwen/Qwen3.8-2.4T-A95B',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'meta-models/Muse-Spark-Open-816B-A42B',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'meta-models/Muse-Spark-Open-816B-A42B',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
         id: 'moonshotai/Kimi-K3',
         name: 'Kimi K3',
         description: "Moonshot AI's 2.8-trillion-parameter multimodal reasoning model, served by Modal as a Shared Endpoint.",
@@ -20153,6 +20352,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nvidia/GLM-5.3-Flash-NVFP4',
+        name: 'GLM 5.3 Flash NVFP4',
+        match: {
+          equals: 'nvidia/GLM-5.3-Flash-NVFP4',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
         id: 'thinkingmachines/Inkling-NVFP4',
         name: 'Inkling NVFP4',
         description: "Thinking Machines Lab's reasoning model, served by Modal as a Shared Endpoint.",
@@ -20164,6 +20375,30 @@ export const data: Provider[] = [
           input_mtok: 1.2,
           cache_read_mtok: 0.27,
           output_mtok: 5,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM 5.3',
+        match: {
+          equals: 'zai-org/GLM-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM 5.3 Flash',
+        match: {
+          equals: 'zai-org/GLM-5.3-Flash',
+        },
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.09,
+          output_mtok: 1.5,
         },
       },
     ],

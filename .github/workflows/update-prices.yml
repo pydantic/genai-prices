@@ -33,12 +33,15 @@ jobs:
           - cerebras
           - cloudflare
           - cursor
+          - databricks
           - doubleword
+          - fireworks
           - github-copilot
           - groq
           - huggingface
           - meta
           - minimax
+          - modal
           - moonshotai
           - novita
           - openai-decisions
