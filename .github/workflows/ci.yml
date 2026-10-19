@@ -170,6 +170,8 @@ jobs:
         with:
           version: v2.10.1
           working-directory: packages/go
+          # config verify downloads the schema from golangci-lint.run, which times out in CI
+          verify: false
       - run: make test-go
 
   # Preserve the v2 schema core. Optional model price variants are ignored by older clients.
