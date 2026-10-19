@@ -27,13 +27,16 @@ jobs:
       fail-fast: false
       matrix:
         importer:
+          - anthropic
           - arcee
           - avian
           - baseten
           - cerebras
           - cloudflare
           - cursor
+          - databricks
           - doubleword
+          - fireworks
           - github-copilot
           - google
           - groq
@@ -41,6 +44,7 @@ jobs:
           - meta
           - minimax
           - mistral
+          - modal
           - moonshotai
           - novita
           - openai-decisions

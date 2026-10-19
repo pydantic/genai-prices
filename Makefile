@@ -71,6 +71,10 @@ cerebras-get: ## get cerebras model prices
 cloudflare-get: ## get cloudflare workers ai prices
 	uv run -m prices get_cloudflare_prices
 
+.PHONY: anthropic-get
+anthropic-get: ## get anthropic model prices
+	uv run -m prices get_anthropic_prices
+
 .PHONY: arcee-get
 arcee-get: ## get arcee model prices
 	uv run -m prices get_arcee_prices
@@ -159,12 +163,24 @@ mistral-get: ## get mistral model prices
 xai-get: ## get xai model prices
 	uv run -m prices get_xai_prices
 
+.PHONY: databricks-get
+databricks-get: ## get databricks foundation model api prices
+	uv run -m prices get_databricks_prices
+
+.PHONY: fireworks-get
+fireworks-get: ## get fireworks serverless prices
+	uv run -m prices get_fireworks_prices
+
+.PHONY: modal-get
+modal-get: ## get modal shared endpoint prices
+	uv run -m prices get_modal_prices
+
 .PHONY: openrouter-provider-get
 openrouter-provider-get: ## get openrouter provider prices
 	uv run -m prices get_openrouter_provider_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get mistral-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get mistral-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies
