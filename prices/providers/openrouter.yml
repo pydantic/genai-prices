@@ -1940,7 +1940,7 @@ models:
       - constraint:
           start_date: 2026-10-19
         prices:
-          input_mtok: 0.044
+          input_mtok: 0.0376
           cache_read_mtok: 0.0016
           output_mtok: 0.08
     prices_checked: 2026-10-19
@@ -4383,6 +4383,14 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: minimax/minimax-m3.1-flash:free
+    name: MiniMax M3.1 Flash (free)
+    match:
+      equals: minimax/minimax-m3.1-flash:free
+    context_window: 1000000
+    prices: {}
     prices_checked: 2026-10-19
 
   - id: ministral-3b
@@ -10150,7 +10158,7 @@ models:
         prices:
           input_mtok: 0.048
           cache_read_mtok: 0.006
-          output_mtok: 0.2
+          output_mtok: 0.16
     context_window: 1310720
 
   - id: z-ai/glm-5.3-flash:batch

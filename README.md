@@ -69,7 +69,7 @@ The following providers are currently supported:
 - [Novita](prices/providers/novita.yml) - 109 models
 - [OpenAI](prices/providers/openai.yml) - 110 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
-- [OpenRouter](prices/providers/openrouter.yml) - 892 models
+- [OpenRouter](prices/providers/openrouter.yml) - 893 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 11 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 71 models

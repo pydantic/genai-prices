@@ -31973,7 +31973,7 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.044,
+              input_mtok: 0.0376,
               cache_read_mtok: 0.0016,
               output_mtok: 0.08,
             },
@@ -35522,6 +35522,15 @@ export const data: Provider[] = [
           cache_read_mtok: 0.06,
           output_mtok: 1.2,
         },
+      },
+      {
+        id: 'minimax/minimax-m3.1-flash:free',
+        name: 'MiniMax M3.1 Flash (free)',
+        match: {
+          equals: 'minimax/minimax-m3.1-flash:free',
+        },
+        context_window: 1000000,
+        prices: {},
       },
       {
         id: 'ministral-3b',
@@ -44351,7 +44360,7 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.048,
               cache_read_mtok: 0.006,
-              output_mtok: 0.2,
+              output_mtok: 0.16,
             },
           },
         ],
