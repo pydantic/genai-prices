@@ -125,7 +125,9 @@ describe('extractUsage', () => {
         output_reasoning_tokens: 25,
         output_tokens: 100,
       })
-      expect(calcPrice(usage, model!, { providerId: 'openai-decisions' })?.total_price).toBeCloseTo(0.0001, 10)
+      expect(
+        calcPrice(usage, model!, { providerId: 'openai-decisions', timestamp: new Date('2026-10-18T00:00:00Z') })?.total_price
+      ).toBeCloseTo(0.0001, 10)
     })
 
     it('should extract GitHub Copilot chat usage', () => {

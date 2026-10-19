@@ -112,9 +112,14 @@ def test_muse_spark_standard_and_contributor_prices(
 
 
 def test_openai_decisions_price_and_usage_extraction():
+    pinned = datetime(2026, 10, 18, tzinfo=UTC)
     decisions_usage = Usage(input_tokens=1_000, cache_read_tokens=200, output_tokens=100)
-    decisions_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ')
-    openai_price = calc_price(decisions_usage, model_ref='gpt-6-luna', provider_id='openai')
+    decisions_price = calc_price(
+        decisions_usage, model_ref='gpt-6-luna', provider_id=' OPENAI-DECISIONS ', genai_request_timestamp=pinned
+    )
+    openai_price = calc_price(
+        decisions_usage, model_ref='gpt-6-luna', provider_id='openai', genai_request_timestamp=pinned
+    )
 
     assert decisions_price.provider.id == 'openai-decisions'
     assert decisions_price.total_price == Decimal('0.000100')
@@ -150,7 +155,10 @@ def test_openai_decisions_price_and_usage_extraction():
             output_reasoning_tokens=25,
         )
         assert calc_price(
-            extracted.usage, model_ref=extracted.model.id, provider_id='openai-decisions'
+            extracted.usage,
+            model_ref=extracted.model.id,
+            provider_id='openai-decisions',
+            genai_request_timestamp=pinned,
         ).total_price == Decimal('0.000100')
 
     for input_tokens, expected in ((272_000, Decimal('0.0272')), (272_001, Decimal('0.0544002'))):
@@ -158,6 +166,7 @@ def test_openai_decisions_price_and_usage_extraction():
             Usage(input_tokens=input_tokens, cache_read_tokens=100_000, cache_write_tokens=50_000),
             model_ref='gpt-6-luna',
             provider_id='openai-decisions',
+            genai_request_timestamp=pinned,
         )
         assert tier_price.total_price == expected
 

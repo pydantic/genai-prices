@@ -4,8 +4,18 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Literal, TypeVar
 
+import httpx2
+
 package_dir = Path(__file__).parent.parent.parent
 root_dir = package_dir.parent
+
+
+def get_markdown(url: str) -> str:
+    response = httpx2.get(url, timeout=30.0)
+    response.raise_for_status()
+    if response.headers.get('content-type', '').lower().startswith('text/html'):
+        raise RuntimeError(f'{url} returned HTML instead of markdown')
+    return response.text
 
 
 def pretty_size(size: int) -> str:

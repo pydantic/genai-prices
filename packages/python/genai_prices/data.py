@@ -4802,7 +4802,18 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8'),
                 name='Qwen3 VL 235B A22B Instruct',
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('1.2')),
+                context_window=262144,
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('1.2'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 18)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.21'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('1.9')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
@@ -4815,6 +4826,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='Qwen/Qwen3.5-35B-A3B-FP8'),
                 name='Qwen3.5 35B A3B',
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
+                match=ClauseEquals(equals='Qwen/Qwen3.5-35B-A3B-FP8-dottxt'),
+                name='Qwen3.5 35B A3B dottxt',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.35'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('1.2')
+                ),
             ),
             ModelInfo(
                 id='Qwen/Qwen3.5-397B-A17B',
@@ -4832,7 +4851,15 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3.6-35B-A3B-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3.6-35B-A3B-FP8'),
                 name='Qwen3.6 35B A3B',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 18)),
+                        prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('1')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='Qwen/Qwen3.8-27B-FP8',
@@ -4866,6 +4893,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.74'), output_mtok=Decimal('3.48')),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro-0813',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
                 name='DeepSeek V4.1 Flash',
@@ -4878,7 +4913,23 @@ providers: list[Provider] = [
                 id='google/gemma-4-31B-it',
                 match=ClauseEquals(equals='google/gemma-4-31B-it'),
                 name='Gemma 4 31B IT',
-                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.4')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.4'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 18)),
+                        prices=ModelPrice(input_mtok=Decimal('0.12'), output_mtok=Decimal('0.35')),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='meta-models/Muse-Glimmer-30B',
+                match=ClauseEquals(equals='meta-models/Muse-Glimmer-30B'),
+                name='Muse Glimmer 30B',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.11'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.32')
+                ),
             ),
             ModelInfo(
                 id='mistralai/Devstral-2-123B-Instruct-2512',
@@ -4907,6 +4958,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.75')),
             ),
             ModelInfo(
+                id='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4'),
+                name='Nemotron 3 Ultra 550B A55B',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
                 id='openai/gpt-oss-20b',
                 match=ClauseEquals(equals='openai/gpt-oss-20b'),
                 name='GPT OSS 20B',
@@ -4926,6 +4985,22 @@ providers: list[Provider] = [
                 price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/zai-org-glm-5-2-fp8.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.93'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('3')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3',
+                match=ClauseEquals(equals='zai-org/GLM-5.3'),
+                name='GLM 5.3',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3-Flash',
+                match=ClauseEquals(equals='zai-org/GLM-5.3-Flash'),
+                name='GLM 5.3 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
                 ),
             ),
         ],
@@ -22201,7 +22276,7 @@ providers: list[Provider] = [
         name='TypeSafe',
         api_pattern='https://api\\.typesafe\\.ai',
         pricing_urls=['https://docs.typesafe.ai/models'],
-        price_comments='TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; per https://docs.typesafe.ai/models, `jev-latest` currently points at `jev-1.13.0` while `jev-preview` points at `jev-1.14.0`. Every version bills at the same $0.042 input rate.',
+        price_comments="TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync.",
         model_match=ClauseStartsWith(starts_with='jev-'),
         provider_match=ClauseContains(contains='typesafe'),
         extractors=[
@@ -22228,7 +22303,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='jev-1.14.0'), ClauseEquals(equals='jev-preview')]),
                 name='Jev 1.14.0',
                 context_window=32000,
-                price_comments='Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version, with `jev-preview` as its alias and `jev-latest` still on 1.13. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
+                price_comments='Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version. The default context limit is 32k for state plus one question, within the 64k per-request limit.',
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
         ],
