@@ -31952,9 +31952,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.446136,
-              cache_read_mtok: 0.037178,
-              output_mtok: 0.892272,
+              input_mtok: 0.422472,
+              cache_read_mtok: 0.035206,
+              output_mtok: 0.844944,
             },
           },
         ],
@@ -47513,7 +47513,14 @@ export const data: Provider[] = [
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
-          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {

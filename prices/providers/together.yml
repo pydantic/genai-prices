@@ -275,7 +275,9 @@ models:
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek V4.1 Flash
     match:
-      equals: deepseek-ai/DeepSeek-V4.1-Flash
+      or:
+        - equals: deepseek-ai/DeepSeek-V4.1-Flash
+        - equals: deepseek-ai/DeepSeek-V4.1-Flash-1017
     context_window: 1000000
     prices:
       input_mtok: 0.3
