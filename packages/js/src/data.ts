@@ -8528,6 +8528,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'meta/muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'meta/muse-spark-open',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
         id: 'mistralai/Devstral-2-123B-Instruct-2512',
         name: 'Devstral 2 123B Instruct 2512',
         match: {
@@ -31937,9 +31949,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.447876,
-              cache_read_mtok: 0.037323,
-              output_mtok: 0.895752,
+              input_mtok: 0.446136,
+              cache_read_mtok: 0.037178,
+              output_mtok: 0.892272,
             },
           },
         ],

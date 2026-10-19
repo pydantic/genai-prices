@@ -4970,6 +4970,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='meta/muse-spark-open',
+                match=ClauseEquals(equals='meta/muse-spark-open'),
+                name='Muse Spark Open',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4.25')
+                ),
+            ),
+            ModelInfo(
                 id='mistralai/Devstral-2-123B-Instruct-2512',
                 match=ClauseEquals(equals='mistralai/Devstral-2-123B-Instruct-2512'),
                 name='Devstral 2 123B Instruct 2512',
@@ -18065,9 +18073,9 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.447876'),
-                            cache_read_mtok=Decimal('0.037323'),
-                            output_mtok=Decimal('0.895752'),
+                            input_mtok=Decimal('0.446136'),
+                            cache_read_mtok=Decimal('0.037178'),
+                            output_mtok=Decimal('0.892272'),
                         ),
                     ),
                 ],
