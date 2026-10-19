@@ -1940,7 +1940,7 @@ models:
       - constraint:
           start_date: 2026-10-19
         prices:
-          input_mtok: 0.0376
+          input_mtok: 0.0344
           cache_read_mtok: 0.0016
           output_mtok: 0.08
     prices_checked: 2026-10-19

@@ -11554,6 +11554,8 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='MiniMax-M3.1-Flash'), ClauseEquals(equals='minimax-m3.1-flash')]
                 ),
                 name='MiniMax-M3.1-Flash',
+                description='Frontier multimodal coding model with 1M context window and tunable thinking depth. An ultra-efficient open-weight model for everyday work.',
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
                 ),
@@ -18113,7 +18115,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.0376'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
+                            input_mtok=Decimal('0.0344'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
                         ),
                     ),
                 ],
