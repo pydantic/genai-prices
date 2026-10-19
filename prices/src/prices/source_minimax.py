@@ -20,6 +20,8 @@ PRICE_COLUMNS = {
 }
 
 Rates = dict[str, Decimal]
+# HTML tags and Markdown links, keeping a link's label.
+MARKUP = re.compile(r'<[^>]+>|\[([^]]+)]\([^)]*\)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
@@ -70,10 +72,10 @@ def parse_models_markdown(markdown: str) -> dict[str, tuple[int | None, str]]:
         if header != ['Model Name', 'Context Window', 'Description']:
             continue
         for name, context, description in rows:
-            name = re.sub(r'<[^>]+>|\[([^]]+)]\([^)]*\)', r'\1', name).strip()
+            name = MARKUP.sub(r'\1', name).strip()
             context = context.replace(',', '').replace(' ', '')
             window = int(context[:-1]) * 1000 if context.endswith('K') else int(context) if context.isdigit() else None
-            details[name] = (window, description.replace('**', '').strip())
+            details[name] = (window, MARKUP.sub(r'\1', description).replace('**', '').strip())
     return details
 
 

@@ -143,7 +143,7 @@ def test_minimax_reads_context_windows_and_descriptions_from_the_model_tables() 
 | Model Name | Context Window | Description |
 | :- | :- | :- |
 | <span style={{whiteSpace:"nowrap"}}>MiniMax-M3.1-Flash</span> | 1,000,000 | **Frontier coding model**. Open-weight. |
-| [M2-her](/docs/guides/text-chat) | 64 K | **Designed for dialogue** |
+| [M2-her](/docs/guides/text-chat) | 64 K | **Designed for [dialogue](/docs/guides/text-chat)** |
 | MiniMax-Next | Coming soon | **Preview** |
 
 | Field | Value |
