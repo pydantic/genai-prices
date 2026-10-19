@@ -7486,12 +7486,14 @@ providers: list[Provider] = [
                 ),
                 name='Gemini Live 2.5 Flash',
                 description="Google's Live API model for low-latency bidirectional voice and video interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served from the `global` location). The prefix match also covers the AI Studio preview ids (`gemini-live-2.5-flash-preview*`).",
-                price_comments='See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
+                price_comments='See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview. Both price video input at the $3 audio rate, and Vertex prices image input the same.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'),
                     output_mtok=Decimal('2'),
                     input_audio_mtok=Decimal('3'),
                     output_audio_mtok=Decimal('12'),
+                    input_image_mtok=Decimal('3'),
+                    input_video_mtok=Decimal('3'),
                 ),
             ),
             ModelInfo(

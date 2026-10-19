@@ -888,7 +888,7 @@ models:
         - equals: gemini-2.5-flash-latest
         - equals: gemini-2.5-flash-preview-09-2025
     context_window: 1048576
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
       before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
@@ -945,7 +945,7 @@ models:
             - starts_with: gemini-2.5-flash-lite-preview
             - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
       before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
@@ -1003,7 +1003,7 @@ models:
         - equals: gemini-2.5-flash-tts
         - equals: gemini-2.5-flash-preview-tts
     context_window: 8192
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://cloud.google.com/text-to-speech/pricing#gemini-tts. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Rates are
@@ -1034,7 +1034,7 @@ models:
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
       input and output in both prompt-size tiers; context caching stays at the standard rate.
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 1.25
@@ -1074,7 +1074,7 @@ models:
         - equals: gemini-2.5-pro-tts
         - equals: gemini-2.5-pro-preview-tts
     context_window: 8192
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://cloud.google.com/text-to-speech/pricing#gemini-tts. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Rates are
@@ -1099,7 +1099,7 @@ models:
         - equals: gemini-3-flash-preview
         - starts_with: gemini-3-flash-preview-
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on
       input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab);
@@ -1139,7 +1139,7 @@ models:
         - equals: gemini-3-pro-image
         - starts_with: gemini-3-pro-image-preview
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M
       tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and
@@ -1170,7 +1170,7 @@ models:
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
-    description:
+    description: >-
       The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding
       model yet.
     match:
@@ -1232,7 +1232,7 @@ models:
         - equals: gemini-3.1-flash-image
         - starts_with: gemini-3.1-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per 1M tokens and is
       the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens. Preview
@@ -1261,7 +1261,7 @@ models:
         - equals: gemini-3.1-flash-lite
         - starts_with: gemini-3.1-flash-lite-preview
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
@@ -1289,7 +1289,7 @@ models:
       Google's low-latency, cost-efficient image generation and editing model.
     match:
       starts_with: gemini-3.1-flash-lite-image
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite-image. Batch rates verified on 2026-10-14
       at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch
@@ -1311,7 +1311,7 @@ models:
     description: Google's low-latency audio-to-audio model with multimodal input support.
     match:
       starts_with: gemini-3.1-flash-live-preview
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-live-preview.
     prices:
       input_mtok: 0.75
@@ -1327,7 +1327,7 @@ models:
     description: Preview token-priced text-to-speech model in the Gemini 3.1 Flash family.
     match:
       equals: gemini-3.1-flash-tts-preview
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; batch is half input and output.
     prices:
@@ -1342,7 +1342,8 @@ models:
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
-    description: The latest performance, intelligence, and usability improvements to the best model family in the world
+    description: >-
+      The latest performance, intelligence, and usability improvements to the best model family in the world
       for multimodal understanding, agentic capabilities, and vibe-coding.
     match:
       or:
@@ -1350,7 +1351,7 @@ models:
         # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
         # Move it when Google points it at a newer model.
         - equals: gemini-pro-latest
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
       before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as
@@ -1399,7 +1400,7 @@ models:
         - regex: '^gemini-3\.5-flash-\d'
     context_window: 1000000
     prices_checked: 2026-09-29
-    price_comments:
+    price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
       offer 50% discount on input/output.
     prices:
@@ -1420,7 +1421,7 @@ models:
         # Move it when Google points it at a newer model.
         - equals: gemini-flash-lite-latest
     context_window: 1000000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50%
       discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on
@@ -1491,9 +1492,10 @@ models:
       starts_with: gemini-3.7-flash
     context_window: 1000000
     prices_checked: 2026-09-29
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
-      tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache
-      storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
+      offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price
+      ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
     prices:
       - prices:
           input_mtok: 0.75
@@ -1663,16 +1665,18 @@ models:
 
   - id: gemini-3.8-live
     name: Gemini 3.8 Live
-    description: Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue,
+    description: >-
+      Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue,
       including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.
     match:
       # Also covers `gemini-3.8-live-extended-thinking`, which Google prices identically.
       starts_with: gemini-3.8-live
     context_window: 131072
-    prices_checked: 2026-09-29
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended
-      Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output
-      price. Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.
+    prices_checked: 2026-10-19
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended
+      Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price.
+      Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.
     prices:
       input_mtok: 0.75
       input_audio_mtok: 3
@@ -1742,7 +1746,7 @@ models:
         - equals: gemini-embedding-2
         - equals: gemini-embedding-2-preview
     context_window: 8192
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
@@ -1833,11 +1837,13 @@ models:
     price_comments: >-
       See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API)
       and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches
-      the preview.
-    prices_checked: 2026-07-24
+      the preview. Both price video input at the $3 audio rate, and Vertex prices image input the same.
+    prices_checked: 2026-10-19
     prices:
       input_mtok: 0.5
       input_audio_mtok: 3
+      input_image_mtok: 3
+      input_video_mtok: 3
       output_mtok: 2
       output_audio_mtok: 12
 
@@ -1848,7 +1854,7 @@ models:
       separately from image output tokens.
     match:
       equals: gemini-nano-banana-2.1
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking
       output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text.
@@ -1872,7 +1878,7 @@ models:
     description: Google's video generation and editing model with multimodal input.
     match:
       equals: gemini-omni-1.1-flash
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     price_comments: >-
       Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Omni Flash, GA): input
       $1.50 / 1M tokens across text, image, video and audio; output $9 / 1M tokens (text) and
@@ -1888,7 +1894,7 @@ models:
     description: Google's video generation and editing model with multimodal input.
     match:
       starts_with: gemini-omni-flash-preview
-    prices_checked: 2026-07-22
+    prices_checked: 2026-10-19
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-flash-preview.
     prices:
       input_mtok: 1.5
@@ -1987,7 +1993,9 @@ models:
     match:
       equals: gemma-2-27b-it
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
+    price_comments: >-
+      Imported from OpenRouter pricing; verify against Google pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.65
       output_mtok: 0.65
@@ -2004,7 +2012,8 @@ models:
 
   - id: gemma-3n
     name: Gemma 3n (free)
-    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and
+    description: >-
+      Our open model built for efficient performance on everyday devices like mobile phones, laptops, and
       tablets.
     collapse: false
     prices_checked: 2025-08-12

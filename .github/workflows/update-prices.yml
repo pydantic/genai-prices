@@ -36,6 +36,7 @@ jobs:
           - cursor
           - doubleword
           - github-copilot
+          - google
           - groq
           - huggingface
           - meta
