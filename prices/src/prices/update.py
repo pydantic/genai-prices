@@ -89,8 +89,7 @@ class ProviderYaml:
             assert isinstance(model.prices, ModelPrice)
             new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
             if preserve_price_history:
-                current_model = self.provider.find_model(lookup_id)
-                assert current_model is not None
+                [current_model] = [m for m in self.provider.models if m.id == lookup_id]
                 current_prices = (
                     current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
                 )

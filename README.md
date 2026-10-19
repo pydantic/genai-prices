@@ -46,7 +46,7 @@ The following providers are currently supported:
 - [Databricks](prices/providers/databricks.yml) - 20 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 27 models
-- [Fireworks](prices/providers/fireworks.yml) - 32 models
+- [Fireworks](prices/providers/fireworks.yml) - 43 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 42 models
 - [Google](prices/providers/google.yml) - 69 models
 - [Groq](prices/providers/groq.yml) - 37 models
@@ -64,7 +64,7 @@ The following providers are currently supported:
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
 - [Mistral](prices/providers/mistral.yml) - 45 models
-- [Modal](prices/providers/modal.yml) - 2 models
+- [Modal](prices/providers/modal.yml) - 8 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
 - [Novita](prices/providers/novita.yml) - 109 models
 - [OpenAI](prices/providers/openai.yml) - 108 models

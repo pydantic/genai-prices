@@ -5087,6 +5087,36 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4p1-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4p1-flash'),
+                name='DeepSeek V4.1 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4p1-flash-1017',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4p1-flash-1017'),
+                name='DeepSeek V4.1 Flash 1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4p1-flash-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-us'),
+                name='DeepSeek V4.1 Flash US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.009'), output_mtok=Decimal('1.8')
+                ),
+            ),
+            ModelInfo(
+                id='ember-1',
+                match=ClauseEquals(equals='accounts/fireworks/models/ember-1'),
+                name='Ember-1',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
                 id='gemma-3-27b-it',
                 match=ClauseEquals(equals='accounts/fireworks/models/gemma-3-27b-it'),
                 name='Gemma 3 27B Instruct',
@@ -5145,15 +5175,65 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p3',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p3'),
+                name='GLM 5.3',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-fast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-fast'),
+                name='GLM 5.3 Fast',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.39'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p3-flash'),
+                name='GLM 5.3 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-flash-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-flash-us'),
+                name='GLM 5.3 Flash US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.225'), cache_read_mtok=Decimal('0.045'), output_mtok=Decimal('0.75')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-us'),
+                name='GLM 5.3 US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.1'), cache_read_mtok=Decimal('0.39'), output_mtok=Decimal('6.6')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='accounts/fireworks/models/gpt-oss-120b'),
                 name='OpenAI gpt-oss-120b',
                 description="OpenAI's open-weight 117B parameter MoE model designed for production, general purpose, high reasoning use-cases. Features powerful reasoning, agentic tasks, and versatile developer use cases.",
                 context_window=131072,
                 price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('0.6')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('0.6')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-oss-20b',
@@ -5243,10 +5323,20 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3-us'),
                 name='Kimi K3 US',
                 context_window=1040000,
-                price_comments='US-only serverless pricing. See https://docs.fireworks.ai/serverless/us-only-serverless.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('3.3'), cache_read_mtok=Decimal('0.33'), output_mtok=Decimal('16.5')
-                ),
+                price_comments='US-only serverless pricing. Since 2026-09-01 US-only models cost 1.5x the base model. See https://docs.fireworks.ai/serverless/us-only-serverless.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.3'), cache_read_mtok=Decimal('0.33'), output_mtok=Decimal('16.5')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4.5'), cache_read_mtok=Decimal('0.45'), output_mtok=Decimal('22.5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='llama-v3p1-8b-instruct',
@@ -5302,6 +5392,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='nemotron-lightning-3p5-30b-a3b',
+                match=ClauseEquals(equals='accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b'),
+                name='NVIDIA Nemotron 3.5 Lightning 30B A3B',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.2')
+                ),
+            ),
+            ModelInfo(
                 id='qwen2p5-vl-72b-instruct',
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen2p5-vl-72b-instruct'),
                 name='Qwen2.5-VL 72B Instruct',
@@ -5333,6 +5431,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('1.6')
                 ),
+            ),
+            ModelInfo(
+                id='qwen3p8-max',
+                match=ClauseEquals(equals='accounts/fireworks/models/qwen3p8-max'),
+                name='Qwen 3.8 Max',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
         ],
     ),
@@ -11633,6 +11737,28 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='Qwen/Qwen3.8-2.4T-A95B',
+                match=ClauseEquals(equals='Qwen/Qwen3.8-2.4T-A95B'),
+                name='Qwen3.8-Max',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                name='DeepSeek V4.1 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='meta-models/Muse-Spark-Open-816B-A42B',
+                match=ClauseEquals(equals='meta-models/Muse-Spark-Open-816B-A42B'),
+                name='Muse Spark Open',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4.25')
+                ),
+            ),
+            ModelInfo(
                 id='moonshotai/Kimi-K3',
                 match=ClauseEquals(equals='moonshotai/Kimi-K3'),
                 name='Kimi K3',
@@ -11642,12 +11768,36 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='nvidia/GLM-5.3-Flash-NVFP4',
+                match=ClauseEquals(equals='nvidia/GLM-5.3-Flash-NVFP4'),
+                name='GLM 5.3 Flash NVFP4',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
                 id='thinkingmachines/Inkling-NVFP4',
                 match=ClauseEquals(equals='thinkingmachines/Inkling-NVFP4'),
                 name='Inkling NVFP4',
                 description="Thinking Machines Lab's reasoning model, served by Modal as a Shared Endpoint.",
                 price_comments='Modal Shared Endpoint dashboard pricing. Reasoning tokens use the same $5/MTok rate as completion tokens.',
                 prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('5')),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3',
+                match=ClauseEquals(equals='zai-org/GLM-5.3'),
+                name='GLM 5.3',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3-Flash',
+                match=ClauseEquals(equals='zai-org/GLM-5.3-Flash'),
+                name='GLM 5.3 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.09'), output_mtok=Decimal('1.5')
+                ),
             ),
         ],
     ),

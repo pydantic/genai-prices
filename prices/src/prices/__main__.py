@@ -13,7 +13,9 @@ from .source_baseten import get_baseten_prices
 from .source_cerebras import get_cerebras_prices
 from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
+from .source_databricks import get_databricks_prices
 from .source_doubleword import get_doubleword_prices
+from .source_fireworks import get_fireworks_prices
 from .source_github_copilot import get_github_copilot_prices
 from .source_google import get_google_prices
 from .source_groq import get_groq_prices
@@ -21,6 +23,7 @@ from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_meta import get_meta_prices
 from .source_minimax import get_minimax_prices
+from .source_modal import get_modal_prices
 from .source_moonshotai import get_moonshotai_prices
 from .source_novita import get_novita_prices
 from .source_openai_decisions import get_openai_decisions_prices
@@ -48,7 +51,9 @@ def main():
         get_cerebras_prices,
         get_cloudflare_prices,
         get_cursor_prices,
+        get_databricks_prices,
         get_doubleword_prices,
+        get_fireworks_prices,
         get_github_copilot_prices,
         get_google_prices,
         get_groq_prices,
@@ -56,6 +61,7 @@ def main():
         get_litellm_prices,
         get_meta_prices,
         get_minimax_prices,
+        get_modal_prices,
         get_moonshotai_prices,
         get_novita_prices,
         get_openai_decisions_prices,
