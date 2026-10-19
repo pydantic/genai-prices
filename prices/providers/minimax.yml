@@ -166,6 +166,18 @@ models:
       cache_write_mtok: 0.375
       output_mtok: 2.40
 
+  - id: MiniMax-M3.1-Flash
+    name: MiniMax-M3.1-Flash
+    match:
+      or:
+        - equals: MiniMax-M3.1-Flash
+        - equals: minimax-m3.1-flash
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
   - id: minimax-01
     name: MiniMax-01
     description: >-
@@ -207,7 +219,7 @@ models:
         - equals: MiniMax-M3
         - equals: minimax-m3
     context_window: 1000000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-19
     price_comments: >-
       Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo,
       2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens
