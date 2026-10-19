@@ -393,13 +393,15 @@ func TestClaudeFable51DoesNotUseFable5Prices(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.providerID+"/"+test.fable51, func(t *testing.T) {
 			fable5, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.fable5, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.fable5, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
 			}
 			fable51, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.fable51, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.fable51, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -464,6 +466,7 @@ func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 // OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added.
 func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
 	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		Usage: genai_prices.Usage{
 			genai_prices.UsageInputTokens:     1_000_000,
 			genai_prices.UsageCacheReadTokens: 1_000_000,
@@ -511,13 +514,15 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.providerID+"/"+test.opus55, func(t *testing.T) {
 			opus5, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.opus5, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.opus5, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
 			}
 			opus55, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.opus55, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.opus55, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -603,6 +608,7 @@ func TestClaudeSonnet55ResolvesToItsOwnModel(t *testing.T) {
 		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12.1},
 	} {
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			Usage: genai_prices.Usage{
 				genai_prices.UsageInputTokens:     2_000_000,
 				genai_prices.UsageCacheReadTokens: 1_000_000,
@@ -931,6 +937,7 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_001, genai_prices.UsageOutputTokens: 100_000}, test.wantLongContext},
 		} {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 				Usage:      tokens.usage,
 				Model:      test.model,
 				ProviderID: test.providerID,
@@ -1031,6 +1038,7 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		{"openrouter", "mistralai/mistral-large-4-0", "mistralai/mistral-large-4-0", map[string]string{"route": "mistral/eu"}, 2.9799},
 	} {
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			Usage: genai_prices.Usage{
 				genai_prices.UsageInputTokens:     1_000_000,
 				genai_prices.UsageCacheReadTokens: 100_000,

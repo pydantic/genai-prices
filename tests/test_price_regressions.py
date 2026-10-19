@@ -159,7 +159,7 @@ def test_groq_transcription_duration_prices(
     billed_seconds: Decimal,
 ) -> None:
     original_usage = copy(usage)
-    price = calc_price(usage, model_ref=model_ref, provider_id='groq')
+    price = calc_price(usage, model_ref=model_ref, provider_id='groq', genai_request_timestamp=datetime(2026, 10, 17))
     expected_price = hourly_rate * billed_seconds / Decimal(3_600)
 
     assert price.input_price == expected_price
@@ -174,7 +174,12 @@ def test_groq_transcription_duration_prices(
 )
 def test_groq_gpt_oss_safeguard_20b_has_its_own_price(model_ref: str, expected_price: str) -> None:
     """Safeguard 20B was matched by the 120B record and billed at double its price."""
-    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref, provider_id='groq')
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref,
+        provider_id='groq',
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
 
     assert price.model.id == model_ref
     assert price.total_price == Decimal(expected_price)
@@ -699,8 +704,12 @@ def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_
     """
     usage = Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000)
 
-    fable_5 = calc_price(usage, model_ref=fable_5_ref, provider_id=provider_id)
-    fable_5_1 = calc_price(usage, model_ref=fable_5_1_ref, provider_id=provider_id)
+    fable_5 = calc_price(
+        usage, model_ref=fable_5_ref, provider_id=provider_id, genai_request_timestamp=datetime(2026, 10, 17)
+    )
+    fable_5_1 = calc_price(
+        usage, model_ref=fable_5_1_ref, provider_id=provider_id, genai_request_timestamp=datetime(2026, 10, 17)
+    )
 
     assert fable_5.model.id != fable_5_1.model.id
     assert fable_5_1.total_price == fable_5.total_price / 4
@@ -720,7 +729,10 @@ def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_
 )
 def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cache_read_mtok: str) -> None:
     price = calc_price(
-        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal(cache_read_mtok)
@@ -781,6 +793,7 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
         model_ref='~anthropic/claude-fable-latest',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal('1')
@@ -837,6 +850,7 @@ def test_claude_opus_5_5_prices(provider_id: str, model_ref: str, expected_price
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal(expected_price)
@@ -917,6 +931,7 @@ def test_claude_sonnet_5_5_resolves_to_its_own_model(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == model_id
@@ -1000,9 +1015,17 @@ def test_claude_haiku_5_5_prices_by_prompt_length(
     provider_id: str, model_ref: str, model_id: str, base_price: str, long_context_price: str
 ) -> None:
     """Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate and 100,001 does not."""
-    base = calc_price(Usage(input_tokens=100_000, output_tokens=100_000), model_ref=model_ref, provider_id=provider_id)
+    base = calc_price(
+        Usage(input_tokens=100_000, output_tokens=100_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
     long_context = calc_price(
-        Usage(input_tokens=100_001, output_tokens=100_000), model_ref=model_ref, provider_id=provider_id
+        Usage(input_tokens=100_001, output_tokens=100_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert base.model.id == model_id

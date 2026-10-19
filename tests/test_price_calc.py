@@ -69,6 +69,7 @@ def test_october_model_prices_and_context_metadata():
         Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
         'mistralai/mistral-large-4-0-20261006',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert openrouter_mistral.model.context_window is None
     assert openrouter_mistral.total_price == Decimal('2.709')
@@ -77,10 +78,13 @@ def test_october_model_prices_and_context_metadata():
         'mistralai/mistral-large-4-0',
         provider_id='openrouter',
         price_context={'route': 'mistral/eu'},
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert eu_price.total_price == Decimal('2.9799')
 
-    openrouter_meta = calc_price(usage, 'meta/muse-wonder-20261012', provider_id='openrouter')
+    openrouter_meta = calc_price(
+        usage, 'meta/muse-wonder-20261012', provider_id='openrouter', genai_request_timestamp=datetime(2026, 10, 17)
+    )
     assert openrouter_meta.model.context_window == 1_048_576
     assert openrouter_meta.total_price == Decimal('23.6225')
 
@@ -1057,6 +1061,7 @@ def test_openrouter_deepseek_v32_price():
         Usage(input_tokens=2_000_000, output_tokens=1_000_000, cache_read_tokens=1_000_000),
         model_ref='deepseek/deepseek-v3.2',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.input_price == snapshot(Decimal('0.4576'))
@@ -1169,6 +1174,7 @@ def test_openrouter_kimi_k27_code_price():
         Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
         model_ref='moonshotai/kimi-k2.7-code',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == 'moonshotai/kimi-k2.7-code'
@@ -1182,6 +1188,7 @@ def test_openrouter_kimi_k27_code_dated_price():
         Usage(input_tokens=2_038_030, output_tokens=13_034),
         model_ref='moonshotai/kimi-k2.7-code-20260612',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == 'moonshotai/kimi-k2.7-code'
@@ -1249,6 +1256,7 @@ def test_openrouter_glm_51_dated_price():
         Usage(input_tokens=27_447, output_tokens=83),
         model_ref='z-ai/glm-5.1-20260406',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == 'z-ai/glm-5.1'
@@ -1262,6 +1270,7 @@ def test_openrouter_glm_52_dated_price():
         Usage(input_tokens=1_000, output_tokens=100),
         model_ref='z-ai/glm-5.2-20260616',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == 'z-ai/glm-5.2'
@@ -1275,6 +1284,7 @@ def test_openrouter_glm_53_dated_price():
         Usage(input_tokens=1_000, output_tokens=100),
         model_ref='z-ai/glm-5.3-20260816',
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == 'z-ai/glm-5.3'
@@ -1488,6 +1498,7 @@ def test_openrouter_modern_dated_aliases_price():
             Usage(input_tokens=1_000, output_tokens=100),
             model_ref=model_ref,
             provider_api_url='https://openrouter.ai/api/v1',
+            genai_request_timestamp=datetime(2026, 10, 17),
         )
 
         assert price.model.id == model_id
@@ -1520,6 +1531,7 @@ def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
         Usage(input_tokens=1_000, output_tokens=100),
         model_ref=model_ref,
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == model_ref
@@ -1648,7 +1660,9 @@ def test_set_custom_snapshot_does_not_validate_dynamic_model_prices() -> None:
 
 def test_requests_kcount_prices():
     # request count defaults to 1
-    price = calc_price(Usage(), model_ref='sonar', provider_id='perplexity')
+    price = calc_price(
+        Usage(), model_ref='sonar', provider_id='perplexity', genai_request_timestamp=datetime(2026, 10, 17)
+    )
     assert price.input_price == snapshot(Decimal('0'))
     assert price.output_price == snapshot(Decimal('0'))
     assert price.total_price == snapshot(Decimal('0.012'))
@@ -1792,6 +1806,7 @@ def test_distinct_output_category_prices_replace_aggregate_output_rate():
         Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
         model_ref='sonar-deep-research',
         provider_id='perplexity',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
@@ -2331,6 +2346,7 @@ def test_qualified_openrouter_voxtral_model_does_not_infer_mistral() -> None:
         Usage(output_tokens=1),
         model_ref=model_ref,
         provider_api_url='https://openrouter.ai/api/v1',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert price.provider.id == 'openrouter'
     assert price.model.id == model_ref
@@ -2923,16 +2939,22 @@ def test_grok_4_6_long_context_cliff():
     # The boundary is inclusive on xAI's side (">= 200k prompt tokens") but a tier here
     # fires on `tokens > start`, so the threshold is pinned from both directions: one
     # token below stays on the base rate, exactly 200k is already on the higher one.
-    under = calc_price(Usage(input_tokens=199_999), 'grok-4.6', provider_id='x-ai')
+    under = calc_price(
+        Usage(input_tokens=199_999), 'grok-4.6', provider_id='x-ai', genai_request_timestamp=datetime(2026, 10, 17)
+    )
     assert under.input_price == snapshot(Decimal('0.399998'))
 
-    at = calc_price(Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai')
+    at = calc_price(
+        Usage(input_tokens=200_000), 'grok-4.6', provider_id='x-ai', genai_request_timestamp=datetime(2026, 10, 17)
+    )
     assert at.input_price == snapshot(Decimal('0.8'))
 
     # One more token roughly doubles the bill; under marginal pricing it would barely move.
     assert at.input_price > under.input_price * 2 - Decimal('0.0001')
 
-    full = calc_price(Usage(input_tokens=500_000), 'grok-4.6', provider_id='x-ai')
+    full = calc_price(
+        Usage(input_tokens=500_000), 'grok-4.6', provider_id='x-ai', genai_request_timestamp=datetime(2026, 10, 17)
+    )
     assert full.input_price == snapshot(Decimal('2.0'))
     assert full.input_price != Decimal('200000') * 2 / 1_000_000 + Decimal('300000') * 4 / 1_000_000
 
@@ -2940,6 +2962,7 @@ def test_grok_4_6_long_context_cliff():
         Usage(input_tokens=300_000, cache_read_tokens=10_000, output_tokens=1_000),
         'grok-4.6',
         provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert mixed.total_price == snapshot(Decimal('1.182'))
 
@@ -3002,7 +3025,12 @@ def test_gemma_4_31b_prices():
 )
 def test_openrouter_openai_dated_ids(model_ref: str, expected_model_id: str):
     """OpenRouter resolves OpenAI's date-suffixed ids (both `YYYY-MM-DD` and `YYYYMMDD` forms)."""
-    price = calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='openrouter')
+    price = calc_price(
+        Usage(input_tokens=1),
+        model_ref=model_ref,
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
 
     assert price.model.id == expected_model_id
 
@@ -3030,7 +3058,9 @@ def test_openrouter_gpt_6_sol_luna_prices(model_ref: str, openai_model: str):
             output_tokens=1_000,
             web_searches=1,
         )
-        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
+        price = calc_price(
+            usage, model_ref=model_ref, provider_id='openrouter', genai_request_timestamp=datetime(2026, 10, 17)
+        )
         direct_price = calc_price(usage, model_ref=openai_model, provider_id='openai')
 
         assert price.model.id == f'openai/{openai_model}'
@@ -3058,8 +3088,12 @@ def test_openrouter_gpt_6_sol_luna_batch_prices(model_ref: str, base_model: str,
             output_tokens=1_000,
             web_searches=1,
         )
-        price = calc_price(usage, model_ref=model_ref, provider_id='openrouter')
-        standard = calc_price(usage, model_ref=base_model, provider_id='openrouter')
+        price = calc_price(
+            usage, model_ref=model_ref, provider_id='openrouter', genai_request_timestamp=datetime(2026, 10, 17)
+        )
+        standard = calc_price(
+            usage, model_ref=base_model, provider_id='openrouter', genai_request_timestamp=datetime(2026, 10, 17)
+        )
 
         assert price.model.id == batch_model
         assert price.model.context_window == 1_050_000
@@ -3082,6 +3116,7 @@ def test_openrouter_gpt_54_long_context_tier(
         Usage(input_tokens=input_tokens, output_tokens=1_000),
         model_ref='openai/gpt-5.4',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.input_price == expected_input_price
@@ -3093,6 +3128,7 @@ def test_openrouter_gpt_56_sol_cache_write_price():
         Usage(input_tokens=10_000, cache_write_tokens=8_000, cache_read_tokens=1_000, output_tokens=1_000),
         model_ref='openai/gpt-5.6-sol',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     # 1,000 uncached @ $2 + 8,000 cache writes @ $2.5 + 1,000 cache reads @ $0.2 (per Mtok)

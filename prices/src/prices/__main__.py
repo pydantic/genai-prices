@@ -23,7 +23,7 @@ from .source_minimax import get_minimax_prices
 from .source_moonshotai import get_moonshotai_prices
 from .source_novita import get_novita_prices
 from .source_openai_decisions import get_openai_decisions_prices
-from .source_openrouter import get_openrouter_prices, update_from_openrouter
+from .source_openrouter import get_openrouter_prices, get_openrouter_provider_prices, update_from_openrouter
 from .source_ovhcloud import get_ovhcloud_prices
 from .source_perplexity import get_perplexity_prices
 from .source_quicksilverpro import get_quicksilverpro_prices
@@ -58,6 +58,7 @@ def main():
         get_novita_prices,
         get_openai_decisions_prices,
         get_openrouter_prices,
+        get_openrouter_provider_prices,
         get_ovhcloud_prices,
         get_perplexity_prices,
         get_quicksilverpro_prices,
