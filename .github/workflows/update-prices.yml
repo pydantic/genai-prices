@@ -47,6 +47,7 @@ jobs:
           - modal
           - moonshotai
           - novita
+          - openai
           - openai-decisions
           - openrouter-provider
           - ovhcloud
