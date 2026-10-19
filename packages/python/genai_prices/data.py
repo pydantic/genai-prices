@@ -18075,9 +18075,9 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.446136'),
-                            cache_read_mtok=Decimal('0.037178'),
-                            output_mtok=Decimal('0.892272'),
+                            input_mtok=Decimal('0.422472'),
+                            cache_read_mtok=Decimal('0.035206'),
+                            output_mtok=Decimal('0.844944'),
                         ),
                     ),
                 ],
@@ -27100,7 +27100,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
-                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                    ]
+                ),
                 name='DeepSeek V4.1 Flash',
                 context_window=1000000,
                 prices=ModelPrice(

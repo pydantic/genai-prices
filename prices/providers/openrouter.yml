@@ -1907,9 +1907,9 @@ models:
       - constraint:
           start_date: 2026-10-19
         prices:
-          input_mtok: 0.446136
-          cache_read_mtok: 0.037178
-          output_mtok: 0.892272
+          input_mtok: 0.422472
+          cache_read_mtok: 0.035206
+          output_mtok: 0.844944
     prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v4-pro-0813
