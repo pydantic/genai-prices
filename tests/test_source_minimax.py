@@ -143,7 +143,7 @@ def test_minimax_reads_context_windows_and_descriptions_from_the_model_tables() 
 | Model Name | Context Window | Description |
 | :- | :- | :- |
 | <span style={{whiteSpace:"nowrap"}}>MiniMax-M3.1-Flash</span> | 1,000,000 | **Frontier coding model**. Open-weight. |
-| [M2-her](/docs/guides/text-chat) | 64 K | **Designed for [dialogue](/docs/guides/text-chat)** |
+| **[M2-her](/docs/guides/text-chat)** | 64 K | **Designed for [dialogue](/docs/guides/text-chat)** |
 | MiniMax-Next | Coming soon | **Preview** |
 
 | Field | Value |
@@ -165,7 +165,7 @@ def test_minimax_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
 
     source_minimax.main(provider_path)
 
-    assert capsys.readouterr().out == 'MiniMax prices updated: 1 added, 1 updated\n'
+    assert capsys.readouterr().out == 'MiniMax prices updated: 0 added, 2 updated\n'
     flash = ProviderYaml(provider_path).provider.find_model('MiniMax-M3.1-Flash')
     assert flash is not None
     assert flash.context_window == 1_000_000

@@ -72,7 +72,7 @@ def parse_models_markdown(markdown: str) -> dict[str, tuple[int | None, str]]:
         if header != ['Model Name', 'Context Window', 'Description']:
             continue
         for name, context, description in rows:
-            name = MARKUP.sub(r'\1', name).strip()
+            name = MARKUP.sub(r'\1', name).replace('**', '').strip()
             context = context.replace(',', '').replace(' ', '')
             window = int(context[:-1]) * 1000 if context.endswith('K') else int(context) if context.isdigit() else None
             details[name] = (window, MARKUP.sub(r'\1', description).replace('**', '').strip())
