@@ -91,10 +91,15 @@ jobs:
           version: "0.12.1"
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: uv sync --frozen --all-packages --all-extras
-      - run: make test
+      # Coverage runs on 3.14 only: it traces branches via sys.monitoring, while CTracer on <3.14 is ~3x slower.
+      - if: matrix.python-version == '3.14'
+        run: make test
         env:
           COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
+      - if: matrix.python-version != '3.14'
+        run: uv run pytest
       - name: store coverage files
+        if: matrix.python-version == '3.14'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-${{ matrix.python-version }}
