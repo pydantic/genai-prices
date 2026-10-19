@@ -17347,7 +17347,7 @@ providers: list[Provider] = [
                 name='DeepSeek V4.1 Flash',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.0456'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
+                    input_mtok=Decimal('0.0448'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
                 ),
             ),
             ModelInfo(
@@ -17746,7 +17746,10 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash Lite (batch)',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.2')
+                    input_mtok=Decimal('0.05'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    cache_read_mtok=Decimal('0.01'),
+                    output_mtok=Decimal('0.2'),
                 ),
             ),
             ModelInfo(
@@ -17776,7 +17779,10 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash (batch)',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.25')
+                    input_mtok=Decimal('0.15'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('1.25'),
                 ),
             ),
             ModelInfo(
@@ -17833,6 +17839,7 @@ providers: list[Provider] = [
                 context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.625'), tiers=[Tier(start=200000, price=Decimal('1.25'))]),
+                    cache_write_mtok=Decimal('0.1875'),
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
                     ),
@@ -17861,7 +17868,11 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='google/gemini-3-flash-preview:batch'),
                 name='Gemini 3 Flash Preview (batch)',
                 context_window=1048576,
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.5')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    output_mtok=Decimal('1.5'),
+                ),
             ),
             ModelInfo(
                 id='google/gemini-3-pro-image',
@@ -17957,7 +17968,10 @@ providers: list[Provider] = [
                 name='Gemini 3.1 Flash Lite (batch)',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.125'), cache_read_mtok=Decimal('0.0125'), output_mtok=Decimal('0.75')
+                    input_mtok=Decimal('0.125'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    cache_read_mtok=Decimal('0.0125'),
+                    output_mtok=Decimal('0.75'),
                 ),
             ),
             ModelInfo(
@@ -18002,6 +18016,7 @@ providers: list[Provider] = [
                 context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200000, price=Decimal('2'))]),
+                    cache_write_mtok=Decimal('0.1875'),
                     output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('9'))]),
                 ),
             ),
@@ -18046,7 +18061,10 @@ providers: list[Provider] = [
                 name='Gemini 3.5 Flash Lite (batch)',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('1.25')
+                    input_mtok=Decimal('0.15'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    cache_read_mtok=Decimal('0.015'),
+                    output_mtok=Decimal('1.25'),
                 ),
             ),
             ModelInfo(
@@ -18055,7 +18073,10 @@ providers: list[Provider] = [
                 name='Gemini 3.5 Flash (batch)',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                    input_mtok=Decimal('0.75'),
+                    cache_write_mtok=Decimal('0.04166666666666665'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('4.5'),
                 ),
             ),
             ModelInfo(
@@ -21319,6 +21340,9 @@ providers: list[Provider] = [
                 context_window=1050000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
+                    ),
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
                     ),
@@ -21332,6 +21356,9 @@ providers: list[Provider] = [
                 context_window=1050000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('0.125'), tiers=[Tier(start=272000, price=Decimal('0.25'))]
+                    ),
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.01'), tiers=[Tier(start=272000, price=Decimal('0.02'))]
                     ),
@@ -21466,6 +21493,9 @@ providers: list[Provider] = [
                 context_window=1050000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
                     output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
                 ),
@@ -21477,6 +21507,9 @@ providers: list[Provider] = [
                 context_window=1050000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
                     output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
                 ),
@@ -24389,7 +24422,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.0352'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.2')
+                            input_mtok=Decimal('0.0392'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.2')
                         ),
                     ),
                 ],
@@ -24588,7 +24621,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~deepseek/deepseek-v4-flash-latest'),
                 name='DeepSeek V4 Flash Latest',
                 context_window=1048576,
-                prices=ModelPrice(input_mtok=Decimal('0.0049'), output_mtok=Decimal('0.45')),
+                prices=ModelPrice(input_mtok=Decimal('0.0065'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='~google/gemini-flash-latest',
@@ -24654,7 +24687,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.238'), cache_read_mtok=Decimal('0.228'), output_mtok=Decimal('16')
+                            input_mtok=Decimal('0.217'), cache_read_mtok=Decimal('0.207'), output_mtok=Decimal('16')
                         ),
                     ),
                 ],
@@ -24755,7 +24788,7 @@ providers: list[Provider] = [
                 name='GLM Flash Latest',
                 context_window=1048576,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.0352'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.2')
+                    input_mtok=Decimal('0.0392'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.2')
                 ),
             ),
             ModelInfo(

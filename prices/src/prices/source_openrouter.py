@@ -268,10 +268,13 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
 
 def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
     """Build the `openrouter` provider's records, with prompt-length overrides as tiers."""
+    by_id = {model.id: model for model in models}
     model_infos: list[ModelInfo] = []
     for model in models:
         if model.provider_id() == 'openrouter' or model.pricing.has_negative_price():
             continue
+        if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
+            model = with_batch_cache_writes(model, base)
         overrides: list[dict[str, Any]] = (model.pricing.model_extra or {}).get('overrides') or []
         if any(key.startswith('utc_') for override in overrides for key in override):
             # Time-of-day rates can't be expressed as one dated price; leave these models curated by hand.
@@ -309,6 +312,30 @@ def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
             )
         )
     return model_infos
+
+
+def with_batch_cache_writes(batch: OpenRouterModel, base: OpenRouterModel) -> OpenRouterModel:
+    """Fill the cache-write rates OpenRouter omits on a batch route, at the route's input discount."""
+    if batch.pricing.input_cache_write is not None or base.pricing.input_cache_write is None:
+        return batch
+    if not batch.pricing.prompt or not base.pricing.prompt:
+        return batch
+    ratio = batch.pricing.prompt / base.pricing.prompt
+    batch_overrides: list[dict[str, Any]] = (batch.pricing.model_extra or {}).get('overrides') or []
+    base_overrides: list[dict[str, Any]] = (base.pricing.model_extra or {}).get('overrides') or []
+    starts = [override.get('min_prompt_tokens') for override in batch_overrides]
+    if starts != [override.get('min_prompt_tokens') for override in base_overrides]:
+        return batch
+    overrides = [
+        {**override, 'input_cache_write': Decimal(base_override['input_cache_write']) * ratio}
+        if 'input_cache_write' in base_override
+        else override
+        for override, base_override in zip(batch_overrides, base_overrides)
+    ]
+    pricing = batch.pricing.model_copy(
+        update={'input_cache_write': base.pricing.input_cache_write * ratio, 'overrides': overrides}
+    )
+    return batch.model_copy(update={'pricing': pricing})
 
 
 def update_openrouter_provider(provider_path: Path | None = None) -> None:

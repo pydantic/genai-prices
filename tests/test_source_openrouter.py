@@ -574,6 +574,39 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
     assert models[1].prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
 
 
+def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> None:
+    base = pricing_with_extras(
+        {
+            'prompt': '0.000002',
+            'input_cache_write': '0.0000025',
+            'overrides': [{'min_prompt_tokens': 272_000, 'prompt': '0.000004', 'input_cache_write': '0.000005'}],
+        }
+    )
+    batch = pricing_with_extras({'overrides': [{'min_prompt_tokens': 272_000, 'prompt': '0.000002'}]})
+    unaligned = pricing_with_extras({'overrides': [{'min_prompt_tokens': 128_000, 'prompt': '0.000002'}]})
+
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model('openai/terra', pricing=base),
+            openrouter_model('openai/terra:batch', pricing=batch),
+            openrouter_model('openai/luna', pricing=base),
+            openrouter_model('openai/luna:batch', pricing=unaligned),
+            openrouter_model('openai/sol', pricing=OpenRouterPricing(input_cache_write=Decimal('0.000001'))),
+            openrouter_model('openai/sol:batch'),
+        ]
+    )
+    prices = {model.id: model.prices for model in models}
+
+    assert isinstance(terra := prices['openai/terra:batch'], ModelPrice)
+    assert terra.cache_write_mtok == TieredPrices(
+        base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]
+    )
+    assert isinstance(luna := prices['openai/luna:batch'], ModelPrice)
+    assert luna.cache_write_mtok is None
+    assert isinstance(sol := prices['openai/sol:batch'], ModelPrice)
+    assert sol.cache_write_mtok is None
+
+
 @pytest.mark.parametrize(
     ('overrides', 'error'),
     [

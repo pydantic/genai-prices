@@ -30706,7 +30706,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         prices: {
-          input_mtok: 0.0456,
+          input_mtok: 0.0448,
           cache_read_mtok: 0.0016,
           output_mtok: 0.08,
         },
@@ -31316,6 +31316,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.05,
+          cache_write_mtok: 0.04166666666666665,
           cache_read_mtok: 0.01,
           output_mtok: 0.2,
         },
@@ -31362,6 +31363,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.15,
+          cache_write_mtok: 0.04166666666666665,
           cache_read_mtok: 0.03,
           output_mtok: 1.25,
         },
@@ -31464,6 +31466,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_mtok: 0.1875,
           cache_read_mtok: {
             base: 0.125,
             tiers: [
@@ -31514,6 +31517,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.25,
+          cache_write_mtok: 0.04166666666666665,
           output_mtok: 1.5,
         },
       },
@@ -31649,6 +31653,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.125,
+          cache_write_mtok: 0.04166666666666665,
           cache_read_mtok: 0.0125,
           output_mtok: 0.75,
         },
@@ -31734,6 +31739,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_mtok: 0.1875,
           output_mtok: {
             base: 6,
             tiers: [
@@ -31799,6 +31805,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.15,
+          cache_write_mtok: 0.04166666666666665,
           cache_read_mtok: 0.015,
           output_mtok: 1.25,
         },
@@ -31812,6 +31819,7 @@ export const data: Provider[] = [
         context_window: 1048576,
         prices: {
           input_mtok: 0.75,
+          cache_write_mtok: 0.04166666666666665,
           cache_read_mtok: 0.075,
           output_mtok: 4.5,
         },
@@ -37254,6 +37262,15 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
           cache_read_mtok: {
             base: 0.01,
             tiers: [
@@ -37288,6 +37305,15 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
               },
             ],
           },
@@ -37690,6 +37716,15 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
           cache_read_mtok: {
             base: 0.1,
             tiers: [
@@ -37724,6 +37759,15 @@ export const data: Provider[] = [
               {
                 start: 272000,
                 price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
               },
             ],
           },
@@ -43036,7 +43080,7 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.0352,
+              input_mtok: 0.0392,
               cache_read_mtok: 0.006,
               output_mtok: 0.2,
             },
@@ -43337,7 +43381,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         prices: {
-          input_mtok: 0.0049,
+          input_mtok: 0.0065,
           output_mtok: 0.45,
         },
       },
@@ -43422,8 +43466,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.238,
-              cache_read_mtok: 0.228,
+              input_mtok: 0.217,
+              cache_read_mtok: 0.207,
               output_mtok: 16,
             },
           },
@@ -43697,7 +43741,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         prices: {
-          input_mtok: 0.0352,
+          input_mtok: 0.0392,
           cache_read_mtok: 0.006,
           output_mtok: 0.2,
         },
