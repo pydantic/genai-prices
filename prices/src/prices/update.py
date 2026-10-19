@@ -69,9 +69,7 @@ class ProviderYaml:
         self._extra_prices = []
         self._removed_models = set()
 
-    def update_model(
-        self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False, preserve_price_history: bool = False
-    ) -> None:
+    def update_model(self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False) -> None:
         yaml_model = self._get_model(lookup_id)
         description = model.description
         if description:
@@ -88,33 +86,27 @@ class ProviderYaml:
             prices = cast(Any, yaml_model['prices'])
             assert isinstance(model.prices, ModelPrice)
             new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
-            if preserve_price_history:
-                [current_model] = [m for m in self.provider.models if m.id == lookup_id]
-                current_prices = (
-                    current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
-                )
-                if current_prices != model.prices:
-                    conditional_price = {'constraint': {'start_date': model.prices_checked}, 'prices': new_prices}
-                    if isinstance(prices, CommentedMap):
-                        yaml_model['prices'] = [{'prices': prices}, conditional_price]
-                    elif (
-                        isinstance(current_model.prices, list)
-                        and isinstance(constraint := current_model.prices[-1].constraint, StartDateConstraint)
-                        and constraint.start_date == model.prices_checked
-                    ):
-                        # A second change on the same day would otherwise add an entry that can never match.
-                        cast(CommentedSeq, prices)[-1] = conditional_price
-                    else:
-                        cast(CommentedSeq, prices).append(conditional_price)  # pyright: ignore[reportUnknownMemberType]
-            elif isinstance(prices, CommentedMap):
-                prices.clear()  # pyright: ignore[reportUnknownMemberType]
-                prices.update(new_prices)  # pyright: ignore[reportUnknownMemberType]
-            else:
-                yaml_model['prices'] = new_prices
-            if model.prices_checked is not None:
-                yaml_model['prices_checked'] = model.prices_checked
-                if 'price_discrepancies' in yaml_model:
-                    del yaml_model['price_discrepancies']
+            current_model = next(m for m in self.provider.models if m.id == lookup_id)
+            current_prices = (
+                current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
+            )
+            if current_prices != model.prices:
+                conditional_price = {'constraint': {'start_date': model.prices_checked}, 'prices': new_prices}
+                if isinstance(prices, CommentedMap):
+                    yaml_model['prices'] = [{'prices': prices}, conditional_price]
+                elif (
+                    isinstance(current_model.prices, list)
+                    and isinstance(constraint := current_model.prices[-1].constraint, StartDateConstraint)
+                    and constraint.start_date == model.prices_checked
+                ):
+                    # A second change on the same day would otherwise add an entry that can never match.
+                    cast(CommentedSeq, prices)[-1] = conditional_price
+                else:
+                    cast(CommentedSeq, prices).append(conditional_price)  # pyright: ignore[reportUnknownMemberType]
+            assert model.prices_checked is not None, 'a price update needs the date it was checked'
+            yaml_model['prices_checked'] = model.prices_checked
+            if 'price_discrepancies' in yaml_model:
+                del yaml_model['price_discrepancies']
 
         current_match_yaml = cast(CommentedMap, yaml_model['match'])
         current_match = match_logic_schema.validate_python(current_match_yaml)
@@ -201,7 +193,7 @@ class ProviderYaml:
                 # The existing match already covers this id, so an `equals` clause for it would only add noise.
                 current_match = match_logic_schema.validate_python(self._get_model(matching_model.id)['match'])
                 model = model.model_copy(update={'match': current_match})
-            self.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
+            self.update_model(matching_model.id, model, set_prices=True)
             models_updated += 1
         self.save()
         return models_added, models_updated

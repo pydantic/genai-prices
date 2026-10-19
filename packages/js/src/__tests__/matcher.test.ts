@@ -571,7 +571,7 @@ describe('Claude Fable 5 vs 5.1', () => {
     const price = calcPrice(
       { cache_read_tokens: 1_000_000, cache_write_tokens: 1_000_000, input_tokens: 3_000_000, output_tokens: 1_000_000 },
       modelRef,
-      { providerId: 'aws' }
+      { providerId: 'aws', timestamp: new Date('2026-10-17T00:00:00Z') }
     )
 
     expect(price!.model.id).toBe(modelId)
