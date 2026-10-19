@@ -76,3 +76,37 @@ def test_held_prices_do_not_block_new_model_aliases_or_metadata(tmp_path: Path, 
     assert model is not None and model.context_window == 1000
     assert model.prices == ModelPrice(input_mtok=Decimal(2))
     assert model.prices_checked == today
+
+
+@pytest.mark.parametrize('direct', [True, False])
+def test_repeated_updates_on_one_provider_instance_preserve_the_first_rate(
+    tmp_path: Path, direct: bool, capsys: pytest.CaptureFixture[str]
+) -> None:
+    today = date.today()
+    path = tmp_path / 'provider.yml'
+    path.write_text(
+        'id: example\nname: Example\napi_pattern: example\nmodels:\n'
+        '  - id: m\n    match: {equals: m}\n    prices: {input_mtok: 1}\n'
+        '    price_variants:\n      - when: {processing: batch}\n        prices: {input_mtok: 0.5}\n'
+    )
+    provider = ProviderYaml(path)
+    for rate in [2, 3]:
+        incoming = ModelInfo(
+            id='m', match=ClauseEquals(equals='m'), prices=ModelPrice(input_mtok=Decimal(rate)), prices_checked=today
+        )
+        if direct:
+            assert provider.update_model('m', incoming, set_prices=True) == (rate == 2)
+        else:
+            assert provider.upsert_models([incoming], source='Example', min_count=1) == (0, int(rate == 2))
+    provider.save()
+    [model] = ProviderYaml(path).provider.models
+    assert isinstance(model.prices, list) and len(model.prices) == 2
+    assert model.prices[-1].prices == ModelPrice(input_mtok=Decimal(2))
+    assert model.price_variants is not None
+    if direct:
+        assert len(model.price_variants) == 1
+    else:
+        assert len(model.price_variants) == 2
+        assert model.price_variants[0].prices == ModelPrice(input_mtok=Decimal(1))
+        assert model.price_variants[1].prices == ModelPrice(input_mtok=Decimal('0.5'))
+    assert capsys.readouterr().out.count('cannot be represented by date-only constraints') == 1

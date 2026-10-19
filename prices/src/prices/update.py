@@ -72,9 +72,9 @@ class ProviderYaml:
         self._removed_models = set()
 
     def update_model(self, lookup_id: str, model: ModelInfo, *, set_prices: bool = False) -> bool:
-        current_model = next((m for m in self.provider.models if m.id == lookup_id), None)
-        price_update_blocked = set_prices and current_model is not None and self._same_day_change(current_model, model)
         yaml_model = self._get_model(lookup_id)
+        current_model = ModelInfo.model_validate(yaml_model)
+        price_update_blocked = set_prices and self._same_day_change(current_model, model)
         description = model.description
         if description:
             description = FoldedScalarString(description)
@@ -90,7 +90,6 @@ class ProviderYaml:
             prices = cast(Any, yaml_model['prices'])
             assert isinstance(model.prices, ModelPrice)
             new_prices = model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
-            current_model = next(m for m in self.provider.models if m.id == lookup_id)
             current_prices = (
                 current_model.prices[-1].prices if isinstance(current_model.prices, list) else current_model.prices
             )
@@ -143,6 +142,7 @@ class ProviderYaml:
         """Add models and date representable rate changes; report intraday changes for manual review."""
         if len(models) < min_count:
             raise RuntimeError(f'{source} returned only {len(models)} priced models; expected at least {min_count}')
+        self.provider = Provider.model_validate(self.data)
         models_added = 0
         models_updated = 0
         updated_prices: dict[str, ModelPrice] = {}
@@ -188,14 +188,14 @@ class ProviderYaml:
             updated_prices[matching_model.id] = prices
             model = model.model_copy(update={'prices': prices})
             price_update_blocked = self._same_day_change(matching_model, model)
-            if not price_update_blocked and matching_model.price_variants and prices != ModelPrice(**curated):
-                assert model.prices_checked is not None, 'a price update needs the date it was checked'
-                self._follow_price_variants(matching_model, ModelPrice(**curated), prices, model.prices_checked, source)
             if model.match == ClauseEquals(equals=model.id):
                 # The existing match already covers this id, so an `equals` clause for it would only add noise.
                 current_match = match_logic_schema.validate_python(self._get_model(matching_model.id)['match'])
                 model = model.model_copy(update={'match': current_match})
             self.update_model(matching_model.id, model, set_prices=not price_update_blocked)
+            if not price_update_blocked and matching_model.price_variants and prices != ModelPrice(**curated):
+                assert model.prices_checked is not None, 'a price update needs the date it was checked'
+                self._follow_price_variants(matching_model, ModelPrice(**curated), prices, model.prices_checked, source)
             models_updated += not price_update_blocked
         self.save()
         return models_added, models_updated
