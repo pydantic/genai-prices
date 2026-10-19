@@ -564,6 +564,7 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
             openrouter_model('google/long', pricing=long_context),
             openrouter_model('deepseek/off-peak', pricing=time_of_day),
             openrouter_model('openrouter/auto'),
+            openrouter_model('~deepseek/deepseek-flash-latest'),
             openrouter_model('vendor/dynamic', pricing=OpenRouterPricing(prompt=Decimal('-1'))),
             openrouter_model('openai/gpt:batch', canonical_slug='openai/gpt-20260101'),
         ]
@@ -721,5 +722,5 @@ def test_update_openrouter_provider_fetches_recorded_models(tmp_path: Path, caps
 
     assert capsys.readouterr().out == snapshot("""\
 OpenRouter: kept openai/gpt-5.1 at its own rates, alias openai/gpt-5.1-codex reports others
-OpenRouter prices updated: 0 added, 439 updated
+OpenRouter prices updated: 0 added, 420 updated
 """)
