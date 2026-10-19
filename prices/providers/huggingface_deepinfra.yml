@@ -1,0 +1,916 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_deepinfra
+name: HuggingFace (deepinfra)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/deepinfra
+provider_match:
+  and:
+    - contains: huggingface
+    - contains: deepinfra
+extractors:
+  - api_flavor: default
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+  - api_flavor: chat
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+models:
+  - id: MiniMaxAI/MiniMax-M2.7
+    name: MiniMax-M2.7
+    match:
+      or:
+        - equals: minimaxai/minimax-m2.7
+        - equals: minimaxai/minimax-m2.7-fast
+    context_window: 196608
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1
+    prices_checked: 2026-10-19
+
+  - id: MiniMaxAI/MiniMax-M3
+    name: MiniMax-M3
+    match:
+      or:
+        - equals: minimaxai/minimax-m3
+        - equals: minimaxai/minimax-m3-fast
+    context_window: 524288
+    prices:
+      input_mtok: 0.28
+      output_mtok: 1.1
+    prices_checked: 2026-10-19
+
+  - id: NousResearch/Hermes-3-Llama-3.1-70B
+    name: Hermes-3-Llama-3.1-70B
+    match:
+      or:
+        - equals: nousresearch/hermes-3-llama-3.1-70b
+        - equals: nousresearch/hermes-3-llama-3.1-70b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.7
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen2.5-72B-Instruct
+    name: Qwen2.5-72B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen2.5-72b-instruct
+        - equals: qwen/qwen2.5-72b-instruct-fast
+    context_window: 32768
+    prices:
+      input_mtok: 0.36
+      output_mtok: 0.4
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-14B
+    name: Qwen3-14B
+    match:
+      or:
+        - equals: qwen/qwen3-14b
+        - equals: qwen/qwen3-14b-fast
+    context_window: 40960
+    prices:
+      input_mtok: 0.12000000000000001
+      output_mtok: 0.24000000000000002
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-235B-A22B-Instruct-2507
+    name: Qwen3-235B-A22B-Instruct-2507
+    match:
+      or:
+        - equals: qwen/qwen3-235b-a22b-instruct-2507
+        - equals: qwen/qwen3-235b-a22b-instruct-2507-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.09
+      output_mtok: 0.55
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-235B-A22B-Thinking-2507
+    name: Qwen3-235B-A22B-Thinking-2507
+    match:
+      or:
+        - equals: qwen/qwen3-235b-a22b-thinking-2507
+        - equals: qwen/qwen3-235b-a22b-thinking-2507-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.22999999999999998
+      output_mtok: 2.3
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-30B-A3B
+    name: Qwen3-30B-A3B
+    match:
+      or:
+        - equals: qwen/qwen3-30b-a3b
+        - equals: qwen/qwen3-30b-a3b-fast
+    context_window: 40960
+    prices:
+      input_mtok: 0.12000000000000001
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-32B
+    name: Qwen3-32B
+    match:
+      or:
+        - equals: qwen/qwen3-32b
+        - equals: qwen/qwen3-32b-fast
+    context_window: 40960
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.28
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-Next-80B-A3B-Instruct
+    name: Qwen3-Next-80B-A3B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-next-80b-a3b-instruct
+        - equals: qwen/qwen3-next-80b-a3b-instruct-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.09
+      output_mtok: 1.1
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-VL-235B-A22B-Instruct
+    name: Qwen3-VL-235B-A22B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-vl-235b-a22b-instruct
+        - equals: qwen/qwen3-vl-235b-a22b-instruct-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.8799999999999999
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-VL-30B-A3B-Instruct
+    name: Qwen3-VL-30B-A3B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-vl-30b-a3b-instruct
+        - equals: qwen/qwen3-vl-30b-a3b-instruct-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-122B-A10B
+    name: Qwen3.5-122B-A10B
+    match:
+      or:
+        - equals: qwen/qwen3.5-122b-a10b
+        - equals: qwen/qwen3.5-122b-a10b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.29
+      output_mtok: 2.4
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-27B
+    name: Qwen3.5-27B
+    match:
+      or:
+        - equals: qwen/qwen3.5-27b
+        - equals: qwen/qwen3.5-27b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.26
+      output_mtok: 2.5999999999999996
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-35B-A3B
+    name: Qwen3.5-35B-A3B
+    match:
+      or:
+        - equals: qwen/qwen3.5-35b-a3b
+        - equals: qwen/qwen3.5-35b-a3b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.14
+      output_mtok: 1
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-397B-A17B
+    name: Qwen3.5-397B-A17B
+    match:
+      or:
+        - equals: qwen/qwen3.5-397b-a17b
+        - equals: qwen/qwen3.5-397b-a17b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.45
+      output_mtok: 2.9999999999999996
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-9B
+    name: Qwen3.5-9B
+    match:
+      or:
+        - equals: qwen/qwen3.5-9b
+        - equals: qwen/qwen3.5-9b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.6-27B
+    name: Qwen3.6-27B
+    match:
+      or:
+        - equals: qwen/qwen3.6-27b
+        - equals: qwen/qwen3.6-27b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.32
+      output_mtok: 3.2
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.6-35B-A3B
+    name: Qwen3.6-35B-A3B
+    match:
+      or:
+        - equals: qwen/qwen3.6-35b-a3b
+        - equals: qwen/qwen3.6-35b-a3b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.95
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.8-2.4T-A95B
+    name: Qwen3.8-2.4T-A95B
+    match:
+      or:
+        - equals: qwen/qwen3.8-2.4t-a95b
+        - equals: qwen/qwen3.8-2.4t-a95b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 2
+      output_mtok: 5.999999999999999
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.8-27B
+    name: Qwen3.8-27B
+    match:
+      or:
+        - equals: qwen/qwen3.8-27b
+        - equals: qwen/qwen3.8-27b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.2
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
+
+  - id: XiaomiMiMo/MiMo-V2.5
+    name: MiMo-V2.5
+    match:
+      or:
+        - equals: xiaomimimo/mimo-v2.5
+        - equals: xiaomimimo/mimo-v2.5-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.14
+      output_mtok: 0.28
+    prices_checked: 2026-10-19
+
+  - id: XiaomiMiMo/MiMo-V2.5-Pro
+    name: MiMo-V2.5-Pro
+    match:
+      or:
+        - equals: xiaomimimo/mimo-v2.5-pro
+        - equals: xiaomimimo/mimo-v2.5-pro-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1
+      output_mtok: 2.9999999999999996
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-R1-0528
+    name: DeepSeek-R1-0528
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-r1-0528
+        - equals: deepseek-ai/deepseek-r1-0528-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2.15
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V3
+    name: DeepSeek-V3
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3
+        - equals: deepseek-ai/deepseek-v3-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.32
+      output_mtok: 0.8899999999999999
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V3-0324
+    name: DeepSeek-V3-0324
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3-0324
+        - equals: deepseek-ai/deepseek-v3-0324-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.24000000000000002
+      output_mtok: 0.9
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V3.1
+    name: DeepSeek-V3.1
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3.1
+        - equals: deepseek-ai/deepseek-v3.1-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.95
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V3.1-Terminus
+    name: DeepSeek-V3.1-Terminus
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3.1-terminus
+        - equals: deepseek-ai/deepseek-v3.1-terminus-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.27
+      output_mtok: 0.95
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V3.2
+    name: DeepSeek-V3.2
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3.2
+        - equals: deepseek-ai/deepseek-v3.2-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.26
+      output_mtok: 0.38
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4-Flash
+    name: DeepSeek-V4-Flash
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-flash
+        - equals: deepseek-ai/deepseek-v4-flash-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.09
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4-Flash-0731
+    name: DeepSeek-V4-Flash-0731
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-flash-0731
+        - equals: deepseek-ai/deepseek-v4-flash-0731-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.060000000000000005
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4-Flash-Vision-Exp
+    name: DeepSeek-V4-Flash-Vision-Exp
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-flash-vision-exp
+        - equals: deepseek-ai/deepseek-v4-flash-vision-exp-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.43999999999999995
+      output_mtok: 1.32
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4-Pro
+    name: DeepSeek-V4-Pro
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-pro
+        - equals: deepseek-ai/deepseek-v4-pro-fast
+        - equals: deepseek-ai/deepseek-v4-pro-0813
+        - equals: deepseek-ai/deepseek-v4-pro-0813-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.2999999999999998
+      output_mtok: 2.5999999999999996
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4.1-Flash
+    name: DeepSeek-V4.1-Flash
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4.1-flash
+        - equals: deepseek-ai/deepseek-v4.1-flash-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-3-12b-it
+    name: gemma-3-12b-it
+    match:
+      or:
+        - equals: google/gemma-3-12b-it
+        - equals: google/gemma-3-12b-it-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-3-27b-it
+    name: gemma-3-27b-it
+    match:
+      or:
+        - equals: google/gemma-3-27b-it
+        - equals: google/gemma-3-27b-it-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.16
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-3-4b-it
+    name: gemma-3-4b-it
+    match:
+      or:
+        - equals: google/gemma-3-4b-it
+        - equals: google/gemma-3-4b-it-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-4-26B-A4B-it
+    name: gemma-4-26B-A4B-it
+    match:
+      or:
+        - equals: google/gemma-4-26b-a4b-it
+        - equals: google/gemma-4-26b-a4b-it-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.33999999999999997
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-4-31B-it
+    name: gemma-4-31B-it
+    match:
+      or:
+        - equals: google/gemma-4-31b-it
+        - equals: google/gemma-4-31b-it-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.4
+    prices_checked: 2026-10-19
+
+  - id: ibm-granite/granite-4.2-30b
+    name: granite-4.2-30b
+    match:
+      or:
+        - equals: ibm-granite/granite-4.2-30b
+        - equals: ibm-granite/granite-4.2-30b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.16
+      output_mtok: 0.6499999999999999
+    prices_checked: 2026-10-19
+
+  - id: ibm-granite/granite-4.2-3b
+    name: granite-4.2-3b
+    match:
+      or:
+        - equals: ibm-granite/granite-4.2-3b
+        - equals: ibm-granite/granite-4.2-3b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.030000000000000002
+      output_mtok: 0.12000000000000001
+    prices_checked: 2026-10-19
+
+  - id: ibm-granite/granite-4.2-8b
+    name: granite-4.2-8b
+    match:
+      or:
+        - equals: ibm-granite/granite-4.2-8b
+        - equals: ibm-granite/granite-4.2-8b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.060000000000000005
+      output_mtok: 0.25
+    prices_checked: 2026-10-19
+
+  - id: inclusionAI/Ling-3.0-flash
+    name: Ling-3.0-flash
+    match:
+      or:
+        - equals: inclusionai/ling-3.0-flash
+        - equals: inclusionai/ling-3.0-flash-fast
+        - equals: inclusionai/ling-3.0-flash-fin
+        - equals: inclusionai/ling-3.0-flash-fin-fast
+        - equals: inclusionai/ling-3.0-flash-vl
+        - equals: inclusionai/ling-3.0-flash-vl-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.060000000000000005
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: meta-llama/Llama-3.1-8B-Instruct
+    name: Llama-3.1-8B-Instruct
+    match:
+      or:
+        - equals: meta-llama/llama-3.1-8b-instruct
+        - equals: meta-llama/llama-3.1-8b-instruct-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.05
+    prices_checked: 2026-10-19
+
+  - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    name: Llama-4-Scout-17B-16E-Instruct
+    match:
+      or:
+        - equals: meta-llama/llama-4-scout-17b-16e-instruct
+        - equals: meta-llama/llama-4-scout-17b-16e-instruct-fast
+    context_window: 327680
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
+    prices_checked: 2026-10-19
+
+  - id: meta-llama/Llama-Guard-4-12B
+    name: Llama-Guard-4-12B
+    match:
+      or:
+        - equals: meta-llama/llama-guard-4-12b
+        - equals: meta-llama/llama-guard-4-12b-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: meta-models/Muse-Glimmer-30B
+    name: Muse-Glimmer-30B
+    match:
+      or:
+        - equals: meta-models/muse-glimmer-30b
+        - equals: meta-models/muse-glimmer-30b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: microsoft/phi-4
+    name: phi-4
+    match:
+      or:
+        - equals: microsoft/phi-4
+        - equals: microsoft/phi-4-fast
+    context_window: 16384
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.14
+    prices_checked: 2026-10-19
+
+  - id: moonshotai/Kimi-K2.5
+    name: Kimi-K2.5
+    match:
+      or:
+        - equals: moonshotai/kimi-k2.5
+        - equals: moonshotai/kimi-k2.5-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.45
+      output_mtok: 2.25
+    prices_checked: 2026-10-19
+
+  - id: moonshotai/Kimi-K2.6
+    name: Kimi-K2.6
+    match:
+      or:
+        - equals: moonshotai/kimi-k2.6
+        - equals: moonshotai/kimi-k2.6-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.7499999999999999
+      output_mtok: 3.5
+    prices_checked: 2026-10-19
+
+  - id: moonshotai/Kimi-K2.7-Code
+    name: Kimi-K2.7-Code
+    match:
+      or:
+        - equals: moonshotai/kimi-k2.7-code
+        - equals: moonshotai/kimi-k2.7-code-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.6799999999999999
+      output_mtok: 3.4
+    prices_checked: 2026-10-19
+
+  - id: moonshotai/Kimi-K3
+    name: Kimi-K3
+    match:
+      or:
+        - equals: moonshotai/kimi-k3
+        - equals: moonshotai/kimi-k3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 2.8499999999999996
+      output_mtok: 14.25
+    prices_checked: 2026-10-19
+
+  - id: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16
+    name: NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16
+    match:
+      or:
+        - equals: nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16
+        - equals: nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16-fast
+    context_window: 262144
+    prices:
+      input_mtok: 1
+      output_mtok: 5
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.037
+      output_mtok: 0.16999999999999998
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      or:
+        - equals: openai/gpt-oss-20b
+        - equals: openai/gpt-oss-20b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.030000000000000002
+      output_mtok: 0.14
+    prices_checked: 2026-10-19
+
+  - id: stepfun-ai/Step-3.5-Flash
+    name: Step-3.5-Flash
+    match:
+      or:
+        - equals: stepfun-ai/step-3.5-flash
+        - equals: stepfun-ai/step-3.5-flash-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
+    prices_checked: 2026-10-19
+
+  - id: stepfun-ai/Step-3.7-Flash
+    name: Step-3.7-Flash
+    match:
+      or:
+        - equals: stepfun-ai/step-3.7-flash
+        - equals: stepfun-ai/step-3.7-flash-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.15
+    prices_checked: 2026-10-19
+
+  - id: tencent/Hy3
+    name: Hy3
+    match:
+      or:
+        - equals: tencent/hy3
+        - equals: tencent/hy3-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.13
+      output_mtok: 0.53
+    prices_checked: 2026-10-19
+
+  - id: tencent/Hy4-preview
+    name: Hy4-preview
+    match:
+      or:
+        - equals: tencent/hy4-preview
+        - equals: tencent/hy4-preview-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.834
+      output_mtok: 2.5010000000000003
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/Inkling
+    name: Inkling
+    match:
+      or:
+        - equals: thinkingmachines/inkling
+        - equals: thinkingmachines/inkling-fast
+    context_window: 524288
+    prices:
+      input_mtok: 0.95
+      output_mtok: 4.05
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/Inkling-Small
+    name: Inkling-Small
+    match:
+      or:
+        - equals: thinkingmachines/inkling-small
+        - equals: thinkingmachines/inkling-small-fast
+    context_window: 524288
+    prices:
+      input_mtok: 0.45
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-4.6
+    name: GLM-4.6
+    match:
+      or:
+        - equals: zai-org/glm-4.6
+        - equals: zai-org/glm-4.6-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-4.7
+    name: GLM-4.7
+    match:
+      or:
+        - equals: zai-org/glm-4.7
+        - equals: zai-org/glm-4.7-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.4
+      output_mtok: 1.75
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-4.7-Flash
+    name: GLM-4.7-Flash
+    match:
+      or:
+        - equals: zai-org/glm-4.7-flash
+        - equals: zai-org/glm-4.7-flash-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.060000000000000005
+      output_mtok: 0.4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5
+    name: GLM-5
+    match:
+      or:
+        - equals: zai-org/glm-5
+        - equals: zai-org/glm-5-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.6
+      output_mtok: 2.08
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.1
+    name: GLM-5.1
+    match:
+      or:
+        - equals: zai-org/glm-5.1
+        - equals: zai-org/glm-5.1-fast
+    context_window: 202752
+    prices:
+      input_mtok: 1.05
+      output_mtok: 3.5
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.2
+    name: GLM-5.2
+    match:
+      or:
+        - equals: zai-org/glm-5.2
+        - equals: zai-org/glm-5.2-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.7499999999999999
+      output_mtok: 2.4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.3
+    name: GLM-5.3
+    match:
+      or:
+        - equals: zai-org/glm-5.3
+        - equals: zai-org/glm-5.3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.9
+      output_mtok: 4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.3-Flash
+    name: GLM-5.3-Flash
+    match:
+      or:
+        - equals: zai-org/glm-5.3-flash
+        - equals: zai-org/glm-5.3-flash-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.5
+    prices_checked: 2026-10-19

@@ -1,0 +1,202 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_baseten
+name: HuggingFace (baseten)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/baseten
+provider_match:
+  and:
+    - contains: huggingface
+    - contains: baseten
+extractors:
+  - api_flavor: default
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+  - api_flavor: chat
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+models:
+  - id: deepseek-ai/DeepSeek-V4-Flash-0731
+    name: DeepSeek-V4-Flash-0731
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-flash-0731
+        - equals: deepseek-ai/deepseek-v4-flash-0731-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.13
+      output_mtok: 0.26
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4-Pro-0813
+    name: DeepSeek-V4-Pro-0813
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-pro-0813
+        - equals: deepseek-ai/deepseek-v4-pro-0813-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.32
+      output_mtok: 3.96
+    prices_checked: 2026-10-19
+
+  - id: deepseek-ai/DeepSeek-V4.1-Flash
+    name: DeepSeek-V4.1-Flash
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4.1-flash
+        - equals: deepseek-ai/deepseek-v4.1-flash-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: meta-models/Muse-Spark-Open-816B-A42B
+    name: Muse-Spark-Open-816B-A42B
+    match:
+      or:
+        - equals: meta-models/muse-spark-open-816b-a42b
+        - equals: meta-models/muse-spark-open-816b-a42b-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.25
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
+
+  - id: moonshotai/Kimi-K3
+    name: Kimi-K3
+    match:
+      or:
+        - equals: moonshotai/kimi-k3
+        - equals: moonshotai/kimi-k3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4
+    name: NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4
+    match:
+      or:
+        - equals: nvidia/nvidia-nemotron-3.5-super-vl-120b-a12b-nvfp4
+        - equals: nvidia/nvidia-nemotron-3.5-super-vl-120b-a12b-nvfp4-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b-fast
+    context_window: 128072
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.2
+    name: GLM-5.2
+    match:
+      or:
+        - equals: zai-org/glm-5.2
+        - equals: zai-org/glm-5.2-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.4
+      output_mtok: 4.4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.3
+    name: GLM-5.3
+    match:
+      or:
+        - equals: zai-org/glm-5.3
+        - equals: zai-org/glm-5.3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.4
+      output_mtok: 4.4
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.3-Flash
+    name: GLM-5.3-Flash
+    match:
+      or:
+        - equals: zai-org/glm-5.3-flash
+        - equals: zai-org/glm-5.3-flash-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.5
+    prices_checked: 2026-10-19

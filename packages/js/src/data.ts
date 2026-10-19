@@ -1469,6 +1469,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek/deepseek-v4.1-flash-1017',
+        name: 'deepseek/deepseek-v4.1-flash-1017',
+        match: {
+          equals: 'deepseek/deepseek-v4.1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k3',
         name: 'Kimi K3',
         match: {
@@ -5575,7 +5587,14 @@ export const data: Provider[] = [
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
-          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+            },
+          ],
         },
         context_window: 1048000,
         prices: {
@@ -5598,6 +5617,19 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.014,
           output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'meta-models/muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'meta-models/muse-spark-open',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
         },
       },
       {
@@ -5685,6 +5717,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'reflection/Beam-1.0',
+        name: 'Beam',
+        match: {
+          equals: 'reflection/Beam-1.0',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 1.3,
+          cache_read_mtok: 0.13,
+          output_mtok: 4.3,
         },
       },
       {
@@ -6270,9 +6315,22 @@ export const data: Provider[] = [
         },
         context_window: 65536,
         price_comments: 'Input only, $0.09 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-flash/',
-        prices: {
-          input_mtok: 0.09,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.038,
+            },
+          },
+        ],
       },
       {
         id: '@cf/cloudflare/clef-omni',
@@ -13809,6 +13867,300 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'huggingface_baseten',
+    name: 'HuggingFace (baseten)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/baseten',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'baseten',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.26,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        name: 'DeepSeek-V4-Pro-0813',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.32,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek-V4.1-Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'meta-models/Muse-Spark-Open-816B-A42B',
+        name: 'Muse-Spark-Open-816B-A42B',
+        match: {
+          or: [
+            {
+              equals: 'meta-models/muse-spark-open-816b-a42b',
+            },
+            {
+              equals: 'meta-models/muse-spark-open-816b-a42b-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 4.25,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi-K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4',
+        name: 'NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nvidia-nemotron-3.5-super-vl-120b-a12b-nvfp4',
+            },
+            {
+              equals: 'nvidia/nvidia-nemotron-3.5-super-vl-120b-a12b-nvfp4-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 128072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.2',
+            },
+            {
+              equals: 'zai-org/glm-5.2-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM-5.3',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3',
+            },
+            {
+              equals: 'zai-org/glm-5.3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3-flash',
+            },
+            {
+              equals: 'zai-org/glm-5.3-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.5,
+        },
+      },
+    ],
+  },
+  {
     id: 'huggingface_cerebras',
     name: 'HuggingFace (cerebras)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
@@ -13911,6 +14263,25 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'Qwen/Qwen3.8-27B',
+        name: 'Qwen3.8-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-27b',
+            },
+            {
+              equals: 'qwen/qwen3.8-27b-fast',
+            },
+          ],
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.99,
+          output_mtok: 1.49,
+        },
+      },
+      {
         id: 'meta-llama/Llama-3.1-8B-Instruct',
         name: 'Llama-3.1-8B-Instruct',
         match: {
@@ -13926,6 +14297,1458 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 0.75,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_deepinfra',
+    name: 'HuggingFace (deepinfra)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/deepinfra',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'deepinfra',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'MiniMaxAI/MiniMax-M2.7',
+        name: 'MiniMax-M2.7',
+        match: {
+          or: [
+            {
+              equals: 'minimaxai/minimax-m2.7',
+            },
+            {
+              equals: 'minimaxai/minimax-m2.7-fast',
+            },
+          ],
+        },
+        context_window: 196608,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M3',
+        name: 'MiniMax-M3',
+        match: {
+          or: [
+            {
+              equals: 'minimaxai/minimax-m3',
+            },
+            {
+              equals: 'minimaxai/minimax-m3-fast',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.28,
+          output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'NousResearch/Hermes-3-Llama-3.1-70B',
+        name: 'Hermes-3-Llama-3.1-70B',
+        match: {
+          or: [
+            {
+              equals: 'nousresearch/hermes-3-llama-3.1-70b',
+            },
+            {
+              equals: 'nousresearch/hermes-3-llama-3.1-70b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.7,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-72B-Instruct',
+        name: 'Qwen2.5-72B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen2.5-72b-instruct',
+            },
+            {
+              equals: 'qwen/qwen2.5-72b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.36,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-14B',
+        name: 'Qwen3-14B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-14b',
+            },
+            {
+              equals: 'qwen/qwen3-14b-fast',
+            },
+          ],
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.12000000000000001,
+          output_mtok: 0.24000000000000002,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-235b-a22b-instruct-2507',
+            },
+            {
+              equals: 'qwen/qwen3-235b-a22b-instruct-2507-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.55,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+        name: 'Qwen3-235B-A22B-Thinking-2507',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-235b-a22b-thinking-2507',
+            },
+            {
+              equals: 'qwen/qwen3-235b-a22b-thinking-2507-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.22999999999999998,
+          output_mtok: 2.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-30B-A3B',
+        name: 'Qwen3-30B-A3B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-30b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3-30b-a3b-fast',
+            },
+          ],
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.12000000000000001,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-32b',
+            },
+            {
+              equals: 'qwen/qwen3-32b-fast',
+            },
+          ],
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        name: 'Qwen3-Next-80B-A3B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-235B-A22B-Instruct',
+        name: 'Qwen3-VL-235B-A22B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-vl-235b-a22b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-vl-235b-a22b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.8799999999999999,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
+        name: 'Qwen3-VL-30B-A3B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-vl-30b-a3b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-vl-30b-a3b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-122B-A10B',
+        name: 'Qwen3.5-122B-A10B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-122b-a10b',
+            },
+            {
+              equals: 'qwen/qwen3.5-122b-a10b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.29,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-27B',
+        name: 'Qwen3.5-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-27b',
+            },
+            {
+              equals: 'qwen/qwen3.5-27b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.26,
+          output_mtok: 2.5999999999999996,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-35B-A3B',
+        name: 'Qwen3.5-35B-A3B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-35b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3.5-35b-a3b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-397B-A17B',
+        name: 'Qwen3.5-397B-A17B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-397b-a17b',
+            },
+            {
+              equals: 'qwen/qwen3.5-397b-a17b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 2.9999999999999996,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-9B',
+        name: 'Qwen3.5-9B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-9b',
+            },
+            {
+              equals: 'qwen/qwen3.5-9b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-27B',
+        name: 'Qwen3.6-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.6-27b',
+            },
+            {
+              equals: 'qwen/qwen3.6-27b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.32,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-35B-A3B',
+        name: 'Qwen3.6-35B-A3B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.6-35b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3.6-35b-a3b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.95,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-2.4T-A95B',
+        name: 'Qwen3.8-2.4T-A95B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b',
+            },
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 5.999999999999999,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-27B',
+        name: 'Qwen3.8-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-27b',
+            },
+            {
+              equals: 'qwen/qwen3.8-27b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.5',
+        name: 'MiMo-V2.5',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.5',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.5-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.5-Pro',
+        name: 'MiMo-V2.5-Pro',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.5-pro',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.5-pro-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 2.9999999999999996,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-0528',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-0528-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2.15,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3',
+        name: 'DeepSeek-V3',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.32,
+          output_mtok: 0.8899999999999999,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3-0324',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3-0324-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.24000000000000002,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.1',
+        name: 'DeepSeek-V3.1',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3.1',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3.1-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.95,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.1-Terminus',
+        name: 'DeepSeek-V3.1-Terminus',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3.1-terminus',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3.1-terminus-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.95,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.2',
+        name: 'DeepSeek-V3.2',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3.2',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3.2-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.26,
+          output_mtok: 0.38,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash',
+        name: 'DeepSeek-V4-Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.060000000000000005,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-Vision-Exp',
+        name: 'DeepSeek-V4-Flash-Vision-Exp',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-vision-exp',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-vision-exp-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.43999999999999995,
+          output_mtok: 1.32,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro',
+        name: 'DeepSeek-V4-Pro',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-fast',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.2999999999999998,
+          output_mtok: 2.5999999999999996,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek-V4.1-Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'google/gemma-3-12b-it',
+        name: 'gemma-3-12b-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-3-12b-it',
+            },
+            {
+              equals: 'google/gemma-3-12b-it-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'google/gemma-3-27b-it',
+        name: 'gemma-3-27b-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-3-27b-it',
+            },
+            {
+              equals: 'google/gemma-3-27b-it-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.16,
+        },
+      },
+      {
+        id: 'google/gemma-3-4b-it',
+        name: 'gemma-3-4b-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-3-4b-it',
+            },
+            {
+              equals: 'google/gemma-3-4b-it-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'google/gemma-4-26B-A4B-it',
+        name: 'gemma-4-26B-A4B-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-4-26b-a4b-it',
+            },
+            {
+              equals: 'google/gemma-4-26b-a4b-it-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.33999999999999997,
+        },
+      },
+      {
+        id: 'google/gemma-4-31B-it',
+        name: 'gemma-4-31B-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-4-31b-it',
+            },
+            {
+              equals: 'google/gemma-4-31b-it-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'ibm-granite/granite-4.2-30b',
+        name: 'granite-4.2-30b',
+        match: {
+          or: [
+            {
+              equals: 'ibm-granite/granite-4.2-30b',
+            },
+            {
+              equals: 'ibm-granite/granite-4.2-30b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.16,
+          output_mtok: 0.6499999999999999,
+        },
+      },
+      {
+        id: 'ibm-granite/granite-4.2-3b',
+        name: 'granite-4.2-3b',
+        match: {
+          or: [
+            {
+              equals: 'ibm-granite/granite-4.2-3b',
+            },
+            {
+              equals: 'ibm-granite/granite-4.2-3b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.030000000000000002,
+          output_mtok: 0.12000000000000001,
+        },
+      },
+      {
+        id: 'ibm-granite/granite-4.2-8b',
+        name: 'granite-4.2-8b',
+        match: {
+          or: [
+            {
+              equals: 'ibm-granite/granite-4.2-8b',
+            },
+            {
+              equals: 'ibm-granite/granite-4.2-8b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.060000000000000005,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'inclusionAI/Ling-3.0-flash',
+        name: 'Ling-3.0-flash',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-fast',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-fin',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-fin-fast',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.060000000000000005,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.02,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-4-scout-17b-16e-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-4-scout-17b-16e-instruct-fast',
+            },
+          ],
+        },
+        context_window: 327680,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-Guard-4-12B',
+        name: 'Llama-Guard-4-12B',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-guard-4-12b',
+            },
+            {
+              equals: 'meta-llama/llama-guard-4-12b-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'meta-models/Muse-Glimmer-30B',
+        name: 'Muse-Glimmer-30B',
+        match: {
+          or: [
+            {
+              equals: 'meta-models/muse-glimmer-30b',
+            },
+            {
+              equals: 'meta-models/muse-glimmer-30b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'microsoft/phi-4',
+        name: 'phi-4',
+        match: {
+          or: [
+            {
+              equals: 'microsoft/phi-4',
+            },
+            {
+              equals: 'microsoft/phi-4-fast',
+            },
+          ],
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.14,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.5',
+        name: 'Kimi-K2.5',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.5',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.5-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 2.25,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.6',
+        name: 'Kimi-K2.6',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.6',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.6-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.7499999999999999,
+          output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.7-Code',
+        name: 'Kimi-K2.7-Code',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.7-code',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.7-code-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6799999999999999,
+          output_mtok: 3.4,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi-K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2.8499999999999996,
+          output_mtok: 14.25,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16',
+        name: 'NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16',
+            },
+            {
+              equals: 'nvidia/nvidia-nemotron-3-ultra-550b-a55b-bf16-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.037,
+          output_mtok: 0.16999999999999998,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-20b',
+            },
+            {
+              equals: 'openai/gpt-oss-20b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.030000000000000002,
+          output_mtok: 0.14,
+        },
+      },
+      {
+        id: 'stepfun-ai/Step-3.5-Flash',
+        name: 'Step-3.5-Flash',
+        match: {
+          or: [
+            {
+              equals: 'stepfun-ai/step-3.5-flash',
+            },
+            {
+              equals: 'stepfun-ai/step-3.5-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'stepfun-ai/Step-3.7-Flash',
+        name: 'Step-3.7-Flash',
+        match: {
+          or: [
+            {
+              equals: 'stepfun-ai/step-3.7-flash',
+            },
+            {
+              equals: 'stepfun-ai/step-3.7-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1.15,
+        },
+      },
+      {
+        id: 'tencent/Hy3',
+        name: 'Hy3',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy3',
+            },
+            {
+              equals: 'tencent/hy3-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.53,
+        },
+      },
+      {
+        id: 'tencent/Hy4-preview',
+        name: 'Hy4-preview',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy4-preview',
+            },
+            {
+              equals: 'tencent/hy4-preview-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.834,
+          output_mtok: 2.5010000000000003,
+        },
+      },
+      {
+        id: 'thinkingmachines/Inkling',
+        name: 'Inkling',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling',
+            },
+            {
+              equals: 'thinkingmachines/inkling-fast',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.95,
+          output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'thinkingmachines/Inkling-Small',
+        name: 'Inkling-Small',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling-small',
+            },
+            {
+              equals: 'thinkingmachines/inkling-small-fast',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.6',
+        name: 'GLM-4.6',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-4.6',
+            },
+            {
+              equals: 'zai-org/glm-4.6-fast',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.7',
+        name: 'GLM-4.7',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-4.7',
+            },
+            {
+              equals: 'zai-org/glm-4.7-fast',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 1.75,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.7-Flash',
+        name: 'GLM-4.7-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-4.7-flash',
+            },
+            {
+              equals: 'zai-org/glm-4.7-flash-fast',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.060000000000000005,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5',
+        name: 'GLM-5',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5',
+            },
+            {
+              equals: 'zai-org/glm-5-fast',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.08,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.1',
+        name: 'GLM-5.1',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.1',
+            },
+            {
+              equals: 'zai-org/glm-5.1-fast',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 1.05,
+          output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.2',
+            },
+            {
+              equals: 'zai-org/glm-5.2-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.7499999999999999,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM-5.3',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3',
+            },
+            {
+              equals: 'zai-org/glm-5.3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3-flash',
+            },
+            {
+              equals: 'zai-org/glm-5.3-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -14033,6 +15856,25 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'MiniMaxAI/MiniMax-M3',
+        name: 'MiniMax-M3',
+        match: {
+          or: [
+            {
+              equals: 'minimaxai/minimax-m3',
+            },
+            {
+              equals: 'minimaxai/minimax-m3-fast',
+            },
+          ],
+        },
+        context_window: 512000,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'meta-llama/Llama-3.3-70B-Instruct',
         name: 'Llama-3.3-70B-Instruct',
         match: {
@@ -14049,6 +15891,44 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.9,
           output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi-K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+        name: 'NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nvidia-nemotron-3-ultra-550b-a55b-nvfp4',
+            },
+            {
+              equals: 'nvidia/nvidia-nemotron-3-ultra-550b-a55b-nvfp4-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.4,
         },
       },
       {
@@ -15364,9 +17244,34 @@ export const data: Provider[] = [
             {
               equals: 'minimaxai/minimax-m2.5-fast',
             },
+            {
+              equals: 'minimaxai/minimax-m2.7',
+            },
+            {
+              equals: 'minimaxai/minimax-m2.7-fast',
+            },
           ],
         },
         context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M3',
+        name: 'MiniMax-M3',
+        match: {
+          or: [
+            {
+              equals: 'minimaxai/minimax-m3',
+            },
+            {
+              equals: 'minimaxai/minimax-m3-fast',
+            },
+          ],
+        },
+        context_window: 1000000,
         prices: {
           input_mtok: 0.3,
           output_mtok: 1.2,
@@ -15753,6 +17658,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.8-2.4T-A95B',
+        name: 'Qwen3.8-2.4T-A95B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b',
+            },
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b-fast',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-27B',
+        name: 'Qwen3.8-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-27b',
+            },
+            {
+              equals: 'qwen/qwen3.8-27b-fast',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.42,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'Sao10K/L3-70B-Euryale-v2.1',
         name: 'L3-70B-Euryale-v2.1',
         match: {
@@ -15826,6 +17769,82 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.5',
+        name: 'MiMo-V2.5',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.5',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.5-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.168,
+          output_mtok: 0.336,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.5-Pro',
+        name: 'MiMo-V2.5-Pro',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.5-pro',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.5-pro-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.522,
+          output_mtok: 1.044,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.6-Flash-RL',
+        name: 'MiMo-V2.6-Flash-RL',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.6-flash-rl',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.6-flash-rl-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'XiaomiMiMo/MiMo-V2.6-Pro-RL',
+        name: 'MiMo-V2.6-Pro-RL',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2.6-pro-rl',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2.6-pro-rl-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.435,
+          output_mtok: 0.87,
         },
       },
       {
@@ -16088,6 +18107,196 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.44,
+          output_mtok: 1.32,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro',
+        name: 'DeepSeek-V4-Pro',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.6,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        name: 'DeepSeek-V4-Pro-0813',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.32,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek-V4.1-Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4.1-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'google/gemma-4-26B-A4B-it',
+        name: 'gemma-4-26B-A4B-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-4-26b-a4b-it',
+            },
+            {
+              equals: 'google/gemma-4-26b-a4b-it-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'google/gemma-4-31B-it',
+        name: 'gemma-4-31B-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-4-31b-it',
+            },
+            {
+              equals: 'google/gemma-4-31b-it-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'inclusionAI/Ling-3.0-flash',
+        name: 'Ling-3.0-flash',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'inclusionAI/Ling-3.0-flash-Fin',
+        name: 'Ling-3.0-flash-Fin',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash-fin',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-fin-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'inclusionAI/Ling-3.0-flash-VL',
+        name: 'Ling-3.0-flash-VL',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'inclusionAI/Ling-3.1-flash',
+        name: 'Ling-3.1-flash',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.1-flash',
+            },
+            {
+              equals: 'inclusionai/ling-3.1-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'meta-llama/Llama-3.1-8B-Instruct',
         name: 'Llama-3.1-8B-Instruct',
         match: {
@@ -16278,6 +18487,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K2.6',
+        name: 'Kimi-K2.6',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.6',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.6-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 3.4,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.7-Code',
+        name: 'Kimi-K2.7-Code',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.7-code',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.7-code-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.95,
+          output_mtok: 4,
+        },
+      },
+      {
         id: 'openai/gpt-oss-120b',
         name: 'gpt-oss-120b',
         match: {
@@ -16313,6 +18560,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'tencent/Hy4-preview',
+        name: 'Hy4-preview',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy4-preview',
+            },
+            {
+              equals: 'tencent/hy4-preview-fast',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.834,
+          output_mtok: 2.501,
         },
       },
       {
@@ -16503,6 +18769,63 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1,
           output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.2',
+            },
+            {
+              equals: 'zai-org/glm-5.2-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM-5.3',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3',
+            },
+            {
+              equals: 'zai-org/glm-5.3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3-flash',
+            },
+            {
+              equals: 'zai-org/glm-5.3-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -16863,6 +19186,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+        name: 'DeepSeek-R1-Distill-Qwen-14B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-qwen-14b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-qwen-14b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
         name: 'DeepSeek-R1-Distill-Qwen-32B',
         match: {
@@ -17157,6 +19499,82 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.5-397B-A17B',
+        name: 'Qwen3.5-397B-A17B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-397b-a17b',
+            },
+            {
+              equals: 'qwen/qwen3.5-397b-a17b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.71,
+          output_mtok: 4.25,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-9B',
+        name: 'Qwen3.5-9B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-9b',
+            },
+            {
+              equals: 'qwen/qwen3.5-9b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.12,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-27B',
+        name: 'Qwen3.6-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.6-27b',
+            },
+            {
+              equals: 'qwen/qwen3.6-27b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.47,
+          output_mtok: 3.19,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-27B',
+        name: 'Qwen3.8-27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-27b',
+            },
+            {
+              equals: 'qwen/qwen3.8-27b-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.47,
+          output_mtok: 3.19,
+        },
+      },
+      {
         id: 'meta-llama/Llama-3.1-8B-Instruct',
         name: 'Llama-3.1-8B-Instruct',
         match: {
@@ -17423,6 +19841,24 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.2,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'speakleash/Bielik-11B-v3.0-Instruct',
+        name: 'Bielik-11B-v3.0-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'speakleash/bielik-11b-v3.0-instruct',
+            },
+            {
+              equals: 'speakleash/bielik-11b-v3.0-instruct-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.4,
           output_mtok: 0.4,
         },
       },
@@ -17739,6 +20175,254 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'huggingface_scaleway',
+    name: 'HuggingFace (scaleway)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/scaleway',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'scaleway',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-235b-a22b-instruct-2507',
+            },
+            {
+              equals: 'qwen/qwen3-235b-a22b-instruct-2507-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.855,
+          output_mtok: 2.565,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+        name: 'Qwen3-Coder-30B-A3B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-coder-30b-a3b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-coder-30b-a3b-instruct-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.228,
+          output_mtok: 0.912,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-397B-A17B',
+        name: 'Qwen3.5-397B-A17B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.5-397b-a17b',
+            },
+            {
+              equals: 'qwen/qwen3.5-397b-a17b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.684,
+          output_mtok: 4.104,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-35B-A3B',
+        name: 'Qwen3.6-35B-A3B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.6-35b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3.6-35b-a3b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.285,
+          output_mtok: 1.71,
+        },
+      },
+      {
+        id: 'google/gemma-4-26B-A4B-it',
+        name: 'gemma-4-26B-A4B-it',
+        match: {
+          or: [
+            {
+              equals: 'google/gemma-4-26b-a4b-it',
+            },
+            {
+              equals: 'google/gemma-4-26b-a4b-it-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.285,
+          output_mtok: 0.57,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1.026,
+          output_mtok: 1.026,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.171,
+          output_mtok: 0.684,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.2',
+            },
+            {
+              equals: 'zai-org/glm-5.2-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2.052,
+          output_mtok: 6.27,
+        },
+      },
+    ],
+  },
+  {
     id: 'huggingface_together',
     name: 'HuggingFace (together)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
@@ -17857,6 +20541,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M3',
+        name: 'MiniMax-M3',
+        match: {
+          or: [
+            {
+              equals: 'minimaxai/minimax-m3',
+            },
+            {
+              equals: 'minimaxai/minimax-m3-fast',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
         },
       },
       {
@@ -18012,9 +20715,42 @@ export const data: Provider[] = [
           ],
         },
         context_window: 262144,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.17,
+              output_mtok: 0.25,
+            },
+          },
+        ],
+      },
+      {
+        id: 'Qwen/Qwen3.8-2.4T-A95B',
+        name: 'Qwen3.8-2.4T-A95B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b',
+            },
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b-fast',
+            },
+          ],
+        },
+        context_window: 1010000,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.15,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -18128,6 +20864,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4-Flash-0731',
+        name: 'DeepSeek-V4-Flash-0731',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-flash-0731-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.13999999999999999,
+          output_mtok: 0.27999999999999997,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        name: 'DeepSeek-V4-Pro-0813',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v4-pro-0813-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.32,
+          output_mtok: 3.96,
+        },
+      },
+      {
         id: 'google/gemma-3n-E4B-it',
         name: 'gemma-3n-E4B-it',
         match: {
@@ -18160,10 +20934,24 @@ export const data: Provider[] = [
           ],
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.88,
-          output_mtok: 0.88,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.88,
+              output_mtok: 0.88,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.0399999999999998,
+              output_mtok: 1.0399999999999998,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -18185,6 +20973,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'meta-models/Muse-Glimmer-30B',
+        name: 'Muse-Glimmer-30B',
+        match: {
+          or: [
+            {
+              equals: 'meta-models/muse-glimmer-30b',
+            },
+            {
+              equals: 'meta-models/muse-glimmer-30b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 1.5,
+        },
+      },
+      {
         id: 'moonshotai/Kimi-K2.5',
         name: 'Kimi-K2.5',
         match: {
@@ -18201,6 +21008,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.5,
           output_mtok: 2.8,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi-K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-fast',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -18239,6 +21065,57 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'prism-ml/Ternary-Bonsai-27B-AWQ-4bit',
+        name: 'Ternary-Bonsai-27B-AWQ-4bit',
+        match: {
+          or: [
+            {
+              equals: 'prism-ml/ternary-bonsai-27b-awq-4bit',
+            },
+            {
+              equals: 'prism-ml/ternary-bonsai-27b-awq-4bit-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {},
+      },
+      {
+        id: 'prism-ml/Ternary-Bonsai-27B-gguf',
+        name: 'Ternary-Bonsai-27B-gguf',
+        match: {
+          or: [
+            {
+              equals: 'prism-ml/ternary-bonsai-27b-gguf',
+            },
+            {
+              equals: 'prism-ml/ternary-bonsai-27b-gguf-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {},
+      },
+      {
+        id: 'thinkingmachines/Inkling',
+        name: 'Inkling',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling',
+            },
+            {
+              equals: 'thinkingmachines/inkling-fast',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 4.05,
         },
       },
       {
@@ -18315,6 +21192,63 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1,
           output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.2',
+            },
+            {
+              equals: 'zai-org/glm-5.2-fast',
+            },
+          ],
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM-5.3',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3',
+            },
+            {
+              equals: 'zai-org/glm-5.3-fast',
+            },
+          ],
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-5.3-flash',
+            },
+            {
+              equals: 'zai-org/glm-5.3-flash-fast',
+            },
+          ],
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -20700,6 +23634,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'deepseek/deepseek-v4.1-flash-p',
+            },
+            {
+              equals: 'deepseek/deepseek-v4.1-flash-1017',
             },
           ],
         },
@@ -37541,6 +40478,100 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen3-Embedding-8B',
+        name: 'Qwen3-Embedding-8B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen3-Embedding-8B',
+            },
+            {
+              equals: 'qwen3-embedding-8b',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
+        id: 'Qwen3.5-397B-A17B',
+        name: 'Qwen3.5-397B-A17B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen3.5-397B-A17B',
+            },
+            {
+              equals: 'qwen3.5-397b-a17b',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.71,
+          output_mtok: 4.25,
+        },
+      },
+      {
+        id: 'Qwen3.5-9B',
+        name: 'Qwen3.5-9B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen3.5-9B',
+            },
+            {
+              equals: 'qwen3.5-9b',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.12,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'Qwen3.6-27B',
+        name: 'Qwen3.6-27B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen3.6-27B',
+            },
+            {
+              equals: 'qwen3.6-27b',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.47,
+          output_mtok: 3.19,
+        },
+      },
+      {
+        id: 'Qwen3.8-27B',
+        name: 'Qwen3.8-27B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen3.8-27B',
+            },
+            {
+              equals: 'qwen3.8-27b',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.47,
+          output_mtok: 3.19,
+        },
+      },
+      {
         id: 'bge-base-en-v1.5',
         name: 'bge-base-en-v1.5',
         match: {
@@ -37913,9 +40944,36 @@ export const data: Provider[] = [
           equals: 'claude-fable-5',
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 8,
+              output_mtok: 40,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.5,
+              output_mtok: 12.5,
+            },
+          },
+        ],
+      },
+      {
+        id: 'claude-fable-5-1',
+        name: 'Claude Fable 5.1',
+        match: {
+          equals: 'claude-fable-5-1',
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 8,
-          output_mtok: 40,
+          input_mtok: 2.5,
+          cache_read_mtok: 0.0625,
+          output_mtok: 12.5,
         },
       },
       {
@@ -37925,9 +40983,37 @@ export const data: Provider[] = [
           equals: 'claude-haiku-4-5',
         },
         context_window: 200000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.8,
+              output_mtok: 4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 1.25,
+            },
+          },
+        ],
+      },
+      {
+        id: 'claude-haiku-5-5',
+        name: 'Claude Haiku 5.5',
+        match: {
+          equals: 'claude-haiku-5-5',
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 0.8,
-          output_mtok: 4,
+          input_mtok: 0.025,
+          cache_write_mtok: 0.03125,
+          cache_read_mtok: 0.0025,
+          output_mtok: 0.125,
         },
       },
       {
@@ -37949,10 +41035,24 @@ export const data: Provider[] = [
           equals: 'claude-opus-4-8',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 4,
-          output_mtok: 20,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 4,
+              output_mtok: 20,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.25,
+              output_mtok: 6.25,
+            },
+          },
+        ],
       },
       {
         id: 'claude-opus-5',
@@ -37961,9 +41061,37 @@ export const data: Provider[] = [
           equals: 'claude-opus-5',
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 4,
+              output_mtok: 20,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.25,
+              output_mtok: 6.25,
+            },
+          },
+        ],
+      },
+      {
+        id: 'claude-opus-5-5',
+        name: 'Claude Opus 5.5',
+        match: {
+          equals: 'claude-opus-5-5',
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 4,
-          output_mtok: 20,
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.05,
+          output_mtok: 5,
         },
       },
       {
@@ -37985,9 +41113,37 @@ export const data: Provider[] = [
           equals: 'claude-sonnet-5',
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              output_mtok: 10,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 2.5,
+            },
+          },
+        ],
+      },
+      {
+        id: 'claude-sonnet-5-5',
+        name: 'Claude Sonnet 5.5',
+        match: {
+          equals: 'claude-sonnet-5-5',
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 2,
-          output_mtok: 10,
+          input_mtok: 0.5,
+          cache_write_mtok: 0.625,
+          cache_read_mtok: 0.05,
+          output_mtok: 2.5,
         },
       },
       {
@@ -37997,11 +41153,26 @@ export const data: Provider[] = [
           equals: 'deepseek-v4-flash',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.112,
-          cache_read_mtok: 0.0144,
-          output_mtok: 0.224,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.112,
+              cache_read_mtok: 0.0144,
+              output_mtok: 0.224,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.06,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.18,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4-pro',
@@ -38010,10 +41181,51 @@ export const data: Provider[] = [
           equals: 'deepseek-v4-pro',
         },
         context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.003625,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.1,
+              output_mtok: 2.1,
+            },
+          },
+        ],
+      },
+      {
+        id: 'deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-v4.1-flash',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.003625,
-          output_mtok: 0.87,
+          input_mtok: 0.125,
+          cache_read_mtok: 0.0125,
+          output_mtok: 0.55,
+        },
+      },
+      {
+        id: 'deepseek-v4.1-flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-v4.1-flash-1017',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.098,
+          cache_read_mtok: 0.00294,
+          output_mtok: 0.294,
         },
       },
       {
@@ -38098,10 +41310,24 @@ export const data: Provider[] = [
           equals: 'gemini-3.6-flash',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.275,
-          output_mtok: 6.375,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.275,
+              output_mtok: 6.375,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6375,
+              output_mtok: 3.1875,
+            },
+          },
+        ],
       },
       {
         id: 'gemini-3.7-flash',
@@ -38117,17 +41343,58 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3.8-flash',
+        name: 'Gemini 3.8 Flash',
+        match: {
+          equals: 'gemini-3.8-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.6375,
+          cache_read_mtok: 0.06375,
+          output_mtok: 3.1875,
+        },
+      },
+      {
+        id: 'gemini-4-argon',
+        name: 'Gemini 4 Argon',
+        match: {
+          equals: 'gemini-4-argon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'glm-5.2',
         name: 'GLM 5.2',
         match: {
           equals: 'glm-5.2',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.12,
-          cache_read_mtok: 0.208,
-          output_mtok: 3.52,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.12,
+              cache_read_mtok: 0.208,
+              output_mtok: 3.52,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.105,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'glm-5.3',
@@ -38136,11 +41403,26 @@ export const data: Provider[] = [
           equals: 'glm-5.3',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.12,
-          cache_read_mtok: 0.208,
-          output_mtok: 3.52,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.12,
+              cache_read_mtok: 0.208,
+              output_mtok: 3.52,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.2,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'glm-5.3-flash',
@@ -38149,10 +41431,38 @@ export const data: Provider[] = [
           equals: 'glm-5.3-flash',
         },
         context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.06,
+              cache_read_mtok: 0.012,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.07,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.05,
+            },
+          },
+        ],
+      },
+      {
+        id: 'glm-5.3-prime',
+        name: 'GLM 5.3 Prime',
+        match: {
+          equals: 'glm-5.3-prime',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.06,
-          cache_read_mtok: 0.012,
-          output_mtok: 0.2,
+          input_mtok: 2.24,
+          cache_read_mtok: 0.448,
+          output_mtok: 7.04,
         },
       },
       {
@@ -38162,12 +41472,28 @@ export const data: Provider[] = [
           equals: 'gpt-5.6-luna',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.08,
-          cache_write_mtok: 0.1,
-          cache_read_mtok: 0.008,
-          output_mtok: 0.48,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.08,
+              cache_write_mtok: 0.1,
+              cache_read_mtok: 0.008,
+              output_mtok: 0.48,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.16,
+              cache_write_mtok: 0.2,
+              cache_read_mtok: 0.016,
+              output_mtok: 0.96,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-sol',
@@ -38176,12 +41502,28 @@ export const data: Provider[] = [
           equals: 'gpt-5.6-sol',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 4,
-          cache_write_mtok: 5,
-          cache_read_mtok: 0.4,
-          output_mtok: 24,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.4,
+              output_mtok: 24,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.6,
+              cache_write_mtok: 2,
+              cache_read_mtok: 0.16,
+              output_mtok: 8,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-5.6-terra',
@@ -38190,11 +41532,83 @@ export const data: Provider[] = [
           equals: 'gpt-5.6-terra',
         },
         context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.8,
+              cache_write_mtok: 1,
+              cache_read_mtok: 0.08,
+              output_mtok: 4.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.6,
+              cache_write_mtok: 2,
+              cache_read_mtok: 0.16,
+              output_mtok: 9.6,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gpt-6-astra',
+        name: 'GPT-6 Astra',
+        match: {
+          equals: 'gpt-6-astra',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.8,
-          cache_write_mtok: 1,
-          cache_read_mtok: 0.08,
-          output_mtok: 4.8,
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
+        id: 'gpt-6-luna',
+        name: 'GPT-6 Luna',
+        match: {
+          equals: 'gpt-6-luna',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.1,
+          cache_write_mtok: 0.125,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'gpt-6-sol',
+        name: 'GPT-6 Sol',
+        match: {
+          equals: 'gpt-6-sol',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-6.1-sol',
+        name: 'GPT-6.1 Sol',
+        match: {
+          equals: 'gpt-6.1-sol',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
         },
       },
       {
@@ -38204,11 +41618,26 @@ export const data: Provider[] = [
           equals: 'gpt-oss-120b',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.12,
-          cache_read_mtok: 0.06,
-          output_mtok: 0.48,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.12,
+              cache_read_mtok: 0.06,
+              output_mtok: 0.48,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.03,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'grok-4.5',
@@ -38237,16 +41666,68 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'grok-4.7',
+        name: 'Grok 4.7',
+        match: {
+          equals: 'grok-4.7',
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'hy3',
         name: 'Hy3',
         match: {
           equals: 'hy3',
         },
         context_window: 262144,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1056,
+              cache_read_mtok: 0.0264,
+              output_mtok: 0.4224,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.091,
+              cache_read_mtok: 0.0227,
+              output_mtok: 0.363,
+            },
+          },
+        ],
+      },
+      {
+        id: 'hy4-preview',
+        name: 'Hy4 Preview',
+        match: {
+          equals: 'hy4-preview',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.1056,
-          cache_read_mtok: 0.0264,
-          output_mtok: 0.4224,
+          input_mtok: 0.6672,
+          cache_read_mtok: 0.0336,
+          output_mtok: 2.0008,
+        },
+      },
+      {
+        id: 'jev-1.13',
+        name: 'Jev 1.13',
+        match: {
+          equals: 'jev-1.13',
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.042,
         },
       },
       {
@@ -38256,11 +41737,26 @@ export const data: Provider[] = [
           equals: 'kimi-k2.6',
         },
         context_window: 256000,
-        prices: {
-          input_mtok: 0.5472,
-          cache_read_mtok: 0.292,
-          output_mtok: 2.728,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5472,
+              cache_read_mtok: 0.292,
+              output_mtok: 2.728,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.45,
+              cache_read_mtok: 0.045,
+              output_mtok: 1.95,
+            },
+          },
+        ],
       },
       {
         id: 'kimi-k2.7-code',
@@ -38269,11 +41765,26 @@ export const data: Provider[] = [
           equals: 'kimi-k2.7-code',
         },
         context_window: 256000,
-        prices: {
-          input_mtok: 0.584,
-          cache_read_mtok: 0.1278,
-          output_mtok: 2.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.584,
+              cache_read_mtok: 0.1278,
+              output_mtok: 2.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6712,
+              cache_read_mtok: 0.18,
+              output_mtok: 3.35,
+            },
+          },
+        ],
       },
       {
         id: 'kimi-k3',
@@ -38282,11 +41793,26 @@ export const data: Provider[] = [
           equals: 'kimi-k3',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 2.4,
-          cache_read_mtok: 0.24,
-          output_mtok: 12,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2.4,
+              cache_read_mtok: 0.24,
+              output_mtok: 12,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.55,
+              cache_read_mtok: 0.255,
+              output_mtok: 12.75,
+            },
+          },
+        ],
       },
       {
         id: 'mimo-v2.5',
@@ -38299,6 +41825,32 @@ export const data: Provider[] = [
           input_mtok: 0.112,
           cache_read_mtok: 0.00224,
           output_mtok: 0.224,
+        },
+      },
+      {
+        id: 'mimo-v2.6-flash',
+        name: 'MiMo-V2.6-Flash',
+        match: {
+          equals: 'mimo-v2.6-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.112,
+          cache_read_mtok: 0.00224,
+          output_mtok: 0.224,
+        },
+      },
+      {
+        id: 'mimo-v2.6-pro',
+        name: 'MiMo-V2.6-Pro',
+        match: {
+          equals: 'mimo-v2.6-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.348,
+          cache_read_mtok: 0.00288,
+          output_mtok: 0.696,
         },
       },
       {
@@ -38315,17 +41867,45 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistral-large-4',
+        name: 'Mistral Large 4',
+        match: {
+          equals: 'mistral-large-4',
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.68,
+          cache_read_mtok: 0.07,
+          output_mtok: 2.09,
+        },
+      },
+      {
         id: 'muse-glimmer-30b',
         name: 'Muse Glimmer 30B',
         match: {
           equals: 'muse-glimmer-30b',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.28,
-          cache_read_mtok: 0.032,
-          output_mtok: 1.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.28,
+              cache_read_mtok: 0.032,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.04,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'muse-spark-1.2',
@@ -38341,17 +41921,84 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'muse-spark-1.3',
+        name: 'Muse Spark 1.3',
+        match: {
+          equals: 'muse-spark-1.3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.12,
+          output_mtok: 3.4,
+        },
+      },
+      {
+        id: 'muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'muse-spark-open',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
+        id: 'muse-wonder',
+        name: 'Muse Wonder',
+        match: {
+          equals: 'muse-wonder',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
+        id: 'nemotron-3-ultra',
+        name: 'Nemotron 3 Ultra',
+        match: {
+          equals: 'nemotron-3-ultra',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 2.2,
+        },
+      },
+      {
         id: 'nemotron-3.5-lightning',
         name: 'Nemotron 3.5 Lightning',
         match: {
           equals: 'nemotron-3.5-lightning',
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.08,
-          cache_read_mtok: 0.04,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.08,
+              cache_read_mtok: 0.04,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.066,
+              cache_read_mtok: 0.033,
+              output_mtok: 0.176,
+            },
+          },
+        ],
       },
       {
         id: 'qwen3.6-35b',
@@ -38360,11 +42007,26 @@ export const data: Provider[] = [
           equals: 'qwen3.6-35b',
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.112,
-          cache_read_mtok: 0.04,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.112,
+              cache_read_mtok: 0.04,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.025,
+              output_mtok: 0.7,
+            },
+          },
+        ],
       },
       {
         id: 'qwen3.6-plus',
@@ -38435,6 +42097,32 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen3.8-27b-decentered',
+        name: 'Qwen3.8 27B Decentered',
+        match: {
+          equals: 'qwen3.8-27b-decentered',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.238,
+          output_mtok: 1.428,
+        },
+      },
+      {
+        id: 'qwen3.8-flash-next',
+        name: 'Qwen3.8 Flash Next',
+        match: {
+          equals: 'qwen3.8-flash-next',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.12,
+          cache_write_mtok: 0.16,
+          cache_read_mtok: 0.0128,
+          output_mtok: 0.376,
+        },
+      },
+      {
         id: 'qwen3.8-max',
         name: 'Qwen3.8 Max',
         match: {
@@ -38446,6 +42134,57 @@ export const data: Provider[] = [
           cache_write_mtok: 2.5,
           cache_read_mtok: 0.25,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen3.8-max-prime',
+        name: 'Qwen3.8 Max Prime',
+        match: {
+          equals: 'qwen3.8-max-prime',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.5,
+          output_mtok: 12,
+        },
+      },
+      {
+        id: 'qwen3.8-omni-flash',
+        name: 'Qwen3.8 Omni Flash',
+        match: {
+          equals: 'qwen3.8-omni-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_write_mtok: 0.15,
+          cache_read_mtok: 0.016,
+          output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'step-5-preview',
+        name: 'Step 5 Preview',
+        match: {
+          equals: 'step-5-preview',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.1,
+          output_mtok: 2.7,
+        },
+      },
+      {
+        id: 'trio-spark-v1.3',
+        name: 'Trio-Spark v1.3',
+        match: {
+          equals: 'trio-spark-v1.3',
+        },
+        context_window: 1024,
+        prices: {
+          input_mtok: 0.042,
         },
       },
     ],

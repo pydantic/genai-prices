@@ -1,0 +1,170 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_scaleway
+name: HuggingFace (scaleway)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/scaleway
+provider_match:
+  and:
+    - contains: huggingface
+    - contains: scaleway
+extractors:
+  - api_flavor: default
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+  - api_flavor: chat
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+        required: true
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - cache_write_tokens
+        dest: cache_write_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+        required: true
+models:
+  - id: Qwen/Qwen3-235B-A22B-Instruct-2507
+    name: Qwen3-235B-A22B-Instruct-2507
+    match:
+      or:
+        - equals: qwen/qwen3-235b-a22b-instruct-2507
+        - equals: qwen/qwen3-235b-a22b-instruct-2507-fast
+    prices:
+      input_mtok: 0.855
+      output_mtok: 2.565
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3-Coder-30B-A3B-Instruct
+    name: Qwen3-Coder-30B-A3B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-coder-30b-a3b-instruct
+        - equals: qwen/qwen3-coder-30b-a3b-instruct-fast
+    prices:
+      input_mtok: 0.228
+      output_mtok: 0.912
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.5-397B-A17B
+    name: Qwen3.5-397B-A17B
+    match:
+      or:
+        - equals: qwen/qwen3.5-397b-a17b
+        - equals: qwen/qwen3.5-397b-a17b-fast
+    prices:
+      input_mtok: 0.684
+      output_mtok: 4.104
+    prices_checked: 2026-10-19
+
+  - id: Qwen/Qwen3.6-35B-A3B
+    name: Qwen3.6-35B-A3B
+    match:
+      or:
+        - equals: qwen/qwen3.6-35b-a3b
+        - equals: qwen/qwen3.6-35b-a3b-fast
+    prices:
+      input_mtok: 0.285
+      output_mtok: 1.71
+    prices_checked: 2026-10-19
+
+  - id: google/gemma-4-26B-A4B-it
+    name: gemma-4-26B-A4B-it
+    match:
+      or:
+        - equals: google/gemma-4-26b-a4b-it
+        - equals: google/gemma-4-26b-a4b-it-fast
+    prices:
+      input_mtok: 0.285
+      output_mtok: 0.57
+    prices_checked: 2026-10-19
+
+  - id: meta-llama/Llama-3.3-70B-Instruct
+    name: Llama-3.3-70B-Instruct
+    match:
+      or:
+        - equals: meta-llama/llama-3.3-70b-instruct
+        - equals: meta-llama/llama-3.3-70b-instruct-fast
+    prices:
+      input_mtok: 1.026
+      output_mtok: 1.026
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b-fast
+    prices:
+      input_mtok: 0.171
+      output_mtok: 0.684
+    prices_checked: 2026-10-19
+
+  - id: zai-org/GLM-5.2
+    name: GLM-5.2
+    match:
+      or:
+        - equals: zai-org/glm-5.2
+        - equals: zai-org/glm-5.2-fast
+    prices:
+      input_mtok: 2.052
+      output_mtok: 6.27
+    prices_checked: 2026-10-19

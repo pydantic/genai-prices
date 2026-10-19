@@ -112,6 +112,7 @@ models:
     prices:
       input_mtok: 0.74
       output_mtok: 0.74
+    prices_checked: 2026-10-19
 
   - id: Mistral-7B-Instruct-v0.3
     name: Mistral-7B-Instruct-v0.3
@@ -134,6 +135,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.14
+    prices_checked: 2026-10-19
 
   - id: Mistral-Small-3.2-24B-Instruct-2506
     name: Mistral-Small-3.2-24B-Instruct-2506
@@ -145,6 +147,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.31
+    prices_checked: 2026-10-19
 
   - id: Mixtral-8x7B-Instruct-v0.1
     name: Mixtral-8x7B-Instruct-v0.1
@@ -167,6 +170,7 @@ models:
     prices:
       input_mtok: 1.01
       output_mtok: 1.01
+    prices_checked: 2026-10-19
 
   - id: Qwen3-32B
     name: Qwen3-32B
@@ -190,6 +194,65 @@ models:
       input_mtok: 0.07
       output_mtok: 0.26
 
+  - id: Qwen3-Embedding-8B
+    name: Qwen3-Embedding-8B
+    match:
+      or:
+        - equals: Qwen3-Embedding-8B
+        - equals: qwen3-embedding-8b
+    context_window: 32768
+    prices:
+      input_mtok: 0.12
+    prices_checked: 2026-10-19
+
+  - id: Qwen3.5-397B-A17B
+    name: Qwen3.5-397B-A17B
+    match:
+      or:
+        - equals: Qwen3.5-397B-A17B
+        - equals: qwen3.5-397b-a17b
+    context_window: 262144
+    prices:
+      input_mtok: 0.71
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
+
+  - id: Qwen3.5-9B
+    name: Qwen3.5-9B
+    match:
+      or:
+        - equals: Qwen3.5-9B
+        - equals: qwen3.5-9b
+    context_window: 262144
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: Qwen3.6-27B
+    name: Qwen3.6-27B
+    match:
+      or:
+        - equals: Qwen3.6-27B
+        - equals: qwen3.6-27b
+    context_window: 262144
+    prices:
+      input_mtok: 0.47
+      output_mtok: 3.19
+    prices_checked: 2026-10-19
+
+  - id: Qwen3.8-27B
+    name: Qwen3.8-27B
+    match:
+      or:
+        - equals: Qwen3.8-27B
+        - equals: qwen3.8-27b
+    context_window: 262144
+    prices:
+      input_mtok: 0.47
+      output_mtok: 3.19
+    prices_checked: 2026-10-19
+
   - id: bge-base-en-v1.5
     name: bge-base-en-v1.5
     match:
@@ -205,6 +268,7 @@ models:
     context_window: 8192
     prices:
       input_mtok: 0.01
+    prices_checked: 2026-10-19
 
   - id: bge-multilingual-gemma2
     name: bge-multilingual-gemma2
@@ -213,6 +277,7 @@ models:
     context_window: 8192
     prices:
       input_mtok: 0.01
+    prices_checked: 2026-10-19
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -222,6 +287,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.47
+    prices_checked: 2026-10-19
 
   - id: gpt-oss-20b
     name: gpt-oss-20b
@@ -231,3 +297,4 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.18
+    prices_checked: 2026-10-19
