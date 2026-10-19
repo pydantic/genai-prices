@@ -54,9 +54,18 @@ it.each(['jev-1.14.0', 'jev-preview'])('preserves the default context limit for 
   expect(price?.total_price).toBe(0.042)
 })
 
-it('keeps the unverified Grok multi-agent alias unpriced', () => {
-  expect(calcPrice({ input_tokens: 1 }, 'grok-4.20-multi-agent-0309', { providerId: 'x-ai' })).toBeNull()
-  expect(
-    calcPrice({ input_tokens: 200_000, output_tokens: 1_000_000 }, 'grok-4.20-multi-agent', { providerId: 'x-ai' })?.total_price
-  ).toBeCloseTo(6.4, 12)
+it('prices the dated Grok multi-agent id at its published long-context rate', () => {
+  const options = { providerId: 'x-ai', timestamp: new Date('2026-10-17T00:00:00Z') }
+  const usage = { input_tokens: 200_000, output_tokens: 1_000_000 }
+  const dated = calcPrice(usage, 'grok-4.20-multi-agent-0309', options)
+  expect(dated?.model.id).toBe('grok-4.20-multi-agent-0309')
+  expect(dated?.total_price).toBeCloseTo(5.5, 12)
+  expect(calcPrice(usage, 'grok-4.20-multi-agent-0309', { ...options, priceContext: { processing: 'batch' } })?.total_price).toBeCloseTo(
+    4.4,
+    12
+  )
+  for (const alias of ['grok-4.20-multi-agent-beta-0309', 'grok-4.20-multi-agent-latest']) {
+    expect(calcPrice(usage, alias, options)?.model.id).toBe('grok-4.20-multi-agent-0309')
+  }
+  expect(calcPrice(usage, 'grok-4.20-multi-agent', options)?.total_price).toBeCloseTo(6.4, 12)
 })

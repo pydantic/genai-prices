@@ -15,6 +15,7 @@ from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
 from .source_doubleword import get_doubleword_prices
 from .source_github_copilot import get_github_copilot_prices
+from .source_groq import get_groq_prices
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_meta import get_meta_prices
@@ -24,10 +25,13 @@ from .source_novita import get_novita_prices
 from .source_openai_decisions import get_openai_decisions_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 from .source_ovhcloud import get_ovhcloud_prices
+from .source_perplexity import get_perplexity_prices
 from .source_quicksilverpro import get_quicksilverpro_prices
 from .source_simonw_prices import get_simonw_prices
+from .source_together import get_together_prices
 from .source_typesafe import get_typesafe_prices
 from .source_voyageai import get_voyageai_prices
+from .source_xai import get_xai_prices
 from .source_zai import get_zai_prices
 
 
@@ -45,6 +49,7 @@ def main():
         get_cursor_prices,
         get_doubleword_prices,
         get_github_copilot_prices,
+        get_groq_prices,
         get_huggingface_prices,
         get_litellm_prices,
         get_meta_prices,
@@ -54,10 +59,13 @@ def main():
         get_openai_decisions_prices,
         get_openrouter_prices,
         get_ovhcloud_prices,
+        get_perplexity_prices,
         get_quicksilverpro_prices,
         get_simonw_prices,
+        get_together_prices,
         get_typesafe_prices,
         get_voyageai_prices,
+        get_xai_prices,
         get_zai_prices,
         update_price_discrepancies,
         check_for_price_discrepancies,

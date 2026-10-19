@@ -72,4 +72,4 @@ def test_novita_main_fetches_recorded_models(tmp_path: Path, capsys: pytest.Capt
 
     source_novita.main(provider_path)
 
-    assert capsys.readouterr().out == 'Novita prices updated: 0 added, 92 updated\n'
+    assert capsys.readouterr().out == 'Novita prices updated: 0 added, 85 updated\n'

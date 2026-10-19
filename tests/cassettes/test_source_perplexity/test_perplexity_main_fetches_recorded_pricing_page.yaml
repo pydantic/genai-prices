@@ -1,0 +1,2310 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://docs.perplexity.ai/docs/getting-started/pricing.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - docs.perplexity.ai
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - EXPIRED
+      cf-ray:
+      - a4ca45b34b88bb83-FRA
+      content-disposition:
+      - inline
+      content-security-policy:
+      - default-src 'none'
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Sun, 18 Oct 2026 20:25:26 GMT
+      last-modified:
+      - Sun, 18 Oct 2026 20:25:26 GMT
+      link:
+      - >-
+        </llms.txt>; rel="llms-txt", </llms-full.txt>; rel="llms-full-txt",
+        </.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>;
+        rel="mcp-server-card", </.well-known/agent-card.json>; rel="agent-card",
+        </.well-known/agent-skills/index.json>; rel="agent-skills"
+      server:
+      - Vercel
+      strict-transport-security:
+      - max-age=63072000
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-llms-txt:
+      - /llms.txt
+      x-matched-path:
+      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-robots-tag:
+      - noindex
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - fra1:fra1:iad1::iad1::9gsbl-1792355126250-fa9b41257dfe
+    body:
+      type: text
+      content: |
+        > ## Documentation Index
+        > Fetch the complete documentation index at: https://docs.perplexity.ai/llms.txt
+        > Use this file to discover all available pages before exploring further.
+        
+        # Pricing
+        
+        > Understand Perplexity API pricing, model rates, request fees, billing setup, and rate-limit references.
+        
+        export const PRICING = {
+          "_meta": {
+            "purpose": "Single source of truth for the PricingCalculator widget. Every rate here is transcribed from the public docs; update prices HERE only.",
+            "sources": {
+              "agent.tools, agent.sandbox, search, sonar, embeddings, decisions": "/docs/getting-started/pricing",
+              "agent.models": "/docs/agent-api/models (token rates are not on the pricing page)",
+              "agent.presets": "model from the /docs/agent-api/presets Available Presets table. input/output tokens and per-run tool counts are median values from representative Agent API runs (editable in the widget), NOT billed values — actual cost is metered from each response's usage field.",
+              "sonar": "/docs/getting-started/pricing Sonar API Pricing (Token Pricing + Request Pricing tables). citation/reasoning/searchQueries apply to Sonar Deep Research only. Pro Search (Sonar Pro variant) is intentionally not modeled here."
+            },
+            "units": {
+              "model input/output/cache": "$ per 1,000,000 tokens",
+              "tools": "$ per invocation",
+              "sandbox.session": "$ per session (<=20-min billing window)",
+              "search.per1k": "$ per 1,000 requests",
+              "sonar.input/output/citation/reasoning": "$ per 1,000,000 tokens",
+              "sonar.request.{low,medium,high}": "$ per 1,000 requests (varies by search context size)",
+              "sonar.searchQueries": "$ per 1,000 searches (Deep Research only)",
+              "embeddings.rate": "$ per 1,000,000 tokens",
+              "decisions.input": "$ per 1,000,000 input tokens (output tokens are free; no per-request fee)"
+            },
+            "cacheEncoding": "number = flat $/1M cache-read rate; 'inputx0.1' = 90% off the active input rate; {low,high} = tiered cache-read rates; null = no cache pricing",
+            "tieredEncoding": "input/output/cache may be {low,high} objects; tierThreshold sets the per-model input-token switch point for the high tier"
+          },
+          "agent": {
+            "tools": {
+              "web_search": 0.0025,
+              "image_search": 0.0025,
+              "fetch_url": 0.0005,
+              "people_search": 0.005,
+              "finance_search": 0.005
+            },
+            "webSearchTypes": {
+              "web": 0.0025,
+              "fast": 0.001
+            },
+            "sandbox": {
+              "session": 0.03,
+              "search": 0.0025
+            },
+            "models": [{
+              "group": "Anthropic",
+              "id": "anthropic/claude-opus-5-5",
+              "input": 4,
+              "output": 20,
+              "cache": 0.20
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-opus-5",
+              "input": 5,
+              "output": 25,
+              "cache": 0.50
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-fable-5",
+              "input": 10,
+              "output": 50,
+              "cache": 1.00
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-fable-5-1",
+              "input": 10,
+              "output": 50,
+              "cache": 0.25
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-sonnet-5-5",
+              "input": 2,
+              "output": 10,
+              "cache": 0.10
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-sonnet-5",
+              "input": 2,
+              "output": 10,
+              "cache": 0.20
+            }, {
+              "group": "Anthropic",
+              "id": "anthropic/claude-haiku-5-5",
+              "input": {
+                "low": 0.10,
+                "high": 0.50
+              },
+              "output": {
+                "low": 0.50,
+                "high": 2.50
+              },
+              "cache": {
+                "low": 0.01,
+                "high": 0.05
+              },
+              "tierThreshold": 100000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-6.1-sol",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 10.00,
+                "high": 15.00
+              },
+              "cache": 0.10,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-6-astra",
+              "input": {
+                "low": 10.00,
+                "high": 20.00
+              },
+              "output": {
+                "low": 50.00,
+                "high": 75.00
+              },
+              "cache": 1.00,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-6-sol",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 10.00,
+                "high": 15.00
+              },
+              "cache": 0.20,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-6-luna",
+              "input": {
+                "low": 0.10,
+                "high": 0.20
+              },
+              "output": {
+                "low": 0.50,
+                "high": 0.75
+              },
+              "cache": 0.01,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-5.6-sol",
+              "input": {
+                "low": 4.00,
+                "high": 8.00
+              },
+              "output": {
+                "low": 20.00,
+                "high": 30.00
+              },
+              "cache": 0.40,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-5.6-terra",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 12.00,
+                "high": 18.00
+              },
+              "cache": "inputx0.1",
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-5.6-luna",
+              "input": {
+                "low": 0.20,
+                "high": 0.40
+              },
+              "output": {
+                "low": 1.20,
+                "high": 1.80
+              },
+              "cache": 0.02,
+              "tierThreshold": 272000
+            }, {
+              "group": "OpenAI",
+              "id": "openai/gpt-5.5",
+              "input": {
+                "low": 5.00,
+                "high": 10.00
+              },
+              "output": {
+                "low": 30.00,
+                "high": 45.00
+              },
+              "cache": 0.50,
+              "tierThreshold": 272000
+            }, {
+              "group": "Google",
+              "id": "google/gemini-4-argon",
+              "input": 2.00,
+              "output": 10.00,
+              "cache": 0.10
+            }, {
+              "group": "Google",
+              "id": "google/gemini-3.6-flash",
+              "input": 1.50,
+              "output": 7.50,
+              "cache": 0.15
+            }, {
+              "group": "Google",
+              "id": "google/gemini-3.7-flash",
+              "input": 0.75,
+              "output": 3.75,
+              "cache": 0.075
+            }, {
+              "group": "Google",
+              "id": "google/gemini-3.8-flash",
+              "input": 0.75,
+              "output": 3.75,
+              "cache": 0.075
+            }, {
+              "group": "xAI",
+              "id": "xai/grok-4.7",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 6.00,
+                "high": 12.00
+              },
+              "cache": {
+                "low": 0.50,
+                "high": 1.00
+              },
+              "tierThreshold": 199999
+            }, {
+              "group": "xAI",
+              "id": "xai/grok-4.6",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 6.00,
+                "high": 12.00
+              },
+              "cache": {
+                "low": 0.50,
+                "high": 1.00
+              },
+              "tierThreshold": 199999
+            }, {
+              "group": "xAI",
+              "id": "xai/grok-4.5",
+              "input": {
+                "low": 2.00,
+                "high": 4.00
+              },
+              "output": {
+                "low": 6.00,
+                "high": 12.00
+              },
+              "cache": {
+                "low": 0.30,
+                "high": 0.60
+              },
+              "tierThreshold": 199999
+            }, {
+              "group": "Z.AI",
+              "id": "perplexity/glm-5.3",
+              "input": 1.40,
+              "output": 4.40,
+              "cache": 0.26
+            }, {
+              "group": "DeepSeek",
+              "id": "perplexity/deepseek-v4-pro-0813",
+              "input": 1.32,
+              "output": 3.96,
+              "cache": 0.044
+            }, {
+              "group": "Moonshot AI",
+              "id": "perplexity/kimi-k3",
+              "input": 3.00,
+              "output": 15.00,
+              "cache": 0.30
+            }, {
+              "group": "NVIDIA",
+              "id": "perplexity/nemotron-3.5-super-120b-a12b",
+              "input": 0.20,
+              "output": 0.50,
+              "cache": 0.04
+            }, {
+              "group": "Perplexity",
+              "id": "perplexity/sonar",
+              "input": 0.25,
+              "output": 2.50,
+              "cache": 0.0625
+            }],
+            "presets": [{
+              "id": "fast",
+              "model": "openai/gpt-5.6-luna",
+              "input": 1000,
+              "output": 500,
+              "tools": {
+                "web_search": 1,
+                "fetch_url": 0
+              }
+            }, {
+              "id": "low",
+              "model": "openai/gpt-5.6-luna",
+              "input": 2000,
+              "output": 1000,
+              "tools": {
+                "web_search": 1,
+                "fetch_url": 1
+              }
+            }, {
+              "id": "medium",
+              "model": "openai/gpt-5.6-luna",
+              "input": 4000,
+              "output": 1000,
+              "tools": {
+                "web_search": 2,
+                "fetch_url": 2
+              }
+            }, {
+              "id": "high",
+              "model": "openai/gpt-5.6-sol",
+              "input": 4000,
+              "output": 2000,
+              "tools": {
+                "web_search": 3,
+                "fetch_url": 3
+              }
+            }, {
+              "id": "xhigh",
+              "model": "openai/gpt-5.6-sol",
+              "input": 8000,
+              "output": 4000,
+              "tools": {
+                "web_search": 4,
+                "fetch_url": 4,
+                "sandbox_sessions": 1,
+                "sandbox_searches": 2
+              }
+            }]
+          },
+          "search": {
+            "per1k": 5.00,
+            "fastPer1k": 1.00
+          },
+          "sonar": {
+            "models": [{
+              "id": "sonar",
+              "label": "Sonar",
+              "input": 1,
+              "output": 1,
+              "request": {
+                "low": 5,
+                "medium": 8,
+                "high": 12
+              }
+            }, {
+              "id": "sonar-pro",
+              "label": "Sonar Pro",
+              "input": 3,
+              "output": 15,
+              "request": {
+                "low": 6,
+                "medium": 10,
+                "high": 14
+              }
+            }, {
+              "id": "sonar-reasoning-pro",
+              "label": "Sonar Reasoning Pro",
+              "input": 2,
+              "output": 8,
+              "request": {
+                "low": 6,
+                "medium": 10,
+                "high": 14
+              }
+            }, {
+              "id": "sonar-deep-research",
+              "label": "Sonar Deep Research",
+              "input": 2,
+              "output": 8,
+              "citation": 2,
+              "reasoning": 3,
+              "searchQueries": 5
+            }]
+          },
+          "embeddings": [{
+            "id": "pplx-embed-v1-0.6b",
+            "dims": 1024,
+            "rate": 0.004
+          }, {
+            "id": "pplx-embed-v1-4b",
+            "dims": 2560,
+            "rate": 0.03
+          }, {
+            "id": "pplx-embed-context-v1-0.6b",
+            "dims": 1024,
+            "rate": 0.008
+          }, {
+            "id": "pplx-embed-context-v1-4b",
+            "dims": 2560,
+            "rate": 0.05
+          }],
+          "decisions": {
+            "model": "pplx-decider-v1.2",
+            "models": [{
+              "id": "pplx-decider-v1.2",
+              "rate": 0.02
+            }, {
+              "id": "pplx-decider-flash-v1.2",
+              "rate": 0.01
+            }],
+            "input": 0.02
+          }
+        };
+        
+        export const PricingCalculator = ({product, data} = {}) => {
+          const PRICING = data;
+          const dataValid = !!(PRICING && PRICING.agent && PRICING.agent.tools && typeof PRICING.agent.tools.image_search === 'number' && PRICING.agent.sandbox && PRICING.agent.webSearchTypes && typeof PRICING.agent.webSearchTypes.fast === 'number' && Array.isArray(PRICING.agent.models) && PRICING.agent.models.length && Array.isArray(PRICING.agent.presets) && PRICING.agent.presets.length && PRICING.search && typeof PRICING.search.per1k === 'number' && typeof PRICING.search.fastPer1k === 'number' && PRICING.sonar && Array.isArray(PRICING.sonar.models) && PRICING.sonar.models.length && Array.isArray(PRICING.embeddings) && PRICING.embeddings.length);
+          if (!dataValid) {
+            return <section className="not-prose" aria-label="API pricing calculator">
+                <p style={{
+              color: 'var(--color-muted-foreground)',
+              fontSize: 14
+            }}>Pricing data unavailable.</p>
+              </section>;
+          }
+          const TOOL_PRICE = PRICING.agent.tools;
+          const SANDBOX_SESSION = PRICING.agent.sandbox.session;
+          const SANDBOX_SEARCH = PRICING.agent.sandbox.search;
+          const AGENT_MODELS = PRICING.agent.models;
+          const AGENT_PRESETS = PRICING.agent.presets;
+          const EMB_MODELS = PRICING.embeddings || [];
+          const SONAR_MODELS = PRICING.sonar && PRICING.sonar.models || [];
+          const DECISIONS = PRICING.decisions && typeof PRICING.decisions.input === 'number' ? PRICING.decisions : null;
+          const DECISION_MODELS = DECISIONS ? DECISIONS.models || [{
+            id: DECISIONS.model
+          }] : [];
+          const PRODUCTS = DECISIONS ? ['search', 'agent', 'embeddings', 'decisions'] : ['search', 'agent', 'embeddings'];
+          const PRODUCT_META = {
+            agent: {
+              label: 'Agent API',
+              accent: 'var(--cb-agent-api-fg)'
+            },
+            search: {
+              label: 'Search API',
+              accent: 'var(--cb-search-api-fg)'
+            },
+            sonar: {
+              label: 'Sonar API',
+              accent: 'var(--cb-sonar-api-fg)'
+            },
+            embeddings: {
+              label: 'Embeddings API',
+              accent: 'var(--cb-embeddings-api-fg)'
+            },
+            decisions: {
+              label: 'Decisions API',
+              accent: 'var(--cb-decisions-api-fg)'
+            }
+          };
+          const isSingleProduct = !!product && PRODUCTS.includes(product);
+          const [activeProduct, setActiveProduct] = useState(isSingleProduct ? product : 'search');
+          const DEFAULT_PRESET_ID = 'fast';
+          const DEFAULT_PRESET = AGENT_PRESETS.find(p => p.id === DEFAULT_PRESET_ID) || AGENT_PRESETS[0];
+          const DP_TOOLS = DEFAULT_PRESET.tools || ({});
+          const [agentModelId, setAgentModelId] = useState(AGENT_MODELS.some(m => m.id === 'openai/gpt-5.6-luna') ? 'openai/gpt-5.6-luna' : DEFAULT_PRESET.model);
+          const [agentInput, setAgentInput] = useState(DEFAULT_PRESET.input);
+          const [agentOutput, setAgentOutput] = useState(DEFAULT_PRESET.output);
+          const [agentWebSearch, setAgentWebSearch] = useState(DP_TOOLS.web_search || 0);
+          const [agentImageSearch, setAgentImageSearch] = useState(DP_TOOLS.image_search || 0);
+          const [agentFetchUrl, setAgentFetchUrl] = useState(DP_TOOLS.fetch_url || 0);
+          const [agentPeople, setAgentPeople] = useState(DP_TOOLS.people_search || 0);
+          const [agentFinance, setAgentFinance] = useState(DP_TOOLS.finance_search || 0);
+          const [agentSandboxSessions, setAgentSandboxSessions] = useState(DP_TOOLS.sandbox_sessions || 0);
+          const [agentSandboxSearches, setAgentSandboxSearches] = useState(DP_TOOLS.sandbox_searches || 0);
+          const [agentRunsPerMonth, setAgentRunsPerMonth] = useState(1000);
+          const [searchRequests, setSearchRequests] = useState(1000);
+          const [searchFast, setSearchFast] = useState(false);
+          const SEARCH_PER_1K = searchFast ? PRICING.search.fastPer1k : PRICING.search.per1k;
+          const [sonarModelId, setSonarModelId] = useState('sonar');
+          const [sonarInput, setSonarInput] = useState(1000);
+          const [sonarOutput, setSonarOutput] = useState(1000);
+          const [sonarContext, setSonarContext] = useState('low');
+          const [sonarRequests, setSonarRequests] = useState(1000);
+          const [sonarCitation, setSonarCitation] = useState(20000);
+          const [sonarReasoning, setSonarReasoning] = useState(74000);
+          const [sonarSearches, setSonarSearches] = useState(18);
+          const [embModelId, setEmbModelId] = useState('pplx-embed-v1-0.6b');
+          const [embTokens, setEmbTokens] = useState(100000);
+          const [volume, setVolume] = useState(1000);
+          const [decModelId, setDecModelId] = useState(DECISIONS ? DECISIONS.model : '');
+          const [decTokens, setDecTokens] = useState(600);
+          const [decRequests, setDecRequests] = useState(1000);
+          const [usageMode, setUsageMode] = useState('total');
+          const [agentTotalInputM, setAgentTotalInputM] = useState(50);
+          const [agentTotalOutputM, setAgentTotalOutputM] = useState(10);
+          const [agentTotalWebSearch, setAgentTotalWebSearch] = useState(0);
+          const [agentTotalImageSearch, setAgentTotalImageSearch] = useState(0);
+          const [agentTotalFetchUrl, setAgentTotalFetchUrl] = useState(0);
+          const [agentTotalPeople, setAgentTotalPeople] = useState(0);
+          const [agentTotalFinance, setAgentTotalFinance] = useState(0);
+          const [agentTotalSandboxSessions, setAgentTotalSandboxSessions] = useState(0);
+          const [agentTotalSandboxSearches, setAgentTotalSandboxSearches] = useState(0);
+          const [sonarTotalInputM, setSonarTotalInputM] = useState(50);
+          const [sonarTotalOutputM, setSonarTotalOutputM] = useState(10);
+          const [sonarTotalRequests, setSonarTotalRequests] = useState(1000);
+          const [sonarTotalCitationM, setSonarTotalCitationM] = useState(20);
+          const [sonarTotalReasoningM, setSonarTotalReasoningM] = useState(74);
+          const [sonarTotalSearches, setSonarTotalSearches] = useState(18000);
+          const [toolsOpen, setToolsOpen] = useState(false);
+          const [modelFilter, setModelFilter] = useState('');
+          const [modelSort, setModelSort] = useState('cost');
+          const [modelProvider, setModelProvider] = useState('all');
+          const [showBreakdown, setShowBreakdown] = useState(false);
+          const [reduceMotion, setReduceMotion] = useState(false);
+          const [liveText, setLiveText] = useState('');
+          const [openInfo, setOpenInfo] = useState(null);
+          const [infoPlace, setInfoPlace] = useState({
+            x: 'left',
+            y: 'down'
+          });
+          const infoRefs = useRef({});
+          const [openListbox, setOpenListbox] = useState(null);
+          const [activeOptIdx, setActiveOptIdx] = useState(-1);
+          const listboxRefs = useRef({});
+          const typeaheadRef = useRef({
+            buf: '',
+            t: 0
+          });
+          const didSyncUrl = useRef(false);
+          const modelListRef = useRef(null);
+          const [copied, setCopied] = useState(false);
+          const [showFormula, setShowFormula] = useState(false);
+          useEffect(() => {
+            if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+            const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const update = () => setReduceMotion(mq.matches);
+            update();
+            if (mq.addEventListener) mq.addEventListener('change', update); else if (mq.addListener) mq.addListener(update);
+            return () => {
+              if (mq.removeEventListener) mq.removeEventListener('change', update); else if (mq.removeListener) mq.removeListener(update);
+            };
+          }, []);
+          useEffect(() => {
+            if (isSingleProduct || typeof window === 'undefined') return;
+            const params = new URLSearchParams(window.location.search);
+            const fromUrl = params.get('calc');
+            if (fromUrl && PRODUCTS.includes(fromUrl)) setActiveProduct(fromUrl);
+          }, []);
+          useEffect(() => {
+            if (isSingleProduct || typeof window === 'undefined') return;
+            if (!didSyncUrl.current) {
+              didSyncUrl.current = true;
+              return;
+            }
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('calc') === activeProduct) return;
+            params.set('calc', activeProduct);
+            const qs = params.toString();
+            const url = window.location.pathname + (qs ? `?${qs}` : '') + (window.location.hash || '');
+            window.history.replaceState(null, '', url);
+          }, [activeProduct]);
+          useEffect(() => {
+            const container = modelListRef.current;
+            if (!container) return;
+            const sel = container.querySelector('[role="radio"][aria-checked="true"]');
+            if (!sel) return;
+            const c = container.getBoundingClientRect();
+            const s = sel.getBoundingClientRect();
+            if (s.top < c.top) container.scrollTop += s.top - c.top - 8; else if (s.bottom > c.bottom) container.scrollTop += s.bottom - c.bottom + 8;
+          }, [agentModelId]);
+          useEffect(() => {
+            if (num(agentSandboxSessions) === 0 && num(agentSandboxSearches) !== 0) setAgentSandboxSearches(0);
+          }, [agentSandboxSessions]);
+          useEffect(() => {
+            if (num(agentTotalSandboxSessions) === 0 && num(agentTotalSandboxSearches) !== 0) setAgentTotalSandboxSearches(0);
+          }, [agentTotalSandboxSessions]);
+          useEffect(() => {
+            if (!openListbox || typeof document === 'undefined') return undefined;
+            const onClick = e => {
+              const el = listboxRefs.current[openListbox];
+              if (el && !el.contains(e.target)) setOpenListbox(null);
+            };
+            const onKey = e => {
+              if (e.key === 'Escape') setOpenListbox(null);
+            };
+            document.addEventListener('mousedown', onClick);
+            document.addEventListener('keydown', onKey);
+            return () => {
+              document.removeEventListener('mousedown', onClick);
+              document.removeEventListener('keydown', onKey);
+            };
+          }, [openListbox]);
+          useEffect(() => {
+            if (!openInfo || typeof document === 'undefined') return undefined;
+            const onClick = e => {
+              const el = infoRefs.current[openInfo];
+              if (el && !el.contains(e.target)) setOpenInfo(null);
+            };
+            const onKey = e => {
+              if (e.key === 'Escape') setOpenInfo(null);
+            };
+            document.addEventListener('mousedown', onClick);
+            document.addEventListener('keydown', onKey);
+            return () => {
+              document.removeEventListener('mousedown', onClick);
+              document.removeEventListener('keydown', onKey);
+            };
+          }, [openInfo]);
+          const num = x => Math.max(0, Number(x) || 0);
+          const intVal = x => {
+            const n = Math.floor(Number(x));
+            return isFinite(n) && n > 0 ? n : 0;
+          };
+          const floatVal = (x, dp = 3) => {
+            const n = Number(x);
+            if (!isFinite(n) || n <= 0) return 0;
+            const f = Math.pow(10, dp);
+            return Math.round(n * f) / f;
+          };
+          const sanitizeDecimal = raw => {
+            const s = String(raw).replace(/[^\d.]/g, '');
+            const i = s.indexOf('.');
+            return i < 0 ? s : s.slice(0, i + 1) + s.slice(i + 1).replace(/\./g, '');
+          };
+          const tokenCost = (n, ratePer1M) => num(n) / 1e6 * ratePer1M;
+          const per1k = (n, feePer1K) => num(n) / 1000 * feePer1K;
+          const fmt = v => {
+            if (!isFinite(v) || v === 0) return '$0.00';
+            if (v >= 10000) {
+              return '$' + Math.round(v).toLocaleString('en-US');
+            }
+            if (v >= 1) {
+              const hasCents = Math.round(v * 100) % 100 !== 0;
+              return '$' + v.toLocaleString('en-US', {
+                minimumFractionDigits: hasCents ? 2 : 0,
+                maximumFractionDigits: 2
+              });
+            }
+            if (v < 0.001) return '<$0.001';
+            let s = v.toFixed(3).replace(/0+$/, '');
+            if ((s.split('.')[1] || '').length < 2) s = v.toFixed(2);
+            return '$' + s;
+          };
+          const fmtRate = v => {
+            if (!isFinite(v)) return '$0';
+            if (Number.isInteger(v)) return '$' + v;
+            let s = v.toFixed(4).replace(/0+$/, '');
+            if ((s.split('.')[1] || '').length < 2) s = v.toFixed(2);
+            return '$' + s;
+          };
+          const q = x => num(x).toLocaleString('en-US');
+          const qRun = x => {
+            const n = num(x);
+            return Number.isInteger(n) ? n.toLocaleString('en-US') : Number(n.toFixed(2)).toString();
+          };
+          const qM = x => {
+            const n = num(x);
+            return Number.isInteger(n) ? n.toLocaleString('en-US') : Number(n.toFixed(3)).toString();
+          };
+          const agentModel = AGENT_MODELS.find(m => m.id === agentModelId) || AGENT_MODELS[0];
+          const DEFAULT_TIER_THRESHOLD = 200000;
+          const isTieredModel = m => [m.input, m.output, m.cache].some(rate => rate && typeof rate === 'object');
+          const tierThresholdFor = m => {
+            const threshold = num(m && m.tierThreshold);
+            return threshold > 0 ? threshold : DEFAULT_TIER_THRESHOLD;
+          };
+          const formatTokenThreshold = threshold => {
+            const n = num(threshold);
+            return n >= 1000 && n % 1000 === 0 ? `${n / 1000}k` : n.toLocaleString('en-US');
+          };
+          const rateFor = m => {
+            const tierThreshold = tierThresholdFor(m);
+            const highTier = usageMode !== 'total' && num(agentInput) > tierThreshold;
+            const pick = v => v && typeof v === 'object' ? v[highTier ? 'high' : 'low'] : v;
+            return {
+              inRate: pick(m.input),
+              outRate: pick(m.output),
+              highTier,
+              tierThreshold,
+              tiered: isTieredModel(m)
+            };
+          };
+          const computeAgent = () => {
+            const m = agentModel;
+            const {inRate, outRate, tiered, highTier, tierThreshold} = rateFor(m);
+            const tier = highTier ? 'high' : 'low';
+            if (usageMode === 'total') {
+              const inputCost = num(agentTotalInputM) * inRate;
+              const outputCost = num(agentTotalOutputM) * outRate;
+              const toolWeb = num(agentTotalWebSearch) * TOOL_PRICE.web_search;
+              const toolImage = num(agentTotalImageSearch) * TOOL_PRICE.image_search;
+              const toolFetch = num(agentTotalFetchUrl) * TOOL_PRICE.fetch_url;
+              const toolPeople = num(agentTotalPeople) * TOOL_PRICE.people_search;
+              const toolFinance = num(agentTotalFinance) * TOOL_PRICE.finance_search;
+              const toolsCost = toolWeb + toolImage + toolFetch + toolPeople + toolFinance;
+              const sess = num(agentTotalSandboxSessions);
+              const srch = sess > 0 ? num(agentTotalSandboxSearches) : 0;
+              const sandboxCost = sess * SANDBOX_SESSION + srch * SANDBOX_SEARCH;
+              const total = inputCost + outputCost + toolsCost + sandboxCost;
+              return {
+                total,
+                tiered,
+                tier,
+                tierThreshold,
+                inputCost,
+                outputCost,
+                toolsCost,
+                sandboxCost,
+                tools: {
+                  web: toolWeb,
+                  image: toolImage,
+                  fetch: toolFetch,
+                  people: toolPeople,
+                  finance: toolFinance
+                }
+              };
+            }
+            const inputCost = tokenCost(num(agentInput), inRate);
+            const outputCost = tokenCost(agentOutput, outRate);
+            const toolWeb = num(agentWebSearch) * TOOL_PRICE.web_search;
+            const toolImage = num(agentImageSearch) * TOOL_PRICE.image_search;
+            const toolFetch = num(agentFetchUrl) * TOOL_PRICE.fetch_url;
+            const toolPeople = num(agentPeople) * TOOL_PRICE.people_search;
+            const toolFinance = num(agentFinance) * TOOL_PRICE.finance_search;
+            const toolsCost = toolWeb + toolImage + toolFetch + toolPeople + toolFinance;
+            const sandboxCost = num(agentSandboxSessions) * SANDBOX_SESSION + num(agentSandboxSearches) * SANDBOX_SEARCH;
+            const total = inputCost + outputCost + toolsCost + sandboxCost;
+            return {
+              total,
+              tiered,
+              tier,
+              tierThreshold,
+              inputCost,
+              outputCost,
+              toolsCost,
+              sandboxCost,
+              tools: {
+                web: toolWeb,
+                image: toolImage,
+                fetch: toolFetch,
+                people: toolPeople,
+                finance: toolFinance
+              }
+            };
+          };
+          const computeSearch = () => ({
+            total: per1k(searchRequests, SEARCH_PER_1K)
+          });
+          const embModel = EMB_MODELS.find(m => m.id === embModelId) || EMB_MODELS[0];
+          const computeEmbeddings = () => ({
+            total: tokenCost(embTokens, embModel.rate)
+          });
+          const decModel = DECISION_MODELS.find(m => m.id === decModelId) || DECISION_MODELS[0];
+          const decRate = decModel && typeof decModel.rate === 'number' ? decModel.rate : DECISIONS ? DECISIONS.input : 0;
+          const computeDecisions = () => ({
+            total: tokenCost(decTokens, decRate)
+          });
+          const sonarModel = SONAR_MODELS.find(m => m.id === sonarModelId) || SONAR_MODELS[0];
+          const sonarIsDeepResearch = !!(sonarModel && sonarModel.searchQueries != null);
+          const computeSonar = () => {
+            const m = sonarModel;
+            if (usageMode === 'total') {
+              const inputCost = num(sonarTotalInputM) * m.input;
+              const outputCost = num(sonarTotalOutputM) * m.output;
+              if (m.searchQueries != null) {
+                const citationCost = num(sonarTotalCitationM) * m.citation;
+                const reasoningCost = num(sonarTotalReasoningM) * m.reasoning;
+                const searchesCost = per1k(sonarTotalSearches, m.searchQueries);
+                const total = inputCost + outputCost + citationCost + reasoningCost + searchesCost;
+                return {
+                  total,
+                  inputCost,
+                  outputCost,
+                  citationCost,
+                  reasoningCost,
+                  searchesCost,
+                  requestFee: 0,
+                  deepResearch: true
+                };
+              }
+              const requestFee = per1k(sonarTotalRequests, m.request[sonarContext]);
+              const total = inputCost + outputCost + requestFee;
+              return {
+                total,
+                inputCost,
+                outputCost,
+                requestFee,
+                deepResearch: false
+              };
+            }
+            const inputCost = tokenCost(sonarInput, m.input);
+            const outputCost = tokenCost(sonarOutput, m.output);
+            if (m.searchQueries != null) {
+              const citationCost = tokenCost(sonarCitation, m.citation);
+              const reasoningCost = tokenCost(sonarReasoning, m.reasoning);
+              const searchesCost = per1k(sonarSearches, m.searchQueries);
+              const total = inputCost + outputCost + citationCost + reasoningCost + searchesCost;
+              return {
+                total,
+                inputCost,
+                outputCost,
+                citationCost,
+                reasoningCost,
+                searchesCost,
+                requestFee: 0,
+                deepResearch: true
+              };
+            }
+            const requestFee = per1k(1, m.request[sonarContext]);
+            const total = inputCost + outputCost + requestFee;
+            return {
+              total,
+              inputCost,
+              outputCost,
+              requestFee,
+              deepResearch: false
+            };
+          };
+          const result = activeProduct === 'agent' ? computeAgent() : activeProduct === 'search' ? computeSearch() : activeProduct === 'sonar' ? computeSonar() : activeProduct === 'decisions' ? computeDecisions() : computeEmbeddings();
+          const isAgent = activeProduct === 'agent';
+          const isSearch = activeProduct === 'search';
+          const isSonar = activeProduct === 'sonar';
+          const isDecisions = activeProduct === 'decisions';
+          const isTotalMode = (isAgent || isSonar) && usageMode === 'total';
+          const volN = isAgent ? num(agentRunsPerMonth) : isSearch ? num(searchRequests) : isSonar ? num(sonarRequests) : isDecisions ? num(decRequests) : num(volume);
+          const unitCost = isSearch ? SEARCH_PER_1K / 1000 : result.total || 0;
+          const projected = isSearch || isTotalMode ? result.total : unitCost * volN;
+          const displayProjected = fmt(projected);
+          useEffect(() => {
+            const handle = setTimeout(() => {
+              const meta = PRODUCT_META[activeProduct];
+              let suffix = '';
+              if (isTotalMode) suffix = ' for your total usage'; else if (isAgent) suffix = ` for ${q(agentRunsPerMonth)} API calls`; else if (isSearch) suffix = ` for ${q(searchRequests)} requests`; else if (isSonar) suffix = ` for ${q(sonarRequests)} API calls`; else if (isDecisions) {
+                if (num(decRequests) > 1) suffix = ` for ${q(decRequests)} requests`;
+              } else if (num(volume) > 1) suffix = ` for ${q(volume)} requests`;
+              setLiveText(`${meta.label} estimate: ${displayProjected}${suffix}`);
+            }, 400);
+            return () => clearTimeout(handle);
+          }, [displayProjected, activeProduct, volume, decRequests, searchRequests, sonarRequests, agentRunsPerMonth, isAgent, isSearch, isSonar, isDecisions, isTotalMode]);
+          const fg = {
+            color: 'var(--color-foreground)'
+          };
+          const muted = {
+            color: 'var(--color-muted-foreground)'
+          };
+          const borderStyle = {
+            borderColor: 'var(--color-border)'
+          };
+          const segSelected = 'bg-[#1215160f] dark:bg-[#f7f7f81a]';
+          const motionCls = reduceMotion ? '' : 'transition-all duration-200';
+          const fieldBase = 'rounded-[8px] border bg-transparent px-3 py-1.5 text-sm tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]';
+          const chipBtn = 'rounded-full border px-2.5 py-1 text-xs tabular-nums hover:bg-[var(--cb-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]';
+          const renderNumberField = (label, value, setValue, id, opts = {}) => {
+            const {helper, info, slider, narrow, max, min, decimals} = opts;
+            const coerce = raw => {
+              let n = decimals ? floatVal(raw, decimals) : intVal(raw);
+              if (typeof min === 'number') n = Math.max(min, n);
+              if (typeof max === 'number') n = Math.min(max, n);
+              return n;
+            };
+            const inputEl = <input id={id} type="text" inputMode={decimals ? 'decimal' : 'numeric'} value={typeof value === 'number' ? String(value) : value} onChange={e => setValue(decimals ? sanitizeDecimal(e.target.value) : e.target.value.replace(/[^\d.]/g, '').split('.')[0])} onBlur={e => setValue(coerce(e.target.value))} aria-describedby={helper ? `${id}-help` : undefined} className={`${fieldBase} ${narrow ? 'w-20 shrink-0 sm:w-24' : 'w-full'}`} style={borderStyle} />;
+            return <div className="flex flex-col gap-1.5">
+                {slider ? <>
+                    {}
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-1.5">
+                        <label id={`${id}-label`} htmlFor={id} className="block text-sm" style={fg}>{label}</label>
+                        {info}
+                      </div>
+                      {inputEl}
+                    </div>
+                    {slider}
+                  </> : <>
+                    <div className="flex items-center gap-1.5">
+                      <label id={`${id}-label`} htmlFor={id} className="block text-sm" style={fg}>{label}</label>
+                      {info}
+                    </div>
+                    {inputEl}
+                  </>}
+                {helper && <p id={`${id}-help`} className="block text-sm" style={muted}>{helper}</p>}
+              </div>;
+          };
+          const ladder125 = (lo, hi) => {
+            const out = [];
+            const mag = Math.floor(Math.log10(Math.max(lo, 1)));
+            for (let e = mag; e <= Math.ceil(Math.log10(hi)) + 1; e++) {
+              for (const m of [1, 2, 5]) {
+                const val = m * Math.pow(10, e);
+                if (val >= lo && val <= hi) out.push(val);
+              }
+            }
+            if (!out.length || out[0] > lo) out.unshift(lo);
+            if (out[out.length - 1] < hi) out.push(hi);
+            return out;
+          };
+          const snapTo125 = (v, lo, hi) => {
+            const rungs = ladder125(lo, hi);
+            return rungs.reduce((best, r) => Math.abs(Math.log10(r) - Math.log10(Math.max(v, lo))) < Math.abs(Math.log10(best) - Math.log10(Math.max(v, lo))) ? r : best, rungs[0]);
+          };
+          const nextRung125 = (v, lo, hi, dir) => {
+            const rungs = ladder125(lo, hi);
+            const cur = snapTo125(v, lo, hi);
+            const i = rungs.indexOf(cur);
+            const ni = Math.min(rungs.length - 1, Math.max(0, i + dir));
+            return rungs[ni];
+          };
+          const renderSliderBar = (value, setValue, id, opts = {}) => {
+            const {scale = 'linear', min = 0, max: maxProp = 100, step = 1, labelId, valueText, logMin} = opts;
+            const v = num(value);
+            const max = Math.max(maxProp, v);
+            const isLog = scale === 'log';
+            const lo = isLog ? typeof logMin === 'number' && logMin > 0 ? logMin : Math.max(1, min) : min;
+            const clamp = x => Math.min(max, Math.max(min, x));
+            const lg = x => Math.log10(Math.max(x, lo));
+            const posPct = x => {
+              const cx = clamp(x);
+              return isLog ? (lg(cx) - lg(lo)) / (lg(max) - lg(lo)) * 100 : (cx - min) / (max - min) * 100;
+            };
+            const valueAtPos = pct => {
+              const p = Math.min(1, Math.max(0, pct));
+              if (isLog) return snapTo125(Math.pow(10, lg(lo) + p * (lg(max) - lg(lo))), lo, max);
+              return clamp(Math.round((min + p * (max - min)) / step) * step);
+            };
+            const fillPct = posPct(v);
+            const onPointer = (e, el) => {
+              if (el) {
+                const r = el.getBoundingClientRect();
+                setValue(valueAtPos((e.clientX - r.left) / r.width));
+              }
+            };
+            const startDrag = (e, track) => {
+              onPointer(e, track);
+              const move = ev => onPointer(ev, track);
+              const up = () => {
+                window.removeEventListener('pointermove', move);
+                window.removeEventListener('pointerup', up);
+              };
+              window.addEventListener('pointermove', move);
+              window.addEventListener('pointerup', up);
+            };
+            const onThumbKeyDown = e => {
+              let nv = null;
+              const up1 = () => isLog ? nextRung125(v, lo, max, 1) : clamp(v + step);
+              const dn1 = () => isLog ? nextRung125(v, lo, max, -1) : clamp(v - step);
+              if (e.key === 'ArrowRight' || e.key === 'ArrowUp') nv = up1(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') nv = dn1(); else if (e.key === 'Home') nv = min; else if (e.key === 'End') nv = max; else if (e.key === 'PageUp') nv = isLog ? snapTo125(clamp(v * 10), lo, max) : clamp(v + 10 * step); else if (e.key === 'PageDown') nv = isLog ? snapTo125(clamp(v / 10), lo, max) : clamp(v - 10 * step);
+              if (nv !== null) {
+                e.preventDefault();
+                setValue(nv);
+              }
+            };
+            return <div className="flex flex-col gap-1">
+                <div className="py-1.5">
+                  <div className="relative h-1.5 rounded-full" style={{
+              backgroundColor: 'var(--color-border)'
+            }} onPointerDown={e => startDrag(e, e.currentTarget)}>
+                    <div className={`absolute left-0 top-0 h-1.5 rounded-full ${motionCls}`} style={{
+              width: `${fillPct}%`,
+              backgroundColor: '#1a6872'
+            }} />
+                    <div className="absolute top-1/2 flex h-11 w-11 items-center justify-center" style={{
+              left: `${fillPct}%`,
+              transform: 'translate(-50%, -50%)',
+              touchAction: 'none'
+            }} onPointerDown={e => {
+              e.stopPropagation();
+              startDrag(e, e.currentTarget.parentElement);
+            }}>
+                      <div role="slider" tabIndex={0} aria-labelledby={labelId} aria-valuemin={min} aria-valuemax={max} aria-valuenow={v} aria-valuetext={valueText ? valueText(v) : String(v)} onKeyDown={onThumbKeyDown} className={`h-4 w-4 cursor-pointer rounded-full border-2 ${motionCls} focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]`} style={{
+              borderColor: '#1a6872',
+              backgroundColor: '#ffffff'
+            }} />
+                    </div>
+                  </div>
+                </div>
+              </div>;
+          };
+          const renderListbox = (id, value, setValue, options, {grouped = false, renderOption} = {}) => {
+            const open = openListbox === id;
+            const selected = options.find(o => o.id === value) || options[0];
+            const optLabel = renderOption || (o => o.id);
+            const activeId = open && activeOptIdx >= 0 && options[activeOptIdx] ? `${id}-opt-${activeOptIdx}` : undefined;
+            const openWith = idx => {
+              setActiveOptIdx(idx);
+              setOpenListbox(id);
+            };
+            const closeRefocus = () => {
+              setOpenListbox(null);
+              if (typeof document !== 'undefined') {
+                const t = document.getElementById(`${id}-trigger`);
+                if (t) t.focus();
+              }
+            };
+            const choose = idx => {
+              if (options[idx]) {
+                setValue(options[idx].id);
+                closeRefocus();
+              }
+            };
+            const moveActive = dir => setActiveOptIdx((activeOptIdx + dir + options.length) % options.length);
+            const onTriggerKeyDown = e => {
+              if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                openWith(Math.max(0, options.findIndex(o => o.id === value)));
+              }
+            };
+            const onListKeyDown = e => {
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                moveActive(1);
+              } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                moveActive(-1);
+              } else if (e.key === 'Home') {
+                e.preventDefault();
+                setActiveOptIdx(0);
+              } else if (e.key === 'End') {
+                e.preventDefault();
+                setActiveOptIdx(options.length - 1);
+              } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                choose(activeOptIdx);
+              } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closeRefocus();
+              } else if (e.key === 'Tab') {
+                setOpenListbox(null);
+              } else if (e.key.length === 1 && (/\S/).test(e.key)) {
+                const now = Date.now();
+                const ta = typeaheadRef.current;
+                ta.buf = now - ta.t > 500 ? e.key.toLowerCase() : ta.buf + e.key.toLowerCase();
+                ta.t = now;
+                const shortId = o => o.id.split('/').pop();
+                const hit = options.findIndex(o => shortId(o).toLowerCase().startsWith(ta.buf) || o.id.toLowerCase().startsWith(ta.buf));
+                if (hit >= 0) setActiveOptIdx(hit);
+              }
+            };
+            const rows = [];
+            let lastGroup = null;
+            options.forEach((opt, i) => {
+              if (grouped && opt.group !== lastGroup) {
+                const firstHeader = lastGroup === null;
+                rows.push(<li key={`grp-${opt.group}`} role="presentation" className={`px-2 pb-1 text-xs font-medium tracking-wide ${firstHeader ? 'pt-1' : 'mt-1 pt-2'}`} style={muted}>{opt.group}</li>);
+                lastGroup = opt.group;
+              }
+              const isSel = opt.id === value;
+              const isActive = i === activeOptIdx;
+              rows.push(<li key={opt.id} id={`${id}-opt-${i}`} role="option" aria-selected={isSel} onMouseEnter={() => setActiveOptIdx(i)} onClick={() => choose(i)} className={`flex cursor-pointer items-center justify-between gap-2 rounded-[6px] px-2 py-1.5 text-sm ${isSel ? 'bg-[#12151614] dark:bg-[#f7f7f824] font-medium' : isActive ? 'bg-[var(--cb-hover)]' : ''} ${isActive ? 'ring-1 ring-inset ring-[color:var(--calc-ring)]' : ''}`} style={fg}>
+                  <span className="tabular-nums">{optLabel(opt)}</span>
+                  {isSel && <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>}
+                </li>);
+            });
+            return <div className="relative" ref={el => {
+              listboxRefs.current[id] = el;
+            }}>
+                <button type="button" id={`${id}-trigger`} aria-haspopup="listbox" aria-expanded={open} aria-labelledby={`${id}-label ${id}-trigger`} onClick={() => open ? setOpenListbox(null) : openWith(Math.max(0, options.findIndex(o => o.id === value)))} onKeyDown={onTriggerKeyDown} className={`${fieldBase} flex items-center justify-between gap-2 text-left`} style={{
+              ...fg,
+              ...borderStyle
+            }}>
+                  <span className="truncate tabular-nums">{optLabel(selected)}</span>
+                  <svg className="h-3.5 w-3.5 shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+                </button>
+                {open && <ul role="listbox" id={`${id}-listbox`} aria-labelledby={`${id}-label`} aria-activedescendant={activeId} tabIndex={-1} ref={el => {
+              if (el) el.focus();
+            }} onKeyDown={onListKeyDown} className="absolute z-50 mt-2 max-h-[320px] w-full overflow-y-auto rounded-lg border p-1 shadow-lg focus:outline-none" style={{
+              backgroundColor: 'var(--cb-popover-bg)',
+              borderColor: 'var(--cb-popover-border)'
+            }}>
+                    {rows}
+                  </ul>}
+              </div>;
+          };
+          const presetLabel = pid => ({
+            'fast': 'Quick lookup',
+            'low': 'Everyday research',
+            'medium': 'Multi-source research',
+            'high': 'Exhaustive analysis',
+            'xhigh': 'Open-ended agentic work'
+          })[pid] || pid;
+          const applyTier = tier => {
+            const p = AGENT_PRESETS.find(x => x.id === tier);
+            if (!p) return;
+            const t = p.tools || ({});
+            setAgentModelId(p.model);
+            setAgentInput(p.input);
+            setAgentOutput(p.output);
+            setAgentWebSearch(t.web_search || 0);
+            setAgentImageSearch(t.image_search || 0);
+            setAgentFetchUrl(t.fetch_url || 0);
+            setAgentPeople(t.people_search || 0);
+            setAgentFinance(t.finance_search || 0);
+            setAgentSandboxSessions(t.sandbox_sessions || 0);
+            setAgentSandboxSearches(t.sandbox_searches || 0);
+          };
+          const agentRates = (() => {
+            const {inRate, outRate} = rateFor(agentModel);
+            return {
+              inR: inRate,
+              outR: outRate
+            };
+          })();
+          const agentEstimateText = () => {
+            const r = result;
+            if (usageMode === 'total') {
+              return ['Perplexity Agent API cost estimate (total usage)', `Model: ${agentModelId}`, `Input tokens: ${qM(agentTotalInputM)}M`, `Output tokens: ${qM(agentTotalOutputM)}M`, `Tools (total): web_search ${q(agentTotalWebSearch)}, image_search ${q(agentTotalImageSearch)}, fetch_url ${q(agentTotalFetchUrl)}, people_search ${q(agentTotalPeople)}, finance_search ${q(agentTotalFinance)}`, `Sandbox (total): ${q(agentTotalSandboxSessions)} sessions, ${q(agentTotalSandboxSearches)} searches`, `Estimated cost: ${fmt(r.total)}`, 'Estimate only. Final cost is metered from each response usage field.'].join('\n');
+            }
+            const lines = ['Perplexity Agent API cost estimate', `Model: ${agentModelId}`, `API calls: ${q(agentRunsPerMonth)}`, `Input tokens: ${q(agentInput)}`, `Output tokens: ${q(agentOutput)}`, `Tools / call: web_search ${qRun(agentWebSearch)}, image_search ${qRun(agentImageSearch)}, fetch_url ${qRun(agentFetchUrl)}, people_search ${qRun(agentPeople)}, finance_search ${qRun(agentFinance)}`, `Sandbox / call: ${qRun(agentSandboxSessions)} sessions, ${qRun(agentSandboxSearches)} searches`, `Per-call cost: ${fmt(r.total)}`, `Estimated cost: ${fmt(r.total * num(agentRunsPerMonth))}`, 'Estimate only. Final cost is metered from each response usage field.'];
+            return lines.join('\n');
+          };
+          const copyEstimate = () => {
+            const text = estimateText();
+            if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }).catch(() => {});
+            } else if (typeof document !== 'undefined') {
+              try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              } catch (e) {}
+            }
+          };
+          const agentFormulaText = () => {
+            const {inR, outR} = agentRates;
+            if (usageMode === 'total') {
+              const parts = [`${qM(agentTotalInputM)}M × ${fmtRate(inR)}/1M`, `${qM(agentTotalOutputM)}M × ${fmtRate(outR)}/1M`];
+              const bits = [];
+              if (num(agentTotalSandboxSessions) > 0) bits.push(`sandbox ${q(agentTotalSandboxSessions)}×${fmtRate(SANDBOX_SESSION)}`);
+              if (num(agentTotalSandboxSearches) > 0) bits.push(`sandbox-search ${q(agentTotalSandboxSearches)}×${fmtRate(SANDBOX_SEARCH)}`);
+              if (num(agentTotalWebSearch) > 0) bits.push(`web ${q(agentTotalWebSearch)}×${fmtRate(TOOL_PRICE.web_search)}`);
+              if (num(agentTotalImageSearch) > 0) bits.push(`image ${q(agentTotalImageSearch)}×${fmtRate(TOOL_PRICE.image_search)}`);
+              if (num(agentTotalFetchUrl) > 0) bits.push(`fetch ${q(agentTotalFetchUrl)}×${fmtRate(TOOL_PRICE.fetch_url)}`);
+              if (num(agentTotalPeople) > 0) bits.push(`people ${q(agentTotalPeople)}×${fmtRate(TOOL_PRICE.people_search)}`);
+              if (num(agentTotalFinance) > 0) bits.push(`finance ${q(agentTotalFinance)}×${fmtRate(TOOL_PRICE.finance_search)}`);
+              return `total = ${[...parts, ...bits].join(' + ')} = ${fmt(result.total)}`;
+            }
+            const parts = [`${q(num(agentInput))} × ${fmtRate(inR)}/1M`, `${q(agentOutput)} × ${fmtRate(outR)}/1M`];
+            const bits = [];
+            if (num(agentSandboxSessions) > 0) bits.push(`sandbox ${qRun(agentSandboxSessions)}×${fmtRate(SANDBOX_SESSION)}`);
+            if (num(agentSandboxSearches) > 0) bits.push(`sandbox-search ${qRun(agentSandboxSearches)}×${fmtRate(SANDBOX_SEARCH)}`);
+            if (num(agentWebSearch) > 0) bits.push(`web ${qRun(agentWebSearch)}×${fmtRate(TOOL_PRICE.web_search)}`);
+            if (num(agentImageSearch) > 0) bits.push(`image ${qRun(agentImageSearch)}×${fmtRate(TOOL_PRICE.image_search)}`);
+            if (num(agentFetchUrl) > 0) bits.push(`fetch ${qRun(agentFetchUrl)}×${fmtRate(TOOL_PRICE.fetch_url)}`);
+            if (num(agentPeople) > 0) bits.push(`people ${qRun(agentPeople)}×${fmtRate(TOOL_PRICE.people_search)}`);
+            if (num(agentFinance) > 0) bits.push(`finance ${qRun(agentFinance)}×${fmtRate(TOOL_PRICE.finance_search)}`);
+            const inner = [...parts, ...bits].join(' + ');
+            return `total = ( ${inner} ) × ${q(agentRunsPerMonth)} API calls = ${fmt(result.total * num(agentRunsPerMonth))}`;
+          };
+          const sonarEstimateText = () => {
+            const m = sonarModel;
+            const isDR = sonarIsDeepResearch;
+            if (usageMode === 'total') {
+              const lines = ['Perplexity Sonar API cost estimate (total usage)', `Model: ${m.label}`, `Input tokens: ${qM(sonarTotalInputM)}M`, `Output tokens: ${qM(sonarTotalOutputM)}M`];
+              if (isDR) {
+                lines.push(`Citation tokens: ${qM(sonarTotalCitationM)}M`, `Reasoning tokens: ${qM(sonarTotalReasoningM)}M`, `Search queries: ${q(sonarTotalSearches)}`);
+              } else {
+                lines.push(`Requests: ${q(sonarTotalRequests)} (search context ${sonarContext})`);
+              }
+              lines.push(`Estimated cost: ${fmt(result.total)}`, 'Estimate only. Final cost is metered from each response usage field.');
+              return lines.join('\n');
+            }
+            const reqs = num(sonarRequests);
+            const lines = ['Perplexity Sonar API cost estimate', `Model: ${m.label}`, `API calls: ${q(sonarRequests)}`, `Input tokens: ${q(sonarInput)}`, `Output tokens: ${q(sonarOutput)}`];
+            if (isDR) {
+              lines.push(`Citation tokens: ${q(sonarCitation)}`, `Reasoning tokens: ${q(sonarReasoning)}`, `Search queries: ${q(sonarSearches)}`);
+            } else {
+              lines.push(`Search context: ${sonarContext} (request fee ${fmtRate(m.request[sonarContext])}/1K)`);
+            }
+            lines.push(`Per-call cost: ${fmt(result.total)}`, `Estimated cost: ${fmt(result.total * reqs)}`, 'Estimate only. Final cost is metered from each response usage field.');
+            return lines.join('\n');
+          };
+          const sonarFormulaText = () => {
+            const m = sonarModel;
+            const isDR = sonarIsDeepResearch;
+            if (usageMode === 'total') {
+              const parts = [`${qM(sonarTotalInputM)}M × ${fmtRate(m.input)}/1M`, `${qM(sonarTotalOutputM)}M × ${fmtRate(m.output)}/1M`];
+              if (isDR) parts.push(`citation ${qM(sonarTotalCitationM)}M × ${fmtRate(m.citation)}/1M`, `reasoning ${qM(sonarTotalReasoningM)}M × ${fmtRate(m.reasoning)}/1M`, `searches ${q(sonarTotalSearches)} × ${fmtRate(m.searchQueries)}/1K`); else parts.push(`request ${q(sonarTotalRequests)} × ${fmtRate(m.request[sonarContext])}/1K`);
+              return `total = ${parts.join(' + ')} = ${fmt(result.total)}`;
+            }
+            const reqs = num(sonarRequests);
+            const parts = [`${q(sonarInput)} × ${fmtRate(m.input)}/1M`, `${q(sonarOutput)} × ${fmtRate(m.output)}/1M`];
+            if (isDR) parts.push(`citation ${q(sonarCitation)} × ${fmtRate(m.citation)}/1M`, `reasoning ${q(sonarReasoning)} × ${fmtRate(m.reasoning)}/1M`, `searches ${q(sonarSearches)} × ${fmtRate(m.searchQueries)}/1K`); else parts.push(`request ${fmtRate(m.request[sonarContext])}/1K`);
+            return `total = ( ${parts.join(' + ')} ) × ${q(sonarRequests)} API calls = ${fmt(result.total * reqs)}`;
+          };
+          const estimateText = () => isSonar ? sonarEstimateText() : agentEstimateText();
+          const formulaText = () => isSonar ? sonarFormulaText() : agentFormulaText();
+          const renderRateChip = text => <p className="block text-xs tabular-nums" style={muted}>{text}</p>;
+          const sectionLabel = text => <p className="block text-xs font-medium tracking-wide" style={muted}>{text}</p>;
+          const POP_W = 256;
+          const POP_H = 160;
+          const renderInfo = (id, content) => {
+            const open = openInfo === id;
+            const btnId = `${id}-btn`;
+            const place = open ? infoPlace : {
+              x: 'left',
+              y: 'down'
+            };
+            const openWithPlacement = el => {
+              let x = 'left', y = 'down';
+              if (el && typeof window !== 'undefined') {
+                const r = el.getBoundingClientRect();
+                if (r.left + POP_W > window.innerWidth - 8) x = 'right';
+                if (r.bottom + POP_H > window.innerHeight - 8) y = 'up';
+              }
+              setInfoPlace({
+                x,
+                y
+              });
+              setOpenInfo(id);
+            };
+            const isFocusVisible = el => {
+              try {
+                return !!(el && el.matches && el.matches(':focus-visible'));
+              } catch (e) {
+                return false;
+              }
+            };
+            const withinInfo = node => {
+              const el = infoRefs.current[id];
+              return !!(el && node && el.contains(node));
+            };
+            const xCls = place.x === 'right' ? 'right-0' : 'left-0';
+            const yCls = place.y === 'up' ? 'bottom-4 pb-2' : 'top-4 pt-2';
+            return <span className="relative inline-flex" ref={el => {
+              infoRefs.current[id] = el;
+            }} onMouseEnter={() => openWithPlacement(document.getElementById(btnId))} onMouseLeave={() => {
+              if (typeof document !== 'undefined' && withinInfo(document.activeElement)) return;
+              setOpenInfo(cur => cur === id ? null : cur);
+            }} onFocus={e => {
+              if (e.target && e.target.id === btnId && isFocusVisible(e.target)) openWithPlacement(e.target);
+            }} onBlur={e => {
+              if (e.relatedTarget && withinInfo(e.relatedTarget)) return;
+              setOpenInfo(cur => cur === id ? null : cur);
+            }}>
+                <button type="button" id={btnId} aria-label="More info" aria-expanded={open} aria-controls={`${id}-pop`} onClick={e => open ? setOpenInfo(null) : openWithPlacement(e.currentTarget)} className="inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]" style={{
+              ...muted,
+              ...borderStyle
+            }}>
+                  ?
+                </button>
+                {open && <span id={`${id}-pop`} role="tooltip" className={`absolute ${xCls} ${yCls} z-50 block w-60 max-w-[min(80vw,16rem)]`}>
+                    <span className="block rounded-lg border p-2.5 text-xs shadow-lg" style={{
+              backgroundColor: 'var(--cb-popover-bg)',
+              borderColor: 'var(--cb-popover-border)',
+              color: 'var(--color-muted-foreground)'
+            }}>
+                      {content}
+                    </span>
+                  </span>}
+              </span>;
+          };
+          const TOOL_INFO = {
+            web_search: ['Performs a web search to retrieve current information', TOOL_PRICE.web_search],
+            image_search: ['Finds structured image results from the web', TOOL_PRICE.image_search],
+            fetch_url: ['Fetches and extracts content from a specific URL', TOOL_PRICE.fetch_url],
+            people_search: ['Looks up professionals, employees, and people', TOOL_PRICE.people_search],
+            finance_search: ['Retrieves financial data and market information', TOOL_PRICE.finance_search]
+          };
+          const toolInfo = key => renderInfo(`tool-${key}-info`, <>{TOOL_INFO[key][0]} · {fmtRate(TOOL_INFO[key][1])} per invocation.</>);
+          const toolsSandboxPerCall = () => num(agentWebSearch) * TOOL_PRICE.web_search + num(agentImageSearch) * TOOL_PRICE.image_search + num(agentFetchUrl) * TOOL_PRICE.fetch_url + num(agentPeople) * TOOL_PRICE.people_search + num(agentFinance) * TOOL_PRICE.finance_search + num(agentSandboxSessions) * SANDBOX_SESSION + num(agentSandboxSearches) * SANDBOX_SEARCH;
+          const agentModelCost = m => {
+            const {inRate, outRate} = rateFor(m);
+            if (usageMode === 'total') return num(agentTotalInputM) * inRate + num(agentTotalOutputM) * outRate;
+            return (tokenCost(num(agentInput), inRate) + tokenCost(num(agentOutput), outRate)) * num(agentRunsPerMonth);
+          };
+          const renderModelTable = () => {
+            const providers = [...new Set(AGENT_MODELS.map(x => x.group))];
+            const terms = modelFilter.toLowerCase().split(',').map(t => t.trim()).filter(Boolean);
+            const rows = AGENT_MODELS.filter(m => (modelProvider === 'all' || m.group === modelProvider) && (terms.length === 0 || terms.some(t => m.id.toLowerCase().includes(t) || m.group.toLowerCase().includes(t)))).sort((a, b) => modelSort === 'name' ? a.id.localeCompare(b.id) : agentModelCost(a) - agentModelCost(b));
+            const selInRows = rows.some(r => r.id === agentModelId);
+            const focusRow = ni => {
+              const t = rows[ni];
+              if (!t) return;
+              setAgentModelId(t.id);
+              if (typeof document !== 'undefined') {
+                const el = document.getElementById(`calc-model-opt-${ni}`);
+                if (el) el.focus();
+              }
+            };
+            const onRowKey = (e, i) => {
+              let ni = null;
+              if (e.key === 'ArrowDown') ni = Math.min(rows.length - 1, i + 1); else if (e.key === 'ArrowUp') ni = Math.max(0, i - 1); else if (e.key === 'Home') ni = 0; else if (e.key === 'End') ni = rows.length - 1;
+              if (ni !== null) {
+                e.preventDefault();
+                focusRow(ni);
+              }
+            };
+            return <div className="flex flex-col gap-2">
+                <input type="text" value={modelFilter} onChange={e => setModelFilter(e.target.value)} placeholder="Filter models… e.g. claude, gpt-5, gemini" aria-label="Filter models" className={`${fieldBase} w-full`} />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {['all', ...providers].map(prov => {
+              const active = modelProvider === prov;
+              return <button key={prov} type="button" onClick={() => setModelProvider(prov)} className={`rounded-full border px-2 py-0.5 text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)] ${active ? '' : 'hover:bg-[var(--cb-hover)]'}`} style={active ? {
+                ...fg,
+                borderColor: '#1a6872'
+              } : {
+                ...muted,
+                ...borderStyle
+              }}>
+                        {prov === 'all' ? 'All' : prov}
+                      </button>;
+            })}
+                </div>
+                <div className="flex items-center gap-2 text-xs" style={muted}>
+                  <span>Sort:</span>
+                  {[['cost', 'Cost'], ['name', 'Name']].map(([key, txt]) => <button key={key} type="button" onClick={() => setModelSort(key)} className="rounded px-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]" style={modelSort === key ? {
+              color: 'var(--color-foreground)',
+              fontWeight: 600
+            } : undefined}>
+                      {txt}
+                    </button>)}
+                </div>
+                <div ref={modelListRef} role="radiogroup" aria-label="Model" className="calc-modeltable flex flex-col gap-0.5 overflow-y-auto rounded-[8px] border p-1" style={{
+              ...borderStyle,
+              maxHeight: '282px'
+            }}>
+                  {rows.map((m, i) => {
+              const sel = m.id === agentModelId;
+              const {inRate, outRate} = rateFor(m);
+              const isTabStop = sel || !selInRows && i === 0;
+              return <button key={m.id} id={`calc-model-opt-${i}`} type="button" role="radio" aria-checked={sel} tabIndex={isTabStop ? 0 : -1} title={m.id} onClick={() => setAgentModelId(m.id)} onKeyDown={e => onRowKey(e, i)} className={`w-full rounded-[6px] px-2.5 py-1.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)] ${sel ? segSelected : 'hover:bg-[var(--cb-hover)]'}`} style={sel ? {
+                boxShadow: 'inset 2px 0 0 0 #1a6872'
+              } : undefined}>
+                        <span className="block break-words text-sm" style={fg}>{m.id.replace(/^[^/]+\//, '')}</span>
+                        <div className="mt-0.5 flex items-baseline justify-between gap-2">
+                          <span className="min-w-0 text-xs tabular-nums" style={muted}>In {fmtRate(inRate)} · Out {fmtRate(outRate)} /1M</span>
+                          <span className="shrink-0 text-sm font-medium tabular-nums" style={fg}>{fmt(agentModelCost(m))}</span>
+                        </div>
+                      </button>;
+            })}
+                  {rows.length === 0 && <span className="px-2 py-2 text-sm" style={muted}>No models match your filter.</span>}
+                </div>
+              </div>;
+          };
+          const renderModelRow = () => {
+            const m = agentModel;
+            const tiered = isTieredModel(m);
+            const thresholdLabel = formatTokenThreshold(tierThresholdFor(m));
+            const rateRange = v => v && typeof v === 'object' ? `${fmtRate(v.low)} → ${fmtRate(v.high)}` : fmtRate(v);
+            const cacheLabel = m.cache === null ? 'no cache' : m.cache === 'inputx0.1' ? 'cache 90% off input' : `cache ${rateRange(m.cache)}`;
+            const modelInfo = <span className="flex flex-col gap-1.5">
+                <span className="block tabular-nums">
+                  {tiered ? `Input ${rateRange(m.input)} · Output ${rateRange(m.output)} per 1M · ${cacheLabel} · tier flips above ${thresholdLabel} input tokens` : `Input ${fmtRate(m.input)} · Output ${fmtRate(m.output)} · ${cacheLabel} per 1M tokens`}
+                </span>
+                {!isSingleProduct && <a href="/docs/agent-api/models" className="calc-link block hover:opacity-80" style={{
+              color: 'var(--color-foreground)'
+            }}>
+                    Rates from the Agent API Models page
+                  </a>}
+              </span>;
+            return <div className="flex flex-col gap-1.5 border-t pt-4" style={borderStyle}>
+                <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                  <label id="calc-agent-model-label" className="block text-sm" style={fg}>Model</label>
+                  {renderInfo('model-info', modelInfo)}
+                  {tiered && <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs tabular-nums" style={{
+              ...muted,
+              ...borderStyle
+            }}>
+                      {usageMode === 'total' ? 'base rate' : num(agentInput) > tierThresholdFor(m) ? `>${thresholdLabel} tier` : `≤${thresholdLabel} tier`}
+                    </span>}
+                </span>
+                {renderModelTable()}
+              </div>;
+          };
+          const tokenMField = (label, value, setter, id) => renderNumberField(label, value, setter, id, {
+            narrow: true,
+            decimals: 3,
+            slider: renderSliderBar(value, setter, id, {
+              scale: 'log',
+              min: 0,
+              logMin: 0.1,
+              max: 1000,
+              labelId: `${id}-label`,
+              valueText: v => `${qM(v)} million ${label.replace(' (M)', '').toLowerCase()}`
+            })
+          });
+          const renderModeTabs = () => {
+            if (!(isAgent || isSonar)) return null;
+            const accent = PRODUCT_META[activeProduct].accent;
+            const order = ['total', 'percall'];
+            const labels = {
+              total: 'Total',
+              percall: 'Per call'
+            };
+            const tabId = key => `calc-mode-${key}`;
+            const focusMode = key => {
+              setUsageMode(key);
+              if (typeof document !== 'undefined') {
+                const el = document.getElementById(tabId(key));
+                if (el) el.focus();
+              }
+            };
+            const onKey = e => {
+              const i = order.indexOf(usageMode);
+              let next = null;
+              if (e.key === 'ArrowRight') next = order[(i + 1) % order.length]; else if (e.key === 'ArrowLeft') next = order[(i - 1 + order.length) % order.length]; else if (e.key === 'Home') next = order[0]; else if (e.key === 'End') next = order[order.length - 1];
+              if (next !== null) {
+                e.preventDefault();
+                focusMode(next);
+              }
+            };
+            return <div role="tablist" aria-label="Usage entry mode" className="flex flex-wrap gap-1 border-b" style={borderStyle}>
+                {order.map(key => {
+              const selected = usageMode === key;
+              return <button key={key} id={tabId(key)} type="button" role="tab" aria-selected={selected} tabIndex={selected ? 0 : -1} onClick={() => setUsageMode(key)} onKeyDown={onKey} className={`relative min-h-[36px] rounded-t-[8px] rounded-b-none px-3.5 py-1.5 text-sm ${motionCls} ${selected ? `${segSelected} font-medium` : 'hover:bg-[var(--cb-hover)] hover:text-[var(--color-foreground)]'}`} style={selected ? fg : muted}>
+                      {labels[key]}
+                      {selected && <span className="absolute inset-x-0 -bottom-px h-0.5" style={{
+                backgroundColor: accent
+              }} aria-hidden="true" />}
+                    </button>;
+            })}
+              </div>;
+          };
+          const totalModeInfo = id => renderInfo(id, <>Total mode: enter your aggregate usage directly, with no per-call multiplier. Tokens are in <strong>millions (M)</strong> — 1 = 1,000,000 tokens. Tiered models are estimated at their base rate here, since a per-request tier can’t be inferred from a total.</>);
+          const renderAgentInputs = () => {
+            const total = usageMode === 'total';
+            const toolRow = (label, value, setter, id, info) => renderNumberField(label, value, setter, id, {
+              info,
+              narrow: true,
+              slider: renderSliderBar(value, setter, id, total ? {
+                scale: 'log',
+                min: 0,
+                max: 1000000,
+                labelId: `${id}-label`,
+                valueText: v => `${q(v)} ${label.toLowerCase()} total`
+              } : {
+                scale: 'linear',
+                min: 0,
+                max: 20,
+                step: 1,
+                labelId: `${id}-label`,
+                valueText: v => `${v} ${label.replace(' / call', '').toLowerCase()} per API call`
+              })
+            });
+            const TT = total ? [[agentTotalSandboxSessions, setAgentTotalSandboxSessions], [agentTotalSandboxSearches, setAgentTotalSandboxSearches], [agentTotalWebSearch, setAgentTotalWebSearch], [agentTotalImageSearch, setAgentTotalImageSearch], [agentTotalFetchUrl, setAgentTotalFetchUrl], [agentTotalPeople, setAgentTotalPeople], [agentTotalFinance, setAgentTotalFinance]] : [[agentSandboxSessions, setAgentSandboxSessions], [agentSandboxSearches, setAgentSandboxSearches], [agentWebSearch, setAgentWebSearch], [agentImageSearch, setAgentImageSearch], [agentFetchUrl, setAgentFetchUrl], [agentPeople, setAgentPeople], [agentFinance, setAgentFinance]];
+            const [[sessV, setSessV], [srchV, setSrchV], [webV, setWebV], [imageV, setImageV], [fetchV, setFetchV], [peopleV, setPeopleV], [financeV, setFinanceV]] = TT;
+            return <div className="flex flex-col gap-5">
+                {}
+                <div className="flex flex-col gap-4">
+                  <span className="flex items-center gap-1.5">
+                    {sectionLabel('Usage')}
+                    {total ? totalModeInfo('agent-total-info') : renderInfo('usage-info', <>Input = your prompt + context sent to the model on each API call; Output = the model’s response. Enter the average per API call. Output tokens usually cost more per 1M than input, though input is often several times larger than output. This estimate bills all input at the full rate; prompt caching (the per-model cache rate) lowers your real cost, so treat the total as an upper bound.</>)}
+                  </span>
+                  {total ? <>
+                      {tokenMField('Input Tokens (M)', agentTotalInputM, setAgentTotalInputM, 'calc-agent-total-input')}
+                      {tokenMField('Output Tokens (M)', agentTotalOutputM, setAgentTotalOutputM, 'calc-agent-total-output')}
+                    </> : <>
+                      {renderNumberField('API Calls', agentRunsPerMonth, setAgentRunsPerMonth, 'calc-agent-runs', {
+              narrow: true,
+              min: 1,
+              slider: renderSliderBar(agentRunsPerMonth, setAgentRunsPerMonth, 'calc-agent-runs', {
+                scale: 'log',
+                min: 1,
+                max: 10000000,
+                labelId: 'calc-agent-runs-label',
+                valueText: v => `${q(v)} API calls`
+              })
+            })}
+                      {renderNumberField('Input Tokens', agentInput, setAgentInput, 'calc-agent-input', {
+              narrow: true,
+              slider: renderSliderBar(agentInput, setAgentInput, 'calc-agent-input', {
+                scale: 'log',
+                min: 0,
+                max: 1000000,
+                labelId: 'calc-agent-input-label',
+                valueText: v => `${q(v)} input tokens per API call`
+              })
+            })}
+                      {renderNumberField('Output Tokens', agentOutput, setAgentOutput, 'calc-agent-output', {
+              narrow: true,
+              slider: renderSliderBar(agentOutput, setAgentOutput, 'calc-agent-output', {
+                scale: 'log',
+                min: 0,
+                max: 1000000,
+                labelId: 'calc-agent-output-label',
+                valueText: v => `${q(v)} output tokens per API call`
+              })
+            })}
+                    </>}
+                </div>
+        
+                {}
+                {(() => {
+              const toolCount = [sessV, srchV, webV, imageV, fetchV, peopleV, financeV].reduce((s, v) => s + num(v), 0);
+              return <div className="border-t pt-4 flex flex-col gap-4" style={borderStyle}>
+                      <button type="button" aria-expanded={toolsOpen} aria-controls="calc-agent-tools" onClick={() => setToolsOpen(o => !o)} className="inline-flex self-start items-center gap-2 rounded-[8px] px-1.5 py-1 -ml-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]" style={muted}>
+                        <span className="text-xs font-medium tracking-wide">{total ? 'Tools (total)' : 'Tools per call'}</span>
+                        {toolCount > 0 && <span className="inline-flex min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-medium tabular-nums" style={{
+                backgroundColor: '#1a6872',
+                color: '#F7F7F8'
+              }}>{q(toolCount)}</span>}
+                        <svg className={`h-4 w-4 shrink-0 opacity-70 ${motionCls} ${toolsOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+                      </button>
+                      {toolsOpen && <div id="calc-agent-tools" className="flex flex-col gap-4">
+                          {toolRow('Sandbox sessions', sessV, setSessV, 'calc-agent-sandbox-sessions', renderInfo('sandbox-sessions-info', <>Isolated code-execution session · {fmtRate(SANDBOX_SESSION)} per session (≤20-min billing window). SDK searches run inside a session are billed separately below.</>))}
+                          {}
+                          {num(sessV) >= 1 && <div className="pl-3 border-l" style={borderStyle}>
+                              {toolRow('Sandbox searches', srchV, setSrchV, 'calc-agent-sandbox-searches', renderInfo('sandbox-searches-info', <>SDK searches run inside a sandbox session · {fmtRate(SANDBOX_SEARCH)} per search.</>))}
+                            </div>}
+                          {toolRow('Web search', webV, setWebV, 'calc-agent-web', toolInfo('web_search'))}
+                          <p className="text-xs" style={muted}>This estimate uses standard web search. Fast Search costs {fmtRate(PRICING.agent.webSearchTypes.fast)} per invocation; model tokens are billed separately.</p>
+                          {toolRow('Image search', imageV, setImageV, 'calc-agent-image', toolInfo('image_search'))}
+                          {toolRow('Fetch URL', fetchV, setFetchV, 'calc-agent-fetch', toolInfo('fetch_url'))}
+                          {toolRow('People search', peopleV, setPeopleV, 'calc-agent-people', toolInfo('people_search'))}
+                          {toolRow('Finance search', financeV, setFinanceV, 'calc-agent-finance', toolInfo('finance_search'))}
+                        </div>}
+                    </div>;
+            })()}
+                {renderModelRow()}
+              </div>;
+          };
+          const renderSearchInputs = () => <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <label id="calc-search-fast-label" htmlFor="calc-search-fast" className="block text-sm" style={fg}>Fast mode</label>
+                  <p id="calc-search-fast-help" className="text-xs tabular-nums" style={muted}>
+                    {searchFast ? 'Fast Search' : 'Standard search'} · {fmtRate(SEARCH_PER_1K)} per 1,000 requests
+                  </p>
+                </div>
+                <button id="calc-search-fast" type="button" role="switch" aria-checked={searchFast} aria-labelledby="calc-search-fast-label" aria-describedby="calc-search-fast-help" onClick={() => setSearchFast(value => !value)} className="inline-flex h-11 w-12 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)]">
+                  <span aria-hidden="true" className="flex h-6 w-11 items-center rounded-full border p-0.5" style={{
+            ...borderStyle,
+            backgroundColor: searchFast ? 'var(--color-foreground)' : 'var(--cb-hover)'
+          }}>
+                    <span className="block h-4 w-4 shrink-0 rounded-full" style={{
+            backgroundColor: searchFast ? 'var(--cb-popover-bg)' : 'var(--color-muted-foreground)',
+            transform: searchFast ? 'translateX(20px)' : 'translateX(0)'
+          }} />
+                  </span>
+                </button>
+              </div>
+              {renderNumberField('Requests', searchRequests, setSearchRequests, 'calc-search-requests', {
+            narrow: true,
+            min: 1,
+            slider: renderSliderBar(searchRequests, setSearchRequests, 'calc-search-requests', {
+              scale: 'log',
+              min: 1,
+              max: 10000000,
+              labelId: 'calc-search-requests-label',
+              valueText: v => `${q(v)} requests`
+            })
+          })}
+              <p className="block text-sm" style={muted}>The Search API charges per successful request, including a successful request with multiple queries, with no token costs. This estimate uses <code>search_type: "{searchFast ? 'fast' : 'web'}"</code> at {fmtRate(SEARCH_PER_1K)} per 1,000 requests.</p>
+            </div>;
+          const renderSonarContextControl = () => {
+            const m = sonarModel;
+            const sizes = [['low', 'Low'], ['medium', 'Medium'], ['high', 'High']];
+            return <div className="flex flex-col gap-1.5">
+                <span className="flex items-center gap-1.5">
+                  <label className="block text-sm" style={fg}>Search context size</label>
+                  {renderInfo('sonar-context-info', <>How much web information is retrieved per query. Higher context = more comprehensive results and a higher per-request fee; token pricing is unchanged. Low is the default.</>)}
+                </span>
+                <div role="radiogroup" aria-label="Search context size" className="flex gap-1.5">
+                  {sizes.map(([key, txt]) => {
+              const active = sonarContext === key;
+              const fee = m.request ? m.request[key] : 0;
+              return <button key={key} type="button" role="radio" aria-checked={active} onClick={() => setSonarContext(key)} className={`flex-1 rounded-[8px] border px-2.5 py-1.5 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)] ${motionCls} ${active ? segSelected : 'hover:bg-[var(--cb-hover)]'}`} style={active ? {
+                ...fg,
+                borderColor: '#1a6872'
+              } : {
+                ...muted,
+                ...borderStyle
+              }}>
+                        <span className="block text-sm">{txt}</span>
+                        <span className="block text-xs tabular-nums" style={muted}>{fmtRate(fee)}/1K</span>
+                      </button>;
+            })}
+                </div>
+              </div>;
+          };
+          const renderSonarInputs = () => {
+            const m = sonarModel;
+            const isDR = sonarIsDeepResearch;
+            const total = usageMode === 'total';
+            const rateChip = isDR ? `Input ${fmtRate(m.input)} · Output ${fmtRate(m.output)} · Citation ${fmtRate(m.citation)} · Reasoning ${fmtRate(m.reasoning)} /1M · Searches ${fmtRate(m.searchQueries)}/1K` : `Input ${fmtRate(m.input)} · Output ${fmtRate(m.output)} /1M · Request ${fmtRate(m.request[sonarContext])}/1K (${sonarContext})`;
+            const tokenSlider = (value, setter, id, label) => renderSliderBar(value, setter, id, {
+              scale: 'log',
+              min: 0,
+              max: 1000000,
+              labelId: `${id}-label`,
+              valueText: v => `${q(v)} ${label} per API call`
+            });
+            return <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <label id="calc-sonar-model-label" className="block text-sm" style={fg}>Model</label>
+                    {renderInfo('sonar-model-info', <>Total cost per query = token costs + a per-request fee (Sonar, Sonar Pro, and Sonar Reasoning Pro). Sonar Deep Research instead bills citation and reasoning tokens plus per-search-query fees.</>)}
+                  </span>
+                  {renderListbox('calc-sonar-model', sonarModelId, setSonarModelId, SONAR_MODELS, {
+              renderOption: o => o.label
+            })}
+                  {renderRateChip(rateChip)}
+                </div>
+        
+                {}
+                <div className="flex flex-col gap-4 border-t pt-4" style={borderStyle}>
+                  <span className="flex items-center gap-1.5">
+                    {sectionLabel('Usage')}
+                    {total ? totalModeInfo('sonar-total-info') : renderInfo('sonar-usage-info', <>Input = your prompt + context sent on each API call; Output = the model’s response. Enter the average per API call. This estimate bills all tokens at the full rate, so treat the total as an upper bound.</>)}
+                  </span>
+                  {total ? <>
+                      {tokenMField('Input Tokens (M)', sonarTotalInputM, setSonarTotalInputM, 'calc-sonar-total-input')}
+                      {tokenMField('Output Tokens (M)', sonarTotalOutputM, setSonarTotalOutputM, 'calc-sonar-total-output')}
+                      {isDR && <>
+                          {tokenMField('Citation Tokens (M)', sonarTotalCitationM, setSonarTotalCitationM, 'calc-sonar-total-citation')}
+                          {tokenMField('Reasoning Tokens (M)', sonarTotalReasoningM, setSonarTotalReasoningM, 'calc-sonar-total-reasoning')}
+                          {renderNumberField('Search Queries', sonarTotalSearches, setSonarTotalSearches, 'calc-sonar-total-searches', {
+              narrow: true,
+              slider: renderSliderBar(sonarTotalSearches, setSonarTotalSearches, 'calc-sonar-total-searches', {
+                scale: 'log',
+                min: 0,
+                max: 10000000,
+                labelId: 'calc-sonar-total-searches-label',
+                valueText: v => `${q(v)} search queries total`
+              })
+            })}
+                        </>}
+                    </> : <>
+                      {renderNumberField('API Calls', sonarRequests, setSonarRequests, 'calc-sonar-requests', {
+              narrow: true,
+              min: 1,
+              slider: renderSliderBar(sonarRequests, setSonarRequests, 'calc-sonar-requests', {
+                scale: 'log',
+                min: 1,
+                max: 10000000,
+                labelId: 'calc-sonar-requests-label',
+                valueText: v => `${q(v)} API calls`
+              })
+            })}
+                      {renderNumberField('Input Tokens', sonarInput, setSonarInput, 'calc-sonar-input', {
+              narrow: true,
+              slider: tokenSlider(sonarInput, setSonarInput, 'calc-sonar-input', 'input tokens')
+            })}
+                      {renderNumberField('Output Tokens', sonarOutput, setSonarOutput, 'calc-sonar-output', {
+              narrow: true,
+              slider: tokenSlider(sonarOutput, setSonarOutput, 'calc-sonar-output', 'output tokens')
+            })}
+                      {isDR && <>
+                          {renderNumberField('Citation Tokens', sonarCitation, setSonarCitation, 'calc-sonar-citation', {
+              narrow: true,
+              slider: tokenSlider(sonarCitation, setSonarCitation, 'calc-sonar-citation', 'citation tokens')
+            })}
+                          {renderNumberField('Reasoning Tokens', sonarReasoning, setSonarReasoning, 'calc-sonar-reasoning', {
+              narrow: true,
+              slider: tokenSlider(sonarReasoning, setSonarReasoning, 'calc-sonar-reasoning', 'reasoning tokens')
+            })}
+                          {renderNumberField('Search Queries', sonarSearches, setSonarSearches, 'calc-sonar-searches', {
+              narrow: true,
+              slider: renderSliderBar(sonarSearches, setSonarSearches, 'calc-sonar-searches', {
+                scale: 'linear',
+                min: 0,
+                max: 100,
+                step: 1,
+                labelId: 'calc-sonar-searches-label',
+                valueText: v => `${q(v)} search queries per API call`
+              })
+            })}
+                        </>}
+                    </>}
+                </div>
+        
+                {!isDR && <div className="border-t pt-4 flex flex-col gap-4" style={borderStyle}>
+                    {total && renderNumberField('Requests', sonarTotalRequests, setSonarTotalRequests, 'calc-sonar-total-requests', {
+              narrow: true,
+              helper: 'Total requests — used only for the per-request fee.',
+              slider: renderSliderBar(sonarTotalRequests, setSonarTotalRequests, 'calc-sonar-total-requests', {
+                scale: 'log',
+                min: 0,
+                max: 10000000,
+                labelId: 'calc-sonar-total-requests-label',
+                valueText: v => `${q(v)} requests total`
+              })
+            })}
+                    {renderSonarContextControl()}
+                  </div>}
+              </div>;
+          };
+          const renderEmbeddingsInputs = () => <div className="flex flex-col gap-4">
+              {sectionLabel('Usage')}
+              <div className="flex flex-col gap-1.5">
+                <label id="calc-emb-model-label" className="block text-sm" style={fg}>Model</label>
+                {renderListbox('calc-emb-model', embModelId, setEmbModelId, EMB_MODELS, {
+            renderOption: o => `${o.id} · ${o.dims} dims`
+          })}
+                {renderRateChip(`${fmtRate(embModel.rate)} per 1M tokens · ${embModel.dims} dims`)}
+              </div>
+              {renderNumberField('Tokens per request', embTokens, setEmbTokens, 'calc-emb-tokens')}
+              <div className="border-t pt-4" style={borderStyle}>
+                {renderNumberField('Requests', volume, setVolume, 'calc-emb-volume', {
+            narrow: true,
+            min: 1,
+            slider: renderSliderBar(volume, setVolume, 'calc-emb-volume', {
+              scale: 'log',
+              min: 1,
+              max: 10000000,
+              labelId: 'calc-emb-volume-label',
+              valueText: v => `${q(v)} requests`
+            })
+          })}
+              </div>
+            </div>;
+          const renderDecisionsInputs = () => <div className="flex flex-col gap-4">
+              {sectionLabel('Usage')}
+              <div className="flex flex-col gap-1.5">
+                <label id="calc-dec-model-label" className="block text-sm" style={fg}>Model</label>
+                {renderListbox('calc-dec-model', decModelId, setDecModelId, DECISION_MODELS)}
+                {renderRateChip(`${fmtRate(decRate)} per 1M input tokens · output tokens free`)}
+              </div>
+              {renderNumberField('Input tokens per request', decTokens, setDecTokens, 'calc-dec-tokens')}
+              <div className="border-t pt-4" style={borderStyle}>
+                {renderNumberField('Requests', decRequests, setDecRequests, 'calc-dec-volume', {
+            narrow: true,
+            min: 1,
+            slider: renderSliderBar(decRequests, setDecRequests, 'calc-dec-volume', {
+              scale: 'log',
+              min: 1,
+              max: 10000000,
+              labelId: 'calc-dec-volume-label',
+              valueText: v => `${q(v)} requests`
+            })
+          })}
+              </div>
+            </div>;
+          const renderInputs = () => {
+            if (activeProduct === 'agent') return renderAgentInputs();
+            if (activeProduct === 'search') return renderSearchInputs();
+            if (activeProduct === 'sonar') return renderSonarInputs();
+            if (activeProduct === 'decisions') return renderDecisionsInputs();
+            return renderEmbeddingsInputs();
+          };
+          const breakdownRow = (key, label, valueNode, mathNode, topBorder) => <div key={key} className={`flex flex-col gap-0.5 ${topBorder ? 'mt-1 border-t pt-2' : ''}`} style={topBorder ? borderStyle : undefined}>
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-sm" style={fg}>{label}</span>
+                <span className="shrink-0 text-sm tabular-nums" style={fg}>{valueNode}</span>
+              </div>
+              {mathNode && <span className="text-xs tabular-nums" style={muted}>{mathNode}</span>}
+            </div>;
+          const subRow = (key, label, math, value) => <div key={key} className="flex flex-col gap-0.5 pl-3">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-xs" style={muted}>{label}</span>
+                <span className="shrink-0 text-xs tabular-nums" style={muted}>{value}</span>
+              </div>
+              {math && <span className="text-xs tabular-nums" style={muted}>{math}</span>}
+            </div>;
+          const renderBreakdownRows = () => {
+            const rows = [];
+            if (activeProduct === 'agent') {
+              const r = result;
+              if (isTotalMode) {
+                const {inR, outR} = agentRates;
+                if (r.inputCost > 0) rows.push(breakdownRow('t-in', 'Input tokens', fmt(r.inputCost), `${qM(agentTotalInputM)}M × ${fmtRate(inR)}/1M`));
+                if (r.outputCost > 0) rows.push(breakdownRow('t-out', 'Output tokens', fmt(r.outputCost), `${qM(agentTotalOutputM)}M × ${fmtRate(outR)}/1M`));
+                if (r.sandboxCost > 0) {
+                  rows.push(breakdownRow('t-sand', 'Sandbox', fmt(r.sandboxCost)));
+                  if (num(agentTotalSandboxSessions) > 0) rows.push(subRow('t-sess', 'Sandbox sessions', `${q(agentTotalSandboxSessions)} × ${fmtRate(SANDBOX_SESSION)}`, fmt(num(agentTotalSandboxSessions) * SANDBOX_SESSION)));
+                  if (num(agentTotalSandboxSearches) > 0) rows.push(subRow('t-ssrch', 'Sandbox searches', `${q(agentTotalSandboxSearches)} × ${fmtRate(SANDBOX_SEARCH)}`, fmt(num(agentTotalSandboxSearches) * SANDBOX_SEARCH)));
+                }
+                if (r.toolsCost > 0) {
+                  rows.push(breakdownRow('t-tools', 'Tool invocations', fmt(r.toolsCost)));
+                  if (r.tools.web > 0) rows.push(subRow('t-web', 'Web search', `${q(agentTotalWebSearch)} × ${fmtRate(TOOL_PRICE.web_search)}`, fmt(r.tools.web)));
+                  if (r.tools.image > 0) rows.push(subRow('t-image', 'Image search', `${q(agentTotalImageSearch)} × ${fmtRate(TOOL_PRICE.image_search)}`, fmt(r.tools.image)));
+                  if (r.tools.fetch > 0) rows.push(subRow('t-fetch', 'Fetch URL', `${q(agentTotalFetchUrl)} × ${fmtRate(TOOL_PRICE.fetch_url)}`, fmt(r.tools.fetch)));
+                  if (r.tools.people > 0) rows.push(subRow('t-people', 'People search', `${q(agentTotalPeople)} × ${fmtRate(TOOL_PRICE.people_search)}`, fmt(r.tools.people)));
+                  if (r.tools.finance > 0) rows.push(subRow('t-finance', 'Finance search', `${q(agentTotalFinance)} × ${fmtRate(TOOL_PRICE.finance_search)}`, fmt(r.tools.finance)));
+                }
+                rows.push(breakdownRow('t-total', 'Total', fmt(r.total), undefined, true));
+                return rows;
+              }
+              const runs = num(agentRunsPerMonth);
+              const {inR, outR} = agentRates;
+              const thresholdLabel = formatTokenThreshold(r.tierThreshold);
+              const tierSuffix = r.tiered ? r.tier === 'high' ? ` (>${thresholdLabel} tier)` : ` (≤${thresholdLabel} tier)` : '';
+              const modelPerRun = r.inputCost + r.outputCost;
+              const toolsPerRun = r.toolsCost;
+              const sandPerRun = r.sandboxCost;
+              rows.push(breakdownRow('g-model', 'Model tokens', fmt(modelPerRun * runs), `${fmt(modelPerRun)}/call × ${q(runs)}`));
+              if (r.inputCost > 0) rows.push(subRow('in', `Input${tierSuffix}`, `${q(num(agentInput))} × ${fmtRate(inR)}/1M /call`, fmt(r.inputCost * runs)));
+              if (r.outputCost > 0) rows.push(subRow('out', `Output${tierSuffix}`, `${q(agentOutput)} × ${fmtRate(outR)}/1M /call`, fmt(r.outputCost * runs)));
+              if (sandPerRun > 0) {
+                rows.push(breakdownRow('g-sand', 'Sandbox', fmt(sandPerRun * runs), `${fmt(sandPerRun)}/call × ${q(runs)}`));
+                if (num(agentSandboxSessions) > 0) rows.push(subRow('s-sess', 'Sandbox sessions', `${qRun(agentSandboxSessions)} × ${fmtRate(SANDBOX_SESSION)} /call`, fmt(num(agentSandboxSessions) * SANDBOX_SESSION * runs)));
+                if (num(agentSandboxSearches) > 0) rows.push(subRow('s-srch', 'Sandbox searches', `${qRun(agentSandboxSearches)} × ${fmtRate(SANDBOX_SEARCH)} /call`, fmt(num(agentSandboxSearches) * SANDBOX_SEARCH * runs)));
+              }
+              if (toolsPerRun > 0) {
+                rows.push(breakdownRow('g-tools', 'Tool invocations', fmt(toolsPerRun * runs), `${fmt(toolsPerRun)}/call × ${q(runs)}`));
+                if (r.tools.web > 0) rows.push(subRow('t-web', 'Web search', `${qRun(agentWebSearch)} × ${fmtRate(TOOL_PRICE.web_search)} /call`, fmt(r.tools.web * runs)));
+                if (r.tools.image > 0) rows.push(subRow('t-image', 'Image search', `${qRun(agentImageSearch)} × ${fmtRate(TOOL_PRICE.image_search)} /call`, fmt(r.tools.image * runs)));
+                if (r.tools.fetch > 0) rows.push(subRow('t-fetch', 'Fetch URL', `${qRun(agentFetchUrl)} × ${fmtRate(TOOL_PRICE.fetch_url)} /call`, fmt(r.tools.fetch * runs)));
+                if (r.tools.people > 0) rows.push(subRow('t-people', 'People search', `${qRun(agentPeople)} × ${fmtRate(TOOL_PRICE.people_search)} /call`, fmt(r.tools.people * runs)));
+                if (r.tools.finance > 0) rows.push(subRow('t-finance', 'Finance search', `${qRun(agentFinance)} × ${fmtRate(TOOL_PRICE.finance_search)} /call`, fmt(r.tools.finance * runs)));
+              }
+              rows.push(breakdownRow('per-run', 'Per API call', fmt(r.total), undefined, true));
+              rows.push(breakdownRow('monthly', 'Total', fmt(r.total * runs), `${fmt(r.total)} × ${q(runs)}`));
+              return rows;
+            }
+            if (activeProduct === 'search') {
+              rows.push(breakdownRow('req', searchFast ? 'Fast Search requests' : 'Standard search requests', fmt(result.total), `${q(searchRequests)} × ${fmtRate(SEARCH_PER_1K)} /1K`));
+              return rows;
+            }
+            if (activeProduct === 'sonar') {
+              const r = result;
+              const m = sonarModel;
+              if (isTotalMode) {
+                rows.push(breakdownRow('st-in', 'Input tokens', fmt(r.inputCost), `${qM(sonarTotalInputM)}M × ${fmtRate(m.input)}/1M`));
+                rows.push(breakdownRow('st-out', 'Output tokens', fmt(r.outputCost), `${qM(sonarTotalOutputM)}M × ${fmtRate(m.output)}/1M`));
+                if (r.deepResearch) {
+                  rows.push(breakdownRow('st-cit', 'Citation tokens', fmt(r.citationCost), `${qM(sonarTotalCitationM)}M × ${fmtRate(m.citation)}/1M`));
+                  rows.push(breakdownRow('st-rea', 'Reasoning tokens', fmt(r.reasoningCost), `${qM(sonarTotalReasoningM)}M × ${fmtRate(m.reasoning)}/1M`));
+                  rows.push(breakdownRow('st-srch', 'Search queries', fmt(r.searchesCost), `${q(sonarTotalSearches)} × ${fmtRate(m.searchQueries)}/1K`));
+                } else {
+                  rows.push(breakdownRow('st-req', `Request fee (${sonarContext})`, fmt(r.requestFee), `${q(sonarTotalRequests)} × ${fmtRate(m.request[sonarContext])}/1K`));
+                }
+                rows.push(breakdownRow('st-total', 'Total', fmt(r.total), undefined, true));
+                return rows;
+              }
+              const reqs = num(sonarRequests);
+              rows.push(breakdownRow('s-in', 'Input tokens', fmt(r.inputCost), `${q(sonarInput)} × ${fmtRate(m.input)}/1M /call`));
+              rows.push(breakdownRow('s-out', 'Output tokens', fmt(r.outputCost), `${q(sonarOutput)} × ${fmtRate(m.output)}/1M /call`));
+              if (r.deepResearch) {
+                rows.push(breakdownRow('s-cit', 'Citation tokens', fmt(r.citationCost), `${q(sonarCitation)} × ${fmtRate(m.citation)}/1M /call`));
+                rows.push(breakdownRow('s-rea', 'Reasoning tokens', fmt(r.reasoningCost), `${q(sonarReasoning)} × ${fmtRate(m.reasoning)}/1M /call`));
+                rows.push(breakdownRow('s-srch', 'Search queries', fmt(r.searchesCost), `${q(sonarSearches)} × ${fmtRate(m.searchQueries)}/1K /call`));
+              } else {
+                rows.push(breakdownRow('s-req', `Request fee (${sonarContext})`, fmt(r.requestFee), `${fmtRate(m.request[sonarContext])}/1K /call`));
+              }
+              rows.push(breakdownRow('s-per', 'Per API call', fmt(r.total), undefined, true));
+              if (reqs !== 1) rows.push(breakdownRow('s-total', 'Total', fmt(r.total * reqs), `${fmt(r.total)} × ${q(reqs)}`));
+              return rows;
+            }
+            if (isDecisions) {
+              rows.push(breakdownRow('d-tok', 'Input tokens', fmt(result.total), `${q(decTokens)} × ${fmtRate(decRate)} /1M`));
+              rows.push(breakdownRow('d-per', 'Per request', fmt(unitCost), undefined, true));
+              if (num(decRequests) !== 1) rows.push(breakdownRow('d-total', 'Total', fmt(projected), `${fmt(unitCost)} × ${q(decRequests)}`));
+              return rows;
+            }
+            rows.push(breakdownRow('tok', 'Tokens', fmt(result.total), `${q(embTokens)} × ${fmtRate(embModel.rate)} /1M`));
+            const showMonthly = num(volume) !== 1;
+            rows.push(breakdownRow('per-call', 'Per request', fmt(unitCost), undefined, true));
+            if (showMonthly) rows.push(breakdownRow('monthly', 'Total', fmt(projected), `${fmt(unitCost)} × ${q(volume)}`));
+            return rows;
+          };
+          const renderBreakdown = () => {
+            if (!showBreakdown) return null;
+            return <div className={`mt-3 flex flex-col gap-1 break-words ${motionCls}`}>
+                {renderBreakdownRows()}
+              </div>;
+          };
+          const renderResult = () => {
+            const scaled = isDecisions ? num(decRequests) > 1 : !isSearch && !isAgent && num(volume) > 1;
+            const eyebrow = isSearch ? `Estimated cost for ${q(searchRequests)} requests` : 'Estimated cost';
+            const nowrap = s => <span className="whitespace-nowrap">{s}</span>;
+            let caption;
+            if (isTotalMode) {
+              const inM = isAgent ? agentTotalInputM : sonarTotalInputM;
+              const outM = isAgent ? agentTotalOutputM : sonarTotalOutputM;
+              caption = <>Total usage · {nowrap(`${qM(inM)}M in`)} · {nowrap(`${qM(outM)}M out`)}</>;
+            } else if (isAgent) {
+              const hasToolCost = (result.toolsCost || 0) + (result.sandboxCost || 0) > 0;
+              caption = <>{fmt(result.total)} per API call {nowrap(hasToolCost ? '(model + tools)' : '(model tokens)')} × {nowrap(`${q(agentRunsPerMonth)} API calls`)}</>;
+            } else if (isSearch) caption = <>{q(searchRequests)} requests · {nowrap(`${fmt(unitCost)} per request`)}</>; else if (isSonar) caption = <>{fmt(result.total)} per API call × {nowrap(`${q(sonarRequests)} API calls`)}</>; else if (isDecisions) caption = scaled ? <>{fmt(unitCost)} per request × {nowrap(`${q(decRequests)} requests`)}</> : 'per request'; else caption = scaled ? <>{fmt(unitCost)} per request × {nowrap(`${q(volume)} requests`)}</> : 'per request';
+            const portalLink = <a href="/docs/getting-started/projects#accessing-the-api-portal" className="calc-link hover:opacity-80" style={muted}>API Portal</a>;
+            const finePrint = isSearch ? <>Estimate only. View billed Search API usage in the {portalLink}. See the <a href="/docs/getting-started/pricing#search-api-pricing" className="calc-link hover:opacity-80" style={muted}>Search API rate table</a>.</> : isSingleProduct ? <>Estimate only. Final cost is metered from each response’s usage field - view it in the {portalLink}.</> : <>Estimate only. Final cost is metered from each response’s usage field - view it in the {portalLink}. See the full rate tables below.</>;
+            return <div className="calc-estimate flex flex-col gap-4 min-w-0">
+                <div aria-live="polite" className="sr-only">{liveText}</div>
+                {}
+                <div className="calc-estimate-panel rounded-[10px] border p-5 flex flex-col min-w-0" style={borderStyle}>
+                  <p className="block text-xs font-medium tracking-wide" style={muted}>{eyebrow}</p>
+                  <div className={`mt-1 text-2xl sm:text-3xl lg:text-4xl font-medium tabular-nums tracking-tight leading-none break-words ${reduceMotion ? '' : 'calc-fade-in'}`} style={fg}>
+                    {displayProjected}
+                  </div>
+                  <p className="mt-1.5 block text-sm tabular-nums" style={muted}>{caption}</p>
+                  {isAgent && <p className="mt-1 block break-words text-xs" style={muted} title={agentModel.id}>Model: {agentModel.id.replace(/^[^/]+\//, '')}</p>}
+                  {isSonar && <p className="mt-1 block break-words text-xs" style={muted} title={sonarModel.id}>Model: {sonarModel.label}</p>}
+                  {isDecisions && <p className="mt-1 block break-words text-xs" style={muted} title={decModelId}>Model: {decModelId}</p>}
+        
+                  <div className="mt-4">
+                    <button type="button" onClick={() => setShowBreakdown(v => !v)} aria-expanded={showBreakdown} className={`inline-flex items-center gap-1 text-sm ${motionCls}`} style={fg}>
+                      <svg className={`h-3.5 w-3.5 ${motionCls}`} style={{
+              transform: showBreakdown ? 'rotate(90deg)' : 'rotate(0deg)'
+            }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                      {showBreakdown ? 'Hide breakdown' : 'Show breakdown'}
+                    </button>
+                    {renderBreakdown()}
+                  </div>
+        
+                  {}
+                  {(isAgent || isSonar) && <div className="mt-4 flex flex-col gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        <button type="button" onClick={copyEstimate} aria-label="Copy estimate to clipboard" className={`inline-flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-sm ${motionCls} hover:bg-[var(--cb-hover)]`} style={{
+              ...fg,
+              ...borderStyle
+            }}>
+                          {copied ? 'Copied ✓' : 'Copy estimate'}
+                        </button>
+                        <button type="button" onClick={() => setShowFormula(v => !v)} aria-expanded={showFormula} className={`inline-flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-sm ${motionCls} hover:bg-[var(--cb-hover)]`} style={{
+              ...fg,
+              ...borderStyle
+            }}>
+                          {showFormula ? 'Hide formula' : 'View formula'}
+                        </button>
+                      </div>
+                      {showFormula && <p className="block break-words rounded-[8px] border p-3 text-xs tabular-nums" style={{
+              ...muted,
+              ...borderStyle
+            }}>
+                          {formulaText()}
+                        </p>}
+                    </div>}
+                </div>
+        
+                <p className="block text-xs" style={muted}>{finePrint}</p>
+              </div>;
+          };
+          const renderTabBar = () => {
+            if (isSingleProduct) {
+              const meta = PRODUCT_META[activeProduct];
+              return <div className="flex items-center gap-2">
+                  <span className="inline-block h-2 w-2 rounded-full" style={{
+                backgroundColor: meta.accent
+              }} aria-hidden="true" />
+                  <span className="text-base font-medium" style={fg}>{meta.label}</span>
+                </div>;
+            }
+            const onTabKeyDown = e => {
+              const idx = PRODUCTS.indexOf(activeProduct);
+              let next = null;
+              if (e.key === 'ArrowRight') next = (idx + 1) % PRODUCTS.length; else if (e.key === 'ArrowLeft') next = (idx - 1 + PRODUCTS.length) % PRODUCTS.length; else if (e.key === 'Home') next = 0; else if (e.key === 'End') next = PRODUCTS.length - 1;
+              if (next !== null) {
+                e.preventDefault();
+                const id = PRODUCTS[next];
+                setActiveProduct(id);
+                if (typeof document !== 'undefined') {
+                  const el = document.getElementById(`calc-tab-${id}`);
+                  if (el) el.focus();
+                }
+              }
+            };
+            return <div role="tablist" aria-label="API product" className="flex flex-wrap gap-1 border-b" style={borderStyle}>
+                {PRODUCTS.map(p => {
+              const meta = PRODUCT_META[p];
+              const selected = activeProduct === p;
+              return <button key={p} type="button" role="tab" id={`calc-tab-${p}`} aria-selected={selected} aria-controls={`calc-panel-${p}`} tabIndex={selected ? 0 : -1} onClick={() => setActiveProduct(p)} onKeyDown={onTabKeyDown} className={`relative min-h-[40px] rounded-t-[8px] rounded-b-none px-4 py-2 text-sm ${motionCls} ${selected ? `${segSelected} font-medium` : 'hover:bg-[var(--cb-hover)] hover:text-[var(--color-foreground)]'}`} style={selected ? fg : muted}>
+                      {meta.label}
+                      {selected && <span className="absolute inset-x-0 -bottom-px h-0.5" style={{
+                backgroundColor: meta.accent
+              }} aria-hidden="true" />}
+                    </button>;
+            })}
+              </div>;
+          };
+          const renderPresetRow = () => {
+            if (!isAgent || usageMode === 'total') return null;
+            return <div className="flex flex-col gap-2 border-b pb-4" style={borderStyle}>
+                <span className="block text-xs font-medium tracking-wide" style={muted}>Common tasks</span>
+                <div className="flex flex-wrap gap-2">
+                  {AGENT_PRESETS.map(p => <button key={p.id} type="button" onClick={() => applyTier(p.id)} className="inline-flex items-center whitespace-nowrap rounded-[8px] border px-2.5 py-1 text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--calc-ring)] hover:bg-[var(--cb-hover)]" style={{
+              ...fg,
+              ...borderStyle
+            }}>
+                      {presetLabel(p.id)}
+                    </button>)}
+                </div>
+              </div>;
+          };
+          const panelProps = isSingleProduct ? {} : {
+            role: 'tabpanel',
+            id: `calc-panel-${activeProduct}`,
+            'aria-labelledby': `calc-tab-${activeProduct}`
+          };
+          return <section className="not-prose w-full" aria-label="API pricing calculator" style={{
+            boxSizing: 'border-box'
+          }}>
+              <style>{`
+                @keyframes calcFadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+                .calc-fade-in { animation: calcFadeIn 150ms ease-out; }
+                /* Card surface - light = #FFFFFF + soft shadow; dark = a NEUTRAL translucent white overlay
+                   (not the brand --color-card token, which is teal rgba(8,31,34,...) and reads green-tinted,
+                   doubly so where the estimate panel stacks on the card). Defined here (not Tailwind arbitrary
+                   values) because the multi-layer shadow and rgba fill contain commas the JIT can't parse. */
+                .calc-card { background-color: #FFFFFF; box-shadow: 0 1px 2px rgba(18,21,22,0.04), 0 1px 3px rgba(18,21,22,0.06); --calc-ring: #1a6872; container-type: inline-size; }
+                .dark .calc-card { background-color: rgba(247,247,248,0.02); box-shadow: none; --calc-ring: #4fc4cf; }
+                /* Estimate focal panel: subtle elevation over the card. Light keeps the neutral card token;
+                   dark uses a slightly stronger neutral overlay so it reads as elevated, still no teal cast. */
+                .calc-estimate-panel { background-color: var(--color-card); }
+                .dark .calc-estimate-panel { background-color: rgba(247,247,248,0.05); }
+                /* Columns key on CARD width (container query), not viewport — the docs TOC squeezes the card
+                   independently of the window. Estimate stays on the RIGHT at a fixed width; inputs grow to take
+                   the rest, so they get more room as the card widens and the estimate never stretches. Only the
+                   narrowest widths (phones, <27rem card) stack. Model rates/names wrap rather than truncate, so a
+                   tight inputs column never elides a price. */
+                .calc-card .calc-cols { display: flex; flex-direction: column; gap: 1.5rem; }
+                .calc-card .calc-col-main { order: 1; min-width: 0; }
+                .calc-card .calc-col-side { order: 0; min-width: 0; }
+                @container (min-width: 30rem) {
+                  .calc-card .calc-cols { flex-direction: row; gap: 1.25rem; align-items: flex-start; }
+                  .calc-card .calc-col-main { order: 0; flex: 1 1 0%; }        /* inputs grow to fill the row */
+                  /* Estimate column: fixed 240px width; align-self stretch gives it the full row height so the
+                     sticky child below has room to travel as the taller inputs column scrolls past. */
+                  .calc-card .calc-col-side { order: 1; flex: 0 0 15rem; align-self: stretch; }
+                  /* Sticky is keyed to THIS container breakpoint (not a viewport lg: class) so it engages
+                     exactly when the two-column layout does - the estimate follows the scroll on desktop. */
+                  .calc-card .calc-col-side .calc-estimate { position: sticky; top: 1.5rem; }
+                }
+                /* Mintlify leaks a white 2px :focus outline (Tailwind focus:outline-none loses to it), and a teal
+                   outline on top of the ring reads too heavy. Kill the outline in every focus state and rely on
+                   the calm teal focus-visible ring (box-shadow) alone; its color comes from --tw-ring-color since
+                   a Tailwind arbitrary ring color with a var() doesn't compile in Mintlify's JIT. */
+                .calc-card :focus, .calc-card :focus-visible { outline: none !important; }
+                .calc-card :focus-visible { --tw-ring-color: var(--calc-ring); }
+                /* Model list: persistent (non-overlay) vertical scrollbar so it's clear the list scrolls. */
+                .calc-card .calc-modeltable::-webkit-scrollbar { width: 8px; -webkit-appearance: none; }
+                .calc-card .calc-modeltable::-webkit-scrollbar-thumb { background-color: rgba(18, 21, 22, 0.35); border-radius: 4px; }
+                .dark .calc-card .calc-modeltable::-webkit-scrollbar-thumb { background-color: rgba(247, 247, 248, 0.35); }
+                /* The number inputs already get the teal focus ring; drop their resting grey border while
+                   focused so it doesn't read as a second (grey) outline nested inside the ring. !important
+                   is required to beat the inline borderColor (var(--color-border)) set on the element. */
+                .calc-card input:focus-visible { border-color: transparent !important; }
+                /* Mintlify prepends its own .link class (text-decoration:none!important) to every anchor,
+                   which ties .calc-link on specificity and wins on source order. Raise specificity above it
+                   (.calc-card a.calc-link = 0,2,1 > a.link) so genuine widget links show a visible underline. */
+                .calc-card a.calc-link { text-decoration: underline !important; text-underline-offset: 2px; }
+              `}</style>
+              <div className="calc-card rounded-[12px] border p-5 sm:p-6" style={borderStyle}>
+                {renderTabBar()}
+                <div {...panelProps} className="mt-5 flex flex-col gap-5 focus:outline-none">
+                  {renderModeTabs()}
+                  {renderPresetRow()}
+                  <div className="calc-cols">
+                    <div className="calc-col-main">
+                      {renderInputs()}
+                    </div>
+                    <div className="calc-col-side">
+                      {renderResult()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>;
+        };
+        
+        <Info>
+          This page shows **pricing information** to help you understand API costs.
+        
+          For **billing setup**, payment methods, and usage monitoring, visit the [Admin section](/docs/getting-started/projects). For **rate limits**, see the [Rate Limits & Usage Tiers](/docs/admin/rate-limits-usage-tiers) page.
+        </Info>
+        
+        ## Estimate your cost
+        
+        <PricingCalculator data={PRICING} />
+        
+        ## Orchestrator API Pricing
+        
+        Orchestrator API usage is billed per token at each model's published rates — there are no per-request fees. Every model has its own input and output rate, with cache reads billed at the model's discounted cache-read rate and reasoning tokens billed at the output rate. You are always billed at the requested model's rates, regardless of how the request is served.
+        
+        See [Orchestrator Models & Pricing](/docs/router/models) for the full per-model rate card, including cache-write rates and long-context pricing.
+        
+        ## Agent API Pricing
+        
+        The Agent API provides access to third-party models from providers including OpenAI, Anthropic, Google, xAI, Z.AI, Moonshot AI, and NVIDIA with **transparent, token-based pricing** at each model's published rates.
+        
+        ### Model Pricing
+        
+        Agent API pricing varies by provider and model, with each provider offering multiple models at different price points.
+        
+        <Card title="View Complete Third-Party Model Pricing" icon="table" href="/docs/agent-api/models">
+          See the full pricing breakdown for all available models from OpenAI, Anthropic, Google, xAI, Z.AI, Moonshot AI, and NVIDIA, including cache rates and provider documentation links on the [Agent API Models page](/docs/agent-api/models).
+        </Card>
+        
+        ### Tool Pricing
+        
+        When using tools with the Agent API:
+        
+        | Tool | Price | Description |
+        | - | :-: | - |
+        | **`web_search` (standard)** | \$0.0025 per invocation | Standard web search with `search_type: "web"`. \$2.50 per 1,000 invocations |
+        | **`web_search` (Fast Search)** | \$0.001 per invocation | The same tool with `search_type: "fast"`. \$1.00 per 1,000 invocations. See [Fast Search](/docs/search/fast-search) |
+        | **`image_search`** | \$0.0025 per successful invocation | Finds structured image results with domain, format, and safe-search filters. \$2.50 per 1,000 successful invocations |
+        | **`fetch_url`** | \$0.0005 per invocation | Fetches and extracts content from specific URLs |
+        | **`people_search`** | \$0.005 per invocation | Looks up professionals, employees, and people. \$5 per 1,000 tool invocations |
+        | **`finance_search`** | \$0.005 per invocation | Retrieves financial data and market information. \$5 per 1,000 tool invocations |
+        | **`sandbox`** | \$0.03 per session | Isolated container for executing code during an Agent API request. A session covers up to 20 minutes of active use for billing purposes — this is the billing window, not a runtime cap. SDK search queries made from inside the sandbox are billed at \$0.0025 per request (same as `web_search`). |
+        
+        <Note>
+          Most tool costs are per invocation. `sandbox` is billed per container session — a 20-minute billing window per container, not a runtime cap — plus per SDK search query made from inside it. Tool costs are separate from model token costs.
+        </Note>
+        
+        ## Search API Pricing
+        
+        | API | Price per 1K requests | Description |
+        | - | :-: | - |
+        | **Search API** | \$5.00 | Raw web search results with advanced filtering |
+        | **Search API with [Fast Search](/docs/search/fast-search)** | \$1.00 | Lower-latency web search results. Set `search_type: "fast"` |
+        
+        <Note>
+          **Billing unit:** Search API charges for each successful `POST /search` request, not for each query in the request. A successful request containing an array of up to five queries is one billing unit. Invalid requests, rate-limited requests, and upstream failures are not billed. A successful response is billed even when it returns no results. There are no additional token-based charges.
+        </Note>
+        
+        ## Embeddings API Pricing
+        
+        Generate high-quality text embeddings for semantic search, retrieval-augmented generation (RAG), and other machine learning applications.
+        
+        ### Standard Embeddings
+        
+        | Model | Dimensions | Price (\$/1M tokens) |
+        | - | :-: | :-: |
+        | `pplx-embed-v1-0.6b` | 1024 | \$0.004 |
+        | `pplx-embed-v1-4b` | 2560 | \$0.03 |
+        
+        ### Contextualized Embeddings
+        
+        | Model | Dimensions | Price (\$/1M tokens) |
+        | - | :-: | :-: |
+        | `pplx-embed-context-v1-0.6b` | 1024 | \$0.008 |
+        | `pplx-embed-context-v1-4b` | 2560 | \$0.05 |
+        
+        <Card title="View Embeddings API Documentation" icon="cube" href="/docs/embeddings/quickstart">
+          Learn how to use the Embeddings API for semantic search, RAG, and more.
+        </Card>
+        
+        ## Decisions API Pricing
+        
+        The Decisions API answers yes/no, multiple-choice, and scored questions about text and images with calibrated probabilities.
+        
+        | Model | Price (\$/1M input tokens) | Output tokens | Per-request fee |
+        | - | :-: | :-: | :-: |
+        | `pplx-decider-v1.2` | \$0.02 | Free | None |
+        | `pplx-decider-flash-v1.2` | \$0.01 | Free | None |
+        
+        <Note>
+          **Aliases:** `pplx-decider-latest` and `perplexity/pplx-decider-latest` select `pplx-decider-v1.2`. `pplx-decider-flash-latest` and `perplexity/pplx-decider-flash-latest` select `pplx-decider-flash-v1.2`. An alias bills at the rate of the model it selects. Requests that name `pplx-decider-v1.1-27b` or `pplx-decider-v1-27b` select `pplx-decider-v1.2` and bill at \$0.02.
+        
+          **Billing unit:** you pay for input tokens only. The `state`, every question, and any images count as input; the response reports the exact number as `usage.input_tokens`, so you can compute the cost of a request from the response you already receive. A request with 600 input tokens costs \$0.000012 on `pplx-decider-v1.2` and \$0.000006 on `pplx-decider-flash-v1.2`.
+        </Note>
+        
+        <Card title="View Decisions API Documentation" icon="scale-balanced" href="/docs/decisions/quickstart">
+          Learn how to ask structured questions and read the probabilities the Decisions API returns.
+        </Card>
+        
+        <AccordionGroup>
+          <Accordion title="Token and Cost Glossary">
+            ### Input Tokens
+        
+            The number of tokens in your prompt or message to the API. This includes:
+        
+            * Your question or instruction
+            * Any context or examples you provide
+            * System messages and formatting
+        
+            **Example:** "What is the weather in New York?" = \~8 input tokens
+        
+            ### Output Tokens
+        
+            The number of tokens in the API's response. This includes:
+        
+            * The generated answer or content
+            * Any explanations or additional context
+            * Search results and references
+        
+            **Example:** "The weather in New York is currently sunny with a temperature of 72°F." = \~15 output tokens
+        
+            ### Search Context Size vs Context Window
+        
+            **Search context size** is *not* the same as the **context window**.
+        
+            * **Search context size** (Sonar only): How much web information is retrieved during search, set with `web_search_options.search_context_size`
+            * **Context window**: Maximum tokens the model can process in one request (affects token limits)
+        
+            <Info>
+              **Token Calculation:** 1 token ≈ 4 characters in English text. The exact count may vary based on language and content complexity.
+            </Info>
+          </Accordion>
+        </AccordionGroup>
+        
+        ## Cost Examples
+        
+        <CardGroup cols={2}>
+          <Card title="Agent API Web Search" icon="calculator">
+            **`openai/gpt-5.6-terra`** • 500 input + 200 output tokens • 1 web search
+        
+            | Component | Cost |
+            | - | - |
+            | Input tokens | \$0.001 |
+            | Output tokens | \$0.0024 |
+            | `web_search` | \$0.0025 |
+            | **Total** | **\$0.0059** |
+          </Card>
+        
+          <Card title="Agent API Research Preset" icon="chart-area-line">
+            **`low` preset representative run** • 2,000 input + 1,000 output tokens • 1 web search + 1 fetch
+        
+            | Component | Cost |
+            | - | - |
+            | Model input tokens | \$0.001 |
+            | Model output tokens | \$0.003 |
+            | `web_search` (Fast Search) | \$0.001 |
+            | `fetch_url` | \$0.0005 |
+            | **Total** | **\$0.0055** |
+          </Card>
+        </CardGroup>
+        
+        Actual preset costs vary with the selected model, token usage, and tool invocations. When present on a completed response, `usage.cost.total_cost` reports the calculated request cost.
+        
+        ## Purchase Options
+        
+        <CardGroup cols={2}>
+          <Card title="Perplexity API Platform on AWS Marketplace" icon="aws" href="/docs/resources/aws-marketplace" arrow="True">
+            Purchase API credits through AWS Marketplace with consolidated billing and enterprise procurement.
+          </Card>
+        
+          <Card title="Contact Sales Team" icon="file-pencil" iconType="solid" href="https://perplexity.typeform.com/to/m3WnMaG6">
+            Fill out our enterprise inquiry form to discuss custom pricing, dedicated support, and enterprise features for teams and organizations.
+          </Card>
+        </CardGroup>
+  recorded_at: 2026-10-18T20:25:26.787313+00:00

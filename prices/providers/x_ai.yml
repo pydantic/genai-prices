@@ -300,7 +300,7 @@ models:
       Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
       The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price
       identically: https://docs.x.ai/developers/models
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 1.25
@@ -351,6 +351,54 @@ models:
       cache_read_mtok: 0.2
       output_mtok: 6
 
+  - id: grok-4.20-multi-agent-0309
+    name: Grok 4.20 Multi-Agent 0309
+    # Same rates as Grok 4.20, but a different model.
+    collapse: false
+    match:
+      or:
+        - equals: grok-4.20-multi-agent-0309
+        - equals: grok-4.20-multi-agent-beta-0309
+        - equals: grok-4.20-multi-agent-latest
+        - equals: grok-4.20-multi-agent-beta-latest
+    context_window: 1000000
+    prices:
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 199999
+            price: 2.5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 199999
+            price: 0.4
+      output_mtok:
+        base: 2.5
+        tiers:
+          - start: 199999
+            price: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 199999
+                price: 2
+          cache_read_mtok:
+            base: 0.16
+            tiers:
+              - start: 199999
+                price: 0.32
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
+    prices_checked: 2026-10-19
+
   - id: grok-4.3
     name: Grok 4.3
     description: >-
@@ -373,7 +421,7 @@ models:
       on the higher rate. Ref: https://docs.x.ai/docs/models
       The Batch API is 20% off every token type, cached tokens included, on both context tiers.
       Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 1.25
@@ -431,7 +479,7 @@ models:
       here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands
       on the higher rate. The base cache-read price is 0.30, not 0.50 - 0.50 is Grok 4.6's.
       Ref: https://docs.x.ai/docs/models/grok-4.5
-    prices_checked: 2026-08-22
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 2
@@ -468,7 +516,7 @@ models:
       table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier
       here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands
       on the higher rate. Ref: https://docs.x.ai/docs/models/grok-4.6
-    prices_checked: 2026-08-22
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 2
@@ -506,7 +554,7 @@ models:
       column "Long context >= 200k tokens", while a tier here fires on `tokens > start`, so the start
       is 199999 and a 200000-token prompt lands on the higher rate. Refs:
       https://docs.x.ai/developers/pricing, https://docs.x.ai/developers/models/grok-4.7
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 2
@@ -538,7 +586,7 @@ models:
       table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier
       here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands
       on the higher rate. Ref: https://docs.x.ai/docs/models
-    prices_checked: 2026-08-22
+    prices_checked: 2026-10-19
     prices:
       input_mtok:
         base: 1

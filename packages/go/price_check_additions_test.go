@@ -1,7 +1,6 @@
 package genai_prices_test
 
 import (
-	"errors"
 	"math"
 	"testing"
 	"time"
@@ -63,6 +62,7 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 		{"moonshotai", "kimi-k2.7-code", tokenUsage, 4.76},
 		{"moonshotai", "kimi-k2.7-code-highspeed", tokenUsage, 9.52},
 		{"x-ai", "grok-4.20-multi-agent", genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageOutputTokens: 1_000_000}, 6.4},
+		{"x-ai", "grok-4.20-multi-agent-0309", genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageOutputTokens: 1_000_000}, 5.5},
 	} {
 		price, err := genai_prices.Calculate(genai_prices.PriceRequest{
 			Usage: test.usage, Model: test.model, ProviderID: test.provider, Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
@@ -74,9 +74,21 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 			t.Fatalf("%s got %g, want %g", test.model, price.TotalPrice, test.total)
 		}
 	}
-	_, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: "grok-4.20-multi-agent-0309", ProviderID: "x-ai"})
-	if !errors.Is(err, genai_prices.ErrModelNotFound) {
-		t.Fatalf("unverified alias: got %v, want ErrModelNotFound", err)
+	batch, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage:        genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageOutputTokens: 1_000_000},
+		Model:        "grok-4.20-multi-agent-0309",
+		ProviderID:   "x-ai",
+		Timestamp:    time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+		PriceContext: map[string]string{"processing": "batch"},
+	})
+	if err != nil || math.Abs(batch.TotalPrice-4.4) > 1e-9 {
+		t.Fatalf("grok-4.20-multi-agent-0309 batch: got %+v, %v, want 4.4", batch, err)
+	}
+	for _, alias := range []string{"grok-4.20-multi-agent-beta-0309", "grok-4.20-multi-agent-latest"} {
+		price, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: alias, ProviderID: "x-ai"})
+		if err != nil || price.ModelID != "grok-4.20-multi-agent-0309" {
+			t.Fatalf("%s: got %+v, %v", alias, price, err)
+		}
 	}
 	for _, model := range []string{"jev-1.14.0", "jev-preview"} {
 		price, err := genai_prices.Calculate(genai_prices.PriceRequest{

@@ -1,0 +1,160 @@
+version: 1
+interactions:
+- request:
+    method: GET
+    uri: https://console.groq.com/docs/models.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - console.groq.com
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      age:
+      - "0"
+      alt-svc:
+      - h3=":443"; ma=86400
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a4ca44f87f190925-AMS
+      connection:
+      - keep-alive
+      content-security-policy:
+      - "default-src 'self' blob:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com https://maps.googleapis.com https://va.vercel-scripts.com https://cdn.segment.com https://api-iam.intercom.io https://www.google-analytics.com https://web.stytch.com https://js.intercomcdn.com https://vercel.live https://www.googletagmanager.com https://widget.intercom.io https://elements.stytch.com https://api.stytchb2b.groq.com https://telemetry.stytch.com https://js.hsforms.net https://challenges.cloudflare.com/ https://*.posthog.com https://static.cloudflareinsights.com https://api.consentjs.datagrail.io https://googleads.g.doubleclick.net https://google.com https://*.datagrail.io https://*.googlesyndication.com https://connect.facebook.net https://static.ads-twitter.com https://ads-twitter.com https://ads-api.twitter.com https://analytics.twitter.com https://chat.cdn-plain.com https://www.redditstatic.com https://snap.licdn.com; style-src 'self' 'unsafe-inline' https://static.intercomassets.com https://fonts.googleapis.com https://*.posthog.com; img-src 'self' https://*.stripe.com https: data: *.groq.com *.googleusercontent.com avatars.githubusercontent.com https://*.posthog.com https://static.ads-twitter.com https://ads-twitter.com https://ads-api.twitter.com https://analytics.twitter.com https://snap.licdn.com https://px.ads.linkedin.com https://px.ads.linkedin.com/wa https://px4.ads.linkedin.com https://p.adsymptotic.com https://cdn.linkedin.oribi.io https://gw.linkedin.oribi.io https://dc.ads.linkedin.com https://sjs.bizographics.com https://prod-uk-services-workspac-workspacefilespublicbuck-vs4gjqpqjkh6.s3.amazonaws.com https://prod-uk-services-attachm-attachmentsbucket28b3ccf-uwfssb4vt2us.s3.eu-west-2.amazonaws.com https://i0.wp.com *; connect-src 'self' https://api.groq.com https://api.us.groqcloud.com https://api.me-central-1.groqcloud.com https://api.eu.groqcloud.com https://api.ca.groqcloud.com https://api.au.groqcloud.com https://api.stytch.com https://api.stytch.groq.com https://checkout.stripe.com https://api.stripe.com https://maps.googleapis.com http://localhost:8080 https://widget.intercom.io https://www.googletagmanager.com https://api.segment.io https://accounts.google.com https://test.stytch.com https://api.stytch.groqcloud.net https://api.stytchb2b.groqcloud.net https://api.stytchb2b.groq.com https://lh3.googleusercontent.com https://downloads.intercomcdn.com https://va.vercel-scripts.com https://api.segment.io https://api-iam.intercom.io https://*.intercom-messenger.com wss://*.intercom-messenger.com wss://widget.intercom.io https://www.google-analytics.com https://api.groqcloud.com https://api.groq.com https://api.groqcloud.net https://api.groqcloud.dev http://localhost:8000 https://vercel.live wss://nexus-websocket-a.intercom.io https://web.stytch.com https://elements.stytch.com https://telemetry.stytch.com https://rawcdn.githack.com https://js.hsforms.net https://gste.groq.io https://forms.hsforms.com https://challenges.cloudflare.com/ https://fonts.googleapis.com https://*.posthog.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io https://*.datagrail.io https://www.facebook.com https://static.ads-twitter.com https://ads-twitter.com https://ads-api.twitter.com https://analytics.twitter.com https://snap.licdn.com https://px.ads.linkedin.com https://px.ads.linkedin.com/wa https://px4.ads.linkedin.com https://p.adsymptotic.com https://cdn.linkedin.oribi.io https://gw.linkedin.oribi.io https://dc.ads.linkedin.com https://sjs.bizographics.com https://groqstatus.com https://pixel-config.reddit.com https://chat.uk.plain.com https://prod-uk-services-attachm-attachmentsuploadbucket2-1l2e4906o2asm.s3.eu-west-2.amazonaws.com; font-src 'self' https: data: https://*.posthog.com; frame-src 'self' https://www.youtube.com https://checkout.stripe.com https://js.stripe.com https://hooks.stripe.com https://intercom-sheets.com https://forms.hsforms.com/ https://www.google.com https://challenges.cloudflare.com/ https://www.googletagmanager.com; object-src 'self' data:; base-uri 'none'; form-action 'self' https://groq.instatus.com https://forms.hsforms.com https://test.stytch.com https://api.stytch.groqcloud.net https://api.stytch.com https://api.stytch.groq.com https://api.stytchb2b.groqcloud.net https://api.stytchb2b.groq.com https://community.groq.com; worker-src 'self' blob: data:; media-src 'self' blob: https://*.posthog.com; frame-ancestors 'none';"
+      content-type:
+      - text/markdown; charset=utf-8
+      cross-origin-opener-policy:
+      - same-origin
+      date:
+      - Sun, 18 Oct 2026 20:24:57 GMT
+      permissions-policy:
+      - >-
+        camera=(), geolocation=(), microphone=(self), payment=(), usb=(),
+        fullscreen=(self), clipboard-write=(self)
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=15552000
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+      - accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-dns-prefetch-control:
+      - "on"
+      x-frame-options:
+      - DENY
+      x-matched-path:
+      - /api/md/[...path]
+      x-vercel-cache:
+      - MISS
+      x-vercel-id:
+      - fra1::sfo1::jwvz6-1792355096436-e5dff22530b1
+    body:
+      type: text
+      content: |-
+        ---
+        description: Explore all available models on GroqCloud.
+        title: Supported Models - GroqDocs
+        image: https://console.groq.com/og_cloudv5.jpg
+        ---
+        
+        # Supported Models
+        
+        Explore all available models on GroqCloud.
+        
+        ## [Featured Models](#featured-models)
+        
+        [![OpenAI GPT-OSS 120B icon](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)OpenAI GPT-OSS 120BGPT-OSS 120B is OpenAI's flagship open-weight language model with 120 billion parameters, built in browser search and code execution, and reasoning capabilities.Token Speed\~500 tpsModalitiesCapabilities](/docs/model/openai/gpt-oss-120b)
+        
+        ## [Production Models](#production-models)
+        
+        **Note:** Production models are intended for use in your production environments. They meet or exceed our high standards for speed, quality, and reliability. Read more [here](https://console.groq.com/docs/deprecations).
+        
+        | MODEL ID                                                                                                                                  | SPEED (T/SEC) | PRICE PER 1M TOKENS      | RATE LIMITS (DEVELOPER PLAN) | CONTEXT WINDOW (TOKENS) | MAX COMPLETION TOKENS | MAX FILE SIZE |
+        | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------ | ---------------------------- | ----------------------- | --------------------- | ------------- |
+        | [![Meta](https://console.groq.com/_next/image?url=%2FMeta_logo.png&w=48&q=75)Llama 3.1 8B](/docs/model/llama-3.1-8b-instant)Enterprisellama-3.1-8b-instant        | 560           | ContactSales             | ContactSales                 | 131,072                 | 131,072               | \-            |
+        | [![Meta](https://console.groq.com/_next/image?url=%2FMeta_logo.png&w=48&q=75)Llama 3.3 70B](/docs/model/llama-3.3-70b-versatile)Enterprisellama-3.3-70b-versatile | 280           | ContactSales             | ContactSales                 | 131,072                 | 32,768                | \-            |
+        | [![OpenAI](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)GPT OSS 120B](/docs/model/openai/gpt-oss-120b)openai/gpt-oss-120b                  | 500           | $0.15 input$0.60 output  | 250K TPM1K RPM               | 131,072                 | 65,536                | \-            |
+        | [![OpenAI](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)GPT OSS 20B](/docs/model/openai/gpt-oss-20b)openai/gpt-oss-20b                     | 1000          | $0.075 input$0.30 output | 250K TPM1K RPM               | 131,072                 | 65,536                | \-            |
+        | [![OpenAI](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)Whisper](/docs/model/whisper-large-v3)whisper-large-v3                             | \-            | $0.111 per hour          | 200K ASH300 RPM              | \-                      | \-                    | 100 MB        |
+        | [![OpenAI](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)Whisper Large V3 Turbo](/docs/model/whisper-large-v3-turbo)whisper-large-v3-turbo  | \-            | $0.04 per hour           | 400K ASH400 RPM              | \-                      | \-                    | 100 MB        |
+        
+        ## [Preview Models](#preview-models)
+        
+        **Note:** Preview models are intended for evaluation purposes only and should not be used in production environments as they may be discontinued at short notice. Read more about deprecations [here](https://console.groq.com/docs/deprecations).
+        
+        | MODEL ID                                                                                                                                                                   | SPEED (T/SEC) | PRICE PER 1M TOKENS      | RATE LIMITS (DEVELOPER PLAN) | CONTEXT WINDOW (TOKENS) | MAX COMPLETION TOKENS | MAX FILE SIZE |
+        | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------ | ---------------------------- | ----------------------- | --------------------- | ------------- |
+        | [![Canopy Labs](https://console.groq.com/_next/image?url=%2Fcanopylabs.png&w=48&q=75)Canopy Labs Orpheus Arabic Saudi](/docs/model/canopylabs/orpheus-arabic-saudi)canopylabs/orpheus-arabic-saudi | \-            | $40.00 per 1M characters | 50K TPM250 RPM               | 4,000                   | 50,000                | \-            |
+        | [![Canopy Labs](https://console.groq.com/_next/image?url=%2Fcanopylabs.png&w=48&q=75)Canopy Labs Orpheus V1 English](/docs/model/canopylabs/orpheus-v1-english)canopylabs/orpheus-v1-english       | \-            | $22.00 per 1M characters | 50K TPM250 RPM               | 4,000                   | 50,000                | \-            |
+        | [![Meta](https://console.groq.com/_next/image?url=%2FMeta_logo.png&w=48&q=75)Llama Prompt Guard 2 22M](/docs/model/meta-llama/llama-prompt-guard-2-22m)meta-llama/llama-prompt-guard-2-22m         | \-            | $0.03 input$0.03 output  | 30K TPM100 RPM               | 512                     | 512                   | \-            |
+        | [![Meta](https://console.groq.com/_next/image?url=%2FMeta_logo.png&w=48&q=75)Prompt Guard 2 86M](/docs/model/meta-llama/llama-prompt-guard-2-86m)meta-llama/llama-prompt-guard-2-86m               | \-            | $0.04 input$0.04 output  | 30K TPM100 RPM               | 512                     | 512                   | \-            |
+        | [![Meta](https://console.groq.com/_next/image?url=%2FMeta_logo.png&w=48&q=75)Muse Spark Open](/docs/model/meta-models/muse-spark-open)Enterprisemeta-models/muse-spark-open                        | 350           | ContactSales             | ContactSales                 | 131,072                 | 131,072               | \-            |
+        | [![MiniMaxAI](https://console.groq.com/_next/image?url=%2Fminimax_logo.png&w=48&q=75)MiniMax M2.7](/docs/model/minimaxai/minimax-m2.7)Enterpriseminimaxai/minimax-m2.7                             | 260           | ContactSales             | ContactSales                 | 196,608                 | 131,072               | \-            |
+        | [![OpenAI](https://console.groq.com/_next/static/media/openailogo.523c87a0.svg)Safety GPT OSS 20B](/docs/model/openai/gpt-oss-safeguard-20b)openai/gpt-oss-safeguard-20b                           | 1000          | $0.075 input$0.30 output | 150K TPM1K RPM               | 131,072                 | 65,536                | \-            |
+        | [![Alibaba Cloud](https://console.groq.com/_next/image?url=%2Fqwen_logo.png&w=48&q=75)Qwen/Qwen3.8-27B](/docs/model/qwen/qwen3.8-27b)qwen/qwen3.8-27b                                              | 450           | $0.80 input$4.00 output  | 250K TPM1K RPM               | 131,072                 | 16,384                | 20 MB         |
+        
+        ## [Deprecated Models](#deprecated-models)
+        
+        Deprecated models are models that are no longer supported or will no longer be supported in the future. See our deprecation guidelines and deprecated models [here](https://console.groq.com/docs/deprecations).
+        
+        ## [Get All Available Models](#get-all-available-models)
+        
+        Hosted models are directly accessible through the GroqCloud Models API endpoint using the model IDs mentioned above. You can use the `https://api.groq.com/openai/v1/models` endpoint to return a JSON list of all active models:
+        
+        Python
+        
+        ```
+        curl -X GET "https://api.groq.com/openai/v1/models" \
+             -H "Authorization: Bearer $GROQ_API_KEY" \
+             -H "Content-Type: application/json"
+        ```
+        
+        ```
+        import Groq from "groq-sdk";
+        
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+        
+        const getModels = async () => {
+          return await groq.models.list();
+        };
+        
+        getModels().then((models) => {
+          // console.log(models);
+        });
+        ```
+        
+        ```
+        import requests
+        import os
+        
+        api_key = os.environ.get("GROQ_API_KEY")
+        url = "https://api.groq.com/openai/v1/models"
+        
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        print(response.json())
+        ```
+  recorded_at: 2026-10-18T20:24:57.228932+00:00

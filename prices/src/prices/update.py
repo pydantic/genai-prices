@@ -138,23 +138,32 @@ class ProviderYaml:
             raise RuntimeError(f'{source} returned only {len(models)} priced models; expected at least {min_count}')
         models_added = 0
         models_updated = 0
-        for model in models:
-            matching_model = self.provider.find_model(model.id)
+        updated_prices: dict[str, ModelPrice] = {}
+        matches = [(model, self.provider.find_model(model.id)) for model in models]
+        # A source model whose id is the record's own id outranks one that only matches it as an alias.
+        matches.sort(key=lambda match: match[1] is not None and match[1].id != match[0].id)
+        for model, matching_model in matches:
             if matching_model is None:
                 models_added += self.add_model(model)
-            else:
-                current = matching_model.prices
-                current = current[-1].prices if isinstance(current, list) else current
-                assert isinstance(model.prices, ModelPrice)
-                # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
-                reported = {key: value for key, value in model.prices if value is not None}
-                model = model.model_copy(update={'prices': ModelPrice(**{**dict(current), **reported})})
-                if model.match == ClauseEquals(equals=model.id):
-                    # The existing match already covers this id, so an `equals` clause for it would only add noise.
-                    current_match = match_logic_schema.validate_python(self._get_model(matching_model.id)['match'])
-                    model = model.model_copy(update={'match': current_match})
-                self.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
-                models_updated += 1
+                continue
+            current = matching_model.prices
+            current = current[-1].prices if isinstance(current, list) else current
+            assert isinstance(model.prices, ModelPrice)
+            # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
+            reported = {key: value for key, value in model.prices if value is not None}
+            prices = ModelPrice(**{**dict(current), **reported})
+            if previous := updated_prices.get(matching_model.id):
+                if previous != prices:
+                    print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')
+                continue
+            updated_prices[matching_model.id] = prices
+            model = model.model_copy(update={'prices': prices})
+            if model.match == ClauseEquals(equals=model.id):
+                # The existing match already covers this id, so an `equals` clause for it would only add noise.
+                current_match = match_logic_schema.validate_python(self._get_model(matching_model.id)['match'])
+                model = model.model_copy(update={'match': current_match})
+            self.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
+            models_updated += 1
         self.save()
         return models_added, models_updated
 
@@ -208,4 +217,7 @@ def get_provider_yaml_string(data: ProviderYamlDict) -> str:
     yaml_data = re.sub(r'(\d|})\n( +- *id:)', r'\1\n\n\2', yaml_data)
     # ruamel leaves a trailing space where it wraps a long scalar
     yaml_data = re.sub(r'[ \t]+\n', '\n', yaml_data)
-    return yaml_data
+    # ruamel keeps a model's trailing blank line on the price entry that used to end it
+    yaml_data = re.sub(r'\n\n( +- constraint:)', r'\n\1', yaml_data)
+    # match prettier, so an unchanged file round-trips byte for byte
+    return re.sub(r'^( *(?:- )?[\w-]+: )\{([^{} \n][^{}\n]*)\}$', r'\1{ \2 }', yaml_data, flags=re.MULTILINE)

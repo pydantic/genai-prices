@@ -7857,6 +7857,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/gpt-oss-120b',
                 match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                name='GPT OSS 120B',
                 description="GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
                 context_window=131072,
                 price_comments='Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed at the halved input rate. See https://console.groq.com/docs/batch.',
@@ -7876,6 +7877,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/gpt-oss-20b',
                 match=ClauseEquals(equals='openai/gpt-oss-20b'),
+                name='GPT OSS 20B',
                 description="GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
                 context_window=131072,
                 price_comments='Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed at the halved input rate. See https://console.groq.com/docs/batch.',
@@ -21889,6 +21891,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
+                id='MiniMaxAI/MiniMax-M3',
+                match=ClauseEquals(equals='MiniMaxAI/MiniMax-M3'),
+                name='Minimax M3',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='Nexusflow/NexusRaven-V2-13B',
                 match=ClauseEquals(equals='Nexusflow/NexusRaven-V2-13B'),
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
@@ -21969,6 +21980,48 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='Qwen/Qwen3.5-9B',
+                match=ClauseEquals(equals='Qwen/Qwen3.5-9B'),
+                name='Qwen3.5 9B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.25')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.6-Plus',
+                match=ClauseEquals(equals='Qwen/Qwen3.6-Plus'),
+                name='Qwen3.6 Plus',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.7-Max',
+                match=ClauseEquals(equals='Qwen/Qwen3.7-Max'),
+                name='Qwen3.7 Max',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('7.5')
+                ),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.7-Plus',
+                match=ClauseEquals(equals='Qwen/Qwen3.7-Plus'),
+                name='Qwen3.7 Plus',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.32'), output_mtok=Decimal('1.28')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.8-2.4T-A95B',
+                match=ClauseEquals(equals='Qwen/Qwen3.8-2.4T-A95B'),
+                name='Qwen3.8-2.4T-A95B',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.8-Flash',
+                match=ClauseEquals(equals='Qwen/Qwen3.8-Flash'),
+                name='Qwen3.8 Flash',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.47')),
+            ),
+            ModelInfo(
                 id='Undi95/ReMM-SLERP-L2-13B',
                 match=ClauseEquals(equals='Undi95/ReMM-SLERP-L2-13B'),
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
@@ -22013,6 +22066,24 @@ providers: list[Provider] = [
                 id='codellama/CodeLlama-7b-Instruct-hf',
                 match=ClauseEquals(equals='codellama/CodeLlama-7b-Instruct-hf'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro-0813',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                name='DeepSeek V4.1 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
             ),
             ModelInfo(
                 id='deepseek-ai/deepseek-coder-33b-instruct',
@@ -22125,6 +22196,24 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.88'), output_mtok=Decimal('0.88')),
             ),
             ModelInfo(
+                id='meta-models/Muse-Glimmer-30B',
+                match=ClauseEquals(equals='meta-models/Muse-Glimmer-30B'),
+                name='Muse Glimmer 30B',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.35'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('1.5')
+                ),
+            ),
+            ModelInfo(
+                id='meta-models/Muse-Spark-Open-816B-A42B',
+                match=ClauseEquals(equals='meta-models/Muse-Spark-Open-816B-A42B'),
+                name='Muse Spark Open 816B A42B',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4.25')
+                ),
+            ),
+            ModelInfo(
                 id='microsoft/WizardLM-2-8x22B',
                 match=ClauseEquals(equals='microsoft/WizardLM-2-8x22B'),
                 prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('1.2')),
@@ -22165,9 +22254,41 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
             ),
             ModelInfo(
+                id='moonshotai/Kimi-K3',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='nvidia/NVIDIA-Nemotron-3.5-Super-VL',
+                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-3.5-Super-VL'),
+                name='NVIDIA Nemotron 3.5 Super VL',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                name='GPT-OSS 120B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
                 id='openchat/openchat-3.5-1210',
                 match=ClauseEquals(equals='openchat/openchat-3.5-1210'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='reflection/Beam-1.0-501B-A23B',
+                match=ClauseEquals(equals='reflection/Beam-1.0-501B-A23B'),
+                name='Beam 1.0 501B A23B',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('1.2')
+                ),
             ),
             ModelInfo(
                 id='snorkelai/Snorkel-Mistral-PairRM-DPO',
@@ -22185,12 +22306,27 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='thinkingmachines/Inkling',
+                match=ClauseEquals(equals='thinkingmachines/Inkling'),
+                name='Inkling',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
                 id='together/Tev1-4B-experimental',
                 match=ClauseEquals(equals='together/Tev1-4B-experimental'),
                 name='Tev1 4B Experimental',
                 context_window=32768,
-                price_comments='The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models',
-                prices=ModelPrice(input_mtok=Decimal('0.04')),
+                price_comments='Rates follow the serverless catalog (https://docs.together.ai/docs/serverless/models), which lists $0.042 per million input tokens; the model page and https://www.together.ai/pricing list $0.04.',
+                prices=[
+                    ConditionalPrice(constraint=None, prices=ModelPrice(input_mtok=Decimal('0.04'))),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
+                        prices=ModelPrice(input_mtok=Decimal('0.042')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='togethercomputer/GPT-JT-Moderation-6B',
@@ -22251,6 +22387,33 @@ providers: list[Provider] = [
                 id='upstage/SOLAR-10.7B-Instruct-v1.0',
                 match=ClauseEquals(equals='upstage/SOLAR-10.7B-Instruct-v1.0'),
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.2',
+                match=ClauseEquals(equals='zai-org/GLM-5.2'),
+                name='GLM-5.2',
+                context_window=1048575,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3',
+                match=ClauseEquals(equals='zai-org/GLM-5.3'),
+                name='GLM-5.3',
+                context_window=1048575,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.3-Flash',
+                match=ClauseEquals(equals='zai-org/GLM-5.3-Flash'),
+                name='GLM-5.3 Flash',
+                context_window=1048575,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
             ),
             ModelInfo(
                 id='zero-one-ai/Yi-34B',
@@ -22761,6 +22924,37 @@ providers: list[Provider] = [
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
                 context_window=1000000,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='grok-4.20-multi-agent-0309',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.20-multi-agent-0309'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-beta-0309'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-latest'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-beta-latest'),
+                    ]
+                ),
+                name='Grok 4.20 Multi-Agent 0309',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=199999, price=Decimal('2'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.16'), tiers=[Tier(start=199999, price=Decimal('0.32'))]
+                            ),
+                            output_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    )
+                ],
             ),
             ModelInfo(
                 id='grok-4.3',
