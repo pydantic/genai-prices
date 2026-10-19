@@ -12247,6 +12247,14 @@ providers: list[Provider] = [
                     )
                 ],
             ),
+            ModelInfo(
+                id='zai-glm-5-3',
+                match=ClauseEquals(equals='zai-glm-5-3'),
+                name='Z.ai GLM 5.3',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
         ],
     ),
     Provider(
