@@ -70,7 +70,7 @@ jobs:
           version: "0.12.1"
           enable-cache: false
       - run: uv sync --all-packages
-      - run: make "${IMPORTER}-get"
+      - run: make "${IMPORTER}-get" | tee "$RUNNER_TEMP/importer.log"
         env:
           IMPORTER: ${{ matrix.importer }}
       - name: Keep the diff unless it only bumps prices_checked
@@ -83,6 +83,9 @@ jobs:
           if git diff -U0 -- prices/providers | grep -E '^[-+] ' | grep -qvE '^[-+] +prices_checked: '; then
             git diff --binary -- prices/providers > "$RUNNER_TEMP/patches/$IMPORTER.patch"
           fi
+          # Rates the importer saw change but couldn't write, listed on the price update PR for a person to apply.
+          grep -E 'update them by hand|kept .+ unchanged|reports others' "$RUNNER_TEMP/importer.log" \
+            > "$RUNNER_TEMP/patches/$IMPORTER.notes" || true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: patch-${{ matrix.importer }}
@@ -150,11 +153,24 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
       - if: steps.apply.outputs.importers != ''
+        name: Write the pull request description
+        env:
+          IMPORTERS: ${{ steps.apply.outputs.importers }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            printf 'Prices fetched from official provider APIs and docs by [this run](%s).\n\n' "$RUN_URL"
+            printf 'Importers with changes: %s\n\n' "$IMPORTERS"
+            printf 'Each rate change is a new dated entry, so past usage keeps its old price.\n'
+            if notes="$(cat "$RUNNER_TEMP"/patches/*.notes 2>/dev/null)" && [ -n "$notes" ]; then
+              printf '\n## Needs a manual update\n\nThese rates changed but could not be updated automatically:\n\n'
+              sed 's/^/- /' <<< "$notes"
+            fi
+          } > "$RUNNER_TEMP/pr-body.md"
+      - if: steps.apply.outputs.importers != ''
         id: pr
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          IMPORTERS: ${{ steps.apply.outputs.importers }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           git config user.name 'genai-prices-automation[bot]'
           git config user.email 'genai-prices-automation[bot]@users.noreply.github.com'
@@ -168,11 +184,11 @@ jobs:
             exit 0
           fi
           git push --force "$remote" "HEAD:$BRANCH"
-          body="$(printf 'Prices fetched from official provider APIs and docs by [this run](%s).\n\nImporters with changes: %s\n\nEach rate change is a new dated entry, so past usage keeps its old price.' "$RUN_URL" "$IMPORTERS")"
+          body="$RUNNER_TEMP/pr-body.md"
           if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
-            gh pr edit "$BRANCH" --body "$body"
+            gh pr edit "$BRANCH" --body-file "$body"
           else
-            echo "created-pr-url=$(gh pr create --head "$BRANCH" --title 'Update provider prices from official sources' --body "$body")" >> "$GITHUB_OUTPUT"
+            echo "created-pr-url=$(gh pr create --head "$BRANCH" --title 'Update provider prices from official sources' --body-file "$body")" >> "$GITHUB_OUTPUT"
           fi
 
   notify:
