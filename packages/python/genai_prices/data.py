@@ -26582,13 +26582,34 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='grok-4.20-multi-agent-0309',
-                match=ClauseEquals(equals='grok-4.20-multi-agent-0309'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.20-multi-agent-0309'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-beta-0309'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-latest'),
+                        ClauseEquals(equals='grok-4.20-multi-agent-beta-latest'),
+                    ]
+                ),
+                name='Grok 4.20 Multi-Agent 0309',
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
                     output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=199999, price=Decimal('2'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.16'), tiers=[Tier(start=199999, price=Decimal('0.32'))]
+                            ),
+                            output_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    )
+                ],
             ),
             ModelInfo(
                 id='grok-4.3',

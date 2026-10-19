@@ -636,5 +636,5 @@ def test_update_openrouter_provider_fetches_recorded_models(tmp_path: Path, caps
 
     assert capsys.readouterr().out == snapshot("""\
 OpenRouter: kept openai/gpt-5.1 at its own rates, alias openai/gpt-5.1-codex reports others
-OpenRouter prices updated: 0 added, 433 updated
+OpenRouter prices updated: 0 added, 439 updated
 """)

@@ -1038,7 +1038,6 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		{"openrouter", "mistralai/mistral-large-4-0", "mistralai/mistral-large-4-0", map[string]string{"route": "mistral/eu"}, 2.9799},
 	} {
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
-			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			Usage: genai_prices.Usage{
 				genai_prices.UsageInputTokens:     1_000_000,
 				genai_prices.UsageCacheReadTokens: 100_000,
