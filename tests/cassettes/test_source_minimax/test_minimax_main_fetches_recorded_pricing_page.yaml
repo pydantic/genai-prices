@@ -2,7 +2,7 @@ version: 1
 interactions:
 - request:
     method: GET
-    uri: https://platform.minimax.io/docs/pricing/overview.md
+    uri: https://platform.minimax.io/docs/guides/text-generation.md
     headers:
       accept:
       - "*/*"
@@ -20,15 +20,15 @@ interactions:
     status: 200
     headers:
       alb_receive_time:
-      - "1792353834.778"
+      - "1792415523.568"
       alb_request_id:
-      - 902699a5ff7d1f4826196be45b3b2aa9967900a8
+      - 9473ce39090aaf738818526b0211262adc2322f7
       cache-control:
       - max-age=0, no-cache, no-store
       cf-cache-status:
       - EXPIRED
       cf-ray:
-      - a4ca262b6fd335b0-IAD
+      - a4d0083e5f562a30-IAD
       connection:
       - keep-alive
       - Transfer-Encoding
@@ -39,11 +39,11 @@ interactions:
       content-type:
       - text/markdown; charset=utf-8
       date:
-      - Sun, 18 Oct 2026 20:03:54 GMT
+      - Mon, 19 Oct 2026 13:12:03 GMT
       expires:
-      - Sun, 18 Oct 2026 20:03:54 GMT
+      - Mon, 19 Oct 2026 13:12:03 GMT
       last-modified:
-      - Sun, 18 Oct 2026 20:03:54 GMT
+      - Mon, 19 Oct 2026 13:12:03 GMT
       link:
       - >-
         </docs/llms.txt>; rel="llms-txt", </docs/llms-full.txt>; rel="llms-full-txt",
@@ -75,7 +75,368 @@ interactions:
       x-vercel-cache:
       - HIT
       x-vercel-id:
-      - iad1::iad1::lnzgv-1792353834816-b48c97ff871a
+      - iad1::iad1::b8fq6-1792415523615-0ce0d03f0536
+    body:
+      type: text
+      content: |
+        > ## Documentation Index
+        > Fetch the complete documentation index at: https://platform.minimax.io/docs/llms.txt
+        > Use this file to discover all available pages before exploring further.
+        
+        # Model Invocation
+        
+        > MiniMax LLMs, supporting multilingual programming, Agent workflows and complex task scenarios.
+        
+        ## Model Overview
+        
+        MiniMax offers multiple LLMs to meet different scenario requirements. **MiniMax-M3.1-Flash** is the latest M-series language model for agentic reasoning, tool use, coding, and long-context tasks, and it supports tuning thinking depth with `effort`. **MiniMax-M3** also remains available. Earlier models are listed under Legacy Models below.
+        
+        ### Supported Models
+        
+        | Model Name | Context Window | Description |
+        | :- | :- | :- |
+        | <span style={{whiteSpace:"nowrap"}}>MiniMax-M3.1-Flash</span> | 1,000,000 | **Frontier multimodal coding model with 1M context window and tunable thinking depth**. An ultra-efficient open-weight model for everyday work. |
+        | MiniMax-M3 | 1,000,000 | **Frontier multimodal coding model with 1M context window** |
+        
+        <Accordion title="Legacy Models">
+          | Model Name | Context Window | Description |
+          | :- | :- | :- |
+          | MiniMax-M2.7 | 204,800 | **Beginning the journey of recursive self-improvement** (output speed approximately 60 tps) |
+          | MiniMax-M2.7-highspeed | 204,800 | **M2.7 Highspeed: Same performance, faster and more agile (output speed approximately 100 tps)** |
+          | MiniMax-M2.5 | 204,800 | **Peak Performance. Ultimate Value. Master the Complex (output speed approximately 60 tps)** |
+          | MiniMax-M2.5-highspeed | 204,800 | **M2.5 highspeed: Same performance, faster and more agile (output speed approximately 100 tps)** |
+          | MiniMax-M2.1 | 204,800 | **Powerful Multi-Language Programming Capabilities with Comprehensively Enhanced Programming Experience (output speed approximately 60 tps)** |
+          | MiniMax-M2.1-highspeed | 204,800 | **Faster and More Agile (output speed approximately 100 tps)** |
+          | MiniMax-M2 | 204,800 | **Agentic capabilities, Advanced reasoning** |
+          | [M2-her](/docs/guides/text-chat) | 64 K | **Designed for dialogue scenarios, supporting role-playing and multi-turn conversations** |
+        </Accordion>
+        
+        <Note>
+          For details on how tps (Tokens Per Second) is calculated, please refer to [FAQ > About APIs](/docs/faq/about-apis#q-how-is-tps-tokens-per-second-calculated-for-llms).
+        </Note>
+        
+        ### **MiniMax M3.1-Flash** Key Highlights
+        
+        <AccordionGroup>
+          <Accordion title="1M-token context">
+            MiniMax-M3.1-Flash supports up to a 1,000,000-token context window for long documents, codebases, and multi-step agent sessions.
+          </Accordion>
+        
+          <Accordion title="Agent and coding workflows">
+            MiniMax-M3.1-Flash is designed for agentic reasoning, tool use, coding, and structured task execution.
+          </Accordion>
+        
+          <Accordion title="Tunable thinking depth (effort)">
+            Tune thinking depth with `effort`, which accepts `low`, `medium`, `high`, `xhigh`, and `max`; higher levels think more thoroughly. When omitted, the default is `max`. See [Thinking](#thinking).
+          </Accordion>
+        
+          <Accordion title="Multimodal chat input">
+            Supports multimodal inputs, including text, images, and video, for a wide range of content understanding and analysis scenarios.
+          </Accordion>
+        </AccordionGroup>
+        
+        ***
+        
+        ## URL Configuration
+        
+        Before calling MiniMax models, prepare the following:
+        
+        | Field | Value |
+        | :- | :- |
+        | `base_url` (Anthropic-compatible, recommended) | `https://api.minimax.io/anthropic` |
+        | `base_url` (OpenAI-compatible) | `https://api.minimax.io/v1` |
+        | `api_key` | [Get Subscription Key](https://platform.minimax.io/console/plan) |
+        | `model` | See [Supported Models](#supported-models) above |
+        
+        ***
+        
+        ## Calling Example
+        
+        MiniMax accepts both Anthropic-style and OpenAI-style request formats. The two examples below are equivalent non-streaming calls; flip `stream` to `true` to switch to streaming responses.
+        
+        ### Anthropic-Compatible (Recommended)
+        
+        Supports thinking blocks, interleaved thinking, and other advanced features — this is the default path.
+        
+        <CodeGroup>
+          ```bash curl theme={null}
+          curl https://api.minimax.io/anthropic/v1/messages \
+            -H "Authorization: Bearer <MINIMAX_API_KEY>" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "MiniMax-M3.1-Flash",
+              "output_config": {"effort": "max"},
+              "max_tokens": 4096,
+              "messages": [
+                {"role": "user", "content": "Hi, how are you?"}
+              ]
+            }'
+          ```
+        
+          ```python Python theme={null}
+          # Please install the Anthropic SDK first: `pip install anthropic`
+          import anthropic
+        
+          client = anthropic.Anthropic(
+              base_url="https://api.minimax.io/anthropic",
+              api_key=[FILTERED]
+          )
+        
+          message = client.messages.create(
+              model="MiniMax-M3.1-Flash",
+              output_config={"effort": "max"},
+              max_tokens=4096,
+              messages=[
+                  {"role": "user", "content": "Hi, how are you?"}
+              ],
+          )
+        
+          for block in message.content:
+              if block.type == "thinking":
+                  print(f"Thinking:\n{block.thinking}\n")
+              elif block.type == "text":
+                  print(f"Text:\n{block.text}\n")
+          ```
+        
+          ```javascript Node.js theme={null}
+          // Please install the Anthropic SDK first: `npm install @anthropic-ai/sdk`
+          import Anthropic from "@anthropic-ai/sdk";
+        
+          const client = new Anthropic({
+            baseURL: "https://api.minimax.io/anthropic",
+            apiKey: "<MINIMAX_API_KEY>",
+          });
+        
+          const message = await client.messages.create({
+            model: "MiniMax-M3.1-Flash",
+            output_config: { effort: "max" },
+            max_tokens: 4096,
+            messages: [
+              { role: "user", content: "Hi, how are you?" },
+            ],
+          });
+        
+          for (const block of message.content) {
+            if (block.type === "thinking") {
+              console.log(`Thinking:\n${block.thinking}\n`);
+            } else if (block.type === "text") {
+              console.log(`Text:\n${block.text}\n`);
+            }
+          }
+          ```
+        </CodeGroup>
+        
+        ### OpenAI-Compatible
+        
+        Already wired up to the OpenAI SDK? Swap `base_url` and `model` for the values below and you can keep using your existing client without migrating to a new SDK.
+        
+        <CodeGroup>
+          ```bash curl theme={null}
+          curl https://api.minimax.io/v1/chat/completions \
+            -H "Authorization: Bearer <MINIMAX_API_KEY>" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "MiniMax-M3.1-Flash",
+              "reasoning_effort": "max",
+              "messages": [
+                {"role": "user", "content": "Hi, how are you?"}
+              ]
+            }'
+          ```
+        
+          ```python Python theme={null}
+          # Please install the OpenAI SDK first: `pip install openai`
+          from openai import OpenAI
+        
+          client = OpenAI(
+              base_url="https://api.minimax.io/v1",
+              api_key=[FILTERED]
+          )
+        
+          response = client.chat.completions.create(
+              model="MiniMax-M3.1-Flash",
+              reasoning_effort="max",
+              messages=[
+                  {"role": "user", "content": "Hi, how are you?"},
+              ],
+          )
+        
+          print(response.choices[0].message.content)
+          ```
+        
+          ```javascript Node.js theme={null}
+          // Please install the OpenAI SDK first: `npm install openai`
+          import OpenAI from "openai";
+        
+          const client = new OpenAI({
+            baseURL: "https://api.minimax.io/v1",
+            apiKey: "<MINIMAX_API_KEY>",
+          });
+        
+          const response = await client.chat.completions.create({
+            model: "MiniMax-M3.1-Flash",
+            reasoning_effort: "max",
+            messages: [
+              { role: "user", content: "Hi, how are you?" },
+            ],
+          });
+        
+          console.log(response.choices[0].message.content);
+          ```
+        </CodeGroup>
+        
+        ***
+        
+        ## Thinking
+        
+        MiniMax-M3.1-Flash reasons before it answers, breaking a complex problem into steps before producing a response. This measurably improves accuracy on agentic reasoning, tool use, coding, and maths. Thinking is **on by default and needs no configuration**.
+        
+        Thinking content comes back separately from the answer: on the OpenAI-compatible protocol, thinking is always returned on `reasoning_content` while `content` holds only the final answer, ready to display without parsing it out of `<think>` tags.
+        
+        ### Thinking depth (effort)
+        
+        `effort` accepts `low`, `medium`, `high`, `xhigh`, and `max`. Higher levels think more thoroughly and produce more output tokens at higher latency. For `MiniMax-M3.1-Flash`, omitting `effort` defaults to `max`. The field name differs per protocol:
+        
+        | Protocol | Thinking depth field | Where thinking content is returned | Output limit field |
+        | :- | :- | :- | :- |
+        | Anthropic-compatible | `output_config.effort` | `thinking` content block | `max_tokens` |
+        | OpenAI-compatible | `reasoning_effort` | `reasoning_content` field | `max_tokens` / `max_completion_tokens` |
+        | OpenAI Responses | `reasoning.effort` | `type: "reasoning"` output item | `max_output_tokens` |
+        
+        For the Anthropic-compatible API, explicitly set `output_config.effort` to `max`:
+        
+        ```json theme={null}
+        {
+          "model": "MiniMax-M3.1-Flash",
+          "max_tokens": 4096,
+          "output_config": {"effort": "max"},
+          "messages": [{"role": "user", "content": "Hello"}]
+        }
+        ```
+        
+        ### Limitations
+        
+        Thinking cannot be turned off. Sending `thinking: {"type": "disabled"}` or `effort: "none"` returns `400`:
+        
+        ```text theme={null}
+        model "MiniMax-M3.1-Flash" requires adaptive thinking
+        ```
+        
+        To reduce the latency and token usage of thinking, lower the `effort` level rather than trying to disable thinking.
+        
+        ***
+        
+        ## API Reference
+        
+        <Columns cols={2}>
+          <Card title="Anthropic API Compatible (Recommended)" icon="book-open" href="/docs/api-reference/text-anthropic-api" cta="View Docs">
+            Call MiniMax models via Anthropic SDK, supporting streaming output and Interleaved Thinking
+          </Card>
+        
+          <Card title="OpenAI API Compatible" icon="book-open" href="/docs/api-reference/text-openai-api" cta="View Docs">
+            Call MiniMax models via OpenAI SDK
+          </Card>
+        
+          <Card title="Using MiniMax M-series Models in AI Coding Tools" icon="code" href="/docs/m-plan/openclaw" cta="View Docs">
+            Use MiniMax M-series models in Claude Code, Cursor, and other tools
+          </Card>
+        
+          <Card title="Chat Model" icon="messages-square" href="/docs/guides/text-chat" cta="View Docs">
+            M2-her chat model, designed for role-playing and multi-turn dialogue scenarios
+          </Card>
+        </Columns>
+        
+        ***
+        
+        ## Contact Us
+        
+        If you encounter any issues while using MiniMax models:
+        
+        * Contact our technical support team through official channels such as email [Model@minimax.io](mailto:Model@minimax.io)
+        * Submit an Issue on our [Github](https://github.com/MiniMax-AI/MiniMax-M2.7/issues) repository
+        
+        ## Related Links
+        
+        * [Anthropic SDK Documentation](https://docs.anthropic.com/en/api/client-sdks)
+        * [OpenAI SDK Documentation](https://platform.openai.com/docs/libraries)
+        * [MiniMax M3.1-Flash](https://www.minimax.io/models/text/m3)
+  recorded_at: 2026-10-19T13:12:03.722729+00:00
+- request:
+    method: GET
+    uri: https://platform.minimax.io/docs/pricing/overview.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - platform.minimax.io
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      alb_receive_time:
+      - "1792415523.824"
+      alb_request_id:
+      - 22e8894a0f97b54f9f22e3d25867a72370ec213b
+      cache-control:
+      - max-age=0, no-cache, no-store
+      cf-cache-status:
+      - EXPIRED
+      cf-ray:
+      - a4d0083ffcd07081-IAD
+      connection:
+      - keep-alive
+      - Transfer-Encoding
+      content-disposition:
+      - inline
+      content-security-policy:
+      - default-src 'none'
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Mon, 19 Oct 2026 13:12:03 GMT
+      expires:
+      - Mon, 19 Oct 2026 13:12:03 GMT
+      last-modified:
+      - Mon, 19 Oct 2026 13:12:03 GMT
+      link:
+      - >-
+        </docs/llms.txt>; rel="llms-txt", </docs/llms-full.txt>; rel="llms-full-txt",
+        </docs/.well-known/api-catalog>; rel="api-catalog",
+        </docs/.well-known/mcp/server-card.json>; rel="mcp-server-card", </docs/.well-known/agent-card.json>;
+        rel="agent-card", </docs/.well-known/agent-skills/index.json>; rel="agent-skills"
+      pragma:
+      - no-cache
+      strict-transport-security:
+      - max-age=63072000
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, accept-encoding
+      x-cache-status:
+      - BYPASS
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-from:
+      - ak
+      x-llms-txt:
+      - /docs/llms.txt
+      x-matched-path:
+      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-robots-tag:
+      - noindex
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - iad1::iad1::8xzvg-1792415523875-b89dbce9a26a
     body:
       type: text
       content: |
@@ -195,38 +556,27 @@ interactions:
         
             [Recharge Now](https://platform.minimax.io/user-center/payment/balance)
         
+            | Model | Input | Output | Prompt caching Read |
+            | :- | :- | :- | :- |
+            | **MiniMax-M3.1-Flash** | \$0.15 / M tokens | \$0.60 / M tokens | \$0.015 / M tokens |
+        
             <Tabs>
               <Tab title="Standard">
                 | Model | Input | Output | Prompt caching Read |
                 | :- | :- | :- | :- |
-                | **MiniMax-M3**<br />≤ 512k input tokens <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Permanent 50% off</span> | ~~\$0.60~~ \$0.30 / M tokens | ~~\$2.40~~ \$1.20 / M tokens | ~~\$0.12~~ \$0.06 / M tokens |
-                | **MiniMax-M3**<br />> 512k input tokens\* <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Permanent 50% off</span> | ~~\$1.20~~ \$0.60 / M tokens | ~~\$4.80~~ \$2.40 / M tokens | ~~\$0.24~~ \$0.12 / M tokens |
+                | **MiniMax-M3**<br />≤ 512k input tokens | \$0.30 / M tokens | \$1.20 / M tokens | \$0.06 / M tokens |
+                | **MiniMax-M3**<br />> 512k input tokens\* | \$0.60 / M tokens | \$2.40 / M tokens | \$0.12 / M tokens |
               </Tab>
         
               <Tab title="Priority*">
                 | Model | Input | Output | Prompt caching Read |
                 | :- | :- | :- | :- |
-                | **MiniMax-M3**<br />≤ 512k input tokens <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Permanent 50% off</span> | ~~\$0.90~~ \$0.45 / M tokens | ~~\$3.60~~ \$1.80 / M tokens | ~~\$0.18~~ \$0.09 / M tokens |
-                | **MiniMax-M3**<br />> 512k input tokens <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">Permanent 50% off</span> | ~~\$1.80~~ \$0.90 / M tokens | ~~\$7.20~~ \$3.60 / M tokens | ~~\$0.36~~ \$0.18 / M tokens |
+                | **MiniMax-M3**<br />≤ 512k input tokens | \$0.45 / M tokens | \$1.80 / M tokens | \$0.09 / M tokens |
+                | **MiniMax-M3**<br />> 512k input tokens | \$0.90 / M tokens | \$3.60 / M tokens | \$0.18 / M tokens |
         
                 \* Priority provides priority admission for faster response times and improved request reliability. Set `service_tier` to `priority` to enable it. Pricing is 1.5x standard.
               </Tab>
             </Tabs>
-        
-            | Model | Input | Output | Prompt caching Read | Prompt caching Write |
-            | :- | :- | :- | :- | :- |
-            | **MiniMax-M2.7** | \$0.3 / M tokens | \$1.2 / M tokens | \$0.06 / M tokens | \$0.375 / M tokens |
-            | **MiniMax-M2.7-highspeed** | \$0.6 / M tokens | \$2.4 / M tokens | \$0.06 / M tokens | \$0.375 / M tokens |
-        
-            <Accordion title="Legacy Models">
-              | Model | Input | Output | Prompt caching Read | Prompt caching Write |
-              | :- | :- | :- | :- | :- |
-              | **MiniMax-M2.5** | \$0.3 / M tokens | \$1.2 / M tokens | \$0.03 / M tokens | \$0.375 / M tokens |
-              | **MiniMax-M2.5-highspeed** | \$0.6 / M tokens | \$2.4 / M tokens | \$0.03 / M tokens | \$0.375 / M tokens |
-              | **MiniMax-M2.1** | \$0.3 / M tokens | \$1.2 / M tokens | \$0.03 / M tokens | \$0.375 / M tokens |
-              | **MiniMax-M2.1-highspeed** | \$0.6 / M tokens | \$2.4 / M tokens | \$0.03 / M tokens | \$0.375 / M tokens |
-              | **MiniMax-M2** | \$0.3 / M tokens | \$1.2 / M tokens | \$0.03 / M tokens | \$0.375 / M tokens |
-            </Accordion>
         
             <Info>
               Note:
@@ -583,4 +933,4 @@ interactions:
             </Accordion>
           </section>
         </div>
-  recorded_at: 2026-10-18T20:03:54.918473+00:00
+  recorded_at: 2026-10-19T13:12:03.986726+00:00

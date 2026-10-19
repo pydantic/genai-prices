@@ -9,6 +9,7 @@ import pytest
 
 from prices import source_minimax
 from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice, Tier, TieredPrices
+from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 BADGE = '<span className="rounded-full">Permanent 50% off</span>'
@@ -127,10 +128,34 @@ def test_minimax_refuses_conflicting_rates_for_one_shared_model(
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 /', '\\$0.4 /')
     )
-    monkeypatch.setattr(source_minimax, 'get_markdown', {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy)}.get)
+    monkeypatch.setattr(
+        source_minimax,
+        'get_markdown',
+        {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy), source_minimax.MODELS_URL: ''}.get,
+    )
 
     with pytest.raises(RuntimeError, match='MiniMax prices MiniMax-M2.5 and MiniMax-M2.1 differently'):
         source_minimax.main(provider_path)
+
+
+def test_minimax_reads_context_windows_and_descriptions_from_the_model_tables() -> None:
+    markdown = """\
+| Model Name | Context Window | Description |
+| :- | :- | :- |
+| <span style={{whiteSpace:"nowrap"}}>MiniMax-M3.1-Flash</span> | 1,000,000 | **Frontier coding model**. Open-weight. |
+| [M2-her](/docs/guides/text-chat) | 64 K | **Designed for dialogue** |
+| MiniMax-Next | Coming soon | **Preview** |
+
+| Field | Value |
+| :- | :- |
+| `model` | See above |
+"""
+
+    assert source_minimax.parse_models_markdown(markdown) == {
+        'MiniMax-M3.1-Flash': (1_000_000, 'Frontier coding model. Open-weight.'),
+        'M2-her': (64_000, 'Designed for dialogue'),
+        'MiniMax-Next': (None, 'Preview'),
+    }
 
 
 @pytest.mark.vcr()
@@ -140,5 +165,8 @@ def test_minimax_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
 
     source_minimax.main(provider_path)
 
-    assert capsys.readouterr().out == 'MiniMax prices updated: 0 added, 6 updated\n'
-    assert 'equals: MiniMax-M2.7-highspeed' not in provider_path.read_text()
+    assert capsys.readouterr().out == 'MiniMax prices updated: 1 added, 1 updated\n'
+    flash = ProviderYaml(provider_path).provider.find_model('MiniMax-M3.1-Flash')
+    assert flash is not None
+    assert flash.context_window == 1_000_000
+    assert flash.description is not None and flash.description.startswith('Frontier multimodal coding model')
