@@ -38,7 +38,9 @@ describe('Provider Matching', () => {
     ['openrouter', 'mistralai/mistral-large-4-0', 'mistralai/mistral-large-4-0'],
     ['openrouter', 'mistralai/mistral-large-4-0-20261006', 'mistralai/mistral-large-4-0'],
   ])('resolves %s model ref %s to %s', (providerId, modelRef, expectedModelId) => {
-    expect(calcPrice({ input_tokens: 1 }, modelRef, { providerId })?.model.id).toBe(expectedModelId)
+    expect(calcPrice({ input_tokens: 1 }, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })?.model.id).toBe(
+      expectedModelId
+    )
   })
 
   it.each([
@@ -70,7 +72,10 @@ describe('Provider Matching', () => {
       })?.total_price
     ).toBeCloseTo(23.6225, 10)
     expect(
-      calcPrice({ ...tokenUsage, web_searches: 1 }, 'meta/muse-wonder-20261012', { providerId: 'openrouter' })?.total_price
+      calcPrice({ ...tokenUsage, web_searches: 1 }, 'meta/muse-wonder-20261012', {
+        providerId: 'openrouter',
+        timestamp: new Date('2026-10-17T00:00:00Z'),
+      })?.total_price
     ).toBeCloseTo(23.6225, 10)
 
     const mistral = actualProviders.find((provider) => provider.id === 'mistral')!
@@ -79,11 +84,17 @@ describe('Provider Matching', () => {
 
     const openrouter = actualProviders.find((provider) => provider.id === 'openrouter')!
     expect(matchModel(openrouter.models, 'mistralai/mistral-large-4-0-20261006')?.context_window).toBeUndefined()
-    expect(calcPrice(tokenUsage, 'mistralai/mistral-large-4-0-20261006', { providerId: 'openrouter' })?.total_price).toBeCloseTo(2.709, 10)
+    expect(
+      calcPrice(tokenUsage, 'mistralai/mistral-large-4-0-20261006', {
+        providerId: 'openrouter',
+        timestamp: new Date('2026-10-17T00:00:00Z'),
+      })?.total_price
+    ).toBeCloseTo(2.709, 10)
     expect(
       calcPrice(tokenUsage, 'mistralai/mistral-large-4-0', {
         priceContext: { route: 'mistral/eu' },
         providerId: 'openrouter',
+        timestamp: new Date('2026-10-17T00:00:00Z'),
       })?.total_price
     ).toBeCloseTo(2.9799, 10)
   })
@@ -523,8 +534,8 @@ describe('Claude Fable 5 vs 5.1', () => {
     ['aws', 'us.anthropic.claude-fable-5-v1:0', 'us.anthropic.claude-fable-5-1-v1:0'],
     ['openrouter', 'anthropic/claude-fable-5', 'anthropic/claude-fable-5.1'],
   ])('keeps %s Fable 5.1 off Fable 5 prices', (providerId, fable5Ref, fable51Ref) => {
-    const fable5 = calcPrice(usage, fable5Ref, { providerId })
-    const fable51 = calcPrice(usage, fable51Ref, { providerId })
+    const fable5 = calcPrice(usage, fable5Ref, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
+    const fable51 = calcPrice(usage, fable51Ref, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
 
     expect(fable51!.model.id).not.toBe(fable5!.model.id)
     expect(fable51!.total_price).toBeCloseTo(fable5!.total_price / 4, 10)
@@ -539,7 +550,7 @@ describe('Claude Fable 5 vs 5.1', () => {
     ['aws', 'us.anthropic.claude-fable-5-1-v1:0', 0.275],
     ['openrouter', 'anthropic/claude-fable-5.1', 0.25],
   ])('prices %s %s cache reads at the 0.025x rate', (providerId, modelRef, expected) => {
-    expect(calcPrice(usage, modelRef, { providerId })!.total_price).toBeCloseTo(expected, 10)
+    expect(calcPrice(usage, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })!.total_price).toBeCloseTo(expected, 10)
   })
 
   // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
@@ -568,7 +579,10 @@ describe('Claude Fable 5 vs 5.1', () => {
   })
 
   it('leaves the OpenRouter family-level alias on Fable 5', () => {
-    const price = calcPrice(usage, '~anthropic/claude-fable-latest', { providerId: 'openrouter' })
+    const price = calcPrice(usage, '~anthropic/claude-fable-latest', {
+      providerId: 'openrouter',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
+    })
 
     expect(price!.total_price).toBeCloseTo(1, 10)
   })
@@ -593,8 +607,8 @@ describe('Claude Opus 5 vs 5.5', () => {
     ['aws', 'anthropic.claude-opus-5', 'anthropic.claude-opus-5-5'],
     ['openrouter', 'anthropic/claude-opus-5', 'anthropic/claude-opus-5.5'],
   ])('keeps %s Opus 5.5 off Opus 5 prices', (providerId, opus5Ref, opus55Ref) => {
-    const opus5 = calcPrice(usage, opus5Ref, { providerId })
-    const opus55 = calcPrice(usage, opus55Ref, { providerId })
+    const opus5 = calcPrice(usage, opus5Ref, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
+    const opus55 = calcPrice(usage, opus55Ref, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
 
     expect(opus55!.model.id).not.toBe(opus5!.model.id)
     expect(opus55!.total_price * 2.5).toBeCloseTo(opus5!.total_price, 10)
@@ -613,6 +627,7 @@ describe('Claude Opus 5 vs 5.5', () => {
   ])('prices %s %s at the Opus 5.5 rates', (providerId, modelRef, expected) => {
     const price = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {
       providerId,
+      timestamp: new Date('2026-10-17T00:00:00Z'),
     })
 
     expect(price!.total_price).toBeCloseTo(expected, 10)
@@ -661,7 +676,7 @@ describe('Claude Sonnet 5 vs 5.5', () => {
     ['aws', 'anthropic.claude-sonnet-5-5', 'regional.anthropic.claude-sonnet-5-5', 13.31],
     ['openrouter', 'anthropic/claude-sonnet-5.5', 'anthropic/claude-sonnet-5.5', 12.1],
   ])('resolves %s %s to %s', (providerId, modelRef, modelId, expected) => {
-    const price = calcPrice(withCacheReads, modelRef, { providerId })
+    const price = calcPrice(withCacheReads, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
 
     expect(price!.model.id).toBe(modelId)
     expect(price!.total_price).toBeCloseTo(expected, 10)
@@ -714,11 +729,14 @@ describe('Claude Haiku 5.5', () => {
     ['openrouter', 'anthropic/claude-haiku-5.5-20261007', 'anthropic/claude-haiku-5.5', 0.06, 0.3000005],
     ['openrouter', 'anthropic/claude-haiku-5.5:batch', 'anthropic/claude-haiku-5.5:batch', 0.03, 0.15000025],
   ])('prices %s %s as %s by prompt length', (providerId, modelRef, modelId, basePrice, longContextPrice) => {
-    const price = calcPrice(base, modelRef, { providerId })
+    const price = calcPrice(base, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })
 
     expect(price!.model.id).toBe(modelId)
     expect(price!.total_price).toBeCloseTo(basePrice, 10)
-    expect(calcPrice(longContext, modelRef, { providerId })!.total_price).toBeCloseTo(longContextPrice, 10)
+    expect(calcPrice(longContext, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })!.total_price).toBeCloseTo(
+      longContextPrice,
+      10
+    )
   })
 
   it.each([

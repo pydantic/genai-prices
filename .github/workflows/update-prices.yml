@@ -42,6 +42,7 @@ jobs:
           - moonshotai
           - novita
           - openai-decisions
+          - openrouter-provider
           - ovhcloud
           - perplexity
           - quicksilverpro

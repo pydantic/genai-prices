@@ -455,7 +455,10 @@ describe('generated data split', () => {
     ['openai/gpt-oss-safeguard-20b', 0.375],
     ['openai/gpt-oss-120b', 0.75],
   ])('prices Groq %s on its own record', (model, expected) => {
-    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, { providerId: 'groq' })
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      providerId: 'groq',
+      timestamp: new Date('2026-10-17T00:00:00Z'),
+    })
 
     expect(result?.model.id).toBe(model)
     expect(result?.total_price).toBeCloseTo(expected, 12)
@@ -470,7 +473,7 @@ describe('generated data split', () => {
     { billedSeconds: 11, hourlyRate: 0.04, model: 'whisper-large-v3-turbo', usage: { audio_seconds: 11, input_audio_seconds: 11 } },
   ])('prices $model transcription duration', ({ billedSeconds, hourlyRate, model, usage }) => {
     const originalUsage = { ...usage }
-    const result = calcPrice(usage, model, { providerId: 'groq' })
+    const result = calcPrice(usage, model, { providerId: 'groq', timestamp: new Date('2026-10-17T00:00:00Z') })
     const expectedPrice = (hourlyRate * billedSeconds) / 3_600
 
     expect(result?.input_price).toBeCloseTo(expectedPrice, 15)

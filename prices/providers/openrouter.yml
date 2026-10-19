@@ -125,20 +125,83 @@ models:
   - id: aion-labs/aion-2.0
     name: Aion-2.0
     match:
-      equals: aion-labs/aion-2.0
+      or:
+        - equals: aion-labs/aion-2.0
+        - equals: aion-labs/aion-2.0-20260223
     prices:
       input_mtok: 0.8
       cache_read_mtok: 0.2
       output_mtok: 1.6
     context_window: 131072
+    prices_checked: 2026-10-19
+
+  - id: aion-labs/aion-3.0
+    name: Aion-3.0
+    match:
+      or:
+        - equals: aion-labs/aion-3.0
+        - equals: aion-labs/aion-3.0-20260707
+    context_window: 131072
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.75
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: aion-labs/aion-3.0-mini
+    name: Aion-3.0-Mini
+    match:
+      or:
+        - equals: aion-labs/aion-3.0-mini
+        - equals: aion-labs/aion-3.0-mini-20260707
+    context_window: 131072
+    prices:
+      input_mtok: 0.7
+      cache_read_mtok: 0.18
+      output_mtok: 1.4
+    prices_checked: 2026-10-19
+
+  - id: aion-labs/aion-3.5
+    name: Aion 3.5
+    match:
+      or:
+        - equals: aion-labs/aion-3.5
+        - equals: aion-labs/aion-3.5-20260923
+    context_window: 262144
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.75
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: aion-labs/aion-3.5-mini
+    name: Aion 3.5 Mini
+    match:
+      or:
+        - equals: aion-labs/aion-3.5-mini
+        - equals: aion-labs/aion-3.5-mini-20260923
+    context_window: 262144
+    prices:
+      input_mtok: 0.7
+      cache_read_mtok: 0.18
+      output_mtok: 1.4
+    prices_checked: 2026-10-19
 
   - id: aion-labs/aion-rp-llama-3.1-8b
+    name: Aion-RP 1.0 (8B)
     match:
       equals: aion-labs/aion-rp-llama-3.1-8b
     prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.2
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.8
+          output_mtok: 1.6
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: alfredpros/codellama-7b-instruct-solidity
     match:
@@ -190,22 +253,27 @@ models:
       input_mtok: 0.3
       output_mtok: 2.5
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: amazon/nova-lite-v1
+    name: Nova Lite 1.0
     match:
       equals: amazon/nova-lite-v1
     prices:
       input_mtok: 0.06
       output_mtok: 0.24
     context_window: 300000
+    prices_checked: 2026-10-19
 
   - id: amazon/nova-micro-v1
+    name: Nova Micro 1.0
     match:
       equals: amazon/nova-micro-v1
     prices:
       input_mtok: 0.035
       output_mtok: 0.14
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: amazon/nova-premier-v1
     name: Nova Premier 1.0
@@ -216,14 +284,17 @@ models:
       cache_read_mtok: 0.625
       output_mtok: 12.5
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: amazon/nova-pro-v1
+    name: Nova Pro 1.0
     match:
       equals: amazon/nova-pro-v1
     prices:
       input_mtok: 0.8
       output_mtok: 3.2
     context_window: 300000
+    prices_checked: 2026-10-19
 
   - id: anthracite-org/magnum-v2-72b
     match:
@@ -233,12 +304,20 @@ models:
       output_mtok: 3
 
   - id: anthracite-org/magnum-v4-72b
+    name: Magnum v4 72B
     match:
       equals: anthracite-org/magnum-v4-72b
     prices:
-      input_mtok: 1.5
-      output_mtok: 2.25
+      - prices:
+          input_mtok: 1.5
+          output_mtok: 2.25
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2.5
+          output_mtok: 5
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: anthropic/claude-2
     match:
@@ -314,40 +393,69 @@ models:
       output_mtok: 15
 
   - id: anthropic/claude-fable-5
+    name: Claude Fable 5
     match:
       or:
         - equals: anthropic/claude-fable-5
         - equals: anthropic/claude-fable-5:beta
+        - equals: anthropic/claude-5-fable-20260609
     context_window: 1000000
     prices:
       input_mtok: 10
       cache_read_mtok: 1.0
       cache_write_mtok: 12.5
       output_mtok: 50
-    prices_checked: 2026-09-01
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anthropic/claude-fable-5.1
+    name: Claude Fable 5.1
     match:
       or:
         - equals: anthropic/claude-fable-5.1
         - equals: anthropic/claude-fable-5.1:beta
+        - equals: anthropic/claude-fable-5.1-20260831
     context_window: 1000000
     prices:
       input_mtok: 10
       cache_read_mtok: 0.25
       cache_write_mtok: 12.5
       output_mtok: 50
-    prices_checked: 2026-09-01
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Cache-read rate confirmed via https://openrouter.ai/api/v1/models
 
+  - id: anthropic/claude-fable-5.1:batch
+    name: Claude Fable 5.1 (batch)
+    match:
+      equals: anthropic/claude-fable-5.1:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_read_mtok: 0.125
+      output_mtok: 25
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-fable-5:batch
+    name: Claude Fable 5 (batch)
+    match:
+      equals: anthropic/claude-fable-5:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_read_mtok: 0.5
+      output_mtok: 25
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-haiku-4.5
+    name: Claude Haiku 4.5
     match:
       or:
         - equals: anthropic/claude-haiku-4.5
@@ -362,14 +470,29 @@ models:
       cache_write_mtok: 1.25
       output_mtok: 5
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-haiku-4.5:batch
+    name: Claude Haiku 4.5 (batch)
+    match:
+      equals: anthropic/claude-haiku-4.5:batch
+    context_window: 200000
+    prices:
+      input_mtok: 0.5
+      cache_write_mtok: 0.625
+      cache_read_mtok: 0.05
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
 
   - id: anthropic/claude-haiku-5.5
+    name: Claude Haiku 5.5
     match:
       or:
         - equals: anthropic/claude-haiku-5.5
         - regex: ^anthropic/claude-haiku-5\.5-\d{8}$
+        - equals: anthropic/claude-haiku-5.5-20261007
     context_window: 1000000
-    prices_checked: 2026-10-08
+    prices_checked: 2026-10-19
     price_comments: >-
       Prompts over 100,000 tokens bill every token at the long-context rate (OpenRouter min_prompt_tokens
       override). The response model field resolves to the dated snapshot anthropic/claude-haiku-5.5-20261007.
@@ -409,7 +532,7 @@ models:
     match:
       equals: anthropic/claude-haiku-5.5:batch
     context_window: 1000000
-    prices_checked: 2026-10-08
+    prices_checked: 2026-10-19
     price_comments: >-
       OpenRouter's batch route bills input, cache, and output tokens at half the standard rates;
       web searches retain their $0.01 per-call rate. Ref: https://openrouter.ai/api/v1/models.
@@ -447,14 +570,29 @@ models:
       or:
         - equals: anthropic/claude-opus-4
         - equals: anthropic/claude-opus-4.1
+        - equals: anthropic/claude-4.1-opus-20250805
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
       cache_read_mtok: 1.5
       output_mtok: 75
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-opus-4.1:batch
+    name: Claude Opus 4.1 (batch)
+    match:
+      equals: anthropic/claude-opus-4.1:batch
+    context_window: 200000
+    prices:
+      input_mtok: 7.5
+      cache_write_mtok: 9.375
+      cache_read_mtok: 0.75
+      output_mtok: 37.5
+    prices_checked: 2026-10-19
 
   - id: anthropic/claude-opus-4.5
+    name: Claude Opus 4.5
     match:
       or:
         - equals: anthropic/claude-opus-4.5
@@ -469,8 +607,22 @@ models:
       cache_write_mtok: 6.25
       output_mtok: 25
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-opus-4.5:batch
+    name: Claude Opus 4.5 (batch)
+    match:
+      equals: anthropic/claude-opus-4.5:batch
+    context_window: 200000
+    prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
 
   - id: anthropic/claude-opus-4.6
+    name: Claude Opus 4.6
     match:
       or:
         - equals: anthropic/claude-opus-4.6
@@ -485,7 +637,7 @@ models:
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
-    prices_checked: 2026-03-22
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -500,18 +652,32 @@ models:
       cache_read_mtok: 3
       output_mtok: 150
 
+  - id: anthropic/claude-opus-4.6:batch
+    name: Claude Opus 4.6 (batch)
+    match:
+      equals: anthropic/claude-opus-4.6:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-opus-4.7
+    name: Claude Opus 4.7
     match:
       or:
         - equals: anthropic/claude-opus-4.7
         - equals: anthropic/claude-opus-4.7:beta
+        - equals: anthropic/claude-4.7-opus-20260416
     context_window: 1000000
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
-    prices_checked: 2026-04-16
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -527,18 +693,32 @@ models:
       output_mtok: 150
     context_window: 1000000
 
+  - id: anthropic/claude-opus-4.7:batch
+    name: Claude Opus 4.7 (batch)
+    match:
+      equals: anthropic/claude-opus-4.7:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-opus-4.8
+    name: Claude Opus 4.8
     match:
       or:
         - equals: anthropic/claude-opus-4.8
         - equals: anthropic/claude-opus-4.8:beta
+        - equals: anthropic/claude-4.8-opus-20260528
     context_window: 1000000
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
-    prices_checked: 2026-05-28
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -554,18 +734,32 @@ models:
       output_mtok: 50
     context_window: 1000000
 
+  - id: anthropic/claude-opus-4.8:batch
+    name: Claude Opus 4.8 (batch)
+    match:
+      equals: anthropic/claude-opus-4.8:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-opus-5
+    name: Claude Opus 5
     match:
       or:
         - equals: anthropic/claude-opus-5
         - equals: anthropic/claude-opus-5:beta
+        - equals: anthropic/claude-opus-5-20260723
     context_window: 1000000
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
-    prices_checked: 2026-07-25
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -586,22 +780,48 @@ models:
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
 
   - id: anthropic/claude-opus-5.5
+    name: Claude Opus 5.5
     match:
       or:
         - equals: anthropic/claude-opus-5.5
         - equals: anthropic/claude-opus-5.5:beta
+        - equals: anthropic/claude-opus-5.5-20260921
     context_window: 1000000
     prices:
       input_mtok: 4
       cache_read_mtok: 0.2
       cache_write_mtok: 5
       output_mtok: 20
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Cache-read rate confirmed via https://openrouter.ai/api/v1/models
+
+  - id: anthropic/claude-opus-5.5:batch
+    name: Claude Opus 5.5 (batch)
+    match:
+      equals: anthropic/claude-opus-5.5:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 2.5
+      cache_read_mtok: 0.1
+      output_mtok: 10
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-opus-5:batch
+    name: Claude Opus 5 (batch)
+    match:
+      equals: anthropic/claude-opus-5:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 2.5
+      cache_write_mtok: 3.125
+      cache_read_mtok: 0.25
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
 
   - id: anthropic/claude-sonnet-4
     # No context_window: endpoints range from 200,000 to 1,000,000: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-4/endpoints
@@ -615,6 +835,7 @@ models:
       output_mtok: 15
 
   - id: anthropic/claude-sonnet-4.5
+    name: Claude Sonnet 4.5
     match:
       or:
         - equals: anthropic/claude-sonnet-4.5
@@ -645,12 +866,41 @@ models:
         tiers:
           - start: 200000
             price: 22.5
-    prices_checked: 2026-03-23
+    prices_checked: 2026-10-19
     price_comments: >-
       Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
+  - id: anthropic/claude-sonnet-4.5:batch
+    name: Claude Sonnet 4.5 (batch)
+    match:
+      equals: anthropic/claude-sonnet-4.5:batch
+    context_window: 1000000
+    prices:
+      input_mtok:
+        base: 1.5
+        tiers:
+          - start: 200000
+            price: 3
+      cache_write_mtok:
+        base: 1.875
+        tiers:
+          - start: 200000
+            price: 3.75
+      cache_read_mtok:
+        base: 0.15
+        tiers:
+          - start: 200000
+            price: 0.3
+      output_mtok:
+        base: 7.5
+        tiers:
+          - start: 200000
+            price: 11.25
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-sonnet-4.6
+    name: Claude Sonnet 4.6
     match:
       or:
         - equals: anthropic/claude-sonnet-4.6
@@ -665,24 +915,38 @@ models:
       cache_read_mtok: 0.3
       cache_write_mtok: 3.75
       output_mtok: 15
-    prices_checked: 2026-03-22
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
     collapse: false
 
+  - id: anthropic/claude-sonnet-4.6:batch
+    name: Claude Sonnet 4.6 (batch)
+    match:
+      equals: anthropic/claude-sonnet-4.6:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 1.5
+      cache_write_mtok: 1.875
+      cache_read_mtok: 0.15
+      output_mtok: 7.5
+    prices_checked: 2026-10-19
+
   - id: anthropic/claude-sonnet-5
+    name: Claude Sonnet 5
     match:
       or:
         - equals: anthropic/claude-sonnet-5
         - equals: anthropic/claude-sonnet-5:beta
+        - equals: anthropic/claude-sonnet-5-20260630
     context_window: 1000000
     prices:
       input_mtok: 2
       cache_read_mtok: 0.2
       cache_write_mtok: 2.5
       output_mtok: 10
-    prices_checked: 2026-08-24
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the
       introductory $2/$10 per MTok rates permanent and cancelled the previously scheduled increase.
@@ -691,23 +955,49 @@ models:
     collapse: false
 
   - id: anthropic/claude-sonnet-5.5
+    name: Claude Sonnet 5.5
     match:
       or:
         - equals: anthropic/claude-sonnet-5.5
         - equals: anthropic/claude-sonnet-5.5:beta
+        - equals: anthropic/claude-sonnet-5.5-20260928
     context_window: 1000000
     prices:
       input_mtok: 2
       cache_read_mtok: 0.1
       cache_write_mtok: 2.5
       output_mtok: 10
-    prices_checked: 2026-10-08
+    prices_checked: 2026-10-19
     price_comments: >-
       Flat pricing across the full 1M context window (no tiered pricing).
       Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Cache-read rate confirmed via https://openrouter.ai/api/v1/models
     collapse: false
+
+  - id: anthropic/claude-sonnet-5.5:batch
+    name: Claude Sonnet 5.5 (batch)
+    match:
+      equals: anthropic/claude-sonnet-5.5:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 1
+      cache_write_mtok: 1.25
+      cache_read_mtok: 0.05
+      output_mtok: 5
+    prices_checked: 2026-10-19
+
+  - id: anthropic/claude-sonnet-5:batch
+    name: Claude Sonnet 5 (batch)
+    match:
+      equals: anthropic/claude-sonnet-5:batch
+    context_window: 1000000
+    prices:
+      input_mtok: 1
+      cache_write_mtok: 1.25
+      cache_read_mtok: 0.1
+      output_mtok: 5
+    prices_checked: 2026-10-19
 
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
@@ -730,10 +1020,18 @@ models:
     match:
       equals: arcee-ai/trinity-large-thinking
     prices:
-      input_mtok: 0.22
-      cache_read_mtok: 0.06
-      output_mtok: 0.85
+      - prices:
+          input_mtok: 0.22
+          cache_read_mtok: 0.06
+          output_mtok: 0.85
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.06
+          output_mtok: 0.8
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: arcee-ai/trinity-mini
     name: Trinity Mini
@@ -782,38 +1080,138 @@ models:
   - id: bytedance-seed/seed-1.6
     name: Seed 1.6
     match:
-      equals: bytedance-seed/seed-1.6
+      or:
+        - equals: bytedance-seed/seed-1.6
+        - equals: bytedance-seed/seed-1.6-20250625
     prices:
-      input_mtok: 0.25
-      output_mtok: 2
+      - prices:
+          input_mtok: 0.25
+          output_mtok: 2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.25
+            tiers:
+              - start: 128000
+                price: 0.5
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 128000
+                price: 4
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: bytedance-seed/seed-1.6-flash
     name: Seed 1.6 Flash
     match:
-      equals: bytedance-seed/seed-1.6-flash
+      or:
+        - equals: bytedance-seed/seed-1.6-flash
+        - equals: bytedance-seed/seed-1.6-flash-20250625
     prices:
-      input_mtok: 0.075
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.075
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.075
+            tiers:
+              - start: 128000
+                price: 0.1
+          output_mtok:
+            base: 0.3
+            tiers:
+              - start: 128000
+                price: 0.8
     context_window: 262144
+    prices_checked: 2026-10-19
+
+  - id: bytedance-seed/seed-2-1-turbo
+    name: Seed 2.1 Turbo
+    match:
+      or:
+        - equals: bytedance-seed/seed-2-1-turbo
+        - equals: bytedance-seed/seed-2-1-turbo-20260810
+    context_window: 262144
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
+
+  - id: bytedance-seed/seed-2.0-code
+    name: Seed-2.0-Code
+    match:
+      or:
+        - equals: bytedance-seed/seed-2.0-code
+        - equals: bytedance-seed/seed-2.0-code-20260730
+    context_window: 262144
+    prices:
+      input_mtok:
+        base: 0.5
+        tiers:
+          - start: 128000
+            price: 1
+      output_mtok:
+        base: 3
+        tiers:
+          - start: 128000
+            price: 6
+    prices_checked: 2026-10-19
 
   - id: bytedance-seed/seed-2.0-lite
     name: Seed-2.0-Lite
     match:
-      equals: bytedance-seed/seed-2.0-lite
+      or:
+        - equals: bytedance-seed/seed-2.0-lite
+        - equals: bytedance-seed/seed-2.0-lite-20260309
     prices:
-      input_mtok: 0.25
-      output_mtok: 2
+      - prices:
+          input_mtok: 0.25
+          output_mtok: 2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.25
+            tiers:
+              - start: 128000
+                price: 0.5
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 128000
+                price: 4
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: bytedance-seed/seed-2.0-mini
     name: Seed-2.0-Mini
     match:
-      equals: bytedance-seed/seed-2.0-mini
+      or:
+        - equals: bytedance-seed/seed-2.0-mini
+        - equals: bytedance-seed/seed-2.0-mini-20260224
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.4
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.1
+            tiers:
+              - start: 128000
+                price: 0.2
+          output_mtok:
+            base: 0.4
+            tiers:
+              - start: 128000
+                price: 0.8
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: bytedance/ui-tars-1.5-7b
     name: UI-TARS 7B
@@ -823,6 +1221,7 @@ models:
       input_mtok: 0.1
       output_mtok: 0.2
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: caller-large
     name: Caller Large
@@ -952,6 +1351,18 @@ models:
       cache_read_mtok: 0.375
       output_mtok: 6
 
+  - id: cognitivecomputations/dolphin-mistral-24b-venice-edition
+    name: Uncensored
+    match:
+      or:
+        - equals: cognitivecomputations/dolphin-mistral-24b-venice-edition
+        - equals: venice/uncensored
+    context_window: 128000
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.9
+    prices_checked: 2026-10-19
+
   - id: cognitivecomputations/dolphin-mistral-24b-venice-edition:free
     name: Uncensored (free)
     match:
@@ -990,12 +1401,29 @@ models:
       output_mtok: 2
 
   - id: cohere/command-a
+    name: Command A
     match:
-      equals: cohere/command-a
+      or:
+        - equals: cohere/command-a
+        - equals: cohere/command-a-03-2025
     prices:
       input_mtok: 2.5
       output_mtok: 10
     context_window: 256000
+    prices_checked: 2026-10-19
+
+  - id: cohere/command-a-plus
+    name: Command A+
+    match:
+      or:
+        - equals: cohere/command-a-plus
+        - equals: cohere/command-a-plus-05-2026
+    context_window: 192000
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.15
+      output_mtok: 1.5
+    prices_checked: 2026-10-19
 
   - id: cohere/command-r
     match:
@@ -1007,12 +1435,14 @@ models:
       output_mtok: 1.5
 
   - id: cohere/command-r-08-2024
+    name: Command R (08-2024)
     match:
       equals: cohere/command-r-08-2024
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: cohere/command-r-plus
     match:
@@ -1024,20 +1454,32 @@ models:
       output_mtok: 15
 
   - id: cohere/command-r-plus-08-2024
+    name: Command R+ (08-2024)
     match:
       equals: cohere/command-r-plus-08-2024
     prices:
       input_mtok: 2.5
       output_mtok: 10
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: cohere/command-r7b-12-2024
+    name: Command R7B (12-2024)
     match:
       equals: cohere/command-r7b-12-2024
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
     context_window: 128000
+    prices_checked: 2026-10-19
+
+  - id: cohere/north-mini-code:free
+    name: North Mini Code (free)
+    match:
+      equals: cohere/north-mini-code:free
+    context_window: 256000
+    prices: {}
+    prices_checked: 2026-10-19
 
   - id: command
     name: Command
@@ -1199,19 +1641,36 @@ models:
     # No context_window: endpoints range from 64,000 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-chat/endpoints
     name: DeepSeek V3
     match:
-      equals: deepseek/deepseek-chat
+      or:
+        - equals: deepseek/deepseek-chat
+        - equals: deepseek/deepseek-chat-v3
     prices:
-      input_mtok: 0.38
-      output_mtok: 0.89
+      - prices:
+          input_mtok: 0.38
+          output_mtok: 0.89
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.32
+          output_mtok: 0.89
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-chat-v3-0324
     name: DeepSeek V3 0324
     match:
       equals: deepseek/deepseek-chat-v3-0324
     prices:
-      input_mtok: 0.3
-      output_mtok: 0.88
+      - prices:
+          input_mtok: 0.3
+          output_mtok: 0.88
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.29
+          cache_read_mtok: 0.11
+          output_mtok: 1.14
     context_window: 163840
+    prices_checked: 2026-10-19
 
   - id: "deepseek/deepseek-chat-v3-0324:free"
     match:
@@ -1224,9 +1683,17 @@ models:
     match:
       equals: deepseek/deepseek-chat-v3.1
     prices:
-      input_mtok: 0.21
-      cache_read_mtok: 0.13
-      output_mtok: 0.79
+      - prices:
+          input_mtok: 0.21
+          cache_read_mtok: 0.13
+          output_mtok: 0.79
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.13
+          output_mtok: 0.95
+    prices_checked: 2026-10-19
 
   - id: "deepseek/deepseek-chat:free"
     match:
@@ -1238,9 +1705,16 @@ models:
     match:
       equals: deepseek/deepseek-r1
     prices:
-      input_mtok: 0.45
-      output_mtok: 2.15
+      - prices:
+          input_mtok: 0.45
+          output_mtok: 2.15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.7
+          output_mtok: 2.5
     context_window: 64000
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-r1-0528
     # No context_window: endpoints range from 128,000 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-r1-0528/endpoints
@@ -1248,8 +1722,16 @@ models:
     match:
       equals: deepseek/deepseek-r1-0528
     prices:
-      input_mtok: 0.5
-      output_mtok: 2.15
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 2.15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.5
+          cache_read_mtok: 0.35
+          output_mtok: 2.15
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-r1-distill-llama-70b
     name: R1 Distill Llama 70B
@@ -1325,18 +1807,34 @@ models:
       equals: deepseek/deepseek-v3.1-terminus
     context_window: 163840
     prices:
-      input_mtok: 0.23
-      output_mtok: 0.90
-    prices_checked: 2025-10-30
+      - prices:
+          input_mtok: 0.23
+          output_mtok: 0.90
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.27
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v3.2
     # No context_window: endpoints range from 32,768 to 163,840: https://openrouter.ai/api/v1/models/deepseek/deepseek-v3.2/endpoints
     name: DeepSeek V3.2
     match:
-      equals: deepseek/deepseek-v3.2
+      or:
+        - equals: deepseek/deepseek-v3.2
+        - equals: deepseek/deepseek-v3.2-20251201
     prices:
-      input_mtok: 0.2288
-      output_mtok: 0.3432
+      - prices:
+          input_mtok: 0.2288
+          output_mtok: 0.3432
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.28
+          cache_read_mtok: 0.028
+          output_mtok: 0.42
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v3.2-exp
     name: DeepSeek V3.2 Exp
@@ -1346,26 +1844,110 @@ models:
       input_mtok: 0.27
       output_mtok: 0.41
     context_window: 163840
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v4-flash
     # No context_window: endpoints range from 384,000 to 1,048,576: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash/endpoints
     name: DeepSeek V4 Flash
     match:
-      equals: deepseek/deepseek-v4-flash
+      or:
+        - equals: deepseek/deepseek-v4-flash
+        - equals: deepseek/deepseek-v4-flash-20260423
     prices:
-      input_mtok: 0.0983
-      cache_read_mtok: 0.0197
-      output_mtok: 0.1966
+      - prices:
+          input_mtok: 0.0983
+          cache_read_mtok: 0.0197
+          output_mtok: 0.1966
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.091
+          cache_read_mtok: 0.0182
+          output_mtok: 0.182
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4-flash-0731
+    name: DeepSeek V4 Flash 0731
+    match:
+      or:
+        - equals: deepseek/deepseek-v4-flash-0731
+        - equals: deepseek/deepseek-v4-flash-20260731
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.042
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4-flash-vision-exp
+    name: DeepSeek V4 Flash Vision Exp
+    match:
+      or:
+        - equals: deepseek/deepseek-v4-flash-vision-exp
+        - equals: deepseek/deepseek-v4-flash-vision-exp-20260821
+    context_window: 1048576
+    prices:
+      input_mtok: 0.2156
+      cache_read_mtok: 0.00686
+      output_mtok: 0.6468
+    prices_checked: 2026-10-19
 
   - id: deepseek/deepseek-v4-pro
     # No context_window: endpoints range from 1,000,000 to 1,048,576: https://openrouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints
     name: DeepSeek V4 Pro
     match:
-      equals: deepseek/deepseek-v4-pro
+      or:
+        - equals: deepseek/deepseek-v4-pro
+        - equals: deepseek/deepseek-v4-pro-20260423
     prices:
-      input_mtok: 0.435
-      cache_read_mtok: 0.003625
-      output_mtok: 0.87
+      - prices:
+          input_mtok: 0.435
+          cache_read_mtok: 0.003625
+          output_mtok: 0.87
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.95526
+          cache_read_mtok: 0.079605
+          output_mtok: 1.91052
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4-pro-0813
+    name: DeepSeek V4 Pro 0813
+    match:
+      or:
+        - equals: deepseek/deepseek-v4-pro-0813
+        - equals: deepseek/deepseek-v4-pro-20260813
+    context_window: 1048576
+    prices:
+      input_mtok: 0.66
+      cache_read_mtok: 0.022
+      output_mtok: 1.98
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4.1-flash
+    name: DeepSeek V4.1 Flash
+    match:
+      or:
+        - equals: deepseek/deepseek-v4.1-flash
+        - equals: deepseek/deepseek-v4.1-flash-20260910
+    context_window: 1048576
+    prices:
+      input_mtok: 0.0448
+      cache_read_mtok: 0.0016
+      output_mtok: 0.08
+    prices_checked: 2026-10-19
+
+  - id: deepseek/deepseek-v4.1-flash:batch
+    name: DeepSeek V4.1 Flash (batch)
+    match:
+      equals: deepseek/deepseek-v4.1-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.004
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
 
   - id: devstral-small
     name: Devstral Small
@@ -1409,12 +1991,33 @@ models:
       equals: dolphin3.0-r1-mistral-24b:free
     prices: {}
 
+  - id: dots-studio/dots-3-note-preview:free
+    name: Dots3-Note Preview (free)
+    match:
+      equals: dots-studio/dots-3-note-preview:free
+    context_window: 512000
+    prices: {}
+    prices_checked: 2026-10-19
+
   - id: eleutherai/llemma_7b
     match:
       equals: eleutherai/llemma_7b
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: elorian/glimpse
+    name: Glimpse
+    match:
+      or:
+        - equals: elorian/glimpse
+        - equals: elorian/glimpse-20261016
+    context_window: 262144
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.06
+      output_mtok: 3
+    prices_checked: 2026-10-19
 
   - id: essentialai/rnj-1-instruct
     name: Rnj 1 Instruct
@@ -1481,6 +2084,19 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: fireworks/ember-1
+    name: Ember-1
+    match:
+      or:
+        - equals: fireworks/ember-1
+        - equals: fireworks/ember-1-20260923
+    context_window: 1048576
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
 
   - id: gemini-2.0-flash-001
     name: Gemini 2.0 Flash
@@ -1711,11 +2327,20 @@ models:
     match:
       equals: google/gemini-2.5-flash
     prices:
-      input_mtok: 0.3
-      cache_write_mtok: 0.3833
-      cache_read_mtok: 0.075
-      output_mtok: 2.5
+      - prices:
+          input_mtok: 0.3
+          cache_write_mtok: 0.3833
+          cache_read_mtok: 0.075
+          output_mtok: 2.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.3
+          cache_write_mtok: 0.0833333333333333
+          cache_read_mtok: 0.03
+          output_mtok: 2.5
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: google/gemini-2.5-flash-image
     name: Nano Banana (Gemini 2.5 Flash Image)
@@ -1727,6 +2352,7 @@ models:
       cache_read_mtok: 0.03
       output_mtok: 2.5
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: google/gemini-2.5-flash-lite
     name: Gemini 2.5 Flash Lite
@@ -1738,6 +2364,7 @@ models:
       cache_read_mtok: 0.01
       output_mtok: 0.4
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: google/gemini-2.5-flash-lite-preview-09-2025
     name: Gemini 2.5 Flash Lite Preview 09-2025
@@ -1746,6 +2373,18 @@ models:
     prices:
       input_mtok: 0.10
       output_mtok: 0.40
+
+  - id: google/gemini-2.5-flash-lite:batch
+    name: Gemini 2.5 Flash Lite (batch)
+    match:
+      equals: google/gemini-2.5-flash-lite:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.05
+      cache_write_mtok: 0.04166666666666665
+      cache_read_mtok: 0.01
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: google/gemini-2.5-flash-preview
     match:
@@ -1771,6 +2410,18 @@ models:
       input_mtok: 0.15
       output_mtok: 3.5
 
+  - id: google/gemini-2.5-flash:batch
+    name: Gemini 2.5 Flash (batch)
+    match:
+      equals: google/gemini-2.5-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.04166666666666665
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+    prices_checked: 2026-10-19
+
   - id: google/gemini-2.5-pro
     name: Gemini 2.5 Pro
     match:
@@ -1779,11 +2430,32 @@ models:
         - equals: google/gemini-2.5-pro-preview
         - equals: google/gemini-2.5-pro-preview-05-06
     prices:
-      input_mtok: 1.25
-      cache_write_mtok: 1.625
-      cache_read_mtok: 0.31
-      output_mtok: 10
+      - prices:
+          input_mtok: 1.25
+          cache_write_mtok: 1.625
+          cache_read_mtok: 0.31
+          output_mtok: 10
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 200000
+                price: 2.5
+          cache_write_mtok: 0.375
+          cache_read_mtok:
+            base: 0.125
+            tiers:
+              - start: 200000
+                price: 0.25
+          output_mtok:
+            base: 10
+            tiers:
+              - start: 200000
+                price: 15
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: "google/gemini-2.5-pro-exp-03-25:free"
     match:
@@ -1797,36 +2469,110 @@ models:
       input_mtok: 1.25
       output_mtok: 10
 
+  - id: google/gemini-2.5-pro:batch
+    name: Gemini 2.5 Pro (batch)
+    match:
+      equals: google/gemini-2.5-pro:batch
+    context_window: 1048576
+    prices:
+      input_mtok:
+        base: 0.625
+        tiers:
+          - start: 200000
+            price: 1.25
+      cache_write_mtok: 0.1875
+      cache_read_mtok:
+        base: 0.125
+        tiers:
+          - start: 200000
+            price: 0.25
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 200000
+            price: 7.5
+    prices_checked: 2026-10-19
+
   - id: google/gemini-3-flash-preview
     name: Gemini 3 Flash Preview
     match:
-      equals: google/gemini-3-flash-preview
+      or:
+        - equals: google/gemini-3-flash-preview
+        - equals: google/gemini-3-flash-preview-20251217
     prices:
       input_mtok: 0.5
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.05
       output_mtok: 3
     context_window: 1048576
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3-flash-preview:batch
+    name: Gemini 3 Flash Preview (batch)
+    match:
+      equals: google/gemini-3-flash-preview:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.04166666666666665
+      output_mtok: 1.5
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3-pro-image
+    name: Nano Banana Pro (Gemini 3 Pro Image)
+    match:
+      or:
+        - equals: google/gemini-3-pro-image
+        - equals: google/gemini-3-pro-image-20260528
+    context_window: 131072
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 0.375
+      cache_read_mtok: 0.2
+      output_mtok: 12
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3-pro-image-preview
     name: Nano Banana Pro (Gemini 3 Pro Image Preview)
+    # An earlier snapshot than the stable model, with a smaller context window.
+    collapse: false
     match:
-      equals: google/gemini-3-pro-image-preview
+      or:
+        - equals: google/gemini-3-pro-image-preview
+        - equals: google/gemini-3-pro-image-preview-20251120
     prices:
       input_mtok: 2
       cache_write_mtok: 0.375
       cache_read_mtok: 0.2
       output_mtok: 12
     context_window: 65536
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.1-flash-image
+    name: Nano Banana 2 (Gemini 3.1 Flash Image)
+    match:
+      or:
+        - equals: google/gemini-3.1-flash-image
+        - equals: google/gemini-3.1-flash-image-20260528
+    context_window: 131072
+    prices:
+      input_mtok: 0.5
+      output_mtok: 3
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3.1-flash-image-preview
     name: Nano Banana 2 (Gemini 3.1 Flash Image Preview)
+    # An earlier snapshot than the stable model, with a smaller context window.
+    collapse: false
     match:
-      equals: google/gemini-3.1-flash-image-preview
+      or:
+        - equals: google/gemini-3.1-flash-image-preview
+        - equals: google/gemini-3.1-flash-image-preview-20260226
     prices:
       input_mtok: 0.5
       output_mtok: 3
     context_window: 65536
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
@@ -1834,12 +2580,38 @@ models:
       or:
         - equals: google/gemini-3.1-flash-lite
         - equals: google/gemini-3.1-flash-lite-preview
+        - equals: google/gemini-3.1-flash-lite-20260507
     prices:
       input_mtok: 0.25
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.025
       output_mtok: 1.5
     context_window: 1048576
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.1-flash-lite-image
+    name: Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)
+    match:
+      or:
+        - equals: google/gemini-3.1-flash-lite-image
+        - equals: google/gemini-3.1-flash-lite-image-20260630
+    context_window: 65536
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.5
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.1-flash-lite:batch
+    name: Gemini 3.1 Flash Lite (batch)
+    match:
+      equals: google/gemini-3.1-flash-lite:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.125
+      cache_write_mtok: 0.04166666666666665
+      cache_read_mtok: 0.0125
+      output_mtok: 0.75
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -1847,12 +2619,53 @@ models:
       or:
         - equals: google/gemini-3.1-pro-preview
         - equals: google/gemini-3.1-pro-preview-customtools
+        - equals: google/gemini-3.1-pro-preview-20260219
     prices:
-      input_mtok: 2
-      cache_write_mtok: 0.375
-      cache_read_mtok: 0.2
-      output_mtok: 12
+      - prices:
+          input_mtok: 2
+          cache_write_mtok: 0.375
+          cache_read_mtok: 0.2
+          output_mtok: 12
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
+          cache_write_mtok: 0.375
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 200000
+                price: 18
     context_window: 1048576
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.1-pro-preview:batch
+    name: Gemini 3.1 Pro Preview (batch)
+    match:
+      equals: google/gemini-3.1-pro-preview:batch
+    context_window: 1048576
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 200000
+            price: 2
+      cache_write_mtok: 0.1875
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 9
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3.5-flash
     name: Gemini 3.5 Flash
@@ -1860,12 +2673,104 @@ models:
       or:
         - equals: google/gemini-3.5-flash
         - regex: ^google/gemini-3\.5-flash-\d{8}$
+        - equals: google/gemini-3.5-flash-20260519
     prices:
       input_mtok: 1.5
       cache_write_mtok: 0.08333333333333334
       cache_read_mtok: 0.15
       output_mtok: 9
     context_window: 1048576
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.5-flash-lite
+    name: Gemini 3.5 Flash Lite
+    match:
+      or:
+        - equals: google/gemini-3.5-flash-lite
+        - equals: google/gemini-3.5-flash-lite-20260721
+    context_window: 1048576
+    prices:
+      input_mtok: 0.3
+      cache_write_mtok: 0.0833333333333333
+      cache_read_mtok: 0.03
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.5-flash-lite:batch
+    name: Gemini 3.5 Flash Lite (batch)
+    match:
+      equals: google/gemini-3.5-flash-lite:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.04166666666666665
+      cache_read_mtok: 0.015
+      output_mtok: 1.25
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.5-flash:batch
+    name: Gemini 3.5 Flash (batch)
+    match:
+      equals: google/gemini-3.5-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.75
+      cache_write_mtok: 0.04166666666666665
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.6-flash
+    name: Gemini 3.6 Flash
+    match:
+      or:
+        - equals: google/gemini-3.6-flash
+        - equals: google/gemini-3.6-flash-20260721
+    context_window: 1048576
+    prices:
+      input_mtok: 0.75
+      cache_write_mtok: 0.0416666666666667
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.6-flash:batch
+    name: Gemini 3.6 Flash (batch)
+    match:
+      equals: google/gemini-3.6-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.375
+      cache_write_mtok: 0.0416666666666667
+      cache_read_mtok: 0.0375
+      output_mtok: 1.875
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.7-flash
+    name: Gemini 3.7 Flash
+    match:
+      or:
+        - equals: google/gemini-3.7-flash
+        - equals: google/gemini-3.7-flash-20260813
+    context_window: 1048576
+    prices:
+      input_mtok: 0.75
+      cache_write_mtok: 0.0416666666666667
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.7-flash:batch
+    name: Gemini 3.7 Flash (batch)
+    match:
+      equals: google/gemini-3.7-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.375
+      cache_write_mtok: 0.0416666666666667
+      cache_read_mtok: 0.0375
+      output_mtok: 1.875
+    prices_checked: 2026-10-19
 
   - id: google/gemini-3.8-flash
     name: Gemini 3.8 Flash
@@ -1873,13 +2778,60 @@ models:
       or:
         - equals: google/gemini-3.8-flash
         - regex: ^google/gemini-3\.8-flash-\d{8}$
+        - equals: google/gemini-3.8-flash-20260902
     prices:
-      input_mtok: 0.75
-      cache_write_mtok: 0.041666666666666664
-      cache_read_mtok: 0.075
-      output_mtok: 3.75
+      - prices:
+          input_mtok: 0.75
+          cache_write_mtok: 0.041666666666666664
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.825
+          cache_write_mtok: 0.041666666666666664
+          cache_read_mtok: 0.0825
+          output_mtok: 4.125
     context_window: 1048576
-    prices_checked: 2026-09-28
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-3.8-flash:batch
+    name: Gemini 3.8 Flash (batch)
+    match:
+      equals: google/gemini-3.8-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.375
+      cache_write_mtok: 0.0416666666666667
+      cache_read_mtok: 0.0375
+      output_mtok: 1.875
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-4-argon
+    name: Gemini 4 Argon
+    match:
+      or:
+        - equals: google/gemini-4-argon
+        - equals: google/gemini-4-argon-20261013
+    context_window: 1048576
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 0.1875
+      cache_read_mtok: 0.1
+      output_mtok: 10
+    prices_checked: 2026-10-19
+
+  - id: google/gemini-4-argon:batch
+    name: Gemini 4 Argon (batch)
+    match:
+      equals: google/gemini-4-argon:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 1
+      cache_write_mtok: 0.1875
+      cache_read_mtok: 0.05
+      output_mtok: 5
+    prices_checked: 2026-10-19
 
   - id: google/gemini-flash-1.5
     match:
@@ -1899,6 +2851,18 @@ models:
     match:
       equals: google/gemini-flash-1.5-8b-exp
     prices: {}
+
+  - id: google/gemini-nano-banana-2.1
+    name: Nano Banana 2.1
+    match:
+      or:
+        - equals: google/gemini-nano-banana-2.1
+        - equals: google/gemini-nano-banana-2.1-20261006
+    context_window: 65536
+    prices:
+      input_mtok: 1.5
+      output_mtok: 7.5
+    prices_checked: 2026-10-19
 
   - id: google/gemini-pro
     match:
@@ -1921,9 +2885,16 @@ models:
     match:
       equals: google/gemma-2-27b-it
     prices:
-      input_mtok: 0.8
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.8
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.65
+          output_mtok: 0.65
     context_window: 8192
+    prices_checked: 2026-10-19
 
   - id: google/gemma-2-9b-it
     match:
@@ -1942,9 +2913,16 @@ models:
     match:
       equals: google/gemma-3-12b-it
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.1
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.05
+          output_mtok: 0.15
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: "google/gemma-3-12b-it:free"
     match:
@@ -1962,8 +2940,16 @@ models:
     match:
       equals: google/gemma-3-27b-it
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.08
+          cache_read_mtok: 0.04
+          output_mtok: 0.35
+    prices_checked: 2026-10-19
 
   - id: "google/gemma-3-27b-it:free"
     match:
@@ -1975,9 +2961,16 @@ models:
     match:
       equals: google/gemma-3-4b-it
     prices:
-      input_mtok: 0.02
-      output_mtok: 0.04
+      - prices:
+          input_mtok: 0.02
+          output_mtok: 0.04
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.05
+          output_mtok: 0.1
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: "google/gemma-3-4b-it:free"
     match:
@@ -1996,10 +2989,20 @@ models:
     # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/google/gemma-4-26b-a4b-it/endpoints
     name: Gemma 4 26B A4B
     match:
-      equals: google/gemma-4-26b-a4b-it
+      or:
+        - equals: google/gemma-4-26b-a4b-it
+        - equals: google/gemma-4-26b-a4b-it-20260403
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.33
+      - prices:
+          input_mtok: 0.06
+          output_mtok: 0.33
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.09
+          cache_read_mtok: 0.05
+          output_mtok: 0.3
+    prices_checked: 2026-10-19
 
   - id: google/gemma-4-26b-a4b-it:free
     name: Gemma 4 26B A4B  (free)
@@ -2007,13 +3010,16 @@ models:
       equals: google/gemma-4-26b-a4b-it:free
     prices: {}
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: google/gemma-4-31b-it
     name: Gemma 4 31B
     match:
-      equals: google/gemma-4-31b-it
+      or:
+        - equals: google/gemma-4-31b-it
+        - equals: google/gemma-4-31b-it-20260402
     context_window: 262144
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
     price_comments: >-
       OpenRouter reports the cheapest active endpoint for this model. It was Venice ($0.12/$0.36) when checked on
       2026-06-09 and DeepInfra ($0.09/$0.34) on 2026-08-27; OpenRouter publishes no history, so the dated entry
@@ -2031,6 +3037,12 @@ models:
           input_mtok: 0.09
           cache_read_mtok: 0.05
           output_mtok: 0.34
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.2
+          cache_read_mtok: 0.05
+          output_mtok: 0.4
 
   - id: google/gemma-4-31b-it:free
     name: Gemma 4 31B (free)
@@ -2038,6 +3050,7 @@ models:
       equals: google/gemma-4-31b-it:free
     prices: {}
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: "google/learnlm-1.5-pro-experimental:free"
     match:
@@ -2047,16 +3060,22 @@ models:
   - id: google/lyria-3-clip-preview
     name: Lyria 3 Clip Preview
     match:
-      equals: google/lyria-3-clip-preview
+      or:
+        - equals: google/lyria-3-clip-preview
+        - equals: google/lyria-3-clip-preview-20260330
     prices: {}
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: google/lyria-3-pro-preview
     name: Lyria 3 Pro Preview
     match:
-      equals: google/lyria-3-pro-preview
+      or:
+        - equals: google/lyria-3-pro-preview
+        - equals: google/lyria-3-pro-preview-20260330
     prices: {}
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: google/palm-2-chat-bison
     match:
@@ -2165,11 +3184,19 @@ models:
 
   - id: gryphe/mythomax-l2-13b
     # No context_window: endpoints range from 4,096 to 8,192: https://openrouter.ai/api/v1/models/gryphe/mythomax-l2-13b/endpoints
+    name: MythoMax 13B
     match:
       equals: gryphe/mythomax-l2-13b
     prices:
-      input_mtok: 0.065
-      output_mtok: 0.065
+      - prices:
+          input_mtok: 0.065
+          output_mtok: 0.065
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.08
+          output_mtok: 0.11
+    prices_checked: 2026-10-19
 
   - id: hermes-2-pro-llama-3-8b
     name: Hermes 2 Pro - Llama-3 8B
@@ -2192,6 +3219,7 @@ models:
       input_mtok: 0.017
       output_mtok: 0.112
     context_window: 131000
+    prices_checked: 2026-10-19
 
   - id: ibm-granite/granite-4.1-8b
     name: Granite 4.1 8B
@@ -2202,15 +3230,44 @@ models:
       output_mtok: 0.1
     context_window: 131072
 
+  - id: ibm-granite/granite-4.2-8b
+    name: Granite 4.2 8B
+    match:
+      or:
+        - equals: ibm-granite/granite-4.2-8b
+        - equals: ibm-granite/granite-4.2-8b-20260831
+    context_window: 131072
+    prices:
+      input_mtok: 0.06
+      cache_read_mtok: 0.015
+      output_mtok: 0.25
+    prices_checked: 2026-10-19
+
   - id: inception/mercury-2
     name: Mercury 2
     match:
-      equals: inception/mercury-2
+      or:
+        - equals: inception/mercury-2
+        - equals: inception/mercury-2-20260304
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 0.75
     context_window: 128000
+    prices_checked: 2026-10-19
+
+  - id: inception/mercury-2.5
+    name: Mercury 2.5
+    match:
+      or:
+        - equals: inception/mercury-2.5
+        - equals: inception/mercury-2.5-20260908
+    context_window: 260000
+    prices:
+      input_mtok: 0.04
+      cache_read_mtok: 0.004
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
 
   - id: inclusionai/ling-2.6-1t
     name: Ling-2.6-1T
@@ -2230,6 +3287,45 @@ models:
       cache_read_mtok: 0.002
       output_mtok: 0.03
 
+  - id: inclusionai/ling-3.0-flash
+    name: Ling 3.0 Flash
+    match:
+      or:
+        - equals: inclusionai/ling-3.0-flash
+        - equals: inclusionai/ling-3.0-flash-20260723
+    context_window: 262144
+    prices:
+      input_mtok: 0.021
+      cache_read_mtok: 0.0042
+      output_mtok: 0.063
+    prices_checked: 2026-10-19
+
+  - id: inclusionai/ling-3.0-flash-vl
+    name: Ling 3.0 Flash VL
+    match:
+      or:
+        - equals: inclusionai/ling-3.0-flash-vl
+        - equals: inclusionai/ling-3.0-flash-vl-20260910
+    context_window: 131072
+    prices:
+      input_mtok: 0.06
+      cache_read_mtok: 0.012
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: inclusionai/ling-3.1-flash
+    name: Ling 3.1 Flash
+    match:
+      or:
+        - equals: inclusionai/ling-3.1-flash
+        - equals: inclusionai/ling-3.1-flash-20261002
+    context_window: 262144
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.015
+      output_mtok: 0.225
+    prices_checked: 2026-10-19
+
   - id: inclusionai/ring-2.6-1t
     name: Ring-2.6-1T
     match:
@@ -2238,6 +3334,30 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.015
       output_mtok: 0.625
+
+  - id: inference-net/schematron-v2-small
+    name: Schematron V2 Small
+    match:
+      or:
+        - equals: inference-net/schematron-v2-small
+        - equals: inference-net/schematron-v2-small-20260902
+    context_window: 128000
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.23
+    prices_checked: 2026-10-19
+
+  - id: inference-net/schematron-v2-turbo
+    name: Schematron V2 Turbo
+    match:
+      or:
+        - equals: inference-net/schematron-v2-turbo
+        - equals: inference-net/schematron-v2-turbo-20260902
+    context_window: 128000
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
 
   - id: infermatic/mn-inferor-12b
     match:
@@ -2377,6 +3497,27 @@ models:
     match:
       equals: liquid/lfm-2.5-1.2b-thinking:free
     prices: {}
+
+  - id: liquid/lfm-2.5-2.6b:free
+    name: LFM2.5-2.6B (free)
+    match:
+      equals: liquid/lfm-2.5-2.6b:free
+    context_window: 65536
+    prices: {}
+    prices_checked: 2026-10-19
+
+  - id: liquid/lfm-2.5-24b-a2b
+    name: LFM2.5-24B-A2B
+    match:
+      or:
+        - equals: liquid/lfm-2.5-24b-a2b
+        - equals: liquid/lfm-2.5-24b-a2b-20261012
+    context_window: 128000
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.025
+      output_mtok: 0.7
+    prices_checked: 2026-10-19
 
   - id: liquid/lfm-3b
     match:
@@ -2616,12 +3757,33 @@ models:
     prices: {}
 
   - id: mancer/weaver
+    name: Weaver (alpha)
     match:
       equals: mancer/weaver
     prices:
-      input_mtok: 1.125
-      output_mtok: 1.125
+      - prices:
+          input_mtok: 1.125
+          output_mtok: 1.125
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.4
+          output_mtok: 0.75
     context_window: 8000
+    prices_checked: 2026-10-19
+
+  - id: meituan/longcat-2.0
+    name: LongCat 2.0
+    match:
+      or:
+        - equals: meituan/longcat-2.0
+        - equals: meituan/longcat-2.0-20260720
+    context_window: 1048756
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.006
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: mercury-coder-small-beta
     name: Mercury Coder Small Beta
@@ -2685,17 +3847,33 @@ models:
     match:
       equals: meta-llama/llama-3.1-70b-instruct
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.28
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.28
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.4
+          output_mtok: 0.4
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: meta-llama/llama-3.1-8b-instruct
     # No context_window: endpoints range from 16,384 to 131,072: https://openrouter.ai/api/v1/models/meta-llama/llama-3.1-8b-instruct/endpoints
+    name: Llama 3.1 8B Instruct
     match:
       equals: meta-llama/llama-3.1-8b-instruct
     prices:
-      input_mtok: 0.02
-      output_mtok: 0.03
+      - prices:
+          input_mtok: 0.02
+          output_mtok: 0.03
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.025
+          output_mtok: 0.08
+    prices_checked: 2026-10-19
 
   - id: "meta-llama/llama-3.1-8b-instruct:free"
     match:
@@ -2720,9 +3898,16 @@ models:
     match:
       equals: meta-llama/llama-3.2-1b-instruct
     prices:
-      input_mtok: 0.005
-      output_mtok: 0.01
+      - prices:
+          input_mtok: 0.005
+          output_mtok: 0.01
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.027
+          output_mtok: 0.201
     context_window: 60000
+    prices_checked: 2026-10-19
 
   - id: "meta-llama/llama-3.2-1b-instruct:free"
     match:
@@ -2735,8 +3920,15 @@ models:
     match:
       equals: meta-llama/llama-3.2-3b-instruct
     prices:
-      input_mtok: 0.01
-      output_mtok: 0.02
+      - prices:
+          input_mtok: 0.01
+          output_mtok: 0.02
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.0509
+          output_mtok: 0.335
+    prices_checked: 2026-10-19
 
   - id: meta-llama/llama-3.2-3b-instruct:free
     name: Llama 3.2 3B Instruct (free)
@@ -2757,8 +3949,15 @@ models:
     match:
       equals: meta-llama/llama-3.3-70b-instruct
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.24
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.24
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.1
+          output_mtok: 0.32
+    prices_checked: 2026-10-19
 
   - id: meta-llama/llama-3.3-70b-instruct:free
     name: Llama 3.3 70B Instruct (free)
@@ -2770,10 +3969,20 @@ models:
     # No context_window: endpoints range from 128,000 to 1,048,576: https://openrouter.ai/api/v1/models/meta-llama/llama-4-maverick/endpoints
     name: Llama 4 Maverick
     match:
-      equals: meta-llama/llama-4-maverick
+      or:
+        - equals: meta-llama/llama-4-maverick
+        - equals: meta-llama/llama-4-maverick-17b-128e-instruct
     prices:
-      input_mtok: 0.15
-      output_mtok: 0.6
+      - prices:
+          input_mtok: 0.15
+          output_mtok: 0.6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.1875
+          cache_read_mtok: 0.05
+          output_mtok: 0.6525
+    prices_checked: 2026-10-19
 
   - id: "meta-llama/llama-4-maverick:free"
     match:
@@ -2784,10 +3993,19 @@ models:
     # No context_window: endpoints range from 131,072 to 1,310,720: https://openrouter.ai/api/v1/models/meta-llama/llama-4-scout/endpoints
     name: Llama 4 Scout
     match:
-      equals: meta-llama/llama-4-scout
+      or:
+        - equals: meta-llama/llama-4-scout
+        - equals: meta-llama/llama-4-scout-17b-16e-instruct
     prices:
-      input_mtok: 0.08
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.08
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.1
+          output_mtok: 0.3
+    prices_checked: 2026-10-19
 
   - id: "meta-llama/llama-4-scout:free"
     match:
@@ -2814,17 +4032,38 @@ models:
     match:
       equals: meta-llama/llama-guard-4-12b
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.05
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.05
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.18
+          output_mtok: 0.18
     context_window: 163840
+    prices_checked: 2026-10-19
+
+  - id: meta/muse-glimmer-30b
+    name: Muse Glimmer 30B
+    match:
+      or:
+        - equals: meta/muse-glimmer-30b
+        - equals: meta/muse-glimmer-30b-20260810
+    context_window: 131072
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.04
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: meta/muse-spark-1.1
+    name: Muse Spark 1.1
     match:
       or:
         - equals: meta/muse-spark-1.1
         - equals: meta/muse-spark-1.1-20260709
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-spark-1.1-20260709/endpoints
     prices:
@@ -2834,12 +4073,13 @@ models:
       web_searches_kcount: 2.5
 
   - id: meta/muse-spark-1.2
+    name: Muse Spark 1.2
     match:
       or:
         - equals: meta/muse-spark-1.2
         - equals: meta/muse-spark-1.2-20260805
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-20260805/endpoints
     prices:
@@ -2849,12 +4089,13 @@ models:
       web_searches_kcount: 2.5
 
   - id: meta/muse-spark-1.2-contributor
+    name: Muse Spark 1.2 Contributor
     match:
       or:
         - equals: meta/muse-spark-1.2-contributor
         - equals: meta/muse-spark-1.2-contributor-20260805
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-spark-1.2-contributor-20260805/endpoints
     prices:
@@ -2864,12 +4105,13 @@ models:
       web_searches_kcount: 2.5
 
   - id: meta/muse-spark-1.3
+    name: Muse Spark 1.3
     match:
       or:
         - equals: meta/muse-spark-1.3
         - equals: meta/muse-spark-1.3-20260902
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-20260902/endpoints
     prices:
@@ -2879,12 +4121,13 @@ models:
       web_searches_kcount: 2.5
 
   - id: meta/muse-spark-1.3-contributor
+    name: Muse Spark 1.3 Contributor
     match:
       or:
         - equals: meta/muse-spark-1.3-contributor
         - equals: meta/muse-spark-1.3-contributor-20260902
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-spark-1.3-contributor-20260902/endpoints
     prices:
@@ -2893,13 +4136,27 @@ models:
       output_mtok: 0.2
       web_searches_kcount: 2.5
 
+  - id: meta/muse-spark-open
+    name: Muse Spark Open
+    match:
+      or:
+        - equals: meta/muse-spark-open
+        - equals: meta/muse-spark-open-20261015
+    context_window: 1048576
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.15
+      output_mtok: 4.25
+    prices_checked: 2026-10-19
+
   - id: meta/muse-wonder
+    name: Muse Wonder
     match:
       or:
         - equals: meta/muse-wonder
         - equals: meta/muse-wonder-20261012
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       https://openrouter.ai/api/v1/models/meta/muse-wonder-20261012/endpoints
     prices:
@@ -2930,12 +4187,14 @@ models:
       output_mtok: 0.1
 
   - id: microsoft/phi-4
+    name: Phi 4
     match:
       equals: microsoft/phi-4
     prices:
       input_mtok: 0.07
       output_mtok: 0.14
     context_window: 16384
+    prices_checked: 2026-10-19
 
   - id: microsoft/phi-4-mini-instruct
     name: Phi 4 Mini Instruct
@@ -2960,12 +4219,20 @@ models:
       output_mtok: 0.07
 
   - id: microsoft/wizardlm-2-8x22b
+    name: WizardLM-2 8x22B
     match:
       equals: microsoft/wizardlm-2-8x22b
     prices:
-      input_mtok: 0.5
-      output_mtok: 0.5
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 0.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.62
+          output_mtok: 0.62
     context_window: 65535
+    prices_checked: 2026-10-19
 
   - id: midnight-rose-70b
     name: Midnight Rose 70B
@@ -2991,15 +4258,23 @@ models:
       input_mtok: 0.2
       output_mtok: 1.1
     context_window: 1000192
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m1
     name: MiniMax M1
     match:
       equals: minimax/minimax-m1
     prices:
-      input_mtok: 0.3
-      output_mtok: 1.65
+      - prices:
+          input_mtok: 0.3
+          output_mtok: 1.65
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.55
+          output_mtok: 2.2
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m2
     # No context_window: endpoints range from 196,608 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2/endpoints
@@ -3007,9 +4282,17 @@ models:
     match:
       equals: minimax/minimax-m2
     prices:
-      input_mtok: 0.255
-      cache_read_mtok: 0.03
-      output_mtok: 1
+      - prices:
+          input_mtok: 0.255
+          cache_read_mtok: 0.03
+          output_mtok: 1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.255
+          cache_read_mtok: 0.03
+          output_mtok: 1.02
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m2-her
     name: MiniMax M2-her
@@ -3022,16 +4305,25 @@ models:
       cache_read_mtok: 0.03
       output_mtok: 1.2
     context_window: 65536
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m2.1
     name: MiniMax M2.1
     match:
       equals: minimax/minimax-m2.1
     prices:
-      input_mtok: 0.29
-      cache_read_mtok: 0.03
-      output_mtok: 0.95
+      - prices:
+          input_mtok: 0.29
+          cache_read_mtok: 0.03
+          output_mtok: 0.95
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.03
+          output_mtok: 1.2
     context_window: 204800
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m2.5
     # No context_window: endpoints range from 65,536 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2.5/endpoints
@@ -3041,9 +4333,17 @@ models:
         - equals: minimax/minimax-m2.5
         - equals: minimax/minimax-m2.5-20260211
     prices:
-      input_mtok: 0.15
-      cache_read_mtok: 0.05
-      output_mtok: 0.9
+      - prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.05
+          output_mtok: 0.9
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.27
+          cache_read_mtok: 0.03
+          output_mtok: 0.95
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m2.7
     # No context_window: endpoints range from 196,608 to 204,800: https://openrouter.ai/api/v1/models/minimax/minimax-m2.7/endpoints
@@ -3053,9 +4353,17 @@ models:
         - equals: minimax/minimax-m2.7
         - equals: minimax/minimax-m2.7-20260318
     prices:
-      input_mtok: 0.27
-      cache_read_mtok: 0.054
-      output_mtok: 1.08
+      - prices:
+          input_mtok: 0.27
+          cache_read_mtok: 0.054
+          output_mtok: 1.08
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.06
+          output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: minimax/minimax-m3
     # No context_window: endpoints range from 262,144 to 1,048,576: https://openrouter.ai/api/v1/models/minimax/minimax-m3/endpoints
@@ -3068,6 +4376,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: ministral-3b
     name: Ministral 3B
@@ -3188,6 +4497,18 @@ models:
       cache_read_mtok: 0.03
       output_mtok: 0.9
     context_window: 256000
+    prices_checked: 2026-10-19
+
+  - id: mistralai/codestral-2508:batch
+    name: Codestral 2508 (batch)
+    match:
+      equals: mistralai/codestral-2508:batch
+    context_window: 256000
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.45
+    prices_checked: 2026-10-19
 
   - id: mistralai/codestral-mamba
     match:
@@ -3205,6 +4526,7 @@ models:
       cache_read_mtok: 0.04
       output_mtok: 2
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: mistralai/ministral-14b-2512
     name: Ministral 3 14B 2512
@@ -3215,6 +4537,7 @@ models:
       cache_read_mtok: 0.02
       output_mtok: 0.2
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: mistralai/ministral-3b
     match:
@@ -3232,6 +4555,7 @@ models:
       cache_read_mtok: 0.01
       output_mtok: 0.1
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: mistralai/ministral-8b
     match:
@@ -3249,6 +4573,18 @@ models:
       cache_read_mtok: 0.015
       output_mtok: 0.15
     context_window: 262144
+    prices_checked: 2026-10-19
+
+  - id: mistralai/ministral-8b-2512:batch
+    name: Ministral 3 8B 2512 (batch)
+    match:
+      equals: mistralai/ministral-8b-2512:batch
+    context_window: 262144
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0075
+      output_mtok: 0.075
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-7b-instruct
     match:
@@ -3286,9 +4622,17 @@ models:
         - equals: mistralai/mistral-large-2407
         - equals: mistral-large-2411
     prices:
-      input_mtok: 2
-      output_mtok: 6
+      - prices:
+          input_mtok: 2
+          output_mtok: 6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          output_mtok: 6
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-large-2512
     name: Mistral Large 3 2512
@@ -3299,13 +4643,26 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 1.5
     context_window: 262144
+    prices_checked: 2026-10-19
+
+  - id: mistralai/mistral-large-2512:batch
+    name: Mistral Large 3 2512 (batch)
+    match:
+      equals: mistralai/mistral-large-2512:batch
+    context_window: 262144
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 0.75
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-large-4-0
+    name: Mistral Large 4
     match:
       or:
         - equals: mistralai/mistral-large-4-0
         - equals: mistralai/mistral-large-4-0-20261006
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-19
     price_comments: >-
       Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The
       October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future
@@ -3338,18 +4695,39 @@ models:
     match:
       equals: mistralai/mistral-medium-3
     prices:
-      input_mtok: 0.4
-      output_mtok: 2
+      - prices:
+          input_mtok: 0.4
+          output_mtok: 2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.4
+          cache_read_mtok: 0.04
+          output_mtok: 2
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-medium-3-5
     name: Mistral Medium 3.5
     match:
-      equals: mistralai/mistral-medium-3-5
+      or:
+        - equals: mistralai/mistral-medium-3-5
+        - equals: mistralai/mistral-medium-3.5-20260430
     prices:
       input_mtok: 1.5
       output_mtok: 7.5
     context_window: 262144
+    prices_checked: 2026-10-19
+
+  - id: mistralai/mistral-medium-3-5:batch
+    name: Mistral Medium 3.5 (batch)
+    match:
+      equals: mistralai/mistral-medium-3-5:batch
+    context_window: 262144
+    prices:
+      input_mtok: 0.75
+      output_mtok: 3.75
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-medium-3.1
     name: Mistral Medium 3.1
@@ -3360,6 +4738,18 @@ models:
       cache_read_mtok: 0.04
       output_mtok: 2
     context_window: 131072
+    prices_checked: 2026-10-19
+
+  - id: mistralai/mistral-medium-3.1:batch
+    name: Mistral Medium 3.1 (batch)
+    match:
+      equals: mistralai/mistral-medium-3.1:batch
+    context_window: 131072
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.02
+      output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-nemo
     # No context_window: endpoints range from 60,288 to 131,072: https://openrouter.ai/api/v1/models/mistralai/mistral-nemo/endpoints
@@ -3367,8 +4757,15 @@ models:
     match:
       equals: mistralai/mistral-nemo
     prices:
-      input_mtok: 0.01
-      output_mtok: 0.019
+      - prices:
+          input_mtok: 0.01
+          output_mtok: 0.019
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.029
+          output_mtok: 0.03
+    prices_checked: 2026-10-19
 
   - id: "mistralai/mistral-nemo:free"
     match:
@@ -3378,11 +4775,21 @@ models:
   - id: mistralai/mistral-saba
     name: Saba
     match:
-      equals: mistralai/mistral-saba
+      or:
+        - equals: mistralai/mistral-saba
+        - equals: mistralai/mistral-saba-2502
     prices:
-      input_mtok: 0.2
-      output_mtok: 0.6
+      - prices:
+          input_mtok: 0.2
+          output_mtok: 0.6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.2
+          cache_read_mtok: 0.02
+          output_mtok: 0.6
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-small
     match:
@@ -3396,9 +4803,16 @@ models:
     match:
       equals: mistralai/mistral-small-24b-instruct-2501
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.09
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.09
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.05
+          output_mtok: 0.08
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: "mistralai/mistral-small-24b-instruct-2501:free"
     match:
@@ -3414,15 +4828,36 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: mistralai/mistral-small-2603:batch
+    name: Mistral Small 4 (batch)
+    match:
+      equals: mistralai/mistral-small-2603:batch
+    context_window: 262144
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0075
+      output_mtok: 0.3
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-small-3.1-24b-instruct
     name: Mistral Small 3.1 24B
     match:
-      equals: mistralai/mistral-small-3.1-24b-instruct
+      or:
+        - equals: mistralai/mistral-small-3.1-24b-instruct
+        - equals: mistralai/mistral-small-3.1-24b-instruct-2503
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.15
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.351
+          output_mtok: 0.555
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: "mistralai/mistral-small-3.1-24b-instruct:free"
     match:
@@ -3433,10 +4868,19 @@ models:
     # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/mistralai/mistral-small-3.2-24b-instruct/endpoints
     name: Mistral Small 3.2 24B
     match:
-      equals: mistralai/mistral-small-3.2-24b-instruct
+      or:
+        - equals: mistralai/mistral-small-3.2-24b-instruct
+        - equals: mistralai/mistral-small-3.2-24b-instruct-2506
     prices:
-      input_mtok: 0.075
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.075
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.09375
+          output_mtok: 0.25
+    prices_checked: 2026-10-19
 
   - id: mistralai/mistral-tiny
     match:
@@ -3446,12 +4890,21 @@ models:
       output_mtok: 0.25
 
   - id: mistralai/mixtral-8x22b-instruct
+    name: Mixtral 8x22B Instruct
     match:
       equals: mistralai/mixtral-8x22b-instruct
     prices:
-      input_mtok: 0.9
-      output_mtok: 0.9
+      - prices:
+          input_mtok: 0.9
+          output_mtok: 0.9
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          output_mtok: 6
     context_window: 65536
+    prices_checked: 2026-10-19
 
   - id: mistralai/mixtral-8x7b-instruct
     match:
@@ -3483,6 +4936,7 @@ models:
       cache_read_mtok: 0.01
       output_mtok: 0.3
     context_window: 32000
+    prices_checked: 2026-10-19
 
   - id: mixtral-8x7b-instruct
     name: Mixtral 8x7B Instruct
@@ -3516,6 +4970,30 @@ models:
       input_mtok: 0.8
       output_mtok: 1.2
 
+  - id: moondream/moondream3-preview
+    name: Moondream 3 Preview
+    match:
+      or:
+        - equals: moondream/moondream3-preview
+        - equals: moondream/moondream3-preview-20261013
+    context_window: 32000
+    prices:
+      input_mtok: 0.3
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
+
+  - id: moondream/moondream3.1-9b-a2b
+    name: Moondream 3.1
+    match:
+      or:
+        - equals: moondream/moondream3.1-9b-a2b
+        - equals: moondream/moondream3.1-9b-a2b-20261013
+    context_window: 32000
+    prices:
+      input_mtok: 0.3
+      output_mtok: 2.5
+    prices_checked: 2026-10-19
+
   - id: moonshotai/kimi-k2
     name: Kimi K2 0711
     match:
@@ -3524,6 +5002,7 @@ models:
       input_mtok: 0.57
       output_mtok: 2.3
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k2-0905
     name: Kimi K2 0905
@@ -3533,35 +5012,66 @@ models:
       input_mtok: 0.6
       output_mtok: 2.5
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k2-thinking
     name: Kimi K2 Thinking
     match:
-      equals: moonshotai/kimi-k2-thinking
+      or:
+        - equals: moonshotai/kimi-k2-thinking
+        - equals: moonshotai/kimi-k2-thinking-20251106
     prices:
-      input_mtok: 0.6
-      output_mtok: 2.5
+      - prices:
+          input_mtok: 0.6
+          output_mtok: 2.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.6
+          cache_read_mtok: 0.15
+          output_mtok: 2.5
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k2.5
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/moonshotai/kimi-k2.5/endpoints
     name: Kimi K2.5
     match:
-      equals: moonshotai/kimi-k2.5
+      or:
+        - equals: moonshotai/kimi-k2.5
+        - equals: moonshotai/kimi-k2.5-0127
     prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.09
-      output_mtok: 1.9
+      - prices:
+          input_mtok: 0.4
+          cache_read_mtok: 0.09
+          output_mtok: 1.9
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.5
+          cache_read_mtok: 0.15
+          output_mtok: 2.5
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k2.6
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/moonshotai/kimi-k2.6/endpoints
     name: Kimi K2.6
     match:
-      equals: moonshotai/kimi-k2.6
+      or:
+        - equals: moonshotai/kimi-k2.6
+        - equals: moonshotai/kimi-k2.6-20260420
     prices:
-      input_mtok: 0.68
-      cache_read_mtok: 0.34
-      output_mtok: 3.41
+      - prices:
+          input_mtok: 0.68
+          cache_read_mtok: 0.34
+          output_mtok: 3.41
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.65
+          cache_read_mtok: 0.15
+          output_mtok: 3.41
+    prices_checked: 2026-10-19
 
   - id: moonshotai/kimi-k2.6:free
     name: Kimi K2.6 (free)
@@ -3576,12 +5086,19 @@ models:
         - equals: moonshotai/kimi-k2.7-code
         - equals: moonshotai/kimi-k2.7-code-20260612
     context_window: 262144
-    prices_checked: "2026-06-15"
+    prices_checked: 2026-10-19
     price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
-      input_mtok: 0.75
-      cache_read_mtok: 0.16
-      output_mtok: 3.50
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.16
+          output_mtok: 3.50
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.6712
+          cache_read_mtok: 0.18
+          output_mtok: 3.35
 
   - id: moonshotai/kimi-k3
     name: Kimi K3
@@ -3590,12 +5107,30 @@ models:
         - equals: moonshotai/kimi-k3
         - equals: moonshotai/kimi-k3-20260715
     context_window: 1048576
-    prices_checked: "2026-07-16"
+    prices_checked: 2026-10-19
     price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
-      input_mtok: 3.00
-      cache_read_mtok: 0.30
-      output_mtok: 15.00
+      - prices:
+          input_mtok: 3.00
+          cache_read_mtok: 0.30
+          output_mtok: 15.00
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.239
+          cache_read_mtok: 0.21
+          output_mtok: 11.936
+
+  - id: moonshotai/kimi-k3:batch
+    name: Kimi K3 (batch)
+    match:
+      equals: moonshotai/kimi-k3:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 2.28
+      cache_read_mtok: 0.228
+      output_mtok: 11.4
+    prices_checked: 2026-10-19
 
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
@@ -3615,6 +5150,7 @@ models:
       input_mtok: 0.8
       output_mtok: 1.2
     context_window: 81920
+    prices_checked: 2026-10-19
 
   - id: morph/morph-v3-large
     name: Morph V3 Large
@@ -3624,6 +5160,7 @@ models:
       input_mtok: 0.9
       output_mtok: 1.9
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: mythalion-13b
     name: Mythalion 13B
@@ -3676,6 +5213,32 @@ models:
       equals: nex-agi/nex-n2-pro:free
     prices: {}
 
+  - id: nex-agi/nex-n2.5-mini
+    name: Nex-N2.5-Mini
+    match:
+      or:
+        - equals: nex-agi/nex-n2.5-mini
+        - equals: nex-agi/nex-n2.5-mini-20260908
+    context_window: 262144
+    prices:
+      input_mtok: 0.025
+      cache_read_mtok: 0.0025
+      output_mtok: 0.1
+    prices_checked: 2026-10-19
+
+  - id: nex-agi/nex-n2.5-pro
+    name: Nex-N2.5-Pro
+    match:
+      or:
+        - equals: nex-agi/nex-n2.5-pro
+        - equals: nex-agi/nex-n2.5-pro-20260907
+    context_window: 262144
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.015
+      output_mtok: 0.25
+    prices_checked: 2026-10-19
+
   - id: noromaid-20b
     name: Noromaid 20B
     match:
@@ -3716,9 +5279,16 @@ models:
     match:
       equals: nousresearch/hermes-3-llama-3.1-405b
     prices:
-      input_mtok: 0.7
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.7
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 1
+          output_mtok: 1
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: nousresearch/hermes-3-llama-3.1-405b:free
     name: Hermes 3 405B Instruct (free)
@@ -3731,9 +5301,16 @@ models:
     match:
       equals: nousresearch/hermes-3-llama-3.1-70b
     prices:
-      input_mtok: 0.12
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.12
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.7
+          output_mtok: 0.7
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: nousresearch/hermes-4-405b
     name: Hermes 4 405B
@@ -3743,6 +5320,7 @@ models:
       input_mtok: 1
       output_mtok: 3
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: nousresearch/hermes-4-70b
     name: Hermes 4 70B
@@ -3807,9 +5385,16 @@ models:
     match:
       equals: nvidia/nemotron-3-nano-30b-a3b
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.05
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.06
+          output_mtok: 0.24
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3-nano-30b-a3b:free
     name: Nemotron 3 Nano 30B A3B (free)
@@ -3823,15 +5408,25 @@ models:
       equals: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
     prices: {}
     context_window: 256000
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3-super-120b-a12b
     # No context_window: endpoints range from 262,144 to 1,000,000: https://openrouter.ai/api/v1/models/nvidia/nemotron-3-super-120b-a12b/endpoints
     name: Nemotron 3 Super
     match:
-      equals: nvidia/nemotron-3-super-120b-a12b
+      or:
+        - equals: nvidia/nemotron-3-super-120b-a12b
+        - equals: nvidia/nemotron-3-super-120b-a12b-20230311
     prices:
-      input_mtok: 0.09
-      output_mtok: 0.45
+      - prices:
+          input_mtok: 0.09
+          output_mtok: 0.45
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.08
+          output_mtok: 0.45
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3-super-120b-a12b:free
     name: Nemotron 3 Super (free)
@@ -3839,16 +5434,27 @@ models:
       equals: nvidia/nemotron-3-super-120b-a12b:free
     prices: {}
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3-ultra-550b-a55b
     # No context_window: endpoints range from 202,800 to 262,144: https://openrouter.ai/api/v1/models/nvidia/nemotron-3-ultra-550b-a55b/endpoints
     name: Nemotron 3 Ultra
     match:
-      equals: nvidia/nemotron-3-ultra-550b-a55b
+      or:
+        - equals: nvidia/nemotron-3-ultra-550b-a55b
+        - equals: nvidia/nemotron-3-ultra-550b-a55b-20260604
     prices:
-      input_mtok: 0.5
-      cache_read_mtok: 0.15
-      output_mtok: 2.5
+      - prices:
+          input_mtok: 0.5
+          cache_read_mtok: 0.15
+          output_mtok: 2.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.6
+          cache_read_mtok: 0.12
+          output_mtok: 2.4
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3-ultra-550b-a55b:free
     name: Nemotron 3 Ultra (free)
@@ -3856,6 +5462,19 @@ models:
       equals: nvidia/nemotron-3-ultra-550b-a55b:free
     prices: {}
     context_window: 1000000
+    prices_checked: 2026-10-19
+
+  - id: nvidia/nemotron-3.5-content-safety
+    name: Nemotron 3.5 Content Safety
+    match:
+      or:
+        - equals: nvidia/nemotron-3.5-content-safety
+        - equals: nvidia/nemotron-3.5-content-safety-20260604
+    context_window: 131072
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-3.5-content-safety:free
     name: Nemotron 3.5 Content Safety (free)
@@ -3863,6 +5482,49 @@ models:
       equals: nvidia/nemotron-3.5-content-safety:free
     prices: {}
     context_window: 128000
+    prices_checked: 2026-10-19
+
+  - id: nvidia/nemotron-3.5-lightning
+    name: Nemotron 3.5 Lightning
+    match:
+      or:
+        - equals: nvidia/nemotron-3.5-lightning
+        - equals: nvidia/nemotron-3.5-lightning-20260807
+    context_window: 262144
+    prices:
+      input_mtok: 0.07
+      cache_read_mtok: 0.04
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
+
+  - id: nvidia/nemotron-3.5-lightning:free
+    name: Nemotron 3.5 Lightning (free)
+    match:
+      equals: nvidia/nemotron-3.5-lightning:free
+    context_window: 1000000
+    prices: {}
+    prices_checked: 2026-10-19
+
+  - id: nvidia/nemotron-3.5-super-vl
+    name: Nemotron 3.5 Super VL
+    match:
+      or:
+        - equals: nvidia/nemotron-3.5-super-vl
+        - equals: nvidia/nemotron-3.5-super-vl-20261015
+    context_window: 1048576
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.08
+      output_mtok: 0.4
+    prices_checked: 2026-10-19
+
+  - id: nvidia/nemotron-3.5-super-vl:free
+    name: Nemotron 3.5 Super VL (free)
+    match:
+      equals: nvidia/nemotron-3.5-super-vl:free
+    context_window: 1000000
+    prices: {}
+    prices_checked: 2026-10-19
 
   - id: nvidia/nemotron-nano-12b-v2-vl:free
     name: Nemotron Nano 12B 2 VL (free)
@@ -3931,6 +5593,7 @@ models:
       input_mtok: 0.5
       output_mtok: 1.5
     context_window: 16385
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-3.5-turbo-0613
     name: GPT-3.5 Turbo (older v0613)
@@ -3940,6 +5603,7 @@ models:
       input_mtok: 1
       output_mtok: 2
     context_window: 4095
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-3.5-turbo-1106
     match:
@@ -3956,6 +5620,7 @@ models:
       input_mtok: 3
       output_mtok: 4
     context_window: 16385
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-3.5-turbo-instruct
     name: GPT-3.5 Turbo Instruct
@@ -3965,6 +5630,17 @@ models:
       input_mtok: 1.5
       output_mtok: 2
     context_window: 4095
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-3.5-turbo:batch
+    name: GPT-3.5 Turbo (batch)
+    match:
+      equals: openai/gpt-3.5-turbo:batch
+    context_window: 16385
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.75
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4
     name: GPT-4
@@ -3976,6 +5652,7 @@ models:
       input_mtok: 30
       output_mtok: 60
     context_window: 8191
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4-1106-preview
     match:
@@ -4003,16 +5680,30 @@ models:
       input_mtok: 10
       output_mtok: 30
     context_window: 128000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-4-turbo:batch
+    name: GPT-4 Turbo (batch)
+    match:
+      equals: openai/gpt-4-turbo:batch
+    context_window: 128000
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4.1
     name: GPT-4.1
     match:
-      equals: openai/gpt-4.1
+      or:
+        - equals: openai/gpt-4.1
+        - equals: openai/gpt-4.1-2025-04-14
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
     context_window: 1047576
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4.1-mini
     name: GPT-4.1 Mini
@@ -4025,16 +5716,53 @@ models:
       cache_read_mtok: 0.1
       output_mtok: 1.6
     context_window: 1047576
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-4.1-mini:batch
+    name: GPT-4.1 Mini (batch)
+    match:
+      equals: openai/gpt-4.1-mini:batch
+    context_window: 1047576
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.05
+      output_mtok: 0.8
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4.1-nano
     name: GPT-4.1 Nano
     match:
-      equals: openai/gpt-4.1-nano
+      or:
+        - equals: openai/gpt-4.1-nano
+        - equals: openai/gpt-4.1-nano-2025-04-14
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
     context_window: 1047576
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-4.1-nano:batch
+    name: GPT-4.1 Nano (batch)
+    match:
+      equals: openai/gpt-4.1-nano:batch
+    context_window: 1047576
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.0125
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-4.1:batch
+    name: GPT-4.1 (batch)
+    match:
+      equals: openai/gpt-4.1:batch
+    context_window: 1047576
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.25
+      output_mtok: 4
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4.5-preview
     match:
@@ -4044,6 +5772,7 @@ models:
       output_mtok: 150
 
   - id: openai/gpt-4o
+    name: GPT-4o
     match:
       or:
         - equals: openai/gpt-4o
@@ -4051,9 +5780,17 @@ models:
         - equals: openai/gpt-4o-2024-11-20
         - equals: openai/gpt-4o-audio-preview
     prices:
-      input_mtok: 2.5
-      output_mtok: 10
+      - prices:
+          input_mtok: 2.5
+          output_mtok: 10
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2.5
+          cache_read_mtok: 1.25
+          output_mtok: 10
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4o-2024-05-13
     name: GPT-4o (2024-05-13)
@@ -4063,6 +5800,7 @@ models:
       input_mtok: 5
       output_mtok: 15
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4o-mini
     name: GPT-4o-mini
@@ -4075,6 +5813,7 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 0.6
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-4o-mini-search-preview
     name: GPT-4o-mini Search Preview
@@ -4084,6 +5823,17 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
+  - id: openai/gpt-4o-mini:batch
+    name: GPT-4o-mini (batch)
+    match:
+      equals: openai/gpt-4o-mini:batch
+    context_window: 128000
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0375
+      output_mtok: 0.3
+    prices_checked: 2026-10-19
+
   - id: openai/gpt-4o-search-preview
     name: GPT-4o Search Preview
     match:
@@ -4092,6 +5842,17 @@ models:
       input_mtok: 2.5
       output_mtok: 10
     collapse: false
+
+  - id: openai/gpt-4o:batch
+    name: GPT-4o (batch)
+    match:
+      equals: openai/gpt-4o:batch
+    context_window: 128000
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.625
+      output_mtok: 5
+    prices_checked: 2026-10-19
 
   - id: "openai/gpt-4o:extended"
     match:
@@ -4114,6 +5875,7 @@ models:
       cache_read_mtok: 0.125
       output_mtok: 10
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5-image
     name: GPT-5 Image
@@ -4124,6 +5886,7 @@ models:
       cache_read_mtok: 1.25
       output_mtok: 10
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5-image-mini
     name: GPT-5 Image Mini
@@ -4134,6 +5897,7 @@ models:
       cache_read_mtok: 0.25
       output_mtok: 2
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5-mini
     name: GPT-5 Mini
@@ -4146,25 +5910,71 @@ models:
       cache_read_mtok: 0.025
       output_mtok: 2
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5-mini:batch
+    name: GPT-5 Mini (batch)
+    match:
+      equals: openai/gpt-5-mini:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.125
+      cache_read_mtok: 0.0125
+      output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5-nano
     name: GPT-5 Nano
     match:
-      equals: openai/gpt-5-nano
+      or:
+        - equals: openai/gpt-5-nano
+        - equals: openai/gpt-5-nano-2025-08-07
     prices:
-      input_mtok: 0.05
-      cache_read_mtok: 0.01
-      output_mtok: 0.4
+      - prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.01
+          output_mtok: 0.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.005
+          output_mtok: 0.4
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5-nano:batch
+    name: GPT-5 Nano (batch)
+    match:
+      equals: openai/gpt-5-nano:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.025
+      cache_read_mtok: 0.0025
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5-pro
     name: GPT-5 Pro
     match:
-      equals: openai/gpt-5-pro
+      or:
+        - equals: openai/gpt-5-pro
+        - equals: openai/gpt-5-pro-2025-10-06
     prices:
       input_mtok: 15
       output_mtok: 120
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5-pro:batch
+    name: GPT-5 Pro (batch)
+    match:
+      equals: openai/gpt-5-pro:batch
+    context_window: 400000
+    prices:
+      input_mtok: 7.5
+      output_mtok: 60
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.1
     name: GPT-5.1
@@ -4173,11 +5983,20 @@ models:
         - equals: openai/gpt-5.1
         - equals: openai/gpt-5.1-chat
         - equals: openai/gpt-5.1-codex
+        - equals: openai/gpt-5.1-20251113
     prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.13
-      output_mtok: 10
+      - prices:
+          input_mtok: 1.25
+          cache_read_mtok: 0.13
+          output_mtok: 10
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 1.25
+          cache_read_mtok: 0.125
+          output_mtok: 10
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.1-codex-mini
     name: GPT-5.1-Codex-Mini
@@ -4186,10 +6005,29 @@ models:
         - equals: openai/gpt-5.1-codex-mini
         - equals: openai/gpt-5.1-codex-mini-20251113
     prices:
-      input_mtok: 0.25
-      cache_read_mtok: 0.025
-      output_mtok: 2
+      - prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.025
+          output_mtok: 2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.03
+          output_mtok: 2
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.1:batch
+    name: GPT-5.1 (batch)
+    match:
+      equals: openai/gpt-5.1:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.625
+      cache_read_mtok: 0.0625
+      output_mtok: 5
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.2
     name: GPT-5.2
@@ -4204,6 +6042,7 @@ models:
       cache_read_mtok: 0.175
       output_mtok: 14
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.2-pro
     name: GPT-5.2 Pro
@@ -4215,6 +6054,28 @@ models:
       input_mtok: 21
       output_mtok: 168
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.2-pro:batch
+    name: GPT-5.2 Pro (batch)
+    match:
+      equals: openai/gpt-5.2-pro:batch
+    context_window: 400000
+    prices:
+      input_mtok: 10.5
+      output_mtok: 84
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.2:batch
+    name: GPT-5.2 (batch)
+    match:
+      equals: openai/gpt-5.2:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.875
+      cache_read_mtok: 0.0875
+      output_mtok: 7
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.3-chat
     name: GPT-5.3 Chat
@@ -4236,6 +6097,7 @@ models:
       cache_read_mtok: 0.175
       output_mtok: 14
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.4
     name: GPT-5.4
@@ -4263,41 +6125,75 @@ models:
         tiers:
           - start: 272000
             price: 22.5
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.4-image-2
     name: GPT-5.4 Image 2
     match:
-      equals: openai/gpt-5.4-image-2
+      or:
+        - equals: openai/gpt-5.4-image-2
+        - equals: openai/gpt-5.4-image-2-20260421
     prices:
       input_mtok: 8
       cache_read_mtok: 2
       output_mtok: 15
     context_window: 272000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.4-mini
     name: GPT-5.4 Mini
     match:
-      equals: openai/gpt-5.4-mini
+      or:
+        - equals: openai/gpt-5.4-mini
+        - equals: openai/gpt-5.4-mini-20260317
     prices:
       input_mtok: 0.75
       cache_read_mtok: 0.075
       output_mtok: 4.5
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.4-mini:batch
+    name: GPT-5.4 Mini (batch)
+    match:
+      equals: openai/gpt-5.4-mini:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.375
+      cache_read_mtok: 0.0375
+      output_mtok: 2.25
+    prices_checked: 2026-10-19
+
   - id: openai/gpt-5.4-nano
     name: GPT-5.4 Nano
     match:
-      equals: openai/gpt-5.4-nano
+      or:
+        - equals: openai/gpt-5.4-nano
+        - equals: openai/gpt-5.4-nano-20260317
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02
       output_mtok: 1.25
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.4-nano:batch
+    name: GPT-5.4 Nano (batch)
+    match:
+      equals: openai/gpt-5.4-nano:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.01
+      output_mtok: 0.625
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.4-pro
     name: GPT-5.4 Pro
     match:
-      equals: openai/gpt-5.4-pro
+      or:
+        - equals: openai/gpt-5.4-pro
+        - equals: openai/gpt-5.4-pro-20260305
     context_window: 1050000
     price_comments: >-
       Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI.
@@ -4313,12 +6209,55 @@ models:
         tiers:
           - start: 272000
             price: 270
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.4-pro:batch
+    name: GPT-5.4 Pro (batch)
+    match:
+      equals: openai/gpt-5.4-pro:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 30
+      output_mtok:
+        base: 90
+        tiers:
+          - start: 272000
+            price: 135
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.4:batch
+    name: GPT-5.4 (batch)
+    match:
+      equals: openai/gpt-5.4:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      output_mtok:
+        base: 7.5
+        tiers:
+          - start: 272000
+            price: 11.25
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.5
     name: GPT-5.5
     match:
-      equals: openai/gpt-5.5
+      or:
+        - equals: openai/gpt-5.5
+        - equals: openai/gpt-5.5-20260423
     context_window: 1050000
     price_comments: >-
       Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI.
@@ -4339,12 +6278,14 @@ models:
         tiers:
           - start: 272000
             price: 45
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.5-pro
     name: GPT-5.5 Pro
     match:
-      equals: openai/gpt-5.5-pro
+      or:
+        - equals: openai/gpt-5.5-pro
+        - equals: openai/gpt-5.5-pro-20260423
     context_window: 1050000
     price_comments: >-
       Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI.
@@ -4360,7 +6301,48 @@ models:
         tiers:
           - start: 272000
             price: 270
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.5-pro:batch
+    name: GPT-5.5 Pro (batch)
+    match:
+      equals: openai/gpt-5.5-pro:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 30
+      output_mtok:
+        base: 90
+        tiers:
+          - start: 272000
+            price: 135
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.5:batch
+    name: GPT-5.5 (batch)
+    match:
+      equals: openai/gpt-5.5:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.6-luna
     name: GPT-5.6 Luna
@@ -4368,6 +6350,7 @@ models:
       or:
         - equals: openai/gpt-5.6-luna
         - regex: ^openai/gpt-5\.6-luna-\d{8}$
+        - equals: openai/gpt-5.6-luna-20260709
     context_window: 1050000
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt
@@ -4394,7 +6377,95 @@ models:
         tiers:
           - start: 272000
             price: 1.8
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-luna-pro
+    name: GPT-5.6 Luna Pro
+    # A different model that happens to share the base model's rates.
+    collapse: false
+    match:
+      or:
+        - equals: openai/gpt-5.6-luna-pro
+        - equals: openai/gpt-5.6-luna-pro-20260709
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      cache_write_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      cache_read_mtok:
+        base: 0.02
+        tiers:
+          - start: 272000
+            price: 0.04
+      output_mtok:
+        base: 1.2
+        tiers:
+          - start: 272000
+            price: 1.8
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-luna-pro:batch
+    name: GPT-5.6 Luna Pro (batch)
+    match:
+      equals: openai/gpt-5.6-luna-pro:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.6
+        tiers:
+          - start: 272000
+            price: 0.9
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-luna:batch
+    name: GPT-5.6 Luna (batch)
+    match:
+      equals: openai/gpt-5.6-luna:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.6
+        tiers:
+          - start: 272000
+            price: 0.9
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.6-sol
     name: GPT-5.6 Sol
@@ -4402,33 +6473,144 @@ models:
       or:
         - equals: openai/gpt-5.6-sol
         - regex: ^openai/gpt-5\.6-sol-\d{8}$
+        - equals: openai/gpt-5.6-sol-20260709
     context_window: 1050000
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt
       tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models
       (pricing.overrides).
     prices:
+      - prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 272000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          output_mtok:
+            base: 10
+            tiers:
+              - start: 272000
+                price: 15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_read_mtok:
+            base: 0.4
+            tiers:
+              - start: 272000
+                price: 0.8
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-sol-pro
+    name: GPT-5.6 Sol Pro
+    match:
+      or:
+        - equals: openai/gpt-5.6-sol-pro
+        - equals: openai/gpt-5.6-sol-pro-20260709
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 4
+        tiers:
+          - start: 272000
+            price: 8
+      cache_write_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.4
+        tiers:
+          - start: 272000
+            price: 0.8
+      output_mtok:
+        base: 20
+        tiers:
+          - start: 272000
+            price: 30
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-sol-pro:batch
+    name: GPT-5.6 Sol Pro (batch)
+    match:
+      equals: openai/gpt-5.6-sol-pro:batch
+    context_window: 1050000
+    prices:
       input_mtok:
         base: 2
         tiers:
           - start: 272000
             price: 4
-      cache_read_mtok:
-        base: 0.2
-        tiers:
-          - start: 272000
-            price: 0.4
       cache_write_mtok:
         base: 2.5
         tiers:
           - start: 272000
             price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
       output_mtok:
         base: 10
         tiers:
           - start: 272000
             price: 15
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-sol:batch
+    name: GPT-5.6 Sol (batch)
+    match:
+      equals: openai/gpt-5.6-sol:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-5.6-terra
     name: GPT-5.6 Terra
@@ -4436,6 +6618,7 @@ models:
       or:
         - equals: openai/gpt-5.6-terra
         - regex: ^openai/gpt-5\.6-terra-\d{8}$
+        - equals: openai/gpt-5.6-terra-20260709
     context_window: 1050000
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt
@@ -4462,7 +6645,194 @@ models:
         tiers:
           - start: 272000
             price: 18
-    prices_checked: 2026-08-27
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-terra-pro
+    name: GPT-5.6 Terra Pro
+    # A different model that happens to share the base model's rates.
+    collapse: false
+    match:
+      or:
+        - equals: openai/gpt-5.6-terra-pro
+        - equals: openai/gpt-5.6-terra-pro-20260709
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 272000
+            price: 18
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-terra-pro:batch
+    name: GPT-5.6 Terra Pro (batch)
+    match:
+      equals: openai/gpt-5.6-terra-pro:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 272000
+            price: 9
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5.6-terra:batch
+    name: GPT-5.6 Terra (batch)
+    match:
+      equals: openai/gpt-5.6-terra:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 272000
+            price: 9
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-5:batch
+    name: GPT-5 (batch)
+    match:
+      equals: openai/gpt-5:batch
+    context_window: 400000
+    prices:
+      input_mtok: 0.625
+      cache_read_mtok: 0.0625
+      output_mtok: 5
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-6-astra
+    name: GPT-6 Astra
+    match:
+      or:
+        - equals: openai/gpt-6-astra
+        - equals: openai/gpt-6-astra-20260903
+        - equals: openai/gpt-6-astra-pro
+        - equals: openai/gpt-6-astra-pro-20260903
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 272000
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 272000
+            price: 75
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-6-astra-pro:batch
+    name: GPT-6 Astra Pro (batch)
+    match:
+      equals: openai/gpt-6-astra-pro:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 272000
+            price: 12.5
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 25
+        tiers:
+          - start: 272000
+            price: 37.5
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-6-astra:batch
+    name: GPT-6 Astra (batch)
+    match:
+      equals: openai/gpt-6-astra:batch
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 272000
+            price: 12.5
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 25
+        tiers:
+          - start: 272000
+            price: 37.5
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6-luna
     name: GPT-6 Luna
@@ -4471,6 +6841,7 @@ models:
         - equals: openai/gpt-6-luna
         - equals: openai/gpt-6-luna-pro
         - regex: ^openai/gpt-6-luna-\d{8}$
+        - equals: openai/gpt-6-luna-20260922
     context_window: 1050000
     price_comments: >-
       OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
@@ -4498,7 +6869,7 @@ models:
           - start: 272000
             price: 0.75
       web_searches_kcount: 10
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6-luna:batch
     name: GPT-6 Luna Batch
@@ -4532,7 +6903,7 @@ models:
           - start: 272000
             price: 0.375
       web_searches_kcount: 10
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6-sol
     name: GPT-6 Sol
@@ -4541,6 +6912,7 @@ models:
         - equals: openai/gpt-6-sol
         - equals: openai/gpt-6-sol-pro
         - regex: ^openai/gpt-6-sol-\d{8}$
+        - equals: openai/gpt-6-sol-20260922
     context_window: 1050000
     price_comments: >-
       OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
@@ -4568,7 +6940,7 @@ models:
           - start: 272000
             price: 15
       web_searches_kcount: 10
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6-sol:batch
     name: GPT-6 Sol Batch
@@ -4602,7 +6974,7 @@ models:
           - start: 272000
             price: 7.5
       web_searches_kcount: 10
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6.1-sol
     name: GPT-6.1 Sol
@@ -4612,6 +6984,7 @@ models:
         - equals: openai/gpt-6.1-sol-pro
         - regex: ^openai/gpt-6\.1-sol-\d{8}$
         - regex: ^openai/gpt-6\.1-sol-pro-\d{8}$
+        - equals: openai/gpt-6.1-sol-20260929
     context_window: 1050000
     price_comments: >-
       OpenRouter lists the base and pro routes at the same rates. Long-context tier (>272K prompt
@@ -4639,7 +7012,7 @@ models:
           - start: 272000
             price: 15
       web_searches_kcount: 10
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-6.1-sol:batch
     name: GPT-6.1 Sol Batch
@@ -4673,7 +7046,7 @@ models:
           - start: 272000
             price: 7.5
       web_searches_kcount: 10
-    prices_checked: 2026-09-29
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-audio
     name: GPT Audio
@@ -4683,6 +7056,7 @@ models:
       input_mtok: 2.5
       output_mtok: 10
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-audio-mini
     name: GPT Audio Mini
@@ -4692,16 +7066,20 @@ models:
       input_mtok: 0.6
       output_mtok: 2.4
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-chat-latest
     name: GPT Chat Latest
     match:
-      equals: openai/gpt-chat-latest
+      or:
+        - equals: openai/gpt-chat-latest
+        - equals: openai/gpt-chat-latest-20260505
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
     context_window: 400000
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-120b
     # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints
@@ -4709,8 +7087,26 @@ models:
     match:
       equals: openai/gpt-oss-120b
     prices:
-      input_mtok: 0.039
-      output_mtok: 0.18
+      - prices:
+          input_mtok: 0.039
+          output_mtok: 0.18
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.075
+          output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-120b:batch
+    name: gpt-oss-120b (batch)
+    match:
+      equals: openai/gpt-oss-120b:batch
+    context_window: 131072
+    prices:
+      input_mtok: 0.0296
+      output_mtok: 0.136
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-120b:free
     name: gpt-oss-120b (free)
@@ -4723,9 +7119,27 @@ models:
     match:
       equals: openai/gpt-oss-20b
     prices:
-      input_mtok: 0.029
-      output_mtok: 0.14
+      - prices:
+          input_mtok: 0.029
+          output_mtok: 0.14
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.018
+          cache_read_mtok: 0.009
+          output_mtok: 0.09
     context_window: 131072
+    prices_checked: 2026-10-19
+
+  - id: openai/gpt-oss-20b:batch
+    name: gpt-oss-20b (batch)
+    match:
+      equals: openai/gpt-oss-20b:batch
+    context_window: 131072
+    prices:
+      input_mtok: 0.024
+      output_mtok: 0.112
+    prices_checked: 2026-10-19
 
   - id: openai/gpt-oss-20b:free
     name: gpt-oss-20b (free)
@@ -4738,10 +7152,18 @@ models:
     match:
       equals: openai/gpt-oss-safeguard-20b
     prices:
-      input_mtok: 0.075
-      cache_read_mtok: 0.037
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.037
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0375
+          output_mtok: 0.3
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: openai/o1
     # No context_window: this record also matches the retired o1-preview aliases, whose window
@@ -4752,10 +7174,12 @@ models:
         - equals: openai/o1
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
+        - equals: openai/o1-2024-12-17
     prices:
       input_mtok: 15
       cache_read_mtok: 7.5
       output_mtok: 60
+    prices_checked: 2026-10-19
 
   - id: openai/o1-mini
     match:
@@ -4774,16 +7198,20 @@ models:
       input_mtok: 150
       output_mtok: 600
     context_window: 200000
+    prices_checked: 2026-10-19
 
   - id: openai/o3
     name: o3
     match:
-      equals: openai/o3
+      or:
+        - equals: openai/o3
+        - equals: openai/o3-2025-04-16
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
     context_window: 200000
+    prices_checked: 2026-10-19
 
   - id: openai/o3-deep-research
     name: o3 Deep Research
@@ -4800,20 +7228,47 @@ models:
       or:
         - equals: openai/o3-mini
         - equals: openai/o3-mini-high
+        - equals: openai/o3-mini-2025-01-31
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
       output_mtok: 4.4
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: openai/o3-mini:batch
+    name: o3 Mini (batch)
+    match:
+      equals: openai/o3-mini:batch
+    context_window: 200000
+    prices:
+      input_mtok: 0.55
+      cache_read_mtok: 0.275
+      output_mtok: 2.2
+    prices_checked: 2026-10-19
 
   - id: openai/o3-pro
     name: o3 Pro
     match:
-      equals: openai/o3-pro
+      or:
+        - equals: openai/o3-pro
+        - equals: openai/o3-pro-2025-06-10
     prices:
       input_mtok: 20
       output_mtok: 80
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: openai/o3:batch
+    name: o3 (batch)
+    match:
+      equals: openai/o3:batch
+    context_window: 200000
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.25
+      output_mtok: 4
+    prices_checked: 2026-10-19
 
   - id: openai/o4-mini
     name: o4 Mini
@@ -4821,11 +7276,13 @@ models:
       or:
         - equals: openai/o4-mini
         - equals: openai/o4-mini-high
+        - equals: openai/o4-mini-2025-04-16
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.275
       output_mtok: 4.4
     context_window: 200000
+    prices_checked: 2026-10-19
 
   - id: openai/o4-mini-deep-research
     name: o4 Mini Deep Research
@@ -4835,6 +7292,17 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
+
+  - id: openai/o4-mini:batch
+    name: o4 Mini (batch)
+    match:
+      equals: openai/o4-mini:batch
+    context_window: 200000
+    prices:
+      input_mtok: 0.55
+      cache_read_mtok: 0.1375
+      output_mtok: 2.2
+    prices_checked: 2026-10-19
 
   - id: openchat/openchat-7b
     match:
@@ -4854,11 +7322,28 @@ models:
   - id: perceptron/perceptron-mk1
     name: Perceptron Mk1
     match:
-      equals: perceptron/perceptron-mk1
+      or:
+        - equals: perceptron/perceptron-mk1
+        - equals: perceptron/perceptron-mk1-20260512
     prices:
       input_mtok: 0.15
       output_mtok: 1.5
     context_window: 32768
+    prices_checked: 2026-10-19
+
+  - id: perceptron/perceptron-mk1.5
+    name: Perceptron Mk1.5
+    # A different model that happens to share the base model's rates.
+    collapse: false
+    match:
+      or:
+        - equals: perceptron/perceptron-mk1.5
+        - equals: perceptron/perceptron-mk1.5-20260925
+    context_window: 36864
+    prices:
+      input_mtok: 0.15
+      output_mtok: 1.5
+    prices_checked: 2026-10-19
 
   - id: perplexity/llama-3.1-sonar-large-128k-online
     match:
@@ -4906,17 +7391,20 @@ models:
       output_mtok: 8
 
   - id: perplexity/sonar
+    name: Sonar
     match:
       equals: perplexity/sonar
     prices:
       input_mtok: 1
       output_mtok: 1
     context_window: 127072
+    prices_checked: 2026-10-19
 
   - id: perplexity/sonar-deep-research
+    name: Sonar Deep Research
     match:
       equals: perplexity/sonar-deep-research
-    prices_checked: 2026-07-29
+    prices_checked: 2026-10-19
     price_comments: >-
       OpenRouter reports internal reasoning as a distinct $3 per million-token charge.
       Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing
@@ -4927,12 +7415,26 @@ models:
       output_reasoning_mtok: 3
 
   - id: perplexity/sonar-pro
+    name: Sonar Pro
     match:
       equals: perplexity/sonar-pro
     prices:
       input_mtok: 3
       output_mtok: 15
     context_window: 200000
+    prices_checked: 2026-10-19
+
+  - id: perplexity/sonar-pro-search
+    name: Sonar Pro Search
+    # A different model that happens to share the base model's rates.
+    collapse: false
+    match:
+      equals: perplexity/sonar-pro-search
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+    prices_checked: 2026-10-19
 
   - id: perplexity/sonar-reasoning
     match:
@@ -4942,12 +7444,14 @@ models:
       output_mtok: 5
 
   - id: perplexity/sonar-reasoning-pro
+    name: Sonar Reasoning Pro
     match:
       equals: perplexity/sonar-reasoning-pro
     prices:
       input_mtok: 2
       output_mtok: 8
     context_window: 128000
+    prices_checked: 2026-10-19
 
   - id: phi-3-medium-128k-instruct
     name: Phi-3 Medium 128K Instruct
@@ -5023,6 +7527,48 @@ models:
       equals: poolside/laguna-m.1:free
     prices: {}
 
+  - id: poolside/laguna-s-2.1
+    name: Laguna S 2.1
+    match:
+      or:
+        - equals: poolside/laguna-s-2.1
+        - equals: poolside/laguna-s-2.1-20260720
+    context_window: 1048576
+    prices:
+      input_mtok: 0.09
+      cache_read_mtok: 0.009
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: poolside/laguna-s-2.1:free
+    name: Laguna S 2.1 (free)
+    match:
+      equals: poolside/laguna-s-2.1:free
+    context_window: 262144
+    prices: {}
+    prices_checked: 2026-10-19
+
+  - id: poolside/laguna-xs-2.1
+    name: Laguna XS 2.1
+    match:
+      or:
+        - equals: poolside/laguna-xs-2.1
+        - equals: poolside/laguna-xs-2.1-20260625
+    context_window: 262144
+    prices:
+      input_mtok: 0.06
+      cache_read_mtok: 0.03
+      output_mtok: 0.12
+    prices_checked: 2026-10-19
+
+  - id: poolside/laguna-xs-2.1:free
+    name: Laguna XS 2.1 (free)
+    match:
+      equals: poolside/laguna-xs-2.1:free
+    context_window: 262144
+    prices: {}
+    prices_checked: 2026-10-19
+
   - id: poolside/laguna-xs.2:free
     name: Laguna XS.2 (free)
     match:
@@ -5036,6 +7582,19 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 1.1
+
+  - id: prism-ml/ternary-bonsai-2-27b
+    name: Ternary Bonsai 2 27B
+    match:
+      or:
+        - equals: prism-ml/ternary-bonsai-2-27b
+        - equals: prism-ml/ternary-bonsai-2-27b-20260918
+    context_window: 262144
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0375
+      output_mtok: 0.5
+    prices_checked: 2026-10-19
 
   - id: pygmalionai/mythalion-13b
     match:
@@ -5119,8 +7678,15 @@ models:
     match:
       equals: qwen/qwen-2.5-72b-instruct
     prices:
-      input_mtok: 0.12
-      output_mtok: 0.39
+      - prices:
+          input_mtok: 0.12
+          output_mtok: 0.39
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.36
+          output_mtok: 0.4
+    prices_checked: 2026-10-19
 
   - id: "qwen/qwen-2.5-72b-instruct:free"
     match:
@@ -5132,9 +7698,16 @@ models:
     match:
       equals: qwen/qwen-2.5-7b-instruct
     prices:
-      input_mtok: 0.04
-      output_mtok: 0.1
+      - prices:
+          input_mtok: 0.04
+          output_mtok: 0.1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.1
+          output_mtok: 0.2
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: "qwen/qwen-2.5-7b-instruct:free"
     match:
@@ -5146,9 +7719,16 @@ models:
     match:
       equals: qwen/qwen-2.5-coder-32b-instruct
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.15
+      - prices:
+          input_mtok: 0.06
+          output_mtok: 0.15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.66
+          output_mtok: 1
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: "qwen/qwen-2.5-coder-32b-instruct:free"
     match:
@@ -5184,12 +7764,39 @@ models:
   - id: qwen/qwen-plus
     name: Qwen-Plus
     match:
-      equals: qwen/qwen-plus
+      or:
+        - equals: qwen/qwen-plus
+        - equals: qwen/qwen-plus-2025-01-25
     prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.16
-      output_mtok: 1.2
+      - prices:
+          input_mtok: 0.4
+          cache_read_mtok: 0.16
+          output_mtok: 1.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.26
+            tiers:
+              - start: 256000
+                price: 0.78
+          cache_write_mtok:
+            base: 0.325
+            tiers:
+              - start: 256000
+                price: 0.975
+          cache_read_mtok:
+            base: 0.052
+            tiers:
+              - start: 256000
+                price: 0.156
+          output_mtok:
+            base: 0.78
+            tiers:
+              - start: 256000
+                price: 2.34
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen-plus-2025-07-28
     name: Qwen Plus 0728
@@ -5256,11 +7863,20 @@ models:
 
   - id: qwen/qwen2.5-vl-72b-instruct
     # No context_window: endpoints range from 32,000 to 128,000: https://openrouter.ai/api/v1/models/qwen/qwen2.5-vl-72b-instruct/endpoints
+    name: Qwen2.5 VL 72B Instruct
     match:
       equals: qwen/qwen2.5-vl-72b-instruct
     prices:
-      input_mtok: 0.7
-      output_mtok: 0.7
+      - prices:
+          input_mtok: 0.7
+          output_mtok: 0.7
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.8
+          cache_read_mtok: 0.4
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: "qwen/qwen2.5-vl-72b-instruct:free"
     match:
@@ -5271,10 +7887,19 @@ models:
     # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-14b/endpoints
     name: Qwen3 14B
     match:
-      equals: qwen/qwen3-14b
+      or:
+        - equals: qwen/qwen3-14b
+        - equals: qwen/qwen3-14b-04-28
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.24
+      - prices:
+          input_mtok: 0.06
+          output_mtok: 0.24
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.12
+          output_mtok: 0.24
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-235b-a22b
     name: Qwen3 235B A22B
@@ -5289,10 +7914,19 @@ models:
     # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-235b-a22b-2507/endpoints
     name: Qwen3 235B A22B Instruct 2507
     match:
-      equals: qwen/qwen3-235b-a22b-2507
+      or:
+        - equals: qwen/qwen3-235b-a22b-2507
+        - equals: qwen/qwen3-235b-a22b-07-25
     prices:
-      input_mtok: 0.09
-      output_mtok: 0.1
+      - prices:
+          input_mtok: 0.09
+          output_mtok: 0.1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.09
+          output_mtok: 0.55
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-235b-a22b-thinking-2507
     # No context_window: endpoints range from 128,000 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-235b-a22b-thinking-2507/endpoints
@@ -5300,17 +7934,33 @@ models:
     match:
       equals: qwen/qwen3-235b-a22b-thinking-2507
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.45
+          output_mtok: 3.5
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-30b-a3b
     # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-30b-a3b/endpoints
     name: Qwen3 30B A3B
     match:
-      equals: qwen/qwen3-30b-a3b
+      or:
+        - equals: qwen/qwen3-30b-a3b
+        - equals: qwen/qwen3-30b-a3b-04-28
     prices:
-      input_mtok: 0.08
-      output_mtok: 0.29
+      - prices:
+          input_mtok: 0.08
+          output_mtok: 0.29
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.12
+          output_mtok: 0.5
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-30b-a3b-instruct-2507
     # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-30b-a3b-instruct-2507/endpoints
@@ -5318,8 +7968,15 @@ models:
     match:
       equals: qwen/qwen3-30b-a3b-instruct-2507
     prices:
-      input_mtok: 0.04815
-      output_mtok: 0.19305
+      - prices:
+          input_mtok: 0.04815
+          output_mtok: 0.19305
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.09
+          output_mtok: 0.3
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-30b-a3b-thinking-2507
     name: Qwen3 30B A3B Thinking 2507
@@ -5334,10 +7991,19 @@ models:
     # No context_window: endpoints range from 40,960 to 131,072: https://openrouter.ai/api/v1/models/qwen/qwen3-32b/endpoints
     name: Qwen3 32B
     match:
-      equals: qwen/qwen3-32b
+      or:
+        - equals: qwen/qwen3-32b
+        - equals: qwen/qwen3-32b-04-28
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.08
+          output_mtok: 0.28
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-8b
     name: Qwen3 8B
@@ -5356,8 +8022,16 @@ models:
         - equals: qwen/qwen3-coder
         - equals: qwen/qwen3-coder-480b-a35b-07-25
     prices:
-      input_mtok: 0.22
-      output_mtok: 1.8
+      - prices:
+          input_mtok: 0.22
+          output_mtok: 1.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.1
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-coder-30b-a3b-instruct
     # No context_window: endpoints range from 160,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-coder-30b-a3b-instruct/endpoints
@@ -5365,19 +8039,59 @@ models:
     match:
       equals: qwen/qwen3-coder-30b-a3b-instruct
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.27
+      - prices:
+          input_mtok: 0.07
+          output_mtok: 0.27
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.07
+          output_mtok: 0.28
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-coder-flash
     name: Qwen3 Coder Flash
     match:
       equals: qwen/qwen3-coder-flash
     prices:
-      input_mtok: 0.195
-      cache_write_mtok: 0.24375
-      cache_read_mtok: 0.039
-      output_mtok: 0.975
+      - prices:
+          input_mtok: 0.195
+          cache_write_mtok: 0.24375
+          cache_read_mtok: 0.039
+          output_mtok: 0.975
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.195
+            tiers:
+              - start: 32000
+                price: 0.325
+              - start: 128000
+                price: 0.52
+          cache_write_mtok:
+            base: 0.24375
+            tiers:
+              - start: 32000
+                price: 0.40625
+              - start: 128000
+                price: 0.65
+          cache_read_mtok:
+            base: 0.039
+            tiers:
+              - start: 32000
+                price: 0.065
+              - start: 128000
+                price: 0.104
+          output_mtok:
+            base: 0.975
+            tiers:
+              - start: 32000
+                price: 1.625
+              - start: 128000
+                price: 2.6
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-coder-next
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-coder-next/endpoints
@@ -5387,9 +8101,17 @@ models:
         - equals: qwen/qwen3-coder-next
         - equals: qwen/qwen3-coder-next-2025-02-03
     prices:
-      input_mtok: 0.11
-      cache_read_mtok: 0.07
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.11
+          cache_read_mtok: 0.07
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.12
+          cache_read_mtok: 0.07
+          output_mtok: 0.8
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-coder-plus
     name: Qwen3 Coder Plus
@@ -5438,6 +8160,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 1.1
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-next-80b-a3b-instruct:free
     name: Qwen3 Next 80B A3B Instruct (free)
@@ -5453,8 +8176,15 @@ models:
         - equals: qwen/qwen3-next-80b-a3b-thinking
         - equals: qwen/qwen3-next-80b-a3b-thinking-2509
     prices:
-      input_mtok: 0.0975
-      output_mtok: 0.78
+      - prices:
+          input_mtok: 0.0975
+          output_mtok: 0.78
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.15
+          output_mtok: 1.2
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-vl-235b-a22b-instruct
     # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-235b-a22b-instruct/endpoints
@@ -5462,9 +8192,17 @@ models:
     match:
       equals: qwen/qwen3-vl-235b-a22b-instruct
     prices:
-      input_mtok: 0.2
-      cache_read_mtok: 0.11
-      output_mtok: 0.88
+      - prices:
+          input_mtok: 0.2
+          cache_read_mtok: 0.11
+          output_mtok: 0.88
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.21
+          cache_read_mtok: 0.1
+          output_mtok: 1.9
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-vl-235b-a22b-thinking
     name: Qwen3 VL 235B A22B Thinking
@@ -5481,8 +8219,15 @@ models:
     match:
       equals: qwen/qwen3-vl-30b-a3b-instruct
     prices:
-      input_mtok: 0.13
-      output_mtok: 0.52
+      - prices:
+          input_mtok: 0.13
+          output_mtok: 0.52
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.15
+          output_mtok: 0.6
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-vl-30b-a3b-thinking
     # No context_window: endpoints range from 131,072 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3-vl-30b-a3b-thinking/endpoints
@@ -5490,8 +8235,15 @@ models:
     match:
       equals: qwen/qwen3-vl-30b-a3b-thinking
     prices:
-      input_mtok: 0.13
-      output_mtok: 1.56
+      - prices:
+          input_mtok: 0.13
+          output_mtok: 1.56
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.29
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-vl-32b-instruct
     name: Qwen3 VL 32B Instruct
@@ -5508,8 +8260,16 @@ models:
     match:
       equals: qwen/qwen3-vl-8b-instruct
     prices:
-      input_mtok: 0.08
-      output_mtok: 0.5
+      - prices:
+          input_mtok: 0.08
+          output_mtok: 0.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.12
+          output_mtok: 0.75
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3-vl-8b-thinking
     name: Qwen3 VL 8B Thinking
@@ -5530,6 +8290,7 @@ models:
       input_mtok: 0.26
       output_mtok: 2.08
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-27b
     name: Qwen3.5-27B
@@ -5538,9 +8299,16 @@ models:
         - equals: qwen/qwen3.5-27b
         - equals: qwen/qwen3.5-27b-20260224
     prices:
-      input_mtok: 0.195
-      output_mtok: 1.56
+      - prices:
+          input_mtok: 0.195
+          output_mtok: 1.56
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.27
+          output_mtok: 2.16
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-35b-a3b
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-35b-a3b/endpoints
@@ -5550,9 +8318,17 @@ models:
         - equals: qwen/qwen3.5-35b-a3b
         - equals: qwen/qwen3.5-35b-a3b-20260224
     prices:
-      input_mtok: 0.14
-      cache_read_mtok: 0.05
-      output_mtok: 1
+      - prices:
+          input_mtok: 0.14
+          cache_read_mtok: 0.05
+          output_mtok: 1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.05
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-397b-a17b
     # No context_window: endpoints range from 128,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-397b-a17b/endpoints
@@ -5562,8 +8338,16 @@ models:
         - equals: qwen/qwen3.5-397b-a17b
         - equals: qwen/qwen3.5-397b-a17b-20260216
     prices:
-      input_mtok: 0.39
-      output_mtok: 2.34
+      - prices:
+          input_mtok: 0.39
+          output_mtok: 2.34
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.5
+          cache_read_mtok: 0.3
+          output_mtok: 3.6
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-9b
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.5-9b/endpoints
@@ -5575,6 +8359,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.15
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-flash-02-23
     name: Qwen3.5-Flash
@@ -5586,6 +8371,7 @@ models:
       input_mtok: 0.065
       output_mtok: 0.26
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-plus-02-15
     name: Qwen3.5 plus-02-15
@@ -5594,19 +8380,54 @@ models:
         - equals: qwen/qwen3.5-plus-02-15
         - equals: qwen/qwen3.5-plus-20260216
     prices:
-      input_mtok: 0.4
-      output_mtok: 2.4
+      - prices:
+          input_mtok: 0.4
+          output_mtok: 2.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.26
+            tiers:
+              - start: 256000
+                price: 0.325
+          output_mtok:
+            base: 1.56
+            tiers:
+              - start: 256000
+                price: 1.95
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.5-plus-20260420
     name: Qwen3.5 Plus 2026-04-20
     match:
       equals: qwen/qwen3.5-plus-20260420
     prices:
-      input_mtok: 0.3
-      cache_write_mtok: 0.375
-      output_mtok: 1.8
+      - prices:
+          input_mtok: 0.3
+          cache_write_mtok: 0.375
+          output_mtok: 1.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.3
+            tiers:
+              - start: 256000
+                price: 0.375
+          cache_write_mtok:
+            base: 0.375
+            tiers:
+              - start: 256000
+                price: 0.46875
+          output_mtok:
+            base: 1.8
+            tiers:
+              - start: 256000
+                price: 2.25
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.6-27b
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.6-27b/endpoints
@@ -5616,8 +8437,16 @@ models:
         - equals: qwen/qwen3.6-27b
         - equals: qwen/qwen3.6-27b-20260422
     prices:
-      input_mtok: 0.289
-      output_mtok: 2.4
+      - prices:
+          input_mtok: 0.289
+          output_mtok: 2.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.025
+          output_mtok: 2
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.6-35b-a3b
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/qwen/qwen3.6-35b-a3b/endpoints
@@ -5627,18 +8456,46 @@ models:
         - equals: qwen/qwen3.6-35b-a3b
         - equals: qwen/qwen3.6-35b-a3b-20260415
     prices:
-      input_mtok: 0.14
-      output_mtok: 1
+      - prices:
+          input_mtok: 0.14
+          output_mtok: 1
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.05
+          output_mtok: 1
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.6-flash
     name: Qwen3.6 Flash
     match:
       equals: qwen/qwen3.6-flash
     prices:
-      input_mtok: 0.1875
-      cache_write_mtok: 0.234375
-      output_mtok: 1.125
+      - prices:
+          input_mtok: 0.1875
+          cache_write_mtok: 0.234375
+          output_mtok: 1.125
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.1875
+            tiers:
+              - start: 256000
+                price: 0.75
+          cache_write_mtok:
+            base: 0.234375
+            tiers:
+              - start: 256000
+                price: 0.9375
+          output_mtok:
+            base: 1.125
+            tiers:
+              - start: 256000
+                price: 3
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.6-max-preview
     name: Qwen3.6 Max Preview
@@ -5659,10 +8516,68 @@ models:
         - equals: qwen/qwen3.6-plus
         - equals: qwen/qwen3.6-plus-04-02
     prices:
-      input_mtok: 0.325
-      cache_write_mtok: 0.40625
-      output_mtok: 1.95
+      - prices:
+          input_mtok: 0.325
+          cache_write_mtok: 0.40625
+          output_mtok: 1.95
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.325
+            tiers:
+              - start: 256000
+                price: 1.3
+          cache_write_mtok:
+            base: 0.40625
+            tiers:
+              - start: 256000
+                price: 1.625
+          output_mtok:
+            base: 1.95
+            tiers:
+              - start: 256000
+                price: 3.9
     context_window: 1000000
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.7-flash
+    name: Qwen3.7 Flash
+    match:
+      or:
+        - equals: qwen/qwen3.7-flash
+        - equals: qwen/qwen3.7-flash-20260727
+    context_window: 1000000
+    prices:
+      input_mtok:
+        base: 0.03
+        tiers:
+          - start: 32000
+            price: 0.1
+          - start: 256000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.038
+        tiers:
+          - start: 32000
+            price: 0.125
+          - start: 256000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.006
+        tiers:
+          - start: 32000
+            price: 0.02
+          - start: 256000
+            price: 0.04
+      output_mtok:
+        base: 0.13
+        tiers:
+          - start: 32000
+            price: 0.4
+          - start: 256000
+            price: 0.8
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.7-max
     name: Qwen3.7 Max
@@ -5671,11 +8586,20 @@ models:
         - equals: qwen/qwen3.7-max
         - equals: qwen/qwen3.7-max-20260520
     prices:
-      input_mtok: 1.25
-      cache_write_mtok: 1.5625
-      cache_read_mtok: 0.25
-      output_mtok: 3.75
+      - prices:
+          input_mtok: 1.25
+          cache_write_mtok: 1.5625
+          cache_read_mtok: 0.25
+          output_mtok: 3.75
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 1.475
+          cache_write_mtok: 1.84375
+          cache_read_mtok: 0.295
+          output_mtok: 4.425
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: qwen/qwen3.7-plus
     name: Qwen3.7 Plus
@@ -5684,11 +8608,124 @@ models:
         - equals: qwen/qwen3.7-plus
         - equals: qwen/qwen3.7-plus-20260602
     prices:
-      input_mtok: 0.4
-      cache_write_mtok: 0.5
-      cache_read_mtok: 0.08
-      output_mtok: 1.6
+      - prices:
+          input_mtok: 0.4
+          cache_write_mtok: 0.5
+          cache_read_mtok: 0.08
+          output_mtok: 1.6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 0.32
+            tiers:
+              - start: 256000
+                price: 0.96
+          cache_write_mtok:
+            base: 0.4
+            tiers:
+              - start: 256000
+                price: 1.2
+          cache_read_mtok:
+            base: 0.064
+            tiers:
+              - start: 256000
+                price: 0.192
+          output_mtok:
+            base: 1.28
+            tiers:
+              - start: 256000
+                price: 3.84
     context_window: 1000000
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.7-plus:batch
+    name: Qwen3.7 Plus (batch)
+    match:
+      equals: qwen/qwen3.7-plus:batch
+    context_window: 262144
+    prices:
+      input_mtok: 0.23
+      output_mtok: 0.92
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-2.4t-a95b
+    name: Qwen3.8 2.4T A95B
+    match:
+      or:
+        - equals: qwen/qwen3.8-2.4t-a95b
+        - equals: qwen/qwen3.8-2.4t-a95b-20260812
+    context_window: 1048576
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.25
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-27b
+    name: Qwen3.8 27B
+    match:
+      or:
+        - equals: qwen/qwen3.8-27b
+        - equals: qwen/qwen3.8-27b-20260814
+    context_window: 1000000
+    prices:
+      input_mtok: 0.24
+      cache_read_mtok: 0.05
+      output_mtok: 2.2
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-flash
+    name: Qwen3.8 Flash
+    match:
+      or:
+        - equals: qwen/qwen3.8-flash
+        - equals: qwen/qwen3.8-flash-20260826
+    context_window: 1000000
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.016
+      output_mtok: 0.47
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-max-0902
+    name: Qwen3.8 Max (0902)
+    match:
+      or:
+        - equals: qwen/qwen3.8-max-0902
+        - equals: qwen/qwen3.8-max-20260902
+    context_window: 1000000
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.25
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-max-prime
+    name: Qwen3.8 Max Prime
+    match:
+      or:
+        - equals: qwen/qwen3.8-max-prime
+        - equals: qwen/qwen3.8-max-prime-20260923
+    context_window: 1000000
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.5
+      output_mtok: 12
+    prices_checked: 2026-10-19
+
+  - id: qwen/qwen3.8-omni-flash
+    name: Qwen3.8 Omni Flash
+    match:
+      or:
+        - equals: qwen/qwen3.8-omni-flash
+        - equals: qwen/qwen3.8-omni-flash-20260918
+    context_window: 1000000
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.016
+      output_mtok: 0.47
+    prices_checked: 2026-10-19
 
   - id: qwen/qwq-32b
     match:
@@ -5813,6 +8850,19 @@ models:
       input_mtok: 4.5
       output_mtok: 4.5
 
+  - id: reflection/beam-1.0-501b-a23b
+    name: Beam 1.0 501B A23B
+    match:
+      or:
+        - equals: reflection/beam-1.0-501b-a23b
+        - equals: reflection/beam-1.0-501b-a23b-20261016
+    context_window: 1048576
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.1
+      output_mtok: 3
+    prices_checked: 2026-10-19
+
   - id: reka-flash-3:free
     name: Flash 3 (free)
     match:
@@ -5822,11 +8872,14 @@ models:
   - id: rekaai/reka-edge
     name: Reka Edge
     match:
-      equals: rekaai/reka-edge
+      or:
+        - equals: rekaai/reka-edge
+        - equals: rekaai/reka-edge-2603
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
     context_window: 16384
+    prices_checked: 2026-10-19
 
   - id: rekaai/reka-flash-3
     name: Reka Flash 3
@@ -5836,6 +8889,7 @@ models:
       input_mtok: 0.1
       output_mtok: 0.2
     context_window: 65536
+    prices_checked: 2026-10-19
 
   - id: "rekaai/reka-flash-3:free"
     match:
@@ -5850,15 +8904,72 @@ models:
       input_mtok: 0.85
       output_mtok: 1.25
     context_window: 256000
+    prices_checked: 2026-10-19
 
   - id: relace/relace-search
     name: Relace Search
     match:
-      equals: relace/relace-search
+      or:
+        - equals: relace/relace-search
+        - equals: relace/relace-search-20251208
     prices:
       input_mtok: 1
       output_mtok: 3
     context_window: 256000
+    prices_checked: 2026-10-19
+
+  - id: sakana/fugu-max
+    name: Fugu Max
+    match:
+      or:
+        - equals: sakana/fugu-max
+        - equals: sakana/fugu-max-20260911
+    context_window: 1000000
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.25
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: sakana/fugu-ultra
+    name: Fugu Ultra
+    match:
+      or:
+        - equals: sakana/fugu-ultra
+        - equals: sakana/fugu-ultra-20260615
+        - equals: sakana/fugu-ultra-v2
+        - equals: sakana/fugu-ultra-v2-20260911
+    context_window: 1000000
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
+    prices_checked: 2026-10-19
+
+  - id: sakana/sakana-namazu
+    name: Sakana Namazu
+    match:
+      or:
+        - equals: sakana/sakana-namazu
+        - equals: sakana/namazu-20260811
+    context_window: 262144
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.15
+      output_mtok: 4
+    prices_checked: 2026-10-19
 
   - id: sao10k/fimbulvetr-11b-v2
     match:
@@ -5879,9 +8990,16 @@ models:
     match:
       equals: sao10k/l3-lunaris-8b
     prices:
-      input_mtok: 0.02
-      output_mtok: 0.05
+      - prices:
+          input_mtok: 0.02
+          output_mtok: 0.05
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.04
+          output_mtok: 0.05
     context_window: 8192
+    prices_checked: 2026-10-19
 
   - id: sao10k/l3.1-70b-hanami-x1
     name: Llama 3.1 70B Hanami x1
@@ -5897,23 +9015,61 @@ models:
     match:
       equals: sao10k/l3.1-euryale-70b
     prices:
-      input_mtok: 0.7
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.7
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.85
+          output_mtok: 0.85
+    prices_checked: 2026-10-19
 
   - id: sao10k/l3.3-euryale-70b
     name: Llama 3.3 Euryale 70B
     match:
-      equals: sao10k/l3.3-euryale-70b
+      or:
+        - equals: sao10k/l3.3-euryale-70b
+        - equals: sao10k/l3.3-euryale-70b-v2.3
     prices:
-      input_mtok: 0.7
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.7
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.65
+          output_mtok: 0.75
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: sarvam-m:free
     name: Sarvam-M (free)
     match:
       equals: sarvam-m:free
     prices: {}
+
+  - id: scaledown/extract
+    name: Extract
+    match:
+      or:
+        - equals: scaledown/extract
+        - equals: scaledown/extract-20260928
+    context_window: 1000000
+    prices:
+      input_mtok: 0.04
+    prices_checked: 2026-10-19
+
+  - id: scaledown/summarize
+    name: Summarize
+    match:
+      or:
+        - equals: scaledown/summarize
+        - equals: scaledown/summarize-20260928
+    context_window: 1000000
+    prices:
+      input_mtok: 0.04
+    prices_checked: 2026-10-19
 
   - id: scb10x/llama3.1-typhoon2-70b-instruct
     match:
@@ -5988,20 +9144,44 @@ models:
     match:
       equals: stepfun/step-3.5-flash
     prices:
-      input_mtok: 0.09
-      cache_read_mtok: 0.02
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.09
+          cache_read_mtok: 0.02
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.1
+          cache_read_mtok: 0.02
+          output_mtok: 0.3
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: stepfun/step-3.7-flash
     # No context_window: endpoints range from 256,000 to 262,144: https://openrouter.ai/api/v1/models/stepfun/step-3.7-flash/endpoints
     name: Step 3.7 Flash
     match:
-      equals: stepfun/step-3.7-flash
+      or:
+        - equals: stepfun/step-3.7-flash
+        - equals: stepfun/step-3.7-flash-20260528
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.04
       output_mtok: 1.15
+    prices_checked: 2026-10-19
+
+  - id: stepfun/step-5-preview
+    name: Step 5 Preview
+    match:
+      or:
+        - equals: stepfun/step-5-preview
+        - equals: stepfun/step-5-preview-20261008
+    context_window: 1048576
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.1
+      output_mtok: 2.7
+    prices_checked: 2026-10-19
 
   - id: switchpoint/router
     name: Switchpoint Router
@@ -6019,16 +9199,63 @@ models:
       input_mtok: 0.14
       output_mtok: 0.57
     context_window: 131072
+    prices_checked: 2026-10-19
+
+  - id: tencent/hy-mt2-1.8b
+    name: Hy-MT2-1.8B
+    match:
+      or:
+        - equals: tencent/hy-mt2-1.8b
+        - equals: tencent/hy-mt2-1.8b-20260521
+    context_window: 8192
+    prices:
+      input_mtok: 0.044
+      output_mtok: 0.177
+    prices_checked: 2026-10-19
+
+  - id: tencent/hy-mt2-30b-a3b
+    name: Hy-MT2-30B-A3B
+    match:
+      or:
+        - equals: tencent/hy-mt2-30b-a3b
+        - equals: tencent/hy-mt2-30b-a3b-20260521
+    context_window: 8192
+    prices:
+      input_mtok: 0.074
+      output_mtok: 0.295
+    prices_checked: 2026-10-19
+
+  - id: tencent/hy-mt2-7b
+    name: Hy-MT2-7B
+    match:
+      or:
+        - equals: tencent/hy-mt2-7b
+        - equals: tencent/hy-mt2-7b-20260521
+    context_window: 8192
+    prices:
+      input_mtok: 0.074
+      output_mtok: 0.295
+    prices_checked: 2026-10-19
 
   - id: tencent/hy3-preview
     name: Hy3 preview
     match:
-      equals: tencent/hy3-preview
+      or:
+        - equals: tencent/hy3-preview
+        - equals: tencent/hy3-preview-20260421
     prices:
-      input_mtok: 0.063
-      cache_read_mtok: 0.021
-      output_mtok: 0.21
+      - prices:
+          input_mtok: 0.063
+          cache_read_mtok: 0.021
+          output_mtok: 0.21
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.18
+          cache_read_mtok: 0.06
+          output_mtok: 0.6
     context_window: 262144
+    prices_checked: 2026-10-19
 
   - id: thedrummer/anubis-pro-105b-v1
     match:
@@ -6046,6 +9273,7 @@ models:
       cache_read_mtok: 0.15
       output_mtok: 0.5
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: thedrummer/rocinante-12b
     name: Rocinante 12B
@@ -6060,17 +9288,75 @@ models:
     match:
       equals: thedrummer/skyfall-36b-v2
     prices:
-      input_mtok: 0.5
-      output_mtok: 0.8
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 0.8
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.25
+          output_mtok: 0.8
     context_window: 32768
+    prices_checked: 2026-10-19
 
   - id: thedrummer/unslopnemo-12b
     # No context_window: endpoints range from 32,768 to 1,024,000: https://openrouter.ai/api/v1/models/thedrummer/unslopnemo-12b/endpoints
+    name: UnslopNemo 12B
     match:
       equals: thedrummer/unslopnemo-12b
     prices:
-      input_mtok: 0.5
-      output_mtok: 0.5
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 0.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.4
+          output_mtok: 0.4
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/inkling
+    name: Inkling
+    match:
+      or:
+        - equals: thinkingmachines/inkling
+        - equals: thinkingmachines/inkling-20260715
+    context_window: 524288
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.17
+      output_mtok: 4.05
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/inkling-small
+    name: Inkling Small
+    match:
+      or:
+        - equals: thinkingmachines/inkling-small
+        - equals: thinkingmachines/inkling-small-20260730
+    context_window: 524288
+    prices:
+      input_mtok: 0.45
+      cache_read_mtok: 0.1
+      output_mtok: 1.2
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/inkling-small:free
+    name: Inkling Small (free)
+    match:
+      equals: thinkingmachines/inkling-small:free
+    context_window: 1048576
+    prices: {}
+    prices_checked: 2026-10-19
+
+  - id: thinkingmachines/inkling:free
+    name: Inkling (free)
+    match:
+      equals: thinkingmachines/inkling:free
+    context_window: 1048576
+    prices: {}
+    prices_checked: 2026-10-19
 
   - id: "thudm/glm-4-32b:free"
     match:
@@ -6106,14 +9392,47 @@ models:
     prices:
       input_mtok: 0.042
 
+  - id: unbiased/pareto-26.10
+    name: Pareto 26.10
+    match:
+      or:
+        - equals: unbiased/pareto-26.10
+        - equals: unbiased/pareto-26.10-20261015
+    context_window: 1048576
+    prices:
+      input_mtok: 0.8
+      cache_read_mtok: 0.03
+      output_mtok: 3.2
+    prices_checked: 2026-10-19
+
+  - id: unbiased/pareto-26.9
+    name: Pareto 26.9
+    match:
+      or:
+        - equals: unbiased/pareto-26.9
+        - equals: unbiased/pareto-26.9-20260917
+    context_window: 262144
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      output_mtok: 7.5
+    prices_checked: 2026-10-19
+
   - id: undi95/remm-slerp-l2-13b
     name: ReMM SLERP 13B
     match:
       equals: undi95/remm-slerp-l2-13b
     prices:
-      input_mtok: 0.8
-      output_mtok: 1.2
+      - prices:
+          input_mtok: 0.8
+          output_mtok: 1.2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.35
+          output_mtok: 0.65
     context_window: 6144
+    prices_checked: 2026-10-19
 
   - id: undi95/toppy-m-7b
     match:
@@ -6121,6 +9440,19 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.07
+
+  - id: upstage/solar-mini4
+    name: Solar Mini 4
+    match:
+      or:
+        - equals: upstage/solar-mini4
+        - equals: upstage/solar-mini4-20260922
+    context_window: 524288
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.005
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
 
   - id: upstage/solar-pro-3
     name: Solar Pro 3
@@ -6131,6 +9463,20 @@ models:
       cache_read_mtok: 0.015
       output_mtok: 0.6
     context_window: 131072
+    prices_checked: 2026-10-19
+
+  - id: upstage/solar-pro4
+    name: Solar Pro 4
+    match:
+      or:
+        - equals: upstage/solar-pro4
+        - equals: upstage/solar-pro4-20260810
+    context_window: 524288
+    prices:
+      input_mtok: 0.09
+      cache_read_mtok: 0.018
+      output_mtok: 0.36
+    prices_checked: 2026-10-19
 
   - id: valkyrie-49b-v1
     name: Valkyrie 49B V1
@@ -6151,11 +9497,14 @@ models:
   - id: writer/palmyra-x5
     name: Palmyra X5
     match:
-      equals: writer/palmyra-x5
+      or:
+        - equals: writer/palmyra-x5
+        - equals: writer/palmyra-x5-20250428
     prices:
       input_mtok: 0.6
       output_mtok: 6
     context_window: 1040000
+    prices_checked: 2026-10-19
 
   - id: x-ai/grok-2-1212
     match:
@@ -6211,22 +9560,66 @@ models:
   - id: x-ai/grok-4.20
     name: Grok 4.20
     match:
-      equals: x-ai/grok-4.20
+      or:
+        - equals: x-ai/grok-4.20
+        - equals: x-ai/grok-4.20-20260309
     prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.2
-      output_mtok: 2.5
+      - prices:
+          input_mtok: 1.25
+          cache_read_mtok: 0.2
+          output_mtok: 2.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 200000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 200000
+                price: 5
     context_window: 2000000
+    prices_checked: 2026-10-19
 
   - id: x-ai/grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
     match:
-      equals: x-ai/grok-4.20-multi-agent
+      or:
+        - equals: x-ai/grok-4.20-multi-agent
+        - equals: x-ai/grok-4.20-multi-agent-20260309
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.2
-      output_mtok: 6
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          output_mtok: 6
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 200000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 200000
+                price: 5
     context_window: 2000000
+    prices_checked: 2026-10-19
 
   - id: x-ai/grok-4.3
     name: Grok 4.3
@@ -6234,11 +9627,130 @@ models:
       or:
         - equals: x-ai/grok-4.3
         - regex: ^x-ai/grok-4\.3-\d{8}$
+        - equals: x-ai/grok-4.3-20260430
     prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.2
-      output_mtok: 2.5
+      - prices:
+          input_mtok: 1.25
+          cache_read_mtok: 0.2
+          output_mtok: 2.5
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 200000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 200000
+                price: 5
     context_window: 1000000
+    prices_checked: 2026-10-19
+
+  - id: x-ai/grok-4.3:batch
+    name: Grok 4.3 (batch)
+    match:
+      equals: x-ai/grok-4.3:batch
+    context_window: 1000000
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 200000
+            price: 2
+      cache_read_mtok:
+        base: 0.16
+        tiers:
+          - start: 200000
+            price: 0.32
+      output_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+    prices_checked: 2026-10-19
+
+  - id: x-ai/grok-4.5
+    name: Grok 4.5
+    match:
+      or:
+        - equals: x-ai/grok-4.5
+        - equals: x-ai/grok-4.5-20260708
+    context_window: 500000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.3
+        tiers:
+          - start: 200000
+            price: 0.6
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+    prices_checked: 2026-10-19
+
+  - id: x-ai/grok-4.6
+    name: Grok 4.6
+    match:
+      or:
+        - equals: x-ai/grok-4.6
+        - equals: x-ai/grok-4.6-20260810
+    context_window: 500000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+    prices_checked: 2026-10-19
+
+  - id: x-ai/grok-4.7
+    name: Grok 4.7
+    match:
+      or:
+        - equals: x-ai/grok-4.7
+        - equals: x-ai/grok-4.7-20260916
+    context_window: 500000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+    prices_checked: 2026-10-19
 
   - id: x-ai/grok-beta
     match:
@@ -6250,12 +9762,34 @@ models:
   - id: x-ai/grok-build-0.1
     name: Grok Build 0.1
     match:
-      equals: x-ai/grok-build-0.1
+      or:
+        - equals: x-ai/grok-build-0.1
+        - equals: x-ai/grok-build-0.1-20260520
     prices:
-      input_mtok: 1
-      cache_read_mtok: 0.2
-      output_mtok: 2
+      - prices:
+          input_mtok: 1
+          cache_read_mtok: 0.2
+          output_mtok: 2
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 200000
+                price: 2
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
     context_window: 256000
+    prices_checked: 2026-10-19
 
   - id: x-ai/grok-code-fast-1
     match:
@@ -6286,21 +9820,74 @@ models:
     # No context_window: endpoints range from 262,144 to 1,050,000: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5/endpoints
     name: MiMo-V2.5
     match:
-      equals: xiaomi/mimo-v2.5
+      or:
+        - equals: xiaomi/mimo-v2.5
+        - equals: xiaomi/mimo-v2.5-20260422
     prices:
       input_mtok: 0.14
       cache_read_mtok: 0.0028
       output_mtok: 0.28
+    prices_checked: 2026-10-19
 
   - id: xiaomi/mimo-v2.5-pro
     # No context_window: endpoints range from 262,144 to 1,050,000: https://openrouter.ai/api/v1/models/xiaomi/mimo-v2.5-pro/endpoints
     name: MiMo-V2.5-Pro
     match:
-      equals: xiaomi/mimo-v2.5-pro
+      or:
+        - equals: xiaomi/mimo-v2.5-pro
+        - equals: xiaomi/mimo-v2.5-pro-20260422
     prices:
       input_mtok: 0.435
       cache_read_mtok: 0.0036
       output_mtok: 0.87
+    prices_checked: 2026-10-19
+
+  - id: xiaomi/mimo-v2.6-flash
+    name: MiMo-V2.6-Flash
+    match:
+      or:
+        - equals: xiaomi/mimo-v2.6-flash
+        - equals: xiaomi/mimo-v2.6-flash-20260921
+    context_window: 1050000
+    prices:
+      input_mtok: 0.14
+      cache_read_mtok: 0.0028
+      output_mtok: 0.28
+    prices_checked: 2026-10-19
+
+  - id: xiaomi/mimo-v2.6-pro
+    name: MiMo-V2.6-Pro
+    match:
+      or:
+        - equals: xiaomi/mimo-v2.6-pro
+        - equals: xiaomi/mimo-v2.6-pro-20260921
+    context_window: 1050000
+    prices:
+      input_mtok: 0.435
+      cache_read_mtok: 0.0036
+      output_mtok: 0.87
+    prices_checked: 2026-10-19
+
+  - id: xiaomi/mimo-v2.6-pro-ultraspeed
+    name: MiMo-V2.6-Pro-UltraSpeed
+    match:
+      or:
+        - equals: xiaomi/mimo-v2.6-pro-ultraspeed
+        - equals: xiaomi/mimo-v2.6-pro-ultraspeed-20260921
+    context_window: 1048576
+    prices:
+      input_mtok: 4.35
+      cache_read_mtok: 0.036
+      output_mtok: 8.7
+    prices_checked: 2026-10-19
+
+  - id: xingchen-agi/xing4.0-29b-a4b:free
+    name: Xing4.0 29B A4B (free)
+    match:
+      equals: xingchen-agi/xing4.0-29b-a4b:free
+    context_window: 262144
+    prices: {}
+    prices_checked: 2026-10-19
 
   - id: xwin-lm/xwin-lm-70b
     match:
@@ -6326,16 +9913,25 @@ models:
       cache_read_mtok: 0.11
       output_mtok: 2.2
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.5-air
     name: GLM 4.5 Air
     match:
       equals: z-ai/glm-4.5-air
     prices:
-      input_mtok: 0.125
-      cache_read_mtok: 0.06
-      output_mtok: 0.85
+      - prices:
+          input_mtok: 0.125
+          cache_read_mtok: 0.06
+          output_mtok: 0.85
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.13
+          cache_read_mtok: 0.025
+          output_mtok: 0.85
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.5v
     name: GLM 4.5V
@@ -6346,6 +9942,7 @@ models:
       cache_read_mtok: 0.11
       output_mtok: 1.8
     context_window: 65536
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.6
     # No context_window: endpoints range from 198,000 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-4.6/endpoints
@@ -6353,29 +9950,57 @@ models:
     match:
       equals: z-ai/glm-4.6
     prices:
-      input_mtok: 0.43
-      cache_read_mtok: 0.08
-      output_mtok: 1.74
+      - prices:
+          input_mtok: 0.43
+          cache_read_mtok: 0.08
+          output_mtok: 1.74
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.11
+          output_mtok: 2.2
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.6v
     name: GLM 4.6V
     match:
-      equals: z-ai/glm-4.6v
+      or:
+        - equals: z-ai/glm-4.6v
+        - equals: z-ai/glm-4.6-20251208
     prices:
-      input_mtok: 0.3
-      cache_read_mtok: 0.05
-      output_mtok: 0.9
+      - prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.05
+          output_mtok: 0.9
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.055
+          output_mtok: 0.9
     context_window: 131072
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.7
     # No context_window: endpoints range from 131,072 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-4.7/endpoints
     name: GLM 4.7
     match:
-      equals: z-ai/glm-4.7
+      or:
+        - equals: z-ai/glm-4.7
+        - equals: z-ai/glm-4.7-20251222
     prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.08
-      output_mtok: 1.75
+      - prices:
+          input_mtok: 0.4
+          cache_read_mtok: 0.08
+          output_mtok: 1.75
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.54
+          cache_read_mtok: 0.099
+          output_mtok: 1.98
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-4.7-flash
     # No context_window: endpoints range from 128,000 to 202,752: https://openrouter.ai/api/v1/models/z-ai/glm-4.7-flash/endpoints
@@ -6385,9 +10010,17 @@ models:
         - equals: z-ai/glm-4.7-flash
         - equals: z-ai/glm-4.7-flash-20260119
     prices:
-      input_mtok: 0.06
-      cache_read_mtok: 0.01
-      output_mtok: 0.4
+      - prices:
+          input_mtok: 0.06
+          cache_read_mtok: 0.01
+          output_mtok: 0.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.0605
+          cache_read_mtok: 0.01
+          output_mtok: 0.4
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-5
     # No context_window: endpoints range from 64,000 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-5/endpoints
@@ -6397,9 +10030,17 @@ models:
         - equals: z-ai/glm-5
         - equals: z-ai/glm-5-20260211
     prices:
-      input_mtok: 0.6
-      cache_read_mtok: 0.12
-      output_mtok: 1.92
+      - prices:
+          input_mtok: 0.6
+          cache_read_mtok: 0.12
+          output_mtok: 1.92
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.2
+          output_mtok: 3.2
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-5-turbo
     name: GLM 5 Turbo
@@ -6412,6 +10053,7 @@ models:
       cache_read_mtok: 0.24
       output_mtok: 4
     context_window: 202752
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-5.1
     # No context_window: endpoints range from 163,840 to 204,800: https://openrouter.ai/api/v1/models/z-ai/glm-5.1/endpoints
@@ -6421,9 +10063,17 @@ models:
         - equals: z-ai/glm-5.1
         - equals: z-ai/glm-5.1-20260406
     prices:
-      input_mtok: 0.98
-      cache_read_mtok: 0.182
-      output_mtok: 3.08
+      - prices:
+          input_mtok: 0.98
+          cache_read_mtok: 0.182
+          output_mtok: 3.08
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.966
+          cache_read_mtok: 0.1794
+          output_mtok: 3.036
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-5.2
     name: GLM 5.2
@@ -6432,10 +10082,18 @@ models:
         - equals: z-ai/glm-5.2
         - equals: z-ai/glm-5.2-20260616
     prices:
-      input_mtok: 1.4
-      cache_read_mtok: 0.26
-      output_mtok: 4.4
+      - prices:
+          input_mtok: 1.4
+          cache_read_mtok: 0.26
+          output_mtok: 4.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.62
+          cache_read_mtok: 0.14
+          output_mtok: 2.42
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: z-ai/glm-5.3
     name: GLM 5.3
@@ -6443,18 +10101,27 @@ models:
       or:
         - equals: z-ai/glm-5.3
         - equals: z-ai/glm-5.3-20260816
-    prices_checked: 2026-08-26
+    prices_checked: 2026-10-19
     prices:
-      input_mtok: 1.4
-      cache_read_mtok: 0.26
-      output_mtok: 4.4
+      - prices:
+          input_mtok: 1.4
+          cache_read_mtok: 0.26
+          output_mtok: 4.4
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.079
+          cache_read_mtok: 0.078
+          output_mtok: 1.4
     context_window: 1048576
 
   - id: z-ai/glm-5.3-flash
     name: GLM 5.3 Flash
     match:
-      equals: z-ai/glm-5.3-flash
-    prices_checked: 2026-09-29
+      or:
+        - equals: z-ai/glm-5.3-flash
+        - equals: z-ai/glm-5.3-flash-20260826
+    prices_checked: 2026-10-19
     price_comments: >-
       A 50% promotion ran through September 9, 2026 at 16:00 UTC. `start_date` is a UTC date, so
       the list prices start on 2026-09-10 and requests from 16:00 to 24:00 UTC on September 9, after
@@ -6471,24 +10138,100 @@ models:
           input_mtok: 0.15
           cache_read_mtok: 0.03
           output_mtok: 0.50
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.0392
+          cache_read_mtok: 0.006
+          output_mtok: 0.2
     context_window: 1310720
+
+  - id: z-ai/glm-5.3-flash:batch
+    name: GLM 5.3 Flash (batch)
+    match:
+      equals: z-ai/glm-5.3-flash:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.01
+      output_mtok: 0.18
+    prices_checked: 2026-10-19
+
+  - id: z-ai/glm-5.3-flashx
+    name: GLM 5.3 FlashX
+    match:
+      or:
+        - equals: z-ai/glm-5.3-flashx
+        - equals: z-ai/glm-5.3-flashx-20260918
+    context_window: 1048576
+    prices:
+      input_mtok: 0.37
+      cache_read_mtok: 0.09
+      output_mtok: 1.25
+    prices_checked: 2026-10-19
+
+  - id: z-ai/glm-5.3-prime
+    name: GLM 5.3 Prime
+    match:
+      or:
+        - equals: z-ai/glm-5.3-prime
+        - equals: z-ai/glm-5.3-prime-20260921
+    context_window: 1000000
+    prices:
+      input_mtok: 2.8
+      cache_read_mtok: 0.56
+      output_mtok: 8.8
+    prices_checked: 2026-10-19
+
+  - id: z-ai/glm-5.3:batch
+    name: GLM 5.3 (batch)
+    match:
+      equals: z-ai/glm-5.3:batch
+    context_window: 1048576
+    prices:
+      input_mtok: 0.45
+      cache_read_mtok: 0.1
+      output_mtok: 2
+    prices_checked: 2026-10-19
+
+  - id: z-ai/glm-5v-turbo
+    name: GLM 5V Turbo
+    match:
+      or:
+        - equals: z-ai/glm-5v-turbo
+        - equals: z-ai/glm-5v-turbo-20260401
+    context_window: 202752
+    prices:
+      input_mtok: 1.2
+      cache_read_mtok: 0.24
+      output_mtok: 4
+    prices_checked: 2026-10-19
 
   - id: ~anthropic/claude-fable-latest
     name: Claude Fable Latest
     match:
       equals: ~anthropic/claude-fable-latest
     prices:
-      input_mtok: 10
-      cache_write_mtok: 12.5
-      cache_read_mtok: 1
-      output_mtok: 50
+      - prices:
+          input_mtok: 10
+          cache_write_mtok: 12.5
+          cache_read_mtok: 1
+          output_mtok: 50
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 10
+          cache_write_mtok: 12.5
+          cache_read_mtok: 0.25
+          output_mtok: 50
     context_window: 1000000
+    prices_checked: 2026-10-19
 
   - id: ~anthropic/claude-haiku-latest
     name: Anthropic Claude Haiku Latest
     match:
       equals: ~anthropic/claude-haiku-latest
-    prices_checked: 2026-10-08
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 1
@@ -6531,7 +10274,7 @@ models:
     name: Claude Opus Latest
     match:
       equals: ~anthropic/claude-opus-latest
-    prices_checked: 2026-09-22
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 5
@@ -6552,7 +10295,7 @@ models:
     name: Anthropic Claude Sonnet Latest
     match:
       equals: ~anthropic/claude-sonnet-latest
-    prices_checked: 2026-09-28
+    prices_checked: 2026-10-19
     prices:
       - prices:
           input_mtok: 3
@@ -6568,39 +10311,132 @@ models:
           cache_write_mtok: 2.5
           cache_read_mtok: 0.2
           output_mtok: 10
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2
+          cache_write_mtok: 2.5
+          cache_read_mtok: 0.1
+          output_mtok: 10
     context_window: 1000000
+
+  - id: ~deepseek/deepseek-flash-latest
+    name: DeepSeek Flash Latest
+    match:
+      equals: ~deepseek/deepseek-flash-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.012
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
+
+  - id: ~deepseek/deepseek-pro-latest
+    name: DeepSeek Pro Latest
+    match:
+      equals: ~deepseek/deepseek-pro-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.225
+      cache_read_mtok: 0.23
+      output_mtok: 8
+    prices_checked: 2026-10-19
+
+  - id: ~deepseek/deepseek-v4-flash-latest
+    name: DeepSeek V4 Flash Latest
+    match:
+      equals: ~deepseek/deepseek-v4-flash-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.0065
+      output_mtok: 0.45
+    prices_checked: 2026-10-19
 
   - id: ~google/gemini-flash-latest
     name: Google Gemini Flash Latest
     match:
       equals: ~google/gemini-flash-latest
     prices:
-      input_mtok: 1.5
-      cache_write_mtok: 0.08333333333333334
-      cache_read_mtok: 0.15
-      output_mtok: 9
+      - prices:
+          input_mtok: 1.5
+          cache_write_mtok: 0.08333333333333334
+          cache_read_mtok: 0.15
+          output_mtok: 9
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.75
+          cache_write_mtok: 0.0416666666666667
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: ~google/gemini-pro-latest
     name: Google Gemini Pro Latest
     match:
       equals: ~google/gemini-pro-latest
     prices:
-      input_mtok: 2
-      cache_write_mtok: 0.375
-      cache_read_mtok: 0.2
-      output_mtok: 12
+      - prices:
+          input_mtok: 2
+          cache_write_mtok: 0.375
+          cache_read_mtok: 0.2
+          output_mtok: 12
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 2
+          cache_write_mtok: 0.1875
+          cache_read_mtok: 0.1
+          output_mtok: 10
     context_window: 1048576
+    prices_checked: 2026-10-19
 
   - id: ~moonshotai/kimi-latest
     name: MoonshotAI Kimi Latest
     match:
       equals: ~moonshotai/kimi-latest
     prices:
-      input_mtok: 0.68
-      cache_read_mtok: 0.34
-      output_mtok: 3.41
+      - prices:
+          input_mtok: 0.68
+          cache_read_mtok: 0.34
+          output_mtok: 3.41
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.217
+          cache_read_mtok: 0.207
+          output_mtok: 16
     context_window: 1048576
+    prices_checked: 2026-10-19
+
+  - id: ~openai/gpt-astra-latest
+    name: GPT Astra Latest
+    match:
+      equals: ~openai/gpt-astra-latest
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 272000
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 272000
+            price: 75
+    prices_checked: 2026-10-19
 
   - id: ~openai/gpt-latest
     name: OpenAI GPT Latest
@@ -6612,6 +10448,34 @@ models:
       output_mtok: 30
     context_window: 1050000
 
+  - id: ~openai/gpt-luna-latest
+    name: GPT Luna Latest
+    match:
+      equals: ~openai/gpt-luna-latest
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 0.75
+    prices_checked: 2026-10-19
+
   - id: ~openai/gpt-mini-latest
     name: OpenAI GPT Mini Latest
     match:
@@ -6621,3 +10485,116 @@ models:
       cache_read_mtok: 0.075
       output_mtok: 4.5
     context_window: 400000
+    prices_checked: 2026-10-19
+
+  - id: ~openai/gpt-sol-latest
+    name: GPT Sol Latest
+    match:
+      equals: ~openai/gpt-sol-latest
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+    prices_checked: 2026-10-19
+
+  - id: ~openai/gpt-terra-latest
+    name: GPT Terra Latest
+    match:
+      equals: ~openai/gpt-terra-latest
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 272000
+            price: 18
+    prices_checked: 2026-10-19
+
+  - id: ~unbiased/pareto-latest
+    name: Pareto Latest
+    match:
+      equals: ~unbiased/pareto-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.8
+      cache_read_mtok: 0.03
+      output_mtok: 3.2
+    prices_checked: 2026-10-19
+
+  - id: ~x-ai/grok-latest
+    name: Grok Latest
+    match:
+      equals: ~x-ai/grok-latest
+    context_window: 500000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+    prices_checked: 2026-10-19
+
+  - id: ~z-ai/glm-flash-latest
+    name: GLM Flash Latest
+    match:
+      equals: ~z-ai/glm-flash-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.0392
+      cache_read_mtok: 0.006
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
+
+  - id: ~z-ai/glm-latest
+    name: GLM Latest
+    match:
+      equals: ~z-ai/glm-latest
+    context_window: 1048576
+    prices:
+      input_mtok: 0.04
+      cache_read_mtok: 0.025
+      output_mtok: 6
+    prices_checked: 2026-10-19

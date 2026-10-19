@@ -27981,7 +27981,14 @@ export const data: Provider[] = [
         id: 'aion-labs/aion-2.0',
         name: 'Aion-2.0',
         match: {
-          equals: 'aion-labs/aion-2.0',
+          or: [
+            {
+              equals: 'aion-labs/aion-2.0',
+            },
+            {
+              equals: 'aion-labs/aion-2.0-20260223',
+            },
+          ],
         },
         context_window: 131072,
         prices: {
@@ -27991,15 +27998,110 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'aion-labs/aion-3.0',
+        name: 'Aion-3.0',
+        match: {
+          or: [
+            {
+              equals: 'aion-labs/aion-3.0',
+            },
+            {
+              equals: 'aion-labs/aion-3.0-20260707',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.75,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'aion-labs/aion-3.0-mini',
+        name: 'Aion-3.0-Mini',
+        match: {
+          or: [
+            {
+              equals: 'aion-labs/aion-3.0-mini',
+            },
+            {
+              equals: 'aion-labs/aion-3.0-mini-20260707',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.18,
+          output_mtok: 1.4,
+        },
+      },
+      {
+        id: 'aion-labs/aion-3.5',
+        name: 'Aion 3.5',
+        match: {
+          or: [
+            {
+              equals: 'aion-labs/aion-3.5',
+            },
+            {
+              equals: 'aion-labs/aion-3.5-20260923',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.75,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'aion-labs/aion-3.5-mini',
+        name: 'Aion 3.5 Mini',
+        match: {
+          or: [
+            {
+              equals: 'aion-labs/aion-3.5-mini',
+            },
+            {
+              equals: 'aion-labs/aion-3.5-mini-20260923',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.18,
+          output_mtok: 1.4,
+        },
+      },
+      {
         id: 'aion-labs/aion-rp-llama-3.1-8b',
+        name: 'Aion-RP 1.0 (8B)',
         match: {
           equals: 'aion-labs/aion-rp-llama-3.1-8b',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.8,
+              output_mtok: 1.6,
+            },
+          },
+        ],
       },
       {
         id: 'alfredpros/codellama-7b-instruct-solidity',
@@ -28074,6 +28176,7 @@ export const data: Provider[] = [
       },
       {
         id: 'amazon/nova-lite-v1',
+        name: 'Nova Lite 1.0',
         match: {
           equals: 'amazon/nova-lite-v1',
         },
@@ -28085,6 +28188,7 @@ export const data: Provider[] = [
       },
       {
         id: 'amazon/nova-micro-v1',
+        name: 'Nova Micro 1.0',
         match: {
           equals: 'amazon/nova-micro-v1',
         },
@@ -28109,6 +28213,7 @@ export const data: Provider[] = [
       },
       {
         id: 'amazon/nova-pro-v1',
+        name: 'Nova Pro 1.0',
         match: {
           equals: 'amazon/nova-pro-v1',
         },
@@ -28130,14 +28235,29 @@ export const data: Provider[] = [
       },
       {
         id: 'anthracite-org/magnum-v4-72b',
+        name: 'Magnum v4 72B',
         match: {
           equals: 'anthracite-org/magnum-v4-72b',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 1.5,
-          output_mtok: 2.25,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.5,
+              output_mtok: 2.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.5,
+              output_mtok: 5,
+            },
+          },
+        ],
       },
       {
         id: 'anthropic/claude-2',
@@ -28288,6 +28408,7 @@ export const data: Provider[] = [
       },
       {
         id: 'anthropic/claude-fable-5',
+        name: 'Claude Fable 5',
         match: {
           or: [
             {
@@ -28295,6 +28416,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-fable-5:beta',
+            },
+            {
+              equals: 'anthropic/claude-5-fable-20260609',
             },
           ],
         },
@@ -28310,6 +28434,7 @@ export const data: Provider[] = [
       },
       {
         id: 'anthropic/claude-fable-5.1',
+        name: 'Claude Fable 5.1',
         match: {
           or: [
             {
@@ -28317,6 +28442,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-fable-5.1:beta',
+            },
+            {
+              equals: 'anthropic/claude-fable-5.1-20260831',
             },
           ],
         },
@@ -28331,7 +28459,36 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-fable-5.1:batch',
+        name: 'Claude Fable 5.1 (batch)',
+        match: {
+          equals: 'anthropic/claude-fable-5.1:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-fable-5:batch',
+        name: 'Claude Fable 5 (batch)',
+        match: {
+          equals: 'anthropic/claude-fable-5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'anthropic/claude-haiku-4.5',
+        name: 'Claude Haiku 4.5',
         match: {
           or: [
             {
@@ -28363,7 +28520,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-haiku-4.5:batch',
+        name: 'Claude Haiku 4.5 (batch)',
+        match: {
+          equals: 'anthropic/claude-haiku-4.5:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.5,
+          cache_write_mtok: 0.625,
+          cache_read_mtok: 0.05,
+          output_mtok: 2.5,
+        },
+      },
+      {
         id: 'anthropic/claude-haiku-5.5',
+        name: 'Claude Haiku 5.5',
         match: {
           or: [
             {
@@ -28371,6 +28543,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^anthropic/claude-haiku-5\\.5-\\d{8}$',
+            },
+            {
+              equals: 'anthropic/claude-haiku-5.5-20261007',
             },
           ],
         },
@@ -28495,6 +28670,9 @@ export const data: Provider[] = [
             {
               equals: 'anthropic/claude-opus-4.1',
             },
+            {
+              equals: 'anthropic/claude-4.1-opus-20250805',
+            },
           ],
         },
         context_window: 200000,
@@ -28506,7 +28684,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-4.1:batch',
+        name: 'Claude Opus 4.1 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-4.1:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 7.5,
+          cache_write_mtok: 9.375,
+          cache_read_mtok: 0.75,
+          output_mtok: 37.5,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-4.5',
+        name: 'Claude Opus 4.5',
         match: {
           or: [
             {
@@ -28538,7 +28731,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-4.5:batch',
+        name: 'Claude Opus 4.5 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-4.5:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 2.5,
+          cache_write_mtok: 3.125,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-4.6',
+        name: 'Claude Opus 4.6',
         match: {
           or: [
             {
@@ -28585,7 +28793,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-4.6:batch',
+        name: 'Claude Opus 4.6 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-4.6:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2.5,
+          cache_write_mtok: 3.125,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-4.7',
+        name: 'Claude Opus 4.7',
         match: {
           or: [
             {
@@ -28593,6 +28816,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-4.7:beta',
+            },
+            {
+              equals: 'anthropic/claude-4.7-opus-20260416',
             },
           ],
         },
@@ -28621,7 +28847,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-4.7:batch',
+        name: 'Claude Opus 4.7 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-4.7:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2.5,
+          cache_write_mtok: 3.125,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-4.8',
+        name: 'Claude Opus 4.8',
         match: {
           or: [
             {
@@ -28629,6 +28870,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-4.8:beta',
+            },
+            {
+              equals: 'anthropic/claude-4.8-opus-20260528',
             },
           ],
         },
@@ -28657,7 +28901,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-opus-4.8:batch',
+        name: 'Claude Opus 4.8 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-4.8:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2.5,
+          cache_write_mtok: 3.125,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
+        },
+      },
+      {
         id: 'anthropic/claude-opus-5',
+        name: 'Claude Opus 5',
         match: {
           or: [
             {
@@ -28665,6 +28924,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-5:beta',
+            },
+            {
+              equals: 'anthropic/claude-opus-5-20260723',
             },
           ],
         },
@@ -28696,6 +28958,7 @@ export const data: Provider[] = [
       },
       {
         id: 'anthropic/claude-opus-5.5',
+        name: 'Claude Opus 5.5',
         match: {
           or: [
             {
@@ -28703,6 +28966,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-5.5:beta',
+            },
+            {
+              equals: 'anthropic/claude-opus-5.5-20260921',
             },
           ],
         },
@@ -28714,6 +28980,34 @@ export const data: Provider[] = [
           cache_write_mtok: 5,
           cache_read_mtok: 0.2,
           output_mtok: 20,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-5.5:batch',
+        name: 'Claude Opus 5.5 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-5.5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-5:batch',
+        name: 'Claude Opus 5 (batch)',
+        match: {
+          equals: 'anthropic/claude-opus-5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2.5,
+          cache_write_mtok: 3.125,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
         },
       },
       {
@@ -28731,6 +29025,7 @@ export const data: Provider[] = [
       },
       {
         id: 'anthropic/claude-sonnet-4.5',
+        name: 'Claude Sonnet 4.5',
         match: {
           or: [
             {
@@ -28796,7 +29091,54 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-sonnet-4.5:batch',
+        name: 'Claude Sonnet 4.5 (batch)',
+        match: {
+          equals: 'anthropic/claude-sonnet-4.5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 1.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 3,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.875,
+            tiers: [
+              {
+                start: 200000,
+                price: 3.75,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.15,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.3,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 7.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 11.25,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'anthropic/claude-sonnet-4.6',
+        name: 'Claude Sonnet 4.6',
         match: {
           or: [
             {
@@ -28830,7 +29172,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-sonnet-4.6:batch',
+        name: 'Claude Sonnet 4.6 (batch)',
+        match: {
+          equals: 'anthropic/claude-sonnet-4.6:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.5,
+          cache_write_mtok: 1.875,
+          cache_read_mtok: 0.15,
+          output_mtok: 7.5,
+        },
+      },
+      {
         id: 'anthropic/claude-sonnet-5',
+        name: 'Claude Sonnet 5',
         match: {
           or: [
             {
@@ -28838,6 +29195,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-sonnet-5:beta',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-5-20260630',
             },
           ],
         },
@@ -28853,6 +29213,7 @@ export const data: Provider[] = [
       },
       {
         id: 'anthropic/claude-sonnet-5.5',
+        name: 'Claude Sonnet 5.5',
         match: {
           or: [
             {
@@ -28860,6 +29221,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-sonnet-5.5:beta',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-5.5-20260928',
             },
           ],
         },
@@ -28871,6 +29235,34 @@ export const data: Provider[] = [
           cache_write_mtok: 2.5,
           cache_read_mtok: 0.1,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'anthropic/claude-sonnet-5.5:batch',
+        name: 'Claude Sonnet 5.5 (batch)',
+        match: {
+          equals: 'anthropic/claude-sonnet-5.5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.05,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'anthropic/claude-sonnet-5:batch',
+        name: 'Claude Sonnet 5 (batch)',
+        match: {
+          equals: 'anthropic/claude-sonnet-5:batch',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
         },
       },
       {
@@ -28902,11 +29294,26 @@ export const data: Provider[] = [
           equals: 'arcee-ai/trinity-large-thinking',
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.22,
-          cache_read_mtok: 0.06,
-          output_mtok: 0.85,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.22,
+              cache_read_mtok: 0.06,
+              output_mtok: 0.85,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.06,
+              output_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'arcee-ai/trinity-mini',
@@ -28972,49 +29379,251 @@ export const data: Provider[] = [
         id: 'bytedance-seed/seed-1.6',
         name: 'Seed 1.6',
         match: {
-          equals: 'bytedance-seed/seed-1.6',
+          or: [
+            {
+              equals: 'bytedance-seed/seed-1.6',
+            },
+            {
+              equals: 'bytedance-seed/seed-1.6-20250625',
+            },
+          ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 4,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'bytedance-seed/seed-1.6-flash',
         name: 'Seed 1.6 Flash',
         match: {
-          equals: 'bytedance-seed/seed-1.6-flash',
+          or: [
+            {
+              equals: 'bytedance-seed/seed-1.6-flash',
+            },
+            {
+              equals: 'bytedance-seed/seed-1.6-flash-20250625',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.075,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.1,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.8,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'bytedance-seed/seed-2-1-turbo',
+        name: 'Seed 2.1 Turbo',
+        match: {
+          or: [
+            {
+              equals: 'bytedance-seed/seed-2-1-turbo',
+            },
+            {
+              equals: 'bytedance-seed/seed-2-1-turbo-20260810',
+            },
+          ],
         },
         context_window: 262144,
         prices: {
-          input_mtok: 0.075,
-          output_mtok: 0.3,
+          input_mtok: 0.5,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'bytedance-seed/seed-2.0-code',
+        name: 'Seed-2.0-Code',
+        match: {
+          or: [
+            {
+              equals: 'bytedance-seed/seed-2.0-code',
+            },
+            {
+              equals: 'bytedance-seed/seed-2.0-code-20260730',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 128000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 128000,
+                price: 6,
+              },
+            ],
+          },
         },
       },
       {
         id: 'bytedance-seed/seed-2.0-lite',
         name: 'Seed-2.0-Lite',
         match: {
-          equals: 'bytedance-seed/seed-2.0-lite',
+          or: [
+            {
+              equals: 'bytedance-seed/seed-2.0-lite',
+            },
+            {
+              equals: 'bytedance-seed/seed-2.0-lite-20260309',
+            },
+          ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.25,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.5,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 4,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'bytedance-seed/seed-2.0-mini',
         name: 'Seed-2.0-Mini',
         match: {
-          equals: 'bytedance-seed/seed-2.0-mini',
+          or: [
+            {
+              equals: 'bytedance-seed/seed-2.0-mini',
+            },
+            {
+              equals: 'bytedance-seed/seed-2.0-mini-20260224',
+            },
+          ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 128000,
+                    price: 0.8,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'bytedance/ui-tars-1.5-7b',
@@ -29228,6 +29837,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'cognitivecomputations/dolphin-mistral-24b-venice-edition',
+        name: 'Uncensored',
+        match: {
+          or: [
+            {
+              equals: 'cognitivecomputations/dolphin-mistral-24b-venice-edition',
+            },
+            {
+              equals: 'venice/uncensored',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'cognitivecomputations/dolphin-mistral-24b-venice-edition:free',
         name: 'Uncensored (free)',
         match: {
@@ -29281,13 +29909,41 @@ export const data: Provider[] = [
       },
       {
         id: 'cohere/command-a',
+        name: 'Command A',
         match: {
-          equals: 'cohere/command-a',
+          or: [
+            {
+              equals: 'cohere/command-a',
+            },
+            {
+              equals: 'cohere/command-a-03-2025',
+            },
+          ],
         },
         context_window: 256000,
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'cohere/command-a-plus',
+        name: 'Command A+',
+        match: {
+          or: [
+            {
+              equals: 'cohere/command-a-plus',
+            },
+            {
+              equals: 'cohere/command-a-plus-05-2026',
+            },
+          ],
+        },
+        context_window: 192000,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.15,
+          output_mtok: 1.5,
         },
       },
       {
@@ -29309,6 +29965,7 @@ export const data: Provider[] = [
       },
       {
         id: 'cohere/command-r-08-2024',
+        name: 'Command R (08-2024)',
         match: {
           equals: 'cohere/command-r-08-2024',
         },
@@ -29337,6 +29994,7 @@ export const data: Provider[] = [
       },
       {
         id: 'cohere/command-r-plus-08-2024',
+        name: 'Command R+ (08-2024)',
         match: {
           equals: 'cohere/command-r-plus-08-2024',
         },
@@ -29348,6 +30006,7 @@ export const data: Provider[] = [
       },
       {
         id: 'cohere/command-r7b-12-2024',
+        name: 'Command R7B (12-2024)',
         match: {
           equals: 'cohere/command-r7b-12-2024',
         },
@@ -29356,6 +30015,15 @@ export const data: Provider[] = [
           input_mtok: 0.0375,
           output_mtok: 0.15,
         },
+      },
+      {
+        id: 'cohere/north-mini-code:free',
+        name: 'North Mini Code (free)',
+        match: {
+          equals: 'cohere/north-mini-code:free',
+        },
+        context_window: 256000,
+        prices: {},
       },
       {
         id: 'command',
@@ -29581,12 +30249,33 @@ export const data: Provider[] = [
         id: 'deepseek/deepseek-chat',
         name: 'DeepSeek V3',
         match: {
-          equals: 'deepseek/deepseek-chat',
+          or: [
+            {
+              equals: 'deepseek/deepseek-chat',
+            },
+            {
+              equals: 'deepseek/deepseek-chat-v3',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.38,
-          output_mtok: 0.89,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.38,
+              output_mtok: 0.89,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.32,
+              output_mtok: 0.89,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-chat-v3-0324',
@@ -29595,10 +30284,25 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-chat-v3-0324',
         },
         context_window: 163840,
-        prices: {
-          input_mtok: 0.3,
-          output_mtok: 0.88,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.3,
+              output_mtok: 0.88,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.29,
+              cache_read_mtok: 0.11,
+              output_mtok: 1.14,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-chat-v3-0324:free',
@@ -29613,11 +30317,26 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-chat-v3.1',
         },
-        prices: {
-          input_mtok: 0.21,
-          cache_read_mtok: 0.13,
-          output_mtok: 0.79,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.21,
+              cache_read_mtok: 0.13,
+              output_mtok: 0.79,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.13,
+              output_mtok: 0.95,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-chat:free',
@@ -29633,10 +30352,24 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-r1',
         },
         context_window: 64000,
-        prices: {
-          input_mtok: 0.45,
-          output_mtok: 2.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.45,
+              output_mtok: 2.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 2.5,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-r1-0528',
@@ -29644,10 +30377,25 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-r1-0528',
         },
-        prices: {
-          input_mtok: 0.5,
-          output_mtok: 2.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 2.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.35,
+              output_mtok: 2.15,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-r1-distill-llama-70b',
@@ -29751,21 +30499,57 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v3.1-terminus',
         },
         context_window: 163840,
-        prices: {
-          input_mtok: 0.23,
-          output_mtok: 0.9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.23,
+              output_mtok: 0.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.27,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v3.2',
         name: 'DeepSeek V3.2',
         match: {
-          equals: 'deepseek/deepseek-v3.2',
+          or: [
+            {
+              equals: 'deepseek/deepseek-v3.2',
+            },
+            {
+              equals: 'deepseek/deepseek-v3.2-20251201',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.2288,
-          output_mtok: 0.3432,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2288,
+              output_mtok: 0.3432,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.28,
+              cache_read_mtok: 0.028,
+              output_mtok: 0.42,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v3.2-exp',
@@ -29783,24 +30567,161 @@ export const data: Provider[] = [
         id: 'deepseek/deepseek-v4-flash',
         name: 'DeepSeek V4 Flash',
         match: {
-          equals: 'deepseek/deepseek-v4-flash',
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-flash',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-flash-20260423',
+            },
+          ],
         },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.0983,
+              cache_read_mtok: 0.0197,
+              output_mtok: 0.1966,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.091,
+              cache_read_mtok: 0.0182,
+              output_mtok: 0.182,
+            },
+          },
+        ],
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-flash-0731',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-flash-20260731',
+            },
+          ],
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.0983,
-          cache_read_mtok: 0.0197,
-          output_mtok: 0.1966,
+          input_mtok: 0.15,
+          cache_read_mtok: 0.042,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash-vision-exp',
+        name: 'DeepSeek V4 Flash Vision Exp',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-flash-vision-exp',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-flash-vision-exp-20260821',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.2156,
+          cache_read_mtok: 0.00686,
+          output_mtok: 0.6468,
         },
       },
       {
         id: 'deepseek/deepseek-v4-pro',
         name: 'DeepSeek V4 Pro',
         match: {
-          equals: 'deepseek/deepseek-v4-pro',
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-pro',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-pro-20260423',
+            },
+          ],
         },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.435,
+              cache_read_mtok: 0.003625,
+              output_mtok: 0.87,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.95526,
+              cache_read_mtok: 0.079605,
+              output_mtok: 1.91052,
+            },
+          },
+        ],
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-pro-0813',
+            },
+            {
+              equals: 'deepseek/deepseek-v4-pro-20260813',
+            },
+          ],
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 0.435,
-          cache_read_mtok: 0.003625,
-          output_mtok: 0.87,
+          input_mtok: 0.66,
+          cache_read_mtok: 0.022,
+          output_mtok: 1.98,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4.1-flash',
+            },
+            {
+              equals: 'deepseek/deepseek-v4.1-flash-20260910',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.0448,
+          cache_read_mtok: 0.0016,
+          output_mtok: 0.08,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4.1-flash:batch',
+        name: 'DeepSeek V4.1 Flash (batch)',
+        match: {
+          equals: 'deepseek/deepseek-v4.1-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.004,
+          output_mtok: 0.15,
         },
       },
       {
@@ -29861,6 +30782,15 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'dots-studio/dots-3-note-preview:free',
+        name: 'Dots3-Note Preview (free)',
+        match: {
+          equals: 'dots-studio/dots-3-note-preview:free',
+        },
+        context_window: 512000,
+        prices: {},
+      },
+      {
         id: 'eleutherai/llemma_7b',
         match: {
           equals: 'eleutherai/llemma_7b',
@@ -29868,6 +30798,26 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.8,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'elorian/glimpse',
+        name: 'Glimpse',
+        match: {
+          or: [
+            {
+              equals: 'elorian/glimpse',
+            },
+            {
+              equals: 'elorian/glimpse-20261016',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 3,
         },
       },
       {
@@ -29960,6 +30910,26 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.8,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'fireworks/ember-1',
+        name: 'Ember-1',
+        match: {
+          or: [
+            {
+              equals: 'fireworks/ember-1',
+            },
+            {
+              equals: 'fireworks/ember-1-20260923',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
@@ -30275,12 +31245,28 @@ export const data: Provider[] = [
           equals: 'google/gemini-2.5-flash',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.3,
-          cache_write_mtok: 0.3833,
-          cache_read_mtok: 0.075,
-          output_mtok: 2.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.3,
+              cache_write_mtok: 0.3833,
+              cache_read_mtok: 0.075,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_write_mtok: 0.0833333333333333,
+              cache_read_mtok: 0.03,
+              output_mtok: 2.5,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemini-2.5-flash-image',
@@ -30322,6 +31308,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-2.5-flash-lite:batch',
+        name: 'Gemini 2.5 Flash Lite (batch)',
+        match: {
+          equals: 'google/gemini-2.5-flash-lite:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.05,
+          cache_write_mtok: 0.04166666666666665,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.2,
+        },
+      },
+      {
         id: 'google/gemini-2.5-flash-preview',
         match: {
           equals: 'google/gemini-2.5-flash-preview',
@@ -30355,6 +31355,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-2.5-flash:batch',
+        name: 'Gemini 2.5 Flash (batch)',
+        match: {
+          equals: 'google/gemini-2.5-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_write_mtok: 0.04166666666666665,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.25,
+        },
+      },
+      {
         id: 'google/gemini-2.5-pro',
         name: 'Gemini 2.5 Pro',
         match: {
@@ -30371,12 +31385,52 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.25,
-          cache_write_mtok: 1.625,
-          cache_read_mtok: 0.31,
-          output_mtok: 10,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.25,
+              cache_write_mtok: 1.625,
+              cache_read_mtok: 0.31,
+              output_mtok: 10,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_write_mtok: 0.375,
+              cache_read_mtok: {
+                base: 0.125,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.25,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'google/gemini-2.5-pro-exp-03-25:free',
@@ -30396,10 +31450,55 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-2.5-pro:batch',
+        name: 'Gemini 2.5 Pro (batch)',
+        match: {
+          equals: 'google/gemini-2.5-pro:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: {
+            base: 0.625,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.25,
+              },
+            ],
+          },
+          cache_write_mtok: 0.1875,
+          cache_read_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.25,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'google/gemini-3-flash-preview',
         name: 'Gemini 3 Flash Preview',
         match: {
-          equals: 'google/gemini-3-flash-preview',
+          or: [
+            {
+              equals: 'google/gemini-3-flash-preview',
+            },
+            {
+              equals: 'google/gemini-3-flash-preview-20251217',
+            },
+          ],
         },
         context_window: 1048576,
         prices: {
@@ -30410,10 +31509,51 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-3-flash-preview:batch',
+        name: 'Gemini 3 Flash Preview (batch)',
+        match: {
+          equals: 'google/gemini-3-flash-preview:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.25,
+          cache_write_mtok: 0.04166666666666665,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'google/gemini-3-pro-image',
+        name: 'Nano Banana Pro (Gemini 3 Pro Image)',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3-pro-image',
+            },
+            {
+              equals: 'google/gemini-3-pro-image-20260528',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.2,
+          output_mtok: 12,
+        },
+      },
+      {
         id: 'google/gemini-3-pro-image-preview',
         name: 'Nano Banana Pro (Gemini 3 Pro Image Preview)',
         match: {
-          equals: 'google/gemini-3-pro-image-preview',
+          or: [
+            {
+              equals: 'google/gemini-3-pro-image-preview',
+            },
+            {
+              equals: 'google/gemini-3-pro-image-preview-20251120',
+            },
+          ],
         },
         context_window: 65536,
         prices: {
@@ -30424,10 +31564,36 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-3.1-flash-image',
+        name: 'Nano Banana 2 (Gemini 3.1 Flash Image)',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.1-flash-image',
+            },
+            {
+              equals: 'google/gemini-3.1-flash-image-20260528',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'google/gemini-3.1-flash-image-preview',
         name: 'Nano Banana 2 (Gemini 3.1 Flash Image Preview)',
         match: {
-          equals: 'google/gemini-3.1-flash-image-preview',
+          or: [
+            {
+              equals: 'google/gemini-3.1-flash-image-preview',
+            },
+            {
+              equals: 'google/gemini-3.1-flash-image-preview-20260226',
+            },
+          ],
         },
         context_window: 65536,
         prices: {
@@ -30446,6 +31612,9 @@ export const data: Provider[] = [
             {
               equals: 'google/gemini-3.1-flash-lite-preview',
             },
+            {
+              equals: 'google/gemini-3.1-flash-lite-20260507',
+            },
           ],
         },
         context_window: 1048576,
@@ -30454,6 +31623,39 @@ export const data: Provider[] = [
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.025,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'google/gemini-3.1-flash-lite-image',
+        name: 'Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.1-flash-lite-image',
+            },
+            {
+              equals: 'google/gemini-3.1-flash-lite-image-20260630',
+            },
+          ],
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'google/gemini-3.1-flash-lite:batch',
+        name: 'Gemini 3.1 Flash Lite (batch)',
+        match: {
+          equals: 'google/gemini-3.1-flash-lite:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.125,
+          cache_write_mtok: 0.04166666666666665,
+          cache_read_mtok: 0.0125,
+          output_mtok: 0.75,
         },
       },
       {
@@ -30467,14 +31669,86 @@ export const data: Provider[] = [
             {
               equals: 'google/gemini-3.1-pro-preview-customtools',
             },
+            {
+              equals: 'google/gemini-3.1-pro-preview-20260219',
+            },
           ],
         },
         context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 0.375,
+              cache_read_mtok: 0.2,
+              output_mtok: 12,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: 0.375,
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 18,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'google/gemini-3.1-pro-preview:batch',
+        name: 'Gemini 3.1 Pro Preview (batch)',
+        match: {
+          equals: 'google/gemini-3.1-pro-preview:batch',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 2,
-          cache_write_mtok: 0.375,
-          cache_read_mtok: 0.2,
-          output_mtok: 12,
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: 0.1875,
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 9,
+              },
+            ],
+          },
         },
       },
       {
@@ -30488,6 +31762,9 @@ export const data: Provider[] = [
             {
               regex: '^google/gemini-3\\.5-flash-\\d{8}$',
             },
+            {
+              equals: 'google/gemini-3.5-flash-20260519',
+            },
           ],
         },
         context_window: 1048576,
@@ -30496,6 +31773,125 @@ export const data: Provider[] = [
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+        },
+      },
+      {
+        id: 'google/gemini-3.5-flash-lite',
+        name: 'Gemini 3.5 Flash Lite',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.5-flash-lite',
+            },
+            {
+              equals: 'google/gemini-3.5-flash-lite-20260721',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          cache_write_mtok: 0.0833333333333333,
+          cache_read_mtok: 0.03,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'google/gemini-3.5-flash-lite:batch',
+        name: 'Gemini 3.5 Flash Lite (batch)',
+        match: {
+          equals: 'google/gemini-3.5-flash-lite:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_write_mtok: 0.04166666666666665,
+          cache_read_mtok: 0.015,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'google/gemini-3.5-flash:batch',
+        name: 'Gemini 3.5 Flash (batch)',
+        match: {
+          equals: 'google/gemini-3.5-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.04166666666666665,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
+        },
+      },
+      {
+        id: 'google/gemini-3.6-flash',
+        name: 'Gemini 3.6 Flash',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.6-flash',
+            },
+            {
+              equals: 'google/gemini-3.6-flash-20260721',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.0416666666666667,
+          cache_read_mtok: 0.075,
+          output_mtok: 3.75,
+        },
+      },
+      {
+        id: 'google/gemini-3.6-flash:batch',
+        name: 'Gemini 3.6 Flash (batch)',
+        match: {
+          equals: 'google/gemini-3.6-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.375,
+          cache_write_mtok: 0.0416666666666667,
+          cache_read_mtok: 0.0375,
+          output_mtok: 1.875,
+        },
+      },
+      {
+        id: 'google/gemini-3.7-flash',
+        name: 'Gemini 3.7 Flash',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-3.7-flash',
+            },
+            {
+              equals: 'google/gemini-3.7-flash-20260813',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.0416666666666667,
+          cache_read_mtok: 0.075,
+          output_mtok: 3.75,
+        },
+      },
+      {
+        id: 'google/gemini-3.7-flash:batch',
+        name: 'Gemini 3.7 Flash (batch)',
+        match: {
+          equals: 'google/gemini-3.7-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.375,
+          cache_write_mtok: 0.0416666666666667,
+          cache_read_mtok: 0.0375,
+          output_mtok: 1.875,
         },
       },
       {
@@ -30509,14 +31905,82 @@ export const data: Provider[] = [
             {
               regex: '^google/gemini-3\\.8-flash-\\d{8}$',
             },
+            {
+              equals: 'google/gemini-3.8-flash-20260902',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.75,
+              cache_write_mtok: 0.041666666666666664,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.825,
+              cache_write_mtok: 0.041666666666666664,
+              cache_read_mtok: 0.0825,
+              output_mtok: 4.125,
+            },
+          },
+        ],
+      },
+      {
+        id: 'google/gemini-3.8-flash:batch',
+        name: 'Gemini 3.8 Flash (batch)',
+        match: {
+          equals: 'google/gemini-3.8-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.375,
+          cache_write_mtok: 0.0416666666666667,
+          cache_read_mtok: 0.0375,
+          output_mtok: 1.875,
+        },
+      },
+      {
+        id: 'google/gemini-4-argon',
+        name: 'Gemini 4 Argon',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-4-argon',
+            },
+            {
+              equals: 'google/gemini-4-argon-20261013',
+            },
           ],
         },
         context_window: 1048576,
         prices: {
-          input_mtok: 0.75,
-          cache_write_mtok: 0.041666666666666664,
-          cache_read_mtok: 0.075,
-          output_mtok: 3.75,
+          input_mtok: 2,
+          cache_write_mtok: 0.1875,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'google/gemini-4-argon:batch',
+        name: 'Gemini 4 Argon (batch)',
+        match: {
+          equals: 'google/gemini-4-argon:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 0.1875,
+          cache_read_mtok: 0.05,
+          output_mtok: 5,
         },
       },
       {
@@ -30545,6 +32009,25 @@ export const data: Provider[] = [
           equals: 'google/gemini-flash-1.5-8b-exp',
         },
         prices: {},
+      },
+      {
+        id: 'google/gemini-nano-banana-2.1',
+        name: 'Nano Banana 2.1',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-nano-banana-2.1',
+            },
+            {
+              equals: 'google/gemini-nano-banana-2.1-20261006',
+            },
+          ],
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 7.5,
+        },
       },
       {
         id: 'google/gemini-pro',
@@ -30580,10 +32063,24 @@ export const data: Provider[] = [
           equals: 'google/gemma-2-27b-it',
         },
         context_window: 8192,
-        prices: {
-          input_mtok: 0.8,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.8,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.65,
+              output_mtok: 0.65,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-2-9b-it',
@@ -30609,10 +32106,24 @@ export const data: Provider[] = [
           equals: 'google/gemma-3-12b-it',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.15,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-3-12b-it:free',
@@ -30634,10 +32145,25 @@ export const data: Provider[] = [
         match: {
           equals: 'google/gemma-3-27b-it',
         },
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.08,
+              cache_read_mtok: 0.04,
+              output_mtok: 0.35,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-3-27b-it:free',
@@ -30653,10 +32179,24 @@ export const data: Provider[] = [
           equals: 'google/gemma-3-4b-it',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.04,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.02,
+              output_mtok: 0.04,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.1,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-3-4b-it:free',
@@ -30680,12 +32220,34 @@ export const data: Provider[] = [
         id: 'google/gemma-4-26b-a4b-it',
         name: 'Gemma 4 26B A4B',
         match: {
-          equals: 'google/gemma-4-26b-a4b-it',
+          or: [
+            {
+              equals: 'google/gemma-4-26b-a4b-it',
+            },
+            {
+              equals: 'google/gemma-4-26b-a4b-it-20260403',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.33,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.06,
+              output_mtok: 0.33,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'google/gemma-4-26b-a4b-it:free',
@@ -30700,7 +32262,14 @@ export const data: Provider[] = [
         id: 'google/gemma-4-31b-it',
         name: 'Gemma 4 31B',
         match: {
-          equals: 'google/gemma-4-31b-it',
+          or: [
+            {
+              equals: 'google/gemma-4-31b-it',
+            },
+            {
+              equals: 'google/gemma-4-31b-it-20260402',
+            },
+          ],
         },
         context_window: 262144,
         price_comments:
@@ -30722,6 +32291,17 @@ export const data: Provider[] = [
               input_mtok: 0.09,
               cache_read_mtok: 0.05,
               output_mtok: 0.34,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.4,
             },
           },
         ],
@@ -30746,7 +32326,14 @@ export const data: Provider[] = [
         id: 'google/lyria-3-clip-preview',
         name: 'Lyria 3 Clip Preview',
         match: {
-          equals: 'google/lyria-3-clip-preview',
+          or: [
+            {
+              equals: 'google/lyria-3-clip-preview',
+            },
+            {
+              equals: 'google/lyria-3-clip-preview-20260330',
+            },
+          ],
         },
         context_window: 1048576,
         prices: {},
@@ -30755,7 +32342,14 @@ export const data: Provider[] = [
         id: 'google/lyria-3-pro-preview',
         name: 'Lyria 3 Pro Preview',
         match: {
-          equals: 'google/lyria-3-pro-preview',
+          or: [
+            {
+              equals: 'google/lyria-3-pro-preview',
+            },
+            {
+              equals: 'google/lyria-3-pro-preview-20260330',
+            },
+          ],
         },
         context_window: 1048576,
         prices: {},
@@ -30923,13 +32517,28 @@ export const data: Provider[] = [
       },
       {
         id: 'gryphe/mythomax-l2-13b',
+        name: 'MythoMax 13B',
         match: {
           equals: 'gryphe/mythomax-l2-13b',
         },
-        prices: {
-          input_mtok: 0.065,
-          output_mtok: 0.065,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.065,
+              output_mtok: 0.065,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.11,
+            },
+          },
+        ],
       },
       {
         id: 'hermes-2-pro-llama-3-8b',
@@ -30974,16 +32583,63 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'ibm-granite/granite-4.2-8b',
+        name: 'Granite 4.2 8B',
+        match: {
+          or: [
+            {
+              equals: 'ibm-granite/granite-4.2-8b',
+            },
+            {
+              equals: 'ibm-granite/granite-4.2-8b-20260831',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'inception/mercury-2',
         name: 'Mercury 2',
         match: {
-          equals: 'inception/mercury-2',
+          or: [
+            {
+              equals: 'inception/mercury-2',
+            },
+            {
+              equals: 'inception/mercury-2-20260304',
+            },
+          ],
         },
         context_window: 128000,
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
           output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'inception/mercury-2.5',
+        name: 'Mercury 2.5',
+        match: {
+          or: [
+            {
+              equals: 'inception/mercury-2.5',
+            },
+            {
+              equals: 'inception/mercury-2.5-20260908',
+            },
+          ],
+        },
+        context_window: 260000,
+        prices: {
+          input_mtok: 0.04,
+          cache_read_mtok: 0.004,
+          output_mtok: 0.15,
         },
       },
       {
@@ -31011,6 +32667,66 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inclusionai/ling-3.0-flash',
+        name: 'Ling 3.0 Flash',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-20260723',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.021,
+          cache_read_mtok: 0.0042,
+          output_mtok: 0.063,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.0-flash-vl',
+        name: 'Ling 3.0 Flash VL',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl',
+            },
+            {
+              equals: 'inclusionai/ling-3.0-flash-vl-20260910',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          cache_read_mtok: 0.012,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'inclusionai/ling-3.1-flash',
+        name: 'Ling 3.1 Flash',
+        match: {
+          or: [
+            {
+              equals: 'inclusionai/ling-3.1-flash',
+            },
+            {
+              equals: 'inclusionai/ling-3.1-flash-20261002',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.225,
+        },
+      },
+      {
         id: 'inclusionai/ring-2.6-1t',
         name: 'Ring-2.6-1T',
         match: {
@@ -31020,6 +32736,44 @@ export const data: Provider[] = [
           input_mtok: 0.075,
           cache_read_mtok: 0.015,
           output_mtok: 0.625,
+        },
+      },
+      {
+        id: 'inference-net/schematron-v2-small',
+        name: 'Schematron V2 Small',
+        match: {
+          or: [
+            {
+              equals: 'inference-net/schematron-v2-small',
+            },
+            {
+              equals: 'inference-net/schematron-v2-small-20260902',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.23,
+        },
+      },
+      {
+        id: 'inference-net/schematron-v2-turbo',
+        name: 'Schematron V2 Turbo',
+        match: {
+          or: [
+            {
+              equals: 'inference-net/schematron-v2-turbo',
+            },
+            {
+              equals: 'inference-net/schematron-v2-turbo-20260902',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.15,
         },
       },
       {
@@ -31210,6 +32964,35 @@ export const data: Provider[] = [
           equals: 'liquid/lfm-2.5-1.2b-thinking:free',
         },
         prices: {},
+      },
+      {
+        id: 'liquid/lfm-2.5-2.6b:free',
+        name: 'LFM2.5-2.6B (free)',
+        match: {
+          equals: 'liquid/lfm-2.5-2.6b:free',
+        },
+        context_window: 65536,
+        prices: {},
+      },
+      {
+        id: 'liquid/lfm-2.5-24b-a2b',
+        name: 'LFM2.5-24B-A2B',
+        match: {
+          or: [
+            {
+              equals: 'liquid/lfm-2.5-24b-a2b',
+            },
+            {
+              equals: 'liquid/lfm-2.5-24b-a2b-20261012',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.025,
+          output_mtok: 0.7,
+        },
       },
       {
         id: 'liquid/lfm-3b',
@@ -31542,13 +33325,48 @@ export const data: Provider[] = [
       },
       {
         id: 'mancer/weaver',
+        name: 'Weaver (alpha)',
         match: {
           equals: 'mancer/weaver',
         },
         context_window: 8000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.125,
+              output_mtok: 1.125,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 0.75,
+            },
+          },
+        ],
+      },
+      {
+        id: 'meituan/longcat-2.0',
+        name: 'LongCat 2.0',
+        match: {
+          or: [
+            {
+              equals: 'meituan/longcat-2.0',
+            },
+            {
+              equals: 'meituan/longcat-2.0-20260720',
+            },
+          ],
+        },
+        context_window: 1048756,
         prices: {
-          input_mtok: 1.125,
-          output_mtok: 1.125,
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
         },
       },
       {
@@ -31638,20 +33456,50 @@ export const data: Provider[] = [
           equals: 'meta-llama/llama-3.1-70b-instruct',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.28,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.28,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 0.4,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.1-8b-instruct',
+        name: 'Llama 3.1 8B Instruct',
         match: {
           equals: 'meta-llama/llama-3.1-8b-instruct',
         },
-        prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.03,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.02,
+              output_mtok: 0.03,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.025,
+              output_mtok: 0.08,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.1-8b-instruct:free',
@@ -31685,10 +33533,24 @@ export const data: Provider[] = [
           equals: 'meta-llama/llama-3.2-1b-instruct',
         },
         context_window: 60000,
-        prices: {
-          input_mtok: 0.005,
-          output_mtok: 0.01,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.005,
+              output_mtok: 0.01,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.027,
+              output_mtok: 0.201,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.2-1b-instruct:free',
@@ -31703,10 +33565,24 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.2-3b-instruct',
         },
-        prices: {
-          input_mtok: 0.01,
-          output_mtok: 0.02,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.01,
+              output_mtok: 0.02,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0509,
+              output_mtok: 0.335,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.2-3b-instruct:free',
@@ -31732,10 +33608,24 @@ export const data: Provider[] = [
         match: {
           equals: 'meta-llama/llama-3.3-70b-instruct',
         },
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.24,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.24,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.32,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-3.3-70b-instruct:free',
@@ -31749,12 +33639,34 @@ export const data: Provider[] = [
         id: 'meta-llama/llama-4-maverick',
         name: 'Llama 4 Maverick',
         match: {
-          equals: 'meta-llama/llama-4-maverick',
+          or: [
+            {
+              equals: 'meta-llama/llama-4-maverick',
+            },
+            {
+              equals: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.15,
-          output_mtok: 0.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1875,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.6525,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-4-maverick:free',
@@ -31767,12 +33679,33 @@ export const data: Provider[] = [
         id: 'meta-llama/llama-4-scout',
         name: 'Llama 4 Scout',
         match: {
-          equals: 'meta-llama/llama-4-scout',
+          or: [
+            {
+              equals: 'meta-llama/llama-4-scout',
+            },
+            {
+              equals: 'meta-llama/llama-4-scout-17b-16e-instruct',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'meta-llama/llama-4-scout:free',
@@ -31809,13 +33742,48 @@ export const data: Provider[] = [
           equals: 'meta-llama/llama-guard-4-12b',
         },
         context_window: 163840,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.05,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.18,
+              output_mtok: 0.18,
+            },
+          },
+        ],
+      },
+      {
+        id: 'meta/muse-glimmer-30b',
+        name: 'Muse Glimmer 30B',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-glimmer-30b',
+            },
+            {
+              equals: 'meta/muse-glimmer-30b-20260810',
+            },
+          ],
+        },
+        context_window: 131072,
         prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.05,
+          input_mtok: 0.3,
+          cache_read_mtok: 0.04,
+          output_mtok: 1.2,
         },
       },
       {
         id: 'meta/muse-spark-1.1',
+        name: 'Muse Spark 1.1',
         match: {
           or: [
             {
@@ -31837,6 +33805,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta/muse-spark-1.2',
+        name: 'Muse Spark 1.2',
         match: {
           or: [
             {
@@ -31858,6 +33827,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta/muse-spark-1.2-contributor',
+        name: 'Muse Spark 1.2 Contributor',
         match: {
           or: [
             {
@@ -31879,6 +33849,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta/muse-spark-1.3',
+        name: 'Muse Spark 1.3',
         match: {
           or: [
             {
@@ -31900,6 +33871,7 @@ export const data: Provider[] = [
       },
       {
         id: 'meta/muse-spark-1.3-contributor',
+        name: 'Muse Spark 1.3 Contributor',
         match: {
           or: [
             {
@@ -31920,7 +33892,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'meta/muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          or: [
+            {
+              equals: 'meta/muse-spark-open',
+            },
+            {
+              equals: 'meta/muse-spark-open-20261015',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
         id: 'meta/muse-wonder',
+        name: 'Muse Wonder',
         match: {
           or: [
             {
@@ -31972,6 +33965,7 @@ export const data: Provider[] = [
       },
       {
         id: 'microsoft/phi-4',
+        name: 'Phi 4',
         match: {
           equals: 'microsoft/phi-4',
         },
@@ -32014,14 +34008,29 @@ export const data: Provider[] = [
       },
       {
         id: 'microsoft/wizardlm-2-8x22b',
+        name: 'WizardLM-2 8x22B',
         match: {
           equals: 'microsoft/wizardlm-2-8x22b',
         },
         context_window: 65535,
-        prices: {
-          input_mtok: 0.5,
-          output_mtok: 0.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 0.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.62,
+              output_mtok: 0.62,
+            },
+          },
+        ],
       },
       {
         id: 'midnight-rose-70b',
@@ -32064,10 +34073,24 @@ export const data: Provider[] = [
           equals: 'minimax/minimax-m1',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.3,
-          output_mtok: 1.65,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.3,
+              output_mtok: 1.65,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.55,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2',
@@ -32075,11 +34098,26 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax/minimax-m2',
         },
-        prices: {
-          input_mtok: 0.255,
-          cache_read_mtok: 0.03,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.255,
+              cache_read_mtok: 0.03,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.255,
+              cache_read_mtok: 0.03,
+              output_mtok: 1.02,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2-her',
@@ -32108,11 +34146,26 @@ export const data: Provider[] = [
           equals: 'minimax/minimax-m2.1',
         },
         context_window: 204800,
-        prices: {
-          input_mtok: 0.29,
-          cache_read_mtok: 0.03,
-          output_mtok: 0.95,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.29,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.95,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.03,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -32127,11 +34180,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.27,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.95,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.7',
@@ -32146,11 +34214,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.27,
-          cache_read_mtok: 0.054,
-          output_mtok: 1.08,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.27,
+              cache_read_mtok: 0.054,
+              output_mtok: 1.08,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.06,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m3',
@@ -32340,6 +34423,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistralai/codestral-2508:batch',
+        name: 'Codestral 2508 (batch)',
+        match: {
+          equals: 'mistralai/codestral-2508:batch',
+        },
+        context_window: 256000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.45,
+        },
+      },
+      {
         id: 'mistralai/codestral-mamba',
         match: {
           equals: 'mistralai/codestral-mamba',
@@ -32422,6 +34518,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistralai/ministral-8b-2512:batch',
+        name: 'Ministral 3 8B 2512 (batch)',
+        match: {
+          equals: 'mistralai/ministral-8b-2512:batch',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0075,
+          output_mtok: 0.075,
+        },
+      },
+      {
         id: 'mistralai/mistral-7b-instruct',
         match: {
           or: [
@@ -32482,10 +34591,25 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
-        prices: {
-          input_mtok: 2,
-          output_mtok: 6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              output_mtok: 6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.2,
+              output_mtok: 6,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-large-2512',
@@ -32501,7 +34625,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistralai/mistral-large-2512:batch',
+        name: 'Mistral Large 3 2512 (batch)',
+        match: {
+          equals: 'mistralai/mistral-large-2512:batch',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 0.75,
+        },
+      },
+      {
         id: 'mistralai/mistral-large-4-0',
+        name: 'Mistral Large 4',
         match: {
           or: [
             {
@@ -32549,21 +34687,55 @@ export const data: Provider[] = [
           equals: 'mistralai/mistral-medium-3',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.4,
-          output_mtok: 2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.04,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-medium-3-5',
         name: 'Mistral Medium 3.5',
         match: {
-          equals: 'mistralai/mistral-medium-3-5',
+          or: [
+            {
+              equals: 'mistralai/mistral-medium-3-5',
+            },
+            {
+              equals: 'mistralai/mistral-medium-3.5-20260430',
+            },
+          ],
         },
         context_window: 262144,
         prices: {
           input_mtok: 1.5,
           output_mtok: 7.5,
+        },
+      },
+      {
+        id: 'mistralai/mistral-medium-3-5:batch',
+        name: 'Mistral Medium 3.5 (batch)',
+        match: {
+          equals: 'mistralai/mistral-medium-3-5:batch',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 3.75,
         },
       },
       {
@@ -32580,15 +34752,42 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistralai/mistral-medium-3.1:batch',
+        name: 'Mistral Medium 3.1 (batch)',
+        match: {
+          equals: 'mistralai/mistral-medium-3.1:batch',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'mistralai/mistral-nemo',
         name: 'Mistral Nemo',
         match: {
           equals: 'mistralai/mistral-nemo',
         },
-        prices: {
-          input_mtok: 0.01,
-          output_mtok: 0.019,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.01,
+              output_mtok: 0.019,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.029,
+              output_mtok: 0.03,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-nemo:free',
@@ -32601,13 +34800,35 @@ export const data: Provider[] = [
         id: 'mistralai/mistral-saba',
         name: 'Saba',
         match: {
-          equals: 'mistralai/mistral-saba',
+          or: [
+            {
+              equals: 'mistralai/mistral-saba',
+            },
+            {
+              equals: 'mistralai/mistral-saba-2502',
+            },
+          ],
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-small',
@@ -32626,10 +34847,24 @@ export const data: Provider[] = [
           equals: 'mistralai/mistral-small-24b-instruct-2501',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.09,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.09,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.08,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-small-24b-instruct-2501:free',
@@ -32651,16 +34886,50 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistralai/mistral-small-2603:batch',
+        name: 'Mistral Small 4 (batch)',
+        match: {
+          equals: 'mistralai/mistral-small-2603:batch',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0075,
+          output_mtok: 0.3,
+        },
+      },
+      {
         id: 'mistralai/mistral-small-3.1-24b-instruct',
         name: 'Mistral Small 3.1 24B',
         match: {
-          equals: 'mistralai/mistral-small-3.1-24b-instruct',
+          or: [
+            {
+              equals: 'mistralai/mistral-small-3.1-24b-instruct',
+            },
+            {
+              equals: 'mistralai/mistral-small-3.1-24b-instruct-2503',
+            },
+          ],
         },
         context_window: 128000,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.351,
+              output_mtok: 0.555,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-small-3.1-24b-instruct:free',
@@ -32673,12 +34942,33 @@ export const data: Provider[] = [
         id: 'mistralai/mistral-small-3.2-24b-instruct',
         name: 'Mistral Small 3.2 24B',
         match: {
-          equals: 'mistralai/mistral-small-3.2-24b-instruct',
+          or: [
+            {
+              equals: 'mistralai/mistral-small-3.2-24b-instruct',
+            },
+            {
+              equals: 'mistralai/mistral-small-3.2-24b-instruct-2506',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.075,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09375,
+              output_mtok: 0.25,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mistral-tiny',
@@ -32692,14 +34982,30 @@ export const data: Provider[] = [
       },
       {
         id: 'mistralai/mixtral-8x22b-instruct',
+        name: 'Mixtral 8x22B Instruct',
         match: {
           equals: 'mistralai/mixtral-8x22b-instruct',
         },
         context_window: 65536,
-        prices: {
-          input_mtok: 0.9,
-          output_mtok: 0.9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.9,
+              output_mtok: 0.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.2,
+              output_mtok: 6,
+            },
+          },
+        ],
       },
       {
         id: 'mistralai/mixtral-8x7b-instruct',
@@ -32789,6 +35095,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moondream/moondream3-preview',
+        name: 'Moondream 3 Preview',
+        match: {
+          or: [
+            {
+              equals: 'moondream/moondream3-preview',
+            },
+            {
+              equals: 'moondream/moondream3-preview-20261013',
+            },
+          ],
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'moondream/moondream3.1-9b-a2b',
+        name: 'Moondream 3.1',
+        match: {
+          or: [
+            {
+              equals: 'moondream/moondream3.1-9b-a2b',
+            },
+            {
+              equals: 'moondream/moondream3.1-9b-a2b-20261013',
+            },
+          ],
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 2.5,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k2',
         name: 'Kimi K2 0711',
         match: {
@@ -32816,37 +35160,103 @@ export const data: Provider[] = [
         id: 'moonshotai/kimi-k2-thinking',
         name: 'Kimi K2 Thinking',
         match: {
-          equals: 'moonshotai/kimi-k2-thinking',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2-thinking',
+            },
+            {
+              equals: 'moonshotai/kimi-k2-thinking-20251106',
+            },
+          ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.6,
-          output_mtok: 2.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.6,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.15,
+              output_mtok: 2.5,
+            },
+          },
+        ],
       },
       {
         id: 'moonshotai/kimi-k2.5',
         name: 'Kimi K2.5',
         match: {
-          equals: 'moonshotai/kimi-k2.5',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.5',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.5-0127',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.4,
-          cache_read_mtok: 0.09,
-          output_mtok: 1.9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.09,
+              output_mtok: 1.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 2.5,
+            },
+          },
+        ],
       },
       {
         id: 'moonshotai/kimi-k2.6',
         name: 'Kimi K2.6',
         match: {
-          equals: 'moonshotai/kimi-k2.6',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.6',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.6-20260420',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.68,
-          cache_read_mtok: 0.34,
-          output_mtok: 3.41,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.68,
+              cache_read_mtok: 0.34,
+              output_mtok: 3.41,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.65,
+              cache_read_mtok: 0.15,
+              output_mtok: 3.41,
+            },
+          },
+        ],
       },
       {
         id: 'moonshotai/kimi-k2.6:free',
@@ -32871,11 +35281,26 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
-        prices: {
-          input_mtok: 0.75,
-          cache_read_mtok: 0.16,
-          output_mtok: 3.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.16,
+              output_mtok: 3.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6712,
+              cache_read_mtok: 0.18,
+              output_mtok: 3.35,
+            },
+          },
+        ],
       },
       {
         id: 'moonshotai/kimi-k3',
@@ -32892,10 +35317,38 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
+        prices: [
+          {
+            prices: {
+              input_mtok: 3,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.239,
+              cache_read_mtok: 0.21,
+              output_mtok: 11.936,
+            },
+          },
+        ],
+      },
+      {
+        id: 'moonshotai/kimi-k3:batch',
+        name: 'Kimi K3 (batch)',
+        match: {
+          equals: 'moonshotai/kimi-k3:batch',
+        },
+        context_window: 1048576,
         prices: {
-          input_mtok: 3,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
+          input_mtok: 2.28,
+          cache_read_mtok: 0.228,
+          output_mtok: 11.4,
         },
       },
       {
@@ -33013,6 +35466,46 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'nex-agi/nex-n2.5-mini',
+        name: 'Nex-N2.5-Mini',
+        match: {
+          or: [
+            {
+              equals: 'nex-agi/nex-n2.5-mini',
+            },
+            {
+              equals: 'nex-agi/nex-n2.5-mini-20260908',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.025,
+          cache_read_mtok: 0.0025,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'nex-agi/nex-n2.5-pro',
+        name: 'Nex-N2.5-Pro',
+        match: {
+          or: [
+            {
+              equals: 'nex-agi/nex-n2.5-pro',
+            },
+            {
+              equals: 'nex-agi/nex-n2.5-pro-20260907',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'noromaid-20b',
         name: 'Noromaid 20B',
         match: {
@@ -33068,10 +35561,24 @@ export const data: Provider[] = [
           equals: 'nousresearch/hermes-3-llama-3.1-405b',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.7,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'nousresearch/hermes-3-llama-3.1-405b:free',
@@ -33088,10 +35595,24 @@ export const data: Provider[] = [
           equals: 'nousresearch/hermes-3-llama-3.1-70b',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.12,
-          output_mtok: 0.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.12,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 0.7,
+            },
+          },
+        ],
       },
       {
         id: 'nousresearch/hermes-4-405b',
@@ -33193,10 +35714,24 @@ export const data: Provider[] = [
           equals: 'nvidia/nemotron-3-nano-30b-a3b',
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.06,
+              output_mtok: 0.24,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3-nano-30b-a3b:free',
@@ -33219,12 +35754,33 @@ export const data: Provider[] = [
         id: 'nvidia/nemotron-3-super-120b-a12b',
         name: 'Nemotron 3 Super',
         match: {
-          equals: 'nvidia/nemotron-3-super-120b-a12b',
+          or: [
+            {
+              equals: 'nvidia/nemotron-3-super-120b-a12b',
+            },
+            {
+              equals: 'nvidia/nemotron-3-super-120b-a12b-20230311',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.45,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+              output_mtok: 0.45,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.45,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3-super-120b-a12b:free',
@@ -33239,13 +35795,35 @@ export const data: Provider[] = [
         id: 'nvidia/nemotron-3-ultra-550b-a55b',
         name: 'Nemotron 3 Ultra',
         match: {
-          equals: 'nvidia/nemotron-3-ultra-550b-a55b',
+          or: [
+            {
+              equals: 'nvidia/nemotron-3-ultra-550b-a55b',
+            },
+            {
+              equals: 'nvidia/nemotron-3-ultra-550b-a55b-20260604',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.5,
-          cache_read_mtok: 0.15,
-          output_mtok: 2.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.15,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.12,
+              output_mtok: 2.4,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3-ultra-550b-a55b:free',
@@ -33257,12 +35835,89 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'nvidia/nemotron-3.5-content-safety',
+        name: 'Nemotron 3.5 Content Safety',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nemotron-3.5-content-safety',
+            },
+            {
+              equals: 'nvidia/nemotron-3.5-content-safety-20260604',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
         id: 'nvidia/nemotron-3.5-content-safety:free',
         name: 'Nemotron 3.5 Content Safety (free)',
         match: {
           equals: 'nvidia/nemotron-3.5-content-safety:free',
         },
         context_window: 128000,
+        prices: {},
+      },
+      {
+        id: 'nvidia/nemotron-3.5-lightning',
+        name: 'Nemotron 3.5 Lightning',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nemotron-3.5-lightning',
+            },
+            {
+              equals: 'nvidia/nemotron-3.5-lightning-20260807',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'nvidia/nemotron-3.5-lightning:free',
+        name: 'Nemotron 3.5 Lightning (free)',
+        match: {
+          equals: 'nvidia/nemotron-3.5-lightning:free',
+        },
+        context_window: 1000000,
+        prices: {},
+      },
+      {
+        id: 'nvidia/nemotron-3.5-super-vl',
+        name: 'Nemotron 3.5 Super VL',
+        match: {
+          or: [
+            {
+              equals: 'nvidia/nemotron-3.5-super-vl',
+            },
+            {
+              equals: 'nvidia/nemotron-3.5-super-vl-20261015',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.08,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'nvidia/nemotron-3.5-super-vl:free',
+        name: 'Nemotron 3.5 Super VL (free)',
+        match: {
+          equals: 'nvidia/nemotron-3.5-super-vl:free',
+        },
+        context_window: 1000000,
         prices: {},
       },
       {
@@ -33412,6 +36067,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-3.5-turbo:batch',
+        name: 'GPT-3.5 Turbo (batch)',
+        match: {
+          equals: 'openai/gpt-3.5-turbo:batch',
+        },
+        context_window: 16385,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.75,
+        },
+      },
+      {
         id: 'openai/gpt-4',
         name: 'GPT-4',
         match: {
@@ -33477,10 +36144,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-4-turbo:batch',
+        name: 'GPT-4 Turbo (batch)',
+        match: {
+          equals: 'openai/gpt-4-turbo:batch',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 5,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'openai/gpt-4.1',
         name: 'GPT-4.1',
         match: {
-          equals: 'openai/gpt-4.1',
+          or: [
+            {
+              equals: 'openai/gpt-4.1',
+            },
+            {
+              equals: 'openai/gpt-4.1-2025-04-14',
+            },
+          ],
         },
         context_window: 1047576,
         prices: {
@@ -33510,16 +36196,62 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-4.1-mini:batch',
+        name: 'GPT-4.1 Mini (batch)',
+        match: {
+          equals: 'openai/gpt-4.1-mini:batch',
+        },
+        context_window: 1047576,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.8,
+        },
+      },
+      {
         id: 'openai/gpt-4.1-nano',
         name: 'GPT-4.1 Nano',
         match: {
-          equals: 'openai/gpt-4.1-nano',
+          or: [
+            {
+              equals: 'openai/gpt-4.1-nano',
+            },
+            {
+              equals: 'openai/gpt-4.1-nano-2025-04-14',
+            },
+          ],
         },
         context_window: 1047576,
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'openai/gpt-4.1-nano:batch',
+        name: 'GPT-4.1 Nano (batch)',
+        match: {
+          equals: 'openai/gpt-4.1-nano:batch',
+        },
+        context_window: 1047576,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.0125,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-4.1:batch',
+        name: 'GPT-4.1 (batch)',
+        match: {
+          equals: 'openai/gpt-4.1:batch',
+        },
+        context_window: 1047576,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.25,
+          output_mtok: 4,
         },
       },
       {
@@ -33534,6 +36266,7 @@ export const data: Provider[] = [
       },
       {
         id: 'openai/gpt-4o',
+        name: 'GPT-4o',
         match: {
           or: [
             {
@@ -33551,10 +36284,25 @@ export const data: Provider[] = [
           ],
         },
         context_window: 128000,
-        prices: {
-          input_mtok: 2.5,
-          output_mtok: 10,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2.5,
+              output_mtok: 10,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 1.25,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'openai/gpt-4o-2024-05-13',
@@ -33600,6 +36348,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-4o-mini:batch',
+        name: 'GPT-4o-mini (batch)',
+        match: {
+          equals: 'openai/gpt-4o-mini:batch',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.3,
+        },
+      },
+      {
         id: 'openai/gpt-4o-search-preview',
         name: 'GPT-4o Search Preview',
         match: {
@@ -33608,6 +36369,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-4o:batch',
+        name: 'GPT-4o (batch)',
+        match: {
+          equals: 'openai/gpt-4o:batch',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.625,
+          output_mtok: 5,
         },
       },
       {
@@ -33696,28 +36470,95 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-5-nano',
-        name: 'GPT-5 Nano',
+        id: 'openai/gpt-5-mini:batch',
+        name: 'GPT-5 Mini (batch)',
         match: {
-          equals: 'openai/gpt-5-nano',
+          equals: 'openai/gpt-5-mini:batch',
         },
         context_window: 400000,
         prices: {
-          input_mtok: 0.05,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.4,
+          input_mtok: 0.125,
+          cache_read_mtok: 0.0125,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'openai/gpt-5-nano',
+        name: 'GPT-5 Nano',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-5-nano',
+            },
+            {
+              equals: 'openai/gpt-5-nano-2025-08-07',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.005,
+              output_mtok: 0.4,
+            },
+          },
+        ],
+      },
+      {
+        id: 'openai/gpt-5-nano:batch',
+        name: 'GPT-5 Nano (batch)',
+        match: {
+          equals: 'openai/gpt-5-nano:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.025,
+          cache_read_mtok: 0.0025,
+          output_mtok: 0.2,
         },
       },
       {
         id: 'openai/gpt-5-pro',
         name: 'GPT-5 Pro',
         match: {
-          equals: 'openai/gpt-5-pro',
+          or: [
+            {
+              equals: 'openai/gpt-5-pro',
+            },
+            {
+              equals: 'openai/gpt-5-pro-2025-10-06',
+            },
+          ],
         },
         context_window: 400000,
         prices: {
           input_mtok: 15,
           output_mtok: 120,
+        },
+      },
+      {
+        id: 'openai/gpt-5-pro:batch',
+        name: 'GPT-5 Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5-pro:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 7.5,
+          output_mtok: 60,
         },
       },
       {
@@ -33734,14 +36575,32 @@ export const data: Provider[] = [
             {
               equals: 'openai/gpt-5.1-codex',
             },
+            {
+              equals: 'openai/gpt-5.1-20251113',
+            },
           ],
         },
         context_window: 400000,
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.13,
-          output_mtok: 10,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.25,
+              cache_read_mtok: 0.13,
+              output_mtok: 10,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.25,
+              cache_read_mtok: 0.125,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: 'openai/gpt-5.1-codex-mini',
@@ -33757,10 +36616,38 @@ export const data: Provider[] = [
           ],
         },
         context_window: 400000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.025,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.03,
+              output_mtok: 2,
+            },
+          },
+        ],
+      },
+      {
+        id: 'openai/gpt-5.1:batch',
+        name: 'GPT-5.1 (batch)',
+        match: {
+          equals: 'openai/gpt-5.1:batch',
+        },
+        context_window: 400000,
         prices: {
-          input_mtok: 0.25,
-          cache_read_mtok: 0.025,
-          output_mtok: 2,
+          input_mtok: 0.625,
+          cache_read_mtok: 0.0625,
+          output_mtok: 5,
         },
       },
       {
@@ -33806,6 +36693,31 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 21,
           output_mtok: 168,
+        },
+      },
+      {
+        id: 'openai/gpt-5.2-pro:batch',
+        name: 'GPT-5.2 Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.2-pro:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 10.5,
+          output_mtok: 84,
+        },
+      },
+      {
+        id: 'openai/gpt-5.2:batch',
+        name: 'GPT-5.2 (batch)',
+        match: {
+          equals: 'openai/gpt-5.2:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.875,
+          cache_read_mtok: 0.0875,
+          output_mtok: 7,
         },
       },
       {
@@ -33890,7 +36802,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-5.4-image-2',
         name: 'GPT-5.4 Image 2',
         match: {
-          equals: 'openai/gpt-5.4-image-2',
+          or: [
+            {
+              equals: 'openai/gpt-5.4-image-2',
+            },
+            {
+              equals: 'openai/gpt-5.4-image-2-20260421',
+            },
+          ],
         },
         context_window: 272000,
         prices: {
@@ -33903,7 +36822,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-5.4-mini',
         name: 'GPT-5.4 Mini',
         match: {
-          equals: 'openai/gpt-5.4-mini',
+          or: [
+            {
+              equals: 'openai/gpt-5.4-mini',
+            },
+            {
+              equals: 'openai/gpt-5.4-mini-20260317',
+            },
+          ],
         },
         context_window: 400000,
         prices: {
@@ -33913,10 +36839,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.4-mini:batch',
+        name: 'GPT-5.4 Mini (batch)',
+        match: {
+          equals: 'openai/gpt-5.4-mini:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.375,
+          cache_read_mtok: 0.0375,
+          output_mtok: 2.25,
+        },
+      },
+      {
         id: 'openai/gpt-5.4-nano',
         name: 'GPT-5.4 Nano',
         match: {
-          equals: 'openai/gpt-5.4-nano',
+          or: [
+            {
+              equals: 'openai/gpt-5.4-nano',
+            },
+            {
+              equals: 'openai/gpt-5.4-nano-20260317',
+            },
+          ],
         },
         context_window: 400000,
         prices: {
@@ -33926,10 +36872,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.4-nano:batch',
+        name: 'GPT-5.4 Nano (batch)',
+        match: {
+          equals: 'openai/gpt-5.4-nano:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.625,
+        },
+      },
+      {
         id: 'openai/gpt-5.4-pro',
         name: 'GPT-5.4 Pro',
         match: {
-          equals: 'openai/gpt-5.4-pro',
+          or: [
+            {
+              equals: 'openai/gpt-5.4-pro',
+            },
+            {
+              equals: 'openai/gpt-5.4-pro-20260305',
+            },
+          ],
         },
         context_window: 1050000,
         price_comments:
@@ -33956,10 +36922,82 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.4-pro:batch',
+        name: 'GPT-5.4 Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.4-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 30,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 90,
+            tiers: [
+              {
+                start: 272000,
+                price: 135,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.4:batch',
+        name: 'GPT-5.4 (batch)',
+        match: {
+          equals: 'openai/gpt-5.4:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 7.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 11.25,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-5.5',
         name: 'GPT-5.5',
         match: {
-          equals: 'openai/gpt-5.5',
+          or: [
+            {
+              equals: 'openai/gpt-5.5',
+            },
+            {
+              equals: 'openai/gpt-5.5-20260423',
+            },
+          ],
         },
         context_window: 1050000,
         price_comments:
@@ -33998,7 +37036,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         match: {
-          equals: 'openai/gpt-5.5-pro',
+          or: [
+            {
+              equals: 'openai/gpt-5.5-pro',
+            },
+            {
+              equals: 'openai/gpt-5.5-pro-20260423',
+            },
+          ],
         },
         context_window: 1050000,
         price_comments:
@@ -34025,6 +37070,71 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.5-pro:batch',
+        name: 'GPT-5.5 Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.5-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 30,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 90,
+            tiers: [
+              {
+                start: 272000,
+                price: 135,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.5:batch',
+        name: 'GPT-5.5 (batch)',
+        match: {
+          equals: 'openai/gpt-5.5:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-5.6-luna',
         name: 'GPT-5.6 Luna',
         match: {
@@ -34034,6 +37144,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^openai/gpt-5\\.6-luna-\\d{8}$',
+            },
+            {
+              equals: 'openai/gpt-5.6-luna-20260709',
             },
           ],
         },
@@ -34080,6 +37193,151 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.6-luna-pro',
+        name: 'GPT-5.6 Luna Pro',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-5.6-luna-pro',
+            },
+            {
+              equals: 'openai/gpt-5.6-luna-pro-20260709',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.02,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.04,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 1.8,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-luna-pro:batch',
+        name: 'GPT-5.6 Luna Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-luna-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.6,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.9,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-luna:batch',
+        name: 'GPT-5.6 Luna (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-luna:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.6,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.9,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-5.6-sol',
         name: 'GPT-5.6 Sol',
         match: {
@@ -34090,11 +37348,207 @@ export const data: Provider[] = [
             {
               regex: '^openai/gpt-5\\.6-sol-\\d{8}$',
             },
+            {
+              equals: 'openai/gpt-5.6-sol-20260709',
+            },
           ],
         },
         context_window: 1050000,
         price_comments:
           'Cache writes are billed at 1.25x the uncached input rate. Long-context tier (>272K prompt tokens) is 2x input and 1.5x output, matching OpenAI. Ref: https://openrouter.ai/api/v1/models (pricing.overrides).',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'openai/gpt-5.6-sol-pro',
+        name: 'GPT-5.6 Sol Pro',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-5.6-sol-pro',
+            },
+            {
+              equals: 'openai/gpt-5.6-sol-pro-20260709',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 4,
+            tiers: [
+              {
+                start: 272000,
+                price: 8,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 20,
+            tiers: [
+              {
+                start: 272000,
+                price: 30,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-sol-pro:batch',
+        name: 'GPT-5.6 Sol Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-sol-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-sol:batch',
+        name: 'GPT-5.6 Sol (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-sol:batch',
+        },
+        context_window: 1050000,
         prices: {
           input_mtok: {
             base: 2,
@@ -34145,6 +37599,9 @@ export const data: Provider[] = [
             {
               regex: '^openai/gpt-5\\.6-terra-\\d{8}$',
             },
+            {
+              equals: 'openai/gpt-5.6-terra-20260709',
+            },
           ],
         },
         context_window: 1050000,
@@ -34190,6 +37647,315 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-5.6-terra-pro',
+        name: 'GPT-5.6 Terra Pro',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-5.6-terra-pro',
+            },
+            {
+              equals: 'openai/gpt-5.6-terra-pro-20260709',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 272000,
+                price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-terra-pro:batch',
+        name: 'GPT-5.6 Terra Pro (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-terra-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 272000,
+                price: 9,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5.6-terra:batch',
+        name: 'GPT-5.6 Terra (batch)',
+        match: {
+          equals: 'openai/gpt-5.6-terra:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 272000,
+                price: 9,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-5:batch',
+        name: 'GPT-5 (batch)',
+        match: {
+          equals: 'openai/gpt-5:batch',
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.625,
+          cache_read_mtok: 0.0625,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'openai/gpt-6-astra',
+        name: 'GPT-6 Astra',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6-astra',
+            },
+            {
+              equals: 'openai/gpt-6-astra-20260903',
+            },
+            {
+              equals: 'openai/gpt-6-astra-pro',
+            },
+            {
+              equals: 'openai/gpt-6-astra-pro-20260903',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-6-astra-pro:batch',
+        name: 'GPT-6 Astra Pro (batch)',
+        match: {
+          equals: 'openai/gpt-6-astra-pro:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 272000,
+                price: 37.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-6-astra:batch',
+        name: 'GPT-6 Astra (batch)',
+        match: {
+          equals: 'openai/gpt-6-astra:batch',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 272000,
+                price: 37.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-6-luna',
         name: 'GPT-6 Luna',
         match: {
@@ -34202,6 +37968,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^openai/gpt-6-luna-\\d{8}$',
+            },
+            {
+              equals: 'openai/gpt-6-luna-20260922',
             },
           ],
         },
@@ -34317,6 +38086,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^openai/gpt-6-sol-\\d{8}$',
+            },
+            {
+              equals: 'openai/gpt-6-sol-20260922',
             },
           ],
         },
@@ -34435,6 +38207,9 @@ export const data: Provider[] = [
             },
             {
               regex: '^openai/gpt-6\\.1-sol-pro-\\d{8}$',
+            },
+            {
+              equals: 'openai/gpt-6.1-sol-20260929',
             },
           ],
         },
@@ -34565,7 +38340,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-chat-latest',
         name: 'GPT Chat Latest',
         match: {
-          equals: 'openai/gpt-chat-latest',
+          or: [
+            {
+              equals: 'openai/gpt-chat-latest',
+            },
+            {
+              equals: 'openai/gpt-chat-latest-20260505',
+            },
+          ],
         },
         context_window: 400000,
         prices: {
@@ -34580,9 +38362,36 @@ export const data: Provider[] = [
         match: {
           equals: 'openai/gpt-oss-120b',
         },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.039,
+              output_mtok: 0.18,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.075,
+              output_mtok: 0.6,
+            },
+          },
+        ],
+      },
+      {
+        id: 'openai/gpt-oss-120b:batch',
+        name: 'gpt-oss-120b (batch)',
+        match: {
+          equals: 'openai/gpt-oss-120b:batch',
+        },
+        context_window: 131072,
         prices: {
-          input_mtok: 0.039,
-          output_mtok: 0.18,
+          input_mtok: 0.0296,
+          output_mtok: 0.136,
         },
       },
       {
@@ -34600,9 +38409,36 @@ export const data: Provider[] = [
           equals: 'openai/gpt-oss-20b',
         },
         context_window: 131072,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.029,
+              output_mtok: 0.14,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.018,
+              cache_read_mtok: 0.009,
+              output_mtok: 0.09,
+            },
+          },
+        ],
+      },
+      {
+        id: 'openai/gpt-oss-20b:batch',
+        name: 'gpt-oss-20b (batch)',
+        match: {
+          equals: 'openai/gpt-oss-20b:batch',
+        },
+        context_window: 131072,
         prices: {
-          input_mtok: 0.029,
-          output_mtok: 0.14,
+          input_mtok: 0.024,
+          output_mtok: 0.112,
         },
       },
       {
@@ -34620,11 +38456,26 @@ export const data: Provider[] = [
           equals: 'openai/gpt-oss-safeguard-20b',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.075,
-          cache_read_mtok: 0.037,
-          output_mtok: 0.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.037,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.0375,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'openai/o1',
@@ -34639,6 +38490,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'o1-preview-2024-09-12',
+            },
+            {
+              equals: 'openai/o1-2024-12-17',
             },
           ],
         },
@@ -34681,7 +38535,14 @@ export const data: Provider[] = [
         id: 'openai/o3',
         name: 'o3',
         match: {
-          equals: 'openai/o3',
+          or: [
+            {
+              equals: 'openai/o3',
+            },
+            {
+              equals: 'openai/o3-2025-04-16',
+            },
+          ],
         },
         context_window: 200000,
         prices: {
@@ -34713,6 +38574,9 @@ export const data: Provider[] = [
             {
               equals: 'openai/o3-mini-high',
             },
+            {
+              equals: 'openai/o3-mini-2025-01-31',
+            },
           ],
         },
         context_window: 200000,
@@ -34723,15 +38587,48 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/o3-mini:batch',
+        name: 'o3 Mini (batch)',
+        match: {
+          equals: 'openai/o3-mini:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.55,
+          cache_read_mtok: 0.275,
+          output_mtok: 2.2,
+        },
+      },
+      {
         id: 'openai/o3-pro',
         name: 'o3 Pro',
         match: {
-          equals: 'openai/o3-pro',
+          or: [
+            {
+              equals: 'openai/o3-pro',
+            },
+            {
+              equals: 'openai/o3-pro-2025-06-10',
+            },
+          ],
         },
         context_window: 200000,
         prices: {
           input_mtok: 20,
           output_mtok: 80,
+        },
+      },
+      {
+        id: 'openai/o3:batch',
+        name: 'o3 (batch)',
+        match: {
+          equals: 'openai/o3:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.25,
+          output_mtok: 4,
         },
       },
       {
@@ -34744,6 +38641,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'openai/o4-mini-high',
+            },
+            {
+              equals: 'openai/o4-mini-2025-04-16',
             },
           ],
         },
@@ -34764,6 +38664,19 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.5,
           output_mtok: 8,
+        },
+      },
+      {
+        id: 'openai/o4-mini:batch',
+        name: 'o4 Mini (batch)',
+        match: {
+          equals: 'openai/o4-mini:batch',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.55,
+          cache_read_mtok: 0.1375,
+          output_mtok: 2.2,
         },
       },
       {
@@ -34791,9 +38704,35 @@ export const data: Provider[] = [
         id: 'perceptron/perceptron-mk1',
         name: 'Perceptron Mk1',
         match: {
-          equals: 'perceptron/perceptron-mk1',
+          or: [
+            {
+              equals: 'perceptron/perceptron-mk1',
+            },
+            {
+              equals: 'perceptron/perceptron-mk1-20260512',
+            },
+          ],
         },
         context_window: 32768,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'perceptron/perceptron-mk1.5',
+        name: 'Perceptron Mk1.5',
+        match: {
+          or: [
+            {
+              equals: 'perceptron/perceptron-mk1.5',
+            },
+            {
+              equals: 'perceptron/perceptron-mk1.5-20260925',
+            },
+          ],
+        },
+        context_window: 36864,
         prices: {
           input_mtok: 0.15,
           output_mtok: 1.5,
@@ -34857,6 +38796,7 @@ export const data: Provider[] = [
       },
       {
         id: 'perplexity/sonar',
+        name: 'Sonar',
         match: {
           equals: 'perplexity/sonar',
         },
@@ -34868,6 +38808,7 @@ export const data: Provider[] = [
       },
       {
         id: 'perplexity/sonar-deep-research',
+        name: 'Sonar Deep Research',
         match: {
           equals: 'perplexity/sonar-deep-research',
         },
@@ -34882,8 +38823,21 @@ export const data: Provider[] = [
       },
       {
         id: 'perplexity/sonar-pro',
+        name: 'Sonar Pro',
         match: {
           equals: 'perplexity/sonar-pro',
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'perplexity/sonar-pro-search',
+        name: 'Sonar Pro Search',
+        match: {
+          equals: 'perplexity/sonar-pro-search',
         },
         context_window: 200000,
         prices: {
@@ -34903,6 +38857,7 @@ export const data: Provider[] = [
       },
       {
         id: 'perplexity/sonar-reasoning-pro',
+        name: 'Sonar Reasoning Pro',
         match: {
           equals: 'perplexity/sonar-reasoning-pro',
         },
@@ -35014,6 +38969,64 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'poolside/laguna-s-2.1',
+        name: 'Laguna S 2.1',
+        match: {
+          or: [
+            {
+              equals: 'poolside/laguna-s-2.1',
+            },
+            {
+              equals: 'poolside/laguna-s-2.1-20260720',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.09,
+          cache_read_mtok: 0.009,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'poolside/laguna-s-2.1:free',
+        name: 'Laguna S 2.1 (free)',
+        match: {
+          equals: 'poolside/laguna-s-2.1:free',
+        },
+        context_window: 262144,
+        prices: {},
+      },
+      {
+        id: 'poolside/laguna-xs-2.1',
+        name: 'Laguna XS 2.1',
+        match: {
+          or: [
+            {
+              equals: 'poolside/laguna-xs-2.1',
+            },
+            {
+              equals: 'poolside/laguna-xs-2.1-20260625',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.06,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.12,
+        },
+      },
+      {
+        id: 'poolside/laguna-xs-2.1:free',
+        name: 'Laguna XS 2.1 (free)',
+        match: {
+          equals: 'poolside/laguna-xs-2.1:free',
+        },
+        context_window: 262144,
+        prices: {},
+      },
+      {
         id: 'poolside/laguna-xs.2:free',
         name: 'Laguna XS.2 (free)',
         match: {
@@ -35030,6 +39043,26 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'prism-ml/ternary-bonsai-2-27b',
+        name: 'Ternary Bonsai 2 27B',
+        match: {
+          or: [
+            {
+              equals: 'prism-ml/ternary-bonsai-2-27b',
+            },
+            {
+              equals: 'prism-ml/ternary-bonsai-2-27b-20260918',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.5,
         },
       },
       {
@@ -35142,10 +39175,24 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen-2.5-72b-instruct',
         },
-        prices: {
-          input_mtok: 0.12,
-          output_mtok: 0.39,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.12,
+              output_mtok: 0.39,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.36,
+              output_mtok: 0.4,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen-2.5-72b-instruct:free',
@@ -35161,10 +39208,24 @@ export const data: Provider[] = [
           equals: 'qwen/qwen-2.5-7b-instruct',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.04,
-          output_mtok: 0.1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.04,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.2,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen-2.5-7b-instruct:free',
@@ -35180,10 +39241,24 @@ export const data: Provider[] = [
           equals: 'qwen/qwen-2.5-coder-32b-instruct',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.06,
+              output_mtok: 0.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.66,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen-2.5-coder-32b-instruct:free',
@@ -35233,14 +39308,69 @@ export const data: Provider[] = [
         id: 'qwen/qwen-plus',
         name: 'Qwen-Plus',
         match: {
-          equals: 'qwen/qwen-plus',
+          or: [
+            {
+              equals: 'qwen/qwen-plus',
+            },
+            {
+              equals: 'qwen/qwen-plus-2025-01-25',
+            },
+          ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.4,
-          cache_read_mtok: 0.16,
-          output_mtok: 1.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.16,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.26,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.78,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.325,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.975,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.052,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.156,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.78,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 2.34,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen-plus-2025-07-28',
@@ -35332,13 +39462,29 @@ export const data: Provider[] = [
       },
       {
         id: 'qwen/qwen2.5-vl-72b-instruct',
+        name: 'Qwen2.5 VL 72B Instruct',
         match: {
           equals: 'qwen/qwen2.5-vl-72b-instruct',
         },
-        prices: {
-          input_mtok: 0.7,
-          output_mtok: 0.7,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 0.7,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.8,
+              cache_read_mtok: 0.4,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen2.5-vl-72b-instruct:free',
@@ -35351,12 +39497,33 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-14b',
         name: 'Qwen3 14B',
         match: {
-          equals: 'qwen/qwen3-14b',
+          or: [
+            {
+              equals: 'qwen/qwen3-14b',
+            },
+            {
+              equals: 'qwen/qwen3-14b-04-28',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.24,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.06,
+              output_mtok: 0.24,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.12,
+              output_mtok: 0.24,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-235b-a22b',
@@ -35374,12 +39541,33 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-235b-a22b-2507',
         name: 'Qwen3 235B A22B Instruct 2507',
         match: {
-          equals: 'qwen/qwen3-235b-a22b-2507',
+          or: [
+            {
+              equals: 'qwen/qwen3-235b-a22b-2507',
+            },
+            {
+              equals: 'qwen/qwen3-235b-a22b-07-25',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              output_mtok: 0.55,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-235b-a22b-thinking-2507',
@@ -35387,21 +39575,56 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-235b-a22b-thinking-2507',
         },
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.45,
+              output_mtok: 3.5,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-30b-a3b',
         name: 'Qwen3 30B A3B',
         match: {
-          equals: 'qwen/qwen3-30b-a3b',
+          or: [
+            {
+              equals: 'qwen/qwen3-30b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3-30b-a3b-04-28',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.29,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.29,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.12,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-30b-a3b-instruct-2507',
@@ -35409,10 +39632,24 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-30b-a3b-instruct-2507',
         },
-        prices: {
-          input_mtok: 0.04815,
-          output_mtok: 0.19305,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.04815,
+              output_mtok: 0.19305,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.09,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-30b-a3b-thinking-2507',
@@ -35430,12 +39667,33 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-32b',
         name: 'Qwen3 32B',
         match: {
-          equals: 'qwen/qwen3-32b',
+          or: [
+            {
+              equals: 'qwen/qwen3-32b',
+            },
+            {
+              equals: 'qwen/qwen3-32b-04-28',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.28,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-8b',
@@ -35462,10 +39720,25 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.22,
-          output_mtok: 1.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.22,
+              output_mtok: 1.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.1,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-coder-30b-a3b-instruct',
@@ -35473,10 +39746,24 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-coder-30b-a3b-instruct',
         },
-        prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.27,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.07,
+              output_mtok: 0.27,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.07,
+              output_mtok: 0.28,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-coder-flash',
@@ -35485,12 +39772,76 @@ export const data: Provider[] = [
           equals: 'qwen/qwen3-coder-flash',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.195,
-          cache_write_mtok: 0.24375,
-          cache_read_mtok: 0.039,
-          output_mtok: 0.975,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.195,
+              cache_write_mtok: 0.24375,
+              cache_read_mtok: 0.039,
+              output_mtok: 0.975,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.195,
+                tiers: [
+                  {
+                    start: 32000,
+                    price: 0.325,
+                  },
+                  {
+                    start: 128000,
+                    price: 0.52,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.24375,
+                tiers: [
+                  {
+                    start: 32000,
+                    price: 0.40625,
+                  },
+                  {
+                    start: 128000,
+                    price: 0.65,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.039,
+                tiers: [
+                  {
+                    start: 32000,
+                    price: 0.065,
+                  },
+                  {
+                    start: 128000,
+                    price: 0.104,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 0.975,
+                tiers: [
+                  {
+                    start: 32000,
+                    price: 1.625,
+                  },
+                  {
+                    start: 128000,
+                    price: 2.6,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-coder-next',
@@ -35505,11 +39856,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.11,
-          cache_read_mtok: 0.07,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.11,
+              cache_read_mtok: 0.07,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.12,
+              cache_read_mtok: 0.07,
+              output_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-coder-plus',
@@ -35603,10 +39969,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.0975,
-          output_mtok: 0.78,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.0975,
+              output_mtok: 0.78,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-vl-235b-a22b-instruct',
@@ -35614,11 +39994,26 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-235b-a22b-instruct',
         },
-        prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.11,
-          output_mtok: 0.88,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.11,
+              output_mtok: 0.88,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.21,
+              cache_read_mtok: 0.1,
+              output_mtok: 1.9,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-vl-235b-a22b-thinking',
@@ -35638,10 +40033,24 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-30b-a3b-instruct',
         },
-        prices: {
-          input_mtok: 0.13,
-          output_mtok: 0.52,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.13,
+              output_mtok: 0.52,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-vl-30b-a3b-thinking',
@@ -35649,10 +40058,24 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-30b-a3b-thinking',
         },
-        prices: {
-          input_mtok: 0.13,
-          output_mtok: 1.56,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.13,
+              output_mtok: 1.56,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.29,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-vl-32b-instruct',
@@ -35672,10 +40095,25 @@ export const data: Provider[] = [
         match: {
           equals: 'qwen/qwen3-vl-8b-instruct',
         },
-        prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.08,
+              output_mtok: 0.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.12,
+              output_mtok: 0.75,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-vl-8b-thinking',
@@ -35722,10 +40160,24 @@ export const data: Provider[] = [
           ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.195,
-          output_mtok: 1.56,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.195,
+              output_mtok: 1.56,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.27,
+              output_mtok: 2.16,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.5-35b-a3b',
@@ -35740,11 +40192,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.14,
-          cache_read_mtok: 0.05,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.05,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.05,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.5-397b-a17b',
@@ -35759,10 +40226,25 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.39,
-          output_mtok: 2.34,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.39,
+              output_mtok: 2.34,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_read_mtok: 0.3,
+              output_mtok: 3.6,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.5-9b',
@@ -35815,10 +40297,40 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.4,
-          output_mtok: 2.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 2.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.26,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.325,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.56,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 1.95,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.5-plus-20260420',
@@ -35827,11 +40339,50 @@ export const data: Provider[] = [
           equals: 'qwen/qwen3.5-plus-20260420',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.3,
-          cache_write_mtok: 0.375,
-          output_mtok: 1.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.3,
+              cache_write_mtok: 0.375,
+              output_mtok: 1.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.375,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.375,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.46875,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.8,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 2.25,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.6-27b',
@@ -35846,10 +40397,25 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.289,
-          output_mtok: 2.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.289,
+              output_mtok: 2.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.025,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.6-35b-a3b',
@@ -35864,10 +40430,25 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.14,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.14,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.05,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.6-flash',
@@ -35876,11 +40457,50 @@ export const data: Provider[] = [
           equals: 'qwen/qwen3.6-flash',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 0.1875,
-          cache_write_mtok: 0.234375,
-          output_mtok: 1.125,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1875,
+              cache_write_mtok: 0.234375,
+              output_mtok: 1.125,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.1875,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.75,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.234375,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.9375,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.125,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 3,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.6-max-preview',
@@ -35916,10 +40536,118 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.325,
+              cache_write_mtok: 0.40625,
+              output_mtok: 1.95,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.325,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 1.3,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.40625,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 1.625,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.95,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 3.9,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'qwen/qwen3.7-flash',
+        name: 'Qwen3.7 Flash',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.7-flash',
+            },
+            {
+              equals: 'qwen/qwen3.7-flash-20260727',
+            },
+          ],
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 0.325,
-          cache_write_mtok: 0.40625,
-          output_mtok: 1.95,
+          input_mtok: {
+            base: 0.03,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.1,
+              },
+              {
+                start: 256000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.038,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.125,
+              },
+              {
+                start: 256000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.006,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.02,
+              },
+              {
+                start: 256000,
+                price: 0.04,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.13,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.4,
+              },
+              {
+                start: 256000,
+                price: 0.8,
+              },
+            ],
+          },
         },
       },
       {
@@ -35936,12 +40664,28 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 1.25,
-          cache_write_mtok: 1.5625,
-          cache_read_mtok: 0.25,
-          output_mtok: 3.75,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.25,
+              cache_write_mtok: 1.5625,
+              cache_read_mtok: 0.25,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.475,
+              cache_write_mtok: 1.84375,
+              cache_read_mtok: 0.295,
+              output_mtok: 4.425,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.7-plus',
@@ -35957,11 +40701,191 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              cache_write_mtok: 0.5,
+              cache_read_mtok: 0.08,
+              output_mtok: 1.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.32,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.96,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.4,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 1.2,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.064,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 0.192,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 1.28,
+                tiers: [
+                  {
+                    start: 256000,
+                    price: 3.84,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'qwen/qwen3.7-plus:batch',
+        name: 'Qwen3.7 Plus (batch)',
+        match: {
+          equals: 'qwen/qwen3.7-plus:batch',
+        },
+        context_window: 262144,
         prices: {
-          input_mtok: 0.4,
-          cache_write_mtok: 0.5,
-          cache_read_mtok: 0.08,
-          output_mtok: 1.6,
+          input_mtok: 0.23,
+          output_mtok: 0.92,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-2.4t-a95b',
+        name: 'Qwen3.8 2.4T A95B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b',
+            },
+            {
+              equals: 'qwen/qwen3.8-2.4t-a95b-20260812',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-27b',
+        name: 'Qwen3.8 27B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-27b',
+            },
+            {
+              equals: 'qwen/qwen3.8-27b-20260814',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.24,
+          cache_read_mtok: 0.05,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-flash',
+        name: 'Qwen3.8 Flash',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-flash',
+            },
+            {
+              equals: 'qwen/qwen3.8-flash-20260826',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.016,
+          output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-max-0902',
+        name: 'Qwen3.8 Max (0902)',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-max-0902',
+            },
+            {
+              equals: 'qwen/qwen3.8-max-20260902',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-max-prime',
+        name: 'Qwen3.8 Max Prime',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-max-prime',
+            },
+            {
+              equals: 'qwen/qwen3.8-max-prime-20260923',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.5,
+          output_mtok: 12,
+        },
+      },
+      {
+        id: 'qwen/qwen3.8-omni-flash',
+        name: 'Qwen3.8 Omni Flash',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3.8-omni-flash',
+            },
+            {
+              equals: 'qwen/qwen3.8-omni-flash-20260918',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.016,
+          output_mtok: 0.47,
         },
       },
       {
@@ -36133,6 +41057,26 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'reflection/beam-1.0-501b-a23b',
+        name: 'Beam 1.0 501B A23B',
+        match: {
+          or: [
+            {
+              equals: 'reflection/beam-1.0-501b-a23b',
+            },
+            {
+              equals: 'reflection/beam-1.0-501b-a23b-20261016',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'reka-flash-3:free',
         name: 'Flash 3 (free)',
         match: {
@@ -36144,7 +41088,14 @@ export const data: Provider[] = [
         id: 'rekaai/reka-edge',
         name: 'Reka Edge',
         match: {
-          equals: 'rekaai/reka-edge',
+          or: [
+            {
+              equals: 'rekaai/reka-edge',
+            },
+            {
+              equals: 'rekaai/reka-edge-2603',
+            },
+          ],
         },
         context_window: 16384,
         prices: {
@@ -36187,12 +41138,109 @@ export const data: Provider[] = [
         id: 'relace/relace-search',
         name: 'Relace Search',
         match: {
-          equals: 'relace/relace-search',
+          or: [
+            {
+              equals: 'relace/relace-search',
+            },
+            {
+              equals: 'relace/relace-search-20251208',
+            },
+          ],
         },
         context_window: 256000,
         prices: {
           input_mtok: 1,
           output_mtok: 3,
+        },
+      },
+      {
+        id: 'sakana/fugu-max',
+        name: 'Fugu Max',
+        match: {
+          or: [
+            {
+              equals: 'sakana/fugu-max',
+            },
+            {
+              equals: 'sakana/fugu-max-20260911',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'sakana/fugu-ultra',
+        name: 'Fugu Ultra',
+        match: {
+          or: [
+            {
+              equals: 'sakana/fugu-ultra',
+            },
+            {
+              equals: 'sakana/fugu-ultra-20260615',
+            },
+            {
+              equals: 'sakana/fugu-ultra-v2',
+            },
+            {
+              equals: 'sakana/fugu-ultra-v2-20260911',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 45,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'sakana/sakana-namazu',
+        name: 'Sakana Namazu',
+        match: {
+          or: [
+            {
+              equals: 'sakana/sakana-namazu',
+            },
+            {
+              equals: 'sakana/namazu-20260811',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.15,
+          output_mtok: 4,
         },
       },
       {
@@ -36222,10 +41270,24 @@ export const data: Provider[] = [
           equals: 'sao10k/l3-lunaris-8b',
         },
         context_window: 8192,
-        prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.05,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.02,
+              output_mtok: 0.05,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.04,
+              output_mtok: 0.05,
+            },
+          },
+        ],
       },
       {
         id: 'sao10k/l3.1-70b-hanami-x1',
@@ -36244,22 +41306,57 @@ export const data: Provider[] = [
         match: {
           equals: 'sao10k/l3.1-euryale-70b',
         },
-        prices: {
-          input_mtok: 0.7,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.85,
+              output_mtok: 0.85,
+            },
+          },
+        ],
       },
       {
         id: 'sao10k/l3.3-euryale-70b',
         name: 'Llama 3.3 Euryale 70B',
         match: {
-          equals: 'sao10k/l3.3-euryale-70b',
+          or: [
+            {
+              equals: 'sao10k/l3.3-euryale-70b',
+            },
+            {
+              equals: 'sao10k/l3.3-euryale-70b-v2.3',
+            },
+          ],
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.7,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.7,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.65,
+              output_mtok: 0.75,
+            },
+          },
+        ],
       },
       {
         id: 'sarvam-m:free',
@@ -36268,6 +41365,42 @@ export const data: Provider[] = [
           equals: 'sarvam-m:free',
         },
         prices: {},
+      },
+      {
+        id: 'scaledown/extract',
+        name: 'Extract',
+        match: {
+          or: [
+            {
+              equals: 'scaledown/extract',
+            },
+            {
+              equals: 'scaledown/extract-20260928',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'scaledown/summarize',
+        name: 'Summarize',
+        match: {
+          or: [
+            {
+              equals: 'scaledown/summarize',
+            },
+            {
+              equals: 'scaledown/summarize-20260928',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.04,
+        },
       },
       {
         id: 'scb10x/llama3.1-typhoon2-70b-instruct',
@@ -36371,22 +41504,64 @@ export const data: Provider[] = [
           equals: 'stepfun/step-3.5-flash',
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.09,
-          cache_read_mtok: 0.02,
-          output_mtok: 0.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.3,
+            },
+          },
+        ],
       },
       {
         id: 'stepfun/step-3.7-flash',
         name: 'Step 3.7 Flash',
         match: {
-          equals: 'stepfun/step-3.7-flash',
+          or: [
+            {
+              equals: 'stepfun/step-3.7-flash',
+            },
+            {
+              equals: 'stepfun/step-3.7-flash-20260528',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.04,
           output_mtok: 1.15,
+        },
+      },
+      {
+        id: 'stepfun/step-5-preview',
+        name: 'Step 5 Preview',
+        match: {
+          or: [
+            {
+              equals: 'stepfun/step-5-preview',
+            },
+            {
+              equals: 'stepfun/step-5-preview-20261008',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.1,
+          output_mtok: 2.7,
         },
       },
       {
@@ -36413,17 +41588,96 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'tencent/hy-mt2-1.8b',
+        name: 'Hy-MT2-1.8B',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy-mt2-1.8b',
+            },
+            {
+              equals: 'tencent/hy-mt2-1.8b-20260521',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.044,
+          output_mtok: 0.177,
+        },
+      },
+      {
+        id: 'tencent/hy-mt2-30b-a3b',
+        name: 'Hy-MT2-30B-A3B',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy-mt2-30b-a3b',
+            },
+            {
+              equals: 'tencent/hy-mt2-30b-a3b-20260521',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.074,
+          output_mtok: 0.295,
+        },
+      },
+      {
+        id: 'tencent/hy-mt2-7b',
+        name: 'Hy-MT2-7B',
+        match: {
+          or: [
+            {
+              equals: 'tencent/hy-mt2-7b',
+            },
+            {
+              equals: 'tencent/hy-mt2-7b-20260521',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.074,
+          output_mtok: 0.295,
+        },
+      },
+      {
         id: 'tencent/hy3-preview',
         name: 'Hy3 preview',
         match: {
-          equals: 'tencent/hy3-preview',
+          or: [
+            {
+              equals: 'tencent/hy3-preview',
+            },
+            {
+              equals: 'tencent/hy3-preview-20260421',
+            },
+          ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.063,
-          cache_read_mtok: 0.021,
-          output_mtok: 0.21,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.063,
+              cache_read_mtok: 0.021,
+              output_mtok: 0.21,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.18,
+              cache_read_mtok: 0.06,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'thedrummer/anubis-pro-105b-v1',
@@ -36466,20 +41720,108 @@ export const data: Provider[] = [
           equals: 'thedrummer/skyfall-36b-v2',
         },
         context_window: 32768,
-        prices: {
-          input_mtok: 0.5,
-          output_mtok: 0.8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 0.8,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.25,
+              output_mtok: 0.8,
+            },
+          },
+        ],
       },
       {
         id: 'thedrummer/unslopnemo-12b',
+        name: 'UnslopNemo 12B',
         match: {
           equals: 'thedrummer/unslopnemo-12b',
         },
-        prices: {
-          input_mtok: 0.5,
-          output_mtok: 0.5,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.5,
+              output_mtok: 0.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 0.4,
+            },
+          },
+        ],
+      },
+      {
+        id: 'thinkingmachines/inkling',
+        name: 'Inkling',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling',
+            },
+            {
+              equals: 'thinkingmachines/inkling-20260715',
+            },
+          ],
         },
+        context_window: 524288,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling-small',
+        name: 'Inkling Small',
+        match: {
+          or: [
+            {
+              equals: 'thinkingmachines/inkling-small',
+            },
+            {
+              equals: 'thinkingmachines/inkling-small-20260730',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.1,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'thinkingmachines/inkling-small:free',
+        name: 'Inkling Small (free)',
+        match: {
+          equals: 'thinkingmachines/inkling-small:free',
+        },
+        context_window: 1048576,
+        prices: {},
+      },
+      {
+        id: 'thinkingmachines/inkling:free',
+        name: 'Inkling (free)',
+        match: {
+          equals: 'thinkingmachines/inkling:free',
+        },
+        context_window: 1048576,
+        prices: {},
       },
       {
         id: 'thudm/glm-4-32b:free',
@@ -36530,16 +41872,70 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'unbiased/pareto-26.10',
+        name: 'Pareto 26.10',
+        match: {
+          or: [
+            {
+              equals: 'unbiased/pareto-26.10',
+            },
+            {
+              equals: 'unbiased/pareto-26.10-20261015',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.8,
+          cache_read_mtok: 0.03,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'unbiased/pareto-26.9',
+        name: 'Pareto 26.9',
+        match: {
+          or: [
+            {
+              equals: 'unbiased/pareto-26.9',
+            },
+            {
+              equals: 'unbiased/pareto-26.9-20260917',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 7.5,
+        },
+      },
+      {
         id: 'undi95/remm-slerp-l2-13b',
         name: 'ReMM SLERP 13B',
         match: {
           equals: 'undi95/remm-slerp-l2-13b',
         },
         context_window: 6144,
-        prices: {
-          input_mtok: 0.8,
-          output_mtok: 1.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.8,
+              output_mtok: 1.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.35,
+              output_mtok: 0.65,
+            },
+          },
+        ],
       },
       {
         id: 'undi95/toppy-m-7b',
@@ -36549,6 +41945,26 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.07,
+        },
+      },
+      {
+        id: 'upstage/solar-mini4',
+        name: 'Solar Mini 4',
+        match: {
+          or: [
+            {
+              equals: 'upstage/solar-mini4',
+            },
+            {
+              equals: 'upstage/solar-mini4-20260922',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.005,
+          output_mtok: 0.2,
         },
       },
       {
@@ -36562,6 +41978,26 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.015,
           output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'upstage/solar-pro4',
+        name: 'Solar Pro 4',
+        match: {
+          or: [
+            {
+              equals: 'upstage/solar-pro4',
+            },
+            {
+              equals: 'upstage/solar-pro4-20260810',
+            },
+          ],
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.09,
+          cache_read_mtok: 0.018,
+          output_mtok: 0.36,
         },
       },
       {
@@ -36590,7 +42026,14 @@ export const data: Provider[] = [
         id: 'writer/palmyra-x5',
         name: 'Palmyra X5',
         match: {
-          equals: 'writer/palmyra-x5',
+          or: [
+            {
+              equals: 'writer/palmyra-x5',
+            },
+            {
+              equals: 'writer/palmyra-x5-20250428',
+            },
+          ],
         },
         context_window: 1040000,
         prices: {
@@ -36678,27 +42121,119 @@ export const data: Provider[] = [
         id: 'x-ai/grok-4.20',
         name: 'Grok 4.20',
         match: {
-          equals: 'x-ai/grok-4.20',
+          or: [
+            {
+              equals: 'x-ai/grok-4.20',
+            },
+            {
+              equals: 'x-ai/grok-4.20-20260309',
+            },
+          ],
         },
         context_window: 2000000,
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.25,
+              cache_read_mtok: 0.2,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'x-ai/grok-4.20-multi-agent',
         name: 'Grok 4.20 Multi-Agent',
         match: {
-          equals: 'x-ai/grok-4.20-multi-agent',
+          or: [
+            {
+              equals: 'x-ai/grok-4.20-multi-agent',
+            },
+            {
+              equals: 'x-ai/grok-4.20-multi-agent-20260309',
+            },
+          ],
         },
         context_window: 2000000,
-        prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.2,
-          output_mtok: 6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.2,
+              output_mtok: 6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'x-ai/grok-4.3',
@@ -36711,13 +42246,224 @@ export const data: Provider[] = [
             {
               regex: '^x-ai/grok-4\\.3-\\d{8}$',
             },
+            {
+              equals: 'x-ai/grok-4.3-20260430',
+            },
           ],
         },
         context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.25,
+              cache_read_mtok: 0.2,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'x-ai/grok-4.3:batch',
+        name: 'Grok 4.3 (batch)',
+        match: {
+          equals: 'x-ai/grok-4.3:batch',
+        },
+        context_window: 1000000,
         prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.5,
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.16,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.32,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'x-ai/grok-4.5',
+        name: 'Grok 4.5',
+        match: {
+          or: [
+            {
+              equals: 'x-ai/grok-4.5',
+            },
+            {
+              equals: 'x-ai/grok-4.5-20260708',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'x-ai/grok-4.6',
+        name: 'Grok 4.6',
+        match: {
+          or: [
+            {
+              equals: 'x-ai/grok-4.6',
+            },
+            {
+              equals: 'x-ai/grok-4.6-20260810',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'x-ai/grok-4.7',
+        name: 'Grok 4.7',
+        match: {
+          or: [
+            {
+              equals: 'x-ai/grok-4.7',
+            },
+            {
+              equals: 'x-ai/grok-4.7-20260916',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -36734,14 +42480,60 @@ export const data: Provider[] = [
         id: 'x-ai/grok-build-0.1',
         name: 'Grok Build 0.1',
         match: {
-          equals: 'x-ai/grok-build-0.1',
+          or: [
+            {
+              equals: 'x-ai/grok-build-0.1',
+            },
+            {
+              equals: 'x-ai/grok-build-0.1-20260520',
+            },
+          ],
         },
         context_window: 256000,
-        prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.2,
-          output_mtok: 2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.2,
+              output_mtok: 2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'x-ai/grok-code-fast-1',
@@ -36781,7 +42573,14 @@ export const data: Provider[] = [
         id: 'xiaomi/mimo-v2.5',
         name: 'MiMo-V2.5',
         match: {
-          equals: 'xiaomi/mimo-v2.5',
+          or: [
+            {
+              equals: 'xiaomi/mimo-v2.5',
+            },
+            {
+              equals: 'xiaomi/mimo-v2.5-20260422',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.14,
@@ -36793,13 +42592,89 @@ export const data: Provider[] = [
         id: 'xiaomi/mimo-v2.5-pro',
         name: 'MiMo-V2.5-Pro',
         match: {
-          equals: 'xiaomi/mimo-v2.5-pro',
+          or: [
+            {
+              equals: 'xiaomi/mimo-v2.5-pro',
+            },
+            {
+              equals: 'xiaomi/mimo-v2.5-pro-20260422',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.435,
           cache_read_mtok: 0.0036,
           output_mtok: 0.87,
         },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-flash',
+        name: 'MiMo-V2.6-Flash',
+        match: {
+          or: [
+            {
+              equals: 'xiaomi/mimo-v2.6-flash',
+            },
+            {
+              equals: 'xiaomi/mimo-v2.6-flash-20260921',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-pro',
+        name: 'MiMo-V2.6-Pro',
+        match: {
+          or: [
+            {
+              equals: 'xiaomi/mimo-v2.6-pro',
+            },
+            {
+              equals: 'xiaomi/mimo-v2.6-pro-20260921',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
+      },
+      {
+        id: 'xiaomi/mimo-v2.6-pro-ultraspeed',
+        name: 'MiMo-V2.6-Pro-UltraSpeed',
+        match: {
+          or: [
+            {
+              equals: 'xiaomi/mimo-v2.6-pro-ultraspeed',
+            },
+            {
+              equals: 'xiaomi/mimo-v2.6-pro-ultraspeed-20260921',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4.35,
+          cache_read_mtok: 0.036,
+          output_mtok: 8.7,
+        },
+      },
+      {
+        id: 'xingchen-agi/xing4.0-29b-a4b:free',
+        name: 'Xing4.0 29B A4B (free)',
+        match: {
+          equals: 'xingchen-agi/xing4.0-29b-a4b:free',
+        },
+        context_window: 262144,
+        prices: {},
       },
       {
         id: 'xwin-lm/xwin-lm-70b',
@@ -36842,11 +42717,26 @@ export const data: Provider[] = [
           equals: 'z-ai/glm-4.5-air',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.125,
-          cache_read_mtok: 0.06,
-          output_mtok: 0.85,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.06,
+              output_mtok: 0.85,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.13,
+              cache_read_mtok: 0.025,
+              output_mtok: 0.85,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-4.5v',
@@ -36867,36 +42757,95 @@ export const data: Provider[] = [
         match: {
           equals: 'z-ai/glm-4.6',
         },
-        prices: {
-          input_mtok: 0.43,
-          cache_read_mtok: 0.08,
-          output_mtok: 1.74,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.43,
+              cache_read_mtok: 0.08,
+              output_mtok: 1.74,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.55,
+              cache_read_mtok: 0.11,
+              output_mtok: 2.2,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-4.6v',
         name: 'GLM 4.6V',
         match: {
-          equals: 'z-ai/glm-4.6v',
+          or: [
+            {
+              equals: 'z-ai/glm-4.6v',
+            },
+            {
+              equals: 'z-ai/glm-4.6-20251208',
+            },
+          ],
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.3,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.055,
+              output_mtok: 0.9,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-4.7',
         name: 'GLM 4.7',
         match: {
-          equals: 'z-ai/glm-4.7',
+          or: [
+            {
+              equals: 'z-ai/glm-4.7',
+            },
+            {
+              equals: 'z-ai/glm-4.7-20251222',
+            },
+          ],
         },
-        prices: {
-          input_mtok: 0.4,
-          cache_read_mtok: 0.08,
-          output_mtok: 1.75,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.08,
+              output_mtok: 1.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.54,
+              cache_read_mtok: 0.099,
+              output_mtok: 1.98,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-4.7-flash',
@@ -36911,11 +42860,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.06,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.06,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0605,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-5',
@@ -36930,11 +42894,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.6,
-          cache_read_mtok: 0.12,
-          output_mtok: 1.92,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.12,
+              output_mtok: 1.92,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.2,
+              output_mtok: 3.2,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-5-turbo',
@@ -36969,11 +42948,26 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 0.98,
-          cache_read_mtok: 0.182,
-          output_mtok: 3.08,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.98,
+              cache_read_mtok: 0.182,
+              output_mtok: 3.08,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.966,
+              cache_read_mtok: 0.1794,
+              output_mtok: 3.036,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-5.2',
@@ -36989,11 +42983,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.4,
-          cache_read_mtok: 0.26,
-          output_mtok: 4.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.4,
+              cache_read_mtok: 0.26,
+              output_mtok: 4.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.62,
+              cache_read_mtok: 0.14,
+              output_mtok: 2.42,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-5.3',
@@ -37009,17 +43018,39 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.4,
-          cache_read_mtok: 0.26,
-          output_mtok: 4.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.4,
+              cache_read_mtok: 0.26,
+              output_mtok: 4.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.079,
+              cache_read_mtok: 0.078,
+              output_mtok: 1.4,
+            },
+          },
+        ],
       },
       {
         id: 'z-ai/glm-5.3-flash',
         name: 'GLM 5.3 Flash',
         match: {
-          equals: 'z-ai/glm-5.3-flash',
+          or: [
+            {
+              equals: 'z-ai/glm-5.3-flash',
+            },
+            {
+              equals: 'z-ai/glm-5.3-flash-20260826',
+            },
+          ],
         },
         context_window: 1310720,
         price_comments:
@@ -37043,7 +43074,104 @@ export const data: Provider[] = [
               output_mtok: 0.5,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0392,
+              cache_read_mtok: 0.006,
+              output_mtok: 0.2,
+            },
+          },
         ],
+      },
+      {
+        id: 'z-ai/glm-5.3-flash:batch',
+        name: 'GLM 5.3 Flash (batch)',
+        match: {
+          equals: 'z-ai/glm-5.3-flash:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.3-flashx',
+        name: 'GLM 5.3 FlashX',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5.3-flashx',
+            },
+            {
+              equals: 'z-ai/glm-5.3-flashx-20260918',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.37,
+          cache_read_mtok: 0.09,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.3-prime',
+        name: 'GLM 5.3 Prime',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5.3-prime',
+            },
+            {
+              equals: 'z-ai/glm-5.3-prime-20260921',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2.8,
+          cache_read_mtok: 0.56,
+          output_mtok: 8.8,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.3:batch',
+        name: 'GLM 5.3 (batch)',
+        match: {
+          equals: 'z-ai/glm-5.3:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.1,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'z-ai/glm-5v-turbo',
+        name: 'GLM 5V Turbo',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5v-turbo',
+            },
+            {
+              equals: 'z-ai/glm-5v-turbo-20260401',
+            },
+          ],
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 1.2,
+          cache_read_mtok: 0.24,
+          output_mtok: 4,
+        },
       },
       {
         id: '~anthropic/claude-fable-latest',
@@ -37052,12 +43180,28 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-fable-latest',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 10,
-          cache_write_mtok: 12.5,
-          cache_read_mtok: 1,
-          output_mtok: 50,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 1,
+              output_mtok: 50,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 50,
+            },
+          },
+        ],
       },
       {
         id: '~anthropic/claude-haiku-latest',
@@ -37189,7 +43333,57 @@ export const data: Provider[] = [
               output_mtok: 10,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+            },
+          },
         ],
+      },
+      {
+        id: '~deepseek/deepseek-flash-latest',
+        name: 'DeepSeek Flash Latest',
+        match: {
+          equals: '~deepseek/deepseek-flash-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.012,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: '~deepseek/deepseek-pro-latest',
+        name: 'DeepSeek Pro Latest',
+        match: {
+          equals: '~deepseek/deepseek-pro-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.225,
+          cache_read_mtok: 0.23,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: '~deepseek/deepseek-v4-flash-latest',
+        name: 'DeepSeek V4 Flash Latest',
+        match: {
+          equals: '~deepseek/deepseek-v4-flash-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.0065,
+          output_mtok: 0.45,
+        },
       },
       {
         id: '~google/gemini-flash-latest',
@@ -37198,12 +43392,28 @@ export const data: Provider[] = [
           equals: '~google/gemini-flash-latest',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1.5,
-          cache_write_mtok: 0.08333333333333334,
-          cache_read_mtok: 0.15,
-          output_mtok: 9,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.5,
+              cache_write_mtok: 0.08333333333333334,
+              cache_read_mtok: 0.15,
+              output_mtok: 9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_write_mtok: 0.0416666666666667,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
+        ],
       },
       {
         id: '~google/gemini-pro-latest',
@@ -37212,12 +43422,28 @@ export const data: Provider[] = [
           equals: '~google/gemini-pro-latest',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 2,
-          cache_write_mtok: 0.375,
-          cache_read_mtok: 0.2,
-          output_mtok: 12,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 0.375,
+              cache_read_mtok: 0.2,
+              output_mtok: 12,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 0.1875,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+            },
+          },
+        ],
       },
       {
         id: '~moonshotai/kimi-latest',
@@ -37226,10 +43452,71 @@ export const data: Provider[] = [
           equals: '~moonshotai/kimi-latest',
         },
         context_window: 1048576,
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.68,
+              cache_read_mtok: 0.34,
+              output_mtok: 3.41,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.217,
+              cache_read_mtok: 0.207,
+              output_mtok: 16,
+            },
+          },
+        ],
+      },
+      {
+        id: '~openai/gpt-astra-latest',
+        name: 'GPT Astra Latest',
+        match: {
+          equals: '~openai/gpt-astra-latest',
+        },
+        context_window: 1050000,
         prices: {
-          input_mtok: 0.68,
-          cache_read_mtok: 0.34,
-          output_mtok: 3.41,
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 12.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
         },
       },
       {
@@ -37246,6 +43533,52 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '~openai/gpt-luna-latest',
+        name: 'GPT Luna Latest',
+        match: {
+          equals: '~openai/gpt-luna-latest',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.75,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: '~openai/gpt-mini-latest',
         name: 'OpenAI GPT Mini Latest',
         match: {
@@ -37256,6 +43589,174 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.075,
           output_mtok: 4.5,
+        },
+      },
+      {
+        id: '~openai/gpt-sol-latest',
+        name: 'GPT Sol Latest',
+        match: {
+          equals: '~openai/gpt-sol-latest',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: '~openai/gpt-terra-latest',
+        name: 'GPT Terra Latest',
+        match: {
+          equals: '~openai/gpt-terra-latest',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 272000,
+                price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: '~unbiased/pareto-latest',
+        name: 'Pareto Latest',
+        match: {
+          equals: '~unbiased/pareto-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.8,
+          cache_read_mtok: 0.03,
+          output_mtok: 3.2,
+        },
+      },
+      {
+        id: '~x-ai/grok-latest',
+        name: 'Grok Latest',
+        match: {
+          equals: '~x-ai/grok-latest',
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: '~z-ai/glm-flash-latest',
+        name: 'GLM Flash Latest',
+        match: {
+          equals: '~z-ai/glm-flash-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.0392,
+          cache_read_mtok: 0.006,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: '~z-ai/glm-latest',
+        name: 'GLM Latest',
+        match: {
+          equals: '~z-ai/glm-latest',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.04,
+          cache_read_mtok: 0.025,
+          output_mtok: 6,
         },
       },
     ],

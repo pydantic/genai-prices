@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
@@ -11,7 +12,7 @@ from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
+from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, TieredPrices, match_logic_schema
 from .utils import package_dir
 
 yaml = YAML()
@@ -117,7 +118,8 @@ class ProviderYaml:
                 clause_yml = model.match.model_dump(by_alias=True, mode='json')
                 or_list.append(clause_yml)  # pyright: ignore[reportUnknownMemberType]
         else:
-            match_or = ClauseOr.model_validate({'or': [current_match, model.match]})
+            clauses = model.match.or_ if isinstance(model.match, ClauseOr) else [model.match]
+            match_or = ClauseOr.model_validate({'or': [current_match, *(c for c in clauses if c != current_match)]})
             yaml_model['match'] = match_or.model_dump(by_alias=True, mode='json')
 
     def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None:
@@ -147,11 +149,30 @@ class ProviderYaml:
                 models_added += self.add_model(model)
                 continue
             current = matching_model.prices
-            current = current[-1].prices if isinstance(current, list) else current
+            curated = dict(current[-1].prices if isinstance(current, list) else current)
             assert isinstance(model.prices, ModelPrice)
+            reported = {
+                # A rate written as a float (0.08333333333333334) is the same rate as its exact decimal.
+                key: rate
+                if isinstance(rate := curated.get(key), Decimal)
+                and isinstance(value, Decimal)
+                and abs(rate - value) < Decimal('1e-12')
+                else value
+                for key, value in model.prices
+                if value is not None
+            }
+            tiered = {
+                key: tiers
+                for key, value in reported.items()
+                if isinstance(tiers := curated.get(key), TieredPrices) and not isinstance(value, TieredPrices)
+            }
+            if any(reported[key] != tiers.base for key, tiers in tiered.items()):
+                print(
+                    f'{source}: kept {matching_model.id} unchanged, {model.id} reports a flat rate where it is tiered'
+                )
+                continue
             # A source that doesn't report a key (e.g. cache writes) must not drop the curated rate for it.
-            reported = {key: value for key, value in model.prices if value is not None}
-            prices = ModelPrice(**{**dict(current), **reported})
+            prices = ModelPrice(**(curated | reported | tiered))
             if previous := updated_prices.get(matching_model.id):
                 if previous != prices:
                     print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')

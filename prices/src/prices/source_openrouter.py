@@ -1,17 +1,27 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from pathlib import Path
+from typing import Any, Literal
 
 import httpx2
 from pydantic import BaseModel
 
 from . import source_prices
-from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
-from .update import get_providers_yaml
-from .utils import distinct_mtok, mtok
+from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Tier, TieredPrices
+from .update import ProviderYaml, get_providers_yaml
+from .utils import distinct_mtok, mtok, package_dir
+
+MODELS_URL = 'https://openrouter.ai/api/v1/models'
+MIN_MODEL_COUNT = 100
+TIERED_PRICE_FIELDS = {
+    'input_mtok': 'prompt',
+    'cache_write_mtok': 'input_cache_write',
+    'cache_read_mtok': 'input_cache_read',
+    'output_mtok': 'completion',
+}
 
 map_providers = {
     'mistralai': 'mistral',
@@ -155,7 +165,7 @@ def report_unknown_pricing_fields(models: list[OpenRouterModel]) -> dict[str, in
 
 def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     """Update provider prices and metadata based on OpenRouter API."""
-    r = httpx2.get('https://openrouter.ai/api/v1/models')
+    r = httpx2.get(MODELS_URL)
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
@@ -254,6 +264,98 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
 
     if mode == 'prices':
         source_prices.write_source_prices('openrouter', prices)
+
+
+def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
+    """Build the `openrouter` provider's records, with prompt-length overrides as tiers."""
+    by_id = {model.id: model for model in models}
+    model_infos: list[ModelInfo] = []
+    for model in models:
+        if model.provider_id() == 'openrouter' or model.pricing.has_negative_price():
+            continue
+        if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
+            model = with_batch_cache_writes(model, base)
+        overrides: list[dict[str, Any]] = (model.pricing.model_extra or {}).get('overrides') or []
+        if any(key.startswith('utc_') for override in overrides for key in override):
+            # Time-of-day rates can't be expressed as one dated price; leave these models curated by hand.
+            continue
+        for override in overrides:
+            if 'min_prompt_tokens' not in override or 'internal_reasoning' in override:
+                raise RuntimeError(f'Unexpected OpenRouter price override for {model.id}: {override}')
+        model_info = model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
+        if ':' in model.id:
+            # A `:batch` or `:free` route shares its base model's canonical slug, which must match only the base.
+            model_info = model_info.model_copy(update={'match': ClauseEquals(equals=model.id)})
+        prices = model_info.prices
+        assert isinstance(prices, ModelPrice)
+        tiered: dict[str, TieredPrices] = {}
+        for key, field in TIERED_PRICE_FIELDS.items():
+            tiers = [
+                Tier(start=override['min_prompt_tokens'], price=Decimal(override[field]) * 1_000_000)
+                for override in overrides
+                if field in override
+            ]
+            if not tiers:
+                continue
+            base = dict(prices).get(key)
+            if base is None:
+                raise RuntimeError(f'OpenRouter overrides {field} for {model.id} without a base rate')
+            tiered[key] = TieredPrices(base=base, tiers=sorted(tiers, key=lambda tier: tier.start))
+        prices = prices.model_copy(update=tiered)
+        # A cache rate equal to the input rate is redundant: the input rate already prices those tokens.
+        redundant = {
+            key: None for key in ('cache_read_mtok', 'cache_write_mtok') if dict(prices)[key] == prices.input_mtok
+        }
+        model_infos.append(
+            model_info.model_copy(
+                update={'prices': prices.model_copy(update=redundant), 'prices_checked': date.today()}
+            )
+        )
+    return model_infos
+
+
+def with_batch_cache_writes(batch: OpenRouterModel, base: OpenRouterModel) -> OpenRouterModel:
+    """Fill the cache-write rates OpenRouter omits on a batch route, at the route's input discount."""
+    if batch.pricing.input_cache_write is not None or base.pricing.input_cache_write is None:
+        return batch
+    if not batch.pricing.prompt or not base.pricing.prompt:
+        return batch
+    ratio = batch.pricing.prompt / base.pricing.prompt
+    batch_overrides: list[dict[str, Any]] = (batch.pricing.model_extra or {}).get('overrides') or []
+    base_overrides: list[dict[str, Any]] = (base.pricing.model_extra or {}).get('overrides') or []
+    starts = [override.get('min_prompt_tokens') for override in batch_overrides]
+    if starts != [override.get('min_prompt_tokens') for override in base_overrides]:
+        return batch
+    overrides = [
+        {**override, 'input_cache_write': Decimal(base_override['input_cache_write']) * ratio}
+        if 'input_cache_write' in base_override
+        else override
+        for override, base_override in zip(batch_overrides, base_overrides)
+    ]
+    pricing = batch.pricing.model_copy(
+        update={'input_cache_write': base.pricing.input_cache_write * ratio, 'overrides': overrides}
+    )
+    return batch.model_copy(update={'pricing': pricing})
+
+
+def update_openrouter_provider(provider_path: Path | None = None) -> None:
+    """Update only the `openrouter` provider's prices, keeping a dated entry for every rate change."""
+    response = httpx2.get(MODELS_URL, timeout=30.0)
+    response.raise_for_status()
+    models = parse_provider_models(OpenRouterResponse.model_validate_json(response.content).data)
+    provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openrouter.yml')
+    # `context_length` varies by endpoint, so an existing record's window, or its deliberate absence, is curated.
+    models = [
+        model.model_copy(update={'context_window': None}) if provider_yaml.provider.find_model(model.id) else model
+        for model in models
+    ]
+    added, updated = provider_yaml.upsert_models(models, source='OpenRouter', min_count=MIN_MODEL_COUNT)
+    print(f'OpenRouter prices updated: {added} added, {updated} updated')
+
+
+def get_openrouter_provider_prices():  # pragma: no cover - thin CLI alias for update_openrouter_provider
+    """Update the openrouter provider's prices from the OpenRouter API."""
+    update_openrouter_provider()
 
 
 def update_from_openrouter():  # pragma: no cover - thin CLI alias for main
