@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from decimal import Decimal
 from io import StringIO
 from operator import itemgetter
@@ -23,6 +24,7 @@ from .prices_types import (
     match_logic_schema,
 )
 from .utils import package_dir
+from .variants import follow_standard_change
 
 yaml = YAML()
 yaml.preserve_quotes = True
@@ -188,6 +190,9 @@ class ProviderYaml:
                     print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')
                 continue
             updated_prices[matching_model.id] = prices
+            if matching_model.price_variants and prices != ModelPrice(**curated):
+                assert model.prices_checked is not None, 'a price update needs the date it was checked'
+                self._follow_price_variants(matching_model, ModelPrice(**curated), prices, model.prices_checked, source)
             model = model.model_copy(update={'prices': prices})
             if model.match == ClauseEquals(equals=model.id):
                 # The existing match already covers this id, so an `equals` clause for it would only add noise.
@@ -203,6 +208,35 @@ class ProviderYaml:
 
     def remove_model(self, model_id: str) -> None:
         self._removed_models.add(model_id)
+
+    def _follow_price_variants(
+        self, record: ModelInfo, old: ModelPrice, new: ModelPrice, start: date, source: str
+    ) -> None:
+        """Date a new batch/flex/priority rate for every variant that is a fixed share of the standard rate."""
+        assert record.price_variants is not None
+        yaml_variants = cast(CommentedSeq, self._get_model(record.id)['price_variants'])
+        changes: list[tuple[int, bool, CommentedMap]] = []
+        for when, prices in follow_standard_change(record.price_variants, old, new):
+            if prices is None:
+                print(
+                    f'{source}: {record.id} {when} rates are not one share of the standard rates; update them by hand'
+                )
+                continue
+            index = next(i for i, variant in enumerate(record.price_variants) if variant.when == when)
+            constraint = record.price_variants[index].constraint
+            same_day = isinstance(constraint, StartDateConstraint) and constraint.start_date == start
+            entry = CommentedMap(
+                when=flow_map(when),
+                constraint=flow_map({'start_date': start}),
+                prices=prices.model_dump(by_alias=True, mode='json', exclude_none=True),
+            )
+            changes.append((index, same_day, entry))
+        # Variants resolve first to last, so the dated entry goes ahead of the one it supersedes.
+        for index, same_day, entry in sorted(changes, key=lambda change: change[0], reverse=True):
+            if same_day:
+                yaml_variants[index] = entry
+            else:
+                yaml_variants.insert(index, entry)  # pyright: ignore[reportUnknownMemberType]
 
     def _get_model(self, model_id: str) -> CommentedMap:
         for model in self.data['models']:
@@ -228,6 +262,12 @@ class ProviderYaml:
         self.data['models'] = existing_models
 
         self.path.write_text(get_provider_yaml_string(self.data))
+
+
+def flow_map(values: dict[str, Any]) -> CommentedMap:
+    mapping = CommentedMap(values)
+    mapping.fa.set_flow_style()  # pyright: ignore[reportUnknownMemberType]
+    return mapping
 
 
 def without_redundant_cache_rates(prices: ModelPrice) -> ModelPrice:
