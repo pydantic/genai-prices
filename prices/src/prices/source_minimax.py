@@ -10,7 +10,7 @@ from prices.update import ProviderYaml
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://platform.minimax.io/docs/pricing/overview.md'
-MIN_MODEL_COUNT = 4
+MIN_MODEL_COUNT = 2
 PRICE_COLUMNS = {
     'Input': 'input_mtok',
     'Output': 'output_mtok',
