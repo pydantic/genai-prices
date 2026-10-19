@@ -13,9 +13,12 @@ from . import source_prices
 from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Tier, TieredPrices
 from .update import ProviderYaml, get_providers_yaml
 from .utils import distinct_mtok, mtok, package_dir
+from .variants import rate_pairs, shape
 
 MODELS_URL = 'https://openrouter.ai/api/v1/models'
 MIN_MODEL_COUNT = 100
+# A model's listed price is its cheapest provider's current, often discounted, rate, which drifts by the hour.
+PRICE_TOLERANCE = Decimal('0.05')
 TIERED_PRICE_FIELDS = {
     'input_mtok': 'prompt',
     'cache_write_mtok': 'input_cache_write',
@@ -340,13 +343,37 @@ def update_openrouter_provider(provider_path: Path | None = None) -> None:
     response.raise_for_status()
     models = parse_provider_models(OpenRouterResponse.model_validate_json(response.content).data)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openrouter.yml')
-    # `context_length` varies by endpoint, so an existing record's window, or its deliberate absence, is curated.
-    models = [
-        model.model_copy(update={'context_window': None}) if provider_yaml.provider.find_model(model.id) else model
-        for model in models
-    ]
+    models = [settled(model, provider_yaml) for model in models]
     added, updated = provider_yaml.upsert_models(models, source='OpenRouter', min_count=MIN_MODEL_COUNT)
     print(f'OpenRouter prices updated: {added} added, {updated} updated')
+
+
+def settled(model: ModelInfo, provider_yaml: ProviderYaml) -> ModelInfo:
+    """Keep a tracked record's context window, and its rates when the reported ones only drifted."""
+    if (record := provider_yaml.provider.find_model(model.id)) is None:
+        return model
+    # `context_length` varies by endpoint, so an existing record's window, or its deliberate absence, is curated.
+    update: dict[str, Any] = {'context_window': None}
+    current = record.prices[-1].prices if isinstance(record.prices, list) else record.prices
+    assert isinstance(model.prices, ModelPrice)
+    if within_tolerance(current, model.prices):
+        update['prices'] = current
+    return model.model_copy(update=update)
+
+
+def within_tolerance(current: ModelPrice, reported: ModelPrice) -> bool:
+    """Whether every reported rate is within `PRICE_TOLERANCE` of the current one, tiered the same way."""
+    curated = dict(current)
+    for key, value in reported:
+        if value is None:
+            continue
+        if (previous := curated.get(key)) is None or shape(value) != shape(previous):
+            return False
+        for rate, base in rate_pairs(value, previous):
+            assert base is not None
+            if abs(rate - base) > PRICE_TOLERANCE * base:
+                return False
+    return True
 
 
 def get_openrouter_provider_prices():  # pragma: no cover - thin CLI alias for update_openrouter_provider
