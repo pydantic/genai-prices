@@ -13648,6 +13648,7 @@ export const data: Provider[] = [
       },
       {
         id: 'openai/gpt-oss-120b',
+        name: 'GPT OSS 120B',
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
@@ -13680,6 +13681,7 @@ export const data: Provider[] = [
       },
       {
         id: 'openai/gpt-oss-20b',
+        name: 'GPT OSS 20B',
         description:
           "GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
         match: {
@@ -38487,6 +38489,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'MiniMaxAI/MiniMax-M3',
+        name: 'Minimax M3',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M3',
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.06,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'Nexusflow/NexusRaven-V2-13B',
         match: {
           equals: 'Nexusflow/NexusRaven-V2-13B',
@@ -38662,6 +38677,78 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.5-9B',
+        name: 'Qwen3.5 9B',
+        match: {
+          equals: 'Qwen/Qwen3.5-9B',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.17,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-Plus',
+        name: 'Qwen3.6 Plus',
+        match: {
+          equals: 'Qwen/Qwen3.6-Plus',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.7-Max',
+        name: 'Qwen3.7 Max',
+        match: {
+          equals: 'Qwen/Qwen3.7-Max',
+        },
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.5,
+          output_mtok: 7.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.7-Plus',
+        name: 'Qwen3.7 Plus',
+        match: {
+          equals: 'Qwen/Qwen3.7-Plus',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.32,
+          output_mtok: 1.28,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-2.4T-A95B',
+        name: 'Qwen3.8-2.4T-A95B',
+        match: {
+          equals: 'Qwen/Qwen3.8-2.4T-A95B',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.8-Flash',
+        name: 'Qwen3.8 Flash',
+        match: {
+          equals: 'Qwen/Qwen3.8-Flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.47,
+        },
+      },
+      {
         id: 'Undi95/ReMM-SLERP-L2-13B',
         match: {
           equals: 'Undi95/ReMM-SLERP-L2-13B',
@@ -38749,6 +38836,32 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        name: 'DeepSeek V4 Pro 0813',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Pro-0813',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.13,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        name: 'DeepSeek V4.1 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
         },
       },
       {
@@ -38986,6 +39099,32 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'meta-models/Muse-Glimmer-30B',
+        name: 'Muse Glimmer 30B',
+        match: {
+          equals: 'meta-models/Muse-Glimmer-30B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.35,
+          cache_read_mtok: 0.04,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'meta-models/Muse-Spark-Open-816B-A42B',
+        name: 'Muse Spark Open 816B A42B',
+        match: {
+          equals: 'meta-models/Muse-Spark-Open-816B-A42B',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
         id: 'microsoft/WizardLM-2-8x22B',
         match: {
           equals: 'microsoft/WizardLM-2-8x22B',
@@ -39066,6 +39205,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/Kimi-K3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL',
+        name: 'NVIDIA Nemotron 3.5 Super VL',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.02,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'GPT-OSS 120B',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'openchat/openchat-3.5-1210',
         match: {
           equals: 'openchat/openchat-3.5-1210',
@@ -39073,6 +39250,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'reflection/Beam-1.0-501B-A23B',
+        name: 'Beam 1.0 501B A23B',
+        match: {
+          equals: 'reflection/Beam-1.0-501B-A23B',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.4,
+          cache_read_mtok: 0.04,
+          output_mtok: 1.2,
         },
       },
       {
@@ -39106,6 +39296,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'thinkingmachines/Inkling',
+        name: 'Inkling',
+        match: {
+          equals: 'thinkingmachines/Inkling',
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.17,
+          output_mtok: 4.05,
+        },
+      },
+      {
         id: 'together/Tev1-4B-experimental',
         name: 'Tev1 4B Experimental',
         match: {
@@ -39113,10 +39316,23 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         price_comments:
-          'The model page and https://www.together.ai/pricing list $0.04 per million input tokens and free output. The serverless catalog still lists $0.042: https://docs.together.ai/docs/serverless/models',
-        prices: {
-          input_mtok: 0.04,
-        },
+          'Rates follow the serverless catalog (https://docs.together.ai/docs/serverless/models), which lists $0.042 per million input tokens; the model page and https://www.together.ai/pricing list $0.04.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.04,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.042,
+            },
+          },
+        ],
       },
       {
         id: 'togethercomputer/GPT-JT-Moderation-6B',
@@ -39236,6 +39452,45 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.2',
+        name: 'GLM-5.2',
+        match: {
+          equals: 'zai-org/GLM-5.2',
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3',
+        name: 'GLM-5.3',
+        match: {
+          equals: 'zai-org/GLM-5.3',
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.3-Flash',
+        name: 'GLM-5.3 Flash',
+        match: {
+          equals: 'zai-org/GLM-5.3-Flash',
+        },
+        context_window: 1048575,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
       {
@@ -40131,6 +40386,42 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.2,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'grok-4.20-multi-agent-0309',
+        match: {
+          equals: 'grok-4.20-multi-agent-0309',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 199999,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 199999,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 199999,
+                price: 5,
+              },
+            ],
+          },
         },
       },
       {

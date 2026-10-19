@@ -140,5 +140,5 @@ def test_minimax_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
 
     source_minimax.main(provider_path)
 
-    assert capsys.readouterr().out == 'MiniMax prices updated: 0 added, 8 updated\n'
+    assert capsys.readouterr().out == 'MiniMax prices updated: 0 added, 6 updated\n'
     assert 'equals: MiniMax-M2.7-highspeed' not in provider_path.read_text()

@@ -58,10 +58,19 @@ def test_typesafe_114_default_context(model: str) -> None:
     assert price.total_price == Decimal('0.042')
 
 
-def test_grok_multi_agent_unverified_alias_is_not_priced() -> None:
-    with pytest.raises(LookupError, match='Unable to find model'):
-        calc_price(Usage(input_tokens=1), 'grok-4.20-multi-agent-0309', provider_id='x-ai')
+def test_grok_multi_agent_dated_id_takes_its_published_long_context_rate() -> None:
+    dated = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent-0309',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
+    assert dated.model.id == 'grok-4.20-multi-agent-0309'
+    assert dated.total_price == Decimal('5.5')
     price = calc_price(
-        Usage(input_tokens=200_000, output_tokens=1_000_000), 'grok-4.20-multi-agent', provider_id='x-ai'
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert price.total_price == Decimal('6.4')
