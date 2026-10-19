@@ -45,6 +45,7 @@ jobs:
           - huggingface
           - meta
           - minimax
+          - mistral
           - modal
           - moonshotai
           - novita
