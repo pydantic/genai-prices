@@ -120,6 +120,8 @@ jobs:
           uv sync --all-packages
           npm ci
           make collapse-models build
+          # extract_usages.py exits non-zero after rewriting a stale file; a second run fails only on a real error.
+          uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py
       - if: steps.apply.outputs.importers != ''
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0

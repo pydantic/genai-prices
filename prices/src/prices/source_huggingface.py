@@ -1,14 +1,16 @@
-from operator import attrgetter
+from datetime import date
 from pathlib import Path
 from typing import Any, cast
 
 import httpx2
 from pydantic import HttpUrl
 
-from prices.collapse import collapse_provider
 from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
-from prices.write_guard import check_model_count
+from prices.utils import package_dir
+
+MODELS_URL = 'https://router.huggingface.co/v1/models'
+MIN_MODEL_COUNT = 50
 
 
 def get_model_infos(models: list[dict[str, Any]], provider: str):
@@ -38,69 +40,56 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
                 ]
             ),
             context_window=provider_info.get('context_length'),
+            prices_checked=date.today(),
         )
 
 
-def main():
-    models = httpx2.get('https://router.huggingface.co/v1/models').json()['data']
-    if not models:
-        raise SystemExit('HuggingFace router returned no models; nothing written')
+def main(providers_dir: Path | None = None) -> None:
+    providers_dir = providers_dir or package_dir / 'providers'
+    response = httpx2.get(MODELS_URL, timeout=30.0)
+    response.raise_for_status()
+    models = response.json()['data']
+    providers = sorted({p['provider'] for model in models for p in model['providers']})
+    model_infos = {provider: list(get_model_infos(models, provider)) for provider in providers}
+    # Each sub-provider can legitimately list very few models, so only the router as a whole is checked.
+    if (total := sum(map(len, model_infos.values()))) < MIN_MODEL_COUNT:
+        raise RuntimeError(
+            f'HuggingFace router returned only {total} priced models; expected at least {MIN_MODEL_COUNT}'
+        )
 
-    providers = {p['provider'] for model in models for p in model['providers']}
-    providers_dir = Path(__file__).parent / '../../providers'
+    for provider, infos in model_infos.items():
+        if not infos:
+            continue
+        path = providers_dir / f'huggingface_{provider}.yml'
+        if not path.exists():
+            path.write_text(new_provider_yaml(provider, providers_dir))
+        added, updated = ProviderYaml(path).upsert_models(infos, source=f'HuggingFace ({provider})', min_count=1)
+        print(f'HuggingFace ({provider}) prices updated: {added} added, {updated} updated')
 
+
+def new_provider_yaml(provider: str, providers_dir: Path) -> str:
     openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
     assert openai_extractors
     [chat_extractor] = [e for e in openai_extractors if e.api_flavor == 'chat']
-    # Only the chat completions API is served, so it is also the `default` flavor (#324).
-    extractors = [chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor]
-
-    # Build and check every provider before writing any, so a bad payload can't leave the set half-updated.
-    outputs: list[tuple[Path, str]] = []
-    for provider in providers:
-        provider_id = f'huggingface_{provider}'
-        path = providers_dir / f'{provider_id}.yml'
-        model_infos = sorted(get_model_infos(models, provider), key=attrgetter('id'))
-        check_model_count(path, len(model_infos), source=f'HuggingFace router ({provider})')
-        if not model_infos:
-            continue
-
-        provider_match = ClauseAnd(
+    provider_info = Provider(
+        id=f'huggingface_{provider}',
+        name=f'HuggingFace ({provider})',
+        api_pattern=rf'https://router\.huggingface\.co/{provider}',
+        models=[],
+        pricing_urls=[HttpUrl(MODELS_URL), HttpUrl('https://huggingface.co/inference/models')],
+        # Only the chat completions API is served, so it is also the `default` flavor (#324).
+        extractors=[chat_extractor.model_copy(update={'api_flavor': 'default'}), chat_extractor],
+        provider_match=ClauseAnd(
             and_=[  # pyright: ignore[reportCallIssue]
                 ClauseContains(contains='huggingface'),
                 ClauseContains(contains=provider),
             ],
-        )
-        provider_info = Provider(
-            id=provider_id,
-            name=f'HuggingFace ({provider})',
-            api_pattern=rf'https://router\.huggingface\.co/{provider}',
-            models=model_infos,
-            pricing_urls=[
-                HttpUrl('https://router.huggingface.co/v1/models'),
-                HttpUrl('https://huggingface.co/inference/models'),
-            ],
-            extractors=extractors,
-            provider_match=provider_match,
-        )
-        yaml_data = cast(
-            ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
-        )
-
-        yaml_string = (
-            '# yaml-language-server: $schema=.schema.json\n'
-            '# !!!!!!\n'
-            '# This is auto-generated by source_huggingface.py and does not support manual edits yet\n'
-            '# !!!!!!\n\n'
-        ) + get_provider_yaml_string(yaml_data)
-
-        outputs.append((path, yaml_string))
-
-    for path, yaml_string in outputs:
-        path.write_text(yaml_string)
-        provider_yaml = ProviderYaml(path)
-        if collapse_provider(provider_yaml):
-            provider_yaml.save()
+        ),
+    )
+    yaml_data = cast(
+        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
+    )
+    return '# yaml-language-server: $schema=.schema.json\n' + get_provider_yaml_string(yaml_data)
 
 
 def get_huggingface_prices():  # pragma: no cover - thin CLI alias for main

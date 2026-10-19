@@ -71,13 +71,9 @@ def parse_pricing_page(page: str) -> dict[str, ModelPrice]:
 def parse_models(catalog_markdown: str, pricing_page: str) -> list[ModelInfo]:
     catalog = parse_catalog(catalog_markdown)
     prices = parse_pricing_page(pricing_page)
-    catalog_ids = {model.id for model in catalog}
-    if catalog_ids != prices.keys():
-        missing_prices = sorted(catalog_ids - prices.keys())
-        missing_catalog = sorted(prices.keys() - catalog_ids)
-        raise RuntimeError(
-            f'Baseten catalog/pricing mismatch: missing prices={missing_prices}, missing catalog={missing_catalog}'
-        )
+    # New models often reach the catalog before the pricing page, so price only what both list.
+    if unpriced := sorted({model.id for model in catalog} - prices.keys()):
+        print(f'Skipping Baseten models without published prices: {unpriced}')
     return [
         ModelInfo(
             id=model.id,
@@ -93,26 +89,8 @@ def parse_models(catalog_markdown: str, pricing_page: str) -> list[ModelInfo]:
             prices_checked=date.today(),
         )
         for model in catalog
+        if model.id in prices
     ]
-
-
-def update_baseten_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) -> tuple[int, int]:
-    if len(models) < MIN_MODEL_COUNT:
-        raise RuntimeError(f'Baseten sources returned only {len(models)} models; expected at least {MIN_MODEL_COUNT}')
-    existing_count = len(provider_yaml.provider.models)
-    if len(models) * 2 < existing_count:
-        raise RuntimeError(f'Baseten sources returned only {len(models)} models; tracked provider has {existing_count}')
-    models_added = 0
-    models_updated = 0
-    for model in models:
-        matching_model = provider_yaml.provider.find_model(model.id)
-        if matching_model is None:
-            models_added += provider_yaml.add_model(model)
-        else:
-            provider_yaml.update_model(matching_model.id, model, set_prices=True, preserve_price_history=True)
-            models_updated += 1
-    provider_yaml.save()
-    return models_added, models_updated
 
 
 def main(provider_path: Path | None = None) -> None:
@@ -122,7 +100,9 @@ def main(provider_path: Path | None = None) -> None:
     pricing_response.raise_for_status()
     models = parse_models(catalog_response.text, pricing_response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/baseten.yml')
-    models_added, models_updated = update_baseten_provider(provider_yaml, models)
+    models_added, models_updated = provider_yaml.upsert_models(
+        models, source='Baseten sources', min_count=MIN_MODEL_COUNT
+    )
     print(f'Baseten prices updated: {models_added} added, {models_updated} updated')
 
 

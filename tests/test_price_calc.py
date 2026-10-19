@@ -3120,6 +3120,7 @@ def test_decision_model_input_only_prices(
         Usage(input_tokens=input_tokens, output_tokens=70),
         model_ref=model_ref,
         provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.provider.id == provider_id
