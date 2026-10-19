@@ -60,5 +60,12 @@ it('prices the dated Grok multi-agent id at its published long-context rate', ()
   const dated = calcPrice(usage, 'grok-4.20-multi-agent-0309', options)
   expect(dated?.model.id).toBe('grok-4.20-multi-agent-0309')
   expect(dated?.total_price).toBeCloseTo(5.5, 12)
+  expect(calcPrice(usage, 'grok-4.20-multi-agent-0309', { ...options, priceContext: { processing: 'batch' } })?.total_price).toBeCloseTo(
+    4.4,
+    12
+  )
+  for (const alias of ['grok-4.20-multi-agent-beta-0309', 'grok-4.20-multi-agent-latest']) {
+    expect(calcPrice(usage, alias, options)?.model.id).toBe('grok-4.20-multi-agent-0309')
+  }
   expect(calcPrice(usage, 'grok-4.20-multi-agent', options)?.total_price).toBeCloseTo(6.4, 12)
 })

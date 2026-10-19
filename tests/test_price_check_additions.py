@@ -67,6 +67,16 @@ def test_grok_multi_agent_dated_id_takes_its_published_long_context_rate() -> No
     )
     assert dated.model.id == 'grok-4.20-multi-agent-0309'
     assert dated.total_price == Decimal('5.5')
+    for alias in ('grok-4.20-multi-agent-beta-0309', 'grok-4.20-multi-agent-latest'):
+        assert calc_price(Usage(input_tokens=1), alias, provider_id='x-ai').model.id == 'grok-4.20-multi-agent-0309'
+    batch = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent-0309',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
+        price_context={'processing': 'batch'},
+    )
+    assert batch.total_price == Decimal('4.4')
     price = calc_price(
         Usage(input_tokens=200_000, output_tokens=1_000_000),
         'grok-4.20-multi-agent',

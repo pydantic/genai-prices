@@ -352,8 +352,15 @@ models:
       output_mtok: 6
 
   - id: grok-4.20-multi-agent-0309
+    name: Grok 4.20 Multi-Agent 0309
+    # Same rates as Grok 4.20, but a different model.
+    collapse: false
     match:
-      equals: grok-4.20-multi-agent-0309
+      or:
+        - equals: grok-4.20-multi-agent-0309
+        - equals: grok-4.20-multi-agent-beta-0309
+        - equals: grok-4.20-multi-agent-latest
+        - equals: grok-4.20-multi-agent-beta-latest
     context_window: 1000000
     prices:
       input_mtok:
@@ -371,6 +378,25 @@ models:
         tiers:
           - start: 199999
             price: 5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 199999
+                price: 2
+          cache_read_mtok:
+            base: 0.16
+            tiers:
+              - start: 199999
+                price: 0.32
+          output_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
     prices_checked: 2026-10-19
 
   - id: grok-4.3

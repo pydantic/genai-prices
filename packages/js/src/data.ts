@@ -40390,8 +40390,22 @@ export const data: Provider[] = [
       },
       {
         id: 'grok-4.20-multi-agent-0309',
+        name: 'Grok 4.20 Multi-Agent 0309',
         match: {
-          equals: 'grok-4.20-multi-agent-0309',
+          or: [
+            {
+              equals: 'grok-4.20-multi-agent-0309',
+            },
+            {
+              equals: 'grok-4.20-multi-agent-beta-0309',
+            },
+            {
+              equals: 'grok-4.20-multi-agent-latest',
+            },
+            {
+              equals: 'grok-4.20-multi-agent-beta-latest',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -40423,6 +40437,46 @@ export const data: Provider[] = [
             ],
           },
         },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.16,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 0.32,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 4,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'grok-4.3',
