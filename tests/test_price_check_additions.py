@@ -83,4 +83,17 @@ def test_grok_multi_agent_dated_id_takes_its_published_long_context_rate() -> No
         provider_id='x-ai',
         genai_request_timestamp=datetime(2026, 10, 17),
     )
-    assert price.total_price == Decimal('6.4')
+    assert price.model.id == 'grok-4.20-multi-agent-0309'
+    assert price.total_price == Decimal('5.5')
+
+
+@pytest.mark.parametrize('model', ['grok-4.20', 'grok-4.20-multi-agent'])
+@pytest.mark.parametrize(('day', 'total'), [(29, Decimal('12.8')), (30, Decimal('5.5'))])
+def test_grok_4_20_price_cut(model: str, day: int, total: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        model,
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 4, day, tzinfo=UTC),
+    )
+    assert price.total_price == total

@@ -300,23 +300,45 @@ models:
       Ref: https://docs.x.ai/developers/pricing#batch-api-pricing
       The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price
       identically: https://docs.x.ai/developers/models
-    prices_checked: 2026-10-19
+      xAI cut Grok 4.20 from $2/$6 ($4/$12 at or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30.
+      Ref: https://web.archive.org/web/20260430105131/https://docs.x.ai/developers/models/grok-4.20?_rsc=qn1f9
+      Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20
+    prices_checked: 2026-10-20
     prices:
-      input_mtok:
-        base: 1.25
-        tiers:
-          - start: 199999
-            price: 2.5
-      cache_read_mtok:
-        base: 0.2
-        tiers:
-          - start: 199999
-            price: 0.4
-      output_mtok:
-        base: 2.5
-        tiers:
-          - start: 199999
-            price: 5
+      - prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 199999
+                price: 0.4
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 199999
+                price: 12
+      - constraint:
+          start_date: 2026-04-30
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 199999
+                price: 2.5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 199999
+                price: 0.4
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 199999
+                price: 5
     price_variants:
       - when: { processing: batch }
         constraint: { start_date: 2026-10-14 }
@@ -337,47 +359,61 @@ models:
               - start: 199999
                 price: 4
 
-  - id: grok-4.20-multi-agent
-    name: Grok 4.20 Multi-Agent
+  - id: grok-4.20-multi-agent-0309
+    name: Grok 4.20 Multi-Agent 0309
     description: >-
       Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents
       operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
-    match:
-      equals: grok-4.20-multi-agent
-    context_window: 1000000
-    prices_checked: 2026-06-09
-    prices:
-      input_mtok: 2
-      cache_read_mtok: 0.2
-      output_mtok: 6
-
-  - id: grok-4.20-multi-agent-0309
-    name: Grok 4.20 Multi-Agent 0309
     # Same rates as Grok 4.20, but a different model.
     collapse: false
     match:
       or:
         - equals: grok-4.20-multi-agent-0309
+        - equals: grok-4.20-multi-agent
         - equals: grok-4.20-multi-agent-beta-0309
         - equals: grok-4.20-multi-agent-latest
         - equals: grok-4.20-multi-agent-beta-latest
     context_window: 1000000
+    price_comments: >-
+      xAI lists grok-4.20-multi-agent as an alias of grok-4.20-multi-agent-0309. xAI cut it from $2/$6 ($4/$12 at
+      or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30.
+      Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20
+      Ref: https://web.archive.org/web/20260430232954/https://docs.x.ai/developers/models/grok-4.3
     prices:
-      input_mtok:
-        base: 1.25
-        tiers:
-          - start: 199999
-            price: 2.5
-      cache_read_mtok:
-        base: 0.2
-        tiers:
-          - start: 199999
-            price: 0.4
-      output_mtok:
-        base: 2.5
-        tiers:
-          - start: 199999
-            price: 5
+      - prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 199999
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 199999
+                price: 0.4
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 199999
+                price: 12
+      - constraint:
+          start_date: 2026-04-30
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 199999
+                price: 2.5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 199999
+                price: 0.4
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 199999
+                price: 5
     price_variants:
       - when: { processing: batch }
         constraint: { start_date: 2026-10-14 }
@@ -397,7 +433,7 @@ models:
             tiers:
               - start: 199999
                 price: 4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: grok-4.3
     name: Grok 4.3
