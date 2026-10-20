@@ -3745,6 +3745,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+                match=ClauseEquals(equals='@cf/deepseek-ai/deepseek-v4.1-flash-1017'),
+                name='deepseek-v4.1-flash-1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='@cf/google/gemma-3-12b-it',
                 match=ClauseEquals(equals='@cf/google/gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
