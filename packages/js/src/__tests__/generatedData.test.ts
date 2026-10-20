@@ -5,6 +5,27 @@ import * as providerDataModule from '../data'
 import { unitData } from '../dataUnits'
 import { UnitRegistry } from '../units'
 
+describe('QuickSilver long-context catalog tiers', () => {
+  it.each([
+    ['claude-haiku-5-5', 0.025, 0.125, 0.0025, 5, 5],
+    ['gpt-6-astra', 10, 50, 1, 2, 1.5],
+    ['gpt-6-luna', 0.1, 0.5, 0.01, 2, 1.5],
+    ['gpt-6.1-sol', 2, 10, 0.1, 2, 1.5],
+    ['gpt-6-sol', 2, 10, 0.2, 2, 1.5],
+    ['grok-4.6', 2, 6, 0.5, 2, 2],
+    ['grok-4.7', 2, 6, 0.5, 2, 2],
+  ])('prices %s below and above the threshold', (model, input, output, cache, inputMultiplier, outputMultiplier) => {
+    for (const tokens of [200_000, 200_001]) {
+      const long = tokens > 200_000
+      const price = calcPrice({ cache_read_tokens: 50_000, input_tokens: tokens, output_tokens: 1_000_000 }, model, {
+        providerId: 'quicksilverpro',
+      })
+      expect(price?.input_price).toBeCloseTo((((tokens - 50_000) * input + 50_000 * cache) / 1_000_000) * (long ? inputMultiplier : 1), 12)
+      expect(price?.output_price).toBeCloseTo(output * (long ? outputMultiplier : 1), 12)
+    }
+  })
+})
+
 const tokenUsageKeys = [
   'input_tokens',
   'output_tokens',

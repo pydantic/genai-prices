@@ -79,3 +79,78 @@ def test_quicksilverpro_main_fetches_recorded_catalog(tmp_path: Path, capsys: py
 
 def test_quicksilverpro_skips_token_models_without_rates():
     assert list(get_model_infos([{'id': 'free', 'pricing_unit': 'tokens', 'input_per_1m': 0}])) == []
+
+
+def test_quicksilverpro_imports_recorded_long_context_tiers() -> None:
+    from prices.prices_types import Tier, TieredPrices
+
+    infos = {info.id: info for info in get_model_infos(load_entries('quicksilverpro_long_context.json', 'models'))}
+    prices = infos['claude-haiku-5-5'].prices
+    assert isinstance(prices, ModelPrice)
+    assert prices.input_mtok == TieredPrices(base=Decimal('0.025'), tiers=[Tier(start=200_000, price=Decimal('0.125'))])
+    assert prices.output_mtok == TieredPrices(
+        base=Decimal('0.125'), tiers=[Tier(start=200_000, price=Decimal('0.625'))]
+    )
+    assert prices.cache_read_mtok == TieredPrices(
+        base=Decimal('0.0025'), tiers=[Tier(start=200_000, price=Decimal('0.0125'))]
+    )
+    assert prices.cache_write_mtok == Decimal('0.03125')
+    assert len(infos) == 7
+
+
+@pytest.mark.parametrize(
+    'long_context',
+    [
+        [],
+        {},
+        {'prompt_tokens_over': 0, 'input_per_1m': 2, 'output_per_1m': 3},
+        {'prompt_tokens_over': 200_000, 'input_per_1m': 2, 'output_per_1m': 3, 'unknown_price': 4},
+    ],
+)
+def test_quicksilverpro_rejects_unsupported_long_context_shapes(long_context: object) -> None:
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        list(get_model_infos([{'id': 'm', 'pricing_unit': 'tokens', 'input_per_1m': 1, 'long_context': long_context}]))
+
+
+def test_quicksilverpro_rejects_tier_without_a_base_rate() -> None:
+    with pytest.raises(ValueError, match='long_context output_mtok has no base rate'):
+        list(
+            get_model_infos(
+                [
+                    {
+                        'id': 'm',
+                        'pricing_unit': 'tokens',
+                        'input_per_1m': 1,
+                        'long_context': {'prompt_tokens_over': 200_000, 'input_per_1m': 2, 'output_per_1m': 3},
+                    }
+                ]
+            )
+        )
+
+
+def test_quicksilverpro_reads_explicit_cache_write_tier() -> None:
+    from prices.prices_types import Tier, TieredPrices
+
+    [model] = get_model_infos(
+        [
+            {
+                'id': 'm',
+                'pricing_unit': 'tokens',
+                'input_per_1m': 1,
+                'output_per_1m': 2,
+                'cache_write_per_1m': 1.25,
+                'long_context': {
+                    'prompt_tokens_over': 200_000,
+                    'input_per_1m': 2,
+                    'output_per_1m': 3,
+                    'cache_write_per_1m': 2.5,
+                },
+            }
+        ]
+    )
+    assert isinstance(model.prices, ModelPrice)
+    assert model.prices.cache_write_mtok == TieredPrices(
+        base=Decimal('1.25'), tiers=[Tier(start=200_000, price=Decimal('2.5'))]
+    )

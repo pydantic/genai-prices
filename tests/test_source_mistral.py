@@ -172,5 +172,6 @@ models:
     flat = ProviderYaml(provider_path).provider.find_model('flat')
     assert flat is not None and flat.price_variants is not None
     assert len(flat.price_variants) == 7
-    assert flat.price_variants[0].prices == ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.6'))
+    assert flat.price_variants[0].prices == ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6'))
+    assert 'cannot be represented by date-only constraints' in capsys.readouterr().out
     assert '{ processing: batch }' in provider_path.read_text()

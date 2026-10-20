@@ -31,6 +31,52 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestQuickSilverLongContextCatalogTiers(t *testing.T) {
+	for _, test := range []struct {
+		model                                                   string
+		input, output, cache, inputMultiplier, outputMultiplier float64
+	}{
+		{"claude-haiku-5-5", .025, .125, .0025, 5, 5},
+		{"gpt-6-astra", 10, 50, 1, 2, 1.5}, {"gpt-6-luna", .1, .5, .01, 2, 1.5},
+		{"gpt-6.1-sol", 2, 10, .1, 2, 1.5}, {"gpt-6-sol", 2, 10, .2, 2, 1.5},
+		{"grok-4.6", 2, 6, .5, 2, 2}, {"grok-4.7", 2, 6, .5, 2, 2},
+	} {
+		for _, tokens := range []float64{200_000, 200_001} {
+			price, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: test.model, ProviderID: "quicksilverpro",
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: tokens, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 1_000_000}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			inputWant := ((tokens-50_000)*test.input + 50_000*test.cache) / 1_000_000
+			outputWant := test.output
+			if tokens > 200_000 {
+				inputWant *= test.inputMultiplier
+				outputWant *= test.outputMultiplier
+			}
+			if math.Abs(price.InputPrice-inputWant) > 1e-12 || math.Abs(price.OutputPrice-outputWant) > 1e-12 {
+				t.Fatalf("%s at %g: got %#v, want input %g output %g", test.model, tokens, price, inputWant, outputWant)
+			}
+		}
+	}
+}
+
+func TestCloudflareClairicNativeDecisionResponse(t *testing.T) {
+	extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{ProviderID: "cloudflare", APIFlavor: "decisions", ResponseJSON: []byte(`{"result":{"model":"clairic","usage":{"state_tokens":61,"image_tokens":0,"schema_tokens":472,"input_tokens":655,"output_tokens":0,"passes":3}},"success":true,"errors":[],"messages":[]}`)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if extracted.Model != "clairic" || !maps.Equal(extracted.Usage, genai_prices.Usage{genai_prices.UsageInputTokens: 655, genai_prices.UsageOutputTokens: 0}) {
+		t.Fatalf("unexpected extracted usage: %#v", extracted)
+	}
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{ProviderID: extracted.ProviderID, Model: extracted.Model, Usage: extracted.Usage})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if price.ModelID != "@cf/cloudflare/clairic" || math.Abs(price.TotalPrice-.0000655) > 1e-12 {
+		t.Fatalf("unexpected price: %#v", price)
+	}
+}
+
 func TestCursorGrok47LongContextPrices(t *testing.T) {
 	for _, test := range []struct {
 		model       string

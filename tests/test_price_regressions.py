@@ -1081,3 +1081,33 @@ def test_openrouter_claude_haiku_latest_moves_to_haiku_5_5(timestamp: datetime, 
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('model', 'input_rate', 'output_rate', 'cache_rate'),
+    [
+        ('claude-haiku-5-5', '0.025', '0.125', '0.0025'),
+        ('gpt-6-astra', '10', '50', '1'),
+        ('gpt-6-luna', '0.1', '0.5', '0.01'),
+        ('gpt-6.1-sol', '2', '10', '0.1'),
+        ('gpt-6-sol', '2', '10', '0.2'),
+        ('grok-4.6', '2', '6', '0.5'),
+        ('grok-4.7', '2', '6', '0.5'),
+    ],
+)
+@pytest.mark.parametrize('input_tokens', [200_000, 200_001])
+def test_quicksilver_long_context_prices(
+    model: str, input_rate: str, output_rate: str, cache_rate: str, input_tokens: int
+) -> None:
+    long = input_tokens > 200_000
+    input_multiplier = 5 if model == 'claude-haiku-5-5' else 2
+    output_multiplier = 5 if model == 'claude-haiku-5-5' else 2 if model.startswith('grok') else Decimal('1.5')
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=50_000, output_tokens=1_000_000),
+        model_ref=model,
+        provider_id='quicksilverpro',
+    )
+    assert price.input_price == (mtok(input_rate, input_tokens - 50_000) + mtok(cache_rate, 50_000)) * (
+        input_multiplier if long else 1
+    )
+    assert price.output_price == Decimal(output_rate) * (output_multiplier if long else 1)

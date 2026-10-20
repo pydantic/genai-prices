@@ -3677,6 +3677,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
+                id='@cf/cloudflare/clairic',
+                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clairic'), ClauseEquals(equals='clairic')]),
+                name='clairic',
+                price_comments='Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
                 id='@cf/cloudflare/clef',
                 match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clef'), ClauseEquals(equals='clef')]),
                 name='Clef',
@@ -26080,11 +26087,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='claude-haiku-5-5'),
                 name='Claude Haiku 5.5',
                 context_window=1000000,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.025'),
+                    input_mtok=TieredPrices(base=Decimal('0.025'), tiers=[Tier(start=200000, price=Decimal('0.125'))]),
                     cache_write_mtok=Decimal('0.03125'),
-                    cache_read_mtok=Decimal('0.0025'),
-                    output_mtok=Decimal('0.125'),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0025'), tiers=[Tier(start=200000, price=Decimal('0.0125'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.625'))]),
                 ),
             ),
             ModelInfo(
@@ -26460,11 +26470,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-astra'),
                 name='GPT-6 Astra',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10'),
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('20'))]),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1'),
-                    output_mtok=Decimal('50'),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=200000, price=Decimal('75'))]),
                 ),
             ),
             ModelInfo(
@@ -26472,11 +26483,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-luna'),
                 name='GPT-6 Luna',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.1'),
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
                     cache_write_mtok=Decimal('0.125'),
-                    cache_read_mtok=Decimal('0.01'),
-                    output_mtok=Decimal('0.5'),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=200000, price=Decimal('0.02'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('0.75'))]),
                 ),
             ),
             ModelInfo(
@@ -26484,11 +26498,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-sol'),
                 name='GPT-6 Sol',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('10'),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
             ),
             ModelInfo(
@@ -26496,11 +26511,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6.1-sol'),
                 name='GPT-6.1 Sol',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('10'),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
             ),
             ModelInfo(
@@ -26534,14 +26550,24 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.6'),
                 name='Grok 4.6',
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-4.7',
                 match=ClauseEquals(equals='grok-4.7'),
                 name='Grok 4.7',
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='hy3',
