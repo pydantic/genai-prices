@@ -10556,6 +10556,17 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
+                id='aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b'),
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast'),
+                    ]
+                ),
+                name='Nemotron-SEA-LION-v4.8-120B-A12B',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
                 id='aisingapore/Qwen-SEA-LION-v4-32B-IT',
                 match=ClauseOr(
                     or_=[
@@ -10565,6 +10576,17 @@ providers: list[Provider] = [
                 ),
                 name='Qwen-SEA-LION-v4-32B-IT',
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it'),
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it-fast'),
+                    ]
+                ),
+                name='Qwen-SEA-LION-v4.5-27B-IT',
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='allenai/Olmo-3-7B-Instruct',
