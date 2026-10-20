@@ -49,6 +49,16 @@ A weekly report associates newly verified pairs with the created PR; those pairs
 An explicitly verified listing already present on main can clear its own pair. Closing a proposal without merging
 returns its pairs to the backlog. Missing reports never erase the backlog.
 
+## Repairs
+
+Genie Pricer's PRs are price proposals for the [finisher](AGENTIC_PRICE_CHECK.md#finishing-proposals). A completed
+Model Price Check run starts a scan, which watches the new PR and dispatches bounded repairs for CI and hosted-review findings.
+
+Pydanty requests another repair through `repository_dispatch` type `genie-pricer-repair-request` with
+`client_payload: {"pr_number": <positive integer>}`. The finisher accepts the event only from `pydanty[bot]` and only for an
+open price proposal. It gives that PR a fresh three-attempt budget unless a repair is already in flight.
+Merge the finisher change before the Team Worker sends these requests; GitHub drops a dispatch that no workflow handles.
+
 ## Deployment and checks
 
 Deploy the Team Worker and apply its D1 migration before merging these workflow changes. Configure the new Slack app and

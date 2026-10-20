@@ -113,6 +113,28 @@ test('collects a validated same-repo automation PR snapshot and evaluates it as 
   assert.equal(evaluate(readySnapshot()).state, 'ready')
 })
 
+test('any same-repository branch by the automation App is a price proposal; other authors are not', async () => {
+  const pr = (login) => ({
+    state: 'open',
+    head: {
+      sha: HEAD,
+      ref: 'model-price-check-2026-10-20-337a115fbd195c65',
+      repo: { full_name: 'pydantic/genai-prices' },
+    },
+    base: { ref: 'main', repo: { full_name: 'pydantic/genai-prices' } },
+    user: { login },
+  })
+  const proposal = await collectSnapshot(
+    githubClient({ prs: [pr('genai-prices-automation[bot]')] }),
+    'pydantic',
+    'genai-prices',
+    42,
+  )
+  assert.equal(proposal.identityValid, true)
+  const other = await collectSnapshot(githubClient({ prs: [pr('someone')] }), 'pydantic', 'genai-prices', 42)
+  assert.equal(other.identityValid, false)
+})
+
 test('a proposal retargeted away from main fails identity validation', async () => {
   const client = githubClient()
   client.rest.pulls.get = async () => ({

@@ -40,8 +40,7 @@ function isAutomationPR(pr, repo) {
     repoFullName(pr.base?.repo) === repo &&
     pr.base?.ref === 'main' &&
     repoFullName(pr.head?.repo) === repo &&
-    pr.user?.login === 'genai-prices-automation[bot]' &&
-    ['automation/hourly-price-update', 'automation/weekly-price-update'].includes(pr.head.ref)
+    pr.user?.login === 'genai-prices-automation[bot]'
   )
 }
 
@@ -520,4 +519,4 @@ function evaluate(snapshot, assessments = []) {
   return { state: waiting.length ? 'waiting' : findings.length ? 'repair' : 'ready', findings, reason }
 }
 
-module.exports = { collectSnapshot, evaluate }
+module.exports = { collectSnapshot, evaluate, isAutomationPR }

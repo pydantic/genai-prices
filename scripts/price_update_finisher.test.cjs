@@ -1,20 +1,38 @@
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { readState, watchOne, claim, recordResult } = require('./price_update_finisher.cjs')
+const { readState, writeState, watchOne, select, watch, claim, recordResult } = require('./price_update_finisher.cjs')
 
 const head = 'a'.repeat(40)
 const repo = { owner: 'pydantic', repo: 'genai-prices' }
-const core = { info() {}, setOutput() {} }
+const core = { info() {}, setOutput() {}, summary: { addRaw: () => core.summary, write: async () => {} } }
+const repairRequest = { action: 'genie-pricer-repair-request', client_payload: { pr_number: 861 } }
+const assessRepair = () => ({ state: 'repair', reason: 'failed', findings: [{ id: 'ci:1', kind: 'ci' }] })
+
+function proposal(number, overrides = {}) {
+  return {
+    number,
+    state: 'open',
+    base: { ref: 'main', repo: { full_name: 'pydantic/genai-prices' } },
+    head: { sha: head, ref: 'automation/hourly-price-update', repo: { full_name: 'pydantic/genai-prices' } },
+    user: { login: 'genai-prices-automation[bot]' },
+    ...overrides,
+  }
+}
+
+async function selected(github, eventName, payload) {
+  const outputs = {}
+  await select({
+    github,
+    context: { repo, eventName, payload },
+    core: { ...core, setOutput: (k, v) => (outputs[k] = v) },
+  })
+  return JSON.parse(outputs.prs)
+}
 
 function fixture() {
   const calls = []
   const comments = []
-  const pr = {
-    state: 'open',
-    base: { ref: 'main' },
-    head: { sha: head, ref: 'automation/hourly-price-update', repo: { full_name: 'pydantic/genai-prices' } },
-    user: { login: 'genai-prices-automation[bot]' },
-  }
+  const pr = proposal(861)
   const issues = {
     listComments: async () => ({ data: comments }),
     createComment: async (input) => {
@@ -262,4 +280,94 @@ test('blocked findings remain tracked and unresolved', async () => {
     watchOne({ ...options, assess: () => ({ state: 'repair', reason: 'finding', findings: [] }) }),
     /maintainer action/,
   )
+})
+
+test('genie-pricer proposals on agent-named branches are price proposals', async () => {
+  const { options, pr } = fixture()
+  pr.head.ref = 'model-price-check-2026-10-20-337a115fbd195c65'
+  const ready = () => ({ state: 'ready', reason: 'complete', findings: [] })
+  assert.equal(await watchOne({ ...options, assess: ready }), 'ready')
+  pr.user.login = 'someone'
+  await assert.rejects(watchOne({ ...options, assess: ready }), /identity or head changed/)
+  pr.user.login = 'genai-prices-automation[bot]'
+  pr.head.repo.full_name = 'someone/genai-prices'
+  await assert.rejects(watchOne({ ...options, assess: ready }), /identity or head changed/)
+})
+
+test('a scan selects every open price proposal and nothing else', async () => {
+  const { github } = fixture()
+  github.rest.pulls.list = async () => ({
+    data: [
+      proposal(861),
+      proposal(870, { head: { sha: head, ref: 'model-price-check-1', repo: { full_name: 'pydantic/genai-prices' } } }),
+      proposal(871, { user: { login: 'someone' } }),
+      proposal(872, { head: { sha: head, ref: 'model-price-check-2', repo: { full_name: 'someone/genai-prices' } } }),
+      proposal(873, { base: { ref: 'release', repo: { full_name: 'pydantic/genai-prices' } } }),
+    ],
+  })
+  assert.deepEqual(await selected(github, 'workflow_run', {}), [861, 870])
+  assert.deepEqual(await selected(github, 'workflow_dispatch', { inputs: { pr_number: '' } }), [861, 870])
+})
+
+test('a repair request must name one open price proposal', async () => {
+  const { github, pr } = fixture()
+  assert.deepEqual(await selected(github, 'repository_dispatch', repairRequest), [861])
+  for (const payload of [
+    { action: 'genie-pricer-repair-request' },
+    { action: 'genie-pricer-repair-request', client_payload: {} },
+    { action: 'genie-pricer-repair-request', client_payload: { pr_number: '861' } },
+    { action: 'genie-pricer-repair-request', client_payload: { pr_number: 0 } },
+    { action: 'genie-pricer-repair-request', client_payload: { pr_number: -861 } },
+    { action: 'genie-pricer-repair-request', client_payload: { pr_number: 861.5 } },
+    { action: 'genie-pricer-repair-request', client_payload: { pr_number: 2 ** 53 } },
+    { action: 'price-update-repair', client_payload: { pr_number: 861 } },
+  ])
+    await assert.rejects(selected(github, 'repository_dispatch', payload), /Invalid repair request/)
+  pr.user.login = 'someone'
+  await assert.rejects(selected(github, 'repository_dispatch', repairRequest), /not an open price proposal/)
+})
+
+test('only an explicit request restores a blocked or exhausted repair budget', async () => {
+  const { options, github, comments, calls } = fixture()
+  let time = 0
+  const run = (eventName, payload) =>
+    watch({ ...options, assess: assessRepair, now: () => time, context: { repo, runId: 456, eventName, payload } })
+  await writeState(github, repo, 861, { attempts: 3, assessments: [], status: 'blocked' }, 'blocked')
+  await assert.rejects(run('workflow_run', {}), /maintainer action/)
+  await assert.rejects(run('workflow_dispatch', { inputs: { pr_number: '' } }), /maintainer action/)
+  assert.equal(readState(comments).attempts, 3)
+
+  await run('repository_dispatch', repairRequest)
+  assert.equal(readState(comments).attempts, 1)
+  assert.equal(readState(comments).requestId, '456-861-1')
+
+  await writeState(github, repo, 861, { ...readState(comments), attempts: 3, status: 'assessed' }, 'assessed')
+  time += 120_001
+  await assert.rejects(run('workflow_run', {}), /repair limit/)
+  await run('workflow_dispatch', { inputs: { pr_number: '861' } })
+  assert.equal(readState(comments).attempts, 1)
+  assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 2)
+})
+
+test('a repair request keeps the attempt count of an in-flight repair', async () => {
+  const { options, github, comments, calls } = fixture()
+  await watchOne({ ...options, assess: assessRepair, now: () => 0 })
+  github.rest.actions.listWorkflowRuns = async () => ({ data: [{ id: 9 }] })
+  let time = 200_000
+  await assert.rejects(
+    watch({
+      ...options,
+      context: { repo, runId: 456, eventName: 'repository_dispatch', payload: repairRequest },
+      assess: assessRepair,
+      now: () => time,
+      sleep: async () => {
+        time += 30_000
+      },
+      timeoutMs: 60_000,
+    }),
+    /timed out/,
+  )
+  assert.equal(readState(comments).attempts, 1)
+  assert.equal(readState(comments).requestId, '123-861-1')
+  assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 1)
 })

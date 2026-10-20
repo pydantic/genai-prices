@@ -168,6 +168,23 @@ Unreadable sources, ambiguous mappings, missing fields, and potential removals a
 skipped-findings section if another change can be verified, or in the noop summary otherwise. A partial check is not reported
 as clean. A missing model on a pricing page is never enough evidence to remove it.
 
+## Finishing proposals
+
+`finish-price-update.yml` finishes every open price proposal: a PR to `main` from a `pydantic/genai-prices` branch,
+authored by `genai-prices-automation[bot]`. The branch name does not matter, so the hourly and weekly `Update prices` PRs,
+this workflow's PRs, and [Genie Pricer](GENIE_PRICER.md)'s PRs all qualify. A scan runs after `Update prices`,
+`Price update repair`, or `Model Price Check` completes, and on manual dispatch without `pr_number`.
+This workflow's PRs are picked up by the next scan.
+
+The scan starts one job per proposal. Each job waits up to 30 minutes for CI, Macroscope, and cubic on the current head,
+so a slow proposal never delays another's watch or exhausts the job timeout. Unresolved findings dispatch
+`repair-price-update.md`, whose trusted job pushes a validated patch to the proposal's branch. Each proposal gets at most
+three repair attempts. The count and status live in a marker comment on the PR. The finisher never merges.
+
+A manual dispatch with `pr_number`, or a Genie Pricer repair request, restarts that proposal's attempt count at zero and
+clears a `blocked` status before evaluating it. It keeps the count while a dispatched repair is still in flight. Automatic
+scans never reset the count. Runs queue in one concurrency group, so a later automatic trigger never replaces a pending request.
+
 ## Edit and compile
 
 ```bash
