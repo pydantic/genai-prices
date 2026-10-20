@@ -26007,6 +26007,12 @@ providers: list[Provider] = [
                 api_flavor='decisions',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -26022,6 +26028,19 @@ providers: list[Provider] = [
                 name='Llama 3.1 Sonar 8B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='pplx-decider-flash-v1.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='pplx-decider-flash-v1.2'),
+                        ClauseEquals(equals='pplx-decider-flash-latest'),
+                        ClauseEquals(equals='perplexity/pplx-decider-flash-latest'),
+                    ]
+                ),
+                name='Decider Flash V1.2',
+                price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
             ),
             ModelInfo(
                 id='pplx-decider-v1-27b',
@@ -26040,6 +26059,43 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
+                id='pplx-decider-v1.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='pplx-decider-v1.2'),
+                        ClauseEquals(equals='pplx-decider-latest'),
+                        ClauseEquals(equals='perplexity/pplx-decider-latest'),
+                    ]
+                ),
+                name='Decider V1.2',
+                price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-embed-context-v1-0.6b',
+                match=ClauseEquals(equals='pplx-embed-context-v1-0.6b'),
+                name='Embed Context V1 0.6B',
+                prices=ModelPrice(input_mtok=Decimal('0.008')),
+            ),
+            ModelInfo(
+                id='pplx-embed-context-v1-4b',
+                match=ClauseEquals(equals='pplx-embed-context-v1-4b'),
+                name='Embed Context V1 4B',
+                prices=ModelPrice(input_mtok=Decimal('0.05')),
+            ),
+            ModelInfo(
+                id='pplx-embed-v1-0.6b',
+                match=ClauseEquals(equals='pplx-embed-v1-0.6b'),
+                name='Embed V1 0.6B',
+                prices=ModelPrice(input_mtok=Decimal('0.004')),
+            ),
+            ModelInfo(
+                id='pplx-embed-v1-4b',
+                match=ClauseEquals(equals='pplx-embed-v1-4b'),
+                name='Embed V1 4B',
+                prices=ModelPrice(input_mtok=Decimal('0.03')),
+            ),
+            ModelInfo(
                 id='r1-1776',
                 match=ClauseEquals(equals='r1-1776'),
                 name='R1 1776',
@@ -26052,6 +26108,7 @@ providers: list[Provider] = [
                 name='Sonar',
                 description='Sonar is lightweight, affordable, fast, and simple to use — now featuring citations and the ability to customize sources. It is designed for companies seeking to integrate lightweight question-and-answer features optimized for speed.',
                 context_window=128000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'), requests_kcount=Decimal('12')),
             ),
             ModelInfo(
@@ -26060,7 +26117,7 @@ providers: list[Provider] = [
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
                 context_window=128000,
-                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
+                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand. Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     output_mtok=Decimal('8'),
@@ -26075,6 +26132,7 @@ providers: list[Provider] = [
                 name='Sonar Pro',
                 description='Note: Sonar Pro pricing includes Perplexity search pricing. See details here',
                 context_window=200000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'), requests_kcount=Decimal('14')),
             ),
             ModelInfo(
@@ -26098,6 +26156,7 @@ providers: list[Provider] = [
                 name='Sonar Reasoning Pro',
                 description='Sonar Pro pricing includes Perplexity search pricing.',
                 context_window=128000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8'), requests_kcount=Decimal('14')),
             ),
         ],
