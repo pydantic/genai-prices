@@ -1,0 +1,42 @@
+name: Finish price update
+
+on:
+  workflow_run: # zizmor: ignore[dangerous-triggers] -- Runs only immutable default-branch code with same-repository guards.
+    workflows: [Update prices, Price update repair]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Price proposal number (blank checks both open proposals)
+        type: string
+        default: ""
+
+permissions: {}
+
+concurrency:
+  group: finish-price-update
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    permissions:
+      actions: read
+      checks: read
+      contents: write # repository_dispatch starts the isolated repair workflow
+      issues: write # bounded repair state and evidence live on the proposal
+      pull-requests: read
+      statuses: read
+    steps:
+      # workflow_run uses trusted default-branch code, never the reviewed PR's scripts.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            await require('./scripts/price_update_finisher.cjs').watch({ github, context, core });

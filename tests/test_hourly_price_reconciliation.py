@@ -35,12 +35,13 @@ def workflow_env(tmp_path: Path) -> dict[str, str]:
         'echo "$*" >> "$GH_CALLS"\n'
         'case "$2" in\n'
         'list) if [ "$1" = issue ]; then cat "$ISSUES"; else printf %s "$EXISTING"; fi ;;\n'
-        'view) cat "$PREVIOUS_BODY"; echo ;;\n'
+        'view) if [[ "$*" = *"--json state"* ]]; then echo OPEN; else cat "$PREVIOUS_BODY"; echo; fi ;;\n'
         'create) echo https://github.com/test/repo/123 ;;\n'
         'esac\n'
     )
     fake_gh.chmod(0o755)
     (tmp_path / 'previous-body').write_text('')
+    (tmp_path / 'calls').write_text('')
     (tmp_path / 'issues').write_text('[]')
     return {
         'PATH': f'{tmp_path}:{os.environ["PATH"]}',
@@ -48,6 +49,7 @@ def workflow_env(tmp_path: Path) -> dict[str, str]:
         'GITHUB_OUTPUT': str(tmp_path / 'output'),
         'GITHUB_STEP_SUMMARY': str(tmp_path / 'summary'),
         'GITHUB_REPOSITORY': 'test/repo',
+        'GITHUB_WORKSPACE': str(Path(__file__).parents[1]),
         'BRANCH': 'automation/hourly-price-update',
         'GH_TOKEN': 'token',
         'GH_CALLS': str(tmp_path / 'calls'),
@@ -57,6 +59,8 @@ def workflow_env(tmp_path: Path) -> dict[str, str]:
         'IMPORT_RESULT': 'success',
         'EXPECTED_COUNT': '1',
         'COMPLETE': 'true',
+        'PREVIOUS_HEAD': '',
+        'PREVIOUS_PR': '',
     }
 
 
@@ -107,7 +111,7 @@ def test_only_a_complete_empty_result_closes_the_stale_pr(
     git(repo, 'add', 'price')
     git(repo, 'commit', '-m', 'base')
     before = git(repo, 'rev-parse', 'HEAD')
-    workflow_env.update({'EXISTING': existing, 'COMPLETE': complete})
+    workflow_env.update({'EXISTING': existing, 'PREVIOUS_PR': existing, 'COMPLETE': complete})
     result = run_script(script('pull-request', 'pr'), repo, workflow_env)
     assert result.returncode == 0, result.stderr
     assert git(repo, 'rev-parse', 'HEAD') == before
@@ -134,9 +138,12 @@ def test_same_tree_still_refreshes_changed_notes_without_run_url_churn(
     base = git(repo, 'rev-parse', 'HEAD')
     (repo / 'price').write_text('newer\n' if publication == 'changed-tree' else 'new\n')
     git(repo, 'add', 'price')
-    git(repo, 'commit', '-m', 'proposal')
-    git(repo, 'push', str(remote), 'HEAD:automation/hourly-price-update')
-    remote_head = git(remote, 'rev-parse', 'refs/heads/automation/hourly-price-update')
+    git(repo, 'config', 'user.email', 'genai-prices-automation[bot]@users.noreply.github.com')
+    git(repo, 'commit', '-m', 'Update provider prices from official sources')
+    remote_head = git(repo, 'rev-parse', 'HEAD')
+    git(repo, 'remote', 'add', 'origin', str(remote))
+    if publication != 'new-pr':
+        git(repo, 'push', str(remote), 'HEAD:automation/hourly-price-update')
     git(repo, 'reset', '--hard', base)
     (repo / 'price').write_text('new\n')
     (tmp_path / 'pr-body.md').write_text('Run https://github.com/test/repo/actions/runs/42\n\nNew notes\n')
@@ -146,6 +153,8 @@ def test_same_tree_still_refreshes_changed_notes_without_run_url_churn(
     workflow_env.update(
         {
             'EXISTING': '' if publication == 'new-pr' else '123',
+            'PREVIOUS_PR': '' if publication == 'new-pr' else '123',
+            'PREVIOUS_HEAD': '' if publication == 'new-pr' else remote_head,
             'GIT_CONFIG_COUNT': '1',
             'GIT_CONFIG_KEY_0': f'url.{remote}.insteadOf',
             'GIT_CONFIG_VALUE_0': 'https://x-access-token:token@github.com/test/repo.git',

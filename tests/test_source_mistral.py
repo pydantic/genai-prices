@@ -3,14 +3,20 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_mistral
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, StartDateConstraint, Tier, TieredPrices
+from prices.prices_types import (
+    ClauseEquals,
+    ConditionalPrice,
+    ModelInfo,
+    ModelPrice,
+    StartDateConstraint,
+    Tier,
+    TieredPrices,
+)
 from prices.update import ProviderYaml
-from prices.utils import package_dir
 
 PRICING_MARKDOWN = """\
 # API pricing
@@ -58,11 +64,38 @@ def test_mistral_rejects_unexpected_pricing_shapes(markdown: str, error: str) ->
 @pytest.mark.vcr()
 def test_mistral_main_fetches_recorded_pricing(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'mistral.yml'
-    copyfile(package_dir / 'providers/mistral.yml', provider_path)
+    provider_path.write_text(
+        """\
+id: mistral
+name: Mistral
+api_pattern: mistral
+models:
+  - id: mistral-large-4
+    match: { equals: mistral-large-4 }
+    prices: { input_mtok: 1, cache_read_mtok: 0.1, output_mtok: 3 }
+"""
+    )
 
     source_mistral.main(provider_path)
 
+    assert capsys.readouterr().out == 'Mistral prices updated: 11 added, 1 updated\n'
+    provider = ProviderYaml(provider_path).provider
+    assert len(provider.models) == 12
+    large = provider.find_model('mistral-large-4')
+    assert large is not None
+    assert large.prices == [
+        ConditionalPrice(
+            prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3'))
+        ),
+        ConditionalPrice(
+            constraint=StartDateConstraint(start_date=date.today()),
+            prices=ModelPrice(input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')),
+        ),
+    ]
+
+    source_mistral.main(provider_path)
     assert capsys.readouterr().out == 'Mistral prices updated: 0 added, 12 updated\n'
+    assert ProviderYaml(provider_path).provider == provider
 
 
 def test_a_standard_rate_change_dates_new_variants_that_are_a_flat_share(

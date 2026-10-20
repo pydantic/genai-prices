@@ -80,7 +80,12 @@ describe('Provider Matching', () => {
 
     const mistral = actualProviders.find((provider) => provider.id === 'mistral')!
     expect(matchModel(mistral.models, 'mistral-large-4-0')?.context_window).toBe(1_048_576)
-    expect(calcPrice(tokenUsage, 'mistral-large-4-0', { providerId: 'mistral' })?.total_price).toBeCloseTo(2.709, 10)
+    expect(
+      calcPrice(tokenUsage, 'mistral-large-4-0', {
+        providerId: 'mistral',
+        timestamp: new Date('2026-10-17T00:00:00Z'),
+      })?.total_price
+    ).toBeCloseTo(2.709, 10)
 
     const openrouter = actualProviders.find((provider) => provider.id === 'openrouter')!
     expect(matchModel(openrouter.models, 'mistralai/mistral-large-4-0-20261006')?.context_window).toBeUndefined()
