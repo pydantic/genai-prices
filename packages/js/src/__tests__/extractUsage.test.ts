@@ -593,6 +593,25 @@ describe('extractUsage', () => {
   describe('Cloudflare provider', () => {
     const cloudflareProvider: Provider = data.find((provider) => provider.id === 'cloudflare')!
 
+    it('extracts the documented Clairic response without counting state or schema tokens twice', () => {
+      const { model, usage } = extractUsage(
+        cloudflareProvider,
+        {
+          errors: [],
+          messages: [],
+          result: {
+            model: 'clairic',
+            usage: { image_tokens: 0, input_tokens: 655, output_tokens: 0, passes: 3, schema_tokens: 472, state_tokens: 61 },
+          },
+          success: true,
+        },
+        'decisions'
+      )
+      expect(model).toBe('clairic')
+      expect(usage).toEqual({ input_tokens: 655, output_tokens: 0 })
+      expect(calcPrice(usage, model!, { providerId: 'cloudflare' })?.total_price).toBeCloseTo(0.0000655, 12)
+    })
+
     it('should extract and price OpenAI-compatible chat usage', () => {
       const { model, usage } = extractUsage(
         cloudflareProvider,

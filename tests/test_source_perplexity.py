@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import json
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
-from typing import Any
 
 import pytest
 
@@ -13,55 +11,73 @@ from prices import source_perplexity
 from prices.prices_types import ModelPrice
 from prices.utils import package_dir
 
-PRICING: dict[str, Any] = {
-    '_meta': {'units': {**source_perplexity.EXPECTED_UNITS, 'tools': '$ per invocation'}},
-    'sonar': {
-        'models': [
-            {'id': 'sonar', 'label': 'Sonar', 'input': 1, 'output': 1, 'request': {'low': 5, 'medium': 8, 'high': 12}},
-            {
-                'id': 'sonar-deep-research',
-                'label': 'Sonar Deep Research',
-                'input': 2,
-                'output': 8,
-                'citation': 2,
-                'reasoning': 3,
-                'searchQueries': 5,
-            },
-        ]
-    },
-}
+EMBEDDINGS = """\
+## Embeddings API Pricing
+
+| Model | Dimensions | Price (\\$/1M tokens) |
+| - | :-: | :-: |
+| `pplx-embed-v1-0.6b` | 1024 | \\$0.004 |
+| `pplx-embed-v1-4b` | 2560 | \\$0.03 |
+"""
+DECISIONS = """\
+## Decisions API Pricing
+
+| Model | Price (\\$/1M input tokens) | Output tokens | Per-request fee |
+| - | :-: | :-: | :-: |
+| `pplx-decider-v1.2` | \\$0.02 | Free | None |
+"""
+AGENT_MODELS = """\
+| Model | Input (\\$/1M) | Output (\\$/1M) | Cache read (\\$/1M) | Service tiers | Docs |
+| - | - | - | - | - | - |
+| `openai/gpt-5.5` | 5.00 (≤272k)<br />10.00 (>272k) | 30.00 | 0.50 | `flex`, `priority` | [GPT-5.5](https://x) |
+| `perplexity/sonar` | 0.25 | 2.50 | 0.0625 | — | — |
+"""
 
 
-def page(pricing: dict[str, Any]) -> str:
-    return f'# Pricing\n\nexport const PRICING = {json.dumps(pricing)};\n\nexport const Calculator = () => {{}}\n'
+def test_perplexity_parses_embeddings_and_decisions_input_rates() -> None:
+    models = source_perplexity.parse_pricing_markdown(f'# Pricing\n\n{EMBEDDINGS}\n{DECISIONS}')
+
+    assert [(model.id, model.prices, model.prices_checked) for model in models] == [
+        ('pplx-embed-v1-0.6b', ModelPrice(input_mtok=Decimal('0.004')), date.today()),
+        ('pplx-embed-v1-4b', ModelPrice(input_mtok=Decimal('0.03')), date.today()),
+        ('pplx-decider-v1.2', ModelPrice(input_mtok=Decimal('0.02')), date.today()),
+    ]
 
 
-def test_perplexity_parses_sonar_rates_with_the_highest_request_fee() -> None:
-    sonar, deep_research = source_perplexity.parse_pricing_markdown(page(PRICING))
-
-    assert (sonar.id, sonar.name, sonar.prices_checked) == ('sonar', 'Sonar', date.today())
-    assert sonar.prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'), requests_kcount=Decimal('12'))
-    assert deep_research.prices == ModelPrice.model_validate(
-        {
-            'input_mtok': '2',
-            'output_mtok': '8',
-            'output_reasoning_mtok': '3',
-            'output_citation_mtok': '2',
-            'web_searches_kcount': '5',
-        }
-    )
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (EMBEDDINGS, 'no longer has its Embeddings and Decisions price tables'),
+        (EMBEDDINGS.replace('1M tokens', '1K tokens') + DECISIONS, 'no longer has its Embeddings and Decisions'),
+        (EMBEDDINGS + DECISIONS.replace('Free', '\\$0.10'), 'now bills Decisions output tokens or requests'),
+        (EMBEDDINGS.replace('\\$0.03', 'Contact sales') + DECISIONS, 'Unexpected Perplexity price row'),
+    ],
+)
+def test_perplexity_rejects_an_unexpected_pricing_page(markdown: str, error: str) -> None:
+    with pytest.raises(RuntimeError, match=error):
+        source_perplexity.parse_pricing_markdown(markdown)
 
 
-def test_perplexity_rejects_a_page_without_pricing_data() -> None:
-    with pytest.raises(RuntimeError, match='Perplexity pricing page has no PRICING data'):
-        source_perplexity.parse_pricing_markdown('# Pricing\n')
+def test_perplexity_parses_only_the_agent_api_models_it_hosts() -> None:
+    assert [(model.id, model.prices) for model in source_perplexity.parse_agent_models_markdown(AGENT_MODELS)] == [
+        (
+            'perplexity/sonar',
+            ModelPrice(input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('2.50')),
+        )
+    ]
 
 
-def test_perplexity_rejects_a_changed_unit() -> None:
-    units = {**source_perplexity.EXPECTED_UNITS, 'sonar.searchQueries': '$ per 1,000,000 searches'}
-
-    with pytest.raises(RuntimeError, match="Perplexity changed the unit of sonar.searchQueries to '\\$ per 1,000,000"):
-        source_perplexity.parse_pricing_markdown(page({**PRICING, '_meta': {'units': units}}))
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (AGENT_MODELS.replace('perplexity/', 'other/'), 'no longer lists Perplexity-hosted models'),
+        (AGENT_MODELS.replace('| — | — |', '| `flex` | — |'), 'Unexpected Perplexity Agent API model row'),
+        (AGENT_MODELS.replace('0.0625', 'Free'), 'Unexpected Perplexity Agent API model row'),
+    ],
+)
+def test_perplexity_rejects_an_unexpected_agent_models_page(markdown: str, error: str) -> None:
+    with pytest.raises(RuntimeError, match=error):
+        source_perplexity.parse_agent_models_markdown(markdown)
 
 
 @pytest.mark.vcr()
@@ -71,4 +87,4 @@ def test_perplexity_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: p
 
     source_perplexity.main(provider_path)
 
-    assert capsys.readouterr().out == 'Perplexity prices updated: 0 added, 4 updated\n'
+    assert capsys.readouterr().out == 'Perplexity prices updated: 0 added, 12 updated\n'

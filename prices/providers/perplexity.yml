@@ -36,10 +36,21 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
-  # /v1/responses aliases /v1/agent: https://docs.perplexity.ai/docs/agent-api/openai-compatibility
-  # Cache reads and reasoning are subsets of their parent totals, unlike Sonar Deep Research's additive categories.
+  # https://docs.perplexity.ai/docs/decisions/quickstart — `usage.input_tokens` / `usage.output_tokens`.
+  # Output tokens are free. The Sonar extractor stays on `prompt_tokens` / `completion_tokens`.
+  - api_flavor: decisions
+    root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+  # https://docs.perplexity.ai/api-reference/agent-post — OpenAI Responses usage; cached tokens are a subset of
+  # input_tokens. Cache writes bill at the input rate, so cache_creation_input_tokens stays in input_tokens.
+  # Reasoning is included in output_tokens; preserve its breakdown without adding it to the total.
   # https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/providers/perplexity/events.py
-  # Use the current cache_read_input_tokens field only; do not also add the cached_tokens compatibility alias.
+  # Read cache_read_input_tokens only; cached_tokens is a compatibility alias.
   - api_flavor: responses
     root: usage
     mappings:
@@ -56,16 +67,12 @@ extractors:
       - path: [tool_calls_details, search_web, invocation]
         dest: web_searches
         required: false
-  # https://docs.perplexity.ai/docs/decisions/quickstart — `usage.input_tokens` / `usage.output_tokens`.
-  # Output tokens are free. The Sonar extractor stays on `prompt_tokens` / `completion_tokens`.
-  - api_flavor: decisions
+  # https://docs.perplexity.ai/docs/embeddings/standard-embeddings — `usage.prompt_tokens`, no completion tokens.
+  - api_flavor: embeddings
     root: usage
-    model_path: model
     mappings:
-      - path: input_tokens
+      - path: prompt_tokens
         dest: input_tokens
-      - path: output_tokens
-        dest: output_tokens
 models:
   - id: llama-3.1-sonar-large-128k-online
     name: Llama 3.1 Sonar 70B Online
@@ -89,14 +96,61 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
+  - id: perplexity/deepseek-v4-pro-0813
+    match:
+      equals: perplexity/deepseek-v4-pro-0813
+    prices:
+      input_mtok: 1.32
+      cache_read_mtok: 0.044
+      output_mtok: 3.96
+    prices_checked: 2026-10-20
+
+  - id: perplexity/glm-5.3
+    match:
+      equals: perplexity/glm-5.3
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    prices_checked: 2026-10-20
+
+  - id: perplexity/glm-5.3-flash
+    match:
+      equals: perplexity/glm-5.3-flash
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.03
+      output_mtok: 0.5
+    prices_checked: 2026-10-20
+
+  - id: perplexity/kimi-k3
+    match:
+      equals: perplexity/kimi-k3
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-20
+
+  - id: perplexity/nemotron-3.5-super-120b-a12b
+    match:
+      equals: perplexity/nemotron-3.5-super-120b-a12b
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.04
+      output_mtok: 0.5
+    prices_checked: 2026-10-20
+
   - id: perplexity/sonar
-    name: Sonar (Agent API)
     match:
       equals: perplexity/sonar
-    prices_checked: 2026-10-15
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.0625
+      output_mtok: 2.5
+      web_searches_kcount: 2.5
+    prices_checked: 2026-10-20
     price_comments: >-
-      Agent API native Sonar uses a different model ID and rates from Sonar Chat Completions.
-      https://docs.perplexity.ai/docs/agent-api/models
       Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand.
       Pass price_context search_type=fast for Fast Search, including presets that select it.
       The response invocation count does not identify the search type. Without context, standard web search is estimated.
@@ -106,11 +160,6 @@ models:
       https://docs.perplexity.ai/docs/resources/changelog#september-2026
       Earlier dates retain the standard search estimate.
       Only tokens, cache reads, and web search are represented; other Agent tools are not priced.
-    prices:
-      input_mtok: 0.25
-      cache_read_mtok: 0.0625
-      output_mtok: 2.5
-      web_searches_kcount: 2.5
     price_variants:
       - when: { search_type: fast }
         constraint: { start_date: 2026-09-24 }
@@ -118,6 +167,20 @@ models:
           web_searches_kcount: 1
       - when: { search_type: web }
         prices: {}
+
+  - id: pplx-decider-flash-v1.2
+    name: Decider Flash V1.2
+    match:
+      or:
+        - equals: pplx-decider-flash-v1.2
+        - equals: pplx-decider-flash-latest
+        - equals: perplexity/pplx-decider-flash-latest
+    prices:
+      input_mtok: 0.01
+    prices_checked: 2026-10-20
+    price_comments: >-
+      Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects
+      this model. https://docs.perplexity.ai/docs/decisions/quickstart
 
   - id: pplx-decider-v1-27b
     name: Decider V1 27B
@@ -143,6 +206,52 @@ models:
     prices:
       input_mtok: 0.02
 
+  - id: pplx-decider-v1.2
+    name: Decider V1.2
+    match:
+      or:
+        - equals: pplx-decider-v1.2
+        - equals: pplx-decider-latest
+        - equals: perplexity/pplx-decider-latest
+    prices:
+      input_mtok: 0.02
+    prices_checked: 2026-10-20
+    price_comments: >-
+      Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this
+      model. https://docs.perplexity.ai/docs/decisions/quickstart
+
+  - id: pplx-embed-context-v1-0.6b
+    name: Embed Context V1 0.6B
+    match:
+      equals: pplx-embed-context-v1-0.6b
+    prices:
+      input_mtok: 0.008
+    prices_checked: 2026-10-20
+
+  - id: pplx-embed-context-v1-4b
+    name: Embed Context V1 4B
+    match:
+      equals: pplx-embed-context-v1-4b
+    prices:
+      input_mtok: 0.05
+    prices_checked: 2026-10-20
+
+  - id: pplx-embed-v1-0.6b
+    name: Embed V1 0.6B
+    match:
+      equals: pplx-embed-v1-0.6b
+    prices:
+      input_mtok: 0.004
+    prices_checked: 2026-10-20
+
+  - id: pplx-embed-v1-4b
+    name: Embed V1 4B
+    match:
+      equals: pplx-embed-v1-4b
+    prices:
+      input_mtok: 0.03
+    prices_checked: 2026-10-20
+
   - id: r1-1776
     name: R1 1776
     description: >-
@@ -167,6 +276,10 @@ models:
       equals: sonar
     context_window: 128000
     prices_checked: 2026-10-19
+    price_comments: >-
+      Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are
+      the last published rates, checked 2026-10-19.
+      https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview
     prices:
       input_mtok: 1
       output_mtok: 1
@@ -186,6 +299,9 @@ models:
     price_comments: >-
       Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens.
       Search queries cost $5 per thousand.
+      Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are
+      the last published rates, checked 2026-10-19.
+      https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview
     prices:
       input_mtok: 2
       output_mtok: 8
@@ -201,6 +317,10 @@ models:
       equals: sonar-pro
     context_window: 200000
     prices_checked: 2026-10-19
+    price_comments: >-
+      Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are
+      the last published rates, checked 2026-10-19.
+      https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview
     prices:
       requests_kcount: 14
       input_mtok: 3
@@ -238,6 +358,10 @@ models:
       equals: sonar-reasoning-pro
     context_window: 128000
     prices_checked: 2026-10-19
+    price_comments: >-
+      Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are
+      the last published rates, checked 2026-10-19.
+      https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview
     prices:
       requests_kcount: 14
       input_mtok: 2

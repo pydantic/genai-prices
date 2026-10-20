@@ -6282,6 +6282,24 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/cloudflare/clairic',
+        name: 'clairic',
+        match: {
+          or: [
+            {
+              equals: '@cf/cloudflare/clairic',
+            },
+            {
+              equals: 'clairic',
+            },
+          ],
+        },
+        price_comments: 'Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
         id: '@cf/cloudflare/clef',
         name: 'Clef',
         match: {
@@ -6336,7 +6354,14 @@ export const data: Provider[] = [
         id: '@cf/cloudflare/clef-omni',
         name: 'Clef Omni',
         match: {
-          equals: '@cf/cloudflare/clef-omni',
+          or: [
+            {
+              equals: '@cf/cloudflare/clef-omni',
+            },
+            {
+              equals: 'clef-omni',
+            },
+          ],
         },
         context_window: 64000,
         price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
@@ -6390,6 +6415,18 @@ export const data: Provider[] = [
           input_mtok: 1.32,
           cache_read_mtok: 0.044,
           output_mtok: 3.96,
+        },
+      },
+      {
+        id: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        name: 'deepseek-v4.1-flash-1017',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
         },
       },
       {
@@ -8481,7 +8518,14 @@ export const data: Provider[] = [
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
-          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+            },
+          ],
         },
         price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
         prices: {
@@ -18213,6 +18257,24 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'BSC-LT/ALIA-40b-instruct-2606',
+        name: 'ALIA-40b-instruct-2606',
+        match: {
+          or: [
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606',
+            },
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
         name: 'Gemma-SEA-LION-v4-27B-IT',
         match: {
@@ -18231,6 +18293,24 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+        name: 'Nemotron-SEA-LION-v4.8-120B-A12B',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b',
+            },
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+        },
+      },
+      {
         id: 'aisingapore/Qwen-SEA-LION-v4-32B-IT',
         name: 'Qwen-SEA-LION-v4-32B-IT',
         match: {
@@ -18246,6 +18326,24 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+        name: 'Qwen-SEA-LION-v4.5-27B-IT',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it',
+            },
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.4,
         },
       },
       {
@@ -31563,6 +31661,16 @@ export const data: Provider[] = [
               output_mtok: 0.89,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2574,
+              output_mtok: 1.0287,
+            },
+          },
         ],
       },
       {
@@ -31899,11 +32007,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.042,
-          output_mtok: 0.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.042,
+              output_mtok: 0.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v4-flash-vision-exp',
@@ -31955,6 +32078,17 @@ export const data: Provider[] = [
               input_mtok: 0.422472,
               cache_read_mtok: 0.035206,
               output_mtok: 0.844944,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.95526,
+              cache_read_mtok: 0.079605,
+              output_mtok: 1.91052,
             },
           },
         ],
@@ -32010,6 +32144,17 @@ export const data: Provider[] = [
               input_mtok: 0.0344,
               cache_read_mtok: 0.0016,
               output_mtok: 0.08,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0352,
+              cache_read_mtok: 0.0016,
+              output_mtok: 0.0112,
             },
           },
         ],
@@ -33499,6 +33644,17 @@ export const data: Provider[] = [
               output_mtok: 0.1,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.04,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.05,
+            },
+          },
         ],
       },
       {
@@ -33548,6 +33704,17 @@ export const data: Provider[] = [
               input_mtok: 0.09,
               cache_read_mtok: 0.05,
               output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0765,
+              cache_read_mtok: 0.0425,
+              output_mtok: 0.255,
             },
           },
         ],
@@ -33943,6 +34110,26 @@ export const data: Provider[] = [
           input_mtok: 0.04,
           cache_read_mtok: 0.004,
           output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'inception/mercury-3',
+        name: 'Mercury 3',
+        match: {
+          or: [
+            {
+              equals: 'inception/mercury-3',
+            },
+            {
+              equals: 'inception/mercury-3-20261019',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.35,
         },
       },
       {
@@ -37217,11 +37404,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.08,
-          output_mtok: 0.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.08,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3.5-super-vl:free',
@@ -41556,6 +41758,17 @@ export const data: Provider[] = [
               output_mtok: 3.6,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.39,
+              cache_read_mtok: 0.3,
+              output_mtok: 2.34,
+            },
+          },
         ],
       },
       {
@@ -41758,6 +41971,17 @@ export const data: Provider[] = [
               input_mtok: 0.15,
               cache_read_mtok: 0.05,
               output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.95,
             },
           },
         ],
@@ -42382,11 +42606,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.1,
-          output_mtok: 3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.1,
+              output_mtok: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.04,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'reka-flash-3:free',
@@ -43306,11 +43545,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 524288,
-        prices: {
-          input_mtok: 0.09,
-          cache_read_mtok: 0.018,
-          output_mtok: 0.36,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.018,
+              output_mtok: 0.36,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'valkyrie-49b-v1',
@@ -44225,6 +44479,17 @@ export const data: Provider[] = [
               output_mtok: 3.2,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.12,
+              output_mtok: 1.92,
+            },
+          },
         ],
       },
       {
@@ -44395,6 +44660,17 @@ export const data: Provider[] = [
               input_mtok: 0.048,
               cache_read_mtok: 0.006,
               output_mtok: 0.16,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
             },
           },
         ],
@@ -45608,6 +45884,23 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'decisions',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'responses',
         root: 'usage',
         model_path: 'model',
@@ -45640,18 +45933,13 @@ export const data: Provider[] = [
         ],
       },
       {
-        api_flavor: 'decisions',
+        api_flavor: 'embeddings',
         root: 'usage',
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
+            path: 'prompt_tokens',
             dest: 'input_tokens',
-            required: true,
-          },
-          {
-            path: 'output_tokens',
-            dest: 'output_tokens',
             required: true,
           },
         ],
@@ -45685,13 +45973,67 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'perplexity/deepseek-v4-pro-0813',
+        match: {
+          equals: 'perplexity/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3',
+        match: {
+          equals: 'perplexity/glm-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3-flash',
+        match: {
+          equals: 'perplexity/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'perplexity/kimi-k3',
+        match: {
+          equals: 'perplexity/kimi-k3',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'perplexity/nemotron-3.5-super-120b-a12b',
+        match: {
+          equals: 'perplexity/nemotron-3.5-super-120b-a12b',
+        },
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.5,
+        },
+      },
+      {
         id: 'perplexity/sonar',
-        name: 'Sonar (Agent API)',
         match: {
           equals: 'perplexity/sonar',
         },
         price_comments:
-          'Agent API native Sonar uses a different model ID and rates from Sonar Chat Completions. https://docs.perplexity.ai/docs/agent-api/models Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Fast Search pricing starts on its documented public launch date, 2026-09-24. https://github.com/perplexityai/modelcontextprotocol/pull/146 https://docs.perplexity.ai/docs/resources/changelog#september-2026 Earlier dates retain the standard search estimate. Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
+          'Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Fast Search pricing starts on its documented public launch date, 2026-09-24. https://github.com/perplexityai/modelcontextprotocol/pull/146 https://docs.perplexity.ai/docs/resources/changelog#september-2026 Earlier dates retain the standard search estimate. Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.0625,
@@ -45720,6 +46062,28 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'pplx-decider-flash-v1.2',
+        name: 'Decider Flash V1.2',
+        match: {
+          or: [
+            {
+              equals: 'pplx-decider-flash-v1.2',
+            },
+            {
+              equals: 'pplx-decider-flash-latest',
+            },
+            {
+              equals: 'perplexity/pplx-decider-flash-latest',
+            },
+          ],
+        },
+        price_comments:
+          'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
         id: 'pplx-decider-v1-27b',
         name: 'Decider V1 27B',
         match: {
@@ -45746,6 +46110,68 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'pplx-decider-v1.2',
+        name: 'Decider V1.2',
+        match: {
+          or: [
+            {
+              equals: 'pplx-decider-v1.2',
+            },
+            {
+              equals: 'pplx-decider-latest',
+            },
+            {
+              equals: 'perplexity/pplx-decider-latest',
+            },
+          ],
+        },
+        price_comments:
+          'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'pplx-embed-context-v1-0.6b',
+        name: 'Embed Context V1 0.6B',
+        match: {
+          equals: 'pplx-embed-context-v1-0.6b',
+        },
+        prices: {
+          input_mtok: 0.008,
+        },
+      },
+      {
+        id: 'pplx-embed-context-v1-4b',
+        name: 'Embed Context V1 4B',
+        match: {
+          equals: 'pplx-embed-context-v1-4b',
+        },
+        prices: {
+          input_mtok: 0.05,
+        },
+      },
+      {
+        id: 'pplx-embed-v1-0.6b',
+        name: 'Embed V1 0.6B',
+        match: {
+          equals: 'pplx-embed-v1-0.6b',
+        },
+        prices: {
+          input_mtok: 0.004,
+        },
+      },
+      {
+        id: 'pplx-embed-v1-4b',
+        name: 'Embed V1 4B',
+        match: {
+          equals: 'pplx-embed-v1-4b',
+        },
+        prices: {
+          input_mtok: 0.03,
+        },
+      },
+      {
         id: 'r1-1776',
         name: 'R1 1776',
         description:
@@ -45767,6 +46193,8 @@ export const data: Provider[] = [
           equals: 'sonar',
         },
         context_window: 128000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 1,
           output_mtok: 1,
@@ -45783,7 +46211,7 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         price_comments:
-          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand. Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
@@ -45800,6 +46228,8 @@ export const data: Provider[] = [
           equals: 'sonar-pro',
         },
         context_window: 200000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 3,
           output_mtok: 15,
@@ -45840,6 +46270,8 @@ export const data: Provider[] = [
           equals: 'sonar-reasoning-pro',
         },
         context_window: 128000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
@@ -46003,11 +46435,37 @@ export const data: Provider[] = [
           equals: 'claude-haiku-5-5',
         },
         context_window: 1000000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 0.025,
+          input_mtok: {
+            base: 0.025,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.125,
+              },
+            ],
+          },
           cache_write_mtok: 0.03125,
-          cache_read_mtok: 0.0025,
-          output_mtok: 0.125,
+          cache_read_mtok: {
+            base: 0.0025,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.0125,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.625,
+              },
+            ],
+          },
         },
       },
       {
@@ -46556,11 +47014,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-astra',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 10,
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 20,
+              },
+            ],
+          },
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1,
-          output_mtok: 50,
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 200000,
+                price: 75,
+              },
+            ],
+          },
         },
       },
       {
@@ -46570,11 +47054,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-luna',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 0.1,
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
           cache_write_mtok: 0.125,
-          cache_read_mtok: 0.01,
-          output_mtok: 0.5,
+          cache_read_mtok: {
+            base: 0.01,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.02,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.75,
+              },
+            ],
+          },
         },
       },
       {
@@ -46584,11 +47094,37 @@ export const data: Provider[] = [
           equals: 'gpt-6-sol',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.2,
-          output_mtok: 10,
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 15,
+              },
+            ],
+          },
         },
       },
       {
@@ -46598,11 +47134,37 @@ export const data: Provider[] = [
           equals: 'gpt-6.1-sol',
         },
         context_window: 1048576,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
           cache_write_mtok: 2.5,
-          cache_read_mtok: 0.1,
-          output_mtok: 10,
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 15,
+              },
+            ],
+          },
         },
       },
       {
@@ -46652,10 +47214,36 @@ export const data: Provider[] = [
           equals: 'grok-4.6',
         },
         context_window: 500000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {
@@ -46665,10 +47253,36 @@ export const data: Provider[] = [
           equals: 'grok-4.7',
         },
         context_window: 500000,
+        price_comments:
+          'Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
         prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 6,
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
         },
       },
       {

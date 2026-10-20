@@ -156,7 +156,7 @@ groq-get: ## get groq model prices
 	uv run -m prices get_groq_prices
 
 .PHONY: perplexity-get
-perplexity-get: ## get perplexity sonar prices
+perplexity-get: ## get perplexity decisions, embeddings and agent api prices
 	uv run -m prices get_perplexity_prices
 
 .PHONY: together-get

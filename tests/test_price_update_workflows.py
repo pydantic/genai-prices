@@ -39,7 +39,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
-    proposal_query = 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update'
+    proposal_query = 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update -head:automation/weekly-price-update'
     assert source['on']['skip-if-match'] == proposal_query
     pre_activation = compiled['jobs']['pre_activation']
     skip_step = next(step for step in pre_activation['steps'] if step.get('id') == 'check_skip_if_match')
@@ -713,7 +713,7 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
-    assert notify['if'] == "needs.importer-failure.outputs.newly-failing == 'true'"
+    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
     assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
 
@@ -781,12 +781,69 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
     assert not output.exists()
 
 
+def test_aggregators_update_weekly_on_their_own_proposal() -> None:
+    workflow = read_workflow('update-prices.yml')
+    weekly = "(github.event.schedule == '47 6 * * 1' || inputs.weekly)"
+    assert workflow['on']['schedule'] == [{'cron': '17 * * * *'}, {'cron': '47 6 * * 1'}]
+    assert workflow['env']['BRANCH'] == f"automation/${{{{ {weekly} && 'weekly' || 'hourly' }}}}-price-update"
+    weekly_list, hourly_list = re.findall(
+        r"'(\[[^']*\])'", workflow['jobs']['import']['strategy']['matrix']['importer']
+    )
+    weekly_importers, hourly_importers = json.loads(weekly_list), json.loads(hourly_list)
+    assert weekly_importers == ['huggingface', 'openrouter-provider']
+    assert not set(weekly_importers) & set(hourly_importers)
+    makefile = (WORKFLOWS.parents[1] / 'Makefile').read_text()
+    assert all(f'\n{importer}-get:' in makefile for importer in weekly_importers + hourly_importers)
+
+
 def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
     steps = read_workflow('update-prices.yml')['jobs']['pull-request']['steps']
     script = next(step['run'] for step in steps if 'make collapse-models build' in step.get('run', ''))
     assert script.index('make collapse-models build') < script.index(
         'uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py'
     )
+
+
+@pytest.mark.parametrize('open_pr', ['', '843'])
+def test_hourly_update_keeps_the_start_dates_the_open_price_update_proposes(tmp_path: Path, open_pr: str) -> None:
+    for tool in ('gh', 'git', 'uv'):
+        fake = tmp_path / tool
+        output = 'printf %s "$OPEN_PR"\n' if tool == 'gh' else ''
+        fake.write_text(f'#!/bin/bash\necho "{tool} $*" >> "$CALLS"\n{output}')
+        fake.chmod(0o755)
+    job = read_workflow('update-prices.yml')['jobs']['pull-request']
+    names = [step.get('name') for step in job['steps']]
+    step = job['steps'][names.index('Keep the start dates the open price update proposes')]
+    build = next(i for i, step in enumerate(job['steps']) if 'make collapse-models build' in step.get('run', ''))
+    assert names.index('Keep the start dates the open price update proposes') < build
+    assert step['if'] == "steps.apply.outputs.importers != ''"
+    assert step['env'] == {'GH_TOKEN': '${{ github.token }}'}
+    assert job['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    calls = tmp_path / 'calls'
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', step['run']],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'BRANCH': 'automation/hourly-price-update',
+            'CALLS': str(calls),
+            'OPEN_PR': open_pr,
+        },
+        check=True,
+    )
+
+    assert calls.read_text().splitlines() == [
+        'gh pr list --head automation/hourly-price-update --state open --json number --jq .[].number',
+        *(
+            [
+                'git fetch --quiet --depth=1 origin automation/hourly-price-update',
+                'uv run --all-packages -m prices.proposed_start_dates FETCH_HEAD',
+            ]
+            if open_pr
+            else []
+        ),
+    ]
 
 
 @pytest.mark.parametrize(
@@ -806,8 +863,9 @@ def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
         ({}, ''),
     ],
 )
+@pytest.mark.parametrize('complete', ['true', 'false'])
 def test_hourly_update_lists_rates_that_need_a_manual_update(
-    tmp_path: Path, notes: dict[str, str], manual_section: str
+    tmp_path: Path, notes: dict[str, str], manual_section: str, complete: str
 ) -> None:
     patches = tmp_path / 'patches'
     patches.mkdir()
@@ -818,14 +876,26 @@ def test_hourly_update_lists_rates_that_need_a_manual_update(
 
     subprocess.run(
         ['bash', '-e', '-o', 'pipefail', '-c', script],
-        env={**os.environ, 'RUNNER_TEMP': str(tmp_path), 'IMPORTERS': 'openai groq', 'RUN_URL': 'https://run'},
+        env={
+            **os.environ,
+            'RUNNER_TEMP': str(tmp_path),
+            'IMPORTERS': 'openai groq',
+            'COMPLETE': complete,
+            'RUN_URL': 'https://run',
+        },
         check=True,
     )
 
     assert (tmp_path / 'pr-body.md').read_text() == (
         'Prices fetched from official provider APIs and docs by [this run](https://run).\n\n'
         'Importers with changes: openai groq\n\n'
-        'Each rate change is a new dated entry, so past usage keeps its old price.\n' + manual_section
+        + (
+            ''
+            if complete == 'true'
+            else 'Some importers failed in this run, so their changes are missing until they recover.\n\n'
+        )
+        + 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
+        + manual_section
     )
 
 

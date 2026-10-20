@@ -7,12 +7,14 @@ from pathlib import Path
 
 import httpx2
 
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
+from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 PRICING_URL = 'https://developers.cloudflare.com/workers-ai/platform/pricing/index.md'
 MIN_MODEL_COUNT = 40
+# Cloudflare's native decision APIs return the short selector in `result.model`.
+# https://developers.cloudflare.com/workers-ai/models/clairic/
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
@@ -42,7 +44,11 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 ModelInfo(
                     id=model_id,
                     name=model_id.rsplit('/', 1)[-1],
-                    match=ClauseEquals(equals=model_id),
+                    match=ClauseOr.model_validate(
+                        {'or': [{'equals': model_id}, {'equals': model_id.rsplit('/', 1)[-1]}]}
+                    )
+                    if model_id.startswith('@cf/cloudflare/')
+                    else ClauseEquals(equals=model_id),
                     prices=ModelPrice(
                         input_mtok=rates.get('input'),
                         cache_read_mtok=rates.get('cached input'),
@@ -67,8 +73,7 @@ def update_cloudflare_provider(provider_yaml: ProviderYaml, models: list[ModelIn
         if matching_model is None:
             models_added += provider_yaml.add_model(model)
         else:
-            provider_yaml.update_model(matching_model.id, model, set_prices=True)
-            models_updated += 1
+            models_updated += provider_yaml.update_model(matching_model.id, model, set_prices=True)
     provider_yaml.save()
     return models_added, models_updated
 

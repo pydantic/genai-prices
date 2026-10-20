@@ -3677,6 +3677,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
+                id='@cf/cloudflare/clairic',
+                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clairic'), ClauseEquals(equals='clairic')]),
+                name='clairic',
+                price_comments='Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
                 id='@cf/cloudflare/clef',
                 match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clef'), ClauseEquals(equals='clef')]),
                 name='Clef',
@@ -3702,7 +3709,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='@cf/cloudflare/clef-omni',
-                match=ClauseEquals(equals='@cf/cloudflare/clef-omni'),
+                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clef-omni'), ClauseEquals(equals='clef-omni')]),
                 name='Clef Omni',
                 context_window=64000,
                 price_comments='Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
@@ -3735,6 +3742,14 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Pro 0813',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+                match=ClauseEquals(equals='@cf/deepseek-ai/deepseek-v4.1-flash-1017'),
+                name='deepseek-v4.1-flash-1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
                 ),
             ),
             ModelInfo(
@@ -4940,7 +4955,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
-                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                    ]
+                ),
                 name='DeepSeek V4.1 Flash',
                 price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
                 prices=ModelPrice(
@@ -10530,6 +10550,17 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='BSC-LT/ALIA-40b-instruct-2606',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606'),
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606-fast'),
+                    ]
+                ),
+                name='ALIA-40b-instruct-2606',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
                 id='aisingapore/Gemma-SEA-LION-v4-27B-IT',
                 match=ClauseOr(
                     or_=[
@@ -10541,6 +10572,17 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
+                id='aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b'),
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast'),
+                    ]
+                ),
+                name='Nemotron-SEA-LION-v4.8-120B-A12B',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
                 id='aisingapore/Qwen-SEA-LION-v4-32B-IT',
                 match=ClauseOr(
                     or_=[
@@ -10550,6 +10592,17 @@ providers: list[Provider] = [
                 ),
                 name='Qwen-SEA-LION-v4-32B-IT',
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it'),
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it-fast'),
+                    ]
+                ),
+                name='Qwen-SEA-LION-v4.5-27B-IT',
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='allenai/Olmo-3-7B-Instruct',
@@ -17823,6 +17876,10 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(input_mtok=Decimal('0.32'), output_mtok=Decimal('0.89')),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(input_mtok=Decimal('0.2574'), output_mtok=Decimal('1.0287')),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -18037,9 +18094,19 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek V4 Flash 0731',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.042'), output_mtok=Decimal('0.15')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.042'), output_mtok=Decimal('0.15')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.44'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('1.32')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek/deepseek-v4-flash-vision-exp',
@@ -18080,6 +18147,14 @@ providers: list[Provider] = [
                             output_mtok=Decimal('0.844944'),
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.95526'),
+                            cache_read_mtok=Decimal('0.079605'),
+                            output_mtok=Decimal('1.91052'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -18116,6 +18191,14 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.0344'), cache_read_mtok=Decimal('0.0016'), output_mtok=Decimal('0.08')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.0352'),
+                            cache_read_mtok=Decimal('0.0016'),
+                            output_mtok=Decimal('0.0112'),
                         ),
                     ),
                 ],
@@ -19102,6 +19185,12 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.04'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.05')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -19132,6 +19221,14 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.3')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.0765'),
+                            cache_read_mtok=Decimal('0.0425'),
+                            output_mtok=Decimal('0.255'),
                         ),
                     ),
                 ],
@@ -19373,6 +19470,20 @@ providers: list[Provider] = [
                 context_window=260000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.04'), cache_read_mtok=Decimal('0.004'), output_mtok=Decimal('0.15')
+                ),
+            ),
+            ModelInfo(
+                id='inception/mercury-3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='inception/mercury-3'),
+                        ClauseEquals(equals='inception/mercury-3-20261019'),
+                    ]
+                ),
+                name='Mercury 3',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.35')
                 ),
             ),
             ModelInfo(
@@ -21404,9 +21515,19 @@ providers: list[Provider] = [
                 ),
                 name='Nemotron 3.5 Super VL',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('0.4')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('0.4')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='nvidia/nemotron-3.5-super-vl:free',
@@ -23627,6 +23748,12 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('3.6')
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.39'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('2.34')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -23738,6 +23865,12 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.95')
                         ),
                     ),
                 ],
@@ -24092,7 +24225,19 @@ providers: list[Provider] = [
                 ),
                 name='Beam 1.0 501B A23B',
                 context_window=1048576,
-                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('1')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='reka-flash-3:free',
@@ -24635,9 +24780,19 @@ providers: list[Provider] = [
                 ),
                 name='Solar Pro 4',
                 context_window=524288,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.018'), output_mtok=Decimal('0.36')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.018'), output_mtok=Decimal('0.36')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.6')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='valkyrie-49b-v1',
@@ -25109,6 +25264,12 @@ providers: list[Provider] = [
                             input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.2')
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('1.92')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -25200,6 +25361,12 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.048'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('0.16')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
                         ),
                     ),
                 ],
@@ -25885,6 +26052,15 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['input_tokens_details', 'cache_read_input_tokens'],
                         dest='cache_read_tokens',
@@ -25905,11 +26081,8 @@ providers: list[Provider] = [
             ),
             UsageExtractor(
                 root='usage',
-                mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
-                ],
-                api_flavor='decisions',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
                 model_path='model',
             ),
         ],
@@ -25929,10 +26102,42 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='perplexity/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='perplexity/deepseek-v4-pro-0813'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3',
+                match=ClauseEquals(equals='perplexity/glm-5.3'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3-flash',
+                match=ClauseEquals(equals='perplexity/glm-5.3-flash'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/kimi-k3',
+                match=ClauseEquals(equals='perplexity/kimi-k3'),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='perplexity/nemotron-3.5-super-120b-a12b',
+                match=ClauseEquals(equals='perplexity/nemotron-3.5-super-120b-a12b'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
                 id='perplexity/sonar',
                 match=ClauseEquals(equals='perplexity/sonar'),
-                name='Sonar (Agent API)',
-                price_comments='Agent API native Sonar uses a different model ID and rates from Sonar Chat Completions. https://docs.perplexity.ai/docs/agent-api/models Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Fast Search pricing starts on its documented public launch date, 2026-09-24. https://github.com/perplexityai/modelcontextprotocol/pull/146 https://docs.perplexity.ai/docs/resources/changelog#september-2026 Earlier dates retain the standard search estimate. Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
+                price_comments='Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Fast Search pricing starts on its documented public launch date, 2026-09-24. https://github.com/perplexityai/modelcontextprotocol/pull/146 https://docs.perplexity.ai/docs/resources/changelog#september-2026 Earlier dates retain the standard search estimate. Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.0625'),
@@ -25947,6 +26152,19 @@ providers: list[Provider] = [
                     ),
                     PriceVariant(when={'search_type': 'web'}, prices=ModelPrice(), constraint=None),
                 ],
+            ),
+            ModelInfo(
+                id='pplx-decider-flash-v1.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='pplx-decider-flash-v1.2'),
+                        ClauseEquals(equals='pplx-decider-flash-latest'),
+                        ClauseEquals(equals='perplexity/pplx-decider-flash-latest'),
+                    ]
+                ),
+                name='Decider Flash V1.2',
+                price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
             ),
             ModelInfo(
                 id='pplx-decider-v1-27b',
@@ -25965,6 +26183,43 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
+                id='pplx-decider-v1.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='pplx-decider-v1.2'),
+                        ClauseEquals(equals='pplx-decider-latest'),
+                        ClauseEquals(equals='perplexity/pplx-decider-latest'),
+                    ]
+                ),
+                name='Decider V1.2',
+                price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-embed-context-v1-0.6b',
+                match=ClauseEquals(equals='pplx-embed-context-v1-0.6b'),
+                name='Embed Context V1 0.6B',
+                prices=ModelPrice(input_mtok=Decimal('0.008')),
+            ),
+            ModelInfo(
+                id='pplx-embed-context-v1-4b',
+                match=ClauseEquals(equals='pplx-embed-context-v1-4b'),
+                name='Embed Context V1 4B',
+                prices=ModelPrice(input_mtok=Decimal('0.05')),
+            ),
+            ModelInfo(
+                id='pplx-embed-v1-0.6b',
+                match=ClauseEquals(equals='pplx-embed-v1-0.6b'),
+                name='Embed V1 0.6B',
+                prices=ModelPrice(input_mtok=Decimal('0.004')),
+            ),
+            ModelInfo(
+                id='pplx-embed-v1-4b',
+                match=ClauseEquals(equals='pplx-embed-v1-4b'),
+                name='Embed V1 4B',
+                prices=ModelPrice(input_mtok=Decimal('0.03')),
+            ),
+            ModelInfo(
                 id='r1-1776',
                 match=ClauseEquals(equals='r1-1776'),
                 name='R1 1776',
@@ -25977,6 +26232,7 @@ providers: list[Provider] = [
                 name='Sonar',
                 description='Sonar is lightweight, affordable, fast, and simple to use — now featuring citations and the ability to customize sources. It is designed for companies seeking to integrate lightweight question-and-answer features optimized for speed.',
                 context_window=128000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'), requests_kcount=Decimal('12')),
             ),
             ModelInfo(
@@ -25985,7 +26241,7 @@ providers: list[Provider] = [
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
                 context_window=128000,
-                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
+                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand. Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     output_mtok=Decimal('8'),
@@ -26000,6 +26256,7 @@ providers: list[Provider] = [
                 name='Sonar Pro',
                 description='Note: Sonar Pro pricing includes Perplexity search pricing. See details here',
                 context_window=200000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'), requests_kcount=Decimal('14')),
             ),
             ModelInfo(
@@ -26023,6 +26280,7 @@ providers: list[Provider] = [
                 name='Sonar Reasoning Pro',
                 description='Sonar Pro pricing includes Perplexity search pricing.',
                 context_window=128000,
+                price_comments='Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8'), requests_kcount=Decimal('14')),
             ),
         ],
@@ -26126,11 +26384,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='claude-haiku-5-5'),
                 name='Claude Haiku 5.5',
                 context_window=1000000,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.025'),
+                    input_mtok=TieredPrices(base=Decimal('0.025'), tiers=[Tier(start=200000, price=Decimal('0.125'))]),
                     cache_write_mtok=Decimal('0.03125'),
-                    cache_read_mtok=Decimal('0.0025'),
-                    output_mtok=Decimal('0.125'),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0025'), tiers=[Tier(start=200000, price=Decimal('0.0125'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.625'))]),
                 ),
             ),
             ModelInfo(
@@ -26506,11 +26767,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-astra'),
                 name='GPT-6 Astra',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10'),
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('20'))]),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1'),
-                    output_mtok=Decimal('50'),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=200000, price=Decimal('75'))]),
                 ),
             ),
             ModelInfo(
@@ -26518,11 +26780,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-luna'),
                 name='GPT-6 Luna',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.1'),
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
                     cache_write_mtok=Decimal('0.125'),
-                    cache_read_mtok=Decimal('0.01'),
-                    output_mtok=Decimal('0.5'),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=200000, price=Decimal('0.02'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('0.75'))]),
                 ),
             ),
             ModelInfo(
@@ -26530,11 +26795,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6-sol'),
                 name='GPT-6 Sol',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('10'),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
             ),
             ModelInfo(
@@ -26542,11 +26808,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gpt-6.1-sol'),
                 name='GPT-6.1 Sol',
                 context_window=1048576,
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('10'),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
             ),
             ModelInfo(
@@ -26580,14 +26847,24 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.6'),
                 name='Grok 4.6',
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='grok-4.7',
                 match=ClauseEquals(equals='grok-4.7'),
                 name='Grok 4.7',
                 context_window=500000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
+                price_comments='Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked 2026-10-19). Cache-write rates have no long-context override in the catalog.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]),
+                ),
             ),
             ModelInfo(
                 id='hy3',
