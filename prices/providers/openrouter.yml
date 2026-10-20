@@ -1653,11 +1653,6 @@ models:
         prices:
           input_mtok: 0.32
           output_mtok: 0.89
-      - constraint:
-          start_date: 2026-10-20
-        prices:
-          input_mtok: 0.2574
-          output_mtok: 1.0287
     prices_checked: 2026-10-20
 
   - id: deepseek/deepseek-chat-v3-0324
@@ -2811,18 +2806,10 @@ models:
         - regex: ^google/gemini-3\.8-flash-\d{8}$
         - equals: google/gemini-3.8-flash-20260902
     prices:
-      - prices:
-          input_mtok: 0.75
-          cache_write_mtok: 0.041666666666666664
-          cache_read_mtok: 0.075
-          output_mtok: 3.75
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.825
-          cache_write_mtok: 0.041666666666666664
-          cache_read_mtok: 0.0825
-          output_mtok: 4.125
+      input_mtok: 0.75
+      cache_write_mtok: 0.041666666666666664
+      cache_read_mtok: 0.075
+      output_mtok: 3.75
     context_window: 1048576
     prices_checked: 2026-10-20
 
@@ -5174,16 +5161,9 @@ models:
     prices_checked: 2026-10-20
     price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
-      - prices:
-          input_mtok: 3.00
-          cache_read_mtok: 0.30
-          output_mtok: 15.00
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.239
-          cache_read_mtok: 0.21
-          output_mtok: 11.936
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
 
   - id: moonshotai/kimi-k3:batch
     name: Kimi K3 (batch)
@@ -10066,16 +10046,9 @@ models:
         - equals: z-ai/glm-4.6v
         - equals: z-ai/glm-4.6-20251208
     prices:
-      - prices:
-          input_mtok: 0.3
-          cache_read_mtok: 0.05
-          output_mtok: 0.9
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.3
-          cache_read_mtok: 0.055
-          output_mtok: 0.9
+      input_mtok: 0.3
+      cache_read_mtok: 0.05
+      output_mtok: 0.9
     context_window: 131072
     prices_checked: 2026-10-20
 
@@ -10137,12 +10110,6 @@ models:
           input_mtok: 1
           cache_read_mtok: 0.2
           output_mtok: 3.2
-      - constraint:
-          start_date: 2026-10-20
-        prices:
-          input_mtok: 0.6
-          cache_read_mtok: 0.12
-          output_mtok: 1.92
     prices_checked: 2026-10-20
 
   - id: z-ai/glm-5-turbo
@@ -10185,16 +10152,9 @@ models:
         - equals: z-ai/glm-5.2
         - equals: z-ai/glm-5.2-20260616
     prices:
-      - prices:
-          input_mtok: 1.4
-          cache_read_mtok: 0.26
-          output_mtok: 4.4
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.62
-          cache_read_mtok: 0.14
-          output_mtok: 2.42
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
     context_window: 1048576
     prices_checked: 2026-10-20
 
@@ -10206,16 +10166,9 @@ models:
         - equals: z-ai/glm-5.3-20260816
     prices_checked: 2026-10-20
     prices:
-      - prices:
-          input_mtok: 1.4
-          cache_read_mtok: 0.26
-          output_mtok: 4.4
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.079
-          cache_read_mtok: 0.078
-          output_mtok: 1.4
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
     context_window: 1048576
 
   - id: z-ai/glm-5.3-flash
@@ -10241,18 +10194,6 @@ models:
           input_mtok: 0.15
           cache_read_mtok: 0.03
           output_mtok: 0.50
-      - constraint:
-          start_date: 2026-10-19
-        prices:
-          input_mtok: 0.048
-          cache_read_mtok: 0.006
-          output_mtok: 0.16
-      - constraint:
-          start_date: 2026-10-20
-        prices:
-          input_mtok: 0.15
-          cache_read_mtok: 0.03
-          output_mtok: 0.5
     context_window: 1310720
 
   - id: z-ai/glm-5.3-flash:batch

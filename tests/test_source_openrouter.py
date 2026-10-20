@@ -16,11 +16,13 @@ from prices.prices_types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
+    Provider,
     StartDateConstraint,
     Tier,
     TieredPrices,
 )
 from prices.source_openrouter import (
+    OpenRouterEndpoint,
     OpenRouterModel,
     OpenRouterPricing,
     OpenRouterResponse,
@@ -777,6 +779,12 @@ models:
     ]
 
 
+def write_provider(tmp_path: Path, provider_id: str, models: str) -> update.ProviderYaml:
+    path = tmp_path / f'{provider_id}.yml'
+    path.write_text(f'id: {provider_id}\nname: {provider_id}\napi_pattern: {provider_id}\nmodels:\n{models}')
+    return update.ProviderYaml(path)
+
+
 @pytest.mark.vcr()
 def test_update_openrouter_provider_fetches_recorded_models(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
@@ -793,5 +801,206 @@ def test_update_openrouter_provider_fetches_recorded_models(
     source_openrouter.update_openrouter_provider(provider_path)
 
     assert capsys.readouterr().out == snapshot("""\
-OpenRouter prices updated: 0 added, 420 updated
+OpenRouter prices updated: 3 added, 417 updated
 """)
+    prices = {
+        model.id: source_openrouter.latest_price(model) for model in update.ProviderYaml(provider_path).provider.models
+    }
+    # Recorded on 2026-10-20, when one host listed glm-5.3-flash at $0.048 and two resellers had glm-5 at 40% off (#848).
+    assert prices['z-ai/glm-5.3-flash'] == ModelPrice(
+        input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+    )
+    assert prices['z-ai/glm-5'] == ModelPrice(
+        input_mtok=Decimal(1), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.2')
+    )
+
+
+def endpoint(
+    tag: str,
+    prompt: str,
+    completion: str | None,
+    *,
+    cache_read: str | None = None,
+    service_tier: str | None = None,
+    discount: str = '0',
+) -> OpenRouterEndpoint:
+    pricing = OpenRouterPricing(
+        prompt=Decimal(prompt) / 1_000_000,
+        completion=None if completion is None else Decimal(completion) / 1_000_000,
+        input_cache_read=None if cache_read is None else Decimal(cache_read) / 1_000_000,
+        discount=Decimal(discount),
+    )
+    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing)
+
+
+@pytest.mark.parametrize(
+    ('endpoints', 'recorded', 'rates'),
+    [
+        pytest.param(
+            [
+                endpoint('a/us', '1', '2'),
+                endpoint('a/eu', '1', '2'),
+                endpoint('b', '2', '4'),
+                endpoint('c/fp8', '2', '4'),
+            ],
+            None,
+            ('2', '4'),
+            id='each host counts once',
+        ),
+        pytest.param(
+            [endpoint('cheap', '0.048', '0.16'), endpoint('b', '0.15', '0.5'), endpoint('c', '0.15', '0.5')],
+            None,
+            ('0.15', '0.5'),
+            id='a lone cheap host',
+        ),
+        pytest.param(
+            [
+                endpoint('a', '1', '2', cache_read='0.1'),
+                endpoint('b', '1', '2', cache_read='0.2'),
+                endpoint('c', '1', '2'),
+                endpoint('d', '3', '4'),
+                endpoint('e', '3', '4'),
+            ],
+            None,
+            ('1', '2'),
+            id='input and output rates outvote whole rate cards',
+        ),
+        pytest.param(
+            [endpoint('a/flex', '3', '6', service_tier='flex'), endpoint('b', '9', '9'), endpoint('c', '9', '9')],
+            None,
+            ('9', '9'),
+            id='standard tier only',
+        ),
+        pytest.param([endpoint('a/flex', '3', '6', service_tier='flex')], None, ('3', '6'), id='flex when alone'),
+        pytest.param(
+            [
+                endpoint('a', '0.5', '1', discount='0.5'),
+                endpoint('b', '0.5', '1', discount='0.5'),
+                endpoint('c', '1', '2'),
+            ],
+            None,
+            ('1', '2'),
+            id='full price only',
+        ),
+        pytest.param([endpoint('a', '0.5', '1', discount='0.5')], None, ('0.5', '1'), id='discounted when alone'),
+        pytest.param([endpoint('a', '2', '4'), endpoint('b', '1', '2')], None, ('1', '2'), id='tie takes cheapest'),
+        pytest.param(
+            [endpoint('a', '2', '4'), endpoint('b', '1', '2')],
+            '{input_mtok: 2.05, output_mtok: 4}',
+            ('2', '4'),
+            id='tie keeps recorded rate',
+        ),
+        pytest.param([], None, ('1', '2'), id='no endpoints keeps listed rate'),
+    ],
+)
+def test_endpoint_pricing_takes_the_rate_most_hosts_charge(
+    tmp_path: Path, endpoints: list[OpenRouterEndpoint], recorded: str | None, rates: tuple[str, str]
+) -> None:
+    records = (
+        '  []\n' if recorded is None else f'  - id: vendor/m\n    match: {{equals: vendor/m}}\n    prices: {recorded}\n'
+    )
+    provider_yaml = write_provider(tmp_path, 'openrouter', records)
+
+    pricing = source_openrouter.with_endpoint_pricing(openrouter_model('vendor/m'), endpoints, provider_yaml).pricing
+
+    assert (pricing.prompt, pricing.completion) == tuple(Decimal(rate) / 1_000_000 for rate in rates)
+
+
+REPORTED = ModelPrice(input_mtok=Decimal(9), output_mtok=Decimal(9))
+TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+
+
+@pytest.mark.parametrize(
+    ('model_id', 'prices', 'endpoints', 'expected'),
+    [
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'cache_read_mtok': 0.2, 'output_mtok': 2, 'web_searches_kcount': 10},
+            [endpoint('z-ai/fp8', '1.02', '2')],
+            ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal(2)),
+            id='own endpoint confirms the token rates',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': {'base': 1, 'tiers': [{'start': 200_000, 'price': 2}]}, 'output_mtok': 2},
+            [endpoint('z-ai', '1', '2')],
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal(1), tiers=[Tier(start=200_000, price=Decimal(2))]),
+                output_mtok=Decimal(2),
+            ),
+            id='tiered record compares its base',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            [
+                {'prices': {'input_mtok': 1, 'output_mtok': 2}},
+                {'constraint': {'start_date': TOMORROW}, 'prices': {'input_mtok': 5, 'output_mtok': 10}},
+            ],
+            [endpoint('z-ai', '1', '2')],
+            ModelPrice(input_mtok=Decimal(1), output_mtok=Decimal(2)),
+            id='future price ignored',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai', '0.5', '1', discount='0.5')],
+            ModelPrice(input_mtok=Decimal(1), output_mtok=Decimal(2)),
+            id='own endpoint before its discount',
+        ),
+        pytest.param(
+            'z-ai/glm', {'input_mtok': 1, 'output_mtok': 2}, [endpoint('z-ai', '1.2', '2')], REPORTED, id='disagrees'
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('novita', '1', '2')],
+            REPORTED,
+            id='reseller only',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai/priority', '1', '2', service_tier='priority')],
+            REPORTED,
+            id='own priority tier only',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai', '1', None)],
+            REPORTED,
+            id='no output rate',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            [
+                {'prices': {'input_mtok': 1, 'output_mtok': 2}},
+                {
+                    'constraint': {'start_time': '01:00:00Z', 'end_time': '04:00:00Z'},
+                    'prices': {'input_mtok': 2, 'output_mtok': 4},
+                },
+            ],
+            [endpoint('z-ai', '1', '2')],
+            REPORTED,
+            id='time of day record',
+        ),
+        pytest.param('z-ai/glm', {}, [endpoint('z-ai', '1', '2')], REPORTED, id='free record'),
+        pytest.param('z-ai/other', {'input_mtok': 1}, [endpoint('z-ai', '1', '2')], REPORTED, id='no record'),
+        pytest.param('z-ai/glm:batch', {'input_mtok': 1}, [endpoint('z-ai', '1', '2')], REPORTED, id='route'),
+        pytest.param('qwen/glm', {'input_mtok': 1}, [endpoint('qwen', '1', '2')], REPORTED, id='unmapped author'),
+    ],
+)
+def test_official_price_applies_only_where_the_original_provider_charges_it(
+    model_id: str, prices: object, endpoints: list[OpenRouterEndpoint], expected: ModelPrice
+) -> None:
+    zai = Provider.model_validate(
+        {
+            'id': 'zai',
+            'name': 'Z.AI',
+            'api_pattern': 'z',
+            'models': [{'id': 'glm', 'match': {'equals': 'glm'}, 'prices': prices}],
+        }
+    )
+    model = ModelInfo(id=model_id, match=ClauseEquals(equals=model_id), prices=REPORTED)
+
+    assert source_openrouter.with_official_price(model, endpoints, {'zai': zai}).prices == expected
