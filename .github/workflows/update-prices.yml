@@ -3,7 +3,14 @@ name: Update prices
 on:
   schedule:
     - cron: "17 * * * *"
-  workflow_dispatch: {}
+    # Aggregators reprice by the hour, so they get a weekly proposal of their own.
+    - cron: "47 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      weekly:
+        description: Run the weekly aggregator importers instead of the hourly ones
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -14,7 +21,8 @@ concurrency:
 env:
   UV_PYTHON: 3.13
   UV_FROZEN: "1"
-  BRANCH: automation/hourly-price-update
+  TITLE_SUFFIX: ${{ (github.event.schedule == '47 6 * * 1' || inputs.weekly) && ' (weekly)' || '' }}
+  BRANCH: automation/${{ (github.event.schedule == '47 6 * * 1' || inputs.weekly) && 'weekly' || 'hourly' }}-price-update
 
 jobs:
   import:
@@ -28,40 +36,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        importer:
-          - anthropic
-          - arcee
-          - avian
-          - azure
-          - aws
-          - baseten
-          - cerebras
-          - cloudflare
-          - cursor
-          - databricks
-          - doubleword
-          - fireworks
-          - github-copilot
-          - google
-          - groq
-          - huggingface
-          - meta
-          - minimax
-          - mistral
-          - modal
-          - moonshotai
-          - novita
-          - openai
-          - openai-decisions
-          - openrouter-provider
-          - ovhcloud
-          - perplexity
-          - quicksilverpro
-          - together
-          - typesafe
-          - voyageai
-          - xai
-          - zai
+        importer: >-
+          ${{ fromJSON((github.event.schedule == '47 6 * * 1' || inputs.weekly) && '["huggingface", "openrouter-provider"]' || '[
+            "anthropic", "arcee", "avian", "azure", "aws", "baseten", "cerebras", "cloudflare", "cursor",
+            "databricks", "doubleword", "fireworks", "github-copilot", "google", "groq", "meta", "minimax",
+            "mistral", "modal", "moonshotai", "novita", "openai", "openai-decisions", "ovhcloud",
+            "perplexity", "quicksilverpro", "together", "typesafe", "voyageai", "xai", "zai"
+          ]') }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -232,7 +213,7 @@ jobs:
             fi
           else
             git push --force "$remote" "HEAD:$BRANCH"
-            echo "created-pr-url=$(gh pr create --head "$BRANCH" --title 'Update provider prices from official sources' --body-file "$body")" >> "$GITHUB_OUTPUT"
+            echo "created-pr-url=$(gh pr create --head "$BRANCH" --title "Update provider prices from official sources$TITLE_SUFFIX" --body-file "$body")" >> "$GITHUB_OUTPUT"
           fi
 
   manual-updates:
@@ -262,9 +243,9 @@ jobs:
           if [ "$IMPORT_RESULT" = success ] && [ "${#notes[@]}" = "$EXPECTED_COUNT" ]; then
             complete=true
           fi
-          title='Provider prices needing manual review'
+          title="Provider prices needing manual review$TITLE_SUFFIX"
           issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $title" \
-            --json number,title,author | jq -r '.[] | select(.title == "Provider prices needing manual review" and (.author.login == "github-actions[bot]" or .author.login == "app/github-actions")) | .number')"
+            --json number,title,author | jq -r --arg title "$title" '.[] | select(.title == $title and (.author.login == "github-actions[bot]" or .author.login == "app/github-actions")) | .number')"
           previous_body="$RUNNER_TEMP/previous-manual-body.md"
           : > "$previous_body"
           if [ -n "$issue" ]; then

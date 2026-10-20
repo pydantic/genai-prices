@@ -39,7 +39,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
-    proposal_query = 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update'
+    proposal_query = 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update -head:automation/weekly-price-update'
     assert source['on']['skip-if-match'] == proposal_query
     pre_activation = compiled['jobs']['pre_activation']
     skip_step = next(step for step in pre_activation['steps'] if step.get('id') == 'check_skip_if_match')
@@ -779,6 +779,21 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
 
     assert result.returncode != 0
     assert not output.exists()
+
+
+def test_aggregators_update_weekly_on_their_own_proposal() -> None:
+    workflow = read_workflow('update-prices.yml')
+    weekly = "(github.event.schedule == '47 6 * * 1' || inputs.weekly)"
+    assert workflow['on']['schedule'] == [{'cron': '17 * * * *'}, {'cron': '47 6 * * 1'}]
+    assert workflow['env']['BRANCH'] == f"automation/${{{{ {weekly} && 'weekly' || 'hourly' }}}}-price-update"
+    weekly_list, hourly_list = re.findall(
+        r"'(\[[^']*\])'", workflow['jobs']['import']['strategy']['matrix']['importer']
+    )
+    weekly_importers, hourly_importers = json.loads(weekly_list), json.loads(hourly_list)
+    assert weekly_importers == ['huggingface', 'openrouter-provider']
+    assert not set(weekly_importers) & set(hourly_importers)
+    makefile = (WORKFLOWS.parents[1] / 'Makefile').read_text()
+    assert all(f'\n{importer}-get:' in makefile for importer in weekly_importers + hourly_importers)
 
 
 def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:

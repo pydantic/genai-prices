@@ -231,4 +231,3 @@ def test_status_functions_and_token_boundaries() -> None:
     build = next(i for i, step in enumerate(steps) if 'make collapse-models build' in step.get('run', ''))
     token = next(i for i, step in enumerate(steps) if step.get('id') == 'app-token')
     assert build < token
-    assert workflow['on']['schedule'] == [{'cron': '17 * * * *'}]

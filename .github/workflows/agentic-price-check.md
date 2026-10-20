@@ -9,7 +9,7 @@ on:
       timezone: UTC
   permissions:
     pull-requests: read
-  skip-if-match: 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update'
+  skip-if-match: 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update -head:automation/weekly-price-update'
 if: ${{ vars.AGENTIC_WORKFLOWS_ENABLED == 'true' }}
 runs-on: ubuntu-latest
 permissions:
