@@ -79,7 +79,7 @@ repos:
         name: build prices
         entry: make
         args: [build]
-        files: "prices/"
+        files: "^prices/"
         language: system
         pass_filenames: false
       - id: check-for-price-discrepancies
@@ -87,7 +87,7 @@ repos:
         entry: make
         args: [check-for-price-discrepancies]
         types: [yaml]
-        files: "prices/"
+        files: "^prices/"
         language: system
         pass_filenames: false
       - id: inject-providers
@@ -95,7 +95,7 @@ repos:
         entry: make
         args: [inject-providers]
         types: [yaml]
-        files: "prices/"
+        files: "^prices/"
         language: system
         pass_filenames: false
       - id: typecheck-python
