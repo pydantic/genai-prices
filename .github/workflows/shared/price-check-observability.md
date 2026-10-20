@@ -1,4 +1,8 @@
 ---
+pre-agent-steps:
+  - name: Record the trusted price-check start time
+    if: always()
+    run: echo "PRICE_CHECK_JOB_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
 post-steps:
   - name: Export price-check telemetry
     if: always()
@@ -7,6 +11,7 @@ post-steps:
     env:
       # Keep this credential scoped to the trusted step after the agent exits.
       OTEL_EXPORTER_OTLP_HEADERS: Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}
+      PRICE_CHECK_JOB_STATUS: ${{ job.status }}
     with:
       script: |
         const fs = require('node:fs');
@@ -16,34 +21,61 @@ post-steps:
           path.join(process.env.RUNNER_TEMP, 'gh-aw/actions/send_otlp_span.cjs')
         );
         try {
-          const readRecords = (file) => fs.readFileSync(file, 'utf8').split('\n').flatMap((line) => {
-            try {
-              const record = JSON.parse(line);
-              return record && typeof record === 'object' && !Array.isArray(record) ? [record] : [];
-            } catch { return []; }
-          });
+          const diagnostics = [];
+          const readRecords = (file) => {
+            try { return fs.readFileSync(file, 'utf8').split('\n').flatMap((line) => {
+              try {
+                const record = JSON.parse(line);
+                return record && typeof record === 'object' && !Array.isArray(record) ? [record] : [];
+              } catch { return []; }
+            }); } catch { return []; }
+          };
+          const readJson = (file) => {
+            try { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+            catch { return undefined; }
+          };
           const log = readRecords('/tmp/gh-aw/agent-session.jsonl');
-          const usage = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_usage.json', 'utf8'));
-          if (typeof usage.primary_model !== 'string' || !usage.primary_model) {
-            throw new Error('No canonical primary model; telemetry is incomplete.');
-          }
-          const modelUsage = { [usage.primary_model]: {
-            inputTokens: usage.input_tokens, cacheReadInputTokens: usage.cache_read_tokens,
-            cacheCreationInputTokens: usage.cache_write_tokens, outputTokens: usage.output_tokens,
-          } };
-          const output = JSON.parse(fs.readFileSync('/tmp/gh-aw/agent_output.json', 'utf8'));
-          const terminalEmitted = output.items?.some((item) => ['noop', 'create_pull_request'].includes(item.type)) === true;
-          const succeeded = log.some((record) => record.type === 'session.result' && record.data?.status === 'success');
+          const usage = readJson('/tmp/gh-aw/agent_usage.json');
+          const output = readJson('/tmp/gh-aw/agent_output.json') ?? {};
+          const terminalEmitted = Array.isArray(output.items)
+            && output.items.some((item) => ['noop', 'create_pull_request', 'report_incomplete', 'repair_staged'].includes(item.type));
+          const sessionResult = log.find((record) => record.type === 'session.result');
+          const sessionStatus = sessionResult?.data?.status;
+          const cancelled = process.env.PRICE_CHECK_JOB_STATUS === 'cancelled';
+          const agentOutcome = cancelled ? 'cancelled' : sessionStatus === 'success' ? 'success'
+            : sessionStatus === 'error' || process.env.PRICE_CHECK_JOB_STATUS === 'failure' ? 'error' : 'unknown';
+          if (agentOutcome === 'unknown') diagnostics.push('Agent outcome is missing.');
           const requests = [...new Map(readRecords(
             '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'
           ).map((record) => [record.spanId, record])).values()];
-          if (!requests.length) throw new Error('No API request spans; telemetry is incomplete.');
+          if (!requests.length) diagnostics.push('No API request spans.');
+          const counts = usage && {
+            uncached_input: usage.input_tokens, cached_input: usage.cache_read_tokens,
+            cache_creation: usage.cache_write_tokens, output: usage.output_tokens,
+          };
+          const usageValid = counts && Object.values(counts).every((value) => Number.isSafeInteger(value) && value >= 0);
+          if (!usageValid) diagnostics.push('Canonical cumulative usage is missing or invalid.');
+          const model = usageValid && typeof usage.primary_model === 'string' && usage.primary_model
+            ? usage.primary_model : undefined;
+          if (usageValid && !model) diagnostics.push('Canonical usage has no primary model.');
+          const sessionTimes = log.flatMap((record) => {
+            const data = record.data ?? {};
+            return [record.startTimeMs, record.endTimeMs, data.startTimeMs, data.endTimeMs, record.timestamp, data.timestamp]
+              .map((value) => typeof value === 'number' ? value : typeof value === 'string' ? Date.parse(value) : NaN)
+              .filter((value) => Number.isFinite(value) && value > 0);
+          });
+          const requestTimes = requests.flatMap((record) => [record.startTimeMs, record.endTimeMs]);
+          const validRequestTimes = requestTimes.filter((value) => Number.isFinite(value) && value > 0);
+          const jobStart = Date.parse(process.env.PRICE_CHECK_JOB_STARTED_AT ?? '');
+          const now = Date.now();
+          const allTimes = validRequestTimes.length ? validRequestTimes : sessionTimes;
+          const startMs = allTimes.length ? Math.min(...allTimes) : Number.isFinite(jobStart) ? jobStart : now;
+          const endMs = allTimes.length ? Math.max(...allTimes) : now;
           const identity = [process.env.GITHUB_REPOSITORY, process.env.GITHUB_RUN_ID, process.env.GITHUB_RUN_ATTEMPT].join(':');
           const digest = createHash('sha256').update(identity).digest('hex');
           const traceId = digest.slice(0, 32);
           const rootId = digest.slice(32, 48);
-          const event = process.env.GITHUB_EVENT_PATH
-            ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')) : {};
+          const event = process.env.GITHUB_EVENT_PATH ? readJson(process.env.GITHUB_EVENT_PATH) ?? {} : {};
           const requestId = event.client_payload?.request_id;
           const resourceAttributes = Object.entries({
             'gh-aw.repository': process.env.GITHUB_REPOSITORY,
@@ -54,11 +86,10 @@ post-steps:
             'price_check.target_model': typeof event.client_payload?.target_model === 'string' ? event.client_payload.target_model : '',
             'price_check.workflow': process.env.GITHUB_WORKFLOW ?? '',
           }).map(([key, value]) => buildAttr(key, value));
-          const startMs = Math.min(...requests.map((record) => record.startTimeMs));
-          const endMs = Math.max(...requests.map((record) => record.endTimeMs));
           const payloads = [];
           const addSpan = (options) => payloads.push(buildOTLPPayload({
-            traceId, serviceName: 'gh-aw.agentic-price-check', resourceAttributes, startMs, endMs, ...options,
+            traceId, serviceName: process.env.PRICE_CHECK_SERVICE_NAME || 'gh-aw.agentic-price-check',
+            resourceAttributes, startMs, endMs, ...options,
           }));
           const toolCounts = {};
           for (const record of log) {
@@ -66,22 +97,19 @@ post-steps:
             if (record.type === 'tool.execution_start' && typeof name === 'string')
               toolCounts[name] = (toolCounts[name] ?? 0) + 1;
           }
-          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: succeeded ? 1 : 2, attributes: [
+          addSpan({ spanId: rootId, spanName: 'invoke_agent', statusCode: agentOutcome === 'success' ? 1 : 2, attributes: [
             buildAttr('gen_ai.operation.name', 'invoke_agent'), buildAttr('gen_ai.agent.name', 'Price Check'),
+            buildAttr('price_check.agent_outcome', agentOutcome), buildAttr('price_check.outcome_scope', 'agent_only'),
+            buildAttr('price_check.telemetry_coverage', diagnostics.length ? 'incomplete' : 'complete'),
+            buildAttr('price_check.telemetry_diagnostic', diagnostics.join(' ')),
             buildAttr('price_check.terminal_output_emitted', terminalEmitted),
             buildAttr('price_check.tool_counts', JSON.stringify(toolCounts)),
           ] });
-          for (const [model, usage] of Object.entries(modelUsage)) {
-            const counts = {
-              uncached_input: usage.inputTokens, cached_input: usage.cacheReadInputTokens,
-              cache_creation: usage.cacheCreationInputTokens, output: usage.outputTokens,
-            };
-            if (!Object.values(counts).every((value) => Number.isSafeInteger(value) && value >= 0)) {
-              throw new Error('Invalid cumulative usage; telemetry is incomplete.');
-            }
+          if (usageValid) {
             addSpan({ spanId: createHash('sha256').update(identity + model).digest('hex').slice(0, 16),
               parentSpanId: rootId, spanName: 'price_check.usage', attributes: [
-                buildAttr('gen_ai.request.model', model), buildAttr('price_check.usage.source', 'gh-aw.agent_usage'),
+                ...(model ? [buildAttr('gen_ai.request.model', model)] : []),
+                buildAttr('price_check.usage.source', 'gh-aw.agent_usage'),
                 ...Object.entries(counts).map(([key, value]) => buildAttr('price_check.usage.' + key, value)),
               ] });
           }
@@ -97,10 +125,12 @@ post-steps:
           fs.mkdirSync('/tmp/gh-aw/mcp-logs', { recursive: true });
           fs.writeFileSync('/tmp/gh-aw/mcp-logs/price-check-telemetry.json', JSON.stringify({
             run_id: process.env.GITHUB_RUN_ID, trace_id: traceId, exported_request_spans: requests.length,
-            usage_source: 'gh-aw.agent_usage', model_usage: modelUsage, tool_counts: toolCounts,
+            agent_outcome: agentOutcome, outcome_scope: 'agent_only', telemetry_coverage: diagnostics.length ? 'incomplete' : 'complete',
+            telemetry_diagnostics: diagnostics, usage_source: usageValid ? 'gh-aw.agent_usage' : null,
+            model: model ?? null, usage_counts: usageValid ? counts : null, tool_counts: toolCounts,
             cost_is_client_estimate: true,
           }, null, 2));
-          await core.summary.addRaw(`Logfire: exported ${requests.length} request spans and cumulative usage.\n`).write();
+          await core.summary.addRaw(`Logfire: exported agent-only telemetry with ${requests.length} request spans.\n`).write();
         } catch (error) {
           await core.summary.addRaw(`Logfire telemetry incomplete: ${error.message}\n`).write();
           throw error;

@@ -44,6 +44,7 @@ jobs:
         run: >-
           node --test scripts/price_check_web_fetch.test.cjs
           scripts/price_check_scope.test.cjs scripts/price_check_bridge.test.cjs
+          scripts/price_update_*.test.cjs
 
   pre-commit:
     runs-on: ubuntu-latest

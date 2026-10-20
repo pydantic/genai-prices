@@ -94,7 +94,21 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
+          fetch-depth: 0
           persist-credentials: false
+      - name: Preserve repairs on the open proposal
+        id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$pr" ]; then
+            git fetch --quiet origin "$BRANCH"
+            previous="$(git rev-parse FETCH_HEAD)"
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" check HEAD "$previous"
+            echo "head=$previous" >> "$GITHUB_OUTPUT"
+          fi
+          echo "pr=$pr" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: patch-*
@@ -139,12 +153,11 @@ jobs:
       - if: steps.apply.outputs.importers != ''
         name: Keep the start dates the open price update proposes
         env:
-          GH_TOKEN: ${{ github.token }}
+          PREVIOUS_HEAD: ${{ steps.previous.outputs.head }}
         run: |
           # Rebuilt from main, the branch would otherwise date a pending rate change to each day it is rebuilt.
-          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
-            git fetch --quiet --depth=1 origin "$BRANCH"
-            uv run --all-packages -m prices.proposed_start_dates FETCH_HEAD
+          if [ -n "$PREVIOUS_HEAD" ]; then
+            uv run --all-packages -m prices.proposed_start_dates "$PREVIOUS_HEAD"
           fi
       - if: steps.apply.outputs.importers != ''
         run: |
@@ -153,6 +166,9 @@ jobs:
           make collapse-models build
           # extract_usages.py exits non-zero after rewriting a stale file; a second run fails only on a real error.
           uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py
+      - if: steps.apply.outputs.importers != ''
+        name: Validate the proposal before publication
+        run: make test test-js test-go
       - id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
@@ -182,11 +198,19 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           COMPLETE: ${{ steps.apply.outputs.complete }}
+          PREVIOUS_HEAD: ${{ steps.previous.outputs.head }}
+          PREVIOUS_PR: ${{ steps.previous.outputs.pr }}
         run: |
           git config user.name 'genai-prices-automation[bot]'
           git config user.email 'genai-prices-automation[bot]@users.noreply.github.com'
           body="$RUNNER_TEMP/pr-body.md"
-          pr="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          pr="$PREVIOUS_PR"
+          # Fail if someone updated the proposal while the importers or validation ran.
+          if [ -n "$PREVIOUS_HEAD" ]; then
+            git fetch --quiet origin "$BRANCH"
+            [ "$(git rev-parse FETCH_HEAD)" = "$PREVIOUS_HEAD" ] || exit 1
+            [ "$(gh pr view "$pr" --json state --jq .state)" = OPEN ] || exit 1
+          fi
           git add --all
           if git diff --cached --quiet; then
             # Only a run where every importer succeeded shows that nothing remains to publish.
@@ -200,10 +224,7 @@ jobs:
           remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Compare trees independently of the PR body: manual notes can change without a data change.
           if [ -n "$pr" ]; then
-            git fetch --quiet "$remote" "$BRANCH"
-            if [ "$(git rev-parse FETCH_HEAD^{tree})" != "$(git rev-parse HEAD^{tree})" ]; then
-              git push --force "$remote" "HEAD:$BRANCH"
-            fi
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" publish "$remote" "$BRANCH" "$PREVIOUS_HEAD"
             gh pr view "$pr" --json body --jq .body > "$RUNNER_TEMP/previous-body.md"
             # A new run link alone does not warrant an hourly edit.
             sed -E 's@actions/runs/[0-9]+@actions/runs/RUN@g' "$body" > "$RUNNER_TEMP/body-normalized.md"
@@ -212,7 +233,7 @@ jobs:
               gh pr edit "$pr" --body-file "$body"
             fi
           else
-            git push --force "$remote" "HEAD:$BRANCH"
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" publish "$remote" "$BRANCH" ''
             echo "created-pr-url=$(gh pr create --head "$BRANCH" --title "Update provider prices from official sources$TITLE_SUFFIX" --body-file "$body")" >> "$GITHUB_OUTPUT"
           fi
 
