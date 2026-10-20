@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 21 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
-- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 53 models
+- [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 54 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models
@@ -58,7 +58,7 @@ The following providers are currently supported:
 - [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 84 models
 - [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 21 models
 - [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 11 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 9 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 12 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
 - [Meta](prices/providers/meta.yml) - 6 models
@@ -71,7 +71,7 @@ The following providers are currently supported:
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 894 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
-- [Perplexity](prices/providers/perplexity.yml) - 17 models
+- [Perplexity](prices/providers/perplexity.yml) - 23 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 71 models
 - [Together AI](prices/providers/together.yml) - 92 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models

@@ -3745,6 +3745,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+                match=ClauseEquals(equals='@cf/deepseek-ai/deepseek-v4.1-flash-1017'),
+                name='deepseek-v4.1-flash-1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='@cf/google/gemma-3-12b-it',
                 match=ClauseEquals(equals='@cf/google/gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -4947,7 +4955,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
-                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                    ]
+                ),
                 name='DeepSeek V4.1 Flash',
                 price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
                 prices=ModelPrice(
@@ -10537,6 +10550,17 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='BSC-LT/ALIA-40b-instruct-2606',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606'),
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606-fast'),
+                    ]
+                ),
+                name='ALIA-40b-instruct-2606',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
                 id='aisingapore/Gemma-SEA-LION-v4-27B-IT',
                 match=ClauseOr(
                     or_=[
@@ -10548,6 +10572,17 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
+                id='aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b'),
+                        ClauseEquals(equals='aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast'),
+                    ]
+                ),
+                name='Nemotron-SEA-LION-v4.8-120B-A12B',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
                 id='aisingapore/Qwen-SEA-LION-v4-32B-IT',
                 match=ClauseOr(
                     or_=[
@@ -10557,6 +10592,17 @@ providers: list[Provider] = [
                 ),
                 name='Qwen-SEA-LION-v4-32B-IT',
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it'),
+                        ClauseEquals(equals='aisingapore/qwen-sea-lion-v4.5-27b-it-fast'),
+                    ]
+                ),
+                name='Qwen-SEA-LION-v4.5-27B-IT',
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='allenai/Olmo-3-7B-Instruct',
@@ -25904,7 +25950,10 @@ providers: list[Provider] = [
         id='perplexity',
         name='Perplexity',
         api_pattern='https://api\\.perplexity\\.ai',
-        pricing_urls=['https://docs.perplexity.ai/docs/getting-started/pricing'],
+        pricing_urls=[
+            'https://docs.perplexity.ai/docs/getting-started/pricing',
+            'https://docs.perplexity.ai/docs/agent-api/models',
+        ],
         price_comments='Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
         extractors=[
             UsageExtractor(
@@ -25932,6 +25981,20 @@ providers: list[Provider] = [
             ),
             UsageExtractor(
                 root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_read_input_tokens'],
+                        dest='cache_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
                 mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',
                 model_path='model',
@@ -25951,6 +26014,46 @@ providers: list[Provider] = [
                 name='Llama 3.1 Sonar 8B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='perplexity/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='perplexity/deepseek-v4-pro-0813'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3',
+                match=ClauseEquals(equals='perplexity/glm-5.3'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3-flash',
+                match=ClauseEquals(equals='perplexity/glm-5.3-flash'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/kimi-k3',
+                match=ClauseEquals(equals='perplexity/kimi-k3'),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='perplexity/nemotron-3.5-super-120b-a12b',
+                match=ClauseEquals(equals='perplexity/nemotron-3.5-super-120b-a12b'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/sonar',
+                match=ClauseEquals(equals='perplexity/sonar'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='pplx-decider-flash-v1.2',

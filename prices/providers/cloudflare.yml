@@ -230,6 +230,16 @@ models:
       cache_read_mtok: 0.044
       output_mtok: 3.96
 
+  - id: "@cf/deepseek-ai/deepseek-v4.1-flash-1017"
+    name: deepseek-v4.1-flash-1017
+    match:
+      equals: "@cf/deepseek-ai/deepseek-v4.1-flash-1017"
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.006
+      output_mtok: 1.2
+    prices_checked: 2026-10-20
+
   - id: "@cf/google/gemma-3-12b-it"
     name: Gemma 3 12B IT
     match:

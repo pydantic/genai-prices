@@ -2,7 +2,7 @@ version: 1
 interactions:
 - request:
     method: GET
-    uri: https://docs.perplexity.ai/docs/getting-started/pricing.md
+    uri: https://docs.perplexity.ai/docs/agent-api/models.md
     headers:
       accept:
       - "*/*"
@@ -19,14 +19,12 @@ interactions:
   response:
     status: 200
     headers:
-      age:
-      - "14222"
       cache-control:
       - public, max-age=0, must-revalidate
       cf-cache-status:
       - EXPIRED
       cf-ray:
-      - a4d53d201e4c1625-IAD
+      - a4d6fea78f5ed27d-FRA
       content-disposition:
       - inline
       content-security-policy:
@@ -34,9 +32,9 @@ interactions:
       content-type:
       - text/markdown; charset=utf-8
       date:
-      - Tue, 20 Oct 2026 04:21:58 GMT
+      - Tue, 20 Oct 2026 09:28:51 GMT
       last-modified:
-      - Tue, 20 Oct 2026 04:21:58 GMT
+      - Tue, 20 Oct 2026 09:28:51 GMT
       link:
       - >-
         </llms.txt>; rel="llms-txt", </llms-full.txt>; rel="llms-full-txt",
@@ -64,7 +62,554 @@ interactions:
       x-vercel-cache:
       - HIT
       x-vercel-id:
-      - iad1:iad1:iad1::iad1::qwpbx-1792470118392-1b1a3b1669d0
+      - fra1:fra1:iad1::iad1::2pkk8-1792488531098-24094b86d9bb
+    body:
+      type: text
+      content: |
+        > ## Documentation Index
+        > Fetch the complete documentation index at: https://docs.perplexity.ai/llms.txt
+        > Use this file to discover all available pages before exploring further.
+        
+        # Agent API Models
+        
+        > Compare Agent API models, token pricing, supported service tiers, and provider documentation.
+        
+        ## Available Models
+        
+        The Agent API provides a unified interface to models from multiple providers with transparent token-based pricing.
+        
+        Pricing rates are published per model and may differ from provider list prices. All charges are based on actual token consumption, and every API response includes exact token counts so you know your costs per request.
+        
+        The **Service tiers** column lists optional non-default tiers. An em dash means the model uses default processing only.
+        
+        A rate with a context-length range, such as `(≤272k)`, changes when the input is above that range. A single value applies at every context length.
+        
+        <Tip>
+          Looking for pre-configured model setups? See [**Presets**](/docs/agent-api/presets) — optimized for specific use cases.
+        </Tip>
+        
+        <Tabs>
+          <Tab title="Anthropic">
+            <Card title="Anthropic">
+              Claude Opus (highest reasoning), Sonnet (balanced), and Haiku (fastest, cheapest).
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `anthropic/claude-fable-5` | 10.00 | 50.00 | 1.00 | — | [Claude Fable 5](https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5) |
+            | `anthropic/claude-fable-5-1` | 10.00 | 50.00 | 0.25 | — | [Claude Fable 5.1](https://platform.claude.com/docs/en/about-claude/models/overview) |
+            | `anthropic/claude-opus-5-5` | 4.00 | 20.00 | 0.20 | — | [Claude Opus 5.5](https://platform.claude.com/docs/en/about-claude/models/overview) |
+            | `anthropic/claude-opus-5` | 5.00 | 25.00 | 0.50 | — | [Claude Opus 5](https://platform.claude.com/docs/en/about-claude/models/overview) |
+            | `anthropic/claude-sonnet-5-5` | 2.00 | 10.00 | 0.10 | — | [Claude Sonnet 5.5](https://www.anthropic.com/claude-sonnet-5-5) |
+            | `anthropic/claude-sonnet-5` | 2.00 | 10.00 | 0.20 | — | [Claude Sonnet 5](https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5) |
+            | `anthropic/claude-haiku-5-5` | 0.10 (≤100k)<br />0.50 (>100k) | 0.50 (≤100k)<br />2.50 (>100k) | 0.01 (≤100k)<br />0.05 (>100k) | — | [Claude Haiku 5.5](https://platform.claude.com/docs/en/about-claude/models/overview) |
+        
+            <Warning>
+              Requests that use an `anthropic/*` model must include `max_output_tokens`. If omitted, the API returns HTTP 400 with `validation failed: max_output_tokens is required when using Anthropic models`. `max_output_tokens` is a shared Agent API parameter, but this required condition applies only to Anthropic models.
+            </Warning>
+          </Tab>
+        
+          <Tab title="OpenAI">
+            <Card title="OpenAI">
+              OpenAI GPT models.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `openai/gpt-6.1-sol` | 2.00 (≤272k)<br />4.00 (>272k) | 10.00 (≤272k)<br />15.00 (>272k) | 95% off input | `flex`, `priority` | [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol) |
+            | `openai/gpt-6-astra` | 10.00 (≤272k)<br />20.00 (>272k) | 50.00 (≤272k)<br />75.00 (>272k) | 90% off input | `flex`, `priority` | [OpenAI models](https://developers.openai.com/api/docs/models) |
+            | `openai/gpt-6-sol` | 2.00 (≤272k)<br />4.00 (>272k) | 10.00 (≤272k)<br />15.00 (>272k) | 90% off input | `flex`, `priority` | [OpenAI models](https://developers.openai.com/api/docs/models) |
+            | `openai/gpt-6-luna` | 0.10 (≤272k)<br />0.20 (>272k) | 0.50 (≤272k)<br />0.75 (>272k) | 90% off input | `flex`, `priority` | [OpenAI models](https://developers.openai.com/api/docs/models) |
+            | `openai/gpt-5.6-sol` | 4.00 (≤272k)<br />8.00 (>272k) | 20.00 (≤272k)<br />30.00 (>272k) | 90% off input | `flex`, `priority` | [GPT-5.6](https://openai.com/index/gpt-5-6/) |
+            | `openai/gpt-5.6-terra` | 2.00 (≤272k)<br />4.00 (>272k) | 12.00 (≤272k)<br />18.00 (>272k) | 90% off input | `flex`, `priority` | [GPT-5.6](https://openai.com/index/gpt-5-6/) |
+            | `openai/gpt-5.6-luna` | 0.20 (≤272k)<br />0.40 (>272k) | 1.20 (≤272k)<br />1.80 (>272k) | 90% off input | `flex`, `priority` | [GPT-5.6](https://openai.com/index/gpt-5-6/) |
+            | `openai/gpt-5.5` | 5.00 (≤272k)<br />10.00 (>272k) | 30.00 (≤272k)<br />45.00 (>272k) | 0.50 | `flex`, `priority` | [GPT-5.5](https://developers.openai.com/api/docs/models/gpt-5.5) |
+          </Tab>
+        
+          <Tab title="Google">
+            <Card title="Google">
+              Gemini 4 Argon and Gemini 3.6, 3.7, and 3.8 Flash.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `google/gemini-4-argon` | 2.00 | 10.00 | 0.10 | Default only | [Gemini 4 Argon](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon) |
+            | `google/gemini-3.6-flash` | 1.50 | 7.50 | 0.15 | — | [Gemini 3.6 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash) |
+            | `google/gemini-3.7-flash` | 0.75 | 3.75 | 0.075 | — | [Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash) |
+            | `google/gemini-3.8-flash` | 0.75 | 3.75 | 0.075 | — | [Gemini models](https://ai.google.dev/gemini-api/docs/models) |
+        
+            Gemini 4 Argon rates are introductory pricing through November 30, 2026. Reasoning tokens are billed at the output-token rate.
+          </Tab>
+        
+          <Tab title="xAI">
+            <Card title="xAI">
+              Grok 4.7, 4.6, and 4.5.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `xai/grok-4.7` | 2.00 (\<200k)<br />4.00 (≥200k) | 6.00 (\<200k)<br />12.00 (≥200k) | 0.50 (\<200k)<br />1.00 (≥200k) | — | [Grok 4.7](https://docs.x.ai/developers/models/grok-4.7) |
+            | `xai/grok-4.6` | 2.00 (\<200k)<br />4.00 (≥200k) | 6.00 (\<200k)<br />12.00 (≥200k) | 0.50 (\<200k)<br />1.00 (≥200k) | — | [Grok 4.6](https://docs.x.ai/developers/models/grok-4.6) |
+            | `xai/grok-4.5` | 2.00 (\<200k)<br />4.00 (≥200k) | 6.00 (\<200k)<br />12.00 (≥200k) | 0.30 (\<200k)<br />0.60 (≥200k) | — | [Grok 4.5](https://docs.x.ai/developers/models) |
+          </Tab>
+        
+          <Tab title="Z.AI">
+            <Card title="Z.AI">
+              GLM 5.3 and GLM 5.3 Flash — Z.AI reasoning models.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `perplexity/glm-5.3` | 1.40 | 4.40 | 0.26 | — | [GLM](https://docs.z.ai) |
+            | `perplexity/glm-5.3-flash` | 0.15 | 0.50 | 0.03 | — | [GLM-5.3 Flash](https://huggingface.co/zai-org/GLM-5.3-Flash) |
+          </Tab>
+        
+          <Tab title="DeepSeek">
+            <Card title="DeepSeek">
+              DeepSeek V4 Pro, hosted by Perplexity.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `perplexity/deepseek-v4-pro-0813` | 1.32 | 3.96 | 0.044 | — | — |
+          </Tab>
+        
+          <Tab title="Moonshot AI">
+            <Card title="Moonshot AI">
+              Kimi K3 — Moonshot AI's flagship reasoning model.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `perplexity/kimi-k3` | 3.00 | 15.00 | 0.30 | — | [Kimi K3](https://huggingface.co/moonshotai/Kimi-K3) |
+        
+            <Info>
+              Kimi K3 accepts `minimal`, `low`, `medium`, `high`, `xhigh`, and `max` reasoning effort. `minimal` uses low effort, while `xhigh` and `max` use maximum effort. Reasoning tokens are billed at the output-token rate.
+            </Info>
+          </Tab>
+        
+          <Tab title="NVIDIA">
+            <Card title="NVIDIA">
+              Nemotron 3.5 Super is a reasoning model with a 1,048,576-token context window and up to 131,072 output tokens. It accepts text input only.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `perplexity/nemotron-3.5-super-120b-a12b` | 0.20 | 0.50 | 0.04 | — | — |
+          </Tab>
+        
+          <Tab title="Perplexity">
+            <Card title="Perplexity">
+              Perplexity's grounded search model.
+            </Card>
+        
+            | Model | Input (\$/1M) | Output (\$/1M) | Cache read (\$/1M) | Service tiers | Docs |
+            | - | - | - | - | - | - |
+            | `perplexity/sonar` | 0.25 | 2.50 | 0.0625 | — | — |
+          </Tab>
+        </Tabs>
+        
+        ## Service tiers
+        
+        Omit `service_tier`, or set it to `auto` or `default`, to use default processing. `flex` uses lower-cost, best-effort capacity at 0.5× the listed token prices. `priority` uses higher-priority processing at 2× the listed token prices. `fast` is accepted as an alias for `priority`. These multipliers apply only to models that list the tier in the **Service tiers** column. Other models always bill at the listed rate.
+        
+        When you provide `model` or `models`, the Agent API applies `flex` or `priority` only if the selected model—or every model in a fallback list—supports that tier. An unsupported tier does not cause the request to be rejected; the API ignores `service_tier` and uses default processing. Requests that specify only a preset or profile retain the tier until the model is resolved. The response's `service_tier` field reports the tier that served the request.
+        
+        <Warning>
+          Not all third-party models support all features (e.g., reasoning, tools). Check model documentation for specific capabilities.
+        </Warning>
+        
+        ## Using a Model
+        
+        <CodeGroup>
+          ```python Python theme={null}
+          from perplexity import Perplexity
+        
+          client = Perplexity()
+        
+          response = client.responses.create(
+              model="openai/gpt-5.6-sol",
+              input="Explain the difference between supervised and unsupervised learning in machine learning.",
+              max_output_tokens=300,
+          )
+        
+          print(f"Response ID: {response.id}")
+          print(response.output_text)
+          ```
+        
+          ```typescript Typescript theme={null}
+          import Perplexity from '@perplexity-ai/perplexity_ai';
+        
+          const client = new Perplexity();
+        
+          const response = await client.responses.create({
+              model: "openai/gpt-5.6-sol",
+              input: "Explain the difference between supervised and unsupervised learning in machine learning.",
+              max_output_tokens: 300,
+          });
+        
+          console.log(`Response ID: ${response.id}`);
+          console.log(response.output_text);
+          ```
+        
+          ```bash cURL theme={null}
+          curl https://api.perplexity.ai/v1/agent \
+            -H "Authorization: Bearer $PERPLEXITY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "openai/gpt-5.6-sol",
+              "input": "Explain the difference between supervised and unsupervised learning in machine learning.",
+              "max_output_tokens": 300
+            }' | jq
+          ```
+        </CodeGroup>
+        
+        <Accordion title="Response">
+          ```json theme={null}
+          {
+            "id": "resp_85783af3-39c4-4565-9f09-144482151abf",
+            "created_at": 1779391438,
+            "model": "openai/gpt-5.6-sol",
+            "object": "response",
+            "output": [
+              {
+                "results": [
+                  {
+                    "id": 1,
+                    "snippet": "Supervised learning is a machine learning technique that uses labeled data sets to train artificial intelligence (AI) models to identify the underlying patterns and relationships.\nThe goal of the learning process is to create a model that can predict correct outputs on new real-world data.\n...\nLabeled training data provides a “ground truth,” explicitly teaching the model to identify the relationships between features and data labels.\n...\nSupervised learning relies on ground truth data to teach a model the relationships between inputs and outputs.",
+                    "title": "What Is Supervised Learning? | IBM",
+                    "url": "https://www.ibm.com/think/topics/supervised-learning",
+                    "date": "2025-09-12",
+                    "last_updated": "2026-03-31",
+                    "source": "web"
+                  },
+                  {
+                    "id": 2,
+                    "snippet": "Unsupervised learning, also known as unsupervised machine learning, uses machine learning (ML) algorithms to analyze and cluster unlabeled data sets.\nThese algorithms discover hidden patterns or data groupings without the need for human intervention.\n...\nUnsupervised learning and supervised learning are frequently discussed together.\nUnlike unsupervised learning algorithms, supervised learning algorithms use labeled data.\nFrom that data, it either predicts future outcomes or assigns data to specific categories based on the regression or classification problem that it is trying to solve.\nWhile supervised learning algorithms tend to be more accurate than unsupervised learning models, they require upfront human intervention to label the data appropriately.",
+                    "title": "What Is Unsupervised Learning? - IBM",
+                    "url": "https://www.ibm.com/think/topics/unsupervised-learning",
+                    "date": "2021-09-23",
+                    "last_updated": "2026-03-31",
+                    "source": "web"
+                  },
+                  {
+                    "id": 3,
+                    "snippet": "The difference between supervised and unsupervised **learning lies in how they use data and their goals**.\n**Supervised learning** relies on **labeled datasets, where each input is paired with a corresponding output label**.\nThe goal is to learn the relationship between inputs and outputs so the model can predict outcomes for new data, such as classifying emails as spam or not spam.\nIn contrast, **unsupervised learning** works **with unlabeled data aiming to uncover hidden patterns or structures within the dataset** such as grouping customers based on their shopping habits or detecting anomalies in a dataset.\n> Overall, supervised learning excels in predictive tasks with known outcomes, while unsupervised learning is ideal for discovering relationships and trends in raw data.\n...\nLabeled data means that each example in the dataset comes with a correct answer or output.\nIn supervised learning process:\n- Machine is given a dataset with input features (like age, salary, or temperature) and corresponding labels (like \"yes/no,\" \"high/low,\" or \"rainy/sunny\").\n- Then machine learns dataset by finding patterns in the data.\nFor example, it might learn that if the temperature is high, it’s likely to be sunny.\n- Once trained, the machine can predict the label for new input data.\nFor instance, if you give it a new temperature value, it can predict whether it will be sunny or rainy.",
+                    "title": "Difference between Supervised and Unsupervised Learning",
+                    "url": "https://www.geeksforgeeks.org/machine-learning/difference-between-supervised-and-unsupervised-learning/",
+                    "date": "2025-07-11",
+                    "last_updated": "2026-05-19",
+                    "source": "web"
+                  },
+                  {
+                    "id": 4,
+                    "snippet": "Supervised learning is a type of machine learning where a model learns from labelled data, meaning each input has a correct output.\nThe model compares its predictions with actual results and improves over time to increase accuracy.",
+                    "title": "Supervised Machine Learning - GeeksforGeeks",
+                    "url": "https://www.geeksforgeeks.org/machine-learning/supervised-machine-learning/",
+                    "date": "2026-05-09",
+                    "last_updated": "2026-05-19",
+                    "source": "web"
+                  },
+                  {
+                    "id": 5,
+                    "snippet": "Unsupervised Learning is a type of machine learning where the model works without labelled data.\nIt learns patterns on its own by grouping similar data points or finding hidden structures without any human intervention.",
+                    "title": "Unsupervised Machine Learning - GeeksforGeeks",
+                    "url": "https://www.geeksforgeeks.org/machine-learning/unsupervised-learning/",
+                    "date": "2026-04-30",
+                    "last_updated": "2026-05-19",
+                    "source": "web"
+                  },
+                  {
+                    "id": 6,
+                    "snippet": "The biggest difference between supervised and unsupervised machine learning is the type of data used.\nSupervised learning uses labeled training data, and unsupervised learning does not.\nMore simply, supervised learning models have a baseline understanding of what the correct output values *should* be.\nWith supervised learning, an algorithm uses a sample dataset to train itself to make predictions, iteratively adjusting itself to minimize error.\nThese datasets are labeled for context, providing the desired output values to enable a model to give a “correct” answer.",
+                    "title": "Supervised vs. unsupervised learning - Google Cloud",
+                    "url": "https://cloud.google.com/discover/supervised-vs-unsupervised-learning",
+                    "date": null,
+                    "last_updated": "2026-05-18",
+                    "source": "web"
+                  },
+                  {
+                    "id": 7,
+                    "snippet": "Supervised learning is a category of machine learning that uses labeled datasets to train algorithms to predict outcomes and recognize patterns.\nUnlike unsupervised learning, supervised learning algorithms are given labeled training to learn the relationship between the input and the outputs.\n...\nThe data used in supervised learning is labeled — meaning that it contains examples of both inputs (called features) and correct outputs (labels).\n...\nWhen it comes to understanding the difference between supervised learning vs. unsupervised learning, the primary difference is the type of input data used to train the model.\nSupervised learning uses labeled training datasets to try and teach a model a specific, pre-defined goal.",
+                    "title": "What is Supervised Learning? | Google Cloud",
+                    "url": "https://cloud.google.com/discover/what-is-supervised-learning",
+                    "date": "2025-04-12",
+                    "last_updated": "2026-05-18",
+                    "source": "web"
+                  },
+                  {
+                    "id": 8,
+                    "snippet": "Unsupervised learning in artificial intelligence is a type of machine learning that learns from data without human supervision.\nUnlike supervised learning, unsupervised machine learning models are given unlabeled data and allowed to discover patterns and insights without any explicit guidance or instruction.\n...\nAs the name suggests, unsupervised learning uses self-learning algorithms—they learn without any labels or prior training.\nInstead, the model is given raw, unlabeled data and has to infer its own rules and structure the information based on similarities, differences, and patterns without explicit instructions on how to work with each piece of data.\n...\nThe main difference between supervised learning and unsupervised learning is the type of input data that you use.\nUnlike unsupervised machine learning algorithms, supervised learning relies on labeled training data to determine whether pattern recognition within a dataset is accurate.\nThe goals of supervised learning models are also predetermined, meaning that the type of output of a model is already known before the algorithms are applied.\nIn other words, the input is mapped to the output based on the training data.",
+                    "title": "What is unsupervised learning? - Google Cloud",
+                    "url": "https://cloud.google.com/discover/what-is-unsupervised-learning",
+                    "date": null,
+                    "last_updated": "2026-05-19",
+                    "source": "web"
+                  },
+                  {
+                    "id": 9,
+                    "snippet": "- Supervised vs. unsupervised learning serve different purposes: supervised learning uses labeled data to make precise predictions and classifications, while unsupervised learning finds hidden patterns in raw, unlabeled data, making each better suited for different business goals.\n...\nIn supervised learning, models are trained using labeled data, where each input is paired with a known output.\nThe model learns by comparing its predictions against these correct answers and iteratively reducing error.\nAt the core of this process are machine learning models that learn explicit relationships between features and outcomes.\nThe presence of labeled data provides clear guidance, making supervised learning well-suited for problems where accuracy, traceability and repeatability are essential.\n...\nSupervised learning predicts known outcomes using labeled data.\nUnsupervised learning discovers patterns in unlabeled data.\n...\nSupervised machine learning excels when you have labeled data and need precise, accountable predictions or classifications.",
+                    "title": "Supervised vs Unsupervised Learning - Databricks",
+                    "url": "https://www.databricks.com/blog/supervised-vs-unsupervised-learning",
+                    "date": "2026-02-17",
+                    "last_updated": "2026-05-20",
+                    "source": "web"
+                  },
+                  {
+                    "id": 10,
+                    "snippet": "Supervised learning algorithms train on sample data that specifies both the algorithm's input and output.\nFor example, the data could be images of handwritten numbers that are annotated to indicate which numbers they represent.\n...\nIn supervised learning, you train the model with a set of input data and a corresponding set of paired labeled output data.\nThe labeling is typically done manually.\n...\n|What is it?|You train the model with a set of input data and a corresponding set of paired labeled output data.|You train the model to discover hidden patterns in unlabeled data.|",
+                    "title": "Supervised vs Unsupervised Learning - Difference Between ... - AWS",
+                    "url": "https://aws.amazon.com/compare/the-difference-between-machine-learning-supervised-and-unsupervised/",
+                    "date": "2026-05-13",
+                    "last_updated": "2026-05-20",
+                    "source": "web"
+                  },
+                  {
+                    "id": 11,
+                    "snippet": "In a supervised learning model, the algorithm learns on a labeled dataset, providing an answer key that the algorithm can use to evaluate its accuracy on training data.\n...\nIf you’re learning a task under supervision, someone is present judging whether you’re getting the right answer.\nSimilarly, in supervised learning, that means having a full set of labeled data while training an algorithm.\nFully labeled means that each example in the training dataset is tagged with the answer the algorithm should come up with on its own.",
+                    "title": "NVIDIA Blog: Supervised Vs. Unsupervised Learning",
+                    "url": "https://blogs.nvidia.com/blog/supervised-unsupervised-learning/",
+                    "date": "2018-08-02",
+                    "last_updated": "2026-04-13",
+                    "source": "web"
+                  },
+                  {
+                    "id": 12,
+                    "snippet": "**Supervised Learning** is a machine learning approach where models are trained on labeled data—input examples paired with correct output answers.\nThe algorithm learns to map inputs to outputs by studying these examples, adjusting its parameters to minimize errors between its predictions and the known correct answers.",
+                    "title": "What is Supervised Learning? - Stanford HAI",
+                    "url": "https://hai.stanford.edu/ai-definitions/what-is-supervised-learning",
+                    "date": "2024-09-10",
+                    "last_updated": "2026-05-06",
+                    "source": "web"
+                  },
+                  {
+                    "id": 13,
+                    "snippet": "**Unsupervised learning** is a framework in machine learning where, in contrast to supervised learning, algorithms learn patterns exclusively from unlabeled data.",
+                    "title": "Unsupervised learning - Wikipedia",
+                    "url": "https://en.wikipedia.org/wiki/Unsupervised_learning",
+                    "date": "2003-05-25",
+                    "last_updated": "2026-03-31",
+                    "source": "web"
+                  },
+                  {
+                    "id": 14,
+                    "snippet": "The difference between supervised and unsupervised learning is simple: it's about how much human guidance you give the machine learning algorithm.\n...\nIn supervised learning, humans provide more guidance by showing the algorithm examples with the correct answers.\nYou're essentially teaching it by example.\n**How it works:** You give the algorithm lots of data that includes both the question AND the answer, so it can learn the pattern.\n...\n**Supervised Learning:**\n- **Needs labeled training data** (humans must provide the \"right answers\")\n- **More human work upfront** to create training examples\n- **Predictable results** - you know what you're trying to achieve\n...\n**Use Supervised Learning When:**\n- You know what you want to predict\n- You have examples of correct answers\n- You want specific, measurable results\n- You have time to create labeled training data\n...\nSupervised learning is great when you know what you're trying to achieve and have examples to learn from.\nUnsupervised learning is perfect for exploration and discovery when you want to understand what's hidden in your data.",
+                    "title": "Supervised vs. Unsupervised Learning: The Basics Explained | TDWI",
+                    "url": "https://tdwi.org/blogs/ai-101/2025/09/supervised-vs-unsupervised-learning.aspx",
+                    "date": "2025-09-20",
+                    "last_updated": "2026-05-21",
+                    "source": "web"
+                  }
+                ],
+                "type": "search_results",
+                "queries": [
+                  "supervised learning definition",
+                  "unsupervised learning definition",
+                  "difference between supervised and unsupervised learning"
+                ]
+              },
+              {
+                "id": "msg_edef631a-cd00-4ba7-85ab-cea139ca9f13",
+                "content": [
+                  {
+                    "text": "Supervised learning learns from **labeled** examples to predict known outcomes, while unsupervised learning finds structure in **unlabeled** data without predefined outputs.[web:1][web:2][web:6][web:8]\n\n## Core idea\n\n- Supervised learning uses datasets where each input (features) comes with a correct output label, and the model learns a mapping from inputs to outputs to make predictions on new data.[web:1][web:7][web:12]  \n- Unsupervised learning uses datasets that have inputs only, with no labels, and algorithms try to discover patterns such as clusters, groups, or anomalies in the data.[web:2][web:5][web:8][web:13]\n\n## Data and “answers”\n\n- In supervised learning, training data is “labeled,” meaning each example is paired with the right answer (for example, an email plus a tag “spam” or “not spam”).[web:1][web:4][web:7][web:10][web:12]  \n- In unsupervised learning, the data is “unlabeled”; the model receives raw examples and must organize them or detect structure without being told the correct answer for each case.[web:2][web:5][web:8][web:13]\n\n## Typical goals\n\n- Supervised learning aims at prediction: classification (discrete labels like spam/not spam) and regression (continuous values like house prices), with a clear, predefined target variable.[web:1][web:3][web:9]  \n- Unsupervised learning aims at pattern discovery: clustering similar items, finding hidden groupings, dimensionality reduction, or detecting outliers without a predefined target.[web:2][web:3][web:5][web:8][web:9]\n\n## Examples of each\n\n- Common supervised methods and tasks include logistic regression for spam detection, decision trees for credit approval, and image classifiers trained on labeled pictures of objects.[web:1][web:4][web:7][web:9][web:10]  \n- Common unsupervised methods and tasks include k-means clustering for grouping customers by behavior, anomaly detection in network traffic, and algorithms like PCA for compressing or visualizing high-dimensional data.[web:2][web:3][web:5][web:8][web:9]\n\n## Practical trade‑offs\n\n- Supervised learning typically delivers more accurate, measurable predictions but requires substantial human effort to create labeled datasets and a clear definition of the prediction goal.[web:2][web:6][web:7][web:9][web:14]  \n- Unsupervised learning requires less upfront labeling work and is well suited for exploration and discovering unknown structure, but its results are often harder to evaluate because there is no single “correct” answer.[web:2][web:3][web:8][web:9][web:14]",
+                    "type": "output_text",
+                    "annotations": [],
+                    "logprobs": []
+                  }
+                ],
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "status": "completed",
+            "error": null,
+            "usage": {
+              "input_tokens": 6599,
+              "output_tokens": 657,
+              "total_tokens": 7256,
+              "cost": {
+                "currency": "USD",
+                "input_cost": 0.01206,
+                "output_cost": 0.01314,
+                "total_cost": 0.02913,
+                "cache_creation_cost": null,
+                "cache_read_cost": 0.00143,
+                "tool_calls_cost": 0.0025
+              },
+              "input_tokens_details": {
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 3584,
+                "cached_tokens": 3584
+              },
+              "tool_calls_details": {
+                "search_web": {
+                  "invocation": 1
+                }
+              },
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            },
+            "background": false,
+            "completed_at": 1779391438,
+            "frequency_penalty": 0,
+            "incomplete_details": null,
+            "instructions": "## Abstract\n<role>\nYou are an AI assistant developed by Perplexity AI. Given a user's query, your goal is to generate an expert, useful, factually correct, and contextually relevant response by leveraging available tools and conversation history. First, you will receive the tools you can call iteratively to gather the necessary knowledge for your response. You need to use these tools rather than using internal knowledge. Second, you will receive guidelines to format your response for clear and effective presentation. Third, you will receive guidelines for citation practices to maintain factual accuracy and credibility.\n</role>\n\n## Instructions\n<tools_workflow>\nBegin each turn with tool calls to gather information. You must call at least one tool before answering, even if information exists in your knowledge base. Decompose complex user queries into discrete tool calls for accuracy and parallelization. After each tool call, assess if your output fully addresses the query and its subcomponents. Continue until the user query is resolved or until the <tool_call_limit> below is reached. End your turn with a comprehensive response. Never mention tool calls in your final response as it would badly impact user experience.\n\n<tool_call_limit> Make at most three tool calls before concluding.</tool_call_limit>\n</tools_workflow>\n\n## Citation Instructions\n<citation_instructions>\nYour response must include at least 1 citation. Add a citation to every sentence that includes information derived from tool outputs.\nTool results are provided using `id` in the format `type:index`. `type` is the data source or context. `index` is the unique identifier per citation.\n<common_source_types> are included below.\n\n<common_source_types>\n- `web`: Internet sources\n- `page`: Full web page content\n- `conversation_history`: past queries and answers from your interaction with the user\n</common_source_types>\n\n<formatting_citations>\nUse brackets to indicate citations like this: [type:index]. Commas, dashes, or alternate formats are not valid citation formats. If citing multiple sources, write each citation in a separate bracket like [web:1][web:2][web:3].\n\nCorrect: \"The Eiffel Tower is in Paris [web:3].\"\nIncorrect: \"The Eiffel Tower is in Paris [web-3].\"\n</formatting_citations>\n\nYour citations must be inline - not in a separate References or Citations section. Cite the source immediately after each sentence containing referenced information. If your response presents a markdown table with referenced information from `web`, `memory`, `attached_file`, or `calendar_event` tool result, cite appropriately within table cells directly after relevant data instead in of a new column. Do not cite `generated_image` or `generated_video` inside table cells.\n\n## Response Guidelines\n<response_guidelines>\nResponses are displayed on web interfaces where users should not need to scroll extensively. Limit responses to 5 sections maximum. Users can ask follow-up questions if they need additional detail. Prioritize the most relevant information for the initial query.\n\n### Answer Formatting\n- Begin with a direct 1-2 sentence answer to the core question.\n- Organize the rest of your answer into sections led with Markdown headers (using ##, ###) when appropriate to ensure clarity (e.g. entity definitions, biographies, and wikis).\n- Your answer should be at least 3 sentences long.\n- Each Markdown header should be concise (less than 6 words) and meaningful.\n- Markdown headers should be plain text, not numbered.\n- Between each Markdown header is a section consisting of 2-3 well-cited sentences.\n- When comparing entities with multiple dimensions, use a markdown table to show differences (instead of lists).\n- Whenever possible, present information as bullet point lists to improve readability.\n- You are allowed to bold at most one word (**example**) per paragraph. You can't bold consecutive words.\n- For grouping multiple related items, present the information with a mix of paragraphs and bullet point lists. Do not nest lists within other lists.\n\n### Tone\n<tone>\nExplain clearly using plain language. Use active voice and vary sentence structure to sound natural. Ensure smooth transitions between sentences. Avoid personal pronouns like \"I\". Keep explanations direct; use examples or metaphors only when they meaningfully clarify complex concepts that would otherwise be unclear.\n</tone>\n\n### Lists and Paragraphs\n<lists_and_paragraphs>\nUse lists for: multiple facts/recommendations, steps, features/benefits, comparisons, or biographical information.\n\nAvoid repeating content in both intro paragraphs and list items. Keep intros minimal. Either start directly with a header and list, or provide 1 sentence of context only.\n\nList formatting:\n- Use numbers when sequence matters; otherwise bullets (-) with a space after the dash.\n- Use numbers when sequence matters; otherwise bullets (-).\n- No whitespace before bullets (i.e. no indenting), one item per line.\n- Sentence capitalization; periods only for complete sentences.\n\nParagraphs:\n- Use for brief context (2-3 sentences max) or simple answers\n- Separate with blank lines\n- If exceeding 3 consecutive sentences, consider restructuring as a list\n</lists_and_paragraphs>\n\n### Summaries and Conclusions\n<summaries_and_conclusions>\nAvoid summaries and conclusions. They are not needed and are repetitive. Markdown tables are not for summaries. For comparisons, provide a table to compare, but avoid labeling it as 'Comparison/Key Table', provide a more meaningful title.\n</summaries_and_conclusions>\n\n## Prohibited Meta-Commentary\n<prohibited_commentary>\n- Never reference your information gathering process in your final answer.\n- Do not use phrases such as:\n- \"Based on my search results...\"\n- \"Now I have gathered comprehensive information...\"\n- \"According to my research...\"\n- \"My search revealed...\"\n- \"I found information about...\"\n- \"Let me provide a detailed answer...\"\n- \"Let me compile this information...\"\n- \"Short Answer: ...\"\n- Begin answers immediately with factual content that directly addresses the user's query.\n</prohibited_commentary>\n\n<copyright_requirements>\n- Never reproduce copyrighted content (text, lyrics, etc.)\n- You may share public domain content (expired copyrights, traditional works)\n- When copyright status is uncertain, treat as copyrighted\n- Keep summaries brief (under 30 words) and original — don't reconstruct sources\n- Brief factual statements (names, dates, facts) are always acceptable\n</copyright_requirements>\n\nCurrent date: Thursday, May 21, 2026\n\n",
+            "max_output_tokens": 8192,
+            "max_tool_calls": null,
+            "metadata": {},
+            "parallel_tool_calls": true,
+            "presence_penalty": 0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "reasoning": null,
+            "safety_identifier": null,
+            "service_tier": "default",
+            "store": true,
+            "temperature": 1,
+            "text": {
+              "format": {
+                "type": "text"
+              }
+            },
+            "tool_choice": "auto",
+            "tools": [
+              {
+                "type": "web_search"
+              },
+              {
+                "type": "fetch_url"
+              }
+            ],
+            "top_logprobs": 0,
+            "top_p": 1,
+            "truncation": "disabled",
+            "user": null
+          }
+          ```
+        </Accordion>
+        
+        <Tip>
+          **See Your Costs in Real-Time:** Every response includes a `usage` field with exact input tokens, output tokens, and cache read tokens. Calculate your cost instantly using the pricing table above.
+        
+          ```json theme={null}
+          {
+            "usage": {
+              "input_tokens": 150,
+              "output_tokens": 320,
+              "total_tokens": 470
+            }
+          }
+          ```
+        </Tip>
+        
+        ## Model Fallback
+        
+        For high-availability applications, you can specify multiple models in a fallback chain. When one model fails or is unavailable, the API automatically tries the next model in the chain.
+        
+        <Card title="Model Fallback Chain" icon="square-rounded-arrow-down" href="/docs/agent-api/model-fallback">
+          Learn how to use model fallback chains to ensure high availability and reliability by automatically trying multiple models when one fails.
+        </Card>
+        
+        <Info>
+          **Example:**
+        
+          ```python theme={null}
+          response = client.responses.create(
+              models=["openai/gpt-5.6-sol", "anthropic/claude-sonnet-5-5", "google/gemini-3.8-flash"],
+              input="Your question here",
+              max_output_tokens=8192,
+          )
+          ```
+        
+          For detailed examples, pricing information, and best practices, see the [Model Fallback documentation](/docs/agent-api/model-fallback).
+        </Info>
+        
+        ## Next Steps
+        
+        <CardGroup cols={2}>
+          <Card title="Web Search" icon="screwdriver-wrench" href="/docs/agent-api/tools/web-search">
+            Equip your model with web search for source-grounded context.
+          </Card>
+        
+          <Card title="Prompt Guide" icon="lightbulb" href="/docs/agent-api/prompt-guide">
+            Write prompts that get the most out of the Agent API.
+          </Card>
+        
+          <Card title="Output Control" icon="wand-magic-sparkles" href="/docs/agent-api/output-control">
+            Shape responses with structured outputs and JSON schemas.
+          </Card>
+        
+          <Card title="Finance Search" icon="chart-line" href="/docs/agent-api/tools/finance-search">
+            Query market data, filings, and ticker-level information.
+          </Card>
+        </CardGroup>
+  recorded_at: 2026-10-20T09:28:51.360350+00:00
+- request:
+    method: GET
+    uri: https://docs.perplexity.ai/docs/getting-started/pricing.md
+    headers:
+      accept:
+      - "*/*"
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - docs.perplexity.ai
+      user-agent:
+      - python-httpx2/2.2.0
+    body:
+      type: none
+  response:
+    status: 200
+    headers:
+      cache-control:
+      - public, max-age=0, must-revalidate
+      cf-cache-status:
+      - EXPIRED
+      cf-ray:
+      - a4d6fea59f34d2df-FRA
+      content-disposition:
+      - inline
+      content-security-policy:
+      - default-src 'none'
+      content-type:
+      - text/markdown; charset=utf-8
+      date:
+      - Tue, 20 Oct 2026 09:28:50 GMT
+      last-modified:
+      - Tue, 20 Oct 2026 09:28:50 GMT
+      link:
+      - >-
+        </llms.txt>; rel="llms-txt", </llms-full.txt>; rel="llms-full-txt",
+        </.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>;
+        rel="mcp-server-card", </.well-known/agent-card.json>; rel="agent-card",
+        </.well-known/agent-skills/index.json>; rel="agent-skills"
+      server:
+      - Vercel
+      strict-transport-security:
+      - max-age=63072000
+      transfer-encoding:
+      - chunked
+      vary:
+      - rsc, accept-encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - DENY
+      x-llms-txt:
+      - /llms.txt
+      x-matched-path:
+      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-robots-tag:
+      - noindex
+      x-vercel-cache:
+      - HIT
+      x-vercel-id:
+      - fra1:fra1:iad1::iad1::nf9wc-1792488530796-e0df9c53d915
     body:
       type: text
       content: |
@@ -190,4 +735,4 @@ interactions:
         
         * [Perplexity API Platform on AWS Marketplace](/docs/resources/aws-marketplace): buy API credits through AWS Marketplace with consolidated billing and enterprise procurement.
         * [Contact the sales team](https://perplexity.typeform.com/to/m3WnMaG6): ask about custom pricing, dedicated support, and enterprise features.
-  recorded_at: 2026-10-20T04:21:58.518085+00:00
+  recorded_at: 2026-10-20T09:28:51.009512+00:00

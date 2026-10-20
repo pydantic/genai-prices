@@ -6418,6 +6418,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        name: 'deepseek-v4.1-flash-1017',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: '@cf/google/gemma-3-12b-it',
         name: 'Gemma 3 12B IT',
         match: {
@@ -8506,7 +8518,14 @@ export const data: Provider[] = [
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
-          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+            },
+          ],
         },
         price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
         prices: {
@@ -18238,6 +18257,24 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'BSC-LT/ALIA-40b-instruct-2606',
+        name: 'ALIA-40b-instruct-2606',
+        match: {
+          or: [
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606',
+            },
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
         name: 'Gemma-SEA-LION-v4-27B-IT',
         match: {
@@ -18256,6 +18293,24 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+        name: 'Nemotron-SEA-LION-v4.8-120B-A12B',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b',
+            },
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+        },
+      },
+      {
         id: 'aisingapore/Qwen-SEA-LION-v4-32B-IT',
         name: 'Qwen-SEA-LION-v4-32B-IT',
         match: {
@@ -18271,6 +18326,24 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+        name: 'Qwen-SEA-LION-v4.5-27B-IT',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it',
+            },
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.4,
         },
       },
       {
@@ -45640,7 +45713,7 @@ export const data: Provider[] = [
   {
     id: 'perplexity',
     name: 'Perplexity',
-    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing'],
+    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing', 'https://docs.perplexity.ai/docs/agent-api/models'],
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
       'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
@@ -45705,6 +45778,28 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cache_read_input_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'embeddings',
         root: 'usage',
         model_path: 'model',
@@ -45742,6 +45837,72 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'perplexity/deepseek-v4-pro-0813',
+        match: {
+          equals: 'perplexity/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3',
+        match: {
+          equals: 'perplexity/glm-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3-flash',
+        match: {
+          equals: 'perplexity/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'perplexity/kimi-k3',
+        match: {
+          equals: 'perplexity/kimi-k3',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'perplexity/nemotron-3.5-super-120b-a12b',
+        match: {
+          equals: 'perplexity/nemotron-3.5-super-120b-a12b',
+        },
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'perplexity/sonar',
+        match: {
+          equals: 'perplexity/sonar',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.0625,
+          output_mtok: 2.5,
         },
       },
       {

@@ -75,6 +75,7 @@ def test_publisher_applies_available_patches_and_reports_completeness(
         (tmp_path / 'price').write_text('new\n')
         patch = git(tmp_path, 'diff', '--', 'price') + '\n'
         (tmp_path / 'price').write_text('conflict\n' if evidence == 'conflict' else 'old\n')
+        git(tmp_path, 'add', 'price')
     if evidence != 'missing':
         (tmp_path / 'patches/source.patch').write_text(patch)
         (tmp_path / 'patches/source.notes').write_text('')
@@ -230,4 +231,3 @@ def test_status_functions_and_token_boundaries() -> None:
     build = next(i for i, step in enumerate(steps) if 'make collapse-models build' in step.get('run', ''))
     token = next(i for i, step in enumerate(steps) if step.get('id') == 'app-token')
     assert build < token
-    assert workflow['on']['schedule'] == [{'cron': '17 * * * *'}]

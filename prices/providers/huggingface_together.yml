@@ -106,7 +106,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen2.5-7B-Instruct
     name: Qwen2.5-7B-Instruct
@@ -203,7 +203,7 @@ models:
         prices:
           input_mtok: 0.17
           output_mtok: 0.25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.8-2.4T-A95B
     name: Qwen3.8-2.4T-A95B
@@ -215,7 +215,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: ServiceNow-AI/Apriel-1.6-15b-Thinker
     name: Apriel-1.6-15b-Thinker
@@ -286,7 +286,7 @@ models:
     prices:
       input_mtok: 0.13999999999999999
       output_mtok: 0.27999999999999997
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: deepseek-ai/DeepSeek-V4-Pro-0813
     name: DeepSeek-V4-Pro-0813
@@ -298,7 +298,7 @@ models:
     prices:
       input_mtok: 1.32
       output_mtok: 3.96
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: google/gemma-3n-E4B-it
     name: gemma-3n-E4B-it
@@ -327,7 +327,7 @@ models:
         prices:
           input_mtok: 1.0399999999999998
           output_mtok: 1.0399999999999998
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
     name: Llama-4-Maverick-17B-128E-Instruct-FP8
@@ -350,7 +350,7 @@ models:
     prices:
       input_mtok: 0.35
       output_mtok: 1.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: moonshotai/Kimi-K2.5
     name: Kimi-K2.5
@@ -373,7 +373,7 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 15
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -385,7 +385,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -406,7 +406,7 @@ models:
         - equals: prism-ml/ternary-bonsai-27b-awq-4bit-fast
     context_window: 262144
     prices: {}
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: prism-ml/Ternary-Bonsai-27B-gguf
     name: Ternary-Bonsai-27B-gguf
@@ -416,7 +416,7 @@ models:
         - equals: prism-ml/ternary-bonsai-27b-gguf-fast
     context_window: 262144
     prices: {}
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: thinkingmachines/Inkling
     name: Inkling
@@ -428,7 +428,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 4.05
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.5-Air-FP8
     name: GLM-4.5-Air-FP8
@@ -484,7 +484,7 @@ models:
     prices:
       input_mtok: 1.4
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5.3
     name: GLM-5.3
@@ -496,7 +496,7 @@ models:
     prices:
       input_mtok: 1.4
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM-5.3-Flash
@@ -508,4 +508,4 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20

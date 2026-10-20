@@ -99,9 +99,10 @@ def parse_retail_prices(items: list[dict[str, Any]]) -> list[ModelInfo]:
 
 def main(provider_path: Path | None = None) -> None:
     items: list[dict[str, Any]] = []
-    # The API rejects a filter with more than about 20 clauses, so each model gets its own query.
-    for meters in METERS.values():
-        meter_filter = ' or '.join(f"meterName eq '{meter}'" for meter in meters.values())
+    meters = [meter for model_meters in METERS.values() for meter in model_meters.values()]
+    # The API rejects a filter with more than about 20 clauses, and rate-limits one query per model.
+    for start in range(0, len(meters), 15):
+        meter_filter = ' or '.join(f"meterName eq '{meter}'" for meter in meters[start : start + 15])
         url: str | None = PRICES_URL
         params: dict[str, str] | None = {
             '$filter': f"serviceName eq 'Foundry Models' and armRegionName eq '{REGION}' "

@@ -3,6 +3,7 @@ name: Perplexity
 id: perplexity
 pricing_urls:
   - https://docs.perplexity.ai/docs/getting-started/pricing
+  - https://docs.perplexity.ai/docs/agent-api/models
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
   Prices per request vary based on usage, this is not represented here,
@@ -44,6 +45,18 @@ extractors:
         dest: input_tokens
       - path: output_tokens
         dest: output_tokens
+  # https://docs.perplexity.ai/api-reference/agent-post — OpenAI Responses usage; cached tokens are a subset of
+  # input_tokens. Cache writes bill at the input rate, so cache_creation_input_tokens stays in input_tokens.
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cache_read_input_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
   # https://docs.perplexity.ai/docs/embeddings/standard-embeddings — `usage.prompt_tokens`, no completion tokens.
   - api_flavor: embeddings
     root: usage
@@ -73,6 +86,60 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
+  - id: perplexity/deepseek-v4-pro-0813
+    match:
+      equals: perplexity/deepseek-v4-pro-0813
+    prices:
+      input_mtok: 1.32
+      cache_read_mtok: 0.044
+      output_mtok: 3.96
+    prices_checked: 2026-10-20
+
+  - id: perplexity/glm-5.3
+    match:
+      equals: perplexity/glm-5.3
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.26
+      output_mtok: 4.4
+    prices_checked: 2026-10-20
+
+  - id: perplexity/glm-5.3-flash
+    match:
+      equals: perplexity/glm-5.3-flash
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.03
+      output_mtok: 0.5
+    prices_checked: 2026-10-20
+
+  - id: perplexity/kimi-k3
+    match:
+      equals: perplexity/kimi-k3
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-20
+
+  - id: perplexity/nemotron-3.5-super-120b-a12b
+    match:
+      equals: perplexity/nemotron-3.5-super-120b-a12b
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.04
+      output_mtok: 0.5
+    prices_checked: 2026-10-20
+
+  - id: perplexity/sonar
+    match:
+      equals: perplexity/sonar
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.0625
+      output_mtok: 2.5
+    prices_checked: 2026-10-20
+
   - id: pplx-decider-flash-v1.2
     name: Decider Flash V1.2
     match:
@@ -82,7 +149,7 @@ models:
         - equals: perplexity/pplx-decider-flash-latest
     prices:
       input_mtok: 0.01
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
     price_comments: >-
       Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects
       this model. https://docs.perplexity.ai/docs/decisions/quickstart
@@ -120,7 +187,7 @@ models:
         - equals: perplexity/pplx-decider-latest
     prices:
       input_mtok: 0.02
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
     price_comments: >-
       Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this
       model. https://docs.perplexity.ai/docs/decisions/quickstart
@@ -131,7 +198,7 @@ models:
       equals: pplx-embed-context-v1-0.6b
     prices:
       input_mtok: 0.008
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: pplx-embed-context-v1-4b
     name: Embed Context V1 4B
@@ -139,7 +206,7 @@ models:
       equals: pplx-embed-context-v1-4b
     prices:
       input_mtok: 0.05
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: pplx-embed-v1-0.6b
     name: Embed V1 0.6B
@@ -147,7 +214,7 @@ models:
       equals: pplx-embed-v1-0.6b
     prices:
       input_mtok: 0.004
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: pplx-embed-v1-4b
     name: Embed V1 4B
@@ -155,7 +222,7 @@ models:
       equals: pplx-embed-v1-4b
     prices:
       input_mtok: 0.03
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: r1-1776
     name: R1 1776
