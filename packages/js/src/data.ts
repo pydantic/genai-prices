@@ -6354,7 +6354,14 @@ export const data: Provider[] = [
         id: '@cf/cloudflare/clef-omni',
         name: 'Clef Omni',
         match: {
-          equals: '@cf/cloudflare/clef-omni',
+          or: [
+            {
+              equals: '@cf/cloudflare/clef-omni',
+            },
+            {
+              equals: 'clef-omni',
+            },
+          ],
         },
         context_window: 64000,
         price_comments: 'Input only, $0.15 per million tokens. https://developers.cloudflare.com/workers-ai/models/clef-omni/',
@@ -31581,6 +31588,16 @@ export const data: Provider[] = [
               output_mtok: 0.89,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2574,
+              output_mtok: 1.0287,
+            },
+          },
         ],
       },
       {
@@ -31917,11 +31934,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.042,
-          output_mtok: 0.15,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.042,
+              output_mtok: 0.15,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.44,
+              cache_read_mtok: 0.014,
+              output_mtok: 1.32,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v4-flash-vision-exp',
@@ -31973,6 +32005,17 @@ export const data: Provider[] = [
               input_mtok: 0.422472,
               cache_read_mtok: 0.035206,
               output_mtok: 0.844944,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.95526,
+              cache_read_mtok: 0.079605,
+              output_mtok: 1.91052,
             },
           },
         ],
@@ -32028,6 +32071,17 @@ export const data: Provider[] = [
               input_mtok: 0.0344,
               cache_read_mtok: 0.0016,
               output_mtok: 0.08,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0352,
+              cache_read_mtok: 0.0016,
+              output_mtok: 0.0112,
             },
           },
         ],
@@ -33517,6 +33571,17 @@ export const data: Provider[] = [
               output_mtok: 0.1,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.04,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.05,
+            },
+          },
         ],
       },
       {
@@ -33566,6 +33631,17 @@ export const data: Provider[] = [
               input_mtok: 0.09,
               cache_read_mtok: 0.05,
               output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0765,
+              cache_read_mtok: 0.0425,
+              output_mtok: 0.255,
             },
           },
         ],
@@ -33961,6 +34037,26 @@ export const data: Provider[] = [
           input_mtok: 0.04,
           cache_read_mtok: 0.004,
           output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'inception/mercury-3',
+        name: 'Mercury 3',
+        match: {
+          or: [
+            {
+              equals: 'inception/mercury-3',
+            },
+            {
+              equals: 'inception/mercury-3-20261019',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.01,
+          output_mtok: 0.35,
         },
       },
       {
@@ -37235,11 +37331,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.1,
-          cache_read_mtok: 0.08,
-          output_mtok: 0.4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.08,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3.5-super-vl:free',
@@ -41574,6 +41685,17 @@ export const data: Provider[] = [
               output_mtok: 3.6,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.39,
+              cache_read_mtok: 0.3,
+              output_mtok: 2.34,
+            },
+          },
         ],
       },
       {
@@ -41776,6 +41898,17 @@ export const data: Provider[] = [
               input_mtok: 0.15,
               cache_read_mtok: 0.05,
               output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.05,
+              output_mtok: 0.95,
             },
           },
         ],
@@ -42400,11 +42533,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.1,
-          output_mtok: 3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.1,
+              output_mtok: 3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.04,
+              output_mtok: 1,
+            },
+          },
+        ],
       },
       {
         id: 'reka-flash-3:free',
@@ -43324,11 +43472,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 524288,
-        prices: {
-          input_mtok: 0.09,
-          cache_read_mtok: 0.018,
-          output_mtok: 0.36,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.09,
+              cache_read_mtok: 0.018,
+              output_mtok: 0.36,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'valkyrie-49b-v1',
@@ -44243,6 +44406,17 @@ export const data: Provider[] = [
               output_mtok: 3.2,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.6,
+              cache_read_mtok: 0.12,
+              output_mtok: 1.92,
+            },
+          },
         ],
       },
       {
@@ -44413,6 +44587,17 @@ export const data: Provider[] = [
               input_mtok: 0.048,
               cache_read_mtok: 0.006,
               output_mtok: 0.16,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
             },
           },
         ],
