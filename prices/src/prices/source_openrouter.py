@@ -393,9 +393,7 @@ def importable(model: OpenRouterModel) -> bool:
     return not (model.provider_id() == 'openrouter' or model.pricing.has_negative_price() or model.id.startswith('~'))
 
 
-def update_openrouter_provider(
-    provider_path: Path | None = None, transport: httpx2.BaseTransport | None = None
-) -> None:
+def update_openrouter_provider(provider_path: Path | None = None) -> None:
     """Update only the `openrouter` provider's prices, keeping a dated entry for every rate change.
 
     The model list reports a model's cheapest endpoint, whose rate flips whenever a discounted host comes or goes. A
@@ -404,7 +402,7 @@ def update_openrouter_provider(
     """
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openrouter.yml')
     providers = {provider_id: yaml.provider for provider_id, yaml in get_providers_yaml().items()}
-    with httpx2.Client(timeout=30.0, transport=transport) as client:
+    with httpx2.Client(timeout=30.0) as client:
         response = client.get(MODELS_URL)
         response.raise_for_status()
         listed = [model for model in OpenRouterResponse.model_validate_json(response.content).data if importable(model)]
