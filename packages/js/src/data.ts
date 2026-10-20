@@ -21183,15 +21183,48 @@ export const data: Provider[] = [
       },
       {
         id: 'mistral-small-latest',
-        name: 'Mistral Small 3.2',
+        name: 'Mistral Small Latest',
         description: 'SOTA. Multimodal. Multilingual. Apache 2.0.',
         match: {
           equals: 'mistral-small-latest',
         },
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.3,
-        },
+        price_comments:
+          "The latest alias moved from Mistral Small 3.2 to Mistral Small 4 on 2026-03-16: Mistral's docs list mistral-small-latest as an API name of Small 4 from its release commit. Ref: https://github.com/mistralai/platform-docs-public/commit/94bd65f1942b552b3a5774a3be40097ec7924d56",
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-03-16',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.6,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.075,
+              cache_read_mtok: 0.0075,
+              output_mtok: 0.3,
+            },
+            constraint: {
+              start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+        ],
       },
       {
         id: 'mistral-tiny',

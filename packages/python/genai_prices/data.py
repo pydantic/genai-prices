@@ -12255,9 +12255,29 @@ providers: list[Provider] = [
             ModelInfo(
                 id='mistral-small-latest',
                 match=ClauseEquals(equals='mistral-small-latest'),
-                name='Mistral Small 3.2',
+                name='Mistral Small Latest',
                 description='SOTA. Multimodal. Multilingual. Apache 2.0.',
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
+                price_comments="The latest alias moved from Mistral Small 3.2 to Mistral Small 4 on 2026-03-16: Mistral's docs list mistral-small-latest as an API name of Small 4 from its release commit. Ref: https://github.com/mistralai/platform-docs-public/commit/94bd65f1942b552b3a5774a3be40097ec7924d56",
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 16)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                        ),
+                    ),
+                ],
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.0075'), output_mtok=Decimal('0.3')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    )
+                ],
             ),
             ModelInfo(
                 id='mistral-tiny',

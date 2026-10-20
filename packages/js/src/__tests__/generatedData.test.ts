@@ -640,6 +640,20 @@ describe('generated data split', () => {
       model: 'mistral-medium-latest',
       timestamp: new Date('2026-06-16T00:00:00Z'),
     },
+    {
+      expectedInput: 0.1,
+      expectedModelId: 'mistral-small-latest',
+      expectedOutput: 0.3,
+      model: 'mistral-small-latest',
+      timestamp: new Date('2026-03-15T00:00:00Z'),
+    },
+    {
+      expectedInput: 0.15,
+      expectedModelId: 'mistral-small-latest',
+      expectedOutput: 0.6,
+      model: 'mistral-small-latest',
+      timestamp: new Date('2026-03-16T00:00:00Z'),
+    },
   ])('prices $model at $timestamp', ({ expectedInput, expectedModelId, expectedOutput, model, timestamp }) => {
     const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
       providerId: 'mistral',
