@@ -18250,6 +18250,24 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'BSC-LT/ALIA-40b-instruct-2606',
+        name: 'ALIA-40b-instruct-2606',
+        match: {
+          or: [
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606',
+            },
+            {
+              equals: 'bsc-lt/alia-40b-instruct-2606-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
         name: 'Gemma-SEA-LION-v4-27B-IT',
         match: {
