@@ -10545,6 +10545,17 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='BSC-LT/ALIA-40b-instruct-2606',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606'),
+                        ClauseEquals(equals='bsc-lt/alia-40b-instruct-2606-fast'),
+                    ]
+                ),
+                name='ALIA-40b-instruct-2606',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
                 id='aisingapore/Gemma-SEA-LION-v4-27B-IT',
                 match=ClauseOr(
                     or_=[
