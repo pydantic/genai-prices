@@ -6418,6 +6418,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        name: 'deepseek-v4.1-flash-1017',
+        match: {
+          equals: '@cf/deepseek-ai/deepseek-v4.1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.006,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: '@cf/google/gemma-3-12b-it',
         name: 'Gemma 3 12B IT',
         match: {
