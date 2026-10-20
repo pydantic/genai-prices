@@ -16,6 +16,16 @@ function fail(message) {
   throw new Error(message)
 }
 
+function reviewUnavailable(check) {
+  return (
+    check.app?.slug === 'cubic-dev-ai' &&
+    check.conclusion === 'neutral' &&
+    /review line limit reached|monthly review limit/i.test(
+      `${check.output?.title ?? ''}\n${check.output?.summary ?? ''}\n${check.output?.text ?? ''}`,
+    )
+  )
+}
+
 function fullName(owner, name) {
   return `${owner}/${name}`
 }
@@ -222,7 +232,7 @@ async function collectSnapshot(github, owner, name, prNumber) {
   ])
   const headChecks = checkRuns.filter((check) => check.head_sha === headSha)
   const annotatedChecks = await Promise.all(
-    latestBy(headChecks, checkKey, (check) => check.started_at ?? check.completed_at)
+    latestCheckAttempts(headChecks)
       .filter(
         (check) =>
           REVIEWERS.some((reviewer) => reviewer.app === check.app?.slug && reviewer.name === check.name) &&
@@ -327,6 +337,7 @@ function evaluate(snapshot, assessments = []) {
       waiting.push(`Waiting for reviewer check ${name}`)
       continue
     }
+    if (reviewUnavailable(check)) waiting.push(`Waiting for reviewer check ${name}: review quota exhausted`)
   }
 
   let ciSeen = false
@@ -339,6 +350,7 @@ function evaluate(snapshot, assessments = []) {
       (reviewer) => reviewer.app === check.app?.slug && reviewer.name === check.name,
     )
     if (requiredReviewer) {
+      if (reviewUnavailable(check)) continue
       const body = check.output?.summary || check.output?.text
       const annotationEvidence = (check.annotations ?? [])
         .map((annotation) => {
@@ -348,17 +360,10 @@ function evaluate(snapshot, assessments = []) {
           return `${location}: ${annotation.annotation_level ?? 'notice'}: ${message}`
         })
         .join('\n')
+      const evidence = []
       if (['success', 'neutral'].includes(check.conclusion) && Number(check.output?.annotations_count) > 0)
-        add(
-          finding({
-            kind: 'check',
-            id: `check:${check.id}`,
-            body: annotationEvidence || `${check.name} check reports ${check.output.annotations_count} annotation(s).`,
-            url: check.html_url,
-            reactionTarget: check.id,
-            source: 'check',
-            dismissible: true,
-          }),
+        evidence.push(
+          annotationEvidence || `${check.name} check reports ${check.output.annotations_count} annotation(s).`,
         )
       if (
         check.conclusion !== 'success' &&
@@ -366,11 +371,13 @@ function evaluate(snapshot, assessments = []) {
         check.conclusion !== 'skipped' &&
         !(check.conclusion === 'neutral' && !body)
       )
+        evidence.push(body || `${check.name} concluded ${check.conclusion}`)
+      if (evidence.length)
         add(
           finding({
             kind: 'check',
             id: `check:${check.id}`,
-            body: body || `${check.name} concluded ${check.conclusion}`,
+            body: evidence.join('\n\n'),
             url: check.html_url,
             replyTarget: null,
             reactionTarget: check.id,

@@ -227,6 +227,78 @@ test('missing or delayed required reviewer checks keep the PR waiting', () => {
   assert.equal(evaluate(running).state, 'waiting')
 })
 
+test('annotation collection uses the same newest attempt as readiness despite timestamp ordering', async () => {
+  const client = githubClient({
+    checkRuns: [
+      reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check', {
+        id: 11,
+        started_at: '2026-10-20T13:00:00Z',
+        output: { annotations_count: 1 },
+      }),
+      reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check', {
+        id: 13,
+        started_at: '2026-10-20T12:00:00Z',
+        output: { annotations_count: 1 },
+      }),
+      reviewerCheck('cubic-dev-ai', 'cubic · AI code reviewer'),
+    ],
+    annotations: {
+      11: [{ path: 'old.py', message: 'Older attempt annotation.' }],
+      13: [{ path: 'new.py', message: 'Newest attempt annotation.' }],
+    },
+    workflowRuns: [
+      { id: 50, path: '.github/workflows/ci.yml', head_sha: HEAD, status: 'completed', conclusion: 'success' },
+    ],
+  })
+  const snapshot = await collectSnapshot(client, 'pydantic', 'genai-prices', 42)
+  const result = evaluate(snapshot)
+  assert.equal(result.state, 'repair')
+  assert.equal(result.findings.length, 1)
+  assert.equal(result.findings[0].id, 'check:13')
+  assert.match(result.findings[0].body, /new.py: notice: Newest attempt annotation/)
+  assert.deepEqual(client.annotationPages, [[13, 1]])
+})
+
+test('cubic quota exhaustion cannot be dismissed as a completed review', () => {
+  const snapshot = readySnapshot({
+    checkRuns: [
+      reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check'),
+      reviewerCheck('cubic-dev-ai', 'cubic · AI code reviewer', {
+        conclusion: 'neutral',
+        output: {
+          title: 'AI review line limit reached',
+          summary: "You've reached your plan's monthly review limit. Reviews resume on 22 October 2026.",
+          annotations_count: 0,
+        },
+      }),
+    ],
+  })
+  const result = evaluate(snapshot, [
+    { headSha: HEAD, id: 'check:12', action: 'dismissed', evidence: 'This is a service limit, not a code defect.' },
+  ])
+  assert.equal(result.state, 'waiting')
+  assert.match(result.reason, /review quota exhausted/)
+  assert.deepEqual(result.findings, [])
+})
+
+test('a neutral check summary and annotations produce one finding with both forms of evidence', () => {
+  const snapshot = readySnapshot({
+    checkRuns: [
+      reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check', {
+        conclusion: 'neutral',
+        output: { summary: 'Review summary requires assessment.', annotations_count: 1 },
+        annotations: [{ path: 'test.py', start_line: 3, message: 'Specific annotation requires assessment.' }],
+      }),
+      reviewerCheck('cubic-dev-ai', 'cubic · AI code reviewer'),
+    ],
+  })
+  const result = evaluate(snapshot)
+  assert.equal(result.state, 'repair')
+  assert.equal(result.findings.length, 1)
+  assert.match(result.findings[0].body, /Review summary requires assessment/)
+  assert.match(result.findings[0].body, /Specific annotation requires assessment/)
+})
+
 test('a head change during collection keeps the snapshot waiting', async () => {
   let call = 0
   const client = githubClient({
