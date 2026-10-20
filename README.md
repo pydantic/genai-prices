@@ -58,7 +58,7 @@ The following providers are currently supported:
 - [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 84 models
 - [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 21 models
 - [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 11 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 9 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 11 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
 - [Meta](prices/providers/meta.yml) - 6 models

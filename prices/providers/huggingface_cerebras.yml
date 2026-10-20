@@ -95,7 +95,7 @@ models:
     prices:
       input_mtok: 0.99
       output_mtok: 1.49
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
@@ -117,4 +117,4 @@ models:
     prices:
       input_mtok: 0.35
       output_mtok: 0.75
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20

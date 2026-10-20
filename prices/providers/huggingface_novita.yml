@@ -95,7 +95,7 @@ models:
     prices:
       input_mtok: 0.55
       output_mtok: 2.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: MiniMaxAI/MiniMax-M2
     name: MiniMax-M2
@@ -113,7 +113,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: MiniMaxAI/MiniMax-M3
     name: MiniMax-M3
@@ -125,7 +125,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: NousResearch/Hermes-2-Pro-Llama-3-8B
     name: Hermes-2-Pro-Llama-3-8B
@@ -280,7 +280,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.7
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3-VL-30B-A3B-Thinking
     name: Qwen3-VL-30B-A3B-Thinking
@@ -314,6 +314,7 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 3.2
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.5-27B
     name: Qwen3.5-27B
@@ -325,7 +326,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 2.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.5-35B-A3B
     name: Qwen3.5-35B-A3B
@@ -337,7 +338,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.5-397B-A17B
     name: Qwen3.5-397B-A17B
@@ -349,7 +350,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3.6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.8-2.4T-A95B
     name: Qwen3.8-2.4T-A95B
@@ -361,7 +362,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3.8-27B
     name: Qwen3.8-27B
@@ -373,7 +374,7 @@ models:
     prices:
       input_mtok: 0.42
       output_mtok: 3
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: Sao10K/L3-70B-Euryale-v2.1
     name: L3-70B-Euryale-v2.1
@@ -407,7 +408,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: XiaomiMiMo/MiMo-V2-Flash
     name: MiMo-V2-Flash
@@ -430,7 +431,7 @@ models:
     prices:
       input_mtok: 0.168
       output_mtok: 0.336
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: XiaomiMiMo/MiMo-V2.5-Pro
     name: MiMo-V2.5-Pro
@@ -442,7 +443,7 @@ models:
     prices:
       input_mtok: 0.522
       output_mtok: 1.044
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: XiaomiMiMo/MiMo-V2.6-Flash-RL
     name: MiMo-V2.6-Flash-RL
@@ -454,7 +455,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.28
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: XiaomiMiMo/MiMo-V2.6-Pro-RL
     name: MiMo-V2.6-Pro-RL
@@ -466,7 +467,7 @@ models:
     prices:
       input_mtok: 0.435
       output_mtok: 0.87
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: alpindale/WizardLM-2-8x22B
     name: WizardLM-2-8x22B
@@ -478,7 +479,7 @@ models:
     prices:
       input_mtok: 0.62
       output_mtok: 0.62
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: baidu/ERNIE-4.5-21B-A3B-PT
     name: ERNIE-4.5-21B-A3B-PT
@@ -547,7 +548,7 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 2.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
@@ -627,7 +628,7 @@ models:
     prices:
       input_mtok: 0.44
       output_mtok: 1.32
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: deepseek-ai/DeepSeek-V4-Pro
     name: DeepSeek-V4-Pro
@@ -639,7 +640,7 @@ models:
     prices:
       input_mtok: 1.6
       output_mtok: 3.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: deepseek-ai/DeepSeek-V4-Pro-0813
     name: DeepSeek-V4-Pro-0813
@@ -651,7 +652,7 @@ models:
     prices:
       input_mtok: 1.32
       output_mtok: 3.96
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek-V4.1-Flash
@@ -665,7 +666,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: google/gemma-4-26B-A4B-it
     name: gemma-4-26B-A4B-it
@@ -677,7 +678,7 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: google/gemma-4-31B-it
     name: gemma-4-31B-it
@@ -689,7 +690,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: inclusionAI/Ling-3.0-flash
     name: Ling-3.0-flash
@@ -701,7 +702,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.18
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: inclusionAI/Ling-3.0-flash-Fin
     name: Ling-3.0-flash-Fin
@@ -713,7 +714,7 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.22
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: inclusionAI/Ling-3.0-flash-VL
     name: Ling-3.0-flash-VL
@@ -725,7 +726,7 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.22
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: inclusionAI/Ling-3.1-flash
     name: Ling-3.1-flash
@@ -737,7 +738,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 0.9
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
@@ -749,7 +750,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.05
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
@@ -761,7 +762,7 @@ models:
     prices:
       input_mtok: 0.135
       output_mtok: 0.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
     name: Llama-4-Maverick-17B-128E-Instruct-FP8
@@ -773,7 +774,7 @@ models:
     prices:
       input_mtok: 0.27
       output_mtok: 0.85
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
     name: Llama-4-Scout-17B-16E-Instruct
@@ -785,6 +786,7 @@ models:
     prices:
       input_mtok: 0.18
       output_mtok: 0.59
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Meta-Llama-3-70B-Instruct
     name: Meta-Llama-3-70B-Instruct
@@ -818,7 +820,7 @@ models:
     prices:
       input_mtok: 0.57
       output_mtok: 2.3
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: moonshotai/Kimi-K2-Instruct-0905
     name: Kimi-K2-Instruct-0905
@@ -830,7 +832,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: moonshotai/Kimi-K2-Thinking
     name: Kimi-K2-Thinking
@@ -853,7 +855,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: moonshotai/Kimi-K2.6
     name: Kimi-K2.6
@@ -865,7 +867,7 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 3.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: moonshotai/Kimi-K2.7-Code
     name: Kimi-K2.7-Code
@@ -877,7 +879,7 @@ models:
     prices:
       input_mtok: 0.95
       output_mtok: 4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -889,7 +891,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -912,7 +914,7 @@ models:
     prices:
       input_mtok: 0.834
       output_mtok: 2.501
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/AutoGLM-Phone-9B-Multilingual
     name: AutoGLM-Phone-9B-Multilingual
@@ -924,7 +926,7 @@ models:
     prices:
       input_mtok: 0.035
       output_mtok: 0.138
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4-32B-0414
     name: GLM-4-32B-0414
@@ -958,7 +960,7 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.85
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.5V
     name: GLM-4.5V
@@ -970,7 +972,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 1.8
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.6
     name: GLM-4.6
@@ -982,7 +984,7 @@ models:
     prices:
       input_mtok: 0.55
       output_mtok: 2.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.6V-Flash
     name: GLM-4.6V-Flash
@@ -994,7 +996,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 0.9
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.7
     name: GLM-4.7
@@ -1006,7 +1008,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.7-Flash
     name: GLM-4.7-Flash
@@ -1018,7 +1020,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5
     name: GLM-5
@@ -1030,7 +1032,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 3.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5.2
     name: GLM-5.2
@@ -1042,7 +1044,7 @@ models:
     prices:
       input_mtok: 1.4
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5.3
     name: GLM-5.3
@@ -1054,7 +1056,7 @@ models:
     prices:
       input_mtok: 1.4
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM-5.3-Flash
@@ -1066,4 +1068,4 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
