@@ -45771,7 +45771,7 @@ export const data: Provider[] = [
   {
     id: 'perplexity',
     name: 'Perplexity',
-    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing'],
+    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing', 'https://docs.perplexity.ai/docs/agent-api/models'],
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
       'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
@@ -45836,6 +45836,28 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cache_read_input_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'embeddings',
         root: 'usage',
         model_path: 'model',
@@ -45873,6 +45895,72 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'perplexity/deepseek-v4-pro-0813',
+        match: {
+          equals: 'perplexity/deepseek-v4-pro-0813',
+        },
+        prices: {
+          input_mtok: 1.32,
+          cache_read_mtok: 0.044,
+          output_mtok: 3.96,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3',
+        match: {
+          equals: 'perplexity/glm-5.3',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'perplexity/glm-5.3-flash',
+        match: {
+          equals: 'perplexity/glm-5.3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'perplexity/kimi-k3',
+        match: {
+          equals: 'perplexity/kimi-k3',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'perplexity/nemotron-3.5-super-120b-a12b',
+        match: {
+          equals: 'perplexity/nemotron-3.5-super-120b-a12b',
+        },
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'perplexity/sonar',
+        match: {
+          equals: 'perplexity/sonar',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.0625,
+          output_mtok: 2.5,
         },
       },
       {

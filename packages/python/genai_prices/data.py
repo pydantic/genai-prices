@@ -25989,7 +25989,10 @@ providers: list[Provider] = [
         id='perplexity',
         name='Perplexity',
         api_pattern='https://api\\.perplexity\\.ai',
-        pricing_urls=['https://docs.perplexity.ai/docs/getting-started/pricing'],
+        pricing_urls=[
+            'https://docs.perplexity.ai/docs/getting-started/pricing',
+            'https://docs.perplexity.ai/docs/agent-api/models',
+        ],
         price_comments='Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
         extractors=[
             UsageExtractor(
@@ -26017,6 +26020,20 @@ providers: list[Provider] = [
             ),
             UsageExtractor(
                 root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_read_input_tokens'],
+                        dest='cache_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
                 mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',
                 model_path='model',
@@ -26036,6 +26053,46 @@ providers: list[Provider] = [
                 name='Llama 3.1 Sonar 8B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='perplexity/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='perplexity/deepseek-v4-pro-0813'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.32'), cache_read_mtok=Decimal('0.044'), output_mtok=Decimal('3.96')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3',
+                match=ClauseEquals(equals='perplexity/glm-5.3'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/glm-5.3-flash',
+                match=ClauseEquals(equals='perplexity/glm-5.3-flash'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/kimi-k3',
+                match=ClauseEquals(equals='perplexity/kimi-k3'),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='perplexity/nemotron-3.5-super-120b-a12b',
+                match=ClauseEquals(equals='perplexity/nemotron-3.5-super-120b-a12b'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='perplexity/sonar',
+                match=ClauseEquals(equals='perplexity/sonar'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='pplx-decider-flash-v1.2',
