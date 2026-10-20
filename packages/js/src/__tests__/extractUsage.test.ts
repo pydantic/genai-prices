@@ -850,6 +850,52 @@ describe('extractUsage', () => {
   describe('Perplexity provider', () => {
     const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
 
+    it.each([true, false])('should extract and price responses usage with details=%s', (withDetails) => {
+      // Constructed from the Agent schema/model and Perplexity's own synthetic usage test, not a recording:
+      // https://docs.perplexity.ai/docs/agent-api/models
+      // https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/tests/test_perplexity_usage.py
+      // https://docs.perplexity.ai/docs/agent-api/tools/web-search
+      const responseData = {
+        model: 'perplexity/sonar',
+        object: 'response',
+        usage: {
+          input_tokens: 1000,
+          ...(withDetails ? { input_tokens_details: { cache_read_input_tokens: 800, cached_tokens: 300 } } : {}),
+          output_tokens: 100,
+          ...(withDetails ? { output_tokens_details: { reasoning_tokens: 50 } } : {}),
+          ...(withDetails ? { tool_calls_details: { search_web: { invocation: 2 } } } : {}),
+          total_tokens: 1100,
+        },
+      }
+
+      const { model, usage } = extractUsage(perplexityProvider, responseData, 'responses')
+
+      expect(model).toBe('perplexity/sonar')
+      expect(usage).toEqual(
+        withDetails
+          ? { cache_read_tokens: 800, input_tokens: 1000, output_reasoning_tokens: 50, output_tokens: 100, web_searches: 2 }
+          : { input_tokens: 1000, output_tokens: 100 }
+      )
+      for (const [month, day, priceContext, expectedTotal] of [
+        [10, 15, undefined, 0.00535],
+        [10, 15, { search_type: 'web' }, 0.00535],
+        [9, 23, { search_type: 'fast' }, 0.00235],
+        [9, 24, { search_type: 'fast' }, 0.00235],
+        [10, 14, { search_type: 'fast' }, 0.00235],
+        [10, 15, { search_type: 'fast' }, 0.00235],
+      ] as const) {
+        const price = calcPrice(usage, model!, {
+          priceContext,
+          provider: perplexityProvider,
+          timestamp: new Date(Date.UTC(2026, month - 1, day)),
+        })
+        expect(price!.model.id).toBe('perplexity/sonar')
+        expect(price!.input_price).toBeCloseTo(withDetails ? 0.0001 : 0.00025, 12)
+        expect(price!.output_price).toBeCloseTo(0.00025, 12)
+        expect(price!.total_price).toBeCloseTo(withDetails ? expectedTotal : 0.0005, 12)
+      }
+    })
+
     it('should add separately reported output categories to aggregate output', () => {
       const responseData = {
         model: 'sonar-deep-research',

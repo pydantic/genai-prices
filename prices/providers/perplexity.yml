@@ -4,9 +4,10 @@ id: perplexity
 pricing_urls:
   - https://docs.perplexity.ai/docs/getting-started/pricing
   - https://docs.perplexity.ai/docs/agent-api/models
+  - https://docs.perplexity.ai/docs/agent-api/tools/web-search
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
-  Prices per request vary based on usage, this is not represented here,
+  Sonar Chat Completions prices per request vary based on usage, this is not represented here,
   instead we just take the highest price shown for `requests_kcount`.
 extractors:
   # https://docs.perplexity.ai/api-reference/sonar-post
@@ -47,6 +48,9 @@ extractors:
         dest: output_tokens
   # https://docs.perplexity.ai/api-reference/agent-post — OpenAI Responses usage; cached tokens are a subset of
   # input_tokens. Cache writes bill at the input rate, so cache_creation_input_tokens stays in input_tokens.
+  # Reasoning is included in output_tokens; preserve its breakdown without adding it to the total.
+  # https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/providers/perplexity/events.py
+  # Read cache_read_input_tokens only; cached_tokens is a compatibility alias.
   - api_flavor: responses
     root: usage
     mappings:
@@ -55,8 +59,14 @@ extractors:
       - path: [input_tokens_details, cache_read_input_tokens]
         dest: cache_read_tokens
         required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: output_tokens
         dest: output_tokens
+      - path: [tool_calls_details, search_web, invocation]
+        dest: web_searches
+        required: false
   # https://docs.perplexity.ai/docs/embeddings/standard-embeddings — `usage.prompt_tokens`, no completion tokens.
   - api_flavor: embeddings
     root: usage
@@ -138,7 +148,20 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.0625
       output_mtok: 2.5
+      web_searches_kcount: 2.5
     prices_checked: 2026-10-20
+    price_comments: >-
+      Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand.
+      Pass price_context search_type=fast for Fast Search, including presets that select it.
+      The response invocation count does not identify the search type. Without context, standard web search is estimated.
+      https://docs.perplexity.ai/docs/agent-api/tools/web-search
+      Only tokens, cache reads, and web search are represented; other Agent tools are not priced.
+    price_variants:
+      - when: { search_type: fast }
+        prices:
+          web_searches_kcount: 1
+      - when: { search_type: web }
+        prices: {}
 
   - id: pplx-decider-flash-v1.2
     name: Decider Flash V1.2

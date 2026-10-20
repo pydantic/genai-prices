@@ -45849,10 +45849,14 @@ export const data: Provider[] = [
   {
     id: 'perplexity',
     name: 'Perplexity',
-    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing', 'https://docs.perplexity.ai/docs/agent-api/models'],
+    pricing_urls: [
+      'https://docs.perplexity.ai/docs/getting-started/pricing',
+      'https://docs.perplexity.ai/docs/agent-api/models',
+      'https://docs.perplexity.ai/docs/agent-api/tools/web-search',
+    ],
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
-      'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
+      'Sonar Chat Completions prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
     extractors: [
       {
         api_flavor: 'default',
@@ -45929,9 +45933,19 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+          {
+            path: ['tool_calls_details', 'search_web', 'invocation'],
+            dest: 'web_searches',
+            required: false,
           },
         ],
       },
@@ -46035,11 +46049,30 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar',
         },
+        price_comments:
+          'Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.0625,
           output_mtok: 2.5,
+          web_searches_kcount: 2.5,
         },
+        price_variants: [
+          {
+            when: {
+              search_type: 'fast',
+            },
+            prices: {
+              web_searches_kcount: 1,
+            },
+          },
+          {
+            when: {
+              search_type: 'web',
+            },
+            prices: {},
+          },
+        ],
       },
       {
         id: 'pplx-decider-flash-v1.2',
