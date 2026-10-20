@@ -31588,16 +31588,6 @@ export const data: Provider[] = [
               output_mtok: 0.89,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-10-20',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.2574,
-              output_mtok: 1.0287,
-            },
-          },
         ],
       },
       {
@@ -33286,28 +33276,12 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.75,
-              cache_write_mtok: 0.041666666666666664,
-              cache_read_mtok: 0.075,
-              output_mtok: 3.75,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.825,
-              cache_write_mtok: 0.041666666666666664,
-              cache_read_mtok: 0.0825,
-              output_mtok: 4.125,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.75,
+          cache_write_mtok: 0.041666666666666664,
+          cache_read_mtok: 0.075,
+          output_mtok: 3.75,
+        },
       },
       {
         id: 'google/gemini-3.8-flash:batch',
@@ -36743,26 +36717,11 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
-        prices: [
-          {
-            prices: {
-              input_mtok: 3,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.239,
-              cache_read_mtok: 0.21,
-              output_mtok: 11.936,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
       },
       {
         id: 'moonshotai/kimi-k3:batch',
@@ -44285,26 +44244,11 @@ export const data: Provider[] = [
           ],
         },
         context_window: 131072,
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.3,
-              cache_read_mtok: 0.05,
-              output_mtok: 0.9,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.3,
-              cache_read_mtok: 0.055,
-              output_mtok: 0.9,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.9,
+        },
       },
       {
         id: 'z-ai/glm-4.7',
@@ -44406,17 +44350,6 @@ export const data: Provider[] = [
               output_mtok: 3.2,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-10-20',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.6,
-              cache_read_mtok: 0.12,
-              output_mtok: 1.92,
-            },
-          },
         ],
       },
       {
@@ -44487,26 +44420,11 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: [
-          {
-            prices: {
-              input_mtok: 1.4,
-              cache_read_mtok: 0.26,
-              output_mtok: 4.4,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.62,
-              cache_read_mtok: 0.14,
-              output_mtok: 2.42,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
       },
       {
         id: 'z-ai/glm-5.3',
@@ -44522,26 +44440,11 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: [
-          {
-            prices: {
-              input_mtok: 1.4,
-              cache_read_mtok: 0.26,
-              output_mtok: 4.4,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.079,
-              cache_read_mtok: 0.078,
-              output_mtok: 1.4,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
+        },
       },
       {
         id: 'z-ai/glm-5.3-flash',
@@ -44570,28 +44473,6 @@ export const data: Provider[] = [
           {
             constraint: {
               start_date: '2026-09-10',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.15,
-              cache_read_mtok: 0.03,
-              output_mtok: 0.5,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-19',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.048,
-              cache_read_mtok: 0.006,
-              output_mtok: 0.16,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-20',
               type: 'start_date',
             },
             prices: {
