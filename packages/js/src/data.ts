@@ -21124,12 +21124,20 @@ export const data: Provider[] = [
         description:
           'Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following, repetition reduction, and improved function calling.',
         match: {
-          equals: 'mistral-small-3.2-24b-instruct',
+          or: [
+            {
+              equals: 'mistral-small-2506',
+            },
+            {
+              equals: 'mistral-small-3.2-24b-instruct',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
+        price_comments:
+          'Mistral lists Mistral Small 3.2 (mistral-small-2506) at $0.10/$0.30 per MTok. Its EU and US regional endpoints bill 1.1x list. Ref: https://github.com/mistralai/platform-docs-public/blob/d3ccc16309763fcb59c61906ecd486d75d719a84/src/schema/models/models/mistral-small-3-2-25-06.ts Ref: https://docs.mistral.ai/inference/regional-inference',
         prices: {
-          input_mtok: 0.075,
-          output_mtok: 0.2,
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
       },
       {
@@ -21163,11 +21171,20 @@ export const data: Provider[] = [
         description:
           "Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:\n- strong math, coding, and reasoning\n- large context length (64k)\n- fluency in English, French, Italian, German, and Spanish",
         match: {
-          equals: 'mixtral-8x22b-instruct',
+          or: [
+            {
+              equals: 'open-mixtral-8x22b',
+            },
+            {
+              equals: 'mixtral-8x22b-instruct',
+            },
+          ],
         },
+        price_comments:
+          'Mistral billed open-mixtral-8x22b at $2/$6 per MTok from launch until its 2025-03-30 retirement. Ref: https://web.archive.org/web/20240417182952/https://mistral.ai/technology/ Ref: https://web.archive.org/web/20250203181801/https://mistral.ai/technology/',
         prices: {
-          input_mtok: 0.9,
-          output_mtok: 0.9,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -49648,36 +49665,75 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price identically: https://docs.x.ai/developers/models',
-        prices: {
-          input_mtok: {
-            base: 1.25,
-            tiers: [
-              {
-                start: 199999,
-                price: 2.5,
+          'Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price identically: https://docs.x.ai/developers/models xAI cut Grok 4.20 from $2/$6 ($4/$12 at or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30. Ref: https://web.archive.org/web/20260430105131/https://docs.x.ai/developers/models/grok-4.20?_rsc=qn1f9 Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 4,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 199999,
-                price: 0.4,
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 0.4,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 2.5,
-            tiers: [
-              {
-                start: 199999,
-                price: 5,
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 12,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-04-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
         price_variants: [
           {
             when: {
@@ -49720,27 +49776,17 @@ export const data: Provider[] = [
         ],
       },
       {
-        id: 'grok-4.20-multi-agent',
-        name: 'Grok 4.20 Multi-Agent',
-        description:
-          "Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-        match: {
-          equals: 'grok-4.20-multi-agent',
-        },
-        context_window: 1000000,
-        prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.2,
-          output_mtok: 6,
-        },
-      },
-      {
         id: 'grok-4.20-multi-agent-0309',
         name: 'Grok 4.20 Multi-Agent 0309',
+        description:
+          "Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
         match: {
           or: [
             {
               equals: 'grok-4.20-multi-agent-0309',
+            },
+            {
+              equals: 'grok-4.20-multi-agent',
             },
             {
               equals: 'grok-4.20-multi-agent-beta-0309',
@@ -49754,35 +49800,76 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 1.25,
-            tiers: [
-              {
-                start: 199999,
-                price: 2.5,
+        price_comments:
+          'xAI lists grok-4.20-multi-agent as an alias of grok-4.20-multi-agent-0309. xAI cut it from $2/$6 ($4/$12 at or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30. Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20 Ref: https://web.archive.org/web/20260430232954/https://docs.x.ai/developers/models/grok-4.3',
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 4,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.2,
-            tiers: [
-              {
-                start: 199999,
-                price: 0.4,
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 0.4,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 2.5,
-            tiers: [
-              {
-                start: 199999,
-                price: 5,
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 12,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-04-30',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 199999,
+                    price: 5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
         price_variants: [
           {
             when: {

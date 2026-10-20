@@ -76,7 +76,7 @@ The following providers are currently supported:
 - [Together AI](prices/providers/together.yml) - 92 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
-- [X AI](prices/providers/x_ai.yml) - 23 models
+- [X AI](prices/providers/x_ai.yml) - 22 models
 - [Z.AI](prices/providers/zai.yml) - 18 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 15 models
 
