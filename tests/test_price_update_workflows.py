@@ -614,32 +614,46 @@ def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
         for step in steps[:export_index]:
             assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
         assert steps[export_index]['env'] == {
-            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
+            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}',
+            'PRICE_CHECK_JOB_STATUS': '${{ job.status }}',
         }
         assert steps[export_index]['if'] == 'always()'
         assert steps[export_index]['continue-on-error'] is True
 
 
-def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None:
+def test_price_check_observability(tmp_path: Path) -> None:
     observability = read_workflow('shared/price-check-observability.md')
     script = observability['post-steps'][0]['with']['script']
+    environment_file = tmp_path / 'environment'
+    subprocess.run(
+        ['bash', '-e', '-c', observability['pre-agent-steps'][0]['run']],
+        env={**os.environ, 'GITHUB_ENV': str(environment_file)},
+        check=True,
+    )
+    name, started_at = environment_file.read_text().strip().split('=', 1)
+    assert name == 'PRICE_CHECK_JOB_STARTED_AT'
     driver = r"""
 const script = JSON.parse(process.env.EXPORT_SCRIPT);
-const files = {
-  '/tmp/gh-aw/agent-session.jsonl': [
-    'debug output', 'null',
+const paths = {
+  session: '/tmp/gh-aw/agent-session.jsonl', usage: '/tmp/gh-aw/agent_usage.json',
+  output: '/tmp/gh-aw/agent_output.json', requests: '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'
+};
+const makeFiles = ({status = 'success', usage = true, requests = true, outputType = 'noop', timestamps = true} = {}) => ({
+  [paths.session]: [
     JSON.stringify({type: 'tool.execution_start', data: {toolName: 'web_fetch'}}),
-    JSON.stringify({type: 'session.result', data: {status: 'success'}})
+    JSON.stringify({type: 'session.result', timestamp: timestamps ? '2026-10-20T01:00:00.000Z' : undefined,
+      data: {status, ...(timestamps ? {timestamp: '2026-10-20T01:05:00.000Z'} : {})}})
   ].join('\n'),
-  '/tmp/gh-aw/agent_usage.json': JSON.stringify({primary_model: 'model', input_tokens: 11,
-    cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 7}),
-  '/tmp/gh-aw/agent_output.json': JSON.stringify({items: [{type: 'noop'}]}),
-  '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl': [1, 1].map(() => JSON.stringify({
+  ...(usage ? {[paths.usage]: JSON.stringify({primary_model: 'model', input_tokens: 11,
+    cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 7})} : {}),
+  [paths.output]: JSON.stringify({items: [{type: outputType}]}),
+  [paths.requests]: requests ? [1, 1].map(() => JSON.stringify({
     spanId: '1234567890abcdef', name: 'api_proxy.anthropic.request', startTimeMs: 1000, endTimeMs: 2000,
     attributes: {'awf.request_id': 'request-1'}, status: {code: 1}, kind: 3
-  })).join('\n')
-};
-let payload;
+  })).join('\n') : ''
+});
+let files = makeFiles();
+const exported = [];
 const summaries = [];
 const core = {summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
 const fakeRequire = (name) => {
@@ -650,45 +664,53 @@ const fakeRequire = (name) => {
   if (name.endsWith('send_otlp_span.cjs')) return {
     buildAttr: (key, value) => ({key, value}),
     buildOTLPPayload: (options) => ({resourceSpans: [options]}),
-    sendOTLPSpan: async (endpoint, data) => { payload = {endpoint, ...data}; }
+    sendOTLPSpan: async (endpoint, data) => { exported.push({endpoint, ...data}); }
   };
   return require(name);
 };
 const run = new (async () => {}).constructor('require', 'process', 'core', script);
 (async () => {
-  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_REPOSITORY: 'pydantic/genai-prices',
-    GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1', GITHUB_SHA: 'sha'}}, core);
-  const spans = payload.resourceSpans;
-  const usage = Object.fromEntries(spans.find((span) => span.spanName === 'price_check.usage').attributes
-    .map(({key, value}) => [key, value]));
-  const agent = spans.find((span) => span.spanName === 'invoke_agent');
-  const resource = Object.fromEntries(agent.resourceAttributes.map(({key, value}) => [key, value]));
-  const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
-  const terminalEmitted = agent.attributes.find(({key}) => key === 'price_check.terminal_output_emitted').value;
-  const marker = JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json']);
-  files['/tmp/gh-aw/agent_output.json'] = JSON.stringify({items: [{type: 'report_incomplete'}]});
-  files['/tmp/gh-aw/agent-session.jsonl'] = files['/tmp/gh-aw/agent-session.jsonl'].replace('"status":"success"', '"status":"error"');
-  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core);
-  const partialStatus = payload.resourceSpans.find((span) => span.spanName === 'invoke_agent').statusCode;
-  let incomplete = false;
-  files['/tmp/gh-aw/agent_usage.json'] = '{}';
-  try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
-  console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, toolCounts, terminalEmitted, marker, requestId: resource['price_check.request_id'],
-    completedStatus: agent.statusCode, partialStatus, incomplete, summaries}));
+  const invoke = async (scenario, env = {}) => {
+    files = makeFiles(scenario);
+    await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_REPOSITORY: 'pydantic/genai-prices',
+      GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1', GITHUB_SHA: 'sha',
+      PRICE_CHECK_JOB_STARTED_AT: process.env.JOB_STARTED_AT, ...env}}, core);
+    return {payload: exported.at(-1), marker: JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json'])};
+  };
+  const normal = await invoke({}, {PRICE_CHECK_SERVICE_NAME: 'maintainer.price-check'});
+  const noRequests = await invoke({requests: false});
+  const noUsageError = await invoke({status: 'error', usage: false, requests: false, outputType: 'report_incomplete', timestamps: false});
+  const cancelled = await invoke({requests: false}, {PRICE_CHECK_JOB_STATUS: 'cancelled'});
+  const project = (result) => {
+    const spans = result.payload.resourceSpans;
+    const root = spans.find((span) => span.spanName === 'invoke_agent');
+    const usageSpan = spans.find((span) => span.spanName === 'price_check.usage');
+    const attrs = Object.fromEntries(root.attributes.map(({key, value}) => [key, value]));
+    const usage = usageSpan && Object.fromEntries(usageSpan.attributes.map(({key, value}) => [key, value]));
+    return {endpoint: result.payload.endpoint, serviceName: root.serviceName, names: spans.map((span) => span.spanName),
+      startMs: root.startMs, endMs: root.endMs, statusCode: root.statusCode, attrs, usage, marker: result.marker};
+  };
+  console.log(JSON.stringify({normal: project(normal), noRequests: project(noRequests),
+    noUsageError: project(noUsageError), cancelled: project(cancelled), summaries}));
 })();
 """
     result = subprocess.run(
         ['node', '-e', driver],
-        env={**os.environ, 'EXPORT_SCRIPT': json.dumps(script)},
+        env={**os.environ, 'EXPORT_SCRIPT': json.dumps(script), 'JOB_STARTED_AT': started_at},
         capture_output=True,
         text=True,
         check=True,
     )
     output = json.loads(result.stdout)
-    assert output['endpoint'] == 'https://logfire-eu.pydantic.info'
-    assert output['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
-    assert output['usage'] == {
+    normal = output['normal']
+    assert normal['endpoint'] == 'https://logfire-eu.pydantic.info'
+    assert normal['serviceName'] == 'maintainer.price-check'
+    assert normal['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
+    assert normal['attrs']['price_check.agent_outcome'] == 'success'
+    assert normal['attrs']['price_check.outcome_scope'] == 'agent_only'
+    assert normal['attrs']['price_check.telemetry_coverage'] == 'complete'
+    assert normal['attrs']['price_check.terminal_output_emitted'] is True
+    assert normal['usage'] == {
         'gen_ai.request.model': 'model',
         'price_check.usage.source': 'gh-aw.agent_usage',
         'price_check.usage.uncached_input': 11,
@@ -696,14 +718,26 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
         'price_check.usage.cache_creation': 0,
         'price_check.usage.output': 7,
     }
-    assert output['incomplete'] is True
-    assert output['completedStatus'] == 1
-    assert output['partialStatus'] == 2
-    assert output['toolCounts'] == {'web_fetch': 1}
-    assert output['terminalEmitted'] is True
-    assert output['marker']['exported_request_spans'] == 1
-    assert output['requestId'] == ''
-    assert any('telemetry incomplete' in summary for summary in output['summaries'])
+    assert normal['marker']['exported_request_spans'] == 1
+    no_requests = output['noRequests']
+    assert no_requests['names'] == ['invoke_agent', 'price_check.usage']
+    assert no_requests['serviceName'] == 'gh-aw.agentic-price-check'
+    assert no_requests['usage']['price_check.usage.output'] == 7
+    assert no_requests['attrs']['price_check.telemetry_coverage'] == 'incomplete'
+    assert 'No API request spans' in no_requests['attrs']['price_check.telemetry_diagnostic']
+    no_usage_error = output['noUsageError']
+    assert no_usage_error['names'] == ['invoke_agent']
+    assert no_usage_error['attrs']['price_check.agent_outcome'] == 'error'
+    assert no_usage_error['attrs']['price_check.terminal_output_emitted'] is True
+    assert 'usage is missing or invalid' in no_usage_error['attrs']['price_check.telemetry_diagnostic']
+    assert isinstance(no_usage_error['startMs'], float | int) and no_usage_error['startMs'] > 0
+    assert isinstance(no_usage_error['endMs'], float | int) and no_usage_error['endMs'] > 0
+    assert no_usage_error['endMs'] >= no_usage_error['startMs']
+    cancelled = output['cancelled']
+    assert cancelled['names'] == ['invoke_agent', 'price_check.usage']
+    assert cancelled['attrs']['price_check.agent_outcome'] == 'cancelled'
+    assert cancelled['statusCode'] == 2
+    assert all('agent-only telemetry' in summary for summary in output['summaries'])
 
 
 def test_hourly_importer_failures_alert_slack_once() -> None:
@@ -817,9 +851,10 @@ def test_hourly_update_keeps_the_start_dates_the_open_price_update_proposes(tmp_
     build = next(i for i, step in enumerate(job['steps']) if 'make collapse-models build' in step.get('run', ''))
     assert names.index('Keep the start dates the open price update proposes') < build
     assert step['if'] == "steps.apply.outputs.importers != ''"
-    assert step['env'] == {'GH_TOKEN': '${{ github.token }}'}
+    assert step['env'] == {'PREVIOUS_HEAD': '${{ steps.previous.outputs.head }}'}
     assert job['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
     calls = tmp_path / 'calls'
+    calls.write_text('')
 
     subprocess.run(
         ['bash', '-e', '-o', 'pipefail', '-c', step['run']],
@@ -829,21 +864,14 @@ def test_hourly_update_keeps_the_start_dates_the_open_price_update_proposes(tmp_
             'BRANCH': 'automation/hourly-price-update',
             'CALLS': str(calls),
             'OPEN_PR': open_pr,
+            'PREVIOUS_HEAD': open_pr,
         },
         check=True,
     )
 
-    assert calls.read_text().splitlines() == [
-        'gh pr list --head automation/hourly-price-update --state open --json number --jq .[].number',
-        *(
-            [
-                'git fetch --quiet --depth=1 origin automation/hourly-price-update',
-                'uv run --all-packages -m prices.proposed_start_dates FETCH_HEAD',
-            ]
-            if open_pr
-            else []
-        ),
-    ]
+    assert calls.read_text().splitlines() == (
+        [f'uv run --all-packages -m prices.proposed_start_dates {open_pr}'] if open_pr else []
+    )
 
 
 @pytest.mark.parametrize(

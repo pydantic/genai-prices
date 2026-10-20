@@ -60,6 +60,7 @@ def test_october_model_prices_and_context_metadata():
         Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
         'mistral-large-4-0',
         provider_id='mistral',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
     assert mistral_price.model.id == 'mistral-large-4'
     assert mistral_price.model.context_window == 1_048_576
