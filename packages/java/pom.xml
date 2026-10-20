@@ -72,9 +72,6 @@
               <apiPackage>dev.pydantic.genaiprices.api</apiPackage>
               <modelPackage>dev.pydantic.genaiprices.model</modelPackage>
               <invokerPackage>dev.pydantic.genaiprices.client</invokerPackage>
-              <!-- The spec types the raw provider `response` as `anyOf: [{}, null]`, which the generator names `AnyOf`. -->
-              <typeMappings>AnyOf=Object</typeMappings>
-              <importMappings>AnyOf=java.lang.Object</importMappings>
               <generateApiTests>false</generateApiTests>
               <generateModelTests>false</generateModelTests>
               <generateApiDocumentation>false</generateApiDocumentation>
