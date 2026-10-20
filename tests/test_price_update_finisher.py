@@ -3,15 +3,24 @@ from .test_price_update_workflows import read_workflow
 
 def test_finisher_waits_from_trusted_code_and_repair_completion_resumes_it() -> None:
     workflow = read_workflow('finish-price-update.yml')
-    assert workflow['on']['workflow_run'] == {
-        'workflows': ['Update prices', 'Price update repair'],
-        'types': ['completed'],
-        'branches': ['main'],
+    producers = [
+        read_workflow(name)['name']
+        for name in ('update-prices.yml', 'repair-price-update.md', 'agentic-model-price-check.md')
+    ]
+    assert workflow['on']['workflow_run'] == {'workflows': producers, 'types': ['completed'], 'branches': ['main']}
+    assert workflow['on']['repository_dispatch'] == {'types': ['genie-pricer-repair-request']}
+    jobs = workflow['jobs']
+    assert "github.ref == 'refs/heads/main'" in jobs['select']['if']
+    assert "github.event.sender.login == 'pydanty[bot]'" in jobs['select']['if']
+    assert jobs['select']['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    assert jobs['watch']['needs'] == 'select'
+    assert jobs['watch']['strategy'] == {
+        'fail-fast': False,
+        'matrix': {'pr': '${{ fromJSON(needs.select.outputs.prs) }}'},
     }
-    job = workflow['jobs']['watch']
-    assert "github.ref == 'refs/heads/main'" in job['if']
-    assert job['steps'][0]['with'] == {'ref': '${{ github.sha }}', 'persist-credentials': False}
-    assert workflow['concurrency'] == {'group': 'finish-price-update', 'cancel-in-progress': False}
+    for job in jobs.values():
+        assert job['steps'][0]['with'] == {'ref': '${{ github.sha }}', 'persist-credentials': False}
+    assert workflow['concurrency'] == {'group': 'finish-price-update', 'cancel-in-progress': False, 'queue': 'max'}
 
 
 def test_repair_uses_existing_model_and_has_no_github_write_tool() -> None:

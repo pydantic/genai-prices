@@ -1,12 +1,12 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const { execFileSync } = require('node:child_process')
-const { collectSnapshot, evaluate } = require('./price_update_readiness.cjs')
+const { collectSnapshot, evaluate, isAutomationPR } = require('./price_update_readiness.cjs')
 
 const MARKER = '<!-- price-update-finisher-state\n'
 const REPAIR_WORKFLOW = 'repair-price-update.lock.yml'
 const MAX_ATTEMPTS = 3
-const BRANCHES = ['automation/hourly-price-update', 'automation/weekly-price-update']
+const REPAIR_REQUEST = 'genie-pricer-repair-request'
 
 function readState(comments) {
   const states = comments.filter(
@@ -42,19 +42,54 @@ async function writeState(github, repo, prNumber, state, message) {
   return response.data.id
 }
 
-async function assertHead(github, repo, prNumber, expectedHead) {
+async function priceProposal(github, repo, prNumber) {
   const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: prNumber })
-  if (
-    pr.state !== 'open' ||
-    pr.base?.ref !== 'main' ||
-    pr.head.sha !== expectedHead ||
-    !BRANCHES.includes(pr.head.ref) ||
-    pr.head.repo?.full_name !== `${repo.owner}/${repo.repo}` ||
-    pr.user.login !== 'genai-prices-automation[bot]'
-  ) {
-    throw new Error('Price proposal identity or head changed')
-  }
+  return isAutomationPR(pr, `${repo.owner}/${repo.repo}`) ? pr : null
+}
+
+async function assertHead(github, repo, prNumber, expectedHead) {
+  const pr = await priceProposal(github, repo, prNumber)
+  if (!pr || pr.head.sha !== expectedHead) throw new Error('Price proposal identity or head changed')
   return pr
+}
+
+async function repairInFlight(github, repo, state, now) {
+  if (state.status !== 'repair-requested') return false
+  if (now() - state.requestedAt < 120_000) return true
+  const active = await Promise.all(
+    ['queued', 'in_progress'].map((status) =>
+      github.paginate(github.rest.actions.listWorkflowRuns, {
+        ...repo,
+        workflow_id: REPAIR_WORKFLOW,
+        status,
+        per_page: 100,
+      }),
+    ),
+  )
+  return active.flat().length > 0
+}
+
+// An explicit request restores the full repair budget, except while a dispatched repair can still record its result.
+async function renewBudget({ github, repo, prNumber, core, now = Date.now }) {
+  const state = readState(
+    await github.paginate(github.rest.issues.listComments, { ...repo, issue_number: prNumber, per_page: 100 }),
+  )
+  if (state.attempts === 0 && state.status !== 'blocked') return false
+  if (await repairInFlight(github, repo, state, now)) {
+    core.info(`#${prNumber}: a repair is in flight; its attempt count stays at ${state.attempts}/${MAX_ATTEMPTS}`)
+    return false
+  }
+  if (!(await priceProposal(github, repo, prNumber))) throw new Error(`#${prNumber} is not an open price proposal`)
+  const next = { ...state, attempts: 0 }
+  if (next.status === 'blocked') delete next.status
+  await writeState(
+    github,
+    repo,
+    prNumber,
+    next,
+    `Repair requested on demand. The repair budget restarts at 0/${MAX_ATTEMPTS}.`,
+  )
+  return true
 }
 
 async function watchOne({
@@ -114,21 +149,9 @@ async function watchOne({
     }
     if (state.status === 'blocked')
       throw new Error(`#${prNumber}: repair requires maintainer action; see the tracked findings`)
-    if (state.status === 'repair-requested') {
-      const active = await Promise.all(
-        ['queued', 'in_progress'].map((status) =>
-          github.paginate(github.rest.actions.listWorkflowRuns, {
-            ...repo,
-            workflow_id: REPAIR_WORKFLOW,
-            status,
-            per_page: 100,
-          }),
-        ),
-      )
-      if (active.flat().length || now() - state.requestedAt < 120_000) {
-        await sleep(30_000)
-        continue
-      }
+    if (await repairInFlight(github, repo, state, now)) {
+      await sleep(30_000)
+      continue
     }
     if (state.attempts >= MAX_ATTEMPTS)
       throw new Error(`#${prNumber}: repair limit reached; unresolved findings remain`)
@@ -165,33 +188,48 @@ async function watchOne({
   throw new Error(`#${prNumber}: timed out waiting for head-specific CI, Macroscope, and cubic`)
 }
 
-async function watch({ github, context, core }) {
-  const repo = context.repo
-  let prs
-  const selected = context.payload.inputs?.pr_number
-  if (selected) {
-    const number = Number(selected)
-    if (!Number.isSafeInteger(number) || number <= 0) throw new Error('Invalid PR number')
-    prs = [number]
-  } else {
-    const proposals = await Promise.all(
-      BRANCHES.map((branch) =>
-        github.paginate(github.rest.pulls.list, {
-          ...repo,
-          state: 'open',
-          head: `${repo.owner}:${branch}`,
-          per_page: 100,
-        }),
-      ),
-    )
-    prs = proposals.flat().map((pr) => pr.number)
+// The proposal a maintainer or genie-pricer asked for, or null for an automatic scan.
+function requestedPR(context) {
+  if (context.eventName === 'repository_dispatch') {
+    const number = context.payload.client_payload?.pr_number
+    if (context.payload.action !== REPAIR_REQUEST || !Number.isSafeInteger(number) || number <= 0)
+      throw new Error('Invalid repair request')
+    return number
   }
-  for (const prNumber of prs) await watchOne({ github, repo, prNumber, core, requestId: String(context.runId) })
+  const selected = context.eventName === 'workflow_dispatch' && context.payload.inputs?.pr_number
+  if (!selected) return null
+  const number = Number(selected)
+  if (!Number.isSafeInteger(number) || number <= 0) throw new Error('Invalid PR number')
+  return number
+}
+
+async function select({ github, context, core }) {
+  const repo = context.repo
+  const requested = requestedPR(context)
+  let prs
+  if (requested) {
+    if (!(await priceProposal(github, repo, requested))) throw new Error(`#${requested} is not an open price proposal`)
+    prs = [requested]
+  } else {
+    const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', base: 'main', per_page: 100 })
+    prs = open.filter((pr) => isAutomationPR(pr, `${repo.owner}/${repo.repo}`)).map((pr) => pr.number)
+  }
+  core.setOutput('prs', JSON.stringify(prs))
+  await core.summary
+    .addRaw(prs.length ? `Watching ${prs.map((number) => `#${number}`).join(', ')}.\n` : 'No open price proposals.\n')
+    .write()
+}
+
+async function watch({ github, context, core, prNumber, ...options }) {
+  if (!Number.isSafeInteger(prNumber) || prNumber <= 0) throw new Error('Invalid PR number')
+  const repo = context.repo
+  if (requestedPR(context) === prNumber) await renewBudget({ github, repo, prNumber, core, now: options.now })
+  const result = await watchOne({ ...options, github, repo, prNumber, core, requestId: String(context.runId) })
   await core.summary
     .addRaw(
-      prs.length
-        ? 'Inspected price proposals. A dispatched repair continues in Price update repair.\n'
-        : 'No open price proposals.\n',
+      result === 'ready'
+        ? `#${prNumber} is ready for maintainer review.\n`
+        : `#${prNumber}: a dispatched repair continues in Price update repair.\n`,
     )
     .write()
 }
@@ -337,7 +375,9 @@ module.exports = {
   readState,
   writeState,
   assertHead,
+  renewBudget,
   watchOne,
+  select,
   watch,
   claim,
   loadExpected,
