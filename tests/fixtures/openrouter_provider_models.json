@@ -1,0 +1,838 @@
+{
+  "data": [
+    {
+      "id": "z-ai/glm-5.3-flash",
+      "canonical_slug": "z-ai/glm-5.3-flash-20260826",
+      "hugging_face_id": "zai-org/GLM-5.3-Flash",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "created": 1787752741,
+      "description": "GLM-5.3-Flash is a native multimodal model from Z.ai. It is suited for efficient coding and long-horizon agent tasks. Its hybrid sparse and linear attention architecture maintains accurate long-context behavior while...",
+      "context_length": 1048576,
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": ["text", "image", "video"],
+        "output_modalities": ["text"],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.000000048",
+        "completion": "0.00000016",
+        "input_cache_read": "0.000000006"
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 943718,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": null,
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/z-ai/glm-5.3-flash-20260826/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1316,
+            "win_rate": 56.2,
+            "rank": 16
+          },
+          {
+            "arena": "models",
+            "category": "asciiart",
+            "elo": 1269,
+            "win_rate": 54.6,
+            "rank": 12
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1282,
+            "win_rate": 49.4,
+            "rank": 22
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1260,
+            "win_rate": 50.1,
+            "rank": 30
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1279,
+            "win_rate": 47.1,
+            "rank": 24
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1285,
+            "win_rate": 56.8,
+            "rank": 10
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1317,
+            "win_rate": 54.7,
+            "rank": 13
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1272,
+            "win_rate": 48.5,
+            "rank": 28
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 41.8,
+          "coding_index": 71.5,
+          "agentic_index": 50.9
+        }
+      },
+      "reasoning": {
+        "mandatory": true,
+        "default_enabled": true,
+        "supported_efforts": ["max", "high", "low"],
+        "default_effort": "max"
+      }
+    },
+    {
+      "id": "z-ai/glm-5.3-flash:batch",
+      "canonical_slug": "z-ai/glm-5.3-flash-20260826",
+      "hugging_face_id": "zai-org/GLM-5.3-Flash",
+      "name": "Z.ai: GLM 5.3 Flash (batch)",
+      "created": 1787752741,
+      "description": "GLM-5.3-Flash is a native multimodal model from Z.ai. It is suited for efficient coding and long-horizon agent tasks. Its hybrid sparse and linear attention architecture maintains accurate long-context behavior while...",
+      "context_length": 1048576,
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": ["text", "image", "video"],
+        "output_modalities": ["text"],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.00000005",
+        "completion": "0.00000018",
+        "input_cache_read": "0.00000001"
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 131072,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": null,
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/z-ai/glm-5.3-flash-20260826/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1316,
+            "win_rate": 56.2,
+            "rank": 16
+          },
+          {
+            "arena": "models",
+            "category": "asciiart",
+            "elo": 1269,
+            "win_rate": 54.6,
+            "rank": 12
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1282,
+            "win_rate": 49.4,
+            "rank": 22
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1260,
+            "win_rate": 50.1,
+            "rank": 30
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1279,
+            "win_rate": 47.1,
+            "rank": 24
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1285,
+            "win_rate": 56.8,
+            "rank": 10
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1317,
+            "win_rate": 54.7,
+            "rank": 13
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1272,
+            "win_rate": 48.5,
+            "rank": 28
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 41.8,
+          "coding_index": 71.5,
+          "agentic_index": 50.9
+        }
+      },
+      "reasoning": {
+        "mandatory": true,
+        "default_enabled": true,
+        "supported_efforts": ["max", "high", "low"],
+        "default_effort": "max"
+      }
+    },
+    {
+      "id": "qwen/qwen3.6-35b-a3b",
+      "canonical_slug": "qwen/qwen3.6-35b-a3b-20260415",
+      "hugging_face_id": "Qwen/Qwen3.6-35B-A3B",
+      "name": "Qwen: Qwen3.6 35B A3B",
+      "created": 1777260255,
+      "description": "Qwen3.6-35B-A3B is an open-weight multimodal model from Alibaba Cloud with 35 billion total parameters and 3 billion active parameters per token. It uses a hybrid sparse mixture-of-experts architecture combining Gated...",
+      "context_length": 262144,
+      "architecture": {
+        "modality": "text+image+video->text",
+        "input_modalities": ["text", "image", "video"],
+        "output_modalities": ["text"],
+        "tokenizer": "Qwen",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.0000001",
+        "completion": "0.00000095",
+        "input_cache_read": "0.00000005"
+      },
+      "top_provider": {
+        "context_length": 262144,
+        "max_completion_tokens": 235929,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 20
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": null,
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/qwen/qwen3.6-35b-a3b-20260415/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [],
+        "artificial_analysis": {
+          "intelligence_index": 18.2,
+          "coding_index": 41.9,
+          "agentic_index": 13.1
+        }
+      },
+      "reasoning": {
+        "mandatory": false,
+        "default_enabled": true
+      }
+    },
+    {
+      "id": "z-ai/glm-5",
+      "canonical_slug": "z-ai/glm-5-20260211",
+      "hugging_face_id": "zai-org/GLM-5",
+      "name": "Z.ai: GLM 5",
+      "created": 1770829182,
+      "description": "GLM-5 is Z.ai\u2019s flagship open-source foundation model engineered for complex systems design and long-horizon agent workflows. Built for expert developers, it delivers production-grade performance on large-scale programming tasks, rivaling leading...",
+      "context_length": 204800,
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": ["text"],
+        "output_modalities": ["text"],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.0000006",
+        "completion": "0.00000192",
+        "input_cache_read": "0.00000012"
+      },
+      "top_provider": {
+        "context_length": 198000,
+        "max_completion_tokens": 128000,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95,
+        "frequency_penalty": null
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": null,
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/z-ai/glm-5-20260211/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "agents",
+            "category": "androidnative",
+            "elo": 1161,
+            "win_rate": 55.2,
+            "rank": 24
+          },
+          {
+            "arena": "agents",
+            "category": "fullstack",
+            "elo": 1123,
+            "win_rate": 51.7,
+            "rank": 27
+          },
+          {
+            "arena": "agents",
+            "category": "godotgamedev",
+            "elo": 1144,
+            "win_rate": 46.7,
+            "rank": 21
+          },
+          {
+            "arena": "agents",
+            "category": "htmlslides",
+            "elo": 1147,
+            "win_rate": 45.1,
+            "rank": 18
+          },
+          {
+            "arena": "agents",
+            "category": "mobileapps",
+            "elo": 1135,
+            "win_rate": 51.6,
+            "rank": 34
+          },
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1229,
+            "win_rate": 56.3,
+            "rank": 40
+          },
+          {
+            "arena": "models",
+            "category": "asciiart",
+            "elo": 1147,
+            "win_rate": 47.9,
+            "rank": 44
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1247,
+            "win_rate": 55.5,
+            "rank": 42
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1228,
+            "win_rate": 53,
+            "rank": 44
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1234,
+            "win_rate": 57.4,
+            "rank": 41
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1166,
+            "win_rate": 54.4,
+            "rank": 37
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1230,
+            "win_rate": 53.6,
+            "rank": 49
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1247,
+            "win_rate": 55,
+            "rank": 46
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 27.9,
+          "coding_index": null,
+          "agentic_index": null
+        }
+      },
+      "reasoning": {
+        "mandatory": false,
+        "default_enabled": true
+      }
+    },
+    {
+      "id": "minimax/minimax-m2",
+      "canonical_slug": "minimax/minimax-m2",
+      "hugging_face_id": "MiniMaxAI/MiniMax-M2",
+      "name": "MiniMax: MiniMax M2",
+      "created": 1761252093,
+      "description": "MiniMax-M2 is a compact, high-efficiency large language model optimized for end-to-end coding and agentic workflows. With 10 billion activated parameters (230 billion total), it delivers near-frontier intelligence across general reasoning,...",
+      "context_length": 204800,
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": ["text"],
+        "output_modalities": ["text"],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.000000255",
+        "completion": "0.00000102"
+      },
+      "top_provider": {
+        "context_length": 204800,
+        "max_completion_tokens": 131072,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95,
+        "frequency_penalty": null
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": null,
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/minimax/minimax-m2/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1098,
+            "win_rate": 48.3,
+            "rank": 89
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1135,
+            "win_rate": 48.1,
+            "rank": 94
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1140,
+            "win_rate": 50,
+            "rank": 84
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1119,
+            "win_rate": 48.1,
+            "rank": 90
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1098,
+            "win_rate": 55.3,
+            "rank": 60
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1136,
+            "win_rate": 49.2,
+            "rank": 83
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1144,
+            "win_rate": 48,
+            "rank": 95
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 18.6,
+          "coding_index": null,
+          "agentic_index": null
+        }
+      },
+      "reasoning": {
+        "mandatory": true
+      }
+    },
+    {
+      "id": "deepseek/deepseek-r1-0528",
+      "canonical_slug": "deepseek/deepseek-r1-0528",
+      "hugging_face_id": "deepseek-ai/DeepSeek-R1-0528",
+      "name": "DeepSeek: R1 0528",
+      "created": 1748455170,
+      "description": "May 28th update to the [original DeepSeek R1](/deepseek/deepseek-r1) Performance on par with [OpenAI o1](/openai/o1), but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active...",
+      "context_length": 163840,
+      "architecture": {
+        "modality": "text->text",
+        "input_modalities": ["text"],
+        "output_modalities": ["text"],
+        "tokenizer": "DeepSeek",
+        "instruct_type": "deepseek-r1"
+      },
+      "pricing": {
+        "prompt": "0.0000005",
+        "completion": "0.00000215",
+        "input_cache_read": "0.00000035"
+      },
+      "top_provider": {
+        "context_length": 163840,
+        "max_completion_tokens": 32768,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": null,
+        "top_p": null,
+        "frequency_penalty": null
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": "2025-03-31",
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/deepseek/deepseek-r1-0528/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1112,
+            "win_rate": 53.3,
+            "rank": 85
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1140,
+            "win_rate": 52.6,
+            "rank": 92
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1182,
+            "win_rate": 60.9,
+            "rank": 62
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1097,
+            "win_rate": 49.3,
+            "rank": 96
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1038,
+            "win_rate": 48.7,
+            "rank": 75
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1104,
+            "win_rate": 54.9,
+            "rank": 92
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1149,
+            "win_rate": 52.7,
+            "rank": 90
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 13.1,
+          "coding_index": null,
+          "agentic_index": null
+        }
+      },
+      "reasoning": {
+        "mandatory": true
+      }
+    },
+    {
+      "id": "mistralai/mistral-medium-3",
+      "canonical_slug": "mistralai/mistral-medium-3",
+      "hugging_face_id": "",
+      "name": "Mistral: Mistral Medium 3",
+      "created": 1746627341,
+      "description": "Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8\u00d7 lower cost...",
+      "context_length": 131072,
+      "architecture": {
+        "modality": "text+image+file->text",
+        "input_modalities": ["text", "image", "file"],
+        "output_modalities": ["text"],
+        "tokenizer": "Mistral",
+        "instruct_type": null
+      },
+      "pricing": {
+        "prompt": "0.0000004",
+        "completion": "0.000002",
+        "input_cache_read": "0.00000004"
+      },
+      "top_provider": {
+        "context_length": 131072,
+        "max_completion_tokens": 104857,
+        "is_moderated": false
+      },
+      "per_request_limits": null,
+      "supported_parameters": [
+        "frequency_penalty",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ],
+      "default_parameters": {
+        "temperature": 0.3
+      },
+      "supported_voices": null,
+      "knowledge_cutoff": "2025-03-31",
+      "expiration_date": null,
+      "links": {
+        "details": "/api/v1/models/mistralai/mistral-medium-3/endpoints"
+      },
+      "benchmarks": {
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1084,
+            "win_rate": 54.7,
+            "rank": 91
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1069,
+            "win_rate": 48.1,
+            "rank": 109
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1034,
+            "win_rate": 46,
+            "rank": 110
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1017,
+            "win_rate": 45.2,
+            "rank": 118
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1024,
+            "win_rate": 49.6,
+            "rank": 111
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1080,
+            "win_rate": 47.6,
+            "rank": 113
+          }
+        ],
+        "artificial_analysis": {
+          "intelligence_index": 9,
+          "coding_index": null,
+          "agentic_index": null
+        }
+      }
+    }
+  ],
+  "total_count": 470,
+  "links": {
+    "next": null
+  }
+}

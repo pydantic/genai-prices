@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import httpx2
 import pytest
 from inline_snapshot import snapshot
+from pydantic import TypeAdapter
 
 from prices import source_openrouter, source_prices, update
 from prices.prices_types import (
@@ -16,19 +17,21 @@ from prices.prices_types import (
     ConditionalPrice,
     ModelInfo,
     ModelPrice,
+    Provider,
     StartDateConstraint,
     Tier,
     TieredPrices,
 )
 from prices.source_openrouter import (
+    OpenRouterEndpoint,
+    OpenRouterEndpointsResponse,
     OpenRouterModel,
     OpenRouterPricing,
     OpenRouterResponse,
     report_unknown_pricing_fields,
 )
-from prices.utils import package_dir
 
-from .fixtures import load_entries, load_payload
+from .fixtures import load_entries, load_mapping, load_payload
 
 # The exact pricing keys OpenRouter added without notice, which `extra='forbid'` turned into 115
 # `extra_forbidden` errors and a fully aborted pull (#532).
@@ -777,21 +780,329 @@ models:
     ]
 
 
-@pytest.mark.vcr()
-def test_update_openrouter_provider_fetches_recorded_models(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+# Official records for the models in `openrouter_provider_models.json`, matched the way the real provider files do.
+ORIGINAL_PROVIDER_MODELS = {
+    'deepseek': """\
+  - id: deepseek-reasoner
+    match: {or: [{equals: deepseek-reasoner}, {equals: deepseek-r1-0528}]}
+    prices: {input_mtok: 0.135, cache_read_mtok: 0.035, output_mtok: 0.55}
+""",
+    'minimax': """\
+  - id: MiniMax-M2
+    match: {equals: minimax-m2}
+    prices: {input_mtok: 0.3, cache_write_mtok: 0.375, cache_read_mtok: 0.03, output_mtok: 1.2}
+""",
+    'mistral': """\
+  - id: mistral-medium-3-5
+    match: {starts_with: mistral-medium-3}
+    prices: {input_mtok: 1.5, output_mtok: 7.5}
+""",
+    'zai': """\
+  - id: GLM-5
+    match: {equals: glm-5}
+    prices: {input_mtok: 1, cache_read_mtok: 0.2, output_mtok: 3.2}
+  - id: GLM-5.3-Flash
+    match: {equals: glm-5.3-flash}
+    prices: {input_mtok: 0.15, cache_read_mtok: 0.03, output_mtok: 0.5}
+""",
+}
+
+# The `openrouter` records as the cheapest-endpoint importer left them on 2026-10-20.
+OPENROUTER_RECORDS = """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: deepseek/deepseek-r1-0528
+    match: {equals: deepseek/deepseek-r1-0528}
+    prices: {input_mtok: 0.5, cache_read_mtok: 0.35, output_mtok: 2.15}
+  - id: minimax/minimax-m2
+    match: {equals: minimax/minimax-m2}
+    prices: {input_mtok: 0.255, cache_read_mtok: 0.03, output_mtok: 1.02}
+  - id: mistralai/mistral-medium-3
+    match: {equals: mistralai/mistral-medium-3}
+    prices: {input_mtok: 0.4, cache_read_mtok: 0.04, output_mtok: 2}
+  - id: qwen/qwen3.6-35b-a3b
+    match: {equals: qwen/qwen3.6-35b-a3b}
+    prices: {input_mtok: 0.1, cache_read_mtok: 0.05, output_mtok: 0.95}
+  - id: z-ai/glm-5
+    match: {equals: z-ai/glm-5}
+    prices: {input_mtok: 0.6, cache_read_mtok: 0.12, output_mtok: 1.92}
+  - id: z-ai/glm-5.3-flash
+    match: {equals: z-ai/glm-5.3-flash}
+    prices:
+      - prices: {input_mtok: 0.075, cache_read_mtok: 0.015, output_mtok: 0.25}
+      - constraint: {start_date: 2026-09-10}
+        prices: {input_mtok: 0.15, cache_read_mtok: 0.03, output_mtok: 0.5}
+  - id: z-ai/glm-5.3-flash:batch
+    match: {equals: z-ai/glm-5.3-flash:batch}
+    prices: {input_mtok: 0.05, cache_read_mtok: 0.01, output_mtok: 0.18}
+"""
+
+endpoints_schema = TypeAdapter(dict[str, OpenRouterEndpointsResponse])
+
+
+def write_provider(tmp_path: Path, provider_id: str, models: str) -> update.ProviderYaml:
+    path = tmp_path / f'{provider_id}.yml'
+    path.write_text(f'id: {provider_id}\nname: {provider_id}\napi_pattern: {provider_id}\nmodels:\n{models}')
+    return update.ProviderYaml(path)
+
+
+def openrouter_api(endpoints: dict[str, bytes]) -> httpx2.MockTransport:
+    models = load_payload('openrouter_provider_models.json')
+
+    def handle(request: httpx2.Request) -> httpx2.Response:
+        if str(request.url) == source_openrouter.MODELS_URL:
+            return httpx2.Response(200, content=models)
+        model_id = request.url.path.removeprefix('/api/v1/models/').removesuffix('/endpoints')
+        assert str(request.url) == source_openrouter.ENDPOINTS_URL.format(model_id=model_id)
+        return httpx2.Response(200, content=endpoints[model_id])
+
+    return httpx2.MockTransport(handle)
+
+
+def latest_prices(provider_path: Path) -> dict[str, ModelPrice]:
+    return {
+        model.id: source_openrouter.latest_price(model) for model in update.ProviderYaml(provider_path).provider.models
+    }
+
+
+def test_update_openrouter_provider_prices_models_at_official_or_most_common_rates(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    class NextDay(date):
-        @classmethod
-        def today(cls) -> date:
-            return date.today() + timedelta(days=1)
-
-    monkeypatch.setattr(source_openrouter, 'date', NextDay)
+    """Recorded 2026-10-20, when the cheapest-endpoint rates of glm-5.3-flash and glm-5 flipped (#848)."""
+    providers = {
+        provider_id: write_provider(tmp_path, provider_id, models)
+        for provider_id, models in ORIGINAL_PROVIDER_MODELS.items()
+    }
+    monkeypatch.setattr(source_openrouter, 'get_providers_yaml', lambda: providers)
+    monkeypatch.setattr(source_openrouter, 'MIN_MODEL_COUNT', 1)
     provider_path = tmp_path / 'openrouter.yml'
-    copyfile(package_dir / 'providers/openrouter.yml', provider_path)
+    provider_path.write_text(OPENROUTER_RECORDS)
+    before = latest_prices(provider_path)
+    recorded = {
+        model_id: json.dumps(payload).encode()
+        for model_id, payload in load_mapping('openrouter_endpoints.json').items()
+    }
 
-    source_openrouter.update_openrouter_provider(provider_path)
+    source_openrouter.update_openrouter_provider(provider_path, transport=openrouter_api(recorded))
 
-    assert capsys.readouterr().out == snapshot("""\
-OpenRouter prices updated: 0 added, 420 updated
-""")
+    assert capsys.readouterr().out == 'OpenRouter prices updated: 0 added, 7 updated\n'
+    after = latest_prices(provider_path)
+    changed = {model_id: after[model_id] for model_id in after if after[model_id] != before[model_id]}
+    assert changed == {
+        # Z.AI's own endpoint charges the official rate; the model list reported a 40%-off reseller's.
+        'z-ai/glm-5': ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.2')),
+        # Minimax's own endpoint is 15% off; before the discount it charges the official rate.
+        'minimax/minimax-m2': ModelPrice(
+            input_mtok=Decimal('0.3'),
+            cache_write_mtok=Decimal('0.375'),
+            cache_read_mtok=Decimal('0.03'),
+            output_mtok=Decimal('1.2'),
+        ),
+    }
+    # The model list reported $0.048 from one host; Z.AI and most other hosts charge the official $0.15.
+    assert after['z-ai/glm-5.3-flash'].input_mtok == Decimal('0.15')
+    # DeepSeek doesn't serve R1-0528, and Mistral's own endpoint doesn't charge the record `mistral-medium-3` matches.
+    assert after['deepseek/deepseek-r1-0528'].input_mtok == Decimal('0.5')
+    assert after['mistralai/mistral-medium-3'].input_mtok == Decimal('0.4')
+
+    # The cheap and discounted hosts leave, as they did within hours on 2026-10-19 and 2026-10-20.
+    responses = endpoints_schema.validate_json(load_payload('openrouter_endpoints.json'))
+    for response in responses.values():
+        response.data.endpoints = [
+            endpoint
+            for endpoint in response.data.endpoints
+            if not endpoint.pricing.discount and endpoint.host() != 'open-inference'
+        ]
+    remaining = {model_id: response.model_dump_json().encode() for model_id, response in responses.items()}
+
+    source_openrouter.update_openrouter_provider(provider_path, transport=openrouter_api(remaining))
+
+    assert capsys.readouterr().out == 'OpenRouter prices updated: 0 added, 7 updated\n'
+    assert latest_prices(provider_path) == after
+
+
+def endpoint(
+    tag: str,
+    prompt: str,
+    completion: str | None,
+    *,
+    cache_read: str | None = None,
+    service_tier: str | None = None,
+    discount: str = '0',
+) -> OpenRouterEndpoint:
+    pricing = OpenRouterPricing(
+        prompt=Decimal(prompt) / 1_000_000,
+        completion=None if completion is None else Decimal(completion) / 1_000_000,
+        input_cache_read=None if cache_read is None else Decimal(cache_read) / 1_000_000,
+        discount=Decimal(discount),
+    )
+    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing)
+
+
+@pytest.mark.parametrize(
+    ('endpoints', 'recorded', 'rates'),
+    [
+        pytest.param(
+            [
+                endpoint('a/us', '1', '2'),
+                endpoint('a/eu', '1', '2'),
+                endpoint('b', '2', '4'),
+                endpoint('c/fp8', '2', '4'),
+            ],
+            None,
+            ('2', '4'),
+            id='each host counts once',
+        ),
+        pytest.param(
+            [
+                endpoint('a', '1', '2', cache_read='0.1'),
+                endpoint('b', '1', '2', cache_read='0.2'),
+                endpoint('c', '1', '2'),
+                endpoint('d', '3', '4'),
+                endpoint('e', '3', '4'),
+            ],
+            None,
+            ('1', '2'),
+            id='input and output rates outvote whole rate cards',
+        ),
+        pytest.param(
+            [endpoint('a/flex', '3', '6', service_tier='flex'), endpoint('b', '9', '9'), endpoint('c', '9', '9')],
+            None,
+            ('9', '9'),
+            id='standard tier only',
+        ),
+        pytest.param([endpoint('a/flex', '3', '6', service_tier='flex')], None, ('3', '6'), id='flex when alone'),
+        pytest.param(
+            [
+                endpoint('a', '0.5', '1', discount='0.5'),
+                endpoint('b', '0.5', '1', discount='0.5'),
+                endpoint('c', '1', '2'),
+            ],
+            None,
+            ('1', '2'),
+            id='full price only',
+        ),
+        pytest.param([endpoint('a', '0.5', '1', discount='0.5')], None, ('0.5', '1'), id='discounted when alone'),
+        pytest.param([endpoint('a', '2', '4'), endpoint('b', '1', '2')], None, ('1', '2'), id='tie takes cheapest'),
+        pytest.param(
+            [endpoint('a', '2', '4'), endpoint('b', '1', '2')],
+            '{input_mtok: 2.05, output_mtok: 4}',
+            ('2', '4'),
+            id='tie keeps recorded rate',
+        ),
+        pytest.param([], None, ('1', '2'), id='no endpoints keeps listed rate'),
+    ],
+)
+def test_endpoint_pricing_takes_the_rate_most_hosts_charge(
+    tmp_path: Path, endpoints: list[OpenRouterEndpoint], recorded: str | None, rates: tuple[str, str]
+) -> None:
+    records = (
+        '  []\n' if recorded is None else f'  - id: vendor/m\n    match: {{equals: vendor/m}}\n    prices: {recorded}\n'
+    )
+    provider_yaml = write_provider(tmp_path, 'openrouter', records)
+
+    pricing = source_openrouter.with_endpoint_pricing(openrouter_model('vendor/m'), endpoints, provider_yaml).pricing
+
+    assert (pricing.prompt, pricing.completion) == tuple(Decimal(rate) / 1_000_000 for rate in rates)
+
+
+REPORTED = ModelPrice(input_mtok=Decimal(9), output_mtok=Decimal(9))
+TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+
+
+@pytest.mark.parametrize(
+    ('model_id', 'prices', 'endpoints', 'expected'),
+    [
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'cache_read_mtok': 0.2, 'output_mtok': 2, 'web_searches_kcount': 10},
+            [endpoint('z-ai/fp8', '1.02', '2')],
+            ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal(2)),
+            id='own endpoint confirms the token rates',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': {'base': 1, 'tiers': [{'start': 200_000, 'price': 2}]}, 'output_mtok': 2},
+            [endpoint('z-ai', '1', '2')],
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal(1), tiers=[Tier(start=200_000, price=Decimal(2))]),
+                output_mtok=Decimal(2),
+            ),
+            id='tiered record compares its base',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            [
+                {'prices': {'input_mtok': 1, 'output_mtok': 2}},
+                {'constraint': {'start_date': TOMORROW}, 'prices': {'input_mtok': 5, 'output_mtok': 10}},
+            ],
+            [endpoint('z-ai', '1', '2')],
+            ModelPrice(input_mtok=Decimal(1), output_mtok=Decimal(2)),
+            id='future price ignored',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai', '0.5', '1', discount='0.5')],
+            ModelPrice(input_mtok=Decimal(1), output_mtok=Decimal(2)),
+            id='own endpoint before its discount',
+        ),
+        pytest.param(
+            'z-ai/glm', {'input_mtok': 1, 'output_mtok': 2}, [endpoint('z-ai', '1.2', '2')], REPORTED, id='disagrees'
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('novita', '1', '2')],
+            REPORTED,
+            id='reseller only',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai/priority', '1', '2', service_tier='priority')],
+            REPORTED,
+            id='own priority tier only',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            {'input_mtok': 1, 'output_mtok': 2},
+            [endpoint('z-ai', '1', None)],
+            REPORTED,
+            id='no output rate',
+        ),
+        pytest.param(
+            'z-ai/glm',
+            [
+                {'prices': {'input_mtok': 1, 'output_mtok': 2}},
+                {
+                    'constraint': {'start_time': '01:00:00Z', 'end_time': '04:00:00Z'},
+                    'prices': {'input_mtok': 2, 'output_mtok': 4},
+                },
+            ],
+            [endpoint('z-ai', '1', '2')],
+            REPORTED,
+            id='time of day record',
+        ),
+        pytest.param('z-ai/glm', {}, [endpoint('z-ai', '1', '2')], REPORTED, id='free record'),
+        pytest.param('z-ai/other', {'input_mtok': 1}, [endpoint('z-ai', '1', '2')], REPORTED, id='no record'),
+        pytest.param('z-ai/glm:batch', {'input_mtok': 1}, [endpoint('z-ai', '1', '2')], REPORTED, id='route'),
+        pytest.param('qwen/glm', {'input_mtok': 1}, [endpoint('qwen', '1', '2')], REPORTED, id='unmapped author'),
+    ],
+)
+def test_official_price_applies_only_where_the_original_provider_charges_it(
+    model_id: str, prices: object, endpoints: list[OpenRouterEndpoint], expected: ModelPrice
+) -> None:
+    zai = Provider.model_validate(
+        {
+            'id': 'zai',
+            'name': 'Z.AI',
+            'api_pattern': 'z',
+            'models': [{'id': 'glm', 'match': {'equals': 'glm'}, 'prices': prices}],
+        }
+    )
+    model = ModelInfo(id=model_id, match=ClauseEquals(equals=model_id), prices=REPORTED)
+
+    assert source_openrouter.with_official_price(model, endpoints, {'zai': zai}).prices == expected
