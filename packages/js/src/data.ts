@@ -8518,7 +8518,14 @@ export const data: Provider[] = [
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
-          equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+            },
+          ],
         },
         price_comments: 'Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
         prices: {

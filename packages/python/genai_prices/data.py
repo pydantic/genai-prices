@@ -4955,7 +4955,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
-                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
+                        ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                    ]
+                ),
                 name='DeepSeek V4.1 Flash',
                 price_comments='Realtime pricing. See https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-1-flash.',
                 prices=ModelPrice(
