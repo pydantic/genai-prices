@@ -225,7 +225,7 @@ def test_status_functions_and_token_boundaries() -> None:
     assert jobs['manual-updates']['if'] == '${{ !cancelled() }}'
     assert jobs['manual-updates']['permissions'] == {'issues': 'write'}
     assert jobs['import']['permissions'] == {'contents': 'read'}
-    assert jobs['pull-request']['permissions'] == {'contents': 'read'}
+    assert jobs['pull-request']['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
     steps = jobs['pull-request']['steps']
     build = next(i for i, step in enumerate(steps) if 'make collapse-models build' in step.get('run', ''))
     token = next(i for i, step in enumerate(steps) if step.get('id') == 'app-token')

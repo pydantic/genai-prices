@@ -789,6 +789,48 @@ def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
     )
 
 
+@pytest.mark.parametrize('open_pr', ['', '843'])
+def test_hourly_update_keeps_the_start_dates_the_open_price_update_proposes(tmp_path: Path, open_pr: str) -> None:
+    for tool in ('gh', 'git', 'uv'):
+        fake = tmp_path / tool
+        output = 'printf %s "$OPEN_PR"\n' if tool == 'gh' else ''
+        fake.write_text(f'#!/bin/bash\necho "{tool} $*" >> "$CALLS"\n{output}')
+        fake.chmod(0o755)
+    job = read_workflow('update-prices.yml')['jobs']['pull-request']
+    names = [step.get('name') for step in job['steps']]
+    step = job['steps'][names.index('Keep the start dates the open price update proposes')]
+    build = next(i for i, step in enumerate(job['steps']) if 'make collapse-models build' in step.get('run', ''))
+    assert names.index('Keep the start dates the open price update proposes') < build
+    assert step['if'] == "steps.apply.outputs.importers != ''"
+    assert step['env'] == {'GH_TOKEN': '${{ github.token }}'}
+    assert job['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    calls = tmp_path / 'calls'
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', step['run']],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'BRANCH': 'automation/hourly-price-update',
+            'CALLS': str(calls),
+            'OPEN_PR': open_pr,
+        },
+        check=True,
+    )
+
+    assert calls.read_text().splitlines() == [
+        'gh pr list --head automation/hourly-price-update --state open --json number --jq .[].number',
+        *(
+            [
+                'git fetch --quiet --depth=1 origin automation/hourly-price-update',
+                'uv run --all-packages -m prices.proposed_start_dates FETCH_HEAD',
+            ]
+            if open_pr
+            else []
+        ),
+    ]
+
+
 @pytest.mark.parametrize(
     ('notes', 'manual_section'),
     [
