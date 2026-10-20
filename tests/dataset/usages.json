@@ -10053,6 +10053,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -10304,6 +10308,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -10631,6 +10639,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -10893,6 +10905,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -11132,6 +11148,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -11434,6 +11454,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -11711,6 +11735,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -11991,6 +12019,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -12243,6 +12275,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -12543,6 +12579,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -12818,6 +12858,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -13093,6 +13137,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -13370,6 +13418,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -13609,6 +13661,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -13902,6 +13958,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -14197,6 +14257,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -14492,6 +14556,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -14792,6 +14860,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -15067,6 +15139,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {}
@@ -15340,6 +15416,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -15606,6 +15686,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -15883,6 +15967,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -16149,6 +16237,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -16403,6 +16495,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -16702,6 +16798,10 @@
             "input_price": "0.000003081",
             "output_price": "0.00",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -17001,6 +17101,10 @@
             "input_price": "0.000003822",
             "output_price": "0.00",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -17301,6 +17405,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -17545,6 +17653,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -17830,6 +17942,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -18138,6 +18254,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -28668,6 +28788,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -29170,6 +29294,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -29443,6 +29571,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -29734,6 +29866,10 @@
             "input_price": "0.000039",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -30052,6 +30188,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -30558,6 +30698,10 @@
             "input_price": "0.0000325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -30876,6 +31020,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -31462,6 +31610,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -32061,6 +32213,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -32338,6 +32494,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -32737,6 +32897,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -33120,6 +33284,10 @@
             "input_price": "0.000045",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -33415,6 +33583,10 @@
             "input_price": "0.00005375",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -33716,6 +33888,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -33976,6 +34152,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -34278,6 +34458,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -34567,6 +34751,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -34827,6 +35015,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -35116,6 +35308,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -35393,6 +35589,10 @@
             "input_price": "0.000033",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -35647,6 +35847,10 @@
             "input_price": "0.00004175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -35965,6 +36169,10 @@
             "input_price": "0.0000375",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -36342,6 +36550,10 @@
             "input_price": "0.000033",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -37327,6 +37539,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -37776,6 +37992,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -38218,6 +38438,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -38640,6 +38864,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -38917,6 +39145,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -39884,6 +40116,10 @@
             "input_price": "0.0201",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -40173,6 +40409,10 @@
             "input_price": "0.0201",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -40438,6 +40678,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -41087,6 +41331,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -41352,6 +41600,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -41796,6 +42048,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -42091,6 +42347,10 @@
             "input_price": "0.00009375",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -42725,6 +42985,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -42985,6 +43249,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -43728,6 +43996,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -43988,6 +44260,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -44388,6 +44664,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -44648,6 +44928,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -46385,6 +46669,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -46826,6 +47114,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -47086,6 +47378,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -47889,6 +48185,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -48357,6 +48657,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -49197,6 +49501,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -50006,6 +50314,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -50260,6 +50572,10 @@
             "input_price": "0.000143",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -50566,6 +50882,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -50831,6 +51151,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -51243,6 +51567,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -51611,6 +51939,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -51865,6 +52197,10 @@
             "input_price": "0.00014625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -52306,6 +52642,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -53508,6 +53848,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -53768,6 +54112,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -54541,6 +54889,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -54806,6 +55158,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -55071,6 +55427,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -55617,6 +55977,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -55894,6 +56258,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -56148,6 +56516,10 @@
             "input_price": "0.0000835",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -56860,6 +57232,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -57114,6 +57490,10 @@
             "input_price": "0.00007925",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -57449,6 +57829,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -58153,6 +58537,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -58818,6 +59206,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -59911,6 +60303,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -60954,6 +61350,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -61371,6 +61771,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -61625,6 +62029,10 @@
             "input_price": "0.00027725",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -61943,6 +62351,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -62197,6 +62609,10 @@
             "input_price": "0.0002815",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -63628,6 +64044,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -63893,6 +64313,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -64147,6 +64571,10 @@
             "input_price": "0.0000315",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -64442,6 +64870,10 @@
             "input_price": "0.0001505",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -64928,6 +65360,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -65188,6 +65624,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -66047,6 +66487,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -66556,6 +67000,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -66871,6 +67319,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -67289,6 +67741,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -67554,6 +68010,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -68059,6 +68519,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -69167,6 +69631,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -69589,6 +70057,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -70268,6 +70740,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -70522,6 +70998,10 @@
             "input_price": "0.00009375",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -70828,6 +71308,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -71093,6 +71577,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -71370,6 +71858,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -71726,6 +72218,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -71980,6 +72476,10 @@
             "input_price": "0.0002815",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -72391,6 +72891,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -72744,6 +73248,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -73006,6 +73514,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -73618,6 +74130,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -74643,6 +75159,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -74903,6 +75423,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -75390,6 +75914,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -75650,6 +76178,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -76080,6 +76612,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -78249,6 +78785,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -79224,6 +79764,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -79951,6 +80495,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -80211,6 +80759,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -80571,6 +81123,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -80825,6 +81381,10 @@
             "input_price": "0.00007925",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -81242,6 +81802,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -81502,6 +82066,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -82793,6 +83361,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -83088,6 +83660,10 @@
             "input_price": "0.000098",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -83727,6 +84303,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -83992,6 +84572,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -84281,6 +84865,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -84798,6 +85386,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -85058,6 +85650,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -86151,6 +86747,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -86411,6 +87011,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -87715,6 +88319,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -88017,6 +88625,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -88271,6 +88883,10 @@
             "input_price": "0.00027725",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -88577,6 +89193,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -88842,6 +89462,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -89107,6 +89731,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -89626,6 +90254,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -90684,6 +91316,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -90938,6 +91574,10 @@
             "input_price": "0.0000835",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -91432,6 +92072,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -91692,6 +92336,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -91957,6 +92605,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -92217,6 +92869,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -93293,6 +93949,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -93553,6 +94213,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -95687,6 +96351,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -95947,6 +96615,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -96270,6 +96942,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -96535,6 +97211,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -97084,6 +97764,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -97344,6 +98028,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -97609,6 +98297,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -97965,6 +98657,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -98219,6 +98915,10 @@
             "input_price": "0.000098",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -98624,6 +99324,10 @@
             "input_price": "0.00003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -98878,6 +99582,10 @@
             "input_price": "0.00019125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -99229,6 +99937,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -99489,6 +100201,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -100216,6 +100932,10 @@
             "input_price": "0.00003225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -100486,6 +101206,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -100765,6 +101489,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -101044,6 +101772,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -101323,6 +102055,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -101605,6 +102341,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -101878,6 +102618,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -102148,6 +102892,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -102427,6 +103175,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -102706,6 +103458,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -104214,6 +104970,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -104471,6 +105231,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -104728,6 +105492,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -104985,6 +105753,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -105242,6 +106014,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -105519,6 +106295,10 @@
             "input_price": "0.00006",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -105771,6 +106551,10 @@
             "input_price": "0.0000121",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -106209,6 +106993,10 @@
             "input_price": "0.00003",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -106461,6 +107249,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -106903,6 +107695,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -107180,6 +107976,10 @@
             "input_price": "0.00023",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -107439,6 +108239,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -107698,6 +108502,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -107973,6 +108781,10 @@
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -108260,6 +109072,10 @@
             "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -108512,6 +109328,10 @@
             "input_price": "0.000015",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -108828,6 +109648,10 @@
             "input_price": "0.0006",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -109105,6 +109929,10 @@
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -109382,6 +110210,10 @@
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -109657,6 +110489,10 @@
             "input_price": "0.0000275",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -109932,6 +110768,10 @@
             "input_price": "0.00002",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -110207,6 +111047,10 @@
             "input_price": "0.00003",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -110484,6 +111328,10 @@
             "input_price": "0.0001375",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -110761,6 +111609,10 @@
             "input_price": "0.0007025",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -111038,6 +111890,10 @@
             "input_price": "0.0007775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -111315,6 +112171,10 @@
             "input_price": "0.000115",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -111592,6 +112452,10 @@
             "input_price": "0.0012575",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -111868,6 +112732,10 @@
             "input_price": "0.000002886",
             "output_price": "0.00",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -112145,6 +113013,10 @@
             "input_price": "0.0000012",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -112422,6 +113294,10 @@
             "input_price": "0.00017",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -112699,6 +113575,10 @@
             "input_price": "0.0002225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -113082,6 +113962,10 @@
             "input_price": "0.0006347",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -113375,6 +114259,10 @@
             "input_price": "0.000015",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -113693,6 +114581,10 @@
             "input_price": "0.0027975",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -113955,6 +114847,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -114217,6 +115113,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -114494,6 +115394,10 @@
             "input_price": "0.0002725",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -114771,6 +115675,10 @@
             "input_price": "0.000325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -115048,6 +115956,10 @@
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -115325,6 +116237,10 @@
             "input_price": "0.0006825",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -115602,6 +116518,10 @@
             "input_price": "0.000735",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -115879,6 +116799,10 @@
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -116156,6 +117080,10 @@
             "input_price": "0.0001425",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -116433,6 +117361,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -116710,6 +117642,10 @@
             "input_price": "0.0001575",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -116987,6 +117923,10 @@
             "input_price": "0.0041975",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -117262,6 +118202,10 @@
             "input_price": "0.0000124",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -117524,6 +118468,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -117921,6 +118869,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -118198,6 +119150,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -118475,6 +119431,10 @@
             "input_price": "0.00788",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -118752,6 +119712,10 @@
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -119027,6 +119991,10 @@
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -119281,6 +120249,10 @@
             "input_price": "0.000033",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -119683,6 +120655,10 @@
             "input_price": "0.0000156",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -119960,6 +120936,10 @@
             "input_price": "0.00001935",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -120212,6 +121192,10 @@
             "input_price": "0.0000077",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -120654,6 +121638,10 @@
             "input_price": "0.0004",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -120931,6 +121919,10 @@
             "input_price": "0.0004525",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -121340,6 +122332,10 @@
             "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -123804,6 +124800,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -124066,6 +125066,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -124328,6 +125332,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -124587,6 +125595,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -124846,6 +125858,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -125108,6 +126124,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -125379,6 +126399,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -125769,6 +126793,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -142356,6 +143384,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -142617,6 +143649,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -142894,6 +143930,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -143201,6 +144241,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -143474,6 +144518,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -143747,6 +144795,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -144024,6 +145076,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -144287,6 +145343,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -144564,6 +145624,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -144829,6 +145893,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -145094,6 +146162,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -145401,6 +146473,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -145688,6 +146764,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -145990,6 +147070,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -146277,6 +147361,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -146618,6 +147706,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -146929,6 +148021,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -147230,6 +148326,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -147531,6 +148631,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -147830,6 +148934,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -148115,6 +149223,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -148400,6 +149512,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -148685,6 +149801,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -148972,6 +150092,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -149265,6 +150389,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -149560,6 +150688,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -149845,6 +150977,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -150951,6 +152087,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -151247,6 +152387,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -151524,6 +152668,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -151801,6 +152949,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -152078,6 +153230,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -152355,6 +153511,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -152632,6 +153792,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -152886,6 +154050,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -153204,6 +154372,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -153481,6 +154653,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -153758,6 +154934,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -154035,6 +155215,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -154312,6 +155496,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -154589,6 +155777,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -154866,6 +156058,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -155152,6 +156348,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -155448,6 +156648,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -155744,6 +156948,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -156021,6 +157229,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -156298,6 +157510,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -156575,6 +157791,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -156852,6 +158072,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -157129,6 +158353,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -157173,6 +158401,10 @@
             "input_price": "8E-8",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -157516,6 +158748,10 @@
             "input_price": "8E-8",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -157560,6 +158796,10 @@
             "input_price": "4E-8",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -157972,6 +159212,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -158249,6 +159493,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -158526,6 +159774,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -158803,6 +160055,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -159080,6 +160336,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -159357,6 +160617,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -159634,6 +160898,10 @@
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -159911,6 +161179,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -160188,6 +161460,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -160465,6 +161741,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -160742,6 +162022,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -161019,6 +162303,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -161296,6 +162584,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -161573,6 +162865,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -161850,6 +163146,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -162127,6 +163427,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -162404,6 +163708,10 @@
             "input_price": "0.0000147",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -162685,6 +163993,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -163119,6 +164431,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -163449,6 +164765,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -163711,6 +165031,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -163973,6 +165297,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -164260,6 +165588,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -164588,6 +165920,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -164896,6 +166232,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -165183,6 +166523,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -165513,6 +166857,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -165800,6 +167148,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -166128,6 +167480,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -166456,6 +167812,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -166784,6 +168144,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -167083,6 +168447,10 @@
             "input_price": "0.00000312",
             "output_price": "0.00",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -167386,6 +168754,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -167673,6 +169045,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -168003,6 +169379,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -168328,6 +169708,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -168590,6 +169974,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -168867,6 +170255,10 @@
             "input_price": "0.0005325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -169144,6 +170536,10 @@
             "input_price": "0.00409",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -169421,6 +170817,10 @@
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -169698,6 +171098,10 @@
             "input_price": "0.00006",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -169975,6 +171379,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -170252,6 +171660,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -170529,6 +171941,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -170806,6 +172222,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -171214,6 +172634,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -171632,6 +173056,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -171909,6 +173337,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -172186,6 +173618,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -172463,6 +173899,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -172740,6 +174180,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -173017,6 +174461,10 @@
             "input_price": "0.00053",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -173294,6 +174742,10 @@
             "input_price": "0.0032975",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -173571,6 +175023,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -173848,6 +175304,10 @@
             "input_price": "0.00012",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -174125,6 +175585,10 @@
             "input_price": "0.0002325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -174402,6 +175866,10 @@
             "input_price": "0.0003175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -174679,6 +176147,10 @@
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -174956,6 +176428,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -175233,6 +176709,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -178223,6 +179703,10 @@
             "input_price": "0.00019875",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -178500,6 +179984,10 @@
             "input_price": "0.000267",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -178777,6 +180265,10 @@
             "input_price": "0.0003",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -179054,6 +180546,10 @@
             "input_price": "0.000198",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -179331,6 +180827,10 @@
             "input_price": "0.0002955",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -179608,6 +181108,10 @@
             "input_price": "0.00032325",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -179885,6 +181389,10 @@
             "input_price": "0.00019875",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -180162,6 +181670,10 @@
             "input_price": "0.0001995",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -187385,6 +188897,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -187678,6 +189194,10 @@
             "input_price": "0.0000341",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -188044,6 +189564,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -188865,6 +190389,10 @@
             "input_price": "0.00012",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -189142,6 +190670,10 @@
             "input_price": "0.000185",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -189419,6 +190951,10 @@
             "input_price": "0.0001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -189696,6 +191232,10 @@
             "input_price": "0.0001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -190807,6 +192347,10 @@
             "input_price": "0.00012",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -191084,6 +192628,10 @@
             "input_price": "0.000185",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -191361,6 +192909,10 @@
             "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -191638,6 +193190,10 @@
             "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -194405,6 +195961,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -194682,6 +196242,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -194959,6 +196523,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -195236,6 +196804,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -195513,6 +197085,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -195790,6 +197366,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -196067,6 +197647,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -196344,6 +197928,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -196621,6 +198209,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -196898,6 +198490,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -197175,6 +198771,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -197452,6 +199052,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -197729,6 +199333,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -198006,6 +199614,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -198283,6 +199895,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -198560,6 +200176,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -198821,6 +200441,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -199086,6 +200710,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -199364,6 +200992,10 @@
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
@@ -199706,6 +201338,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "perplexity"
           }
         ],
         "usage": {
