@@ -713,7 +713,7 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
-    assert notify['if'] == "needs.importer-failure.outputs.newly-failing == 'true'"
+    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
     assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
 
@@ -806,8 +806,9 @@ def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
         ({}, ''),
     ],
 )
+@pytest.mark.parametrize('complete', ['true', 'false'])
 def test_hourly_update_lists_rates_that_need_a_manual_update(
-    tmp_path: Path, notes: dict[str, str], manual_section: str
+    tmp_path: Path, notes: dict[str, str], manual_section: str, complete: str
 ) -> None:
     patches = tmp_path / 'patches'
     patches.mkdir()
@@ -818,14 +819,26 @@ def test_hourly_update_lists_rates_that_need_a_manual_update(
 
     subprocess.run(
         ['bash', '-e', '-o', 'pipefail', '-c', script],
-        env={**os.environ, 'RUNNER_TEMP': str(tmp_path), 'IMPORTERS': 'openai groq', 'RUN_URL': 'https://run'},
+        env={
+            **os.environ,
+            'RUNNER_TEMP': str(tmp_path),
+            'IMPORTERS': 'openai groq',
+            'COMPLETE': complete,
+            'RUN_URL': 'https://run',
+        },
         check=True,
     )
 
     assert (tmp_path / 'pr-body.md').read_text() == (
         'Prices fetched from official provider APIs and docs by [this run](https://run).\n\n'
         'Importers with changes: openai groq\n\n'
-        'Each rate change is a new dated entry, so past usage keeps its old price.\n' + manual_section
+        + (
+            ''
+            if complete == 'true'
+            else 'Some importers failed in this run, so their changes are missing until they recover.\n\n'
+        )
+        + 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
+        + manual_section
     )
 
 

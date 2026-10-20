@@ -133,6 +133,17 @@ models:
     prices:
       input_mtok: 0.02
 
+  - id: "@cf/cloudflare/clairic"
+    name: clairic
+    match:
+      or:
+        - equals: "@cf/cloudflare/clairic"
+        - equals: clairic
+    price_comments: "Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/"
+    prices:
+      input_mtok: 0.1
+    prices_checked: 2026-10-19
+
   - id: "@cf/cloudflare/clef"
     name: Clef
     match:

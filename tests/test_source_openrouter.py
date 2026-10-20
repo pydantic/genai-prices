@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
@@ -730,7 +730,7 @@ models:
     assert drift is not None and drift.context_window == 1000
 
 
-def test_upsert_revises_todays_price_and_drops_cache_rates_equal_to_input(tmp_path: Path) -> None:
+def test_upsert_preserves_todays_price_and_drops_redundant_cache_on_new_models(tmp_path: Path) -> None:
     provider_path = tmp_path / 'openrouter.yml'
     provider_path.write_text(
         """\
@@ -768,14 +768,25 @@ models:
             ConditionalPrice(
                 prices=ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal(2))
             ),
-            ConditionalPrice(constraint=StartDateConstraint(start_date=date.today()), prices=without_cache),
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date.today()),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), cache_read_mtok=Decimal('0.4'), output_mtok=Decimal(2)),
+            ),
         ],
         without_cache,
     ]
 
 
 @pytest.mark.vcr()
-def test_update_openrouter_provider_fetches_recorded_models(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_update_openrouter_provider_fetches_recorded_models(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class NextDay(date):
+        @classmethod
+        def today(cls) -> date:
+            return date.today() + timedelta(days=1)
+
+    monkeypatch.setattr(source_openrouter, 'date', NextDay)
     provider_path = tmp_path / 'openrouter.yml'
     copyfile(package_dir / 'providers/openrouter.yml', provider_path)
 
