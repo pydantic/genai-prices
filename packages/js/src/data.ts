@@ -45823,6 +45823,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -45852,6 +45864,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'pplx-decider-flash-v1.2',
+        name: 'Decider Flash V1.2',
+        match: {
+          or: [
+            {
+              equals: 'pplx-decider-flash-v1.2',
+            },
+            {
+              equals: 'pplx-decider-flash-latest',
+            },
+            {
+              equals: 'perplexity/pplx-decider-flash-latest',
+            },
+          ],
+        },
+        price_comments:
+          'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
         id: 'pplx-decider-v1-27b',
         name: 'Decider V1 27B',
         match: {
@@ -45878,6 +45912,68 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'pplx-decider-v1.2',
+        name: 'Decider V1.2',
+        match: {
+          or: [
+            {
+              equals: 'pplx-decider-v1.2',
+            },
+            {
+              equals: 'pplx-decider-latest',
+            },
+            {
+              equals: 'perplexity/pplx-decider-latest',
+            },
+          ],
+        },
+        price_comments:
+          'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'pplx-embed-context-v1-0.6b',
+        name: 'Embed Context V1 0.6B',
+        match: {
+          equals: 'pplx-embed-context-v1-0.6b',
+        },
+        prices: {
+          input_mtok: 0.008,
+        },
+      },
+      {
+        id: 'pplx-embed-context-v1-4b',
+        name: 'Embed Context V1 4B',
+        match: {
+          equals: 'pplx-embed-context-v1-4b',
+        },
+        prices: {
+          input_mtok: 0.05,
+        },
+      },
+      {
+        id: 'pplx-embed-v1-0.6b',
+        name: 'Embed V1 0.6B',
+        match: {
+          equals: 'pplx-embed-v1-0.6b',
+        },
+        prices: {
+          input_mtok: 0.004,
+        },
+      },
+      {
+        id: 'pplx-embed-v1-4b',
+        name: 'Embed V1 4B',
+        match: {
+          equals: 'pplx-embed-v1-4b',
+        },
+        prices: {
+          input_mtok: 0.03,
+        },
+      },
+      {
         id: 'r1-1776',
         name: 'R1 1776',
         description:
@@ -45899,6 +45995,8 @@ export const data: Provider[] = [
           equals: 'sonar',
         },
         context_window: 128000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 1,
           output_mtok: 1,
@@ -45915,7 +46013,7 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         price_comments:
-          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand. Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
@@ -45932,6 +46030,8 @@ export const data: Provider[] = [
           equals: 'sonar-pro',
         },
         context_window: 200000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 3,
           output_mtok: 15,
@@ -45972,6 +46072,8 @@ export const data: Provider[] = [
           equals: 'sonar-reasoning-pro',
         },
         context_window: 128000,
+        price_comments:
+          'Perplexity stopped publishing Sonar rates after Sonar Chat Completions support ended on 2026-09-27; these are the last published rates, checked 2026-10-19. https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
