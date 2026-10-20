@@ -609,6 +609,26 @@ def test_perplexity_decisions_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.00000734')
 
 
+def test_perplexity_agent_api_usage() -> None:
+    response_data = {
+        'model': 'perplexity/sonar',
+        'object': 'response',
+        'usage': {
+            'input_tokens': 1_000_000,
+            'input_tokens_details': {'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 200_000},
+            'output_tokens': 100_000,
+            'total_tokens': 1_100_000,
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='perplexity', api_flavor='responses')
+
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'perplexity/sonar'
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000, cache_read_tokens=200_000, output_tokens=100_000)
+    assert extracted_usage.calc_price().total_price == Decimal('0.4625')
+
+
 def test_openrouter_decisions_usage() -> None:
     response_data = {
         'model': 'typesafe/jev-1.13-20260917',

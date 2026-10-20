@@ -26,6 +26,12 @@ DECISIONS = """\
 | - | :-: | :-: | :-: |
 | `pplx-decider-v1.2` | \\$0.02 | Free | None |
 """
+AGENT_MODELS = """\
+| Model | Input (\\$/1M) | Output (\\$/1M) | Cache read (\\$/1M) | Service tiers | Docs |
+| - | - | - | - | - | - |
+| `openai/gpt-5.5` | 5.00 (≤272k)<br />10.00 (>272k) | 30.00 | 0.50 | `flex`, `priority` | [GPT-5.5](https://x) |
+| `perplexity/sonar` | 0.25 | 2.50 | 0.0625 | — | — |
+"""
 
 
 def test_perplexity_parses_embeddings_and_decisions_input_rates() -> None:
@@ -52,6 +58,28 @@ def test_perplexity_rejects_an_unexpected_pricing_page(markdown: str, error: str
         source_perplexity.parse_pricing_markdown(markdown)
 
 
+def test_perplexity_parses_only_the_agent_api_models_it_hosts() -> None:
+    assert [(model.id, model.prices) for model in source_perplexity.parse_agent_models_markdown(AGENT_MODELS)] == [
+        (
+            'perplexity/sonar',
+            ModelPrice(input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.0625'), output_mtok=Decimal('2.50')),
+        )
+    ]
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (AGENT_MODELS.replace('perplexity/', 'other/'), 'no longer lists Perplexity-hosted models'),
+        (AGENT_MODELS.replace('| — | — |', '| `flex` | — |'), 'Unexpected Perplexity Agent API model row'),
+        (AGENT_MODELS.replace('0.0625', 'Free'), 'Unexpected Perplexity Agent API model row'),
+    ],
+)
+def test_perplexity_rejects_an_unexpected_agent_models_page(markdown: str, error: str) -> None:
+    with pytest.raises(RuntimeError, match=error):
+        source_perplexity.parse_agent_models_markdown(markdown)
+
+
 @pytest.mark.vcr()
 def test_perplexity_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'perplexity.yml'
@@ -59,4 +87,4 @@ def test_perplexity_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: p
 
     source_perplexity.main(provider_path)
 
-    assert capsys.readouterr().out == 'Perplexity prices updated: 0 added, 6 updated\n'
+    assert capsys.readouterr().out == 'Perplexity prices updated: 0 added, 12 updated\n'
