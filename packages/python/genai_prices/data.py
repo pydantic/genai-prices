@@ -12216,11 +12216,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral-small-3.2-24b-instruct',
-                match=ClauseEquals(equals='mistral-small-3.2-24b-instruct'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='mistral-small-2506'),
+                        ClauseEquals(equals='mistral-small-3.2-24b-instruct'),
+                    ]
+                ),
                 name='Mistral Small 3.2 24B',
                 description='Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following, repetition reduction, and improved function calling.',
-                price_comments='Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.2')),
+                price_comments='Mistral lists Mistral Small 3.2 (mistral-small-2506) at $0.10/$0.30 per MTok. Its EU and US regional endpoints bill 1.1x list. Ref: https://github.com/mistralai/platform-docs-public/blob/d3ccc16309763fcb59c61906ecd486d75d719a84/src/schema/models/models/mistral-small-3-2-25-06.ts Ref: https://docs.mistral.ai/inference/regional-inference',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='mistral-small-latest',
@@ -12239,10 +12244,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mixtral-8x22b-instruct',
-                match=ClauseEquals(equals='mixtral-8x22b-instruct'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='open-mixtral-8x22b'), ClauseEquals(equals='mixtral-8x22b-instruct')]
+                ),
                 name='Mixtral 8x22B Instruct',
                 description="Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:\n- strong math, coding, and reasoning\n- large context length (64k)\n- fluency in English, French, Italian, German, and Spanish",
-                prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
+                price_comments='Mistral billed open-mixtral-8x22b at $2/$6 per MTok from launch until its 2025-03-30 retirement. Ref: https://web.archive.org/web/20240417182952/https://mistral.ai/technology/ Ref: https://web.archive.org/web/20250203181801/https://mistral.ai/technology/',
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mixtral-8x7b',
@@ -28149,12 +28157,34 @@ providers: list[Provider] = [
                 name='Grok 4.20',
                 description='Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines low hallucination rates with strict prompt adherence.',
                 context_window=1000000,
-                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price identically: https://docs.x.ai/developers/models',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
-                ),
+                price_comments='Prompts at or above 200k tokens are billed at the higher rate for every token in the request, not just the tokens past the threshold. xAI\'s boundary is inclusive -- its table columns read "< 200k prompt tokens" and ">= 200k prompt tokens" -- while a tier here fires on `tokens > start`, so the start is 199999 and a 200000-token prompt lands on the higher rate. Ref: https://docs.x.ai/docs/models The Batch API is 20% off every token type, cached tokens included, on both context tiers. Ref: https://docs.x.ai/developers/pricing#batch-api-pricing The dated catalog ids grok-4.20-0309-reasoning and grok-4.20-0309-non-reasoning price identically: https://docs.x.ai/developers/models xAI cut Grok 4.20 from $2/$6 ($4/$12 at or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30. Ref: https://web.archive.org/web/20260430105131/https://docs.x.ai/developers/models/grok-4.20?_rsc=qn1f9 Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 4, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]
+                            ),
+                        ),
+                    ),
+                ],
                 price_variants=[
                     PriceVariant(
                         when={'processing': 'batch'},
@@ -28170,30 +28200,47 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
-                id='grok-4.20-multi-agent',
-                match=ClauseEquals(equals='grok-4.20-multi-agent'),
-                name='Grok 4.20 Multi-Agent',
-                description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-                context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
-            ),
-            ModelInfo(
                 id='grok-4.20-multi-agent-0309',
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='grok-4.20-multi-agent-0309'),
+                        ClauseEquals(equals='grok-4.20-multi-agent'),
                         ClauseEquals(equals='grok-4.20-multi-agent-beta-0309'),
                         ClauseEquals(equals='grok-4.20-multi-agent-latest'),
                         ClauseEquals(equals='grok-4.20-multi-agent-beta-latest'),
                     ]
                 ),
                 name='Grok 4.20 Multi-Agent 0309',
+                description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]),
-                ),
+                price_comments='xAI lists grok-4.20-multi-agent as an alias of grok-4.20-multi-agent-0309. xAI cut it from $2/$6 ($4/$12 at or above 200k prompt tokens) to $1.25/$2.50 on 2026-04-30. Ref: https://web.archive.org/web/20260430221139/https://docs.x.ai/developers/models/grok-4.20 Ref: https://web.archive.org/web/20260430232954/https://docs.x.ai/developers/models/grok-4.3',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=199999, price=Decimal('4'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('6'), tiers=[Tier(start=199999, price=Decimal('12'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 4, 30)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=199999, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=199999, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=199999, price=Decimal('5'))]
+                            ),
+                        ),
+                    ),
+                ],
                 price_variants=[
                     PriceVariant(
                         when={'processing': 'batch'},
