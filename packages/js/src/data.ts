@@ -18268,6 +18268,24 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B',
+        name: 'Nemotron-SEA-LION-v4.8-120B-A12B',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b',
+            },
+            {
+              equals: 'aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+        },
+      },
+      {
         id: 'aisingapore/Qwen-SEA-LION-v4-32B-IT',
         name: 'Qwen-SEA-LION-v4-32B-IT',
         match: {
@@ -18283,6 +18301,24 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'aisingapore/Qwen-SEA-LION-v4.5-27B-IT',
+        name: 'Qwen-SEA-LION-v4.5-27B-IT',
+        match: {
+          or: [
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it',
+            },
+            {
+              equals: 'aisingapore/qwen-sea-lion-v4.5-27b-it-fast',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.4,
         },
       },
       {

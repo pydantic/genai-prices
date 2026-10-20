@@ -95,7 +95,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
@@ -118,7 +118,7 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 15
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4
     name: NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4
@@ -130,7 +130,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -142,7 +142,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
