@@ -2203,6 +2203,34 @@ def test_mistral_voxtral_small_price_change(
             Decimal('1.5'),
             Decimal('7.5'),
         ),
+        (
+            'open-mixtral-8x22b',
+            datetime(2025, 3, 1, tzinfo=UTC),
+            'mixtral-8x22b-instruct',
+            Decimal('2'),
+            Decimal('6'),
+        ),
+        (
+            'mixtral-8x22b-instruct',
+            datetime(2026, 10, 20, tzinfo=UTC),
+            'mixtral-8x22b-instruct',
+            Decimal('2'),
+            Decimal('6'),
+        ),
+        (
+            'mistral-small-2506',
+            datetime(2026, 7, 1, tzinfo=UTC),
+            'mistral-small-3.2-24b-instruct',
+            Decimal('0.1'),
+            Decimal('0.3'),
+        ),
+        (
+            'mistral-small-3.2-24b-instruct',
+            datetime(2026, 10, 20, tzinfo=UTC),
+            'mistral-small-3.2-24b-instruct',
+            Decimal('0.1'),
+            Decimal('0.3'),
+        ),
     ],
 )
 def test_mistral_versioned_model_prices(
