@@ -18,7 +18,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Instant
 
-private const val PRICED = """{"input_price":"0.0025","output_price":"0.003","total_price":"0.0055",
+private const val PRICED = """{"total_price":"0.0055",
 "provider":{"id":"openai","name":"OpenAI"},"model":{"id":"gpt-4o","name":"gpt 4o"},
 "model_price":{"input_mtok":2.5,"output_mtok":10},"added_later":true}"""
 
