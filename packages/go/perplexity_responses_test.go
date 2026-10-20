@@ -63,7 +63,7 @@ func TestPerplexityResponsesUsageAndPrice(t *testing.T) {
 			}{
 				{time.October, 15, nil, 0.00535},
 				{time.October, 15, map[string]string{"search_type": "web"}, 0.00535},
-				{time.September, 23, map[string]string{"search_type": "fast"}, 0.00535},
+				{time.September, 23, map[string]string{"search_type": "fast"}, 0.00235},
 				{time.September, 24, map[string]string{"search_type": "fast"}, 0.00235},
 				{time.October, 14, map[string]string{"search_type": "fast"}, 0.00235},
 				{time.October, 15, map[string]string{"search_type": "fast"}, 0.00235},

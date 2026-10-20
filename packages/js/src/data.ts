@@ -46033,7 +46033,7 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar',
         },
         price_comments:
-          'Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Fast Search pricing starts on its documented public launch date, 2026-09-24. https://github.com/perplexityai/modelcontextprotocol/pull/146 https://docs.perplexity.ai/docs/resources/changelog#september-2026 Earlier dates retain the standard search estimate. Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
+          'Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand. Pass price_context search_type=fast for Fast Search, including presets that select it. The response invocation count does not identify the search type. Without context, standard web search is estimated. https://docs.perplexity.ai/docs/agent-api/tools/web-search Only tokens, cache reads, and web search are represented; other Agent tools are not priced.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.0625,
@@ -46047,10 +46047,6 @@ export const data: Provider[] = [
             },
             prices: {
               web_searches_kcount: 1,
-            },
-            constraint: {
-              start_date: '2026-09-24',
-              type: 'start_date',
             },
           },
           {

@@ -125,8 +125,8 @@ print(price.total_price)  # 0.0020
 
 The response reports the search count but not the search type, so extraction cannot select the rate automatically.
 Pass `search_type: fast` even when a Perplexity preset selects Fast Search. Omitting the context or passing
-`search_type: web` uses the standard estimate of $2.50 per thousand searches. The fast rate is $1 per thousand
-for requests dated September 24, 2026 onward. Token charges are calculated separately.
+`search_type: web` uses the standard estimate of $2.50 per thousand searches. The fast rate is $1 per thousand.
+The search type selects the rate independently of the request date. Token charges are calculated separately.
 See [Perplexity's web-search documentation](https://docs.perplexity.ai/docs/agent-api/tools/web-search).
 
 ### Cached input tokens

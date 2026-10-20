@@ -155,14 +155,9 @@ models:
       Pass price_context search_type=fast for Fast Search, including presets that select it.
       The response invocation count does not identify the search type. Without context, standard web search is estimated.
       https://docs.perplexity.ai/docs/agent-api/tools/web-search
-      Fast Search pricing starts on its documented public launch date, 2026-09-24.
-      https://github.com/perplexityai/modelcontextprotocol/pull/146
-      https://docs.perplexity.ai/docs/resources/changelog#september-2026
-      Earlier dates retain the standard search estimate.
       Only tokens, cache reads, and web search are represented; other Agent tools are not priced.
     price_variants:
       - when: { search_type: fast }
-        constraint: { start_date: 2026-09-24 }
         prices:
           web_searches_kcount: 1
       - when: { search_type: web }
