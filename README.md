@@ -96,6 +96,10 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 See the [Go README](packages/go/README.md) for instructions on how to install and use the Go package.
 
+### Kotlin Multiplatform Client
+
+See the [Kotlin README](packages/kotlin/README.md) for the Kotlin Multiplatform client of the genai-prices API, for the JVM, Android and iOS. The build generates it from the API's OpenAPI document.
+
 ### Download data
 
 Price data is available in the following files:

@@ -261,6 +261,15 @@ test-go: ## Test the Go package with the race detector and coverage
 		awk '/^total:/ && $$3 + 0 < 90 { print "Go coverage must be at least 90%"; exit 1 }'
 
 .PHONY: all
+.PHONY: test-kotlin
+test-kotlin: ## Generate the Kotlin client, test it on the JVM, and compile the iOS targets
+	cd packages/kotlin && gradle --no-daemon jvmTest compileKotlinIosArm64 compileKotlinIosSimulatorArm64 compileKotlinIosX64
+
+.PHONY: kotlin-openapi
+kotlin-openapi: ## Refresh the Kotlin client's OpenAPI document from the live API
+	curl -sf https://genai-prices.pydantic.dev/openapi.json -o packages/kotlin/openapi.json
+	npx prettier --write packages/kotlin/openapi.json
+
 all: build package-data format format-go lint lint-go typecheck testcov test-js test-go ## Run all builds, checks, and tests
 
 .PHONY: help
