@@ -175,6 +175,19 @@ jobs:
           verify: false
       - run: make test-go
 
+  test-java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+      - run: make test-java
+
   # Preserve the v2 schema core. Optional model price variants are ignored by older clients.
   v2-schema-frozen:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -194,7 +207,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [price-check-agent, pre-commit, test-python, coverage, test-js, test-go, v2-schema-frozen]
+    needs: [price-check-agent, pre-commit, test-python, coverage, test-js, test-go, test-java, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
