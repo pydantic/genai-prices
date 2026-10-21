@@ -57,12 +57,16 @@ pub(crate) struct Subject<'a> {
 
 impl<'a> Subject<'a> {
     pub(crate) fn new(raw: &'a str) -> Self {
-        let folded = if raw.bytes().any(|byte| !byte.is_ascii() || byte.is_ascii_uppercase()) {
-            Cow::Owned(raw.to_lowercase())
-        } else {
-            Cow::Borrowed(raw)
-        };
-        Self { raw, folded }
+        Self { raw, folded: fold_case(raw) }
+    }
+}
+
+/// Lowercases `text`, borrowing it when it is already lowercase ASCII (the common case for model and provider IDs).
+pub(crate) fn fold_case(text: &str) -> Cow<'_, str> {
+    if text.bytes().any(|byte| !byte.is_ascii() || byte.is_ascii_uppercase()) {
+        Cow::Owned(text.to_lowercase())
+    } else {
+        Cow::Borrowed(text)
     }
 }
 
@@ -72,7 +76,7 @@ pub(crate) fn regex_matches(regex: &Regex, text: &str) -> Result<bool> {
 
 /// Finds a provider by exact ID, then by its `provider_match` alias rule.
 pub(crate) fn find_provider_by_id(providers: &[Provider], provider_id: &str) -> Result<Option<usize>> {
-    let normalized = provider_id.trim().to_lowercase();
+    let normalized = fold_case(provider_id.trim());
     if let Some(index) = providers.iter().position(|provider| provider.id == normalized) {
         return Ok(Some(index));
     }
@@ -138,11 +142,10 @@ pub(crate) fn find_model<'a>(
     if let Some(found) = find_model_direct(providers, selected, model_id, true)? {
         return Ok(Some(found));
     }
-    let normalized = normalize_compact_dated_ref(model_id);
-    if normalized == model_id {
-        return Ok(None);
+    match normalize_compact_dated_ref(model_id) {
+        Cow::Borrowed(_) => Ok(None),
+        Cow::Owned(normalized) => find_model_direct(providers, selected, &normalized, true),
     }
-    find_model_direct(providers, selected, &normalized, true)
 }
 
 fn find_model_direct<'a>(
@@ -179,18 +182,21 @@ static COMPACT_DATE: LazyLock<Regex> = LazyLock::new(|| {
 ///
 /// LiteLLM and OpenRouter emit compact dated model refs that don't match the dashed aliases used in the
 /// price data. This is only a fallback for refs that don't otherwise match.
-pub(crate) fn normalize_compact_dated_ref(model_id: &str) -> String {
-    COMPACT_DATE
-        .replace_all(model_id, |captures: &Captures<'_, str>| {
-            let part = |index: usize| captures[index].parse::<i64>().expect("matched digits");
-            let (year, month, day) = (part(2), part(3), part(4));
-            if crate::time::is_valid_date(year, month, day) {
-                format!("-{year:04}-{month:02}-{day:02}")
-            } else {
-                captures[0].to_owned()
-            }
-        })
-        .into_owned()
+pub(crate) fn normalize_compact_dated_ref(model_id: &str) -> Cow<'_, str> {
+    let normalized = COMPACT_DATE.replace_all(model_id, |captures: &Captures<'_, str>| {
+        let part = |index: usize| captures[index].parse::<i64>().expect("matched digits");
+        let (year, month, day) = (part(2), part(3), part(4));
+        if crate::time::is_valid_date(year, month, day) {
+            format!("-{year:04}-{month:02}-{day:02}")
+        } else {
+            captures[0].to_owned()
+        }
+    });
+    // Matches that are not real dates are left as they were, which still produces an owned copy.
+    match normalized {
+        Cow::Owned(normalized) if normalized == model_id => Cow::Borrowed(model_id),
+        normalized => normalized,
+    }
 }
 
 #[cfg(test)]

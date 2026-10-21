@@ -2,13 +2,16 @@ use std::borrow::Cow;
 use std::fmt;
 use std::time::SystemTime;
 
+use crate::data_units::UNIT_COUNT;
 use crate::decode::decode_providers;
 use crate::error::{Error, ErrorKind, Result, validate_number};
-use crate::matching::{ModelMatch, find_model, find_provider, find_provider_by_id};
-use crate::model::{Constraint, Model, ModelPrice, Provider};
+use crate::matching::{ModelMatch, find_model, find_provider, find_provider_by_id, fold_case};
+use crate::model::{Constraint, Model, Provider};
 use crate::request::{PriceCalculation, PriceRequest};
 use crate::time::Timestamp;
-use crate::units::{BUNDLED_REGISTRY, Registry, calculate_model_price, calculation_warnings, validate_model_price};
+use crate::units::{
+    BUNDLED_REGISTRY, PriceSet, Registry, calculate_model_price, calculation_warnings, validate_price_set,
+};
 use crate::usage::{Usage, UsageKey};
 
 #[cfg(feature = "bundled")]
@@ -75,14 +78,13 @@ impl Calculator {
         if provider_id.is_some() && provider_api_url.is_some() {
             return Err(Error::new(ErrorKind::InvalidUsage, "provider ID and provider API URL are mutually exclusive"));
         }
-        let model_id = request.model.trim().to_lowercase();
-        if model_id.is_empty() {
+        let folded_model = fold_case(request.model.trim());
+        if folded_model.is_empty() {
             return Err(Error::new(ErrorKind::ModelNotFound, "model is required"));
         }
-        let (provider_id, model_id) = self.route_litellm(provider_id, model_id)?;
-        let provider_id = provider_id.as_deref();
+        let (provider_id, model_id) = self.route_litellm(provider_id, &folded_model)?;
 
-        let selected = find_provider(&self.providers, &model_id, provider_id, provider_api_url)?.ok_or_else(|| {
+        let selected = find_provider(&self.providers, model_id, provider_id, provider_api_url)?.ok_or_else(|| {
             Error::new(
                 ErrorKind::ProviderNotFound,
                 format!(
@@ -93,14 +95,14 @@ impl Calculator {
             )
         })?;
         let provider = &self.providers[selected];
-        let matched = find_model(&self.providers, selected, &model_id)?.ok_or_else(|| {
+        let matched = find_model(&self.providers, selected, model_id)?.ok_or_else(|| {
             Error::new(ErrorKind::ModelNotFound, format!("{model_id:?} in provider {:?}", provider.id))
         })?;
 
         let timestamp = Timestamp::from(request.timestamp.unwrap_or_else(SystemTime::now));
-        let prices = resolve_price_variants(&matched, selected, timestamp, request);
+        let (prices, unknown_price_keys) = self.resolve_prices(&matched, selected, timestamp, request);
         if !request.price_context.is_empty() {
-            validate_model_price(&prices, self.registry)
+            validate_price_set(&prices, self.registry)
                 .map_err(|message| Error::new(ErrorKind::InvalidData, message))?;
         }
         for (key, value) in request.usage {
@@ -116,27 +118,65 @@ impl Calculator {
             total_price: calculated.total,
             provider_id: provider.id.clone(),
             model_id: matched.model.id.clone(),
-            warnings: calculation_warnings(request.usage, &prices, self.registry),
+            warnings: calculation_warnings(request.usage, unknown_price_keys, self.registry),
         })
     }
 
     /// LiteLLM is a proxy that prefixes models with their real provider, e.g. `anthropic/claude-sonnet-5`.
     /// When that prefix names a known provider, price the request as that provider's model.
-    fn route_litellm<'a>(
-        &self,
-        provider_id: Option<&'a str>,
-        model_id: String,
-    ) -> Result<(Option<Cow<'a, str>>, String)> {
+    fn route_litellm<'a>(&self, provider_id: Option<&'a str>, model_id: &'a str) -> Result<(Option<&'a str>, &'a str)> {
         let routed = provider_id
             .filter(|id| id.eq_ignore_ascii_case("litellm"))
             .and_then(|_| model_id.split_once('/'))
             .filter(|(provider, model)| !provider.is_empty() && !model.is_empty());
         if let Some((provider, model)) = routed {
             if find_provider_by_id(&self.providers, provider)?.is_some() {
-                return Ok((Some(Cow::Owned(provider.to_owned())), model.to_owned()));
+                return Ok((Some(provider), model));
             }
         }
-        Ok((provider_id.map(Cow::Borrowed), model_id))
+        Ok((provider_id, model_id))
+    }
+
+    /// The prices for `timestamp` with any matching request-specific variants applied, plus the price keys this
+    /// release cannot price.
+    ///
+    /// Variants belong to the provider that defines them, so a model found through a fallback provider is
+    /// priced at its standard rates. Each price key takes the value from the first active matching variant.
+    fn resolve_prices<'a>(
+        &self,
+        matched: &ModelMatch<'a>,
+        selected: usize,
+        timestamp: Timestamp,
+        request: &PriceRequest<'_>,
+    ) -> (PriceSet<'a>, Vec<&'a str>) {
+        let model: &'a Model = matched.model;
+        let standard = model.active_price(timestamp);
+        let mut prices = PriceSet::new(standard, self.registry);
+        let mut unknown: Vec<&str> =
+            standard.keys().map(String::as_str).filter(|key| self.registry.by_price_key(key).is_none()).collect();
+        if request.price_context.is_empty() || matched.provider != selected {
+            return (prices, unknown);
+        }
+        let mut overridden = [false; UNIT_COUNT];
+        for variant in &model.price_variants {
+            if !Constraint::is_active(variant.constraint.as_ref(), timestamp) {
+                continue;
+            }
+            if !variant.when.iter().all(|(key, value)| request.context_value(key) == Some(value.as_str())) {
+                continue;
+            }
+            for (key, price) in &variant.prices {
+                match self.registry.by_price_key(key) {
+                    Some(unit) if !overridden[unit] => {
+                        prices.set(unit, price);
+                        overridden[unit] = true;
+                    }
+                    Some(_) => {}
+                    None => unknown.push(key),
+                }
+            }
+        }
+        (prices, unknown)
     }
 }
 
@@ -156,40 +196,6 @@ pub fn calculate(request: &PriceRequest<'_>) -> Result<PriceCalculation> {
 
 pub(crate) fn non_empty(value: Option<&str>) -> Option<&str> {
     value.filter(|value| !value.is_empty())
-}
-
-/// Applies request-specific price variants over the standard prices for `timestamp`.
-///
-/// Variants belong to the provider that defines them, so a model found through a fallback provider is
-/// priced at its standard rates. Each price key takes the value from the first active matching variant.
-fn resolve_price_variants<'a>(
-    matched: &ModelMatch<'a>,
-    selected: usize,
-    timestamp: Timestamp,
-    request: &PriceRequest<'_>,
-) -> Cow<'a, ModelPrice> {
-    let model: &Model = matched.model;
-    let standard = model.active_price(timestamp);
-    if request.price_context.is_empty() || matched.provider != selected {
-        return Cow::Borrowed(standard);
-    }
-    let mut resolved = standard.clone();
-    let mut overridden = Vec::new();
-    for variant in &model.price_variants {
-        if !Constraint::is_active(variant.constraint.as_ref(), timestamp) {
-            continue;
-        }
-        if !variant.when.iter().all(|(key, value)| request.context_value(key) == Some(value.as_str())) {
-            continue;
-        }
-        for (key, price) in &variant.prices {
-            if !overridden.contains(&key) {
-                resolved.insert(key.clone(), price.clone());
-                overridden.push(key);
-            }
-        }
-    }
-    Cow::Owned(resolved)
 }
 
 /// Groq bills Whisper transcriptions for at least ten seconds of audio.

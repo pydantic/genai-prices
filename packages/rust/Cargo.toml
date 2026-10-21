@@ -35,7 +35,7 @@ serde = { version = "1.0.180", features = ["derive"] }
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ["cfg(docsrs)"] }
 missing_docs = "warn"
-unsafe_code = "forbid"
+unsafe_code = "deny"
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }

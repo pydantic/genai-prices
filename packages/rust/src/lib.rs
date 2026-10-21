@@ -5,6 +5,7 @@
            embedded price data and the README examples; without it, load data with `Calculator::from_json`."
 )]
 #![cfg_attr(docsrs, feature(doc_cfg))]
+#![forbid(unsafe_code)]
 
 mod calculator;
 #[rustfmt::skip]

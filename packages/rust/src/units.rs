@@ -4,12 +4,15 @@
 //! are a subset of the other's (`input_tokens` is an ancestor of `cache_read_tokens`), and the *join* of
 //! two compatible units is the unit with the union of their dimensions. Prices are charged on *leaf*
 //! values: what remains of a unit's usage after subtracting its more specific priced descendants.
+//!
+//! Everything a calculation needs about units is precomputed here, and per-unit state during a calculation
+//! lives in [`UnitMap`]s on the stack, so pricing a request does not allocate.
 
 use std::collections::HashMap;
 use std::fmt::Write as _;
 use std::sync::LazyLock;
 
-use crate::data_units::BUNDLED_UNITS;
+use crate::data_units::{BUNDLED_UNITS, UNIT_COUNT};
 use crate::error::{Error, ErrorKind, Result, validate_number};
 use crate::model::{ModelPrice, PriceValue};
 use crate::usage::{Usage, UsageKey};
@@ -42,20 +45,30 @@ impl UnitDef {
     }
 }
 
-/// An index into [`Registry::units`].
+/// An index into the registered units.
 pub(crate) type UnitId = usize;
+
+/// A value for each registered unit, stored inline.
+pub(crate) type UnitMap<T> = [T; UNIT_COUNT];
 
 #[derive(Debug)]
 pub(crate) struct Registry {
-    units: &'static [UnitDef],
+    units: &'static UnitMap<UnitDef>,
     by_usage_key: HashMap<&'static str, UnitId>,
     by_price_key: HashMap<&'static str, UnitId>,
-    by_dimensions: HashMap<Vec<(&'static str, &'static str)>, UnitId>,
+    requests: Option<UnitId>,
+    input_tokens: Option<UnitId>,
     /// `ancestors[unit][candidate]` is true when `candidate` is a strict ancestor of `unit`.
-    ancestors: Vec<Vec<bool>>,
+    ancestors: Vec<UnitMap<bool>>,
+    /// `joins[left][right]` is the registered join of two compatible units.
+    joins: Vec<UnitMap<Option<UnitId>>>,
+    /// Units ordered by price key, the order prices are summed in (as in the other engines).
+    price_order: UnitMap<UnitId>,
+    /// Units ordered most specific first, then by usage key: the order usage is decomposed in.
+    decomposition_order: UnitMap<UnitId>,
 }
 
-pub(crate) static BUNDLED_REGISTRY: LazyLock<Registry> = LazyLock::new(|| Registry::new(BUNDLED_UNITS));
+pub(crate) static BUNDLED_REGISTRY: LazyLock<Registry> = LazyLock::new(|| Registry::new(&BUNDLED_UNITS));
 
 /// The static string of a registered usage key, so keys built from strings need not allocate.
 pub(crate) fn registered_usage_key(key: &str) -> Option<&'static str> {
@@ -64,20 +77,46 @@ pub(crate) fn registered_usage_key(key: &str) -> Option<&'static str> {
 }
 
 impl Registry {
-    fn new(units: &'static [UnitDef]) -> Self {
+    fn new(units: &'static UnitMap<UnitDef>) -> Self {
+        let by_dimensions: HashMap<_, _> = units.iter().enumerate().map(|(id, unit)| (unit.dimensions, id)).collect();
         let ancestors = units
             .iter()
             .enumerate()
-            .map(|(unit_id, unit)| {
-                units.iter().enumerate().map(|(id, candidate)| id != unit_id && candidate.is_subset_of(unit)).collect()
+            .map(|(unit_id, unit)| std::array::from_fn(|id| id != unit_id && units[id].is_subset_of(unit)))
+            .collect();
+        let joins = units
+            .iter()
+            .map(|left| {
+                std::array::from_fn(|id| {
+                    let right = &units[id];
+                    if !left.is_compatible(right) {
+                        return None;
+                    }
+                    let mut dimensions = left.dimensions.to_vec();
+                    dimensions.extend(right.dimensions.iter().filter(|(key, _)| left.dimension(key).is_none()));
+                    dimensions.sort_unstable();
+                    by_dimensions.get(dimensions.as_slice()).copied()
+                })
             })
             .collect();
+        let mut price_order: UnitMap<UnitId> = std::array::from_fn(|id| id);
+        price_order.sort_by_key(|&id| units[id].price_key);
+        let mut decomposition_order: UnitMap<UnitId> = std::array::from_fn(|id| id);
+        decomposition_order.sort_by(|&left, &right| {
+            let (left, right) = (&units[left], &units[right]);
+            right.dimensions.len().cmp(&left.dimensions.len()).then_with(|| left.usage_key.cmp(right.usage_key))
+        });
+        let by_usage_key: HashMap<_, _> = units.iter().enumerate().map(|(id, unit)| (unit.usage_key, id)).collect();
         Self {
             units,
-            by_usage_key: units.iter().enumerate().map(|(id, unit)| (unit.usage_key, id)).collect(),
+            requests: by_usage_key.get(REQUESTS).copied(),
+            input_tokens: by_usage_key.get(UsageKey::INPUT_TOKENS.as_str()).copied(),
+            by_usage_key,
             by_price_key: units.iter().enumerate().map(|(id, unit)| (unit.price_key, id)).collect(),
-            by_dimensions: units.iter().enumerate().map(|(id, unit)| (unit.dimensions.to_vec(), id)).collect(),
             ancestors,
+            joins,
+            price_order,
+            decomposition_order,
         }
     }
 
@@ -107,33 +146,61 @@ impl Registry {
         left == right || self.is_ancestor(left, right) || self.is_ancestor(right, left)
     }
 
+    fn compatible(&self, left: UnitId, right: UnitId) -> bool {
+        self.unit(left).is_compatible(self.unit(right))
+    }
+
     /// The registered unit with the union of the dimensions of two compatible units, if any.
     fn join(&self, left: UnitId, right: UnitId) -> Option<UnitId> {
-        let (left, right) = (self.unit(left), self.unit(right));
-        debug_assert!(left.is_compatible(right), "{} and {} have no join", left.usage_key, right.usage_key);
-        let mut dimensions = left.dimensions.to_vec();
-        for &(key, value) in right.dimensions {
-            if left.dimension(key).is_none() {
-                dimensions.push((key, value));
-            }
-        }
-        dimensions.sort_unstable();
-        self.by_dimensions.get(&dimensions).copied()
+        self.joins[left][right]
     }
 }
 
-/// Checks that a set of prices covers the ancestors and joins of every priced unit.
-pub(crate) fn validate_model_price(prices: &ModelPrice, registry: &Registry) -> Result<(), String> {
-    let mut priced = Vec::with_capacity(prices.len());
-    for (key, price) in prices {
-        if let Some(id) = registry.by_price_key(key) {
-            price.validate(key)?;
-            priced.push(id);
+/// The registered prices that apply to one calculation, borrowed from the provider data.
+#[derive(Clone, Copy)]
+pub(crate) struct PriceSet<'a> {
+    prices: UnitMap<Option<&'a PriceValue>>,
+}
+
+impl<'a> PriceSet<'a> {
+    /// The registered prices in `prices`; keys this release does not know are left out.
+    pub(crate) fn new(prices: &'a ModelPrice, registry: &Registry) -> Self {
+        let mut set = Self { prices: [None; UNIT_COUNT] };
+        for (key, price) in prices {
+            if let Some(unit) = registry.by_price_key(key) {
+                set.prices[unit] = Some(price);
+            }
         }
+        set
     }
-    for &unit in &priced {
-        for ancestor in (0..registry.units.len()).filter(|&candidate| registry.is_ancestor(candidate, unit)) {
-            if !priced.contains(&ancestor) {
+
+    pub(crate) fn set(&mut self, unit: UnitId, price: &'a PriceValue) {
+        self.prices[unit] = Some(price);
+    }
+
+    fn contains(&self, unit: UnitId) -> bool {
+        self.prices[unit].is_some()
+    }
+
+    /// The priced units and their prices, ordered by price key.
+    fn iter<'s>(&'s self, registry: &'s Registry) -> impl Iterator<Item = (UnitId, &'a PriceValue)> + 's {
+        registry.price_order.iter().filter_map(|&unit| Some((unit, self.prices[unit]?)))
+    }
+}
+
+/// Checks that a model's prices cover the ancestors and joins of every priced unit.
+pub(crate) fn validate_model_price(prices: &ModelPrice, registry: &Registry) -> Result<(), String> {
+    validate_price_set(&PriceSet::new(prices, registry), registry)
+}
+
+/// Checks that a set of prices covers the ancestors and joins of every priced unit.
+pub(crate) fn validate_price_set(prices: &PriceSet<'_>, registry: &Registry) -> Result<(), String> {
+    for (unit, price) in prices.iter(registry) {
+        price.validate(registry.unit(unit).price_key)?;
+    }
+    for (unit, _) in prices.iter(registry) {
+        for ancestor in (0..UNIT_COUNT).filter(|&candidate| registry.is_ancestor(candidate, unit)) {
+            if !prices.contains(ancestor) {
                 return Err(format!(
                     "missing ancestor price key {} for {}",
                     registry.unit(ancestor).price_key,
@@ -142,16 +209,16 @@ pub(crate) fn validate_model_price(prices: &ModelPrice, registry: &Registry) -> 
             }
         }
     }
-    for (index, &left) in priced.iter().enumerate() {
-        for &right in &priced[index + 1..] {
-            if !registry.unit(left).is_compatible(registry.unit(right)) {
+    for (index, (left, _)) in prices.iter(registry).enumerate() {
+        for (right, _) in prices.iter(registry).skip(index + 1) {
+            if !registry.compatible(left, right) {
                 continue;
             }
             let (left_key, right_key) = (registry.unit(left).price_key, registry.unit(right).price_key);
             let Some(join) = registry.join(left, right) else {
                 return Err(format!("missing registered join unit for {left_key} and {right_key}"));
             };
-            if !priced.contains(&join) {
+            if !prices.contains(join) {
                 let join_key = registry.unit(join).price_key;
                 return Err(format!("missing join price key {join_key} for {left_key} and {right_key}"));
             }
@@ -171,7 +238,8 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
         return Ok(value);
     }
 
-    let mut positive = Vec::new();
+    let mut positive: UnitMap<UnitId> = [0; UNIT_COUNT];
+    let mut positive_count = 0;
     for (reported_key, value) in usage {
         let reported_key = reported_key.as_str();
         let Some(reported) = registry.by_usage_key(reported_key).filter(|_| registry.is_reported(reported_key)) else {
@@ -181,7 +249,9 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
         if value <= 0.0 {
             continue;
         }
-        positive.push(reported);
+        // Usage keys are unique, so there are at most `UNIT_COUNT` registered ones.
+        positive[positive_count] = reported;
+        positive_count += 1;
         if registry.is_ancestor(unit, reported) {
             return Err(Error::new(
                 ErrorKind::InvalidUsage,
@@ -189,9 +259,10 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
             ));
         }
     }
+    let positive = &positive[..positive_count];
     for (index, &left) in positive.iter().enumerate() {
         for &right in &positive[index + 1..] {
-            if !registry.unit(left).is_compatible(registry.unit(right)) || registry.comparable(left, right) {
+            if !registry.compatible(left, right) || registry.comparable(left, right) {
                 continue;
             }
             if registry.join(left, right) == Some(unit) {
@@ -209,41 +280,37 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
     Ok(0.0)
 }
 
-/// Decomposes usage into leaf values for the given priced units, most specific first.
-fn leaf_values(priced: &[UnitId], usage: &Usage, registry: &Registry) -> Result<HashMap<UnitId, f64>> {
-    let mut units = priced.to_vec();
-    units.sort_by(|&left, &right| {
-        let (left, right) = (registry.unit(left), registry.unit(right));
-        right.dimensions.len().cmp(&left.dimensions.len()).then_with(|| left.usage_key.cmp(right.usage_key))
-    });
-    units.dedup();
+/// Decomposes usage into leaf values for the priced units (other than `requests`), most specific first.
+fn leaf_values(prices: &PriceSet<'_>, usage: &Usage, registry: &Registry) -> Result<UnitMap<f64>> {
+    let priced = |unit: UnitId| prices.contains(unit) && Some(unit) != registry.requests;
+    let priced_count = (0..UNIT_COUNT).filter(|&unit| priced(unit)).count();
+    let ordered = || registry.decomposition_order.iter().copied().filter(|&unit| priced(unit));
 
-    let mut leaves = HashMap::with_capacity(units.len());
-    for &unit in &units {
+    let mut leaves = [0.0; UNIT_COUNT];
+    for unit in ordered() {
         let value = usage_value(usage, unit, registry)?;
         // Descendants have strictly more dimensions, so they were computed earlier in this loop.
-        let descendant_total: f64 = units
-            .iter()
-            .filter(|&&descendant| descendant != unit && registry.unit(unit).is_subset_of(registry.unit(descendant)))
+        let descendant_total: f64 = ordered()
+            .filter(|&descendant| descendant != unit && registry.unit(unit).is_subset_of(registry.unit(descendant)))
             .map(|descendant| leaves[descendant])
             .sum();
         let mut leaf = value - descendant_total;
         #[allow(clippy::cast_precision_loss)] // a handful of units
-        let tolerance = f64::EPSILON * 1f64.max(value.abs()).max(descendant_total.abs()) * (units.len() + 1) as f64;
+        let tolerance = f64::EPSILON * 1f64.max(value.abs()).max(descendant_total.abs()) * (priced_count + 1) as f64;
         if leaf < 0.0 && leaf.abs() <= tolerance {
             leaf = 0.0;
         }
         if leaf < 0.0 {
-            return Err(negative_leaf_error(unit, &units, usage, value, leaf, registry));
+            return Err(negative_leaf_error(unit, ordered(), usage, value, leaf, registry));
         }
-        leaves.insert(unit, leaf);
+        leaves[unit] = leaf;
     }
     Ok(leaves)
 }
 
 fn negative_leaf_error(
     unit: UnitId,
-    priced: &[UnitId],
+    priced: impl Iterator<Item = UnitId>,
     usage: &Usage,
     unit_value: f64,
     leaf_value: f64,
@@ -251,9 +318,8 @@ fn negative_leaf_error(
 ) -> Error {
     let unit_key = registry.unit(unit).usage_key;
     let descendants: Vec<(&str, f64)> = priced
-        .iter()
-        .filter(|&&descendant| descendant != unit && registry.unit(unit).is_subset_of(registry.unit(descendant)))
-        .filter_map(|&descendant| {
+        .filter(|&descendant| descendant != unit && registry.unit(unit).is_subset_of(registry.unit(descendant)))
+        .filter_map(|descendant| {
             let value = usage_value(usage, descendant, registry).ok().filter(|&value| value > 0.0)?;
             Some((registry.unit(descendant).usage_key, value))
         })
@@ -283,27 +349,20 @@ pub(crate) struct Prices {
     pub(crate) total: f64,
 }
 
-pub(crate) fn calculate_model_price(usage: &Usage, prices: &ModelPrice, registry: &Registry) -> Result<Prices> {
-    // `ModelPrice` is a `BTreeMap`, so units are priced in a deterministic order.
-    let resolved: Vec<(&PriceValue, UnitId)> =
-        prices.iter().filter_map(|(key, price)| Some((price, registry.by_price_key(key)?))).collect();
-    let has_tiered = resolved.iter().any(|(price, _)| matches!(price, PriceValue::Tiered { .. }));
-    let requests = registry.by_usage_key(REQUESTS);
-    let priced: Vec<UnitId> = resolved.iter().map(|&(_, unit)| unit).filter(|&unit| Some(unit) != requests).collect();
-
-    let total_input_tokens = if has_tiered {
-        let input_tokens = registry
-            .by_usage_key(UsageKey::INPUT_TOKENS.as_str())
-            .ok_or_else(|| Error::new(ErrorKind::InvalidUsage, "unknown unit usage key input_tokens"))?;
-        usage_value(usage, input_tokens, registry)?
-    } else {
-        0.0
+pub(crate) fn calculate_model_price(usage: &Usage, prices: &PriceSet<'_>, registry: &Registry) -> Result<Prices> {
+    let has_tiered = prices.iter(registry).any(|(_, price)| matches!(price, PriceValue::Tiered { .. }));
+    let total_input_tokens = match registry.input_tokens {
+        Some(input_tokens) if has_tiered => usage_value(usage, input_tokens, registry)?,
+        None if has_tiered => {
+            return Err(Error::new(ErrorKind::InvalidUsage, "unknown unit usage key input_tokens"));
+        }
+        _ => 0.0,
     };
-    let leaves = leaf_values(&priced, usage, registry)?;
+    let leaves = leaf_values(prices, usage, registry)?;
 
     let mut result = Prices::default();
-    for (price, unit) in resolved {
-        let count = if Some(unit) == requests { 1.0 } else { leaves[&unit] };
+    for (unit, price) in prices.iter(registry) {
+        let count = if Some(unit) == registry.requests { 1.0 } else { leaves[unit] };
         let rate = match price {
             PriceValue::Flat(rate) => *rate,
             PriceValue::Tiered { base, tiers } if count > 0.0 => {
@@ -334,17 +393,23 @@ pub(crate) fn calculate_model_price(usage: &Usage, prices: &ModelPrice, registry
     Ok(result)
 }
 
-/// Warnings for usage and price keys that this release does not know how to price.
-pub(crate) fn calculation_warnings(usage: &Usage, prices: &ModelPrice, registry: &Registry) -> Vec<String> {
-    let usage_keys: Vec<&str> = usage.keys().map(UsageKey::as_str).filter(|key| !registry.is_reported(key)).collect();
-    let price_keys: Vec<&str> =
-        prices.keys().map(String::as_str).filter(|key| registry.by_price_key(key).is_none()).collect();
+/// Warnings for usage and price keys that this release does not know how to price. `unknown_price_keys` may
+/// repeat keys and be unordered. Nothing is allocated when there is nothing to report.
+pub(crate) fn calculation_warnings(
+    usage: &Usage,
+    mut unknown_price_keys: Vec<&str>,
+    registry: &Registry,
+) -> Vec<String> {
     let mut warnings = Vec::new();
-    if !usage_keys.is_empty() {
+    let mut usage_keys = usage.keys().map(UsageKey::as_str).filter(|key| !registry.is_reported(key)).peekable();
+    if usage_keys.peek().is_some() {
+        let usage_keys: Vec<&str> = usage_keys.collect();
         warnings.push(format!("Unsupported usage key for standard pricing: {}", usage_keys.join(", ")));
     }
-    if !price_keys.is_empty() {
-        warnings.push(format!("Unsupported price key for standard pricing: {}", price_keys.join(", ")));
+    if !unknown_price_keys.is_empty() {
+        unknown_price_keys.sort_unstable();
+        unknown_price_keys.dedup();
+        warnings.push(format!("Unsupported price key for standard pricing: {}", unknown_price_keys.join(", ")));
     }
     warnings
 }

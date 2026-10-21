@@ -380,6 +380,7 @@ prices:
     rust_units = (rust_dir / 'src' / 'data_units.rs').read_text()
     assert 'pub const INPUT_5M_TOKENS: UsageKey = UsageKey::from_static("input_5m_tokens");' in rust_units
     assert 'pub const REQUEST__COUNT: UsageKey' in rust_units
+    assert 'pub(crate) const UNIT_COUNT: usize = 5;' in rust_units
     assert 'price_key: "input_5m_mtok", per: 1000000.0' in rust_units
     assert (rust_dir / 'data' / 'prices.json').read_text() == (go_dir / 'internal' / 'data' / 'prices.json').read_text()
     assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']

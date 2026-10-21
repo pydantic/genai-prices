@@ -368,7 +368,10 @@ impl UsageKey {{
 {chr(10).join(constants)}
 }}
 
-pub(crate) static BUNDLED_UNITS: &[UnitDef] = &[
+/// The number of registered units, so per-unit state can live in fixed-size arrays.
+pub(crate) const UNIT_COUNT: usize = {len(entries)};
+
+pub(crate) static BUNDLED_UNITS: [UnitDef; UNIT_COUNT] = [
 {chr(10).join(entries)}
 ];
 """

@@ -125,7 +125,10 @@ impl UsageKey {
     pub const WEB_SEARCHES: UsageKey = UsageKey::from_static("web_searches");
 }
 
-pub(crate) static BUNDLED_UNITS: &[UnitDef] = &[
+/// The number of registered units, so per-unit state can live in fixed-size arrays.
+pub(crate) const UNIT_COUNT: usize = 59;
+
+pub(crate) static BUNDLED_UNITS: [UnitDef; UNIT_COUNT] = [
     UnitDef { usage_key: "audio_seconds", price_key: "audio_hours", per: 3600.0, dimensions: &[("family", "durations"), ("modality", "audio")] },
     UnitDef { usage_key: "cache_audio_read_tokens", price_key: "cache_audio_read_mtok", per: 1000000.0, dimensions: &[("direction", "input"), ("family", "tokens"), ("modality", "audio"), ("token_type", "cache_read")] },
     UnitDef { usage_key: "cache_audio_write_1h_tokens", price_key: "cache_audio_write_1h_mtok", per: 1000000.0, dimensions: &[("cache_ttl", "1h"), ("direction", "input"), ("family", "tokens"), ("modality", "audio"), ("token_type", "cache_write")] },
