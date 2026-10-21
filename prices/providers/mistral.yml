@@ -73,7 +73,7 @@ models:
     match:
       equals: codestral-2508
     context_window: 256000
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.03
@@ -95,7 +95,7 @@ models:
         - equals: codestral-embed-2505
         - equals: codestral-embed
     context_window: 8000
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: >-
       Rates from https://docs.mistral.ai/inference/pricing (Codestral Embed: input $0.15 / 1M tokens,
       cached input $0.015 / 1M tokens) and https://docs.mistral.ai/models/codestral-embed-25-05
@@ -205,7 +205,7 @@ models:
     match:
       equals: ministral-14b-2512
     context_window: 262144
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02
@@ -239,7 +239,7 @@ models:
     match:
       equals: ministral-3b-2512
     context_window: 131072
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.01
@@ -278,7 +278,7 @@ models:
     match:
       equals: ministral-8b-2512
     context_window: 262144
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
@@ -374,7 +374,7 @@ models:
     match:
       equals: mistral-large-2512
     context_window: 262144
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.5
       cache_read_mtok: 0.05
@@ -394,7 +394,7 @@ models:
         - equals: mistral-large-4
         - equals: mistral-large-4-0
     context_window: 1048576
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: >-
       Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The
       published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not
@@ -477,7 +477,7 @@ models:
         - equals: mistral-medium-3
         - equals: mistral-medium-2604
     context_window: 262144
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
@@ -615,7 +615,7 @@ models:
         - equals: mistral-ocr-4-1
         - equals: mistral-ocr-4-1-completion
     context_window: 16384
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: https://docs.mistral.ai/models/ocr-4-1
     prices:
       input_document_kpages: 4
@@ -713,7 +713,7 @@ models:
     match:
       equals: mistral-small-2603
     context_window: 262144
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.015
@@ -868,7 +868,7 @@ models:
         - equals: voxtral-mini-latest
         - equals: voxtral-mini-2602
     context_window: 16384
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
     price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
     prices:
       audio_hours: 0.18
@@ -887,7 +887,7 @@ models:
     prices:
       audio_hours: 0.21
       input_audio_hours: 0.21
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
 
   - id: voxtral-mini-transcribe-realtime-3-0
     name: Voxtral Mini Transcribe Realtime 3
@@ -896,7 +896,7 @@ models:
     prices:
       audio_hours: 0.48
       input_audio_hours: 0.48
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
 
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
@@ -939,7 +939,7 @@ models:
     prices:
       audio_hours: 0.24
       input_audio_hours: 0.24
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21
 
   - id: zai-glm-5-3
     name: Z.ai GLM 5.3
@@ -949,4 +949,4 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.14
       output_mtok: 4.4
-    prices_checked: 2026-10-20
+    prices_checked: 2026-10-21

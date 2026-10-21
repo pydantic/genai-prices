@@ -58,7 +58,7 @@ jobs:
       checks: read
       contents: write # repository_dispatch starts the isolated repair workflow
       issues: write # bounded repair state and evidence live on the proposal
-      pull-requests: read
+      pull-requests: write # a comment on a PR needs pull_requests=write alongside issues=write
       statuses: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

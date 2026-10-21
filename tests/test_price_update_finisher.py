@@ -14,6 +14,9 @@ def test_finisher_waits_from_trusted_code_and_repair_completion_resumes_it() -> 
     assert "github.event.sender.login == 'pydanty[bot]'" in jobs['select']['if']
     assert jobs['select']['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
     assert jobs['watch']['needs'] == 'select'
+    # Commenting on a pull request is rejected without pull_requests=write, even with issues=write.
+    assert jobs['watch']['permissions']['issues'] == 'write'
+    assert jobs['watch']['permissions']['pull-requests'] == 'write'
     assert jobs['watch']['strategy'] == {
         'fail-fast': False,
         'matrix': {'pr': '${{ fromJSON(needs.select.outputs.prs) }}'},

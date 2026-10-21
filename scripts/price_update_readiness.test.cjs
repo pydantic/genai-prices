@@ -676,16 +676,24 @@ test('neutral required reviewer checks without finding content do not need dismi
   assert.equal(evaluate(snapshot).state, 'ready')
 })
 
-test('a skipped required reviewer check remains waiting without creating a repair finding', () => {
-  const snapshot = readySnapshot({
+test('a skipped Macroscope check counts as its review, while a skipped cubic check keeps waiting', () => {
+  const macroscopeSkipped = readySnapshot({
     checkRuns: [
       reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check', { conclusion: 'skipped' }),
       reviewerCheck('cubic-dev-ai', 'cubic · AI code reviewer'),
     ],
   })
-  const result = evaluate(snapshot)
+  assert.equal(evaluate(macroscopeSkipped).state, 'ready')
+
+  const cubicSkipped = readySnapshot({
+    checkRuns: [
+      reviewerCheck('macroscopeapp', 'Macroscope - Correctness Check'),
+      reviewerCheck('cubic-dev-ai', 'cubic · AI code reviewer', { conclusion: 'skipped' }),
+    ],
+  })
+  const result = evaluate(cubicSkipped)
   assert.equal(result.state, 'waiting')
-  assert.match(result.reason, /Waiting for reviewer check Macroscope/)
+  assert.match(result.reason, /Waiting for reviewer check cubic/)
   assert.deepEqual(result.findings, [])
 })
 

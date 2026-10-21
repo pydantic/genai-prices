@@ -4,9 +4,10 @@ const SELF_WAIT_WORKFLOWS = new Set([
   '.github/workflows/finish-price-update.yml',
   '.github/workflows/repair-price-update.lock.yml',
 ])
+// Macroscope skips a head whose diff it already reviewed; that review's findings stay on the PR.
 const REVIEWERS = [
-  { app: 'macroscopeapp', name: 'Macroscope - Correctness Check' },
-  { app: 'cubic-dev-ai', name: 'cubic · AI code reviewer' },
+  { app: 'macroscopeapp', name: 'Macroscope - Correctness Check', skipIsReview: true },
+  { app: 'cubic-dev-ai', name: 'cubic · AI code reviewer', skipIsReview: false },
 ]
 const HOSTED_REVIEWERS = new Set(['macroscopeapp[bot]', 'macroscope[bot]', 'cubic-dev-ai[bot]'])
 const CI_WORKFLOW = '.github/workflows/ci.yml'
@@ -330,9 +331,14 @@ function evaluate(snapshot, assessments = []) {
   const checks = latestCheckAttempts(
     (snapshot.checkRuns ?? []).filter((check) => !isSelfWaitCheck(check, workflowRuns)),
   )
-  for (const { app, name } of REVIEWERS) {
+  for (const { app, name, skipIsReview } of REVIEWERS) {
     const check = checks.find((item) => item.app?.slug === app && item.name === name)
-    if (!check || check.status !== 'completed' || ['cancelled', 'skipped'].includes(check.conclusion)) {
+    if (
+      !check ||
+      check.status !== 'completed' ||
+      check.conclusion === 'cancelled' ||
+      (check.conclusion === 'skipped' && !skipIsReview)
+    ) {
       waiting.push(`Waiting for reviewer check ${name}`)
       continue
     }
