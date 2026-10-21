@@ -201,8 +201,9 @@ pub(crate) fn normalize_compact_dated_ref(model_id: &str) -> Cow<'_, str> {
     }
 }
 
-/// The first code point of each run of ten Unicode decimal digits (general category `Decimal_Number`), as of Unicode 15.1.
-/// Unicode guarantees that decimal digits come in such runs, so a digit's value is its offset from the run's start.
+/// The first code point of each run of ten Unicode decimal digits (general category `Decimal_Number`), as of
+/// Unicode 15.1. Unicode guarantees that decimal digits come in such runs, so a digit's value is its offset from
+/// the run's start.
 const DECIMAL_ZEROS: [u32; 68] = [
     0x0030, 0x0660, 0x06F0, 0x07C0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0x0DE6,
     0x0E50, 0x0ED0, 0x0F20, 0x1040, 0x1090, 0x17E0, 0x1810, 0x1946, 0x19D0, 0x1A80, 0x1A90, 0x1B50, 0x1BB0, 0x1C40,
