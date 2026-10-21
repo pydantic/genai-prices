@@ -213,3 +213,14 @@ fn extraction_matches_the_model_like_python() {
 fn calculator_without_the_model() -> Calculator {
     calculator(r#"[{"id":"testing","name":"Testing","api_pattern":"testing","models":[]}]"#)
 }
+
+#[cfg(feature = "bundled")]
+#[test]
+fn compact_dates_with_unicode_digits() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let price = |model| genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("openai"));
+    // Python reads Arabic-Indic digits matched by `\d` as the date 2025-08-07, so the dated alias matches.
+    assert_eq!(price("gpt-5-mini-20\u{662}\u{665}0807").unwrap().model_id, "gpt-5-mini");
+    // An unknown model with such digits is not found rather than a panic.
+    assert_eq!(price("unknown-20\u{662}\u{665}1211").unwrap_err().kind(), ErrorKind::ModelNotFound);
+}
