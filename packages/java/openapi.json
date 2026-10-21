@@ -3,14 +3,14 @@
   "info": {
     "title": "genai-prices API",
     "version": "1.0.0",
-    "description": "Prices one LLM API call. Send a `User-Agent` that starts with your client name and version."
+    "description": "Prices LLM API calls and serves the price data. Send a `User-Agent` that starts with your client name and version."
   },
   "servers": [{ "url": "https://genai-prices.pydantic.dev" }],
   "security": [],
   "paths": {
-    "/v1/price": {
+    "/v1/prices/calculate": {
       "post": {
-        "operationId": "price",
+        "operationId": "calculatePrice",
         "summary": "Price one LLM API call",
         "requestBody": {
           "required": true,
@@ -31,6 +31,34 @@
           },
           "422": {
             "description": "The request is not valid, or the usage cannot be priced.",
+            "content": { "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetail" } } }
+          }
+        }
+      }
+    },
+    "/v1/prices": {
+      "get": {
+        "operationId": "getPrices",
+        "summary": "Download the price data",
+        "description": "Returns the published genai-prices v2 `data.json`, which an SDK uses to price calls locally. Send the last `ETag` in `If-None-Match` to get a `304` when the data has not changed.",
+        "parameters": [{ "name": "If-None-Match", "in": "header", "required": false, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "The price data.",
+            "headers": { "ETag": { "schema": { "type": "string" } } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object", "description": "One provider, with its models and their prices." },
+                  "description": "Its schema is https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.schema.json."
+                }
+              }
+            }
+          },
+          "304": { "description": "The data has not changed since the `ETag` in `If-None-Match`." },
+          "502": {
+            "description": "The price data source failed.",
             "content": { "application/problem+json": { "schema": { "$ref": "#/components/schemas/ProblemDetail" } } }
           }
         }

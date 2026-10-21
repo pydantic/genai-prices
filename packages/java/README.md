@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Example {
     public static void main(String[] args) throws Exception {
-        PriceResponse price = GenaiPrices.client().price(new PriceRequest()
+        PriceResponse price = GenaiPrices.client().calculatePrice(new PriceRequest()
                 .model("gpt-4o")
                 .providerId("openai")
                 .timestamp(OffsetDateTime.parse("2025-01-01T00:00:00Z"))
@@ -41,7 +41,24 @@ Map<String, Object> openaiResponse = Map.of(
         "usage", Map.of("prompt_tokens", 1000, "completion_tokens", 300));
 
 PriceResponse price = GenaiPrices.client()
-        .price(new PriceRequest().providerId("openai").apiFlavor("chat").response(openaiResponse));
+        .calculatePrice(new PriceRequest().providerId("openai").apiFlavor("chat").response(openaiResponse));
+```
+
+## Download the price data
+
+`getPrices` returns the price data, a list of providers with their models and prices. Pass the last `ETag` to check for
+changes cheaply. If the data has not changed, the call throws `ApiException` with code `304`.
+
+```java
+ApiResponse<List<Object>> response = GenaiPrices.client().getPricesWithHttpInfo(null);
+String etag = response.getHeaders().get("etag").get(0);
+
+try {
+    List<Object> providers = GenaiPrices.client().getPrices(etag);
+} catch (ApiException e) {
+    if (e.getCode() != 304) throw e;
+    // The data has not changed since `etag`.
+}
 ```
 
 ## Errors
