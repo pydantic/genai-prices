@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 
 use fancy_regex::{Captures, Regex};
 
-use crate::error::{Error, Result};
+use crate::error::{Error, ErrorKind, Result};
 use crate::model::{Model, Provider};
 
 /// A matching rule from the provider data. Every comparison is case-insensitive except `Regex`; literals are
@@ -67,7 +67,7 @@ impl<'a> Subject<'a> {
 }
 
 pub(crate) fn regex_matches(regex: &Regex, text: &str) -> Result<bool> {
-    regex.is_match(text).map_err(|error| Error::Match(format!("regex {:?}: {error}", regex.as_str())))
+    regex.is_match(text).map_err(|error| Error::new(ErrorKind::Match, format!("regex {:?}: {error}", regex.as_str())))
 }
 
 /// Finds a provider by exact ID, then by its `provider_match` alias rule.

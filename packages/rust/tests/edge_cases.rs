@@ -7,7 +7,7 @@
 mod common;
 
 use common::{assert_close, calculator, usage};
-use genai_prices::{Calculator, Error, ExtractRequest, PriceRequest, Usage, UsageKey};
+use genai_prices::{Calculator, ErrorKind, ExtractRequest, PriceRequest, Usage, UsageKey};
 
 fn provider(body: &str) -> String {
     format!(r#"[{{"id":"testing","name":"Testing","api_pattern":"testing",{body}}}]"#)
@@ -64,7 +64,7 @@ fn rejects_malformed_shapes() {
         provider(r#""models":[{"id":"model","match":5}]"#),
     ] {
         let result = Calculator::from_json(&data);
-        assert!(matches!(result, Err(Error::InvalidData(_))), "accepted or misclassified {data}: {result:?}");
+        assert_eq!(common::error_kind(&result), Some(ErrorKind::InvalidData), "accepted or misclassified {data}");
     }
 }
 
@@ -80,14 +80,17 @@ fn accepts_optional_fields_and_explicit_nulls() {
              "price_variants":[{"when":{"tier":"x"},"constraint":null,"prices":{"input_mtok":3,"output_mtok":null}}]}
         ]"#,
     ));
-    let free = calculator
-        .calculate(&PriceRequest::new("free", usage([(UsageKey::INPUT_TOKENS, 1.0)])).with_provider_id("testing"));
+    let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
+    let free = calculator.calculate(&PriceRequest::new("free", &one).with_provider_id("testing"));
     assert_eq!(free.unwrap().total_price, 0.0);
-    let timed = PriceRequest::new("timed", usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]))
+    let million = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    let timed = PriceRequest::new("timed", &million)
         .with_provider_id("testing")
         .with_timestamp(common::utc(2026, 1, 1, 12, 0, 0));
     assert_eq!(calculator.calculate(&timed).unwrap().total_price, 1.0);
-    assert_eq!(calculator.calculate(&timed.with_price_context("tier", "x")).unwrap().total_price, 3.0);
+    let tiered = timed.clone().with_price_context("tier", "y").with_price_context("tier", "x");
+    assert_eq!(calculator.calculate(&tiered).unwrap().total_price, 3.0, "the last duplicate context key wins");
+    assert_eq!(calculator.calculate(&timed.with_price_context("tier", "y")).unwrap().total_price, 1.0);
 
     // Optional mappings skip values that are not numbers.
     let extracted = calculator
@@ -105,12 +108,13 @@ fn decomposition_tolerates_rounding_error() {
     // 0.3 - (0.1 + 0.2) is about -5.6e-17, which is rounding error rather than inconsistent usage.
     let rounded =
         usage([(UsageKey::INPUT_TOKENS, 0.3), (UsageKey::CACHE_READ_TOKENS, 0.1), (UsageKey::CACHE_WRITE_TOKENS, 0.2)]);
-    let calculation = calculator.calculate(&PriceRequest::new("model", rounded).with_provider_id("testing")).unwrap();
+    let calculation = calculator.calculate(&PriceRequest::new("model", &rounded).with_provider_id("testing")).unwrap();
     assert_close(calculation.input_price, 0.3 / 1e6, 1e-18);
 
     let overlapping =
         usage([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::CACHE_READ_TOKENS, 0.6), (UsageKey::CACHE_WRITE_TOKENS, 0.6)]);
-    let error = calculator.calculate(&PriceRequest::new("model", overlapping).with_provider_id("testing")).unwrap_err();
+    let error =
+        calculator.calculate(&PriceRequest::new("model", &overlapping).with_provider_id("testing")).unwrap_err();
     assert_eq!(
         error.to_string(),
         "invalid usage: more-specific usage for cache_read_tokens, cache_write_tokens totals 1.2, \
@@ -118,31 +122,16 @@ fn decomposition_tolerates_rounding_error() {
     );
 
     let exceeding = usage([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::CACHE_READ_TOKENS, 2.0)]);
-    let error = calculator.calculate(&PriceRequest::new("model", exceeding).with_provider_id("testing")).unwrap_err();
+    let error = calculator.calculate(&PriceRequest::new("model", &exceeding).with_provider_id("testing")).unwrap_err();
     assert_eq!(error.to_string(), "invalid usage: cache_read_tokens (2) cannot exceed input_tokens (1)");
 }
 
+#[cfg(feature = "bundled")]
 #[test]
 fn unknown_model_without_a_provider() {
-    let error = genai_prices::calculate(&PriceRequest::new("no-such-model", Usage::new())).unwrap_err();
-    assert!(matches!(error, Error::ProviderNotFound(_)), "{error}");
-}
-
-#[test]
-fn error_display() {
-    let cases = [
-        (Error::ProviderNotFound("a".into()), "provider not found: a"),
-        (Error::ModelNotFound("a".into()), "model not found: a"),
-        (Error::ExtractorNotFound("a".into()), "usage extractor not found: a"),
-        (Error::InvalidUsage("a".into()), "invalid usage: a"),
-        (Error::InvalidData("a".into()), "invalid provider data: a"),
-        (Error::InvalidResponse("a".into()), "invalid response: a"),
-        (Error::Match("a".into()), "match failed: a"),
-    ];
-    for (error, message) in cases {
-        assert_eq!(error.to_string(), message);
-    }
-    assert_eq!(UsageKey::from_static("input_tokens"), UsageKey::INPUT_TOKENS);
+    let usage = Usage::new();
+    let error = genai_prices::calculate(&PriceRequest::new("no-such-model", &usage)).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::ProviderNotFound, "{error}");
 }
 
 #[test]
@@ -150,7 +139,7 @@ fn catastrophic_regex_fails_instead_of_hanging() {
     // A lookahead inside the repetition forces the backtracking engine, and two branches that match the same
     // text make it exponential. The backtrack limit plays the role of the Go engine's match timeout.
     let calculator = calculator(&provider(r#""models":[{"id":"model","match":{"regex":"^((?=a)a|a)+b"}}]"#));
-    let request = PriceRequest::new("a".repeat(64), Usage::new()).with_provider_id("testing");
-    let error = calculator.calculate(&request).unwrap_err();
-    assert!(matches!(error, Error::Match(_)), "{error}");
+    let (model, usage) = ("a".repeat(64), Usage::new());
+    let error = calculator.calculate(&PriceRequest::new(&model, &usage).with_provider_id("testing")).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::Match, "{error}");
 }

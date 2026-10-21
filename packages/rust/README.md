@@ -15,14 +15,26 @@ cargo add genai-prices
 use genai_prices::{PriceRequest, Usage, UsageKey};
 
 let usage = Usage::from([(UsageKey::INPUT_TOKENS, 1_000.0), (UsageKey::OUTPUT_TOKENS, 100.0)]);
-let price = genai_prices::calculate(&PriceRequest::new("gpt-5", usage).with_provider_id("openai"))?;
+let price = genai_prices::calculate(&PriceRequest::new("gpt-5", &usage).with_provider_id("openai"))?;
 
 println!("${:.6}", price.total_price);
 # Ok::<(), genai_prices::Error>(())
 ```
 
-`calculate` uses pricing data embedded at release time. Pass a provider ID when you know the provider. This avoids
-an ambiguous model name selecting the wrong provider.
+`calculate` uses pricing data embedded at release time; it is decoded on first use, which takes tens of
+milliseconds, so call `Calculator::bundled()` at startup if that matters. Pass a provider ID when you know the
+provider. This avoids an ambiguous model name selecting the wrong provider.
+
+Prices are `f64` US dollars, as in the Go and JavaScript packages. Errors carry an `ErrorKind` to match on:
+
+```rust
+use genai_prices::{ErrorKind, PriceRequest, Usage};
+
+let usage = Usage::new();
+let error = genai_prices::calculate(&PriceRequest::new("no-such-model", &usage).with_provider_id("openai"))
+    .unwrap_err();
+assert_eq!(error.kind(), ErrorKind::ModelNotFound);
+```
 
 Requests are priced at the rates in effect when they were made. `timestamp` defaults to now; set it with
 `with_timestamp`, which takes anything convertible to `std::time::SystemTime`, including `chrono`, `jiff` and
@@ -36,12 +48,13 @@ use std::time::{Duration, UNIX_EPOCH};
 use genai_prices::{PriceRequest, Usage, UsageKey};
 
 let usage = Usage::from([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]);
-let request = PriceRequest::new("o3", usage)
+let request = PriceRequest::new("o3", &usage)
     .with_provider_id("openai")
     .with_timestamp(UNIX_EPOCH + Duration::from_secs(1_791_763_200)) // 2026-10-12
     .with_price_context("service_tier", "flex");
 
-assert_eq!(genai_prices::calculate(&request)?.total_price, 5.0);
+let price = genai_prices::calculate(&request)?;
+assert!((price.total_price - 5.0).abs() < 1e-9);
 # Ok::<(), genai_prices::Error>(())
 ```
 
@@ -66,12 +79,13 @@ use std::time::{Duration, UNIX_EPOCH};
 use genai_prices::{PriceRequest, Usage, UsageKey};
 
 let usage = Usage::from([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]);
-let request = PriceRequest::new("o3", usage)
+let request = PriceRequest::new("o3", &usage)
     .with_provider_id("openai")
     .with_timestamp(UNIX_EPOCH + Duration::from_secs(1_791_936_000)) // 2026-10-14
     .with_price_context("processing", "batch");
 
-assert_eq!(genai_prices::calculate(&request)?.total_price, 5.0);
+let price = genai_prices::calculate(&request)?;
+assert!((price.total_price - 5.0).abs() < 1e-9);
 # Ok::<(), genai_prices::Error>(())
 ```
 
@@ -85,21 +99,22 @@ A model the provider does not serve in batch returns the standard-price estimate
 ## Extract usage from a response
 
 ```rust
-use genai_prices::{ExtractRequest, PriceRequest};
+use genai_prices::ExtractRequest;
 
 let body = r#"{"model": "gpt-5", "usage": {"input_tokens": 1000, "output_tokens": 100}}"#;
 let extracted = genai_prices::extract_usage(
     &ExtractRequest::new(body).with_provider_id("openai").with_api_flavor("responses"),
 )?;
 
-let model = extracted.model.unwrap_or_default();
-let request = PriceRequest::new(model, extracted.usage).with_provider_id(extracted.provider_id);
-println!("${:.6}", genai_prices::calculate(&request)?.total_price);
+if let Some(request) = extracted.price_request() {
+    println!("${:.6}", genai_prices::calculate(&request)?.total_price);
+}
 # Ok::<(), genai_prices::Error>(())
 ```
 
 The API flavor selects the response shape used by a provider. For example, OpenAI exposes `chat` and `responses`
-shapes.
+shapes. If you have already parsed the body, pass it with `ExtractRequest::from_value` instead of parsing it twice.
+`PriceCalculation` and `ExtractedUsage` implement `serde::Serialize` for logging or forwarding.
 
 ## Load current pricing data
 
@@ -113,10 +128,17 @@ let body = reqwest::blocking::get(REMOTE_DATA_URL)?.error_for_status()?.bytes()?
 let calculator = Calculator::from_json(&body)?;
 
 let usage = Usage::from([(UsageKey::INPUT_TOKENS, 1_000.0)]);
-let price = calculator.calculate(&PriceRequest::new("gpt-5", usage).with_provider_id("openai"))?;
+let price = calculator.calculate(&PriceRequest::new("gpt-5", &usage).with_provider_id("openai"))?;
 println!("${:.6}", price.total_price);
 ```
 
 `Calculator::from_json` creates an immutable snapshot. A failed download or invalid payload cannot replace a
 calculator that your application is already using; share it across threads with an `Arc` and swap it (e.g. with
 `arc-swap`) once a new snapshot loads.
+
+If you only ever load data this way, disable the default `bundled` feature to leave the embedded data out of your
+binary:
+
+```toml
+genai-prices = { version = "...", default-features = false }
+```

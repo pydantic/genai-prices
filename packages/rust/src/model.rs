@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 
 use crate::matching::MatchLogic;
-use crate::time::Instant;
+use crate::time::Timestamp;
 
 #[derive(Debug)]
 pub(crate) struct Provider {
@@ -91,7 +91,7 @@ pub(crate) enum Constraint {
 }
 
 impl Constraint {
-    pub(crate) fn is_active(constraint: Option<&Self>, timestamp: Instant) -> bool {
+    pub(crate) fn is_active(constraint: Option<&Self>, timestamp: Timestamp) -> bool {
         match constraint {
             None => true,
             Some(Self::StartDate(start)) => timestamp.seconds >= *start,
@@ -141,7 +141,7 @@ pub(crate) enum PathStep {
 
 impl Model {
     /// The standard prices in effect at `timestamp`: the last conditional price whose constraint matches.
-    pub(crate) fn active_price(&self, timestamp: Instant) -> &ModelPrice {
+    pub(crate) fn active_price(&self, timestamp: Timestamp) -> &ModelPrice {
         match &self.prices {
             ModelPrices::Direct(prices) => prices,
             ModelPrices::Conditional(conditional) => conditional

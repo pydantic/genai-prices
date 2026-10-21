@@ -7,8 +7,8 @@
 
 mod common;
 
-use common::{assert_close, calculator, usage, utc};
-use genai_prices::{Error, ExtractRequest, PriceRequest, Usage, UsageKey};
+use common::{assert_close, calculator, error_kind, usage, utc};
+use genai_prices::{ErrorKind, ExtractRequest, PriceRequest, Usage, UsageKey};
 
 #[test]
 fn provider_and_model_matching() {
@@ -48,16 +48,18 @@ fn provider_and_model_matching() {
         ("compact date", "model-20251211", Some("source"), None, "dated"),
         ("litellm", "source/source-equals", Some(" LiTeLLM "), None, "equals"),
     ];
+    let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
     for &(name, model, provider_id, provider_api_url, want_model) in cases {
-        let mut request = PriceRequest::new(model, usage([(UsageKey::INPUT_TOKENS, 1.0)]));
-        request.provider_id = provider_id.map(str::to_owned);
-        request.provider_api_url = provider_api_url.map(str::to_owned);
+        let mut request = PriceRequest::new(model, &one);
+        request.provider_id = provider_id;
+        request.provider_api_url = provider_api_url;
         let calculation = calculator.calculate(&request).unwrap_or_else(|error| panic!("{name}: {error}"));
         assert_eq!(calculation.model_id, want_model, "{name}");
     }
+    let empty = Usage::new();
     for model in ["source-regex-tts", "model-20250230"] {
-        let error = calculator.calculate(&PriceRequest::new(model, Usage::new()).with_provider_id("source"));
-        assert!(matches!(error, Err(Error::ModelNotFound(_))), "{model}: {error:?}");
+        let error = calculator.calculate(&PriceRequest::new(model, &empty).with_provider_id("source"));
+        assert_eq!(error_kind(&error), Some(ErrorKind::ModelNotFound), "{model}");
     }
 }
 
@@ -104,11 +106,12 @@ fn conditional_tiered_and_request_pricing() {
         ("request", None, Usage::new(), 0.005),
         ("date", Some(utc(2025, 1, 1, 0, 0, 0)), million_input(), 1.0),
     ];
-    for (model, timestamp, usage, want) in cases {
+    for (model, timestamp, usage, want) in &cases {
         let mut request = PriceRequest::new(model, usage).with_provider_id("testing");
+        let timestamp = *timestamp;
         request.timestamp = timestamp;
         let calculation = calculator.calculate(&request).unwrap();
-        assert_close(calculation.total_price, want, 1e-12);
+        assert_close(calculation.total_price, *want, 1e-12);
     }
 }
 
@@ -124,9 +127,9 @@ fn time_zone_normalization() {
         ]}
     ]"#,
     );
-    let request = PriceRequest::new("offset", usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]))
-        .with_provider_id("testing")
-        .with_timestamp(utc(2026, 1, 1, 12, 0, 0));
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    let request =
+        PriceRequest::new("offset", &usage).with_provider_id("testing").with_timestamp(utc(2026, 1, 1, 12, 0, 0));
     assert_eq!(calculator.calculate(&request).unwrap().total_price, 1.0);
 }
 
@@ -139,8 +142,9 @@ fn tiered_pricing_requires_total_input_tokens() {
         ]}
     ]"#,
     );
-    let request = PriceRequest::new("model", usage([(UsageKey::INPUT_AUDIO_TOKENS, 1.0)])).with_provider_id("testing");
-    assert!(matches!(calculator.calculate(&request), Err(Error::InvalidUsage(_))));
+    let usage = usage([(UsageKey::INPUT_AUDIO_TOKENS, 1.0)]);
+    let request = PriceRequest::new("model", &usage).with_provider_id("testing");
+    assert_eq!(error_kind(&calculator.calculate(&request)), Some(ErrorKind::InvalidUsage));
 }
 
 #[test]
@@ -160,7 +164,7 @@ fn usage_decomposition_errors() {
         (UsageKey::INPUT_AUDIO_TOKENS, 40.0),
         (UsageKey::CACHE_AUDIO_READ_TOKENS, 10.0),
     ]);
-    let calculation = calculator.calculate(&PriceRequest::new("units", valid).with_provider_id("testing")).unwrap();
+    let calculation = calculator.calculate(&PriceRequest::new("units", &valid).with_provider_id("testing")).unwrap();
     assert_close(calculation.total_price, 0.000_24, 1e-15);
 
     let invalid = [
@@ -170,11 +174,12 @@ fn usage_decomposition_errors() {
         usage([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::CACHE_READ_TOKENS, 1.0), (UsageKey::INPUT_AUDIO_TOKENS, 1.0)]),
     ];
     for usage in invalid {
-        let result = calculator.calculate(&PriceRequest::new("units", usage.clone()).with_provider_id("testing"));
-        assert!(matches!(result, Err(Error::InvalidUsage(_))), "usage {usage:?}: {result:?}");
+        let result = calculator.calculate(&PriceRequest::new("units", &usage).with_provider_id("testing"));
+        assert_eq!(error_kind(&result), Some(ErrorKind::InvalidUsage), "usage {usage:?}");
     }
 }
 
+#[cfg(feature = "bundled")]
 #[test]
 fn groq_transcription_minimum() {
     let cases = [
@@ -188,7 +193,7 @@ fn groq_transcription_minimum() {
         ("whisper-large-v3-turbo", usage([(UsageKey::AUDIO_SECONDS, 11.0)]), 0.04 * 11.0 / 3600.0),
     ];
     for (model, usage, want) in cases {
-        let calculation = genai_prices::calculate(&PriceRequest::new(model, usage).with_provider_id("groq")).unwrap();
+        let calculation = genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("groq")).unwrap();
         assert_close(calculation.total_price, want, 1e-12);
     }
 }
@@ -238,7 +243,7 @@ fn extract_usage_paths_and_cloudflare_url() {
             .with_provider_id("testing")
             .with_api_flavor("chat"),
     );
-    assert!(matches!(overflow, Err(Error::InvalidUsage(_))), "{overflow:?}");
+    assert!(common::error_kind(&overflow) == Some(ErrorKind::InvalidUsage), "{overflow:?}");
 
     let cloudflare = calculator
         .extract_usage(
@@ -268,7 +273,7 @@ fn future_price_key_is_ignored() {
     );
     let calculation = calculator
         .calculate(
-            &PriceRequest::new("model", usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)])).with_provider_id("testing"),
+            &PriceRequest::new("model", &usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)])).with_provider_id("testing"),
         )
         .unwrap();
     assert_eq!(calculation.total_price, 1.0);
@@ -287,57 +292,36 @@ fn extract_usage_errors() {
         ],"models":[]}
     ]"#,
     );
-    let testing =
-        |flavor: &str, body: &str| ExtractRequest::new(body).with_provider_id("testing").with_api_flavor(flavor);
-    let cases: Vec<(&str, ExtractRequest, fn(&Error) -> bool)> = vec![
-        ("no selector", ExtractRequest::default(), |error| matches!(error, Error::ProviderNotFound(_))),
-        (
-            "both selectors",
-            ExtractRequest::default().with_provider_id("testing").with_provider_api_url("testing"),
-            |error| matches!(error, Error::InvalidUsage(_)),
-        ),
-        ("unknown provider", ExtractRequest::default().with_provider_id("missing"), |error| {
-            matches!(error, Error::ProviderNotFound(_))
-        }),
-        ("no extractors", ExtractRequest::default().with_provider_id("empty"), |error| {
-            matches!(error, Error::ExtractorNotFound(_))
-        }),
-        ("unknown flavor", ExtractRequest::default().with_provider_id("testing"), |error| {
-            matches!(error, Error::ExtractorNotFound(_))
-        }),
-        ("invalid JSON", testing("required", "x"), |error| matches!(error, Error::InvalidResponse(_))),
-        ("non-mapping", testing("required", "[]"), |error| matches!(error, Error::InvalidResponse(_))),
-        ("null response", testing("required", "null"), |error| matches!(error, Error::InvalidResponse(_))),
-        ("boolean response", testing("required", "true"), |error| matches!(error, Error::InvalidResponse(_))),
-        ("missing root", testing("required", "{}"), |error| matches!(error, Error::InvalidResponse(_))),
-        ("wrong root", testing("required", r#"{"usage":1}"#), |error| matches!(error, Error::InvalidResponse(_))),
-        ("missing required", testing("required", r#"{"usage":{}}"#), |error| {
-            matches!(error, Error::InvalidResponse(_))
-        }),
-        ("wrong required type", testing("required", r#"{"usage":{"input":"1"}}"#), |error| {
-            matches!(error, Error::InvalidResponse(_))
-        }),
-        ("wrong nested mapping", testing("optional", r#"{"usage":{"nested":true}}"#), |error| {
-            matches!(error, Error::InvalidResponse(_))
-        }),
-        ("negative", testing("required", r#"{"usage":{"input":-1}}"#), |error| matches!(error, Error::InvalidUsage(_))),
-        ("no optional usage", testing("optional", r#"{"usage":{"nested":1}}"#), |error| {
-            matches!(error, Error::InvalidResponse(_))
-        }),
-        ("array expected", testing("array", r#"{"usage":{"items":{}}}"#), |error| {
-            matches!(error, Error::InvalidResponse(_))
-        }),
+    let testing = |flavor: &'static str, body: &'static str| {
+        ExtractRequest::new(body).with_provider_id("testing").with_api_flavor(flavor)
+    };
+    let empty = ExtractRequest::new("");
+    let cases = [
+        ("no selector", empty, ErrorKind::ProviderNotFound),
+        ("both selectors", empty.with_provider_id("testing").with_provider_api_url("testing"), ErrorKind::InvalidUsage),
+        ("unknown provider", empty.with_provider_id("missing"), ErrorKind::ProviderNotFound),
+        ("no extractors", empty.with_provider_id("empty"), ErrorKind::ExtractorNotFound),
+        ("unknown flavor", empty.with_provider_id("testing"), ErrorKind::ExtractorNotFound),
+        ("invalid JSON", testing("required", "x"), ErrorKind::InvalidResponse),
+        ("non-mapping", testing("required", "[]"), ErrorKind::InvalidResponse),
+        ("null response", testing("required", "null"), ErrorKind::InvalidResponse),
+        ("boolean response", testing("required", "true"), ErrorKind::InvalidResponse),
+        ("missing root", testing("required", "{}"), ErrorKind::InvalidResponse),
+        ("wrong root", testing("required", r#"{"usage":1}"#), ErrorKind::InvalidResponse),
+        ("missing required", testing("required", r#"{"usage":{}}"#), ErrorKind::InvalidResponse),
+        ("wrong required type", testing("required", r#"{"usage":{"input":"1"}}"#), ErrorKind::InvalidResponse),
+        ("wrong nested mapping", testing("optional", r#"{"usage":{"nested":true}}"#), ErrorKind::InvalidResponse),
+        ("negative", testing("required", r#"{"usage":{"input":-1}}"#), ErrorKind::InvalidUsage),
+        ("no optional usage", testing("optional", r#"{"usage":{"nested":1}}"#), ErrorKind::InvalidResponse),
+        ("array expected", testing("array", r#"{"usage":{"items":{}}}"#), ErrorKind::InvalidResponse),
         (
             "array item missing",
             testing("array", r#"{"usage":{"items":[null,{"kind":1},{"kind":"other"}]}}"#),
-            |error| matches!(error, Error::InvalidResponse(_)),
+            ErrorKind::InvalidResponse,
         ),
     ];
-    for (name, request, expected) in cases {
-        match calculator.extract_usage(&request) {
-            Ok(extracted) => panic!("{name}: expected an error, got {extracted:?}"),
-            Err(error) => assert!(expected(&error), "{name}: unexpected {error:?}"),
-        }
+    for (name, request, kind) in cases {
+        assert_eq!(error_kind(&calculator.extract_usage(&request)), Some(kind), "{name}");
     }
 }
 
@@ -395,6 +379,9 @@ fn invalid_provider_data() {
     ];
     for data in cases {
         let result = genai_prices::Calculator::from_json(&data);
-        assert!(matches!(result, Err(Error::InvalidData(_))), "accepted or misclassified {data}: {result:?}");
+        assert!(
+            common::error_kind(&result) == Some(ErrorKind::InvalidData),
+            "accepted or misclassified {data}: {result:?}"
+        );
     }
 }

@@ -9,6 +9,7 @@ use std::collections::{BTreeMap, HashSet};
 use fancy_regex::Regex;
 use serde_json::{Map, Value};
 
+use crate::error::{Error, ErrorKind};
 use crate::matching::MatchLogic;
 use crate::model::{
     ConditionalPrice, Constraint, ExtractPath, Model, ModelPrice, ModelPrices, PathStep, PriceValue, PriceVariant,
@@ -19,10 +20,15 @@ use crate::units::{Registry, validate_model_price};
 
 type DecodeResult<T> = Result<T, String>;
 
-pub(crate) fn decode_providers(data: &[u8], registry: &Registry) -> DecodeResult<Vec<Provider>> {
-    let value: Value = serde_json::from_slice(data).map_err(|error| error.to_string())?;
+pub(crate) fn decode_providers(data: &[u8], registry: &Registry) -> crate::Result<Vec<Provider>> {
+    let value: Value = serde_json::from_slice(data)
+        .map_err(|error| Error::new(ErrorKind::InvalidData, error.to_string()).with_source(error))?;
+    decode_provider_array(&value, registry).map_err(|message| Error::new(ErrorKind::InvalidData, message))
+}
+
+fn decode_provider_array(value: &Value, registry: &Registry) -> DecodeResult<Vec<Provider>> {
     let Value::Array(items) = value else {
-        return Err(format!("expected a provider array, got {}", type_name(&value)));
+        return Err(format!("expected a provider array, got {}", type_name(value)));
     };
     let providers = items.iter().map(|item| decode_provider(item, registry)).collect::<DecodeResult<Vec<_>>>()?;
     let mut ids = HashSet::with_capacity(providers.len());

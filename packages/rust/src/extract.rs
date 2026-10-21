@@ -4,59 +4,82 @@ use serde_json::{Map, Value};
 
 use crate::calculator::{Calculator, non_empty};
 use crate::decode::type_name;
-use crate::error::{Error, Result, validate_number};
+use crate::error::{Error, ErrorKind, Result, validate_number};
 use crate::matching::{MatchLogic, Subject, find_model, find_provider};
 use crate::model::{PathStep, UsageExtractor};
-use crate::request::{ExtractRequest, ExtractedUsage};
-use crate::usage::{Usage, UsageKey};
+use crate::request::{Body, ExtractRequest, ExtractedUsage};
+use crate::usage::Usage;
 
 impl Calculator {
-    /// Extracts usage and the model from a raw JSON response body.
+    /// Extracts usage and the model from a response body.
     ///
     /// # Errors
     ///
-    /// Returns [`Error::ProviderNotFound`] or [`Error::ExtractorNotFound`] if the request selects no
-    /// extractor, and [`Error::InvalidResponse`] if the body does not have the extractor's shape.
-    pub fn extract_usage(&self, request: &ExtractRequest) -> Result<ExtractedUsage> {
-        let provider_id = non_empty(request.provider_id.as_deref().map(str::trim));
-        let provider_api_url = non_empty(request.provider_api_url.as_deref());
+    /// Returns an [`ErrorKind::ProviderNotFound`] or [`ErrorKind::ExtractorNotFound`] error if the request
+    /// selects no extractor, and an [`ErrorKind::InvalidResponse`] error if the body does not have the
+    /// extractor's shape.
+    pub fn extract_usage(&self, request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
+        let provider_id = non_empty(request.provider_id.map(str::trim));
+        let provider_api_url = non_empty(request.provider_api_url);
         match (provider_id, provider_api_url) {
-            (None, None) => return Err(Error::ProviderNotFound("provider ID or provider API URL is required".into())),
+            (None, None) => {
+                return Err(Error::new(ErrorKind::ProviderNotFound, "provider ID or provider API URL is required"));
+            }
             (Some(_), Some(_)) => {
-                return Err(Error::InvalidUsage("provider ID and provider API URL are mutually exclusive".into()));
+                return Err(Error::new(
+                    ErrorKind::InvalidUsage,
+                    "provider ID and provider API URL are mutually exclusive",
+                ));
             }
             _ => {}
         }
         let selected = find_provider(&self.providers, "", provider_id, provider_api_url)?.ok_or_else(|| {
-            Error::ProviderNotFound(format!(
-                "provider_id={:?} provider_api_url={:?}",
-                provider_id.unwrap_or_default(),
-                provider_api_url.unwrap_or_default(),
-            ))
+            Error::new(
+                ErrorKind::ProviderNotFound,
+                format!(
+                    "provider_id={:?} provider_api_url={:?}",
+                    provider_id.unwrap_or_default(),
+                    provider_api_url.unwrap_or_default(),
+                ),
+            )
         })?;
         let provider = &self.providers[selected];
         if provider.extractors.is_empty() {
-            return Err(Error::ExtractorNotFound(format!("no extraction logic for provider {:?}", provider.id)));
+            return Err(Error::new(
+                ErrorKind::ExtractorNotFound,
+                format!("no extraction logic for provider {:?}", provider.id),
+            ));
         }
-        let flavor = non_empty(request.api_flavor.as_deref()).unwrap_or("default");
+        let flavor = non_empty(request.api_flavor).unwrap_or("default");
         let extractor =
             provider.extractors.iter().find(|extractor| extractor.api_flavor == flavor).ok_or_else(|| {
                 let flavors: Vec<&str> =
                     provider.extractors.iter().map(|extractor| extractor.api_flavor.as_str()).collect();
-                Error::ExtractorNotFound(format!(
-                    "unknown API flavor {flavor:?} for provider {:?}; allowed values: {}",
-                    provider.id,
-                    flavors.join(", "),
-                ))
+                Error::new(
+                    ErrorKind::ExtractorNotFound,
+                    format!(
+                        "unknown API flavor {flavor:?} for provider {:?}; allowed values: {}",
+                        provider.id,
+                        flavors.join(", "),
+                    ),
+                )
             })?;
 
-        let response: Value = serde_json::from_slice(&request.response_json)
-            .map_err(|error| Error::InvalidResponse(format!("decode response JSON: {error}")))?;
-        let Value::Object(response) = &response else {
-            return Err(Error::InvalidResponse(format!(
-                "expected response data to be a mapping, got {}",
-                type_name(&response),
-            )));
+        let parsed;
+        let response = match request.body {
+            Body::Value(value) => value,
+            Body::Json(json) => {
+                parsed = serde_json::from_slice::<Value>(json).map_err(|error| {
+                    Error::new(ErrorKind::InvalidResponse, format!("decode response JSON: {error}")).with_source(error)
+                })?;
+                &parsed
+            }
+        };
+        let Value::Object(response) = response else {
+            return Err(Error::new(
+                ErrorKind::InvalidResponse,
+                format!("expected response data to be a mapping, got {}", type_name(response)),
+            ));
         };
         let mut model =
             extract_path(&extractor.model_path, response, false, &[])?.and_then(Value::as_str).map(str::to_owned);
@@ -79,11 +102,14 @@ impl Calculator {
     ) -> Result<(Usage, Vec<String>)> {
         let root = extract_path(&extractor.root, response, true, &[])?.expect("required paths are found or fail");
         let Value::Object(root_value) = root else {
-            return Err(Error::InvalidResponse(format!(
-                "expected `{}` value to be a mapping, got {}",
-                dotted_path(&extractor.root, &[]),
-                type_name(root),
-            )));
+            return Err(Error::new(
+                ErrorKind::InvalidResponse,
+                format!(
+                    "expected `{}` value to be a mapping, got {}",
+                    dotted_path(&extractor.root, &[]),
+                    type_name(root),
+                ),
+            ));
         };
 
         let mut usage = Usage::new();
@@ -100,24 +126,26 @@ impl Calculator {
             };
             let Some(number) = value.as_f64() else {
                 if mapping.required {
-                    return Err(Error::InvalidResponse(format!(
-                        "expected `{}` value to be a number, got {}",
-                        dotted_path(&extractor.root, &mapping.path),
-                        type_name(value),
-                    )));
+                    return Err(Error::new(
+                        ErrorKind::InvalidResponse,
+                        format!(
+                            "expected `{}` value to be a number, got {}",
+                            dotted_path(&extractor.root, &mapping.path),
+                            type_name(value),
+                        ),
+                    ));
                 }
                 continue;
             };
             validate_number(&mapping.dest, number)?;
-            let total = usage.entry(UsageKey::from(mapping.dest.as_str())).or_insert(0.0);
-            *total += number;
-            validate_number(&mapping.dest, *total)?;
+            let total = usage.add(&mapping.dest, number);
+            validate_number(&mapping.dest, total)?;
         }
         if supported_mappings > 0 && usage.is_empty() {
-            return Err(Error::InvalidResponse(format!(
-                "no usage information found at {}",
-                dotted_path(&extractor.root, &[]),
-            )));
+            return Err(Error::new(
+                ErrorKind::InvalidResponse,
+                format!("no usage information found at {}", dotted_path(&extractor.root, &[])),
+            ));
         }
         let warnings = if unsupported_destinations.is_empty() {
             Vec::new()
@@ -134,7 +162,12 @@ impl Calculator {
 /// # Errors
 ///
 /// See [`Calculator::extract_usage`].
-pub fn extract_usage(request: &ExtractRequest) -> Result<ExtractedUsage> {
+///
+/// # Panics
+///
+/// See [`Calculator::bundled`].
+#[cfg(feature = "bundled")]
+pub fn extract_usage(request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
     Calculator::bundled().extract_usage(request)
 }
 
@@ -146,7 +179,8 @@ fn extract_path<'a>(
     required: bool,
     prefix: &[PathStep],
 ) -> Result<Option<&'a Value>> {
-    let missing = |message: String| if required { Err(Error::InvalidResponse(message)) } else { Ok(None) };
+    let missing =
+        |message: String| if required { Err(Error::new(ErrorKind::InvalidResponse, message)) } else { Ok(None) };
     let mut current = None::<&'a Value>;
     for (index, step) in path.iter().enumerate() {
         let parent = || dotted_path(prefix, &path[..index]);

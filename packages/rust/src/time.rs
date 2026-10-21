@@ -6,12 +6,12 @@ const SECONDS_PER_DAY: i64 = 86_400;
 
 /// A point in time as whole seconds since the Unix epoch plus a sub-second fraction.
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
-pub(crate) struct Instant {
+pub(crate) struct Timestamp {
     pub(crate) seconds: i64,
     pub(crate) nanos: u32,
 }
 
-impl From<SystemTime> for Instant {
+impl From<SystemTime> for Timestamp {
     fn from(time: SystemTime) -> Self {
         match time.duration_since(UNIX_EPOCH) {
             Ok(after) => Self { seconds: saturating_seconds(after.as_secs()), nanos: after.subsec_nanos() },
@@ -27,7 +27,7 @@ impl From<SystemTime> for Instant {
     }
 }
 
-impl Instant {
+impl Timestamp {
     /// Seconds since midnight UTC, including the fraction.
     pub(crate) fn utc_seconds_of_day(self) -> f64 {
         #[allow(clippy::cast_precision_loss)] // always below 86,400
@@ -158,13 +158,13 @@ mod tests {
 
     #[test]
     fn instants() {
-        let instant = Instant::from(UNIX_EPOCH + Duration::from_millis(86_400_500));
-        assert_eq!(instant, Instant { seconds: 86_400, nanos: 500_000_000 });
+        let instant = Timestamp::from(UNIX_EPOCH + Duration::from_millis(86_400_500));
+        assert_eq!(instant, Timestamp { seconds: 86_400, nanos: 500_000_000 });
         assert!((instant.utc_seconds_of_day() - 0.5).abs() < 1e-9);
 
-        let before = Instant::from(UNIX_EPOCH - Duration::from_millis(1_500));
-        assert_eq!(before, Instant { seconds: -2, nanos: 500_000_000 });
+        let before = Timestamp::from(UNIX_EPOCH - Duration::from_millis(1_500));
+        assert_eq!(before, Timestamp { seconds: -2, nanos: 500_000_000 });
         assert!((before.utc_seconds_of_day() - 86_398.5).abs() < 1e-9);
-        assert_eq!(Instant::from(UNIX_EPOCH - Duration::from_secs(1)), Instant { seconds: -1, nanos: 0 });
+        assert_eq!(Timestamp::from(UNIX_EPOCH - Duration::from_secs(1)), Timestamp { seconds: -1, nanos: 0 });
     }
 }

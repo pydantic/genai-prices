@@ -26,3 +26,7 @@ pub fn usage<const N: usize>(values: [(UsageKey, f64); N]) -> Usage {
 pub fn assert_close(actual: f64, expected: f64, tolerance: f64) {
     assert!((actual - expected).abs() <= tolerance, "got {actual}, want {expected}");
 }
+
+pub fn error_kind<T>(result: &genai_prices::Result<T>) -> Option<genai_prices::ErrorKind> {
+    result.as_ref().err().map(genai_prices::Error::kind)
+}

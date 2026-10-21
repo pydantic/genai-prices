@@ -10,7 +10,7 @@ use std::fmt::Write as _;
 use std::sync::LazyLock;
 
 use crate::data_units::BUNDLED_UNITS;
-use crate::error::{Error, Result, validate_number};
+use crate::error::{Error, ErrorKind, Result, validate_number};
 use crate::model::{ModelPrice, PriceValue};
 use crate::usage::{Usage, UsageKey};
 
@@ -56,6 +56,12 @@ pub(crate) struct Registry {
 }
 
 pub(crate) static BUNDLED_REGISTRY: LazyLock<Registry> = LazyLock::new(|| Registry::new(BUNDLED_UNITS));
+
+/// The static string of a registered usage key, so keys built from strings need not allocate.
+pub(crate) fn registered_usage_key(key: &str) -> Option<&'static str> {
+    let registry = &*BUNDLED_REGISTRY;
+    registry.by_usage_key(key).map(|id| registry.unit(id).usage_key)
+}
 
 impl Registry {
     fn new(units: &'static [UnitDef]) -> Self {
@@ -158,15 +164,15 @@ pub(crate) fn validate_model_price(prices: &ModelPrice, registry: &Registry) -> 
 pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> Result<f64> {
     let key = registry.unit(unit).usage_key;
     if !registry.is_reported(key) {
-        return Err(Error::InvalidUsage(format!("unsupported usage key for standard pricing: {key}")));
+        return Err(Error::new(ErrorKind::InvalidUsage, format!("unsupported usage key for standard pricing: {key}")));
     }
-    if let Some(&value) = usage.get(key) {
+    if let Some(value) = usage.get(key) {
         validate_number(key, value)?;
         return Ok(value);
     }
 
     let mut positive = Vec::new();
-    for (reported_key, &value) in usage {
+    for (reported_key, value) in usage {
         let reported_key = reported_key.as_str();
         let Some(reported) = registry.by_usage_key(reported_key).filter(|_| registry.is_reported(reported_key)) else {
             continue;
@@ -177,9 +183,10 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
         }
         positive.push(reported);
         if registry.is_ancestor(unit, reported) {
-            return Err(Error::InvalidUsage(format!(
-                "missing usage value for {key} with positive reported descendant {reported_key}"
-            )));
+            return Err(Error::new(
+                ErrorKind::InvalidUsage,
+                format!("missing usage value for {key} with positive reported descendant {reported_key}"),
+            ));
         }
     }
     for (index, &left) in positive.iter().enumerate() {
@@ -188,11 +195,14 @@ pub(crate) fn usage_value(usage: &Usage, unit: UnitId, registry: &Registry) -> R
                 continue;
             }
             if registry.join(left, right) == Some(unit) {
-                return Err(Error::InvalidUsage(format!(
-                    "missing usage value for {key} with positive reported overlap {} and {}",
-                    registry.unit(left).usage_key,
-                    registry.unit(right).usage_key,
-                )));
+                return Err(Error::new(
+                    ErrorKind::InvalidUsage,
+                    format!(
+                        "missing usage value for {key} with positive reported overlap {} and {}",
+                        registry.unit(left).usage_key,
+                        registry.unit(right).usage_key,
+                    ),
+                ));
             }
         }
     }
@@ -249,17 +259,20 @@ fn negative_leaf_error(
         })
         .collect();
     if let Some((key, value)) = descendants.iter().find(|(_, value)| *value > unit_value) {
-        return Error::InvalidUsage(format!("{key} ({value}) cannot exceed {unit_key} ({unit_value})"));
+        return Error::new(ErrorKind::InvalidUsage, format!("{key} ({value}) cannot exceed {unit_key} ({unit_value})"));
     }
     let mut keys = String::new();
     for (index, (key, _)) in descendants.iter().enumerate() {
         let separator = if index == 0 { "" } else { ", " };
         let _ = write!(keys, "{separator}{key}");
     }
-    Error::InvalidUsage(format!(
-        "more-specific usage for {keys} totals {}, which exceeds {unit_key} ({unit_value})",
-        unit_value - leaf_value,
-    ))
+    Error::new(
+        ErrorKind::InvalidUsage,
+        format!(
+            "more-specific usage for {keys} totals {}, which exceeds {unit_key} ({unit_value})",
+            unit_value - leaf_value,
+        ),
+    )
 }
 
 /// Input, output and total prices in US dollars.
@@ -281,7 +294,7 @@ pub(crate) fn calculate_model_price(usage: &Usage, prices: &ModelPrice, registry
     let total_input_tokens = if has_tiered {
         let input_tokens = registry
             .by_usage_key(UsageKey::INPUT_TOKENS.as_str())
-            .ok_or_else(|| Error::InvalidUsage("unknown unit usage key input_tokens".into()))?;
+            .ok_or_else(|| Error::new(ErrorKind::InvalidUsage, "unknown unit usage key input_tokens"))?;
         usage_value(usage, input_tokens, registry)?
     } else {
         0.0

@@ -2,7 +2,8 @@
 //! service-tier and batch rates. Mirrors `packages/go/price_context_test.go`.
 
 // Exact float comparisons mirror the other engines' tests.
-#![allow(clippy::float_cmp, clippy::type_complexity)]
+#![allow(clippy::float_cmp)]
+#![cfg(feature = "bundled")]
 
 mod common;
 
@@ -38,10 +39,9 @@ fn price_context_contract() {
     let calculator = Calculator::from_json(serde_json::to_vec(&fixture.providers).unwrap()).unwrap();
     for case in fixture.cases {
         let timestamp = chrono::DateTime::parse_from_rfc3339(&case.timestamp).unwrap();
-        let mut request = PriceRequest::new("context-model", fixture.usage.clone())
-            .with_provider_id("testing")
-            .with_timestamp(timestamp);
-        request.price_context = case.context;
+        let mut request =
+            PriceRequest::new("context-model", &fixture.usage).with_provider_id("testing").with_timestamp(timestamp);
+        request.price_context = case.context.iter().map(|(key, value)| (key.as_str(), value.as_str())).collect();
         let result = calculator.calculate(&request).unwrap();
         assert_eq!(
             (result.input_price, result.output_price, result.total_price),
@@ -72,7 +72,8 @@ fn openai_service_tiers() {
         ("gpt-6.1-sol", "fast", 36.1),
         ("gpt-6.1-sol", "priority", 36.1),
     ] {
-        let request = PriceRequest::new(model, token_usage())
+        let usage = token_usage();
+        let request = PriceRequest::new(model, &usage)
             .with_provider_id("openai")
             .with_timestamp(date(2026, 10, 12))
             .with_price_context("service_tier", tier);
@@ -93,7 +94,8 @@ fn batch_processing() {
         ("mistral", "mistral-small-2603", date(2026, 10, 14), 0.358_125),
         ("x-ai", "grok-4.3", date(2026, 10, 14), 5.58),
     ] {
-        let request = PriceRequest::new(model, token_usage())
+        let usage = token_usage();
+        let request = PriceRequest::new(model, &usage)
             .with_provider_id(provider)
             .with_timestamp(timestamp)
             .with_price_context("processing", "batch");
@@ -117,7 +119,7 @@ fn openai_published_flex_rates() {
             (UsageKey::CACHE_READ_TOKENS, cache_read_tokens),
             (UsageKey::OUTPUT_TOKENS, 1_000_000.0),
         ]);
-        let request = PriceRequest::new(model, usage)
+        let request = PriceRequest::new(model, &usage)
             .with_provider_id("openai")
             .with_timestamp(date(2026, 10, 12))
             .with_price_context("service_tier", "flex");
@@ -148,7 +150,7 @@ fn invalid_price_variants() {
     );
     let error = calculator
         .calculate(
-            &PriceRequest::new("m", Usage::new())
+            &PriceRequest::new("m", &Usage::new())
                 .with_provider_id("testing")
                 .with_price_context("service_tier", "flex"),
         )
@@ -158,14 +160,10 @@ fn invalid_price_variants() {
 
 #[test]
 fn fallback_provider_does_not_inherit_tier_rates() {
-    let contexts = [BTreeMap::new(), BTreeMap::from([("service_tier".to_owned(), "priority".to_owned())])];
-    for context in contexts {
-        let mut request = PriceRequest::new(
-            "gpt-5",
-            usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]),
-        )
-        .with_provider_id("azure")
-        .with_timestamp(date(2026, 10, 12));
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]);
+    for context in [vec![], vec![("service_tier", "priority")]] {
+        let mut request =
+            PriceRequest::new("gpt-5", &usage).with_provider_id("azure").with_timestamp(date(2026, 10, 12));
         request.price_context = context;
         let result = genai_prices::calculate(&request).unwrap();
         assert_eq!((result.provider_id.as_str(), result.total_price), ("azure", 11.25));

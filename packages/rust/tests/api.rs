@@ -1,19 +1,18 @@
 //! The public API against the bundled data. Mirrors the engine-level tests in `packages/go/api_test.go`.
 
 // Exact float comparisons mirror the other engines' tests.
-#![allow(clippy::float_cmp, clippy::type_complexity)]
+#![allow(clippy::float_cmp)]
+#![cfg(feature = "bundled")]
 
 mod common;
 
-use common::{assert_close, calculator, date, usage};
-use genai_prices::{Calculator, Error, ExtractRequest, PriceRequest, Usage, UsageKey};
+use common::{assert_close, calculator, date, error_kind, usage};
+use genai_prices::{Calculator, ErrorKind, ExtractRequest, PriceRequest, Usage, UsageKey};
 
 #[test]
 fn calculate() {
-    let request =
-        PriceRequest::new("gpt-5", usage([(UsageKey::INPUT_TOKENS, 1_000.0), (UsageKey::OUTPUT_TOKENS, 100.0)]))
-            .with_provider_id("openai")
-            .with_timestamp(date(2026, 1, 1));
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0), (UsageKey::OUTPUT_TOKENS, 100.0)]);
+    let request = PriceRequest::new("gpt-5", &usage).with_provider_id("openai").with_timestamp(date(2026, 1, 1));
     let calculation = genai_prices::calculate(&request).unwrap();
     assert_eq!((calculation.provider_id.as_str(), calculation.model_id.as_str()), ("openai", "gpt-5"));
     assert!(calculation.total_price > 0.0);
@@ -25,57 +24,54 @@ fn calculator_is_shareable_across_threads() {
     fn assert_send_sync<T: Send + Sync>() {}
     assert_send_sync::<Calculator>();
     assert!(std::ptr::eq(Calculator::bundled(), Calculator::bundled()));
+    let debug = format!("{:?}", Calculator::bundled());
+    assert!(debug.starts_with("Calculator { providers: ") && debug.ends_with(", .. }") && debug.len() < 100, "{debug}");
 }
 
 #[test]
 fn whitespace_provider_id_is_absent() {
-    let mut request = PriceRequest::new("gpt-5", usage([(UsageKey::INPUT_TOKENS, 1_000.0)]))
-        .with_provider_id("  ")
-        .with_provider_api_url("https://api.openai.com");
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let mut request =
+        PriceRequest::new("gpt-5", &usage).with_provider_id("  ").with_provider_api_url("https://api.openai.com");
     assert_eq!(genai_prices::calculate(&request).unwrap().provider_id, "openai");
 
     // An empty URL is absent too, so the provider is inferred from the model.
-    request.provider_api_url = Some(String::new());
+    request.provider_api_url = Some("");
     assert_eq!(genai_prices::calculate(&request).unwrap().provider_id, "openai");
 }
 
 #[test]
 fn reports_unsupported_usage() {
-    let request = PriceRequest::new(
-        "gpt-5",
-        Usage::from([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::from("unknown_tokens"), 2.0)]),
-    )
-    .with_provider_id("openai");
-    let calculation = genai_prices::calculate(&request).unwrap();
+    let usage = Usage::from([("input_tokens", 1.0), ("unknown_tokens", 2.0)]);
+    let calculation = genai_prices::calculate(&PriceRequest::new("gpt-5", &usage).with_provider_id("openai")).unwrap();
     assert_eq!(calculation.warnings, ["Unsupported usage key for standard pricing: unknown_tokens"]);
 }
 
 #[test]
 fn calculate_errors() {
-    let gpt5 = |usage: Usage| PriceRequest::new("gpt-5", usage).with_provider_id("openai");
-    let cases: [(&str, PriceRequest, fn(&Error) -> bool); 6] = [
-        ("missing model", PriceRequest::default(), |error| matches!(error, Error::ModelNotFound(_))),
+    let empty = Usage::new();
+    let negative = usage([(UsageKey::INPUT_TOKENS, -1.0)]);
+    let infinite = usage([(UsageKey::INPUT_TOKENS, f64::INFINITY)]);
+    let cases = [
+        ("missing model", PriceRequest::new("", &empty), ErrorKind::ModelNotFound),
         (
             "conflicting provider selectors",
-            gpt5(Usage::new()).with_provider_api_url("https://api.openai.com"),
-            |error| matches!(error, Error::InvalidUsage(_)),
+            PriceRequest::new("gpt-5", &empty)
+                .with_provider_id("openai")
+                .with_provider_api_url("https://api.openai.com"),
+            ErrorKind::InvalidUsage,
         ),
-        ("unknown provider", PriceRequest::new("gpt-5", Usage::new()).with_provider_id("missing"), |error| {
-            matches!(error, Error::ProviderNotFound(_))
-        }),
-        ("unknown model", PriceRequest::new("missing", Usage::new()).with_provider_id("openai"), |error| {
-            matches!(error, Error::ModelNotFound(_))
-        }),
-        ("negative usage", gpt5(usage([(UsageKey::INPUT_TOKENS, -1.0)])), |error| {
-            matches!(error, Error::InvalidUsage(_))
-        }),
-        ("non-finite usage", gpt5(usage([(UsageKey::INPUT_TOKENS, f64::INFINITY)])), |error| {
-            matches!(error, Error::InvalidUsage(_))
-        }),
+        (
+            "unknown provider",
+            PriceRequest::new("gpt-5", &empty).with_provider_id("missing"),
+            ErrorKind::ProviderNotFound,
+        ),
+        ("unknown model", PriceRequest::new("missing", &empty).with_provider_id("openai"), ErrorKind::ModelNotFound),
+        ("negative usage", PriceRequest::new("gpt-5", &negative).with_provider_id("openai"), ErrorKind::InvalidUsage),
+        ("non-finite usage", PriceRequest::new("gpt-5", &infinite).with_provider_id("openai"), ErrorKind::InvalidUsage),
     ];
-    for (name, request, expected) in cases {
-        let error = genai_prices::calculate(&request).unwrap_err();
-        assert!(expected(&error), "{name}: unexpected {error:?}");
+    for (name, request, kind) in cases {
+        assert_eq!(error_kind(&genai_prices::calculate(&request)), Some(kind), "{name}");
     }
 }
 
@@ -85,8 +81,9 @@ fn rejects_price_overflow() {
         r#"[{"id":"testing","name":"Testing","api_pattern":"testing",
             "models":[{"id":"model","match":{"equals":"model"},"prices":{"output_mtok":2}}]}]"#,
     );
-    let request = PriceRequest::new("model", usage([(UsageKey::OUTPUT_TOKENS, f64::MAX)])).with_provider_id("testing");
-    assert!(matches!(calculator.calculate(&request), Err(Error::InvalidUsage(_))));
+    let usage = usage([(UsageKey::OUTPUT_TOKENS, f64::MAX)]);
+    let request = PriceRequest::new("model", &usage).with_provider_id("testing");
+    assert_eq!(error_kind(&calculator.calculate(&request)), Some(ErrorKind::InvalidUsage));
 }
 
 #[test]
@@ -97,9 +94,11 @@ fn duplicate_keys_use_the_last_value() {
                 "prices":[{"prices":{"input_mtok":2}}],
                 "prices":{"input_mtok":1}}]}]"#,
     );
-    let request =
-        PriceRequest::new("model", usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)])).with_provider_id("testing");
-    assert_eq!(calculator.calculate(&request).unwrap().total_price, 1.0);
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    assert_eq!(
+        calculator.calculate(&PriceRequest::new("model", &usage).with_provider_id("testing")).unwrap().total_price,
+        1.0
+    );
 }
 
 #[test]
@@ -113,19 +112,18 @@ fn from_json() {
             "models": [{"id": "test-model", "match": {"equals": "test-model"}, "prices": {"input_mtok": 2, "output_mtok": 4}}]
         }]"#,
     );
-    let request = PriceRequest::new(
-        "test-model",
-        usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 500_000.0)]),
-    );
-    let calculation = calculator.calculate(&request).unwrap();
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 500_000.0)]);
+    let calculation = calculator.calculate(&PriceRequest::new("test-model", &usage)).unwrap();
     assert_eq!((calculation.input_price, calculation.output_price, calculation.total_price), (2.0, 2.0, 4.0));
 }
 
 #[test]
 fn from_json_rejects_invalid_data() {
     for data in ["{}", "null", "not JSON"] {
-        assert!(matches!(Calculator::from_json(data), Err(Error::InvalidData(_))), "{data}");
+        assert_eq!(error_kind(&Calculator::from_json(data)), Some(ErrorKind::InvalidData), "{data}");
     }
+    let error = Calculator::from_json("not JSON").unwrap_err();
+    assert!(std::error::Error::source(&error).is_some(), "the serde_json error is kept as the source");
 }
 
 #[test]
@@ -141,9 +139,9 @@ fn openai_long_context_boundary() {
         ("gpt-6.1-sol", 2.0, 4.0),
     ] {
         for (tokens, rate) in [(272_000.0, base_rate), (272_001.0, long_rate)] {
-            let request =
-                PriceRequest::new(model, usage([(UsageKey::INPUT_TOKENS, tokens)])).with_provider_id("openai");
-            let calculation = genai_prices::calculate(&request).unwrap();
+            let usage = usage([(UsageKey::INPUT_TOKENS, tokens)]);
+            let calculation =
+                genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("openai")).unwrap();
             assert_close(calculation.input_price, tokens * rate / 1_000_000.0, 1e-12);
         }
     }
@@ -152,19 +150,19 @@ fn openai_long_context_boundary() {
 #[test]
 fn databricks_provider_selection() {
     let model = "databricks-gpt-oss-120b";
-    let one_million = || usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    let one_million = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
     for request in [
-        PriceRequest::new(model, one_million())
+        PriceRequest::new(model, &one_million)
             .with_provider_api_url("https://my-workspace.cloud.databricks.com/serving-endpoints/chat/completions"),
-        PriceRequest::new(model, one_million()).with_provider_api_url(
+        PriceRequest::new(model, &one_million).with_provider_api_url(
             "https://adb-1234567890123456.7.azuredatabricks.net/serving-endpoints/databricks-gpt-oss-120b/invocations",
         ),
-        PriceRequest::new(model, one_million()).with_provider_api_url(
+        PriceRequest::new(model, &one_million).with_provider_api_url(
             "https://1234567890123456.7.gcp.databricks.com/ai-gateway/mlflow/v1/chat/completions",
         ),
-        PriceRequest::new(model, one_million()),
-        PriceRequest::new("system.ai.gpt-oss-120b", one_million()),
-        PriceRequest::new("databricks/databricks-gpt-oss-120b", one_million()).with_provider_id("litellm"),
+        PriceRequest::new(model, &one_million),
+        PriceRequest::new("system.ai.gpt-oss-120b", &one_million),
+        PriceRequest::new("databricks/databricks-gpt-oss-120b", &one_million).with_provider_id("litellm"),
     ] {
         let calculation = genai_prices::calculate(&request).unwrap();
         assert_eq!(
@@ -175,9 +173,8 @@ fn databricks_provider_selection() {
         assert_close(calculation.total_price, 0.15, 1e-9);
     }
 
-    let upstream =
-        genai_prices::calculate(&PriceRequest::new("kimi-k3", usage([(UsageKey::INPUT_TOKENS, 1.0)]))).unwrap();
-    assert_eq!(upstream.provider_id, "moonshotai");
+    let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
+    assert_eq!(genai_prices::calculate(&PriceRequest::new("kimi-k3", &one)).unwrap().provider_id, "moonshotai");
 
     for url in [
         "https://my-workspace.cloud.databricks.com.evil.test/serving-endpoints/chat/completions",
@@ -185,8 +182,8 @@ fn databricks_provider_selection() {
         "https://1234567890123456.7.gcp.databricks.com.evil.test/ai-gateway/mlflow/v1/chat/completions",
         "https://my-workspace.cloud.databricks.com/api/2.0/clusters/list",
     ] {
-        let request = PriceRequest::new(model, usage([(UsageKey::INPUT_TOKENS, 1.0)])).with_provider_api_url(url);
-        assert!(matches!(genai_prices::calculate(&request), Err(Error::ProviderNotFound(_))), "{url}");
+        let request = PriceRequest::new(model, &one).with_provider_api_url(url);
+        assert_eq!(error_kind(&genai_prices::calculate(&request)), Some(ErrorKind::ProviderNotFound), "{url}");
     }
 }
 
@@ -206,11 +203,11 @@ fn aws_converse_cache_write_ttl() {
         let body = format!(
             r#"{{"model":"{model}","usage":{{"inputTokens":0,"cacheReadInputTokens":0,"cacheWriteInputTokens":1000000,"cacheDetails":[{{"ttl":"1h","inputTokens":250000}},{{"ttl":"5m","inputTokens":750000}}],"outputTokens":0,"totalTokens":1000000}}}}"#
         );
-        let extracted = genai_prices::extract_usage(&ExtractRequest::new(body).with_provider_id("aws")).unwrap();
+        let extracted = genai_prices::extract_usage(&ExtractRequest::new(&body).with_provider_id("aws")).unwrap();
         assert_eq!((extracted.provider_id.as_str(), extracted.model.as_deref()), ("aws", Some(model)));
         assert_eq!(extracted.usage, want_usage);
-        let request = PriceRequest::new(model, extracted.usage).with_provider_id(extracted.provider_id);
-        assert_close(genai_prices::calculate(&request).unwrap().total_price, want_price, 1e-12);
+        let price = genai_prices::calculate(&extracted.price_request().unwrap()).unwrap();
+        assert_close(price.total_price, want_price, 1e-12);
     }
 }
 
@@ -240,36 +237,82 @@ fn xai_responses_usage_and_price() {
             0.001_723_75,
         ),
     ] {
-        let extracted = genai_prices::extract_usage(
-            &ExtractRequest::new(body).with_provider_id("x-ai").with_api_flavor("responses"),
-        )
-        .unwrap();
-        assert_eq!(extracted.model.as_deref(), Some("grok-4.20-0309-reasoning"));
-        assert_eq!(extracted.usage, want_usage);
-        let request =
-            PriceRequest::new(extracted.model.unwrap(), extracted.usage).with_provider_id(extracted.provider_id);
-        let price = genai_prices::calculate(&request).unwrap();
-        assert_eq!(price.model_id, "grok-4.20");
-        assert_close(price.input_price, want_input, 1e-12);
-        assert_close(price.output_price, 0.001_56, 1e-12);
-        assert_close(price.total_price, want_total, 1e-12);
+        // The bytes and an already-parsed value must extract the same usage.
+        let parsed: serde_json::Value = serde_json::from_str(body).unwrap();
+        for request in [ExtractRequest::new(body), ExtractRequest::from_value(&parsed)] {
+            let extracted =
+                genai_prices::extract_usage(&request.with_provider_id("x-ai").with_api_flavor("responses")).unwrap();
+            assert_eq!(extracted.model.as_deref(), Some("grok-4.20-0309-reasoning"));
+            assert_eq!(extracted.usage, want_usage);
+            let price = genai_prices::calculate(&extracted.price_request().unwrap()).unwrap();
+            assert_eq!(price.model_id, "grok-4.20");
+            assert_close(price.input_price, want_input, 1e-12);
+            assert_close(price.output_price, 0.001_56, 1e-12);
+            assert_close(price.total_price, want_total, 1e-12);
+        }
     }
 }
 
 #[test]
-fn usage_key_round_trips_through_serde() {
-    let usage: Usage = serde_json::from_str(r#"{"input_tokens": 1, "future_tokens": 2}"#).unwrap();
-    assert_eq!(usage[UsageKey::INPUT_TOKENS.as_str()], 1.0);
-    assert_eq!(usage.get("future_tokens"), Some(&2.0));
+fn results_serialize() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    let calculator = calculator(
+        r#"[{"id":"testing","name":"Testing","api_pattern":"testing",
+            "extractors":[{"root":"usage","mappings":[{"path":"input","dest":"input_tokens","required":true}]}],
+            "models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":2}}]}]"#,
+    );
+    let price = calculator.calculate(&PriceRequest::new("model", &usage).with_provider_id("testing")).unwrap();
+    assert_eq!(
+        serde_json::to_value(&price).unwrap(),
+        serde_json::json!({"input_price": 2.0, "output_price": 0.0, "total_price": 2.0,
+            "provider_id": "testing", "model_id": "model", "warnings": []}),
+    );
+    let extracted =
+        calculator.extract_usage(&ExtractRequest::new(r#"{"usage":{"input":3}}"#).with_provider_id("testing")).unwrap();
+    assert_eq!(extracted.price_request(), None);
+    assert_eq!(
+        serde_json::to_value(&extracted).unwrap(),
+        serde_json::json!({"usage": {"input_tokens": 3.0}, "model": null, "provider_id": "testing", "warnings": []}),
+    );
+}
+
+#[test]
+fn usage_collection() {
+    let mut usage: Usage = serde_json::from_str(r#"{"input_tokens": 1, "future_tokens": 2}"#).unwrap();
+    assert_eq!(
+        (usage.get("input_tokens"), usage.get("future_tokens"), usage.get("missing")),
+        (Some(1.0), Some(2.0), None)
+    );
     assert_eq!(serde_json::to_string(&usage).unwrap(), r#"{"future_tokens":2.0,"input_tokens":1.0}"#);
+    assert_eq!(usage.insert(UsageKey::OUTPUT_TOKENS, 3.0), None);
+    assert_eq!(usage.insert("output_tokens", 4.0), Some(3.0));
+    assert!(usage.contains_key("output_tokens") && !usage.is_empty());
+    assert_eq!(usage.remove("future_tokens"), Some(2.0));
+    usage.extend([("cache_read_tokens", 0.5)]);
+    let keys: Vec<&str> = usage.keys().map(UsageKey::as_str).collect();
+    assert_eq!(keys, ["cache_read_tokens", "input_tokens", "output_tokens"]);
+    let iter = usage.iter();
+    assert_eq!(iter.len(), 3);
+    assert_eq!(iter.map(|(_, value)| value).sum::<f64>(), 5.5);
+    let collected: Usage = usage.clone().into_iter().collect();
+    assert_eq!((collected.len(), collected), (3, usage));
+    assert_eq!(Usage::new(), Usage::default());
+}
+
+#[test]
+fn usage_keys() {
     assert_eq!(format!("{} {:?}", UsageKey::INPUT_TOKENS, UsageKey::INPUT_TOKENS), r#"input_tokens "input_tokens""#);
     assert_eq!(UsageKey::from(String::from("input_tokens")), UsageKey::INPUT_TOKENS);
+    assert_eq!(UsageKey::from("future_tokens").as_str(), "future_tokens");
+    assert_eq!(UsageKey::from(String::from("future_tokens")).as_str(), "future_tokens");
     assert_eq!(AsRef::<str>::as_ref(&UsageKey::INPUT_TOKENS), "input_tokens");
+    assert_eq!(UsageKey::from_static("input_tokens"), UsageKey::INPUT_TOKENS);
 }
 
 #[test]
 fn error_messages_name_the_failure() {
-    let error =
-        genai_prices::calculate(&PriceRequest::new("missing", Usage::new()).with_provider_id("openai")).unwrap_err();
+    let usage = Usage::new();
+    let error = genai_prices::calculate(&PriceRequest::new("missing", &usage).with_provider_id("openai")).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::ModelNotFound);
     assert_eq!(error.to_string(), r#"model not found: "missing" in provider "openai""#);
 }

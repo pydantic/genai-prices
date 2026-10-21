@@ -13,6 +13,16 @@ keywords = ["llm", "genai", "pricing", "openai", "anthropic"]
 categories = ["api-bindings", "finance"]
 include = ["/src", "/data/prices.json", "/README.md", "/LICENSE"]
 
+[features]
+default = ["bundled"]
+# Embeds the price data published with this release and enables `Calculator::bundled`, `calculate` and
+# `extract_usage`. Without it, load data with `Calculator::from_json`.
+bundled = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 fancy-regex = "0.19"
 serde = "1.0.180"
@@ -23,6 +33,7 @@ chrono = { version = "0.4.38", default-features = false, features = ["std"] }
 serde = { version = "1.0.180", features = ["derive"] }
 
 [lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(docsrs)"] }
 missing_docs = "warn"
 unsafe_code = "forbid"
 
