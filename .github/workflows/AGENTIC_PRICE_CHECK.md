@@ -177,7 +177,8 @@ this workflow's PRs, and [Genie Pricer](GENIE_PRICER.md)'s PRs all qualify. A sc
 This workflow's PRs are picked up by the next scan.
 
 The scan starts one job per proposal. Each job waits up to 30 minutes for CI, Macroscope, and cubic on the current head,
-so a slow proposal never delays another's watch or exhausts the job timeout. Unresolved findings dispatch
+so a slow proposal never delays another's watch or exhausts the job timeout. A skipped Macroscope check counts as its
+review, because Macroscope skips a diff it already reviewed; a skipped cubic check keeps waiting. Unresolved findings dispatch
 `repair-price-update.md`, whose trusted job pushes a validated patch to the proposal's branch. Each proposal gets at most
 three repair attempts. The count and status live in a marker comment on the PR. The finisher never merges.
 
