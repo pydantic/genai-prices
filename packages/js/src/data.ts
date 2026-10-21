@@ -9285,6 +9285,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'accounts/fireworks/models/muse-spark-open',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.15,
+          output_mtok: 4.25,
+        },
+      },
+      {
         id: 'nemotron-3-ultra-nvfp4',
         name: 'NVIDIA Nemotron 3 Ultra NVFP4',
         description:
@@ -20645,12 +20657,41 @@ export const data: Provider[] = [
         context_window: 1048576,
         price_comments:
           'Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. The batch variant is half the promotional rate; when the list rates return, prepend a dated batch variant at $0.68/$0.07/$2.09. https://docs.mistral.ai/models/mistral-large-4-0 https://docs.mistral.ai/inference/pricing https://docs.mistral.ai/resources/changelogs',
-        prices: {
-          input_mtok: 0.68,
-          cache_read_mtok: 0.07,
-          output_mtok: 2.09,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.68,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.09,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.36,
+              cache_read_mtok: 0.14,
+              output_mtok: 4.18,
+            },
+          },
+        ],
         price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.68,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.09,
+            },
+            constraint: {
+              start_date: '2026-10-20',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               processing: 'batch',
@@ -21314,6 +21355,28 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'voxtral-mini-transcribe-3-0',
+        name: 'Voxtral Mini Transcribe 3',
+        match: {
+          equals: 'voxtral-mini-transcribe-3-0',
+        },
+        prices: {
+          audio_hours: 0.21,
+          input_audio_hours: 0.21,
+        },
+      },
+      {
+        id: 'voxtral-mini-transcribe-realtime-3-0',
+        name: 'Voxtral Mini Transcribe Realtime 3',
+        match: {
+          equals: 'voxtral-mini-transcribe-realtime-3-0',
+        },
+        prices: {
+          audio_hours: 0.48,
+          input_audio_hours: 0.48,
+        },
+      },
+      {
         id: 'voxtral-small-24b-2507',
         name: 'Voxtral Small 24B 2507',
         description:
@@ -21370,6 +21433,17 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'voxtral-small-transcribe-3-0',
+        name: 'Voxtral Small Transcribe 3',
+        match: {
+          equals: 'voxtral-small-transcribe-3-0',
+        },
+        prices: {
+          audio_hours: 0.24,
+          input_audio_hours: 0.24,
+        },
       },
       {
         id: 'zai-glm-5-3',

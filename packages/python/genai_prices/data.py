@@ -5448,6 +5448,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='muse-spark-open',
+                match=ClauseEquals(equals='accounts/fireworks/models/muse-spark-open'),
+                name='Muse Spark Open',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4.25')
+                ),
+            ),
+            ModelInfo(
                 id='nemotron-3-ultra-nvfp4',
                 match=ClauseEquals(equals='accounts/fireworks/models/nemotron-3-ultra-nvfp4'),
                 name='NVIDIA Nemotron 3 Ultra NVFP4',
@@ -11946,17 +11954,34 @@ providers: list[Provider] = [
                 name='Mistral Large 4',
                 context_window=1048576,
                 price_comments='Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. The batch variant is half the promotional rate; when the list rates return, prepend a dated batch variant at $0.68/$0.07/$2.09. https://docs.mistral.ai/models/mistral-large-4-0 https://docs.mistral.ai/inference/pricing https://docs.mistral.ai/resources/changelogs',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.36'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.18')
+                        ),
+                    ),
+                ],
                 price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
+                    ),
                     PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(
                             input_mtok=Decimal('0.34'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('1.045')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
                 ],
             ),
             ModelInfo(
@@ -12314,6 +12339,18 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='voxtral-mini-transcribe-3-0',
+                match=ClauseEquals(equals='voxtral-mini-transcribe-3-0'),
+                name='Voxtral Mini Transcribe 3',
+                prices=ModelPrice(audio_hours=Decimal('0.21'), input_audio_hours=Decimal('0.21')),
+            ),
+            ModelInfo(
+                id='voxtral-mini-transcribe-realtime-3-0',
+                match=ClauseEquals(equals='voxtral-mini-transcribe-realtime-3-0'),
+                name='Voxtral Mini Transcribe Realtime 3',
+                prices=ModelPrice(audio_hours=Decimal('0.48'), input_audio_hours=Decimal('0.48')),
+            ),
+            ModelInfo(
                 id='voxtral-small-24b-2507',
                 match=ClauseOr(
                     or_=[
@@ -12348,6 +12385,12 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     )
                 ],
+            ),
+            ModelInfo(
+                id='voxtral-small-transcribe-3-0',
+                match=ClauseEquals(equals='voxtral-small-transcribe-3-0'),
+                name='Voxtral Small Transcribe 3',
+                prices=ModelPrice(audio_hours=Decimal('0.24'), input_audio_hours=Decimal('0.24')),
             ),
             ModelInfo(
                 id='zai-glm-5-3',
