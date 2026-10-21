@@ -8,17 +8,19 @@ from shutil import copyfile
 import pytest
 
 from prices import source_cursor
-from prices.prices_types import ModelPrice, StartDateConstraint
+from prices.prices_types import ModelPrice, StartDateConstraint, Tier, TieredPrices
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 PRICING_MARKDOWN = """\
 # Models & Pricing
 
-## Cursor Models
+### Cursor models
 
 | Model | Provider | Input | Cache write | Cache read | Output | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
+| Grok 4.7 | Cursor | $2 | - | $0.5 | $6 | Long context |
+| Grok 4.7 500k | Cursor | $4 | - | $1 | $12 | Long context |
 | Grok 4.6 | Cursor | $2 | - | $0.5 | $6 | Jointly trained |
 | Grok 4.6 (Fast) | Cursor | $4 | - | $1 | $12 | Jointly trained |
 | Grok 4.5 | Cursor | $2 | - | $0.5 | $6 | Jointly trained |
@@ -36,6 +38,7 @@ def test_parse_pricing_markdown_extracts_cursor_models() -> None:
     models = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)
 
     assert [model.id for model in models] == [
+        'grok-4.7',
         'grok-4.6',
         'grok-4.6-fast',
         'grok-4.5',
@@ -43,7 +46,7 @@ def test_parse_pricing_markdown_extracts_cursor_models() -> None:
         'composer-2.5',
         'composer-2.5-fast',
     ]
-    assert models[0].prices == ModelPrice(
+    assert models[1].prices == ModelPrice(
         input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')
     )
     assert models[-1].name == 'Composer 2.5 Fast'
@@ -57,11 +60,14 @@ def test_parse_pricing_markdown_returns_empty_without_cursor_section() -> None:
     assert source_cursor.parse_pricing_markdown('# Models & Pricing\n') == []
 
 
-def test_parse_pricing_markdown_rejects_unknown_models() -> None:
-    markdown = PRICING_MARKDOWN.replace('Grok 4.6 |', 'Unknown |', 1)
+def test_parse_pricing_markdown_folds_500k_rows_into_long_context_tiers() -> None:
+    [model] = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)[:1]
 
-    with pytest.raises(RuntimeError, match='Unknown Cursor model in pricing data: Unknown'):
-        source_cursor.parse_pricing_markdown(markdown)
+    assert model.prices == ModelPrice(
+        input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=256_000, price=Decimal('4'))]),
+        cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=256_000, price=Decimal('1'))]),
+        output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=256_000, price=Decimal('12'))]),
+    )
 
 
 def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
@@ -71,7 +77,7 @@ def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
         source_cursor.parse_pricing_markdown(markdown)
 
 
-def test_cursor_updater_preserves_existing_metadata(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_cursor_updater_preserves_existing_metadata(tmp_path: Path) -> None:
     provider_path = tmp_path / 'cursor.yml'
     provider_path.write_text(
         """\
@@ -95,10 +101,9 @@ models:
         prices: {input_mtok: 9}
 """
     )
-    monkeypatch.setattr(source_cursor, 'MIN_MODEL_COUNT', 1)
-    [model] = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)[:1]
+    model = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)[1]
 
-    assert source_cursor.update_cursor_provider(ProviderYaml(provider_path), [model]) == (0, 1)
+    assert ProviderYaml(provider_path).upsert_models([model], source='Cursor pricing', min_count=1) == (0, 1)
 
     updated = ProviderYaml(provider_path).provider.find_model('grok-4.6')
     assert updated is not None
@@ -116,29 +121,20 @@ models:
         input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')
     )
 
-    source_cursor.update_cursor_provider(ProviderYaml(provider_path), [model])
+    ProviderYaml(provider_path).upsert_models([model], source='Cursor pricing', min_count=1)
     updated = ProviderYaml(provider_path).provider.find_model('grok-4.6')
     assert updated is not None
     assert isinstance(updated.prices, list)
     assert len(updated.prices) == 3
 
 
-def test_cursor_updater_adds_new_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_cursor_updater_adds_new_models(tmp_path: Path) -> None:
     provider_path = tmp_path / 'cursor.yml'
     provider_path.write_text('id: cursor\nname: Cursor\napi_pattern: cursor\nmodels: []\n')
-    monkeypatch.setattr(source_cursor, 'MIN_MODEL_COUNT', 1)
-    [model] = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)[:1]
+    model = source_cursor.parse_pricing_markdown(PRICING_MARKDOWN)[1]
 
-    assert source_cursor.update_cursor_provider(ProviderYaml(provider_path), [model]) == (1, 0)
+    assert ProviderYaml(provider_path).upsert_models([model], source='Cursor pricing', min_count=1) == (1, 0)
     assert ProviderYaml(provider_path).provider.find_model('grok-4.6') is not None
-
-
-def test_cursor_updater_rejects_suspiciously_small_results(tmp_path: Path) -> None:
-    provider_path = tmp_path / 'cursor.yml'
-    provider_path.write_text('id: cursor\nname: Cursor\napi_pattern: cursor\nmodels: []\n')
-
-    with pytest.raises(RuntimeError, match='Cursor pricing returned only 0 models; expected at least 6'):
-        source_cursor.update_cursor_provider(ProviderYaml(provider_path), [])
 
 
 @pytest.mark.vcr()
@@ -148,4 +144,4 @@ def test_cursor_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytes
 
     source_cursor.main(provider_path)
 
-    assert capsys.readouterr().out == 'Cursor prices updated: 0 added, 6 updated\n'
+    assert capsys.readouterr().out == 'Cursor prices updated: 0 added, 8 updated\n'

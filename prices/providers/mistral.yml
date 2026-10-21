@@ -73,7 +73,7 @@ models:
     match:
       equals: codestral-2508
     context_window: 256000
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.03
@@ -95,7 +95,7 @@ models:
         - equals: codestral-embed-2505
         - equals: codestral-embed
     context_window: 8000
-    prices_checked: 2026-10-15
+    prices_checked: 2026-10-21
     price_comments: >-
       Rates from https://docs.mistral.ai/inference/pricing (Codestral Embed: input $0.15 / 1M tokens,
       cached input $0.015 / 1M tokens) and https://docs.mistral.ai/models/codestral-embed-25-05
@@ -205,7 +205,7 @@ models:
     match:
       equals: ministral-14b-2512
     context_window: 262144
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02
@@ -239,7 +239,7 @@ models:
     match:
       equals: ministral-3b-2512
     context_window: 131072
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.01
@@ -278,7 +278,7 @@ models:
     match:
       equals: ministral-8b-2512
     context_window: 262144
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
@@ -374,7 +374,7 @@ models:
     match:
       equals: mistral-large-2512
     context_window: 262144
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.5
       cache_read_mtok: 0.05
@@ -394,7 +394,7 @@ models:
         - equals: mistral-large-4
         - equals: mistral-large-4-0
     context_window: 1048576
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     price_comments: >-
       Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The
       published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not
@@ -404,10 +404,23 @@ models:
       https://docs.mistral.ai/inference/pricing
       https://docs.mistral.ai/resources/changelogs
     prices:
-      input_mtok: 0.68
-      cache_read_mtok: 0.07
-      output_mtok: 2.09
+      - prices:
+          input_mtok: 0.68
+          cache_read_mtok: 0.07
+          output_mtok: 2.09
+      - constraint:
+          start_date: 2026-10-20
+        prices:
+          input_mtok: 1.36
+          cache_read_mtok: 0.14
+          output_mtok: 4.18
     price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-20 }
+        prices:
+          input_mtok: 0.68
+          cache_read_mtok: 0.07
+          output_mtok: 2.09
       - when: { processing: batch }
         constraint: { start_date: 2026-10-14 }
         prices:
@@ -459,10 +472,12 @@ models:
       or:
         - equals: mistral-medium-3.5
         - equals: mistral-medium-3-5
+        # Mistral's API serves mistral-medium-3 as Medium 3.5. OpenRouter's mistralai/mistral-medium-3 is
+        # Medium 3 (mistral-medium-2505), which the mistral-medium-3-1 record prices.
         - equals: mistral-medium-3
         - equals: mistral-medium-2604
     context_window: 262144
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
@@ -600,7 +615,7 @@ models:
         - equals: mistral-ocr-4-1
         - equals: mistral-ocr-4-1-completion
     context_window: 16384
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     price_comments: https://docs.mistral.ai/models/ocr-4-1
     prices:
       input_document_kpages: 4
@@ -698,7 +713,7 @@ models:
     match:
       equals: mistral-small-2603
     context_window: 262144
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.015
@@ -719,7 +734,8 @@ models:
     match:
       equals: mistral-small-3.1-24b-instruct
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.351
       output_mtok: 0.555
@@ -730,24 +746,48 @@ models:
       Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following,
       repetition reduction, and improved function calling.
     match:
-      equals: mistral-small-3.2-24b-instruct
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.
+      or:
+        - equals: mistral-small-2506
+        - equals: mistral-small-3.2-24b-instruct
+    prices_checked: 2026-10-20
+    price_comments: >-
+      Mistral lists Mistral Small 3.2 (mistral-small-2506) at $0.10/$0.30 per MTok. Its EU and US regional
+      endpoints bill 1.1x list.
+      Ref: https://github.com/mistralai/platform-docs-public/blob/d3ccc16309763fcb59c61906ecd486d75d719a84/src/schema/models/models/mistral-small-3-2-25-06.ts
+      Ref: https://docs.mistral.ai/inference/regional-inference
     prices:
-      input_mtok: 0.075
-      output_mtok: 0.2
+      input_mtok: 0.1
+      output_mtok: 0.3
 
   - id: mistral-small-latest
     description: SOTA. Multimodal. Multilingual. Apache 2.0.
-    name: Mistral Small 3.2
+    name: Mistral Small Latest
     match:
       equals: mistral-small-latest
     # No context_window: this alias pointed to the 128k mistral-small-2506 before repointing
     # to the 262,144 mistral-small-2603 — no single value is true for every request it matches
-    prices_checked: 2025-07-04
+    prices_checked: 2026-10-20
+    price_comments: >-
+      The latest alias moved from Mistral Small 3.2 to Mistral Small 4 on 2026-03-16: Mistral's docs list
+      mistral-small-latest as an API name of Small 4 from its release commit.
+      Ref: https://github.com/mistralai/platform-docs-public/commit/94bd65f1942b552b3a5774a3be40097ec7924d56
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.3
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.3
+      - constraint:
+          start_date: 2026-03-16
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.015
+          output_mtok: 0.6
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.0075
+          output_mtok: 0.3
 
   - id: mistral-tiny
     name: Mistral Tiny
@@ -772,10 +812,17 @@ models:
 
       - fluency in English, French, Italian, German, and Spanish
     match:
-      equals: mixtral-8x22b-instruct
+      or:
+        - equals: open-mixtral-8x22b
+        - equals: mixtral-8x22b-instruct
+    prices_checked: 2026-10-20
+    price_comments: >-
+      Mistral billed open-mixtral-8x22b at $2/$6 per MTok from launch until its 2025-03-30 retirement.
+      Ref: https://web.archive.org/web/20240417182952/https://mistral.ai/technology/
+      Ref: https://web.archive.org/web/20250203181801/https://mistral.ai/technology/
     prices:
-      input_mtok: 0.9
-      output_mtok: 0.9
+      input_mtok: 2
+      output_mtok: 6
 
   - id: mixtral-8x7b
     name: Mixtral 8x7B
@@ -821,7 +868,7 @@ models:
         - equals: voxtral-mini-latest
         - equals: voxtral-mini-2602
     context_window: 16384
-    prices_checked: 2026-10-14
+    prices_checked: 2026-10-21
     price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
     prices:
       audio_hours: 0.18
@@ -832,6 +879,24 @@ models:
         prices:
           audio_hours: 0.09
           input_audio_hours: 0.09
+
+  - id: voxtral-mini-transcribe-3-0
+    name: Voxtral Mini Transcribe 3
+    match:
+      equals: voxtral-mini-transcribe-3-0
+    prices:
+      audio_hours: 0.21
+      input_audio_hours: 0.21
+    prices_checked: 2026-10-21
+
+  - id: voxtral-mini-transcribe-realtime-3-0
+    name: Voxtral Mini Transcribe Realtime 3
+    match:
+      equals: voxtral-mini-transcribe-realtime-3-0
+    prices:
+      audio_hours: 0.48
+      input_audio_hours: 0.48
+    prices_checked: 2026-10-21
 
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
@@ -866,3 +931,22 @@ models:
           input_mtok: 0.05
           cache_read_mtok: 0.005
           output_mtok: 0.2
+
+  - id: voxtral-small-transcribe-3-0
+    name: Voxtral Small Transcribe 3
+    match:
+      equals: voxtral-small-transcribe-3-0
+    prices:
+      audio_hours: 0.24
+      input_audio_hours: 0.24
+    prices_checked: 2026-10-21
+
+  - id: zai-glm-5-3
+    name: Z.ai GLM 5.3
+    match:
+      equals: zai-glm-5-3
+    prices:
+      input_mtok: 1.4
+      cache_read_mtok: 0.14
+      output_mtok: 4.4
+    prices_checked: 2026-10-21

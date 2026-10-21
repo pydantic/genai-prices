@@ -4,13 +4,13 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, NotRequired, cast
 
 import jsonschema
 import pytest
 from jsonschema.validators import validator_for
 from pydantic import TypeAdapter
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 from genai_prices import data as genai_data, data_units as genai_data_units
 from genai_prices.data import providers

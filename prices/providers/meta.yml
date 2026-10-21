@@ -49,7 +49,7 @@ models:
     match:
       equals: muse-spark-1.1
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web
       search queries. Muse Spark 1.1 has no Contributor mode variant. https://dev.meta.ai/docs/pricing-rate-limits
@@ -64,7 +64,7 @@ models:
     match:
       equals: muse-spark-1.2
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web
       search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits
@@ -79,7 +79,7 @@ models:
     match:
       equals: muse-spark-1.2-contributor
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed
       at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's
@@ -95,7 +95,7 @@ models:
     match:
       equals: muse-spark-1.3
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Standard mode pricing: $1.25 input, $0.15 cached input, $4.25 output per million tokens, plus $2.50 per 1,000 web
       search queries. No long-context premium. https://dev.meta.ai/docs/pricing-rate-limits
@@ -110,7 +110,7 @@ models:
     match:
       equals: muse-spark-1.3-contributor
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Contributor mode pricing: $0.10 input, $0.002 cached input, $0.20 output per million tokens. Web search is billed
       at the same $2.50 per 1,000 queries as Standard mode (the docs apply it to every Muse Spark model, and OpenRouter's
@@ -126,7 +126,7 @@ models:
     match:
       equals: muse-wonder-1.0
     context_window: 1048576
-    prices_checked: 2026-10-12
+    prices_checked: 2026-10-18
     price_comments: >-
       Standard mode pricing: $4 input, $0.20 cached input, $20 output per million tokens, plus $2.50 per 1,000 web search
       queries. The usage response has no documented billable-search count, so callers provide web_searches. No Messages

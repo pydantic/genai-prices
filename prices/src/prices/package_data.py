@@ -4,7 +4,7 @@ import json
 import re
 import subprocess
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
@@ -87,7 +87,7 @@ def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bo
     if post_process_provider_reprs:
         data_content = path.read_text()
         data_content = re.sub('^ +[a-z_]+=None,$', '', data_content, flags=re.M)
-        data_content = re.sub(r'TzInfo\((?:UTC|0)\)', 'datetime.timezone.utc', data_content)
+        data_content = re.sub(r'TzInfo\((?:UTC|0)\)', 'datetime.UTC', data_content)
         path.write_text(data_content)
 
     subprocess.run(
@@ -144,8 +144,8 @@ def validate_provider_model_prices(providers: Iterable[object], registry: UnitRe
                         all(interval.active(timestamp) for interval in intervals)
                         for timestamp in (
                             datetime.combine(
-                                date(1970, 1, 1), interval.start_time, interval.start_time.tzinfo or timezone.utc
-                            ).astimezone(timezone.utc)
+                                date(1970, 1, 1), interval.start_time, interval.start_time.tzinfo or UTC
+                            ).astimezone(UTC)
                             for interval in intervals
                         )
                     ):

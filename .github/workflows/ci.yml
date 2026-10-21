@@ -17,6 +17,35 @@ env:
   UV_FROZEN: "1"
 
 jobs:
+  price-check-agent:
+    name: Price Check agent composition
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.12.1"
+          enable-cache: false
+      - name: Verify tools and shell environment
+        working-directory: ${{ runner.temp }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          PYDANTIC_AI_NO_BANNER: "1"
+        run: >-
+          uv run --isolated --no-project
+          --with 'pydantic-ai-harness==0.56.0'
+          --with 'pydantic-ai-slim[anthropic,openai,mcp,spec]>=2.54.0'
+          --with 'pytest==8.4.1'
+          sh -c 'python -m unittest scripts.test_price_check_agent && python -m pytest "$GITHUB_WORKSPACE/scripts/test_price_check_sources.py" "$GITHUB_WORKSPACE/scripts/test_price_check_scope_policy.py"'
+      - uses: github/gh-aw-actions/setup@d7cc687a9bc76b9d56e6c496649403392f654b35 # v0.91.1
+      - name: Verify fetch policy and safe-output scope preflight
+        run: >-
+          node --test scripts/price_check_web_fetch.test.cjs
+          scripts/price_check_scope.test.cjs scripts/price_check_bridge.test.cjs
+          scripts/price_update_*.test.cjs
+
   pre-commit:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +79,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -63,10 +92,15 @@ jobs:
           version: "0.12.1"
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: uv sync --frozen --all-packages --all-extras
-      - run: make test
+      # Coverage runs on 3.14 only: it traces branches via sys.monitoring, while CTracer on <3.14 is ~3x slower.
+      - if: matrix.python-version == '3.14'
+        run: make test
         env:
           COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
+      - if: matrix.python-version != '3.14'
+        run: uv run pytest
       - name: store coverage files
+        if: matrix.python-version == '3.14'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-${{ matrix.python-version }}
@@ -137,6 +171,8 @@ jobs:
         with:
           version: v2.10.1
           working-directory: packages/go
+          # config verify downloads the schema from golangci-lint.run, which times out in CI
+          verify: false
       - run: make test-go
 
   test-rust:
@@ -177,7 +213,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, test-go, test-rust, v2-schema-frozen]
+    needs: [price-check-agent, pre-commit, test-python, coverage, test-js, test-go, test-rust, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed

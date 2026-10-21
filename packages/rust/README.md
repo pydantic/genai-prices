@@ -96,6 +96,29 @@ requests, not a tier: OpenAI batch results report `service_tier: "default"`.
 Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
 A model the provider does not serve in batch returns the standard-price estimate.
 
+## Perplexity web search
+
+For `perplexity/sonar`, pass the search type used in the Perplexity request:
+
+```rust
+use genai_prices::{PriceRequest, Usage, UsageKey};
+
+let usage = Usage::from([(UsageKey::WEB_SEARCHES, 2.0)]);
+let request = PriceRequest::new("perplexity/sonar", &usage)
+    .with_provider_id("perplexity")
+    .with_price_context("search_type", "fast");
+
+let price = genai_prices::calculate(&request)?;
+assert!((price.total_price - 0.002).abs() < 1e-9);
+# Ok::<(), genai_prices::Error>(())
+```
+
+The response reports the search count but not the search type, so extraction cannot select the rate automatically.
+Pass `search_type: fast` even when a Perplexity preset selects Fast Search. Omitting the context or passing
+`search_type: web` uses the standard estimate of $2.50 per thousand searches. The fast rate is $1 per thousand.
+The search type selects the rate independently of the request date. Token charges are calculated separately.
+See [Perplexity's web-search documentation](https://docs.perplexity.ai/docs/agent-api/tools/web-search).
+
 ## Extract usage from a response
 
 ```rust

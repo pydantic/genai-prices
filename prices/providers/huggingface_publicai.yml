@@ -85,6 +85,17 @@ extractors:
         dest: output_tokens
         required: true
 models:
+  - id: BSC-LT/ALIA-40b-instruct-2606
+    name: ALIA-40b-instruct-2606
+    match:
+      or:
+        - equals: bsc-lt/alia-40b-instruct-2606
+        - equals: bsc-lt/alia-40b-instruct-2606-fast
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.6
+    prices_checked: 2026-10-20
+
   - id: aisingapore/Gemma-SEA-LION-v4-27B-IT
     name: Gemma-SEA-LION-v4-27B-IT
     match:
@@ -94,6 +105,18 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.4
+    prices_checked: 2026-10-20
+
+  - id: aisingapore/Nemotron-SEA-LION-v4.8-120B-A12B
+    name: Nemotron-SEA-LION-v4.8-120B-A12B
+    match:
+      or:
+        - equals: aisingapore/nemotron-sea-lion-v4.8-120b-a12b
+        - equals: aisingapore/nemotron-sea-lion-v4.8-120b-a12b-fast
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2
+    prices_checked: 2026-10-20
 
   - id: aisingapore/Qwen-SEA-LION-v4-32B-IT
     name: Qwen-SEA-LION-v4-32B-IT
@@ -104,6 +127,18 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.5
+    prices_checked: 2026-10-20
+
+  - id: aisingapore/Qwen-SEA-LION-v4.5-27B-IT
+    name: Qwen-SEA-LION-v4.5-27B-IT
+    match:
+      or:
+        - equals: aisingapore/qwen-sea-lion-v4.5-27b-it
+        - equals: aisingapore/qwen-sea-lion-v4.5-27b-it-fast
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.4
+    prices_checked: 2026-10-20
 
   - id: allenai/Olmo-3-7B-Instruct
     name: Olmo-3-7B-Instruct
@@ -135,6 +170,17 @@ models:
       input_mtok: 0.2
       output_mtok: 0.4
 
+  - id: speakleash/Bielik-11B-v3.0-Instruct
+    name: Bielik-11B-v3.0-Instruct
+    match:
+      or:
+        - equals: speakleash/bielik-11b-v3.0-instruct
+        - equals: speakleash/bielik-11b-v3.0-instruct-fast
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+    prices_checked: 2026-10-20
+
   - id: swiss-ai/Apertus-70B-Instruct-2509
     name: Apertus-70B-Instruct-2509
     match:
@@ -144,6 +190,7 @@ models:
     prices:
       input_mtok: 0.82
       output_mtok: 2.92
+    prices_checked: 2026-10-20
 
   - id: swiss-ai/Apertus-8B-Instruct-2509
     name: Apertus-8B-Instruct-2509
@@ -154,6 +201,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
+    prices_checked: 2026-10-20
 
   - id: utter-project/EuroLLM-22B-Instruct-2512
     name: EuroLLM-22B-Instruct-2512

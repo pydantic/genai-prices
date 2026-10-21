@@ -1,21 +1,32 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+from shutil import copyfile
 
 import httpx2
 import pytest
 from inline_snapshot import snapshot
 
 from prices import source_openrouter, source_prices, update
-from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
+from prices.prices_types import (
+    ClauseEquals,
+    ClauseOr,
+    ConditionalPrice,
+    ModelInfo,
+    ModelPrice,
+    StartDateConstraint,
+    Tier,
+    TieredPrices,
+)
 from prices.source_openrouter import (
     OpenRouterModel,
     OpenRouterPricing,
     OpenRouterResponse,
     report_unknown_pricing_fields,
 )
+from prices.utils import package_dir
 
 from .fixtures import load_entries, load_payload
 
@@ -40,7 +51,7 @@ def openrouter_model(
         id=model_id,
         canonical_slug=canonical_slug or model_id,
         name=f'Test: {model_id}',
-        created=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        created=datetime(2026, 1, 1, tzinfo=UTC),
         description='Test description\n\nMore details',
         context_length=1_000_000,
         pricing=pricing or OpenRouterPricing(prompt=Decimal('0.000001'), completion=Decimal('0.000002')),
@@ -534,3 +545,253 @@ def test_openrouter_main_metadata_reports_only_the_changed_kind(
     else:
         assert '1 models added' in output
         assert 'models updated' not in output
+
+
+def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepresentable_ones() -> None:
+    long_context = pricing_with_extras(
+        {
+            'input_cache_read': '0.0000001',
+            'overrides': [
+                {'min_prompt_tokens': 400_000, 'prompt': '0.000004'},
+                {'min_prompt_tokens': 200_000, 'prompt': '0.000002', 'completion': '0.000003'},
+            ],
+        }
+    )
+    time_of_day = pricing_with_extras({'overrides': [{'utc_days': ['monday'], 'prompt': '0.000002'}]})
+
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model('google/long', pricing=long_context),
+            openrouter_model('deepseek/off-peak', pricing=time_of_day),
+            openrouter_model('openrouter/auto'),
+            openrouter_model('~deepseek/deepseek-flash-latest'),
+            openrouter_model('vendor/dynamic', pricing=OpenRouterPricing(prompt=Decimal('-1'))),
+            openrouter_model('openai/gpt:batch', canonical_slug='openai/gpt-20260101'),
+        ]
+    )
+
+    assert [model.id for model in models] == ['google/long', 'openai/gpt:batch']
+    assert models[0].prices == ModelPrice(
+        input_mtok=TieredPrices(
+            base=Decimal('1'), tiers=[Tier(start=200_000, price=Decimal('2')), Tier(start=400_000, price=Decimal('4'))]
+        ),
+        cache_read_mtok=Decimal('0.1'),
+        output_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200_000, price=Decimal('3'))]),
+    )
+    assert models[0].context_window == 1_000_000
+    assert models[1].match == ClauseEquals(equals='openai/gpt:batch')
+    assert models[1].prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
+
+
+def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> None:
+    base = pricing_with_extras(
+        {
+            'prompt': '0.000002',
+            'input_cache_write': '0.0000025',
+            'overrides': [{'min_prompt_tokens': 272_000, 'prompt': '0.000004', 'input_cache_write': '0.000005'}],
+        }
+    )
+    batch = pricing_with_extras({'overrides': [{'min_prompt_tokens': 272_000, 'prompt': '0.000002'}]})
+    unaligned = pricing_with_extras({'overrides': [{'min_prompt_tokens': 128_000, 'prompt': '0.000002'}]})
+
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model('openai/terra', pricing=base),
+            openrouter_model('openai/terra:batch', pricing=batch),
+            openrouter_model('openai/luna', pricing=base),
+            openrouter_model('openai/luna:batch', pricing=unaligned),
+            openrouter_model('openai/sol', pricing=OpenRouterPricing(input_cache_write=Decimal('0.000001'))),
+            openrouter_model('openai/sol:batch'),
+        ]
+    )
+    prices = {model.id: model.prices for model in models}
+
+    assert isinstance(terra := prices['openai/terra:batch'], ModelPrice)
+    assert terra.cache_write_mtok == TieredPrices(
+        base=Decimal('1.25'), tiers=[Tier(start=272_000, price=Decimal('2.5'))]
+    )
+    assert isinstance(luna := prices['openai/luna:batch'], ModelPrice)
+    assert luna.cache_write_mtok is None
+    assert isinstance(sol := prices['openai/sol:batch'], ModelPrice)
+    assert sol.cache_write_mtok is None
+
+
+@pytest.mark.parametrize(
+    ('overrides', 'error'),
+    [
+        ([{'min_prompt_tokens': 1, 'internal_reasoning': '0.1'}], 'Unexpected OpenRouter price override'),
+        ([{'region': 'eu', 'prompt': '0.1'}], 'Unexpected OpenRouter price override'),
+        ([{'min_prompt_tokens': 1, 'input_cache_write': '0.1'}], 'overrides input_cache_write for vendor/m without'),
+    ],
+)
+def test_openrouter_provider_models_reject_overrides_they_cannot_tier(overrides: object, error: str) -> None:
+    model = openrouter_model('vendor/m', pricing=pricing_with_extras({'overrides': overrides}))
+
+    with pytest.raises(RuntimeError, match=error):
+        source_openrouter.parse_provider_models([model])
+
+
+def test_upsert_keeps_a_curated_tier_when_the_source_reports_only_its_base(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = tmp_path / 'openrouter.yml'
+    provider_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: vendor/new-base
+    match: {equals: vendor/new-base}
+    prices: {input_mtok: {base: 1, tiers: [{start: 200000, price: 2}]}, output_mtok: 2}
+  - id: vendor/same-base
+    match: {equals: vendor/same-base}
+    prices: {input_mtok: {base: 1, tiers: [{start: 200000, price: 2}]}, output_mtok: 2}
+"""
+    )
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model('vendor/same-base', pricing=OpenRouterPricing(prompt=Decimal('0.000001'))),
+            openrouter_model('vendor/new-base', pricing=OpenRouterPricing(prompt=Decimal('0.0000015'))),
+        ]
+    )
+
+    assert update.ProviderYaml(provider_path).upsert_models(models, source='OpenRouter', min_count=1) == (0, 1)
+
+    provider = update.ProviderYaml(provider_path).provider
+    tiered = ModelPrice(
+        input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200_000, price=Decimal('2'))]),
+        output_mtok=Decimal('2'),
+    )
+    assert [model.prices for model in provider.models] == [tiered, tiered]
+    assert capsys.readouterr().out == (
+        'OpenRouter: kept vendor/new-base unchanged, vendor/new-base reports a flat rate where it is tiered\n'
+    )
+
+
+def test_openrouter_keeps_rates_that_only_drifted_within_tolerance(tmp_path: Path) -> None:
+    provider_path = tmp_path / 'openrouter.yml'
+    provider_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: vendor/drift
+    match: {equals: vendor/drift}
+    context_window: 1000
+    prices: {input_mtok: 0.446, output_mtok: 0.892}
+  - id: vendor/jump
+    match: {equals: vendor/jump}
+    prices: {input_mtok: 0.0376, output_mtok: 0.08}
+  - id: vendor/new-key
+    match: {equals: vendor/new-key}
+    prices: {input_mtok: 1, output_mtok: 2}
+  - id: vendor/tiered
+    match: {equals: vendor/tiered}
+    prices: {input_mtok: {base: 1, tiers: [{start: 200000, price: 2}]}, output_mtok: 2}
+"""
+    )
+    provider_yaml = update.ProviderYaml(provider_path)
+    tiered = pricing_with_extras(
+        {'prompt': '0.00000101', 'overrides': [{'min_prompt_tokens': 200_000, 'prompt': '0.00000199'}]}
+    )
+    models = source_openrouter.parse_provider_models(
+        [
+            openrouter_model(
+                'vendor/drift',
+                pricing=OpenRouterPricing.model_validate({'prompt': '0.000000443', 'completion': '0.000000885'}),
+            ),
+            openrouter_model(
+                'vendor/jump',
+                pricing=OpenRouterPricing.model_validate({'prompt': '0.0000000344', 'completion': '0.00000008'}),
+            ),
+            openrouter_model('vendor/new-key', pricing=pricing_with_extras({'input_cache_read': '0.0000001'})),
+            openrouter_model('vendor/tiered', pricing=tiered),
+            openrouter_model('vendor/brand-new'),
+        ]
+    )
+
+    settled = [source_openrouter.settled(model, provider_yaml) for model in models]
+    assert provider_yaml.upsert_models(settled, source='OpenRouter', min_count=1) == (1, 4)
+
+    provider = update.ProviderYaml(provider_path).provider
+    prices = {model.id: model.prices for model in provider.models}
+    assert prices['vendor/drift'] == ModelPrice(input_mtok=Decimal('0.446'), output_mtok=Decimal('0.892'))
+    assert prices['vendor/tiered'] == ModelPrice(
+        input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200_000, price=Decimal('2'))]),
+        output_mtok=Decimal('2'),
+    )
+    assert isinstance(jump := prices['vendor/jump'], list)
+    assert jump[-1].prices == ModelPrice(input_mtok=Decimal('0.0344'), output_mtok=Decimal('0.08'))
+    assert isinstance(new_key := prices['vendor/new-key'], list)
+    assert new_key[-1].prices.cache_read_mtok == Decimal('0.1')
+    drift = provider.find_model('vendor/drift')
+    assert drift is not None and drift.context_window == 1000
+
+
+def test_upsert_preserves_todays_price_and_drops_redundant_cache_on_new_models(tmp_path: Path) -> None:
+    provider_path = tmp_path / 'openrouter.yml'
+    provider_path.write_text(
+        """\
+id: openrouter
+name: OpenRouter
+api_pattern: openrouter
+models:
+  - id: vendor/m
+    match: {equals: vendor/m}
+    prices: {input_mtok: 1, cache_read_mtok: 0.5, output_mtok: 2}
+"""
+    )
+
+    def report(model_id: str, input_mtok: str, cache_read_mtok: str) -> ModelInfo:
+        return ModelInfo(
+            id=model_id,
+            match=ClauseEquals(equals=model_id),
+            prices=ModelPrice(
+                input_mtok=Decimal(input_mtok), cache_read_mtok=Decimal(cache_read_mtok), output_mtok=Decimal(2)
+            ),
+            prices_checked=date.today(),
+        )
+
+    update.ProviderYaml(provider_path).upsert_models(
+        [report('vendor/m', '0.8', '0.4')], source='OpenRouter', min_count=1
+    )
+    update.ProviderYaml(provider_path).upsert_models(
+        [report('vendor/m', '0.6', '0.6'), report('vendor/new', '0.6', '0.6')], source='OpenRouter', min_count=1
+    )
+
+    provider = update.ProviderYaml(provider_path).provider
+    without_cache = ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal(2))
+    assert [model.prices for model in provider.models] == [
+        [
+            ConditionalPrice(
+                prices=ModelPrice(input_mtok=Decimal(1), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal(2))
+            ),
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date.today()),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), cache_read_mtok=Decimal('0.4'), output_mtok=Decimal(2)),
+            ),
+        ],
+        without_cache,
+    ]
+
+
+@pytest.mark.vcr()
+def test_update_openrouter_provider_fetches_recorded_models(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class NextDay(date):
+        @classmethod
+        def today(cls) -> date:
+            return date.today() + timedelta(days=1)
+
+    monkeypatch.setattr(source_openrouter, 'date', NextDay)
+    provider_path = tmp_path / 'openrouter.yml'
+    copyfile(package_dir / 'providers/openrouter.yml', provider_path)
+
+    source_openrouter.update_openrouter_provider(provider_path)
+
+    assert capsys.readouterr().out == snapshot("""\
+OpenRouter prices updated: 0 added, 420 updated
+""")

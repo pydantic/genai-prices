@@ -651,7 +651,7 @@ describe('Comprehensive API Tests', () => {
         output_tokens: 4567,
       })
 
-      const result = calcPrice(usage, model!, { provider: provider! })
+      const result = calcPrice(usage, model!, { provider: provider!, timestamp: new Date('2026-10-17T00:00:00Z') })
       expect(result).not.toBeNull()
 
       expect(result!.provider.name).toEqual('Anthropic')
@@ -762,7 +762,9 @@ describe('Comprehensive API Tests', () => {
         total_price: 0.00315,
       })
 
-      expect(calcPrice(usage, modelRef, { providerApiUrl: 'https://openrouter.ai/api/v1' })).toMatchObject({
+      expect(
+        calcPrice(usage, modelRef, { providerApiUrl: 'https://openrouter.ai/api/v1', timestamp: new Date('2026-10-17T00:00:00Z') })
+      ).toMatchObject({
         input_price: 0.00175,
         model: { id: 'openai/gpt-5.2' },
         output_price: 0.0014,

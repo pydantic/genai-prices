@@ -6,7 +6,7 @@ import statistics
 import sys
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from time import perf_counter_ns
 
@@ -17,7 +17,7 @@ from genai_prices.types import CalcPrice, ClauseEquals, ModelInfo, ModelPrice, P
 DEFAULT_ITERATIONS = 10_000
 DEFAULT_SAMPLES = 5
 DEFAULT_WARMUP_ITERATIONS = 2_000
-BENCHMARK_TIMESTAMP = datetime(2026, 1, 1, tzinfo=timezone.utc)
+BENCHMARK_TIMESTAMP = datetime(2026, 1, 1, tzinfo=UTC)
 
 PriceResult = tuple[Decimal, Decimal, Decimal]
 

@@ -170,3 +170,60 @@ fn fallback_provider_does_not_inherit_tier_rates() {
         assert!(result.warnings.is_empty(), "{:?}", result.warnings);
     }
 }
+
+#[test]
+fn perplexity_responses_usage_and_search_type() {
+    // Constructed from the Agent model/schema and Perplexity's synthetic usage test, not a recording:
+    // https://docs.perplexity.ai/docs/agent-api/models
+    // https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/tests/test_perplexity_usage.py
+    // https://docs.perplexity.ai/docs/agent-api/tools/web-search
+    let with_details = r#"{"model":"perplexity/sonar","object":"response","usage":{"input_tokens":1000,"input_tokens_details":{"cache_read_input_tokens":800,"cached_tokens":300},"output_tokens":100,"output_tokens_details":{"reasoning_tokens":50},"total_tokens":1100,"tool_calls_details":{"search_web":{"invocation":2}}}}"#;
+    let without_details = r#"{"model":"perplexity/sonar","object":"response","usage":{"input_tokens":1000,"output_tokens":100,"total_tokens":1100}}"#;
+    let cases = [
+        (
+            with_details,
+            usage([
+                (UsageKey::INPUT_TOKENS, 1_000.0),
+                (UsageKey::CACHE_READ_TOKENS, 800.0),
+                (UsageKey::OUTPUT_TOKENS, 100.0),
+                (UsageKey::OUTPUT_REASONING_TOKENS, 50.0),
+                (UsageKey::WEB_SEARCHES, 2.0),
+            ]),
+            0.0001,
+            true,
+        ),
+        (
+            without_details,
+            usage([(UsageKey::INPUT_TOKENS, 1_000.0), (UsageKey::OUTPUT_TOKENS, 100.0)]),
+            0.000_25,
+            false,
+        ),
+    ];
+    for (body, want_usage, want_input, with_tools) in cases {
+        let request =
+            genai_prices::ExtractRequest::new(body).with_provider_id("perplexity").with_api_flavor("responses");
+        let extracted = genai_prices::extract_usage(&request).unwrap();
+        assert_eq!(extracted.model.as_deref(), Some("perplexity/sonar"));
+        assert_eq!(extracted.usage, want_usage);
+        // The search type selects the rate independently of the request date.
+        for (month, day, context, want_total) in [
+            (10, 15, None, 0.005_35),
+            (10, 15, Some("web"), 0.005_35),
+            (9, 23, Some("fast"), 0.002_35),
+            (9, 24, Some("fast"), 0.002_35),
+            (10, 14, Some("fast"), 0.002_35),
+            (10, 15, Some("fast"), 0.002_35),
+        ] {
+            let mut request = extracted.price_request().unwrap().with_timestamp(date(2026, month, day));
+            if let Some(search_type) = context {
+                request = request.with_price_context("search_type", search_type);
+            }
+            let price = genai_prices::calculate(&request).unwrap();
+            let want_total = if with_tools { want_total } else { 0.0005 };
+            assert_eq!(price.model_id, "perplexity/sonar");
+            assert_close(price.input_price, want_input, 1e-12);
+            assert_close(price.output_price, 0.000_25, 1e-12);
+            assert_close(price.total_price, want_total, 1e-12);
+        }
+    }
+}

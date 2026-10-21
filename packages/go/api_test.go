@@ -31,6 +31,52 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestQuickSilverLongContextCatalogTiers(t *testing.T) {
+	for _, test := range []struct {
+		model                                                   string
+		input, output, cache, inputMultiplier, outputMultiplier float64
+	}{
+		{"claude-haiku-5-5", .025, .125, .0025, 5, 5},
+		{"gpt-6-astra", 10, 50, 1, 2, 1.5}, {"gpt-6-luna", .1, .5, .01, 2, 1.5},
+		{"gpt-6.1-sol", 2, 10, .1, 2, 1.5}, {"gpt-6-sol", 2, 10, .2, 2, 1.5},
+		{"grok-4.6", 2, 6, .5, 2, 2}, {"grok-4.7", 2, 6, .5, 2, 2},
+	} {
+		for _, tokens := range []float64{200_000, 200_001} {
+			price, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: test.model, ProviderID: "quicksilverpro",
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: tokens, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 1_000_000}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			inputWant := ((tokens-50_000)*test.input + 50_000*test.cache) / 1_000_000
+			outputWant := test.output
+			if tokens > 200_000 {
+				inputWant *= test.inputMultiplier
+				outputWant *= test.outputMultiplier
+			}
+			if math.Abs(price.InputPrice-inputWant) > 1e-12 || math.Abs(price.OutputPrice-outputWant) > 1e-12 {
+				t.Fatalf("%s at %g: got %#v, want input %g output %g", test.model, tokens, price, inputWant, outputWant)
+			}
+		}
+	}
+}
+
+func TestCloudflareClairicNativeDecisionResponse(t *testing.T) {
+	extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{ProviderID: "cloudflare", APIFlavor: "decisions", ResponseJSON: []byte(`{"result":{"model":"clairic","usage":{"state_tokens":61,"image_tokens":0,"schema_tokens":472,"input_tokens":655,"output_tokens":0,"passes":3}},"success":true,"errors":[],"messages":[]}`)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if extracted.Model != "clairic" || !maps.Equal(extracted.Usage, genai_prices.Usage{genai_prices.UsageInputTokens: 655, genai_prices.UsageOutputTokens: 0}) {
+		t.Fatalf("unexpected extracted usage: %#v", extracted)
+	}
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{ProviderID: extracted.ProviderID, Model: extracted.Model, Usage: extracted.Usage})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if price.ModelID != "@cf/cloudflare/clairic" || math.Abs(price.TotalPrice-.0000655) > 1e-12 {
+		t.Fatalf("unexpected price: %#v", price)
+	}
+}
+
 func TestCursorGrok47LongContextPrices(t *testing.T) {
 	for _, test := range []struct {
 		model       string
@@ -61,6 +107,7 @@ func TestCursorGrok47LongContextPrices(t *testing.T) {
 }
 
 func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
+	pinned := time.Date(2026, 10, 18, 0, 0, 0, 0, time.UTC)
 	usage := genai_prices.Usage{
 		genai_prices.UsageInputTokens:      1_000,
 		genai_prices.UsageCacheReadTokens:  200,
@@ -68,7 +115,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 		genai_prices.UsageOutputTokens:     100,
 	}
 	decisions, err := genai_prices.Calculate(genai_prices.PriceRequest{
-		Usage: usage, Model: "gpt-6-luna", ProviderID: " OPENAI-DECISIONS ",
+		Usage: usage, Model: "gpt-6-luna", ProviderID: " OPENAI-DECISIONS ", Timestamp: pinned,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -82,7 +129,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 			genai_prices.UsageCacheReadTokens: 200,
 			genai_prices.UsageOutputTokens:    100,
 		},
-		Model: "gpt-6-luna", ProviderID: "openai",
+		Model: "gpt-6-luna", ProviderID: "openai", Timestamp: pinned,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -104,7 +151,7 @@ func TestOpenAIDecisionsPricingAndExtraction(t *testing.T) {
 				genai_prices.UsageCacheReadTokens:  100_000,
 				genai_prices.UsageCacheWriteTokens: 50_000,
 			},
-			Model: "gpt-6-luna", ProviderID: "openai-decisions",
+			Model: "gpt-6-luna", ProviderID: "openai-decisions", Timestamp: pinned,
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -392,13 +439,15 @@ func TestClaudeFable51DoesNotUseFable5Prices(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.providerID+"/"+test.fable51, func(t *testing.T) {
 			fable5, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.fable5, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.fable5, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
 			}
 			fable51, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.fable51, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.fable51, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -445,7 +494,7 @@ func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.model, func(t *testing.T) {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.model, ProviderID: "aws",
+				Usage: usage, Model: test.model, ProviderID: "aws", Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -463,6 +512,7 @@ func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 // OpenRouter's family-level alias had not moved to 5.1 when 5.1 was added.
 func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
 	calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		Usage: genai_prices.Usage{
 			genai_prices.UsageInputTokens:     1_000_000,
 			genai_prices.UsageCacheReadTokens: 1_000_000,
@@ -510,13 +560,15 @@ func TestClaudeOpus55DoesNotUseOpus5Prices(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.providerID+"/"+test.opus55, func(t *testing.T) {
 			opus5, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.opus5, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.opus5, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
 			}
 			opus55, err := genai_prices.Calculate(genai_prices.PriceRequest{
-				Usage: usage, Model: test.opus55, ProviderID: test.providerID,
+				Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.opus55, ProviderID: test.providerID,
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -602,6 +654,7 @@ func TestClaudeSonnet55ResolvesToItsOwnModel(t *testing.T) {
 		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12.1},
 	} {
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			Usage: genai_prices.Usage{
 				genai_prices.UsageInputTokens:     2_000_000,
 				genai_prices.UsageCacheReadTokens: 1_000_000,
@@ -692,6 +745,7 @@ func TestAWSTitanEmbedTextV2DoesNotUseV1Prices(t *testing.T) {
 				Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000},
 				Model:      test.model,
 				ProviderID: "aws",
+				Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 			})
 			if err != nil {
 				t.Fatal(err)
@@ -726,6 +780,7 @@ func TestDatabricksPrices(t *testing.T) {
 			},
 			Model:      test.model,
 			ProviderID: "databricks",
+			Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -746,6 +801,7 @@ func TestDatabricksProviderSelection(t *testing.T) {
 		{Model: "databricks/databricks-gpt-oss-120b", ProviderID: "litellm"},
 	} {
 		request.Usage = genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000}
+		request.Timestamp = time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC)
 		calculation, err := genai_prices.Calculate(request)
 		if err != nil {
 			t.Fatal(err)
@@ -891,6 +947,7 @@ func TestAWSConverseCacheWriteTTL(t *testing.T) {
 		}
 		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
 			Usage: extracted.Usage, Model: extracted.Model, ProviderID: extracted.ProviderID,
+			Timestamp: time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)
@@ -930,6 +987,7 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 			{genai_prices.Usage{genai_prices.UsageInputTokens: 100_001, genai_prices.UsageOutputTokens: 100_000}, test.wantLongContext},
 		} {
 			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Timestamp:  time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 				Usage:      tokens.usage,
 				Model:      test.model,
 				ProviderID: test.providerID,
@@ -1039,6 +1097,7 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 			Model:        test.model,
 			ProviderID:   test.providerID,
 			PriceContext: test.priceContext,
+			Timestamp:    time.Date(2026, 10, 17, 0, 0, 0, 0, time.UTC),
 		})
 		if err != nil {
 			t.Fatal(err)

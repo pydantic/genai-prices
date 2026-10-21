@@ -6,15 +6,23 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urlparse
 
+import pytest
 from ruamel.yaml import YAML
 
+from scripts.price_check_sources import load_provider_sources, official_source_hosts
+
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
+ROOT = WORKFLOWS.parents[1]
+ENGINE_IMPORT_PIN = '94fc592c15981441d462ee213859da0a18170d15'
+ENGINE_IMPORT_CACHE = (
+    ROOT / '.github/aw/imports/pydantic/pydantic-ai' / ENGINE_IMPORT_PIN / 'src_pydantic_ai_harness_gh-aw_pydantic.md'
+)
 
 
 def read_workflow(filename: str) -> dict[str, Any]:
     content = (WORKFLOWS / filename).read_text()
     if filename.endswith('.md'):
-        content = content.split('---', 2)[1]
+        content = content.partition('\n---\n')[0].removeprefix('---\n')
     yaml: Any = YAML(typ='safe')
     return cast(dict[str, Any], yaml.load(content))
 
@@ -22,7 +30,7 @@ def read_workflow(filename: str) -> dict[str, Any]:
 def test_price_updates_create_pr_before_notifying_slack() -> None:
     source = read_workflow('agentic-price-check.md')
     compiled = read_workflow('agentic-price-check.lock.yml')
-    expected_schedule = [{'cron': '0 6-18 * * 1-5', 'timezone': 'America/Los_Angeles'}]
+    expected_schedule = [{'cron': '0 6 * * 1', 'timezone': 'UTC'}]
     assert source['on']['schedule'] == expected_schedule
     assert compiled['on']['schedule'] == expected_schedule
     assert 'workflow_dispatch' in source['on']
@@ -31,8 +39,13 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['jobs']['pre_activation']['if'] == "vars.AGENTIC_WORKFLOWS_ENABLED == 'true'"
     assert source['on']['permissions'] == {'pull-requests': 'read'}
     assert compiled['jobs']['pre_activation']['permissions'] == {'pull-requests': 'read'}
-    assert 'Bash(git diff:*)' in json.dumps(compiled['jobs']['agent'])
-    assert source['on']['skip-if-match'] == 'is:pr is:open author:app/genai-prices-automation'
+    proposal_query = 'is:pr is:open author:app/genai-prices-automation -head:automation/hourly-price-update -head:automation/weekly-price-update'
+    assert source['on']['skip-if-match'] == proposal_query
+    pre_activation = compiled['jobs']['pre_activation']
+    skip_step = next(step for step in pre_activation['steps'] if step.get('id') == 'check_skip_if_match')
+    assert skip_step['env']['GH_AW_SKIP_QUERY'] == proposal_query
+    assert "steps.check_skip_if_match.outputs.skip_check_ok == 'true'" in pre_activation['outputs']['activated']
+    assert "needs.pre_activation.outputs.activated == 'true'" in compiled['jobs']['activation']['if']
     expected_concurrency = {
         'group': '${{ github.workflow }}',
         'cancel-in-progress': False,
@@ -42,6 +55,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert compiled['concurrency'] == expected_concurrency
     assert 'create-issue' not in source['safe-outputs']
     assert source['safe-outputs']['report-failure-as-issue'] is False
+    assert source['safe-outputs']['report-incomplete'] == {'create-issue': False}
     pr = source['safe-outputs']['create-pull-request']
     assert pr['max'] == 1
     assert pr['draft'] is False
@@ -49,7 +63,15 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert base_branch is None or (isinstance(base_branch, str) and '${' not in base_branch)
     assert pr['fallback-as-issue'] is False
     assert pr['max-patch-size'] == 10240
-    assert source['engine']['args'] == ['--disallowedTools', 'Agent,Task']
+    assert source['engine']['model'] == 'anthropic/glm-5.3-flash'
+    engine = read_workflow('shared/price-check-engine.md')['engine']
+    assert engine['id'] == 'pydantic-ai'
+    assert engine['version'] == '0.56.0'
+    assert engine['env'] == {
+        'PAI_AGENT': 'scripts.price_check_agent:agent',
+        'ANTHROPIC_BASE_URL': 'https://api.z.ai/api/anthropic',
+        'ANTHROPIC_API_KEY': '${{ secrets.ZAI_API_KEY }}',
+    }
     assert 'github-token' not in pr
     assert 'PRICE_UPDATE_TOKEN' not in json.dumps(compiled)
     shared = read_workflow('shared/price-update.md')
@@ -76,12 +98,39 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert handler_config['create_pull_request']['max_patch_size'] == 10240
     execution_step = next(step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'agentic_execution')
     execution_command = execution_step['run']
-    assert '--disallowedTools Agent,Task' in execution_command
-    allowed_tools_start = execution_command.index('--allowed-tools')
-    allowed_tools_end = execution_command.index('--debug-file', allowed_tools_start)
-    allowed_tools = execution_command[allowed_tools_start:allowed_tools_end]
-    assert 'Bash(' in allowed_tools
-    assert 'WebFetch' in allowed_tools
+    assert 'pydantic-ai_harness.cjs clai2' in execution_command
+    assert '--exclude-env ANTHROPIC_API_KEY' in execution_command
+    assert '--anthropic-api-base-path /api/anthropic' in execution_command
+    assert execution_step['env']['PAI_MODEL'] == 'anthropic/glm-5.3-flash'
+    assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_agent:agent'
+    assert execution_step['env']['ANTHROPIC_API_KEY'] == '${{ secrets.ZAI_API_KEY }}'
+    assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.56.0'
+    assert 'observability' not in source
+    excluded_env = read_workflow('shared/price-check-engine.md')['excluded-env']
+    assert excluded_env == [
+        'GH_AW_OTLP_ENDPOINTS',
+        'OTEL_EXPORTER_OTLP_ENDPOINT',
+        'OTEL_EXPORTER_OTLP_HEADERS',
+    ]
+    for name in excluded_env:
+        assert f'--exclude-env {name}' in execution_command
+    config_line = next(
+        line
+        for line in execution_command.splitlines()
+        if 'awf-config.json' in line and line.strip().startswith('printf')
+    )
+    proxy = json.loads(config_line.split("' '", 1)[1].split("' >", 1)[0])['apiProxy']
+    assert proxy['maxRuns'] == 500
+    assert 'maxAiCredits' not in proxy
+    assert proxy['enableTokenSteering'] is False
+    assert proxy['modelFallback'] == {'enabled': False}
+    assert proxy['targets']['anthropic'] == {'host': 'api.z.ai'}
+    assert proxy['defaultAiCreditsPricing'] == {'input': 0.15, 'cachedInput': 0.03, 'output': 0.5}
+    assert proxy['providers']['anthropic']['models']['glm-5.3-flash']['cost'] == {
+        'input': 0.00000015,
+        'cache_read': 0.00000003,
+        'output': 0.00000050,
+    }
     assert token_step['with'] == {
         'client-id': app['client-id'],
         'private-key': app['private-key'],
@@ -99,11 +148,47 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert 'prices/new_data/v2/data_slim.json' in pr['allowed-files']
     assert 'prices/new_data/v2/*.json' not in pr['allowed-files']
     assert 'packages/go/internal/data/prices.json' in pr['allowed-files']
+    assert {path for path in pr['allowed-files'] if path.startswith('tests/')} == {
+        'tests/test_price_calc.py',
+        'tests/test_price_regressions.py',
+        'tests/test_price_check_additions.py',
+        'tests/dataset/usages.json',
+    }
     assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
-    assert source['imports'] == ['shared/price-update.md']
+    assert source['imports'] == [
+        'shared/price-check-engine.md',
+        f'pydantic/pydantic-ai/src/pydantic_ai_harness/gh-aw/pydantic.md@{ENGINE_IMPORT_PIN}',
+        'shared/price-update.md',
+        'shared/price-check-runtime.md',
+        'shared/price-check-observability.md',
+        'shared/price-check-network.md',
+    ]
+    assert ENGINE_IMPORT_CACHE.is_file()
+    runtime = read_workflow('shared/price-check-runtime.md')
+    assert [step['name'] for step in runtime['pre-agent-steps']] == [
+        'Install the gh-aw fetch transport',
+        'Install the price-check scope preflight',
+        'Snapshot trusted provider sources',
+    ]
+    observability = read_workflow('shared/price-check-observability.md')
+    assert [step['name'] for step in observability['post-steps']] == [
+        'Export price-check telemetry',
+        'Stage the model price-check report',
+        'Upload the model price-check report',
+    ]
+    assert read_workflow('shared/price-check-network.md')['network']['allowed']
+    backfill = source['jobs']['report_backfill']
+    assert backfill['needs'] == ['backfill_requests', 'agent', 'safe_outputs']
+    assert "needs.backfill_requests.outputs.pending != '[]'" in backfill['if']
+    assert source['jobs']['agent']['needs'] == ['backfill_requests']
+    backfill_text = (
+        (WORKFLOWS / 'agentic-price-check.md').read_text().split('## Requested-model rollout backfill\n', maxsplit=1)[1]
+    )
+    assert 'For backlog providers outside the weekly manifest, check only the specified model' in backfill_text
+    assert 'without sweeping unrelated models at those providers' in backfill_text
     assert 'SLACK_WEBHOOK_URL' not in json.dumps(compiled['jobs']['agent'])
     assert 'PRICE_UPDATE_APP_PRIVATE_KEY' not in json.dumps(compiled['jobs']['agent'])
-    assert compiled['jobs']['agent']['needs'] == 'activation'
+    assert compiled['jobs']['agent']['needs'] == ['activation', 'backfill_requests']
     assert 'notify_slack' not in compiled['jobs']['safe_outputs']['needs']
     assert 'created_pr_url' in compiled['jobs']['safe_outputs']['outputs']
     notify = compiled['jobs']['notify_slack']
@@ -120,9 +205,8 @@ def test_provider_allowlist_matches_manifest() -> None:
     manifest = read_workflow('../agentic-price-check-providers.yml')
     source = read_workflow('agentic-price-check.md')
     allowed = source['safe-outputs']['create-pull-request']['allowed-files']
-    assert {path for path in allowed if path.endswith('.yml')} == {
-        provider['file'] for provider in manifest['providers']
-    }
+    manifest_files = {provider['file'] for provider in manifest['providers']}
+    assert manifest_files <= {path for path in allowed if path.endswith('.yml')}
     assert len(manifest['providers']) == 25
     assert len({provider['file'] for provider in manifest['providers']}) == 25
     provider_names = {provider['name'] for provider in manifest['providers']}
@@ -139,15 +223,316 @@ def test_provider_allowlist_matches_manifest() -> None:
     }
     assert required_names <= provider_names
     assert 'QuickSilver Pro' not in provider_names
-    assert 'prices/providers/quicksilverpro.yml' not in {provider['file'] for provider in manifest['providers']}
+    assert 'prices/providers/quicksilverpro.yml' not in manifest_files
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    assert {
+        path for path in allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+    assert 'prices/providers/quicksilverpro.yml' in provider_files
+    network_hosts = set(read_workflow('shared/price-check-network.md')['network']['allowed'])
     for provider in manifest['providers']:
         for url in provider['sources']:
-            assert urlparse(cast(str, url)).netloc in source['network']['allowed']
+            assert urlparse(cast(str, url)).netloc in network_hosts
+
+
+def test_targeted_request_uses_all_provider_files_and_the_trusted_host_set() -> None:
+    source = read_workflow('agentic-model-price-check.md')
+    allowed = source['safe-outputs']['create-pull-request']['allowed-files']
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    assert {
+        path for path in allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+    assert {path for path in allowed if path.startswith('tests/')} == {
+        'tests/test_price_calc.py',
+        'tests/test_price_regressions.py',
+        'tests/test_price_check_additions.py',
+        'tests/dataset/usages.json',
+    }
+    network = read_workflow('shared/price-check-network.md')['network']['allowed']
+    assert set(network) == set(official_source_hosts(ROOT)) | {'defaults', 'api.z.ai'}
+    assert 'shared/price-check-network.md' in source['imports']
+    assert (
+        'Read `$RUNNER_TEMP/gh-aw/price-check/provider-sources.json`'
+        in (WORKFLOWS / 'agentic-model-price-check.md').read_text()
+    )
+
+
+def test_weekly_publication_scope_gate_runs_before_safe_outputs() -> None:
+    gate_name = 'Verify weekly provider scope before publication'
+    gate_command = 'uv run --frozen python -m scripts.price_check_scope_policy --validate-transports'
+    gate_env = {'PRICE_CHECK_PENDING_BACKFILL': "${{ needs.backfill_requests.outputs.pending || '[]' }}"}
+    weekly_source = read_workflow('agentic-price-check.md')
+    weekly_compiled = read_workflow('agentic-price-check.lock.yml')
+    source_safe_outputs = weekly_source['safe-outputs']
+    compiled_safe_outputs = weekly_compiled['jobs']['safe_outputs']
+
+    assert source_safe_outputs['needs'] == ['backfill_requests']
+    source_steps = source_safe_outputs['steps']
+    assert [step['name'] for step in source_steps] == [
+        'Check out the policy source when the publisher checkout was skipped',
+        'Set up uv for the trusted provider scope check',
+        gate_name,
+    ]
+    assert source_steps[0]['if'] == "${{ !contains(needs.agent.outputs.output_types, 'create_pull_request') }}"
+    assert source_steps[0]['with'] == {'ref': '${{ github.sha }}', 'persist-credentials': False}
+    source_gate = source_steps[2]
+    assert source_gate['run'] == gate_command
+    assert source_gate['env'] == gate_env
+    assert 'if' not in source_gate
+    assert 'continue-on-error' not in source_gate
+
+    assert 'backfill_requests' in compiled_safe_outputs['needs']
+    compiled_steps = compiled_safe_outputs['steps']
+    compiled_gate_index = next(i for i, step in enumerate(compiled_steps) if step.get('name') == gate_name)
+    compiled_gate = compiled_steps[compiled_gate_index]
+    assert compiled_gate['run'] == gate_command
+    assert compiled_gate['env'] == gate_env
+    assert 'if' not in compiled_gate
+    assert 'continue-on-error' not in compiled_gate
+    checkout_indices = [
+        i for i, step in enumerate(compiled_steps) if step.get('uses', '').startswith('actions/checkout@')
+    ]
+    download_indices = [
+        i for i, step in enumerate(compiled_steps) if step.get('uses', '').startswith('actions/download-artifact@')
+    ]
+    process_index = next(i for i, step in enumerate(compiled_steps) if step.get('id') == 'process_safe_outputs')
+    assert checkout_indices
+    assert download_indices
+    assert max(checkout_indices + download_indices) < compiled_gate_index < process_index
+
+    targeted_source = read_workflow('agentic-model-price-check.md')
+    targeted_compiled = read_workflow('agentic-model-price-check.lock.yml')
+    assert 'backfill_requests' not in targeted_source['safe-outputs'].get('needs', [])
+    assert not any(step.get('name') == gate_name for step in targeted_source['safe-outputs'].get('steps', []))
+    assert 'backfill_requests' not in targeted_compiled['jobs']['safe_outputs']['needs']
+    assert not any(step.get('name') == gate_name for step in targeted_compiled['jobs']['safe_outputs']['steps'])
+    provider_files = {provider.file for provider in load_provider_sources(ROOT)}
+    targeted_allowed = targeted_source['safe-outputs']['create-pull-request']['allowed-files']
+    assert {
+        path for path in targeted_allowed if path.startswith('prices/providers/') and path.endswith('.yml')
+    } == provider_files
+
+
+def test_model_price_check_report_artifact_connects_upload_and_callbacks() -> None:
+    artifact_name = 'model-price-check-report'
+    report_path = '/tmp/gh-aw/agent/model-check-report.json'
+    download_path = '${{ runner.temp }}/genie-pricer-artifacts'
+    staged_report_path = '${{ steps.stage-model-price-report.outputs.path }}'
+    observability = read_workflow('shared/price-check-observability.md')
+    stage_steps = [
+        step for step in observability['post-steps'] if step.get('name') == 'Stage the model price-check report'
+    ]
+    assert len(stage_steps) == 1
+    stage = stage_steps[0]
+    assert stage['id'] == 'stage-model-price-report'
+    stage_script = stage['with']['script']
+    assert f"fs.openSync('{report_path}'" in stage_script
+    assert 'fs.constants.O_NOFOLLOW' in stage_script
+    assert 'fs.fstatSync(descriptor)' in stage_script
+    assert 'stats.isFile()' in stage_script
+    assert 'stats.size > 32 * 1024' in stage_script
+    uploads = [
+        step for step in observability['post-steps'] if step.get('name') == 'Upload the model price-check report'
+    ]
+    assert [(step['if'], step['with']['name'], step['with']['path']) for step in uploads] == [
+        (
+            "${{ always() && steps.stage-model-price-report.outputs.path != '' }}",
+            artifact_name,
+            staged_report_path,
+        )
+    ]
+
+    for source_file, compiled_file, callback_job in (
+        ('agentic-price-check.md', 'agentic-price-check.lock.yml', 'report_backfill'),
+        ('agentic-model-price-check.md', 'agentic-model-price-check.lock.yml', 'report_result'),
+    ):
+        source = read_workflow(source_file)
+        compiled = read_workflow(compiled_file)
+        assert 'shared/price-check-observability.md' in source['imports']
+        compiled_stages = [
+            step for step in compiled['jobs']['agent']['steps'] if step.get('id') == 'stage-model-price-report'
+        ]
+        assert len(compiled_stages) == 1
+        compiled_stage_script = compiled_stages[0]['with']['script']
+        assert f"fs.openSync('{report_path}'" in compiled_stage_script
+        assert 'fs.constants.O_NOFOLLOW' in compiled_stage_script
+        for workflow in (source, compiled):
+            downloads = [
+                step
+                for step in workflow['jobs'][callback_job]['steps']
+                if step.get('uses', '').startswith('actions/download-artifact@')
+            ]
+            assert [(step['with']['name'], step['with']['path']) for step in downloads] == [
+                (artifact_name, download_path)
+            ]
+        compiled_uploads = [
+            step
+            for step in compiled['jobs']['agent']['steps']
+            if step.get('name') == 'Upload the model price-check report'
+        ]
+        assert [(step['with']['name'], step['with']['path']) for step in compiled_uploads] == [
+            (artifact_name, staged_report_path)
+        ]
+
+
+def test_model_price_check_report_staging_rejects_untrusted_files(tmp_path: Path) -> None:
+    observability = read_workflow('shared/price-check-observability.md')
+    stage_script = next(
+        step['with']['script'] for step in observability['post-steps'] if step.get('id') == 'stage-model-price-report'
+    )
+    valid_report = tmp_path / 'valid-report.json'
+    valid_contents = json.dumps({'status': 'complete', 'providers': []})
+    valid_report.write_text(valid_contents)
+    symlink_report = tmp_path / 'symlink-report.json'
+    symlink_report.symlink_to(valid_report)
+    oversized_report = tmp_path / 'oversized-report.json'
+    oversized_report.write_bytes(b'x' * (32 * 1024 + 1))
+    special_report = tmp_path / 'special-report'
+    os.mkfifo(special_report)
+    runner_temp = tmp_path / 'runner-temp'
+    runner_temp.mkdir()
+    fixtures = [
+        {'name': 'regular', 'path': str(valid_report)},
+        {'name': 'symlink', 'path': str(symlink_report)},
+        {'name': 'oversized', 'path': str(oversized_report)},
+        {'name': 'special', 'path': str(special_report)},
+    ]
+    driver = r"""
+const fs = require('node:fs');
+const vm = require('node:vm');
+const sourcePath = '/tmp/gh-aw/agent/model-check-report.json';
+const script = JSON.parse(process.env.STAGE_SCRIPT);
+const fixtures = JSON.parse(process.env.FIXTURES);
+const output = {};
+for (const fixture of fixtures) {
+  let stagedPath = '';
+  const warnings = [];
+  const proxiedFs = new Proxy(fs, {
+    get(target, property) {
+      if (property === 'openSync') {
+        return (file, ...args) => target.openSync(
+          file === sourcePath ? fixture.path : file, ...args
+        );
+      }
+      const value = Reflect.get(target, property, target);
+      return typeof value === 'function' ? value.bind(target) : value;
+    }
+  });
+  const localRequire = (name) => name === 'node:fs' ? proxiedFs : require(name);
+  const core = {
+    setOutput(name, value) {
+      if (name !== 'path') throw new Error(`unexpected output ${name}`);
+      stagedPath = value;
+    },
+    warning(message) { warnings.push(message); }
+  };
+  vm.runInNewContext(script, {
+    require: localRequire,
+    process: {env: {RUNNER_TEMP: process.env.RUNNER_TEMP}},
+    Buffer,
+    core
+  });
+  output[fixture.name] = {
+    path: stagedPath,
+    contents: stagedPath ? fs.readFileSync(stagedPath, 'utf8') : '',
+    warnings
+  };
+}
+console.log(JSON.stringify(output));
+"""
+    result = subprocess.run(
+        ['node', '-e', driver],
+        env={
+            **os.environ,
+            'STAGE_SCRIPT': json.dumps(stage_script),
+            'FIXTURES': json.dumps(fixtures),
+            'RUNNER_TEMP': str(runner_temp),
+        },
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    outcomes = json.loads(result.stdout)
+    staged_path = Path(outcomes['regular']['path'])
+    assert staged_path.name == 'model-check-report.json'
+    assert staged_path.parent.parent == runner_temp
+    assert staged_path.read_text() == valid_contents
+    warning = 'Model price-check report is missing or invalid; callback will retain unresolved discovery.'
+    for name in ('symlink', 'oversized', 'special'):
+        assert outcomes[name]['path'] == ''
+        assert outcomes[name]['contents'] == ''
+        assert outcomes[name]['warnings'] == [warning]
+
+
+def test_targeted_request_is_claimed_before_a_read_only_agent() -> None:
+    source = read_workflow('agentic-model-price-check.md')
+    source_text = (WORKFLOWS / 'agentic-model-price-check.md').read_text()
+    assert source['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    assert source['run-name'] == 'Model prices ${{ github.event.client_payload.request_id }}'
+    assert source['jobs']['claim_request']['needs'] == 'activation'
+    assert source['jobs']['agent']['needs'] == ['claim_request']
+    assert source['jobs']['agent']['if'] == "needs.claim_request.outputs.claimed == 'true'"
+    assert '${{ needs.claim_request.outputs.request }}' in source_text
+    assert '${{ github.event.client_payload.target_model }}' not in source_text
+
+    targeted = read_workflow('agentic-model-price-check.lock.yml')
+    weekly = read_workflow('agentic-price-check.lock.yml')
+    targeted_jobs = targeted['jobs']
+    weekly_jobs = weekly['jobs']
+    assert targeted_jobs['agent']['permissions'] == {
+        'contents': 'read',
+        'pull-requests': 'read',
+    }
+    assert targeted_jobs['claim_request']['needs'] == 'activation'
+    assert targeted_jobs['claim_request']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert targeted_jobs['agent']['needs'] == ['activation', 'claim_request']
+    assert targeted_jobs['agent']['if'] == "needs.claim_request.outputs.claimed == 'true'"
+    assert targeted_jobs['report_result']['needs'] == ['agent', 'claim_request', 'safe_outputs']
+    assert targeted_jobs['report_result']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert weekly_jobs['agent']['permissions'] == targeted_jobs['agent']['permissions']
+    assert weekly_jobs['backfill_requests']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+    assert weekly_jobs['report_backfill']['permissions'] == {
+        'contents': 'read',
+        'id-token': 'write',
+    }
+
+    secret_references = re.compile(r'\$\{\{\s*secrets\.([A-Z0-9_]+)\s*\}\}')
+    targeted_agent_secrets = set(secret_references.findall(json.dumps(targeted_jobs['agent'])))
+    weekly_agent_secrets = set(secret_references.findall(json.dumps(weekly_jobs['agent'])))
+    assert targeted_agent_secrets == weekly_agent_secrets
+    assert not {'SLACK_WEBHOOK_URL', 'SLACK_BOT_TOKEN'} & targeted_agent_secrets
 
 
 def test_price_checks_use_one_scheduled_workflow() -> None:
-    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.md')} == {'agentic-price-check.md'}
-    assert {path.name for path in WORKFLOWS.glob('agentic-price-check*.lock.yml')} == {'agentic-price-check.lock.yml'}
+    source_workflows = {path.name: read_workflow(path.name) for path in WORKFLOWS.glob('agentic-*.md')}
+    assert {name for name, workflow in source_workflows.items() if 'schedule' in workflow['on']} == {
+        'agentic-price-check.md'
+    }
+    assert source_workflows['agentic-price-check.md']['on']['schedule'] == [{'cron': '0 6 * * 1', 'timezone': 'UTC'}]
+    targeted = source_workflows['agentic-model-price-check.md']
+    assert targeted['on']['repository_dispatch']['types'] == ['genie-pricer-model-request']
+    assert targeted['on']['bots'] == ['pydanty']
+    assert 'skip-if-match' not in targeted['on']
+
+    weekly_compiled = read_workflow('agentic-price-check.lock.yml')
+    targeted_compiled = read_workflow('agentic-model-price-check.lock.yml')
+    assert weekly_compiled['on']['schedule'] == source_workflows['agentic-price-check.md']['on']['schedule']
+    assert 'schedule' not in targeted_compiled['on']
+    assert targeted_compiled['on']['repository_dispatch']['types'] == ['genie-pricer-model-request']
+    assert {path.name for path in WORKFLOWS.glob('agentic-*.lock.yml')} == {
+        'agentic-price-check.lock.yml',
+        'agentic-model-price-check.lock.yml',
+    }
 
 
 def test_price_update_validation_commands_stop_on_failure(tmp_path: Path) -> None:
@@ -195,6 +580,7 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
     workflow = read_workflow('price-update-slack.yml')
     assert workflow['permissions'] == {}
     assert workflow['on']['workflow_call']['secrets']['SLACK_WEBHOOK_URL']['required'] is True
+    assert workflow['on']['workflow_call']['inputs']['message']['default'] == 'Review the GenAI Prices update:'
     step = workflow['jobs']['notify']['steps'][0]
     assert step['shell'] == 'bash'
     assert step['env']['SLACK_WEBHOOK_URL'] == '${{ secrets.SLACK_WEBHOOK_URL }}'
@@ -205,7 +591,7 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
     url = 'https://github.com/pydantic/genai-prices/pull/123?quote="\n$(exit 99)'
     result = subprocess.run(
         ['bash', '-e', '-o', 'pipefail', '-c', payload_script],
-        env={**os.environ, 'PR_URL': url, 'SLACK_WEBHOOK_URL': 'unused'},
+        env={**os.environ, 'PR_URL': url, 'MESSAGE': 'Review the GenAI Prices update:', 'SLACK_WEBHOOK_URL': 'unused'},
         capture_output=True,
         text=True,
         check=True,
@@ -218,40 +604,56 @@ def test_slack_payload_escapes_url_without_interpreting_shell() -> None:
 
 
 def test_logfire_credential_is_scoped_to_post_agent_export() -> None:
-    compiled = read_workflow('agentic-price-check.lock.yml')
-    assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(compiled.get('env', {}))
-    steps = compiled['jobs']['agent']['steps']
-    execution_index = next(i for i, step in enumerate(steps) if step.get('id') == 'agentic_execution')
-    export_index = next(i for i, step in enumerate(steps) if step.get('name') == 'Export price-check telemetry')
-    assert execution_index < export_index
-    for step in steps[:export_index]:
-        assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
-    assert steps[export_index]['env'] == {
-        'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}'
-    }
-    assert steps[export_index]['if'] == 'always()'
-    assert steps[export_index]['continue-on-error'] is True
+    for filename in ('agentic-price-check.lock.yml', 'agentic-model-price-check.lock.yml'):
+        compiled = read_workflow(filename)
+        assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(compiled.get('env', {}))
+        steps = compiled['jobs']['agent']['steps']
+        execution_index = next(i for i, step in enumerate(steps) if step.get('id') == 'agentic_execution')
+        export_index = next(i for i, step in enumerate(steps) if step.get('name') == 'Export price-check telemetry')
+        assert execution_index < export_index
+        for step in steps[:export_index]:
+            assert 'LOGFIRE_OTLP_AUTHORIZATION' not in json.dumps(step)
+        assert steps[export_index]['env'] == {
+            'OTEL_EXPORTER_OTLP_HEADERS': 'Authorization=${{ secrets.LOGFIRE_OTLP_AUTHORIZATION }}',
+            'PRICE_CHECK_JOB_STATUS': '${{ job.status }}',
+        }
+        assert steps[export_index]['if'] == 'always()'
+        assert steps[export_index]['continue-on-error'] is True
 
 
-def test_logfire_export_uses_whole_run_usage_and_deduplicates_requests() -> None:
-    workflow = read_workflow('agentic-price-check.md')
-    script = workflow['post-steps'][0]['with']['script']
+def test_price_check_observability(tmp_path: Path) -> None:
+    observability = read_workflow('shared/price-check-observability.md')
+    script = observability['post-steps'][0]['with']['script']
+    environment_file = tmp_path / 'environment'
+    subprocess.run(
+        ['bash', '-e', '-c', observability['pre-agent-steps'][0]['run']],
+        env={**os.environ, 'GITHUB_ENV': str(environment_file)},
+        check=True,
+    )
+    name, started_at = environment_file.read_text().strip().split('=', 1)
+    assert name == 'PRICE_CHECK_JOB_STARTED_AT'
     driver = r"""
 const script = JSON.parse(process.env.EXPORT_SCRIPT);
-const files = {
-  '/tmp/gh-aw/agent-stdio.log': [
-    'debug output', 'null',
-    JSON.stringify({type: 'assistant', message: {content: [{type: 'tool_use', name: 'WebFetch'}]}}),
-    JSON.stringify({type: 'result', usage: {output_tokens: 2}, modelUsage: {
-      model: {inputTokens: 11, cacheReadInputTokens: 100, cacheCreationInputTokens: 0, outputTokens: 7}
-    }})
+const paths = {
+  session: '/tmp/gh-aw/agent-session.jsonl', usage: '/tmp/gh-aw/agent_usage.json',
+  output: '/tmp/gh-aw/agent_output.json', requests: '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl'
+};
+const makeFiles = ({status = 'success', usage = true, requests = true, outputType = 'noop', timestamps = true} = {}) => ({
+  [paths.session]: [
+    JSON.stringify({type: 'tool.execution_start', data: {toolName: 'web_fetch'}}),
+    JSON.stringify({type: 'session.result', timestamp: timestamps ? '2026-10-20T01:00:00.000Z' : undefined,
+      data: {status, ...(timestamps ? {timestamp: '2026-10-20T01:05:00.000Z'} : {})}})
   ].join('\n'),
-  '/tmp/gh-aw/sandbox/firewall/logs/api-proxy-logs/otel.jsonl': [1, 1].map(() => JSON.stringify({
+  ...(usage ? {[paths.usage]: JSON.stringify({primary_model: 'model', input_tokens: 11,
+    cache_read_tokens: 100, cache_write_tokens: 0, output_tokens: 7})} : {}),
+  [paths.output]: JSON.stringify({items: [{type: outputType}]}),
+  [paths.requests]: requests ? [1, 1].map(() => JSON.stringify({
     spanId: '1234567890abcdef', name: 'api_proxy.anthropic.request', startTimeMs: 1000, endTimeMs: 2000,
     attributes: {'awf.request_id': 'request-1'}, status: {code: 1}, kind: 3
-  })).join('\n')
-};
-let payload;
+  })).join('\n') : ''
+});
+let files = makeFiles();
+const exported = [];
 const summaries = [];
 const core = {summary: {addRaw(value) { summaries.push(value); return this; }, async write() {}}};
 const fakeRequire = (name) => {
@@ -262,44 +664,285 @@ const fakeRequire = (name) => {
   if (name.endsWith('send_otlp_span.cjs')) return {
     buildAttr: (key, value) => ({key, value}),
     buildOTLPPayload: (options) => ({resourceSpans: [options]}),
-    sendOTLPSpan: async (endpoint, data) => { payload = {endpoint, ...data}; }
+    sendOTLPSpan: async (endpoint, data) => { exported.push({endpoint, ...data}); }
   };
   return require(name);
 };
 const run = new (async () => {}).constructor('require', 'process', 'core', script);
 (async () => {
-  await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_REPOSITORY: 'pydantic/genai-prices',
-    GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1', GITHUB_SHA: 'sha'}}, core);
-  const spans = payload.resourceSpans;
-  const usage = Object.fromEntries(spans.find((span) => span.spanName === 'price_check.usage').attributes
-    .map(({key, value}) => [key, value]));
-  const agent = spans.find((span) => span.spanName === 'invoke_agent');
-  const toolCounts = JSON.parse(agent.attributes.find(({key}) => key === 'price_check.tool_counts').value);
-  let incomplete = false;
-  files['/tmp/gh-aw/agent-stdio.log'] = 'no result';
-  try { await run(fakeRequire, {env: {RUNNER_TEMP: '/runner'}}, core); } catch { incomplete = true; }
-  console.log(JSON.stringify({endpoint: payload.endpoint, names: spans.map((span) => span.spanName),
-    usage, toolCounts, incomplete, summaries}));
+  const invoke = async (scenario, env = {}) => {
+    files = makeFiles(scenario);
+    await run(fakeRequire, {env: {RUNNER_TEMP: '/runner', GITHUB_REPOSITORY: 'pydantic/genai-prices',
+      GITHUB_RUN_ID: '123', GITHUB_RUN_ATTEMPT: '1', GITHUB_SHA: 'sha',
+      PRICE_CHECK_JOB_STARTED_AT: process.env.JOB_STARTED_AT, ...env}}, core);
+    return {payload: exported.at(-1), marker: JSON.parse(files['/tmp/gh-aw/mcp-logs/price-check-telemetry.json'])};
+  };
+  const normal = await invoke({}, {PRICE_CHECK_SERVICE_NAME: 'maintainer.price-check'});
+  const noRequests = await invoke({requests: false});
+  const noUsageError = await invoke({status: 'error', usage: false, requests: false, outputType: 'report_incomplete', timestamps: false});
+  const cancelled = await invoke({requests: false}, {PRICE_CHECK_JOB_STATUS: 'cancelled'});
+  const project = (result) => {
+    const spans = result.payload.resourceSpans;
+    const root = spans.find((span) => span.spanName === 'invoke_agent');
+    const usageSpan = spans.find((span) => span.spanName === 'price_check.usage');
+    const attrs = Object.fromEntries(root.attributes.map(({key, value}) => [key, value]));
+    const usage = usageSpan && Object.fromEntries(usageSpan.attributes.map(({key, value}) => [key, value]));
+    return {endpoint: result.payload.endpoint, serviceName: root.serviceName, names: spans.map((span) => span.spanName),
+      startMs: root.startMs, endMs: root.endMs, statusCode: root.statusCode, attrs, usage, marker: result.marker};
+  };
+  console.log(JSON.stringify({normal: project(normal), noRequests: project(noRequests),
+    noUsageError: project(noUsageError), cancelled: project(cancelled), summaries}));
 })();
 """
     result = subprocess.run(
         ['node', '-e', driver],
-        env={**os.environ, 'EXPORT_SCRIPT': json.dumps(script)},
+        env={**os.environ, 'EXPORT_SCRIPT': json.dumps(script), 'JOB_STARTED_AT': started_at},
         capture_output=True,
         text=True,
         check=True,
     )
     output = json.loads(result.stdout)
-    assert output['endpoint'] == 'https://logfire-eu.pydantic.info'
-    assert output['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
-    assert output['usage'] == {
+    normal = output['normal']
+    assert normal['endpoint'] == 'https://logfire-eu.pydantic.info'
+    assert normal['serviceName'] == 'maintainer.price-check'
+    assert normal['names'] == ['invoke_agent', 'price_check.usage', 'api_proxy.anthropic.request']
+    assert normal['attrs']['price_check.agent_outcome'] == 'success'
+    assert normal['attrs']['price_check.outcome_scope'] == 'agent_only'
+    assert normal['attrs']['price_check.telemetry_coverage'] == 'complete'
+    assert normal['attrs']['price_check.terminal_output_emitted'] is True
+    assert normal['usage'] == {
         'gen_ai.request.model': 'model',
-        'price_check.usage.source': 'claude.modelUsage',
+        'price_check.usage.source': 'gh-aw.agent_usage',
         'price_check.usage.uncached_input': 11,
         'price_check.usage.cached_input': 100,
         'price_check.usage.cache_creation': 0,
         'price_check.usage.output': 7,
     }
-    assert output['incomplete'] is True
-    assert output['toolCounts'] == {'WebFetch': 1}
-    assert any('telemetry incomplete' in summary for summary in output['summaries'])
+    assert normal['marker']['exported_request_spans'] == 1
+    no_requests = output['noRequests']
+    assert no_requests['names'] == ['invoke_agent', 'price_check.usage']
+    assert no_requests['serviceName'] == 'gh-aw.agentic-price-check'
+    assert no_requests['usage']['price_check.usage.output'] == 7
+    assert no_requests['attrs']['price_check.telemetry_coverage'] == 'incomplete'
+    assert 'No API request spans' in no_requests['attrs']['price_check.telemetry_diagnostic']
+    no_usage_error = output['noUsageError']
+    assert no_usage_error['names'] == ['invoke_agent']
+    assert no_usage_error['attrs']['price_check.agent_outcome'] == 'error'
+    assert no_usage_error['attrs']['price_check.terminal_output_emitted'] is True
+    assert 'usage is missing or invalid' in no_usage_error['attrs']['price_check.telemetry_diagnostic']
+    assert isinstance(no_usage_error['startMs'], float | int) and no_usage_error['startMs'] > 0
+    assert isinstance(no_usage_error['endMs'], float | int) and no_usage_error['endMs'] > 0
+    assert no_usage_error['endMs'] >= no_usage_error['startMs']
+    cancelled = output['cancelled']
+    assert cancelled['names'] == ['invoke_agent', 'price_check.usage']
+    assert cancelled['attrs']['price_check.agent_outcome'] == 'cancelled'
+    assert cancelled['statusCode'] == 2
+    assert all('agent-only telemetry' in summary for summary in output['summaries'])
+
+
+def test_hourly_importer_failures_alert_slack_once() -> None:
+    workflow = read_workflow('update-prices.yml')
+    check = workflow['jobs']['importer-failure']
+    assert check['needs'] == 'import'
+    assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
+    assert check['permissions'] == {'actions': 'read'}
+    notify = workflow['jobs']['notify-failure']
+    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}"
+    assert notify['uses'] == './.github/workflows/price-update-slack.yml'
+    assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
+
+
+@pytest.mark.parametrize(
+    ('previous_run', 'previous_import_conclusions', 'newly_failing'),
+    [
+        ('', '', 'true'),
+        ('41', 'success\nsuccess', 'true'),
+        ('41', 'success\nfailure', 'false'),
+    ],
+)
+def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_passed(
+    tmp_path: Path, previous_run: str, previous_import_conclusions: str, newly_failing: str
+) -> None:
+    fake_gh = tmp_path / 'gh'
+    fake_gh.write_text(
+        '#!/bin/bash\n'
+        'echo "$*" >> "$GH_CALLS"\n'
+        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; else printf "$PREVIOUS_IMPORTS\\n"; fi\n'
+    )
+    fake_gh.chmod(0o755)
+    output = tmp_path / 'output'
+    calls = tmp_path / 'calls'
+    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'GITHUB_OUTPUT': str(output),
+            'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+            'GH_CALLS': str(calls),
+            'PREVIOUS_RUN': previous_run,
+            'PREVIOUS_IMPORTS': previous_import_conclusions,
+        },
+        check=True,
+    )
+
+    assert output.read_text() == f'newly-failing={newly_failing}\n'
+    assert '--event schedule --status completed --limit 1' in calls.read_text()
+    assert ('run view 41 ' in calls.read_text()) == bool(previous_run)
+
+
+def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path) -> None:
+    fake_gh = tmp_path / 'gh'
+    fake_gh.write_text('#!/bin/bash\nif [ "$2" = list ]; then printf 41; else exit 1; fi\n')
+    fake_gh.chmod(0o755)
+    output = tmp_path / 'output'
+    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+
+    result = subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'GITHUB_OUTPUT': str(output),
+            'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+        },
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert not output.exists()
+
+
+def test_aggregators_update_weekly_on_their_own_proposal() -> None:
+    workflow = read_workflow('update-prices.yml')
+    weekly = "(github.event.schedule == '47 6 * * 1' || inputs.weekly)"
+    assert workflow['on']['schedule'] == [{'cron': '17 * * * *'}, {'cron': '47 6 * * 1'}]
+    assert workflow['env']['BRANCH'] == f"automation/${{{{ {weekly} && 'weekly' || 'hourly' }}}}-price-update"
+    weekly_list, hourly_list = re.findall(
+        r"'(\[[^']*\])'", workflow['jobs']['import']['strategy']['matrix']['importer']
+    )
+    weekly_importers, hourly_importers = json.loads(weekly_list), json.loads(hourly_list)
+    assert weekly_importers == ['huggingface', 'openrouter-provider']
+    assert not set(weekly_importers) & set(hourly_importers)
+    makefile = (WORKFLOWS.parents[1] / 'Makefile').read_text()
+    assert all(f'\n{importer}-get:' in makefile for importer in weekly_importers + hourly_importers)
+
+
+def test_hourly_update_regenerates_the_usage_dataset_after_building() -> None:
+    steps = read_workflow('update-prices.yml')['jobs']['pull-request']['steps']
+    script = next(step['run'] for step in steps if 'make collapse-models build' in step.get('run', ''))
+    assert script.index('make collapse-models build') < script.index(
+        'uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py'
+    )
+
+
+@pytest.mark.parametrize('open_pr', ['', '843'])
+def test_hourly_update_keeps_the_start_dates_the_open_price_update_proposes(tmp_path: Path, open_pr: str) -> None:
+    for tool in ('gh', 'git', 'uv'):
+        fake = tmp_path / tool
+        output = 'printf %s "$OPEN_PR"\n' if tool == 'gh' else ''
+        fake.write_text(f'#!/bin/bash\necho "{tool} $*" >> "$CALLS"\n{output}')
+        fake.chmod(0o755)
+    job = read_workflow('update-prices.yml')['jobs']['pull-request']
+    names = [step.get('name') for step in job['steps']]
+    step = job['steps'][names.index('Keep the start dates the open price update proposes')]
+    build = next(i for i, step in enumerate(job['steps']) if 'make collapse-models build' in step.get('run', ''))
+    assert names.index('Keep the start dates the open price update proposes') < build
+    assert step['if'] == "steps.apply.outputs.importers != ''"
+    assert step['env'] == {'PREVIOUS_HEAD': '${{ steps.previous.outputs.head }}'}
+    assert job['permissions'] == {'contents': 'read', 'pull-requests': 'read'}
+    calls = tmp_path / 'calls'
+    calls.write_text('')
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', step['run']],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'BRANCH': 'automation/hourly-price-update',
+            'CALLS': str(calls),
+            'OPEN_PR': open_pr,
+            'PREVIOUS_HEAD': open_pr,
+        },
+        check=True,
+    )
+
+    assert calls.read_text().splitlines() == (
+        [f'uv run --all-packages -m prices.proposed_start_dates {open_pr}'] if open_pr else []
+    )
+
+
+@pytest.mark.parametrize(
+    ('notes', 'manual_section'),
+    [
+        (
+            {
+                'openai': "OpenAI: gpt-5.4 {'service_tier': 'priority'} rates are not one share of the standard rates; "
+                'update them by hand\n',
+                'groq': '',
+            },
+            '\n## Needs a manual update\n\nThese rates changed but could not be updated automatically:\n\n'
+            "- OpenAI: gpt-5.4 {'service_tier': 'priority'} rates are not one share of the standard rates; "
+            'update them by hand\n',
+        ),
+        ({'groq': ''}, ''),
+        ({}, ''),
+    ],
+)
+@pytest.mark.parametrize('complete', ['true', 'false'])
+def test_hourly_update_lists_rates_that_need_a_manual_update(
+    tmp_path: Path, notes: dict[str, str], manual_section: str, complete: str
+) -> None:
+    patches = tmp_path / 'patches'
+    patches.mkdir()
+    for importer, text in notes.items():
+        (patches / f'{importer}.notes').write_text(text)
+    steps = read_workflow('update-prices.yml')['jobs']['pull-request']['steps']
+    script = next(step['run'] for step in steps if step.get('name') == 'Write the pull request description')
+
+    subprocess.run(
+        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        env={
+            **os.environ,
+            'RUNNER_TEMP': str(tmp_path),
+            'IMPORTERS': 'openai groq',
+            'COMPLETE': complete,
+            'RUN_URL': 'https://run',
+        },
+        check=True,
+    )
+
+    assert (tmp_path / 'pr-body.md').read_text() == (
+        'Prices fetched from official provider APIs and docs by [this run](https://run).\n\n'
+        'Importers with changes: openai groq\n\n'
+        + (
+            ''
+            if complete == 'true'
+            else 'Some importers failed in this run, so their changes are missing until they recover.\n\n'
+        )
+        + 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
+        + manual_section
+    )
+
+
+def test_hourly_importer_failure_still_fails_the_step_when_its_output_is_saved(tmp_path: Path) -> None:
+    fake_make = tmp_path / 'make'
+    fake_make.write_text('#!/bin/bash\necho "Cursor pricing returned only 0 priced models"\nexit 1\n')
+    fake_make.chmod(0o755)
+    steps = read_workflow('update-prices.yml')['jobs']['import']['steps']
+    script = next(step['run'] for step in steps if 'importer.log' in step.get('run', '') and '-get' in step['run'])
+
+    result = subprocess.run(
+        ['bash', '-e', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'RUNNER_TEMP': str(tmp_path),
+            'IMPORTER': 'cursor',
+        },
+    )
+
+    assert result.returncode != 0
+    assert (tmp_path / 'importer.log').read_text() == 'Cursor pricing returned only 0 priced models\n'

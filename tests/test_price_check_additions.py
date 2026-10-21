@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import pytest
@@ -43,22 +43,57 @@ def test_moonshot_verified_rates(model: str, total: str) -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
         model,
         provider_id='moonshotai',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
     assert price.total_price == Decimal(total)
 
 
 @pytest.mark.parametrize('model', ['jev-1.14.0', 'jev-preview'])
 def test_typesafe_114_default_context(model: str) -> None:
-    price = calc_price(Usage(input_tokens=1_000_000), model, provider_id='typesafe')
+    price = calc_price(
+        Usage(input_tokens=1_000_000), model, provider_id='typesafe', genai_request_timestamp=datetime(2026, 10, 18)
+    )
     assert price.model.id == 'jev-1.14.0'
     assert price.model.context_window == 32_000
     assert price.total_price == Decimal('0.042')
 
 
-def test_grok_multi_agent_unverified_alias_is_not_priced() -> None:
-    with pytest.raises(LookupError, match='Unable to find model'):
-        calc_price(Usage(input_tokens=1), 'grok-4.20-multi-agent-0309', provider_id='x-ai')
-    price = calc_price(
-        Usage(input_tokens=200_000, output_tokens=1_000_000), 'grok-4.20-multi-agent', provider_id='x-ai'
+def test_grok_multi_agent_dated_id_takes_its_published_long_context_rate() -> None:
+    dated = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent-0309',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
-    assert price.total_price == Decimal('6.4')
+    assert dated.model.id == 'grok-4.20-multi-agent-0309'
+    assert dated.total_price == Decimal('5.5')
+    for alias in ('grok-4.20-multi-agent-beta-0309', 'grok-4.20-multi-agent-latest'):
+        assert calc_price(Usage(input_tokens=1), alias, provider_id='x-ai').model.id == 'grok-4.20-multi-agent-0309'
+    batch = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent-0309',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
+        price_context={'processing': 'batch'},
+    )
+    assert batch.total_price == Decimal('4.4')
+    price = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        'grok-4.20-multi-agent',
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
+    assert price.model.id == 'grok-4.20-multi-agent-0309'
+    assert price.total_price == Decimal('5.5')
+
+
+@pytest.mark.parametrize('model', ['grok-4.20', 'grok-4.20-multi-agent'])
+@pytest.mark.parametrize(('day', 'total'), [(29, Decimal('12.8')), (30, Decimal('5.5'))])
+def test_grok_4_20_price_cut(model: str, day: int, total: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=200_000, output_tokens=1_000_000),
+        model,
+        provider_id='x-ai',
+        genai_request_timestamp=datetime(2026, 4, day, tzinfo=UTC),
+    )
+    assert price.total_price == total

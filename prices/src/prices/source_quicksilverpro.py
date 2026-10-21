@@ -1,19 +1,18 @@
 from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal
-from operator import attrgetter
 from pathlib import Path
-from typing import Any, cast
 
 import httpx2
-from pydantic import HttpUrl
+from pydantic import BaseModel, ConfigDict, Field
 
-from prices.collapse import collapse_provider
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider
-from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
-from prices.write_guard import check_model_count
+from prices.prices_types import ModelInfo, Tier, TieredPrices
+from prices.update import ProviderYaml
+from prices.utils import package_dir
 
 CATALOG_URL = 'https://quicksilverpro.io/pricing.json'
+MIN_MODEL_COUNT = 20
 
 # Catalog rates are already USD per million tokens, so no conversion is needed.
 PRICE_KEYS = {
@@ -25,82 +24,65 @@ PRICE_KEYS = {
 }
 
 
-def get_model_infos(models: list[dict[str, Any]]):
+class LongContext(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+
+    prompt_tokens_over: int = Field(strict=True, gt=0)
+    input_per_1m: Decimal = Field(ge=0)
+    output_per_1m: Decimal = Field(ge=0)
+    cache_read_per_1m: Decimal | None = Field(default=None, ge=0)
+    cache_write_per_1m: Decimal | None = Field(default=None, ge=0)
+
+
+def get_model_infos(models: list[dict[str, object]]):
     """Extract model information from the QuickSilver Pro catalog (`pricing.json`)."""
     for model in models:
         # Image generation is billed per image, which the registry has no unit for.
         if model.get('pricing_unit') != 'tokens':
             continue
 
-        prices = {
+        prices: dict[str, Decimal | TieredPrices] = {
             price_key: Decimal(str(model[catalog_key]))
             for catalog_key, price_key in PRICE_KEYS.items()
             if model.get(catalog_key)
         }
         if not prices:
             continue
+        if model.get('long_context') is not None:
+            tier = LongContext.model_validate(model['long_context'])
+            for price_key, rate in {
+                'input_mtok': tier.input_per_1m,
+                'output_mtok': tier.output_per_1m,
+                'cache_read_mtok': tier.cache_read_per_1m,
+                'cache_write_mtok': tier.cache_write_per_1m,
+            }.items():
+                if rate is None:
+                    continue
+                base = prices.get(price_key)
+                if not isinstance(base, Decimal):
+                    raise ValueError(f'{model["id"]}: long_context {price_key} has no base rate')
+                prices[price_key] = TieredPrices(base=base, tiers=[Tier(start=tier.prompt_tokens_over, price=rate)])
 
-        yield ModelInfo(
-            id=model['id'],
-            name=model.get('name') or model['id'],
-            match=ClauseEquals(equals=model['id']),
-            context_window=model.get('context_tokens'),
-            deprecated=True if model.get('lifecycle') == 'deprecated' else None,
-            prices=ModelPrice(**prices),
+        yield ModelInfo.model_validate(
+            {
+                'id': model['id'],
+                'name': model.get('name') or model['id'],
+                'match': {'equals': model['id']},
+                'context_window': model.get('context_tokens'),
+                'deprecated': True if model.get('lifecycle') == 'deprecated' else None,
+                'prices': prices,
+                'prices_checked': date.today(),
+            }
         )
 
 
-def main():
-    """Download and process QuickSilver Pro pricing data."""
-    try:
-        response = httpx2.get(CATALOG_URL, timeout=30.0)
-        response.raise_for_status()
-        models = response.json().get('models', [])
-    except Exception as e:
-        # Exit non-zero so a scheduled or scripted refresh can't report success on stale data.
-        raise SystemExit(f'Error fetching QuickSilver Pro catalog: {e}') from e
-
-    providers_dir = Path(__file__).parent / '../../providers'
-
-    # The gateway is OpenAI-compatible for both the chat completions and responses APIs.
-    openai_extractors = ProviderYaml(providers_dir / 'openai.yml').provider.extractors
-    assert openai_extractors
-    extractors = [e for e in openai_extractors if e.api_flavor in ('chat', 'responses')]
-
-    model_infos = sorted(get_model_infos(models), key=attrgetter('id'))
-    if not model_infos:
-        raise SystemExit('No valid models found with pricing information')
-
-    provider_id = 'quicksilverpro'
-    path = providers_dir / f'{provider_id}.yml'
-    check_model_count(path, len(model_infos), source='QuickSilver Pro catalog')
-    provider_info = Provider(
-        id=provider_id,
-        name='QuickSilver Pro',
-        description='OpenAI-compatible inference gateway serving frontier and open models via one endpoint.',
-        api_pattern=r'https://api\.quicksilverpro\.io',
-        models=model_infos,
-        pricing_urls=[HttpUrl('https://quicksilverpro.io/#pricing'), HttpUrl(CATALOG_URL)],
-        extractors=extractors,
-    )
-
-    yaml_data = cast(
-        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
-    )
-    yaml_string = (
-        '# yaml-language-server: $schema=.schema.json\n'
-        '# !!!!!!\n'
-        '# This is auto-generated by source_quicksilverpro.py and does not support manual edits yet\n'
-        '# !!!!!!\n\n'
-    ) + get_provider_yaml_string(yaml_data)
-
-    path.write_text(yaml_string)
-    print(f'Created {path}')
-
-    provider_yaml = ProviderYaml(path)
-    if collapse_provider(provider_yaml):
-        provider_yaml.save()
-        print(f'Collapsed and saved {path}')
+def main(provider_path: Path | None = None) -> None:
+    response = httpx2.get(CATALOG_URL, timeout=30.0)
+    response.raise_for_status()
+    models = list(get_model_infos(response.json()['models']))
+    provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/quicksilverpro.yml')
+    added, updated = provider_yaml.upsert_models(models, source='QuickSilver Pro catalog', min_count=MIN_MODEL_COUNT)
+    print(f'QuickSilver Pro prices updated: {added} added, {updated} updated')
 
 
 def get_quicksilverpro_prices():  # pragma: no cover - thin CLI alias for main

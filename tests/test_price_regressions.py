@@ -1,5 +1,5 @@
 from copy import copy
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
 import pytest
@@ -159,7 +159,7 @@ def test_groq_transcription_duration_prices(
     billed_seconds: Decimal,
 ) -> None:
     original_usage = copy(usage)
-    price = calc_price(usage, model_ref=model_ref, provider_id='groq')
+    price = calc_price(usage, model_ref=model_ref, provider_id='groq', genai_request_timestamp=datetime(2026, 10, 17))
     expected_price = hourly_rate * billed_seconds / Decimal(3_600)
 
     assert price.input_price == expected_price
@@ -174,7 +174,12 @@ def test_groq_transcription_duration_prices(
 )
 def test_groq_gpt_oss_safeguard_20b_has_its_own_price(model_ref: str, expected_price: str) -> None:
     """Safeguard 20B was matched by the 120B record and billed at double its price."""
-    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref, provider_id='groq')
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref,
+        provider_id='groq',
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
 
     assert price.model.id == model_ref
     assert price.total_price == Decimal(expected_price)
@@ -699,8 +704,12 @@ def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_
     """
     usage = Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000)
 
-    fable_5 = calc_price(usage, model_ref=fable_5_ref, provider_id=provider_id)
-    fable_5_1 = calc_price(usage, model_ref=fable_5_1_ref, provider_id=provider_id)
+    fable_5 = calc_price(
+        usage, model_ref=fable_5_ref, provider_id=provider_id, genai_request_timestamp=datetime(2026, 10, 17)
+    )
+    fable_5_1 = calc_price(
+        usage, model_ref=fable_5_1_ref, provider_id=provider_id, genai_request_timestamp=datetime(2026, 10, 17)
+    )
 
     assert fable_5.model.id != fable_5_1.model.id
     assert fable_5_1.total_price == fable_5.total_price / 4
@@ -720,7 +729,10 @@ def test_claude_fable_5_1_does_not_use_fable_5_prices(provider_id: str, fable_5_
 )
 def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cache_read_mtok: str) -> None:
     price = calc_price(
-        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000), model_ref=model_ref, provider_id=provider_id
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal(cache_read_mtok)
@@ -751,6 +763,7 @@ def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, e
         ),
         model_ref=model_ref,
         provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
     assert price.model.id == model_id
@@ -769,7 +782,12 @@ def test_aws_claude_fable_inference_profile_ids(model_ref: str, model_id: str, e
 )
 def test_aws_claude_india_inference_profile_ids(model_ref: str, model_id: str, expected: str) -> None:
     """Bedrock's India (`in.`) inference profiles in ap-south-1 take the regional rate, like the other geographies."""
-    price = calc_price(Usage(input_tokens=1_000_000, output_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
 
     assert price.model.id == model_id
     assert price.total_price == Decimal(expected)
@@ -781,6 +799,7 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
         model_ref='~anthropic/claude-fable-latest',
         provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal('1')
@@ -837,6 +856,7 @@ def test_claude_opus_5_5_prices(provider_id: str, model_ref: str, expected_price
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.total_price == Decimal(expected_price)
@@ -917,6 +937,7 @@ def test_claude_sonnet_5_5_resolves_to_its_own_model(
         Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
         model_ref=model_ref,
         provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert price.model.id == model_id
@@ -972,7 +993,12 @@ def test_openrouter_claude_sonnet_latest_moves_to_sonnet_5_5(timestamp: datetime
     ],
 )
 def test_aws_titan_embed_text_v2_does_not_use_v1_prices(model_ref: str, model_id: str, expected_price: str) -> None:
-    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
 
     assert price.model.id == model_id
     assert price.total_price == Decimal(expected_price)
@@ -1000,9 +1026,17 @@ def test_claude_haiku_5_5_prices_by_prompt_length(
     provider_id: str, model_ref: str, model_id: str, base_price: str, long_context_price: str
 ) -> None:
     """Haiku 5.5 bills every token at 5x once the prompt exceeds 100,000 tokens; exactly 100,000 stays on the base rate and 100,001 does not."""
-    base = calc_price(Usage(input_tokens=100_000, output_tokens=100_000), model_ref=model_ref, provider_id=provider_id)
+    base = calc_price(
+        Usage(input_tokens=100_000, output_tokens=100_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
+    )
     long_context = calc_price(
-        Usage(input_tokens=100_001, output_tokens=100_000), model_ref=model_ref, provider_id=provider_id
+        Usage(input_tokens=100_001, output_tokens=100_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 10, 17),
     )
 
     assert base.model.id == model_id
@@ -1047,3 +1081,33 @@ def test_openrouter_claude_haiku_latest_moves_to_haiku_5_5(timestamp: datetime, 
     )
 
     assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
+    ('model', 'input_rate', 'output_rate', 'cache_rate'),
+    [
+        ('claude-haiku-5-5', '0.025', '0.125', '0.0025'),
+        ('gpt-6-astra', '10', '50', '1'),
+        ('gpt-6-luna', '0.1', '0.5', '0.01'),
+        ('gpt-6.1-sol', '2', '10', '0.1'),
+        ('gpt-6-sol', '2', '10', '0.2'),
+        ('grok-4.6', '2', '6', '0.5'),
+        ('grok-4.7', '2', '6', '0.5'),
+    ],
+)
+@pytest.mark.parametrize('input_tokens', [200_000, 200_001])
+def test_quicksilver_long_context_prices(
+    model: str, input_rate: str, output_rate: str, cache_rate: str, input_tokens: int
+) -> None:
+    long = input_tokens > 200_000
+    input_multiplier = 5 if model == 'claude-haiku-5-5' else 2
+    output_multiplier = 5 if model == 'claude-haiku-5-5' else 2 if model.startswith('grok') else Decimal('1.5')
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=50_000, output_tokens=1_000_000),
+        model_ref=model,
+        provider_id='quicksilverpro',
+    )
+    assert price.input_price == (mtok(input_rate, input_tokens - 50_000) + mtok(cache_rate, 50_000)) * (
+        input_multiplier if long else 1
+    )
+    assert price.output_price == Decimal(output_rate) * (output_multiplier if long else 1)

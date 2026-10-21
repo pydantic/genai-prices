@@ -95,6 +95,7 @@ models:
     prices:
       input_mtok: 1.01
       output_mtok: 1.01
+    prices_checked: 2026-10-20
 
   - id: Qwen/Qwen3-32B
     name: Qwen3-32B
@@ -118,6 +119,54 @@ models:
       input_mtok: 0.07
       output_mtok: 0.26
 
+  - id: Qwen/Qwen3.5-397B-A17B
+    name: Qwen3.5-397B-A17B
+    match:
+      or:
+        - equals: qwen/qwen3.5-397b-a17b
+        - equals: qwen/qwen3.5-397b-a17b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.71
+      output_mtok: 4.25
+    prices_checked: 2026-10-20
+
+  - id: Qwen/Qwen3.5-9B
+    name: Qwen3.5-9B
+    match:
+      or:
+        - equals: qwen/qwen3.5-9b
+        - equals: qwen/qwen3.5-9b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.18
+    prices_checked: 2026-10-20
+
+  - id: Qwen/Qwen3.6-27B
+    name: Qwen3.6-27B
+    match:
+      or:
+        - equals: qwen/qwen3.6-27b
+        - equals: qwen/qwen3.6-27b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.47
+      output_mtok: 3.19
+    prices_checked: 2026-10-20
+
+  - id: Qwen/Qwen3.8-27B
+    name: Qwen3.8-27B
+    match:
+      or:
+        - equals: qwen/qwen3.8-27b
+        - equals: qwen/qwen3.8-27b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.47
+      output_mtok: 3.19
+    prices_checked: 2026-10-20
+
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
     match:
@@ -139,6 +188,7 @@ models:
     prices:
       input_mtok: 0.74
       output_mtok: 0.74
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -150,6 +200,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.47
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -161,3 +212,4 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.18
+    prices_checked: 2026-10-20

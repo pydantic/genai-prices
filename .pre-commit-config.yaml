@@ -6,16 +6,20 @@ repos:
       - id: check-yaml
       - id: check-toml
       - id: end-of-file-fixer
-        exclude: '^\.github/workflows/.*\.lock\.yml$'
+        exclude: '^(\.github/workflows/.*\.lock\.yml|tests/cassettes/.*)$'
       - id: trailing-whitespace
-        exclude: '^\.github/workflows/.*\.lock\.yml$'
+        exclude: '^(\.github/workflows/.*\.lock\.yml|tests/cassettes/.*)$'
 
   - repo: https://github.com/sirosen/texthooks
     rev: 0.7.1
     hooks:
+      # Cassettes are recorded traffic; text fixers must not rewrite them.
       - id: fix-smartquotes
+        exclude: "^tests/cassettes/"
       - id: fix-spaces
+        exclude: "^tests/cassettes/"
       - id: fix-ligatures
+        exclude: "^tests/cassettes/"
 
   - repo: https://github.com/codespell-project/codespell
     # Configuration for codespell is in pyproject.toml

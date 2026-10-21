@@ -1,4 +1,4 @@
-.github/workflows/*.lock.yml linguist-generated=true merge=ours
+.github/workflows/*.lock.yml linguist-generated=true
 
 # Frozen v1 compatibility snapshots. No build step writes these, so drift here is
 # invisible to the `build` hook; their contents are pinned by tests/test_frozen_v1_data.py.

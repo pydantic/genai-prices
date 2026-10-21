@@ -96,6 +96,18 @@ models:
       input_mtok: 0.15
       output_mtok: 0.15
 
+  - id: MiniMaxAI/MiniMax-M3
+    name: MiniMax-M3
+    match:
+      or:
+        - equals: minimaxai/minimax-m3
+        - equals: minimaxai/minimax-m3-fast
+    context_window: 524288
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    prices_checked: 2026-10-20
+
   - id: Qwen/Qwen2.5-7B-Instruct
     name: Qwen2.5-7B-Instruct
     match:
@@ -183,8 +195,27 @@ models:
         - equals: qwen/qwen3.5-9b-fast
     context_window: 262144
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.15
+      - prices:
+          input_mtok: 0.1
+          output_mtok: 0.15
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 0.17
+          output_mtok: 0.25
+    prices_checked: 2026-10-20
+
+  - id: Qwen/Qwen3.8-2.4T-A95B
+    name: Qwen3.8-2.4T-A95B
+    match:
+      or:
+        - equals: qwen/qwen3.8-2.4t-a95b
+        - equals: qwen/qwen3.8-2.4t-a95b-fast
+    context_window: 1010000
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+    prices_checked: 2026-10-20
 
   - id: ServiceNow-AI/Apriel-1.6-15b-Thinker
     name: Apriel-1.6-15b-Thinker
@@ -245,6 +276,30 @@ models:
       input_mtok: 0.6
       output_mtok: 1.7
 
+  - id: deepseek-ai/DeepSeek-V4-Flash-0731
+    name: DeepSeek-V4-Flash-0731
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-flash-0731
+        - equals: deepseek-ai/deepseek-v4-flash-0731-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 0.13999999999999999
+      output_mtok: 0.27999999999999997
+    prices_checked: 2026-10-20
+
+  - id: deepseek-ai/DeepSeek-V4-Pro-0813
+    name: DeepSeek-V4-Pro-0813
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v4-pro-0813
+        - equals: deepseek-ai/deepseek-v4-pro-0813-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 1.32
+      output_mtok: 3.96
+    prices_checked: 2026-10-20
+
   - id: google/gemma-3n-E4B-it
     name: gemma-3n-E4B-it
     match:
@@ -264,8 +319,15 @@ models:
         - equals: meta-llama/llama-3.3-70b-instruct-fast
     context_window: 131072
     prices:
-      input_mtok: 0.88
-      output_mtok: 0.88
+      - prices:
+          input_mtok: 0.88
+          output_mtok: 0.88
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 1.0399999999999998
+          output_mtok: 1.0399999999999998
+    prices_checked: 2026-10-20
 
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
     name: Llama-4-Maverick-17B-128E-Instruct-FP8
@@ -278,6 +340,18 @@ models:
       input_mtok: 0.27
       output_mtok: 0.85
 
+  - id: meta-models/Muse-Glimmer-30B
+    name: Muse-Glimmer-30B
+    match:
+      or:
+        - equals: meta-models/muse-glimmer-30b
+        - equals: meta-models/muse-glimmer-30b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.35
+      output_mtok: 1.5
+    prices_checked: 2026-10-20
+
   - id: moonshotai/Kimi-K2.5
     name: Kimi-K2.5
     match:
@@ -289,6 +363,18 @@ models:
       input_mtok: 0.5
       output_mtok: 2.8
 
+  - id: moonshotai/Kimi-K3
+    name: Kimi-K3
+    match:
+      or:
+        - equals: moonshotai/kimi-k3
+        - equals: moonshotai/kimi-k3-fast
+    context_window: 1048576
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+    prices_checked: 2026-10-20
+
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
     match:
@@ -299,6 +385,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+    prices_checked: 2026-10-20
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -310,6 +397,38 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.2
+
+  - id: prism-ml/Ternary-Bonsai-27B-AWQ-4bit
+    name: Ternary-Bonsai-27B-AWQ-4bit
+    match:
+      or:
+        - equals: prism-ml/ternary-bonsai-27b-awq-4bit
+        - equals: prism-ml/ternary-bonsai-27b-awq-4bit-fast
+    context_window: 262144
+    prices: {}
+    prices_checked: 2026-10-20
+
+  - id: prism-ml/Ternary-Bonsai-27B-gguf
+    name: Ternary-Bonsai-27B-gguf
+    match:
+      or:
+        - equals: prism-ml/ternary-bonsai-27b-gguf
+        - equals: prism-ml/ternary-bonsai-27b-gguf-fast
+    context_window: 262144
+    prices: {}
+    prices_checked: 2026-10-20
+
+  - id: thinkingmachines/Inkling
+    name: Inkling
+    match:
+      or:
+        - equals: thinkingmachines/inkling
+        - equals: thinkingmachines/inkling-fast
+    context_window: 524288
+    prices:
+      input_mtok: 1
+      output_mtok: 4.05
+    prices_checked: 2026-10-20
 
   - id: zai-org/GLM-4.5-Air-FP8
     name: GLM-4.5-Air-FP8
@@ -354,3 +473,39 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 3.2
+
+  - id: zai-org/GLM-5.2
+    name: GLM-5.2
+    match:
+      or:
+        - equals: zai-org/glm-5.2
+        - equals: zai-org/glm-5.2-fast
+    context_window: 1048575
+    prices:
+      input_mtok: 1.4
+      output_mtok: 4.4
+    prices_checked: 2026-10-20
+
+  - id: zai-org/GLM-5.3
+    name: GLM-5.3
+    match:
+      or:
+        - equals: zai-org/glm-5.3
+        - equals: zai-org/glm-5.3-fast
+    context_window: 1048575
+    prices:
+      input_mtok: 1.4
+      output_mtok: 4.4
+    prices_checked: 2026-10-20
+
+  - id: zai-org/GLM-5.3-Flash
+    name: GLM-5.3-Flash
+    match:
+      or:
+        - equals: zai-org/glm-5.3-flash
+        - equals: zai-org/glm-5.3-flash-fast
+    context_window: 1048575
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.5
+    prices_checked: 2026-10-20

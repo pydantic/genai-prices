@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -66,7 +66,9 @@ def test_github_copilot_chat_usage() -> None:
     assert extracted.model is not None
     assert extracted.model.id == 'claude-haiku-4.5'
     assert extracted.usage == Usage(input_tokens=15, cache_read_tokens=4, output_tokens=8)
-    assert extracted.calc_price().total_price == Decimal('0.0000514')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.0000514'
+    )
 
 
 def test_github_copilot_responses_usage() -> None:
@@ -95,7 +97,9 @@ def test_github_copilot_responses_usage() -> None:
         output_tokens=11,
         output_reasoning_tokens=4,
     )
-    assert extracted.calc_price().total_price == Decimal('0.00017575')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00017575'
+    )
 
 
 @pytest.mark.parametrize('api_flavor', ['default', 'chat'])
@@ -179,7 +183,9 @@ def test_databricks_chat_usage(api_flavor: str) -> None:
     assert extracted.usage == Usage(
         input_tokens=12_011, cache_read_tokens=12_002, output_tokens=80, output_reasoning_tokens=30
     )
-    assert extracted.calc_price().total_price == Decimal('0.00348512')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00348512'
+    )
 
 
 def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
@@ -192,7 +198,9 @@ def test_databricks_chat_usage_without_cache_or_reasoning() -> None:
     extracted = extract_usage(response_data, provider_id='databricks', api_flavor='chat')
 
     assert extracted.usage == Usage(input_tokens=7, output_tokens=74)
-    assert extracted.calc_price().total_price == Decimal('0.00004545')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.00004545'
+    )
 
 
 def test_databricks_open_responses_usage() -> None:
@@ -218,7 +226,9 @@ def test_databricks_open_responses_usage() -> None:
     assert extracted.usage == Usage(
         input_tokens=100, cache_read_tokens=40, output_tokens=50, output_reasoning_tokens=20
     )
-    assert extracted.calc_price().total_price == Decimal('0.000942')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.000942'
+    )
 
 
 def test_databricks_embeddings_usage() -> None:
@@ -232,7 +242,9 @@ def test_databricks_embeddings_usage() -> None:
     extracted = extract_usage(response_data, provider_id='databricks', api_flavor='embeddings')
 
     assert extracted.usage == Usage(input_tokens=1_000_000)
-    assert extracted.calc_price().total_price == Decimal('0.13')
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == Decimal(
+        '0.13'
+    )
 
 
 @pytest.mark.parametrize(
@@ -268,7 +280,9 @@ def test_bedrock_converse_cache_write_ttl(model: str, expected_price: Decimal) -
         cache_read_tokens=0,
         output_tokens=0,
     )
-    assert extracted.calc_price().total_price == expected_price
+    assert (
+        extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == expected_price
+    )
 
 
 @pytest.mark.parametrize(
@@ -305,7 +319,9 @@ def test_anthropic_platform_cache_write_ttl(provider_id: str, model: str, expect
         cache_read_tokens=0,
         output_tokens=0,
     )
-    assert extracted.calc_price().total_price == expected_price
+    assert (
+        extracted.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price == expected_price
+    )
 
 
 @pytest.mark.parametrize(
@@ -376,7 +392,10 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.usage == expected_usage
     assert extracted_usage.provider.name == 'Anthropic'
 
-    assert extracted_usage.calc_price().total_price == expected_price
+    assert (
+        extracted_usage.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price
+        == expected_price
+    )
 
 
 def test_anthropic_native_thinking_tokens():
@@ -473,7 +492,10 @@ def test_modal_chat_usage(model_id: str, expected_price: Decimal) -> None:
         output_tokens=1_000_000,
         output_reasoning_tokens=500_000,
     )
-    assert extracted_usage.calc_price().total_price == expected_price
+    assert (
+        extracted_usage.calc_price(genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)).total_price
+        == expected_price
+    )
 
 
 def test_cloudflare_chat_usage() -> None:
@@ -572,6 +594,56 @@ def test_cloudflare_decisions_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.24')
 
 
+@pytest.mark.parametrize('with_details', [True, False])
+def test_perplexity_responses_usage_and_price(with_details: bool) -> None:
+    # Constructed from the Agent model/schema and Perplexity's own synthetic usage test, not a recording:
+    # https://docs.perplexity.ai/docs/agent-api/models
+    # https://github.com/perplexityai/wandr/blob/9ea23c7f24d0aaabc2c87b26815a513001b2e7ce/agents/relay/tests/test_perplexity_usage.py
+    # Web search uses tool_calls_details.search_web.invocation, not Sonar's num_search_queries:
+    # https://docs.perplexity.ai/docs/agent-api/tools/web-search
+    response_data: dict[str, Any] = {
+        'object': 'response',
+        'model': 'perplexity/sonar',
+        'usage': {
+            'input_tokens': 1_000,
+            'input_tokens_details': {'cache_read_input_tokens': 800, 'cached_tokens': 300},
+            'output_tokens': 100,
+            'output_tokens_details': {'reasoning_tokens': 50},
+            'tool_calls_details': {'search_web': {'invocation': 2}},
+            'total_tokens': 1_100,
+        },
+    }
+    if not with_details:
+        del response_data['usage']['input_tokens_details']
+        del response_data['usage']['output_tokens_details']
+        del response_data['usage']['tool_calls_details']
+
+    extracted = extract_usage(response_data, provider_id='perplexity', api_flavor='responses')
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'perplexity/sonar'
+    if with_details:
+        assert extracted.usage == Usage(
+            input_tokens=1_000, cache_read_tokens=800, output_tokens=100, output_reasoning_tokens=50, web_searches=2
+        )
+    else:
+        assert extracted.usage == Usage(input_tokens=1_000, output_tokens=100)
+    for month, day, context, expected_total in [
+        (10, 15, None, '0.00535'),
+        (10, 15, {'search_type': 'web'}, '0.00535'),
+        (9, 23, {'search_type': 'fast'}, '0.00235'),
+        (9, 24, {'search_type': 'fast'}, '0.00235'),
+        (10, 14, {'search_type': 'fast'}, '0.00235'),
+        (10, 15, {'search_type': 'fast'}, '0.00235'),
+    ]:
+        price = extracted.calc_price(
+            genai_request_timestamp=datetime(2026, month, day, tzinfo=UTC), price_context=context
+        )
+        assert price.input_price == (Decimal('0.0001') if with_details else Decimal('0.00025'))
+        assert price.output_price == Decimal('0.00025')
+        assert price.total_price == (Decimal(expected_total) if with_details else Decimal('0.0005'))
+
+
 def test_perplexity_decisions_usage() -> None:
     response_data = {
         'model': 'pplx-decider-v1.1-27b',
@@ -585,6 +657,26 @@ def test_perplexity_decisions_usage() -> None:
     assert extracted_usage.model.id == 'pplx-decider-v1.1-27b'
     assert extracted_usage.usage == Usage(input_tokens=367, output_tokens=3)
     assert extracted_usage.calc_price().total_price == Decimal('0.00000734')
+
+
+def test_perplexity_agent_api_usage() -> None:
+    response_data = {
+        'model': 'perplexity/sonar',
+        'object': 'response',
+        'usage': {
+            'input_tokens': 1_000_000,
+            'input_tokens_details': {'cache_creation_input_tokens': 0, 'cache_read_input_tokens': 200_000},
+            'output_tokens': 100_000,
+            'total_tokens': 1_100_000,
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='perplexity', api_flavor='responses')
+
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == 'perplexity/sonar'
+    assert extracted_usage.usage == Usage(input_tokens=1_000_000, cache_read_tokens=200_000, output_tokens=100_000)
+    assert extracted_usage.calc_price().total_price == Decimal('0.4625')
 
 
 def test_openrouter_decisions_usage() -> None:
@@ -1594,7 +1686,9 @@ def test_bedrock():
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == snapshot('amazon.nova-lite-v1:0')
-    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.00002454'))
+    assert extracted_usage.calc_price(
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC)
+    ).total_price == snapshot(Decimal('0.00002454'))
 
 
 anthropic_response_data = {
@@ -1873,8 +1967,8 @@ def test_xai_realtime_duration_and_message_usage_and_price() -> None:
     for model_ref, timestamp, expected_total in [
         ('grok-voice-think-fast-1.0', None, Decimal('0.058')),
         ('grok-voice-think-fast-2.0', None, Decimal('0.088')),
-        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=timezone.utc), Decimal('0.058')),
-        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=timezone.utc), Decimal('0.088')),
+        ('grok-voice-latest', datetime(2026, 8, 4, tzinfo=UTC), Decimal('0.058')),
+        ('grok-voice-latest', datetime(2026, 8, 5, tzinfo=UTC), Decimal('0.088')),
     ]:
         price = calc_price(
             usage,
@@ -1949,3 +2043,27 @@ def test_perplexity_reasoning_pro_reports_reasoning_in_completion_tokens():
     extracted = extract_usage(response_data, provider_id='perplexity')
 
     assert extracted.usage == Usage(input_tokens=17, output_tokens=1_152)
+
+
+def test_cloudflare_clairic_native_decision_response() -> None:
+    # https://developers.cloudflare.com/workers-ai/models/clairic/
+    response: dict[str, object] = {
+        'result': {
+            'model': 'clairic',
+            'usage': {
+                'state_tokens': 61,
+                'image_tokens': 0,
+                'schema_tokens': 472,
+                'input_tokens': 655,
+                'output_tokens': 0,
+                'passes': 3,
+            },
+        },
+        'success': True,
+        'errors': [],
+        'messages': [],
+    }
+    result = extract_usage(response, provider_id='cloudflare', api_flavor='decisions')
+    assert result.model is not None and result.model.id == '@cf/cloudflare/clairic'
+    assert result.usage == Usage(input_tokens=655, output_tokens=0)
+    assert result.calc_price().total_price == Decimal('0.0000655')

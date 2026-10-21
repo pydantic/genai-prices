@@ -4,7 +4,7 @@ version = "0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 # Do not publish this package to PyPI
 classifiers = ["Private :: do not release"]
 dependencies = []
@@ -20,20 +20,20 @@ dev = [
     "ipython>=8.18.1",
     "pytest>=8.4.1",
     "pytest-pretty>=1.3.0",
-    "pytest-recording>=0.13.4",
     "pydantic-settings>=2.11",
     "rich>=14.3.2",
-    "rich-argparse>=1.7.2",
+    "rich-argparse>=1.8.0",
     "ruff>=0.12.3",
-    "boto3-stubs[bedrock,pricing]>=1.40.75",
-    "boto3>=1.40.75",
     "packaging>=25.0",
     "jsonschema>=4.26.0",
     "types-jsonschema>=4.26.0.20260518",
+    "cassetter>=0.15.1",
+    "pyyaml>=6.0.2",
 ]
 
 [tool.uv]
 exclude-newer = "1 week"
+exclude-newer-package = { cassetter = false }
 required-version = ">=0.12.1"
 
 [tool.uv.workspace]
@@ -41,7 +41,7 @@ members = ["prices", "packages/python"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py311"
 include = [
     "prices/src/**/*.py",
     "packages/python/**/*.py",
@@ -125,11 +125,11 @@ venv = ".venv"
 venvPath = "."
 # `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
 # directory on the path.
-executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = ["tests/dataset"] }]
+executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = [".", "tests/dataset"] }]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json,tests/cassettes/test_source_baseten/*.yaml"
+skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json,tests/cassettes/*/*.yaml"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"

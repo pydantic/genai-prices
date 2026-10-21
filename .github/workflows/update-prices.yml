@@ -1,0 +1,373 @@
+name: Update prices
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+    # Aggregators reprice by the hour, so they get a weekly proposal of their own.
+    - cron: "47 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      weekly:
+        description: Run the weekly aggregator importers instead of the hourly ones
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+env:
+  UV_PYTHON: 3.13
+  UV_FROZEN: "1"
+  TITLE_SUFFIX: ${{ (github.event.schedule == '47 6 * * 1' || inputs.weekly) && ' (weekly)' || '' }}
+  BRANCH: automation/${{ (github.event.schedule == '47 6 * * 1' || inputs.weekly) && 'weekly' || 'hourly' }}-price-update
+
+jobs:
+  import:
+    name: import ${{ matrix.importer }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      expected-count: ${{ steps.patch.outputs.expected-count }}
+    strategy:
+      fail-fast: false
+      matrix:
+        importer: >-
+          ${{ fromJSON((github.event.schedule == '47 6 * * 1' || inputs.weekly) && '["huggingface", "openrouter-provider"]' || '[
+            "anthropic", "arcee", "avian", "azure", "aws", "baseten", "cerebras", "cloudflare", "cursor",
+            "databricks", "doubleword", "fireworks", "github-copilot", "google", "groq", "meta", "minimax",
+            "mistral", "modal", "moonshotai", "novita", "openai", "openai-decisions", "ovhcloud",
+            "perplexity", "quicksilverpro", "together", "typesafe", "voyageai", "xai", "zai"
+          ]') }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.12.1"
+          enable-cache: false
+      - run: uv sync --all-packages
+      - run: |
+          set -o pipefail
+          make "${IMPORTER}-get" | tee "$RUNNER_TEMP/importer.log"
+        env:
+          IMPORTER: ${{ matrix.importer }}
+      - name: Keep the diff unless it only bumps prices_checked
+        id: patch
+        env:
+          IMPORTER: ${{ matrix.importer }}
+          EXPECTED_COUNT: ${{ strategy.job-total }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/patches"
+          : > "$RUNNER_TEMP/patches/$IMPORTER.patch"
+          git add --intent-to-add prices/providers
+          if git diff -U0 -- prices/providers | grep -E '^[-+] ' | grep -qvE '^[-+] +prices_checked: '; then
+            git diff --binary -- prices/providers > "$RUNNER_TEMP/patches/$IMPORTER.patch"
+          fi
+          echo "expected-count=$EXPECTED_COUNT" >> "$GITHUB_OUTPUT"
+          # Rates the importer saw change but couldn't write, listed on the price update PR for a person to apply.
+          grep -E 'update them by hand|kept .+ unchanged|reports others' "$RUNNER_TEMP/importer.log" \
+            > "$RUNNER_TEMP/patches/$IMPORTER.notes" || true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: patch-${{ matrix.importer }}
+          path: ${{ runner.temp }}/patches
+          if-no-files-found: error
+
+  pull-request:
+    needs: import
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      created-pr-url: ${{ steps.pr.outputs.created-pr-url }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Preserve repairs on the open proposal
+        id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$pr" ]; then
+            git fetch --quiet origin "$BRANCH"
+            previous="$(git rev-parse FETCH_HEAD)"
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" check HEAD "$previous"
+            echo "head=$previous" >> "$GITHUB_OUTPUT"
+          fi
+          echo "pr=$pr" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: patch-*
+          path: ${{ runner.temp }}/patches
+          merge-multiple: true
+      - name: Apply importer patches
+        id: apply
+        env:
+          IMPORT_RESULT: ${{ needs.import.result }}
+          EXPECTED_COUNT: ${{ needs.import.outputs.expected-count }}
+        run: |
+          shopt -s nullglob
+          patches=("$RUNNER_TEMP"/patches/*.patch)
+          notes=("$RUNNER_TEMP"/patches/*.notes)
+          complete=true
+          if [ "$IMPORT_RESULT" != success ] || [ "${#patches[@]}" != "$EXPECTED_COUNT" ] || [ "${#notes[@]}" != "$EXPECTED_COUNT" ]; then
+            # Failed importers upload nothing, so their pending changes leave the proposal until they recover.
+            echo '::warning::Some importers failed; publishing the others without closing the price proposal'
+            complete=false
+          fi
+          applied=()
+          for patch in "${patches[@]}"; do
+            [ -s "$patch" ] || continue
+            name="$(basename "$patch" .patch)"
+            git apply --index "$patch"
+            applied+=("$name")
+          done
+          echo "complete=$complete" >> "$GITHUB_OUTPUT"
+          echo "importers=${applied[*]}" >> "$GITHUB_OUTPUT"
+      - if: steps.apply.outputs.importers != ''
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.12.1"
+          enable-cache: false
+      - if: steps.apply.outputs.importers != ''
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - if: steps.apply.outputs.importers != ''
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        with:
+          go-version-file: packages/go/go.mod
+          cache: false
+      - if: steps.apply.outputs.importers != ''
+        name: Keep the start dates the open price update proposes
+        env:
+          PREVIOUS_HEAD: ${{ steps.previous.outputs.head }}
+        run: |
+          # Rebuilt from main, the branch would otherwise date a pending rate change to each day it is rebuilt.
+          if [ -n "$PREVIOUS_HEAD" ]; then
+            uv run --all-packages -m prices.proposed_start_dates "$PREVIOUS_HEAD"
+          fi
+      - if: steps.apply.outputs.importers != ''
+        run: |
+          uv sync --all-packages
+          npm ci
+          make collapse-models build
+          # extract_usages.py exits non-zero after rewriting a stale file; a second run fails only on a real error.
+          uv run python tests/dataset/extract_usages.py || uv run python tests/dataset/extract_usages.py
+      - if: steps.apply.outputs.importers != ''
+        name: Validate the proposal before publication
+        run: make test test-js test-go
+      - id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PRICE_UPDATE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.PRICE_UPDATE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Write the pull request description
+        env:
+          IMPORTERS: ${{ steps.apply.outputs.importers }}
+          COMPLETE: ${{ steps.apply.outputs.complete }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            printf 'Prices fetched from official provider APIs and docs by [this run](%s).\n\n' "$RUN_URL"
+            printf 'Importers with changes: %s\n\n' "$IMPORTERS"
+            if [ "$COMPLETE" != true ]; then
+              printf 'Some importers failed in this run, so their changes are missing until they recover.\n\n'
+            fi
+            printf 'Rate changes use date-only entries. Additional changes on the same date need manual review.\n'
+            if notes="$(cat "$RUNNER_TEMP"/patches/*.notes 2>/dev/null)" && [ -n "$notes" ]; then
+              printf '\n## Needs a manual update\n\nThese rates changed but could not be updated automatically:\n\n'
+              sed 's/^/- /' <<< "$notes"
+            fi
+          } > "$RUNNER_TEMP/pr-body.md"
+      - id: pr
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          COMPLETE: ${{ steps.apply.outputs.complete }}
+          PREVIOUS_HEAD: ${{ steps.previous.outputs.head }}
+          PREVIOUS_PR: ${{ steps.previous.outputs.pr }}
+        run: |
+          git config user.name 'genai-prices-automation[bot]'
+          git config user.email 'genai-prices-automation[bot]@users.noreply.github.com'
+          body="$RUNNER_TEMP/pr-body.md"
+          pr="$PREVIOUS_PR"
+          # Fail if someone updated the proposal while the importers or validation ran.
+          if [ -n "$PREVIOUS_HEAD" ]; then
+            git fetch --quiet origin "$BRANCH"
+            [ "$(git rev-parse FETCH_HEAD)" = "$PREVIOUS_HEAD" ] || exit 1
+            [ "$(gh pr view "$pr" --json state --jq .state)" = OPEN ] || exit 1
+          fi
+          git add --all
+          if git diff --cached --quiet; then
+            # Only a run where every importer succeeded shows that nothing remains to publish.
+            if [ -n "$pr" ] && [ "$COMPLETE" = true ]; then
+              gh pr close "$pr" --comment 'No automatically publishable changes remain. Unresolved source differences are tracked in the manual price review issue.'
+            fi
+            exit 0
+          fi
+          git switch -c "$BRANCH"
+          git commit --quiet -m 'Update provider prices from official sources'
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Compare trees independently of the PR body: manual notes can change without a data change.
+          if [ -n "$pr" ]; then
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" publish "$remote" "$BRANCH" "$PREVIOUS_HEAD"
+            gh pr view "$pr" --json body --jq .body > "$RUNNER_TEMP/previous-body.md"
+            # A new run link alone does not warrant an hourly edit.
+            sed -E 's@actions/runs/[0-9]+@actions/runs/RUN@g' "$body" > "$RUNNER_TEMP/body-normalized.md"
+            sed -E 's@actions/runs/[0-9]+@actions/runs/RUN@g' "$RUNNER_TEMP/previous-body.md" > "$RUNNER_TEMP/previous-normalized.md"
+            if [ "$(cat "$RUNNER_TEMP/body-normalized.md")" != "$(cat "$RUNNER_TEMP/previous-normalized.md")" ]; then
+              gh pr edit "$pr" --body-file "$body"
+            fi
+          else
+            bash "$GITHUB_WORKSPACE/scripts/price_update_branch.sh" publish "$remote" "$BRANCH" ''
+            echo "created-pr-url=$(gh pr create --head "$BRANCH" --title "Update provider prices from official sources$TITLE_SUFFIX" --body-file "$body")" >> "$GITHUB_OUTPUT"
+          fi
+
+  manual-updates:
+    needs: import
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    outputs:
+      created-issue-url: ${{ steps.report.outputs.created-issue-url }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: patch-*
+          path: ${{ runner.temp }}/patches
+          merge-multiple: true
+      - id: report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMPORT_RESULT: ${{ needs.import.result }}
+          EXPECTED_COUNT: ${{ needs.import.outputs.expected-count }}
+        run: |
+          shopt -s nullglob
+          notes=("$RUNNER_TEMP"/patches/*.notes)
+          complete=false
+          if [ "$IMPORT_RESULT" = success ] && [ "${#notes[@]}" = "$EXPECTED_COUNT" ]; then
+            complete=true
+          fi
+          title="Provider prices needing manual review$TITLE_SUFFIX"
+          issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $title" \
+            --json number,title,author | jq -r --arg title "$title" '.[] | select(.title == $title and (.author.login == "github-actions[bot]" or .author.login == "app/github-actions")) | .number')"
+          previous_body="$RUNNER_TEMP/previous-manual-body.md"
+          : > "$previous_body"
+          if [ -n "$issue" ]; then
+            gh issue view "$issue" --repo "$GITHUB_REPOSITORY" --json body --jq .body | tr -d '\r' > "$previous_body"
+          fi
+          { grep '^- ' "$previous_body" || true; } | sort -u > "$RUNNER_TEMP/previous-manual-notes.md"
+          {
+            [ "${#notes[@]}" = 0 ] || sed '/^$/d; s/^/- /' "${notes[@]}"
+            # Failed importers report nothing, so a partial run keeps every finding already listed.
+            if [ "$complete" != true ]; then
+              cat "$RUNNER_TEMP/previous-manual-notes.md"
+            fi
+          } | sort -u > "$RUNNER_TEMP/manual-notes.md"
+          body="$RUNNER_TEMP/manual-body.md"
+          if [ ! -s "$RUNNER_TEMP/manual-notes.md" ]; then
+            if [ -n "$issue" ] && [ "$complete" = true ]; then
+              gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment 'All importers completed without reporting manual updates.'
+            fi
+            exit 0
+          fi
+          {
+            printf 'The hourly price importers reported changes that need manual review.\n\n'
+            printf 'A run where every importer succeeds replaces this list; a run with failing importers only adds to it. '
+            printf 'New findings are also posted as comments.\n\n'
+            cat "$RUNNER_TEMP/manual-notes.md"
+          } > "$body"
+          cat "$body" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$issue" ]; then
+            if [ "$(cat "$body")" != "$(cat "$previous_body")" ]; then
+              gh issue edit "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+            fi
+            # Body edits notify nobody, so new findings also go out as a comment.
+            comm -13 "$RUNNER_TEMP/previous-manual-notes.md" "$RUNNER_TEMP/manual-notes.md" > "$RUNNER_TEMP/new-manual-notes.md"
+            if [ -s "$RUNNER_TEMP/new-manual-notes.md" ]; then
+              {
+                printf 'New findings since the last report:\n\n'
+                cat "$RUNNER_TEMP/new-manual-notes.md"
+              } > "$RUNNER_TEMP/manual-comment.md"
+              gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/manual-comment.md"
+            fi
+          else
+            echo "created-issue-url=$(gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file "$body")" >> "$GITHUB_OUTPUT"
+          fi
+
+  notify-manual:
+    needs: manual-updates
+    if: ${{ !cancelled() && needs.manual-updates.outputs.created-issue-url != '' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.manual-updates.outputs.created-issue-url }}
+      message: "GenAI Prices needs a manual price update:"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify:
+    needs: pull-request
+    if: ${{ !cancelled() && needs.pull-request.outputs.created-pr-url != '' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.pull-request.outputs.created-pr-url }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  importer-failure:
+    needs: import
+    if: ${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: read
+    outputs:
+      newly-failing: ${{ steps.previous.outputs.newly-failing }}
+    steps:
+      # ponytail: alerts on the first failing run only; a second importer breaking while one is still red stays silent.
+      - id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
+            --status completed --limit 1 --json databaseId --jq '.[0].databaseId')"
+          conclusions=''
+          if [ -n "$run_id" ]; then
+            # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.
+            conclusions="$(gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
+              --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion')"
+          fi
+          if grep -qx failure <<< "$conclusions"; then
+            echo 'newly-failing=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'newly-failing=true' >> "$GITHUB_OUTPUT"
+          fi
+
+  notify-failure:
+    needs: importer-failure
+    if: ${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      message: "A GenAI Prices importer started failing:"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

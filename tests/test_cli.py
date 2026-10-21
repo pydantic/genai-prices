@@ -5,7 +5,7 @@ import subprocess
 import sys
 from collections.abc import Callable, Collection, Iterator
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from unittest.mock import patch
@@ -45,7 +45,7 @@ def _use_registry(registry: UnitRegistry) -> Iterator[None]:
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     return next(
         f'{provider.id}:{model.id}'
         for provider in providers
