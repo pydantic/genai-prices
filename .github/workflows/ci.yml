@@ -139,6 +139,25 @@ jobs:
           working-directory: packages/go
       - run: make test-go
 
+  test-rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install stable --profile minimal --component rustfmt,clippy,llvm-tools-preview
+      - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
+        with:
+          tool: cargo-llvm-cov
+      - run: make lint-rust
+      - run: make test-rust
+      - name: check the minimum supported Rust version
+        working-directory: packages/rust
+        run: |
+          msrv="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].rust_version')"
+          rustup toolchain install "$msrv" --profile minimal
+          cargo +"$msrv" check --locked
+
   # Preserve the v2 schema core. Optional model price variants are ignored by older clients.
   v2-schema-frozen:
     if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -158,7 +177,7 @@ jobs:
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, test-go, v2-schema-frozen]
+    needs: [pre-commit, test-python, coverage, test-js, test-go, test-rust, v2-schema-frozen]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed

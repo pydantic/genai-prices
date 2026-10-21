@@ -351,6 +351,7 @@ prices:
     python_dir = tmp_path / 'packages' / 'python' / 'genai_prices'
     javascript_dir = tmp_path / 'packages' / 'js' / 'src'
     go_dir = tmp_path / 'packages' / 'go'
+    rust_dir = tmp_path / 'packages' / 'rust'
     python_dir.mkdir(parents=True)
     javascript_dir.mkdir(parents=True)
     go_dir.mkdir(parents=True)
@@ -376,6 +377,11 @@ prices:
     assert 'UsageInput5MTokens' in (go_dir / 'data_units.go').read_text()
     assert 'UsageRequest_Count' in (go_dir / 'data_units.go').read_text()
     assert (go_dir / 'internal' / 'data' / 'prices.json').is_file()
+    rust_units = (rust_dir / 'src' / 'data_units.rs').read_text()
+    assert 'pub const INPUT_5M_TOKENS: UsageKey = UsageKey::from_static("input_5m_tokens");' in rust_units
+    assert 'pub const REQUEST__COUNT: UsageKey' in rust_units
+    assert 'price_key: "input_5m_mtok", per: 1000000.0' in rust_units
+    assert (rust_dir / 'data' / 'prices.json').read_text() == (go_dir / 'internal' / 'data' / 'prices.json').read_text()
     assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']
 
 
