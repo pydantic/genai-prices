@@ -12454,6 +12454,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='Qwen/Qwen3.8-Max-VL-Thinking',
+                match=ClauseEquals(equals='Qwen/Qwen3.8-Max-VL-Thinking'),
+                name='Qwen3.8-Max VL',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
                 name='DeepSeek V4.1 Flash',

@@ -21547,6 +21547,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.8-Max-VL-Thinking',
+        name: 'Qwen3.8-Max VL',
+        match: {
+          equals: 'Qwen/Qwen3.8-Max-VL-Thinking',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
