@@ -26520,6 +26520,9 @@ export const data: Provider[] = [
             {
               regex: '^gpt-5-6-sol-\\d{4}-\\d{2}-\\d{2}$',
             },
+            {
+              equals: 'gpt-daybreak-blue-latest',
+            },
           ],
         },
         context_window: 1050000,
