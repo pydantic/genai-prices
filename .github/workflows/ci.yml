@@ -181,7 +181,9 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - run: rustup toolchain install stable --profile minimal --component rustfmt,clippy,llvm-tools-preview
+      - name: install the pinned Rust toolchain
+        working-directory: packages/rust
+        run: rustup toolchain install
       - uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
         with:
           tool: cargo-llvm-cov
