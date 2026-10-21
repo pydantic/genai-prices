@@ -203,7 +203,7 @@ fn perplexity_responses_usage_and_search_type() {
         let request =
             genai_prices::ExtractRequest::new(body).with_provider_id("perplexity").with_api_flavor("responses");
         let extracted = genai_prices::extract_usage(&request).unwrap();
-        assert_eq!(extracted.model.as_deref(), Some("perplexity/sonar"));
+        assert_eq!(extracted.model_id.as_deref(), Some("perplexity/sonar"));
         assert_eq!(extracted.usage, want_usage);
         // The search type selects the rate independently of the request date.
         for (month, day, context, want_total) in [

@@ -210,7 +210,11 @@ fn aws_converse_cache_write_ttl() {
             r#"{{"model":"{model}","usage":{{"inputTokens":0,"cacheReadInputTokens":0,"cacheWriteInputTokens":1000000,"cacheDetails":[{{"ttl":"1h","inputTokens":250000}},{{"ttl":"5m","inputTokens":750000}}],"outputTokens":0,"totalTokens":1000000}}}}"#
         );
         let extracted = genai_prices::extract_usage(&ExtractRequest::new(&body).with_provider_id("aws")).unwrap();
-        assert_eq!((extracted.provider_id.as_str(), extracted.model.as_deref()), ("aws", Some(model)));
+        // The raw reference is the response's; the matched ID is the price data's.
+        let raw = genai_prices::extract_provider_usage(&ExtractRequest::new(&body).with_provider_id("aws")).unwrap();
+        assert_eq!((raw.provider_id.as_str(), raw.model_ref.as_deref()), ("aws", Some(model)));
+        assert_eq!(raw.usage, extracted.usage);
+        assert!(extracted.model_id.as_deref().is_some_and(|id| id != model), "{:?}", extracted.model_id);
         assert_eq!(extracted.usage, want_usage);
         let price = genai_prices::calculate(&extracted.price_request().unwrap()).unwrap();
         assert_close(price.total_price, want_price, 1e-12);
@@ -248,7 +252,7 @@ fn xai_responses_usage_and_price() {
         for request in [ExtractRequest::new(body), ExtractRequest::from_value(&parsed)] {
             let extracted =
                 genai_prices::extract_usage(&request.with_provider_id("x-ai").with_api_flavor("responses")).unwrap();
-            assert_eq!(extracted.model.as_deref(), Some("grok-4.20-0309-reasoning"));
+            assert_eq!(extracted.model_id.as_deref(), Some("grok-4.20"));
             assert_eq!(extracted.usage, want_usage);
             let price = genai_prices::calculate(&extracted.price_request().unwrap()).unwrap();
             assert_eq!(price.model_id, "grok-4.20");
@@ -278,7 +282,7 @@ fn results_serialize() {
     assert_eq!(extracted.price_request(), None);
     assert_eq!(
         serde_json::to_value(&extracted).unwrap(),
-        serde_json::json!({"usage": {"input_tokens": 3.0}, "model": null, "provider_id": "testing", "warnings": []}),
+        serde_json::json!({"usage": {"input_tokens": 3.0}, "model_id": null, "provider_id": "testing", "warnings": []}),
     );
 }
 

@@ -25,8 +25,8 @@ pub use calculator::Calculator;
 pub use calculator::calculate;
 pub use error::{Error, ErrorKind, Result};
 #[cfg(feature = "bundled")]
-pub use extract::extract_usage;
-pub use request::{ExtractRequest, ExtractedUsage, PriceCalculation, PriceRequest};
+pub use extract::{extract_provider_usage, extract_usage};
+pub use request::{ExtractRequest, ExtractedUsage, PriceCalculation, PriceRequest, ProviderUsage};
 pub use usage::{IntoIter, Iter, Usage, UsageKey};
 
 /// The current v2 provider-data feed, for [`Calculator::from_json`].

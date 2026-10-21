@@ -34,13 +34,23 @@ pub struct PriceRequest<'a> {
     /// Request-specific pricing context, such as `[("service_tier", "flex")]`. Later entries win over earlier
     /// entries with the same key.
     pub price_context: Vec<(&'a str, &'a str)>,
+    /// Set by [`ExtractedUsage::price_request`] to price the model extraction matched.
+    pub(crate) resolved: Option<ResolvedModel<'a>>,
 }
 
 impl<'a> PriceRequest<'a> {
     /// Creates a request for `model` with the given usage.
     #[must_use]
     pub fn new(model: &'a str, usage: &'a Usage) -> Self {
-        Self { usage, model, provider_id: None, provider_api_url: None, timestamp: None, price_context: Vec::new() }
+        Self {
+            usage,
+            model,
+            provider_id: None,
+            provider_api_url: None,
+            timestamp: None,
+            price_context: Vec::new(),
+            resolved: None,
+        }
     }
 
     /// Selects the provider by ID or alias.
@@ -183,27 +193,33 @@ impl<'a> ExtractRequest<'a> {
     }
 }
 
-/// Usage and model information read from a response.
+/// Usage read from a response, with the model it reports matched against the provider data.
 #[derive(Debug, Clone, Default, PartialEq)]
 #[non_exhaustive]
 pub struct ExtractedUsage {
     /// The extracted usage values.
     pub usage: Usage,
-    /// The model reported by the response, if any.
-    pub model: Option<String>,
+    /// The ID of the matched model, or `None` when the response does not report a model.
+    pub model_id: Option<String>,
     /// The ID of the matched provider.
     pub provider_id: String,
     /// Extractor destinations that this release cannot represent.
     pub warnings: Vec<String>,
+    /// The provider that defines the model, which differs from `provider_id` for fallback providers.
+    pub(crate) model_provider_id: Option<String>,
 }
 
 impl ExtractedUsage {
-    /// A request to price this usage with the extracted model and provider.
+    /// A request to price this usage with the matched model.
     ///
-    /// Returns `None` when the response did not report a model.
+    /// The model is priced as matched, not by matching its ID again, so calculate the request with the same
+    /// provider data that extracted it. Returns `None` when the response did not report a model.
     #[must_use]
     pub fn price_request(&self) -> Option<PriceRequest<'_>> {
-        Some(PriceRequest::new(self.model.as_deref()?, &self.usage).with_provider_id(&self.provider_id))
+        let model_id = self.model_id.as_deref()?;
+        let mut request = PriceRequest::new(model_id, &self.usage).with_provider_id(&self.provider_id);
+        request.resolved = Some(ResolvedModel { model_provider_id: self.model_provider_id.as_deref()?, model_id });
+        Some(request)
     }
 }
 
@@ -211,9 +227,41 @@ impl Serialize for ExtractedUsage {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         let mut state = serializer.serialize_struct("ExtractedUsage", 4)?;
         state.serialize_field("usage", &self.usage)?;
-        state.serialize_field("model", &self.model)?;
+        state.serialize_field("model_id", &self.model_id)?;
         state.serialize_field("provider_id", &self.provider_id)?;
         state.serialize_field("warnings", &self.warnings)?;
         state.end()
     }
+}
+
+/// Usage and the raw model reference read from a response, without matching the model.
+#[derive(Debug, Clone, Default, PartialEq)]
+#[non_exhaustive]
+pub struct ProviderUsage {
+    /// The extracted usage values.
+    pub usage: Usage,
+    /// The model reference exactly as the response reports it, if any.
+    pub model_ref: Option<String>,
+    /// The ID of the matched provider.
+    pub provider_id: String,
+    /// Extractor destinations that this release cannot represent.
+    pub warnings: Vec<String>,
+}
+
+impl Serialize for ProviderUsage {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let mut state = serializer.serialize_struct("ProviderUsage", 4)?;
+        state.serialize_field("usage", &self.usage)?;
+        state.serialize_field("model_ref", &self.model_ref)?;
+        state.serialize_field("provider_id", &self.provider_id)?;
+        state.serialize_field("warnings", &self.warnings)?;
+        state.end()
+    }
+}
+
+/// A model already matched by extraction, identified by the provider that defines it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct ResolvedModel<'a> {
+    pub(crate) model_provider_id: &'a str,
+    pub(crate) model_id: &'a str,
 }

@@ -234,7 +234,7 @@ fn extract_usage_paths_and_cloudflare_url() {
             .with_api_flavor("chat"),
         )
         .unwrap();
-    assert_eq!(extracted.model.as_deref(), Some("test-model"));
+    assert_eq!(extracted.model_id.as_deref(), Some("test-model"));
     assert_eq!(extracted.usage, usage([(UsageKey::INPUT_TOKENS, 10.0), (UsageKey::CACHE_READ_TOKENS, 4.0)]));
     assert_eq!(extracted.warnings.len(), 1);
     assert_eq!(extracted.warnings[0].matches("future_tokens").count(), 1);
@@ -253,14 +253,14 @@ fn extract_usage_paths_and_cloudflare_url() {
                 .with_provider_api_url("https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/Test/Model"),
         )
         .unwrap();
-    assert_eq!(cloudflare.model.as_deref(), Some("@cf/test/model"));
+    assert_eq!(cloudflare.model_id.as_deref(), Some("@cf/test/model"));
     let unknown = calculator
         .extract_usage(
             &ExtractRequest::new(r#"{"usage":{"input":1}}"#)
                 .with_provider_api_url("https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/unknown/model"),
         )
         .unwrap();
-    assert_eq!(unknown.model, None);
+    assert_eq!(unknown.model_id, None);
 }
 
 #[test]

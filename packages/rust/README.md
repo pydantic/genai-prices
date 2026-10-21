@@ -137,7 +137,26 @@ if let Some(request) = extracted.price_request() {
 
 The API flavor selects the response shape used by a provider. For example, OpenAI exposes `chat` and `responses`
 shapes. If you have already parsed the body, pass it with `ExtractRequest::from_value` instead of parsing it twice.
-`PriceCalculation` and `ExtractedUsage` implement `serde::Serialize` for logging or forwarding.
+
+As in the Python package, `extract_usage` matches the model the response reports: `model_id` is the matched
+model's ID, and `price_request` prices that model directly. A response from a model the data does not price is an
+`ErrorKind::ModelNotFound` error. To read the usage regardless, use `extract_provider_usage`, which returns the raw
+`model_ref` from the response without matching it:
+
+```rust
+use genai_prices::{ErrorKind, ExtractRequest};
+
+let body = r#"{"model": "brand-new-model", "usage": {"input_tokens": 1000, "output_tokens": 100}}"#;
+let request = ExtractRequest::new(body).with_provider_id("openai").with_api_flavor("responses");
+assert_eq!(genai_prices::extract_usage(&request).unwrap_err().kind(), ErrorKind::ModelNotFound);
+
+let raw = genai_prices::extract_provider_usage(&request)?;
+assert_eq!(raw.model_ref.as_deref(), Some("brand-new-model"));
+assert_eq!(raw.usage.get("input_tokens"), Some(1000.0));
+# Ok::<(), genai_prices::Error>(())
+```
+
+`PriceCalculation`, `ExtractedUsage` and `ProviderUsage` implement `serde::Serialize` for logging or forwarding.
 
 ## Load current pricing data
 

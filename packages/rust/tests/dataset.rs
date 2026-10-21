@@ -8,7 +8,7 @@ mod common;
 use std::path::Path;
 
 use common::utc;
-use genai_prices::{ErrorKind, ExtractRequest, PriceRequest, Usage};
+use genai_prices::{ErrorKind, ExtractRequest, Usage};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -45,36 +45,48 @@ fn dataset() {
                 let request = ExtractRequest::from_value(&row.body)
                     .with_provider_id(&extractor.provider_id)
                     .with_api_flavor(&extractor.api_flavor);
-                let actual = match genai_prices::extract_usage(&request) {
-                    Ok(actual) => actual,
+                // The raw extraction must read every row, whether or not its model is priced.
+                let raw = match genai_prices::extract_provider_usage(&request) {
+                    Ok(raw) => raw,
                     Err(error) => {
                         failures.push(format!("{label}: extract: {error}"));
                         continue;
                     }
                 };
-                if actual.model != row.model {
-                    failures.push(format!("{label}: model {:?}, want {:?}", actual.model, row.model));
+                if raw.model_ref != row.model {
+                    failures.push(format!("{label}: model {:?}, want {:?}", raw.model_ref, row.model));
                 }
                 for (key, want) in &expected.usage {
-                    match actual.usage.get(key) {
+                    match raw.usage.get(key) {
                         Some(got) if (got - want).abs() <= 1e-12 => {}
                         got => failures.push(format!("{label}: usage {key} = {got:?}, want {want}")),
                     }
                 }
-                let Some(model) = actual.model.as_deref() else { continue };
-                let request = PriceRequest::new(model, &actual.usage)
-                    .with_provider_id(&extractor.provider_id)
-                    .with_timestamp(utc(2025, 11, 6, 12, 0, 0));
-                let calculation = match genai_prices::calculate(&request) {
-                    Ok(calculation) => calculation,
-                    Err(error)
-                        if error.kind() == ErrorKind::ModelNotFound
-                            && extractor.input_price.is_none()
-                            && extractor.output_price.is_none()
-                            && extractor.total_price.is_none() =>
-                    {
+                // As in Python, matching the model fails exactly when the generator could not price the row.
+                let unpriced = extractor.input_price.is_none()
+                    && extractor.output_price.is_none()
+                    && extractor.total_price.is_none();
+                let extracted = match genai_prices::extract_usage(&request) {
+                    Ok(extracted) => extracted,
+                    Err(error) if error.kind() == ErrorKind::ModelNotFound && unpriced && row.model.is_some() => {
                         continue;
                     }
+                    Err(error) => {
+                        failures.push(format!("{label}: extract with model: {error}"));
+                        continue;
+                    }
+                };
+                if extracted.usage != raw.usage {
+                    failures.push(format!("{label}: matched extraction changed the usage"));
+                }
+                let Some(request) = extracted.price_request() else {
+                    if row.model.is_some() {
+                        failures.push(format!("{label}: matched no model for {:?}", row.model));
+                    }
+                    continue;
+                };
+                let calculation = match genai_prices::calculate(&request.with_timestamp(utc(2025, 11, 6, 12, 0, 0))) {
+                    Ok(calculation) => calculation,
                     Err(error) => {
                         failures.push(format!("{label}: calculate: {error}"));
                         continue;

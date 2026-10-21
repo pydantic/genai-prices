@@ -97,7 +97,7 @@ fn accepts_optional_fields_and_explicit_nulls() {
         .extract_usage(&ExtractRequest::new(r#"{"usage":{"input":5,"note":"n/a"}}"#).with_provider_id("testing"))
         .unwrap();
     assert_eq!(extracted.usage, usage([(UsageKey::INPUT_TOKENS, 5.0)]));
-    assert_eq!(extracted.model, None);
+    assert_eq!(extracted.model_id, None);
 }
 
 #[test]
@@ -158,4 +158,58 @@ fn litellm_routing_follows_python() {
     for model in ["nope/gpt-5", "/gpt-5"] {
         assert_eq!(price(model).unwrap_err().kind(), ErrorKind::ProviderNotFound, "{model}");
     }
+}
+
+#[test]
+fn extraction_matches_the_model_like_python() {
+    let calculator = calculator(
+        r#"[
+        {"id":"testing","name":"Testing","api_pattern":"testing","fallback_model_providers":["catalog"],
+         "extractors":[{"root":"usage","mappings":[{"path":"input","dest":"input_tokens","required":true}]}],
+         "models":[{"id":"canonical-id","match":{"equals":"alias"},"prices":{"input_mtok":2}}]},
+        {"id":"catalog","name":"Catalog","api_pattern":"catalog",
+         "models":[{"id":"shared","match":{"equals":"shared-model"},"prices":{"input_mtok":3}}]}
+    ]"#,
+    );
+    let extract = |body: &str| calculator.extract_usage(&ExtractRequest::new(body).with_provider_id("testing"));
+
+    // The matched model's ID is reported, and pricing uses that model without matching its ID again: the ID
+    // `canonical-id` would not match the `alias` rule.
+    let extracted = extract(r#"{"model":"ALIAS","usage":{"input":1000000}}"#).unwrap();
+    assert_eq!(extracted.model_id.as_deref(), Some("canonical-id"));
+    let price = calculator.calculate(&extracted.price_request().unwrap()).unwrap();
+    assert_eq!((price.model_id.as_str(), price.total_price), ("canonical-id", 2.0));
+    let rematched =
+        calculator.calculate(&PriceRequest::new("canonical-id", &extracted.usage).with_provider_id("testing"));
+    assert_eq!(common::error_kind(&rematched), Some(ErrorKind::ModelNotFound));
+
+    // Models found through a fallback provider are priced as that provider's model.
+    let fallback = extract(r#"{"model":"shared-model","usage":{"input":1000000}}"#).unwrap();
+    let price = calculator.calculate(&fallback.price_request().unwrap()).unwrap();
+    assert_eq!((price.provider_id.as_str(), price.model_id.as_str(), price.total_price), ("testing", "shared", 3.0));
+
+    // An unknown model is an error, but the raw extraction still reads the usage.
+    let body = r#"{"model":"brand-new","usage":{"input":5}}"#;
+    assert_eq!(common::error_kind(&extract(body)), Some(ErrorKind::ModelNotFound));
+    let raw = calculator.extract_provider_usage(&ExtractRequest::new(body).with_provider_id("testing")).unwrap();
+    assert_eq!((raw.model_ref.as_deref(), raw.usage.get("input_tokens")), (Some("brand-new"), Some(5.0)));
+    assert_eq!(
+        serde_json::to_value(&raw).unwrap(),
+        serde_json::json!({"usage": {"input_tokens": 5.0}, "model_ref": "brand-new", "provider_id": "testing", "warnings": []}),
+    );
+
+    // A response without a model is not an error, and there is nothing to price.
+    let anonymous = extract(r#"{"usage":{"input":5}}"#).unwrap();
+    assert_eq!((anonymous.model_id.as_deref(), anonymous.price_request()), (None, None));
+
+    // A request from one snapshot cannot silently price a different model in another.
+    let other = calculator_without_the_model();
+    assert_eq!(
+        common::error_kind(&other.calculate(&extracted.price_request().unwrap())),
+        Some(ErrorKind::ModelNotFound)
+    );
+}
+
+fn calculator_without_the_model() -> Calculator {
+    calculator(r#"[{"id":"testing","name":"Testing","api_pattern":"testing","models":[]}]"#)
 }

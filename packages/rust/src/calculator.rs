@@ -7,7 +7,7 @@ use crate::decode::decode_providers;
 use crate::error::{Error, ErrorKind, Result, validate_number};
 use crate::matching::{ModelMatch, find_model, find_provider, find_provider_by_id, fold_case};
 use crate::model::{Constraint, Model, Provider};
-use crate::request::{PriceCalculation, PriceRequest};
+use crate::request::{PriceCalculation, PriceRequest, ResolvedModel};
 use crate::time::Timestamp;
 use crate::units::{
     BUNDLED_REGISTRY, PriceSet, Registry, calculate_model_price, calculation_warnings, validate_price_set,
@@ -74,8 +74,10 @@ impl Calculator {
     /// inconsistent with each other.
     pub fn calculate(&self, request: &PriceRequest<'_>) -> Result<PriceCalculation> {
         let model_ref = fold_case(request.model);
-        let (selected, matched) =
-            self.find_provider_model(&model_ref, request.provider_id, request.provider_api_url)?;
+        let (selected, matched) = match request.resolved {
+            Some(resolved) => self.find_resolved_model(request.provider_id.unwrap_or_default(), resolved)?,
+            None => self.find_provider_model(&model_ref, request.provider_id, request.provider_api_url)?,
+        };
         let provider = &self.providers[selected];
 
         let timestamp = Timestamp::from(request.timestamp.unwrap_or_else(SystemTime::now));
@@ -132,6 +134,29 @@ impl Calculator {
             )
         })?;
         Ok((selected, matched))
+    }
+
+    /// Finds a model that extraction already matched, by the IDs it recorded.
+    fn find_resolved_model<'a>(
+        &'a self,
+        provider_id: &str,
+        resolved: ResolvedModel<'_>,
+    ) -> Result<(usize, ModelMatch<'a>)> {
+        let not_found = || {
+            Error::new(
+                ErrorKind::ModelNotFound,
+                format!(
+                    "model {:?} of provider {:?} is not in this data",
+                    resolved.model_id, resolved.model_provider_id
+                ),
+            )
+        };
+        let index_of = |id: &str| self.providers.iter().position(|provider| provider.id == id);
+        let selected = index_of(provider_id).ok_or_else(not_found)?;
+        let provider = index_of(resolved.model_provider_id).ok_or_else(not_found)?;
+        let model =
+            self.providers[provider].models.iter().find(|model| model.id == resolved.model_id).ok_or_else(not_found)?;
+        Ok((selected, ModelMatch { provider, model }))
     }
 
     /// The prices for `timestamp` with any matching request-specific variants applied, plus the price keys this

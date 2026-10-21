@@ -5,20 +5,71 @@ use serde_json::{Map, Value};
 use crate::calculator::{Calculator, non_empty, provider_lookup_error};
 use crate::decode::type_name;
 use crate::error::{Error, ErrorKind, Result, validate_number};
-use crate::matching::{MatchLogic, Subject, find_model, find_provider};
+use crate::matching::{MatchLogic, Subject, find_model, find_provider, fold_case};
 use crate::model::{PathStep, UsageExtractor};
-use crate::request::{Body, ExtractRequest, ExtractedUsage};
+use crate::request::{Body, ExtractRequest, ExtractedUsage, ProviderUsage};
 use crate::usage::Usage;
 
 impl Calculator {
-    /// Extracts usage and the model from a response body.
+    /// Extracts usage from a response body and matches the model it reports, as `extract_usage` does in the
+    /// Python package.
+    ///
+    /// Price the result with [`ExtractedUsage::price_request`], which uses the matched model rather than matching
+    /// the model reference again.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`ErrorKind::ModelNotFound`] error if the response reports a model this data does not price;
+    /// use [`Calculator::extract_provider_usage`] to read the usage regardless. Otherwise fails as
+    /// [`Calculator::extract_provider_usage`] does.
+    pub fn extract_usage(&self, request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
+        let (selected, extracted) = self.extract(request)?;
+        let matched = match &extracted.model_ref {
+            Some(model_ref) => {
+                let matched = find_model(&self.providers, selected, &fold_case(model_ref))?.ok_or_else(|| {
+                    let provider = &extracted.provider_id;
+                    Error::new(
+                        ErrorKind::ModelNotFound,
+                        format!("unable to find model with model_ref={:?} in {provider}", fold_case(model_ref)),
+                    )
+                })?;
+                Some(matched)
+            }
+            // Workers AI responses do not name the model, but the URL does.
+            None if extracted.provider_id == "cloudflare" => {
+                match request.provider_api_url.and_then(cloudflare_model_from_url) {
+                    Some(model_ref) => find_model(&self.providers, selected, &fold_case(model_ref))?,
+                    None => None,
+                }
+            }
+            None => None,
+        };
+        let (model_id, model_provider_id) = match matched {
+            Some(matched) => (Some(matched.model.id.clone()), Some(self.providers[matched.provider].id.clone())),
+            None => (None, None),
+        };
+        Ok(ExtractedUsage {
+            usage: extracted.usage,
+            model_id,
+            provider_id: extracted.provider_id,
+            warnings: extracted.warnings,
+            model_provider_id,
+        })
+    }
+
+    /// Extracts usage and the raw model reference from a response body without matching the model, as
+    /// `Provider.extract_usage` does in the Python package.
     ///
     /// # Errors
     ///
     /// Returns an [`ErrorKind::ProviderNotFound`] or [`ErrorKind::ExtractorNotFound`] error if the request
     /// selects no extractor, and an [`ErrorKind::InvalidResponse`] error if the body does not have the
     /// extractor's shape.
-    pub fn extract_usage(&self, request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
+    pub fn extract_provider_usage(&self, request: &ExtractRequest<'_>) -> Result<ProviderUsage> {
+        self.extract(request).map(|(_, extracted)| extracted)
+    }
+
+    fn extract(&self, request: &ExtractRequest<'_>) -> Result<(usize, ProviderUsage)> {
         let (provider_id, provider_api_url) = (request.provider_id, request.provider_api_url);
         let selected = find_provider(&self.providers, "", provider_id, provider_api_url)?
             .ok_or_else(|| provider_lookup_error("", provider_id, provider_api_url))?;
@@ -60,18 +111,10 @@ impl Calculator {
                 format!("expected response data to be a mapping, got {}", type_name(response)),
             ));
         };
-        let mut model =
+        let model_ref =
             extract_path(&extractor.model_path, response, false, &[])?.and_then(Value::as_str).map(str::to_owned);
         let (usage, warnings) = self.extract_mapped_usage(extractor, response)?;
-
-        if model.is_none() && provider.id == "cloudflare" {
-            if let Some(model_ref) = provider_api_url.and_then(cloudflare_model_from_url) {
-                if let Some(matched) = find_model(&self.providers, selected, &model_ref.to_lowercase())? {
-                    model = Some(matched.model.id.clone());
-                }
-            }
-        }
-        Ok(ExtractedUsage { usage, model, provider_id: provider.id.clone(), warnings })
+        Ok((selected, ProviderUsage { usage, model_ref, provider_id: provider.id.clone(), warnings }))
     }
 
     fn extract_mapped_usage(
@@ -148,6 +191,21 @@ impl Calculator {
 #[cfg(feature = "bundled")]
 pub fn extract_usage(request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
     Calculator::bundled().extract_usage(request)
+}
+
+/// Extracts usage without matching the model, using the bundled provider data. See
+/// [`Calculator::extract_provider_usage`].
+///
+/// # Errors
+///
+/// See [`Calculator::extract_provider_usage`].
+///
+/// # Panics
+///
+/// See [`Calculator::bundled`].
+#[cfg(feature = "bundled")]
+pub fn extract_provider_usage(request: &ExtractRequest<'_>) -> Result<ProviderUsage> {
+    Calculator::bundled().extract_provider_usage(request)
 }
 
 /// Follows `path` from `data`. A missing value is `Ok(None)` unless `required`, in which case it is an
