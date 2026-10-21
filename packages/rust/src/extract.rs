@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use serde_json::{Map, Value};
 
-use crate::calculator::{Calculator, non_empty};
+use crate::calculator::{Calculator, non_empty, provider_lookup_error};
 use crate::decode::type_name;
 use crate::error::{Error, ErrorKind, Result, validate_number};
 use crate::matching::{MatchLogic, Subject, find_model, find_provider};
@@ -19,30 +19,9 @@ impl Calculator {
     /// selects no extractor, and an [`ErrorKind::InvalidResponse`] error if the body does not have the
     /// extractor's shape.
     pub fn extract_usage(&self, request: &ExtractRequest<'_>) -> Result<ExtractedUsage> {
-        let provider_id = non_empty(request.provider_id.map(str::trim));
-        let provider_api_url = non_empty(request.provider_api_url);
-        match (provider_id, provider_api_url) {
-            (None, None) => {
-                return Err(Error::new(ErrorKind::ProviderNotFound, "provider ID or provider API URL is required"));
-            }
-            (Some(_), Some(_)) => {
-                return Err(Error::new(
-                    ErrorKind::InvalidUsage,
-                    "provider ID and provider API URL are mutually exclusive",
-                ));
-            }
-            _ => {}
-        }
-        let selected = find_provider(&self.providers, "", provider_id, provider_api_url)?.ok_or_else(|| {
-            Error::new(
-                ErrorKind::ProviderNotFound,
-                format!(
-                    "provider_id={:?} provider_api_url={:?}",
-                    provider_id.unwrap_or_default(),
-                    provider_api_url.unwrap_or_default(),
-                ),
-            )
-        })?;
+        let (provider_id, provider_api_url) = (request.provider_id, request.provider_api_url);
+        let selected = find_provider(&self.providers, "", provider_id, provider_api_url)?
+            .ok_or_else(|| provider_lookup_error("", provider_id, provider_api_url))?;
         let provider = &self.providers[selected];
         if provider.extractors.is_empty() {
             return Err(Error::new(
@@ -50,7 +29,7 @@ impl Calculator {
                 format!("no extraction logic for provider {:?}", provider.id),
             ));
         }
-        let flavor = non_empty(request.api_flavor).unwrap_or("default");
+        let flavor = request.api_flavor.unwrap_or("default");
         let extractor =
             provider.extractors.iter().find(|extractor| extractor.api_flavor == flavor).ok_or_else(|| {
                 let flavors: Vec<&str> =

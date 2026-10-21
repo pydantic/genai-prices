@@ -224,7 +224,10 @@ units shipped prices use, so it does not catch constraint-resolution, matching, 
 `packages/go/parity_test.go` covers matching, constraint resolution, tiered pricing, usage decomposition and
 usage extraction for Go against synthetic provider data. It asserts hardcoded expectations, not the other
 engines' output, so update it together with the matching Python and JS tests.
-`packages/rust/tests/parity.rs` is a line-for-line port of it; keep the two in step. Rust ports the Go price
+`packages/rust/tests/parity.rs` is a port of it; keep the two in step. Where the engines disagree, Rust follows
+Python, the reference: it does not trim model references, looks up a provider ID or API URL that is set but blank,
+lets a provider ID win over an API URL, and only routes LiteLLM for an untrimmed `litellm` ID, all unlike Go.
+The Rust tests mark each of these where they differ from `parity_test.go`. Rust ports the Go price
 pins that exercise engine behaviour (tier and batch variants, long-context boundaries, API-URL matching, array-match
 extraction) in `packages/rust/tests/price_context.rs` and `packages/rust/tests/api.rs`, but not the per-model pins;
 when a ported pin's price changes, update the Go and Rust expectations together.

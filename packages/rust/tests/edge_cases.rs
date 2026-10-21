@@ -143,3 +143,19 @@ fn catastrophic_regex_fails_instead_of_hanging() {
     let error = calculator.calculate(&PriceRequest::new(&model, &usage).with_provider_id("testing")).unwrap_err();
     assert_eq!(error.kind(), ErrorKind::Match, "{error}");
 }
+
+#[cfg(feature = "bundled")]
+#[test]
+fn litellm_routing_follows_python() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let price = |model| genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("litellm"));
+    let routed = price("openai/gpt-5").unwrap();
+    assert_eq!((routed.provider_id.as_str(), routed.model_id.as_str()), ("openai", "gpt-5"));
+    // A known prefix routes even with nothing after it, so the empty model is not found in that provider.
+    let error = price("openai/").unwrap_err();
+    assert_eq!(error.to_string(), r#"model not found: unable to find model with model_ref="" in openai"#);
+    // Unknown or empty prefixes fall back to inferring the provider from the whole reference.
+    for model in ["nope/gpt-5", "/gpt-5"] {
+        assert_eq!(price(model).unwrap_err().kind(), ErrorKind::ProviderNotFound, "{model}");
+    }
+}

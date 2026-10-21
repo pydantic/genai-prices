@@ -46,7 +46,8 @@ fn provider_and_model_matching() {
         ("regex", "source-regex-value", Some("source"), None, "regex"),
         ("fallback", "model-2025-12-11", Some("source"), None, "dated"),
         ("compact date", "model-20251211", Some("source"), None, "dated"),
-        ("litellm", "source/source-equals", Some(" LiTeLLM "), None, "equals"),
+        // Go also accepts " LiTeLLM "; Python, which Rust follows, does not trim the ID before this check.
+        ("litellm", "source/source-equals", Some("LiTeLLM"), None, "equals"),
     ];
     let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
     for &(name, model, provider_id, provider_api_url, want_model) in cases {
@@ -247,8 +248,8 @@ fn extract_usage_paths_and_cloudflare_url() {
 
     let cloudflare = calculator
         .extract_usage(
+            // Go also passes a blank provider ID here and treats it as absent; Python looks it up and fails.
             &ExtractRequest::new(r#"{"usage":{"input":1}}"#)
-                .with_provider_id("  ")
                 .with_provider_api_url("https://api.cloudflare.com/client/v4/accounts/a/ai/run/@cf/Test/Model"),
         )
         .unwrap();
@@ -298,7 +299,9 @@ fn extract_usage_errors() {
     let empty = ExtractRequest::new("");
     let cases = [
         ("no selector", empty, ErrorKind::ProviderNotFound),
-        ("both selectors", empty.with_provider_id("testing").with_provider_api_url("testing"), ErrorKind::InvalidUsage),
+        // Go rejects both selectors; Python, which Rust follows, lets the provider ID win.
+        ("both selectors", empty.with_provider_id("testing").with_provider_api_url("x"), ErrorKind::ExtractorNotFound),
+        ("blank provider ID", empty.with_provider_id("  "), ErrorKind::ProviderNotFound),
         ("unknown provider", empty.with_provider_id("missing"), ErrorKind::ProviderNotFound),
         ("no extractors", empty.with_provider_id("empty"), ErrorKind::ExtractorNotFound),
         ("unknown flavor", empty.with_provider_id("testing"), ErrorKind::ExtractorNotFound),

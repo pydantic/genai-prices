@@ -22,11 +22,12 @@ use crate::usage::Usage;
 pub struct PriceRequest<'a> {
     /// The values reported by the provider.
     pub usage: &'a Usage,
-    /// The model reference as reported by the provider or passed by the caller.
+    /// The model reference as reported by the provider or passed by the caller, matched case-insensitively.
     pub model: &'a str,
-    /// Selects the provider by ID or alias. Mutually exclusive with `provider_api_url`.
+    /// Selects the provider by ID or alias, ignoring surrounding whitespace. Takes precedence over
+    /// `provider_api_url`.
     pub provider_id: Option<&'a str>,
-    /// Selects the provider by API URL. Mutually exclusive with `provider_id`.
+    /// Selects the provider by API URL when `provider_id` is not set.
     pub provider_api_url: Option<&'a str>,
     /// When the request was made. Defaults to now; selects date- and time-constrained prices.
     pub timestamp: Option<SystemTime>,
@@ -134,9 +135,10 @@ pub(crate) enum Body<'a> {
 #[non_exhaustive]
 pub struct ExtractRequest<'a> {
     pub(crate) body: Body<'a>,
-    /// Selects the provider by ID or alias. Mutually exclusive with `provider_api_url`.
+    /// Selects the provider by ID or alias, ignoring surrounding whitespace. Takes precedence over
+    /// `provider_api_url`.
     pub provider_id: Option<&'a str>,
-    /// Selects the provider by API URL. Mutually exclusive with `provider_id`.
+    /// Selects the provider by API URL when `provider_id` is not set.
     pub provider_api_url: Option<&'a str>,
     /// Selects the response shape, e.g. `chat` or `responses`. Defaults to `default`.
     pub api_flavor: Option<&'a str>,

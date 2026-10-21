@@ -73,31 +73,10 @@ impl Calculator {
     /// request, and an [`ErrorKind::InvalidUsage`] error if usage values are negative, non-finite or
     /// inconsistent with each other.
     pub fn calculate(&self, request: &PriceRequest<'_>) -> Result<PriceCalculation> {
-        let provider_id = non_empty(request.provider_id.map(str::trim));
-        let provider_api_url = non_empty(request.provider_api_url);
-        if provider_id.is_some() && provider_api_url.is_some() {
-            return Err(Error::new(ErrorKind::InvalidUsage, "provider ID and provider API URL are mutually exclusive"));
-        }
-        let folded_model = fold_case(request.model.trim());
-        if folded_model.is_empty() {
-            return Err(Error::new(ErrorKind::ModelNotFound, "model is required"));
-        }
-        let (provider_id, model_id) = self.route_litellm(provider_id, &folded_model)?;
-
-        let selected = find_provider(&self.providers, model_id, provider_id, provider_api_url)?.ok_or_else(|| {
-            Error::new(
-                ErrorKind::ProviderNotFound,
-                format!(
-                    "model={model_id:?} provider_id={:?} provider_api_url={:?}",
-                    provider_id.unwrap_or_default(),
-                    provider_api_url.unwrap_or_default(),
-                ),
-            )
-        })?;
+        let model_ref = fold_case(request.model);
+        let (selected, matched) =
+            self.find_provider_model(&model_ref, request.provider_id, request.provider_api_url)?;
         let provider = &self.providers[selected];
-        let matched = find_model(&self.providers, selected, model_id)?.ok_or_else(|| {
-            Error::new(ErrorKind::ModelNotFound, format!("{model_id:?} in provider {:?}", provider.id))
-        })?;
 
         let timestamp = Timestamp::from(request.timestamp.unwrap_or_else(SystemTime::now));
         let (prices, unknown_price_keys) = self.resolve_prices(&matched, selected, timestamp, request);
@@ -122,19 +101,37 @@ impl Calculator {
         })
     }
 
-    /// LiteLLM is a proxy that prefixes models with their real provider, e.g. `anthropic/claude-sonnet-5`.
-    /// When that prefix names a known provider, price the request as that provider's model.
-    fn route_litellm<'a>(&self, provider_id: Option<&'a str>, model_id: &'a str) -> Result<(Option<&'a str>, &'a str)> {
-        let routed = provider_id
-            .filter(|id| id.eq_ignore_ascii_case("litellm"))
-            .and_then(|_| model_id.split_once('/'))
-            .filter(|(provider, model)| !provider.is_empty() && !model.is_empty());
-        if let Some((provider, model)) = routed {
-            if find_provider_by_id(&self.providers, provider)?.is_some() {
-                return Ok((Some(provider), model));
+    /// Finds the provider and model for a lowercased model reference, as `DataSnapshot.find_provider_model` does
+    /// in the Python package.
+    fn find_provider_model<'a>(
+        &'a self,
+        model_ref: &str,
+        provider_id: Option<&str>,
+        provider_api_url: Option<&str>,
+    ) -> Result<(usize, ModelMatch<'a>)> {
+        let (mut model_ref, mut provider_id) = (model_ref, provider_id);
+        // LiteLLM is a proxy that prefixes models with their real provider, e.g. `anthropic/claude-sonnet-5`. When the
+        // prefix names a known provider, price the request as that provider's model.
+        if provider_id.is_some_and(|id| id.eq_ignore_ascii_case("litellm")) {
+            if let Some((actual_provider_id, actual_model_ref)) = model_ref.split_once('/') {
+                if !actual_provider_id.is_empty() && find_provider_by_id(&self.providers, actual_provider_id)?.is_some()
+                {
+                    provider_id = Some(actual_provider_id);
+                    model_ref = actual_model_ref;
+                }
             }
         }
-        Ok((provider_id, model_id))
+
+        let selected = find_provider(&self.providers, model_ref, provider_id, provider_api_url)?
+            .ok_or_else(|| provider_lookup_error(model_ref, provider_id, provider_api_url))?;
+        let matched = find_model(&self.providers, selected, model_ref)?.ok_or_else(|| {
+            let provider = &self.providers[selected].id;
+            Error::new(
+                ErrorKind::ModelNotFound,
+                format!("unable to find model with model_ref={model_ref:?} in {provider}"),
+            )
+        })?;
+        Ok((selected, matched))
     }
 
     /// The prices for `timestamp` with any matching request-specific variants applied, plus the price keys this
@@ -192,6 +189,20 @@ impl Calculator {
 #[cfg(feature = "bundled")]
 pub fn calculate(request: &PriceRequest<'_>) -> Result<PriceCalculation> {
     Calculator::bundled().calculate(request)
+}
+
+/// The error for a provider lookup that matched nothing, naming the selector that was used.
+pub(crate) fn provider_lookup_error(
+    model_ref: &str,
+    provider_id: Option<&str>,
+    provider_api_url: Option<&str>,
+) -> Error {
+    let message = match (provider_id, provider_api_url) {
+        (Some(id), _) if !id.eq_ignore_ascii_case("litellm") => format!("unable to find provider provider_id={id:?}"),
+        (_, Some(url)) => format!("unable to find provider provider_api_url={url:?}"),
+        _ => format!("unable to find provider with model matching {model_ref:?}"),
+    };
+    Error::new(ErrorKind::ProviderNotFound, message)
 }
 
 pub(crate) fn non_empty(value: Option<&str>) -> Option<&str> {

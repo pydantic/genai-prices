@@ -100,8 +100,9 @@ pub(crate) fn find_provider(
 ) -> Result<Option<usize>> {
     if let Some(provider_id) = provider_id {
         let found = find_provider_by_id(providers, provider_id)?;
-        // LiteLLM is a proxy rather than a provider, so fall through to the other selectors.
-        if found.is_some() || !provider_id.trim().eq_ignore_ascii_case("litellm") {
+        // LiteLLM is a proxy rather than a provider, so fall through to the other selectors. As in Python, an ID with
+        // surrounding whitespace is not LiteLLM here, although the lookup above ignores the whitespace.
+        if found.is_some() || !provider_id.eq_ignore_ascii_case("litellm") {
             return Ok(found);
         }
     }

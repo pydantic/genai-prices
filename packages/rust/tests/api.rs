@@ -29,15 +29,23 @@ fn calculator_is_shareable_across_threads() {
 }
 
 #[test]
-fn whitespace_provider_id_is_absent() {
+fn provider_selectors_follow_python() {
     let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
-    let mut request =
-        PriceRequest::new("gpt-5", &usage).with_provider_id("  ").with_provider_api_url("https://api.openai.com");
-    assert_eq!(genai_prices::calculate(&request).unwrap().provider_id, "openai");
-
-    // An empty URL is absent too, so the provider is inferred from the model.
-    request.provider_api_url = Some("");
-    assert_eq!(genai_prices::calculate(&request).unwrap().provider_id, "openai");
+    let price = |request: PriceRequest<'_>| genai_prices::calculate(&request);
+    // Whitespace around a provider ID is ignored, and the ID takes precedence over an API URL.
+    let request = PriceRequest::new("gpt-5", &usage).with_provider_id(" OpenAI ").with_provider_api_url("https://x");
+    assert_eq!(price(request).unwrap().provider_id, "openai");
+    // A selector that is set but empty is looked up like any other, rather than treated as absent.
+    for request in [
+        PriceRequest::new("gpt-5", &usage).with_provider_id("  "),
+        PriceRequest::new("gpt-5", &usage).with_provider_api_url(""),
+    ] {
+        assert_eq!(error_kind(&price(request)), Some(ErrorKind::ProviderNotFound));
+    }
+    // Model references are matched case-insensitively but not trimmed.
+    assert_eq!(price(PriceRequest::new("GPT-5", &usage).with_provider_id("openai")).unwrap().model_id, "gpt-5");
+    let padded = price(PriceRequest::new(" gpt-5 ", &usage).with_provider_id("openai"));
+    assert_eq!(error_kind(&padded), Some(ErrorKind::ModelNotFound));
 }
 
 #[test]
@@ -53,13 +61,11 @@ fn calculate_errors() {
     let negative = usage([(UsageKey::INPUT_TOKENS, -1.0)]);
     let infinite = usage([(UsageKey::INPUT_TOKENS, f64::INFINITY)]);
     let cases = [
-        ("missing model", PriceRequest::new("", &empty), ErrorKind::ModelNotFound),
+        ("missing model", PriceRequest::new("", &empty), ErrorKind::ProviderNotFound),
         (
-            "conflicting provider selectors",
-            PriceRequest::new("gpt-5", &empty)
-                .with_provider_id("openai")
-                .with_provider_api_url("https://api.openai.com"),
-            ErrorKind::InvalidUsage,
+            "missing model in a provider",
+            PriceRequest::new("", &empty).with_provider_id("openai"),
+            ErrorKind::ModelNotFound,
         ),
         (
             "unknown provider",
@@ -314,5 +320,5 @@ fn error_messages_name_the_failure() {
     let usage = Usage::new();
     let error = genai_prices::calculate(&PriceRequest::new("missing", &usage).with_provider_id("openai")).unwrap_err();
     assert_eq!(error.kind(), ErrorKind::ModelNotFound);
-    assert_eq!(error.to_string(), r#"model not found: "missing" in provider "openai""#);
+    assert_eq!(error.to_string(), r#"model not found: unable to find model with model_ref="missing" in openai"#);
 }
