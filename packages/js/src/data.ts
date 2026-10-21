@@ -1979,7 +1979,7 @@ export const data: Provider[] = [
     id: 'aws',
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
-    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
+    api_pattern: 'https://(?:vpce-[a-z0-9-]+\\.)?bedrock-runtime(?:-fips)?\\.[a-z0-9-]+\\.(?:vpce\\.)?amazonaws\\.com(/|$)',
     provider_match: {
       or: [
         {

@@ -963,6 +963,41 @@ def test_aws_titan_embed_text_v2_price() -> None:
 
 
 @pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://bedrock-runtime.us-east-1.amazonaws.com',
+        'https://bedrock-runtime-fips.us-gov-west-1.amazonaws.com/model/amazon.titan-embed-text-v2:0/invoke',
+        'https://vpce-0123456789abcdef0-abcd1234.bedrock-runtime.us-east-1.vpce.amazonaws.com',
+        'https://vpce-0123456789abcdef0-abcd1234.bedrock-runtime-fips.us-east-1.vpce.amazonaws.com/',
+    ],
+)
+def test_aws_api_url(provider_api_url: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref='amazon.titan-embed-text-v2:0',
+        provider_api_url=provider_api_url,
+        genai_request_timestamp=datetime(2026, 10, 17, tzinfo=UTC),
+    )
+
+    assert price.provider.id == 'aws'
+    assert price.total_price == Decimal('0.02')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://bedrock-runtime.us-east-1.amazonaws.com.evil.test',
+        'https://bedrock-runtime-fips.us-east-1.amazonaws.com.evil.test',
+        'https://vpce-0123456789abcdef0-abcd1234.bedrock-runtime.us-east-1.vpce.amazonaws.com.evil.test',
+        'https://evil.test/vpce-0123.bedrock-runtime.us-east-1.vpce.amazonaws.com',
+    ],
+)
+def test_aws_api_url_rejects_other_hosts(provider_api_url: str) -> None:
+    with pytest.raises(LookupError, match='Unable to find provider provider_api_url='):
+        calc_price(Usage(input_tokens=1), model_ref='amazon.titan-embed-text-v2:0', provider_api_url=provider_api_url)
+
+
+@pytest.mark.parametrize(
     'model_ref,request_timestamp,expected_prices',
     [
         (
