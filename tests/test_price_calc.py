@@ -244,6 +244,24 @@ def test_cursor_provider_inference():
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
+        ('eleven_realtime_v1_max', Decimal('10.07')),
+        ('eleven_realtime_v1_mini', Decimal('6.28')),
+    ],
+)
+def test_elevenlabs_realtime_prices(model_ref: str, expected_total_price: Decimal):
+    price = calc_price(
+        Usage(audio_seconds=60, input_tokens=1_000_000, cache_read_tokens=500_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_api_url='https://api.eu.residency.elevenlabs.io/v1/convai',
+    )
+
+    assert price.provider.id == 'elevenlabs'
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
         ('claude-fable-5', Decimal('61')),
         ('claude-fable-5.1', Decimal('60.25')),
         ('claude-haiku-4.5', Decimal('6.10')),

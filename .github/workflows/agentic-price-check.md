@@ -83,6 +83,7 @@ safe-outputs:
       - prices/providers/databricks.yml
       - prices/providers/deepseek.yml
       - prices/providers/doubleword.yml
+      - prices/providers/elevenlabs.yml
       - prices/providers/fireworks.yml
       - prices/providers/github_copilot.yml
       - prices/providers/google.yml
