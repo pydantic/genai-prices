@@ -260,8 +260,23 @@ test-go: ## Test the Go package with the race detector and coverage
 	@cd packages/go && go tool cover -func=coverage.out | \
 		awk '/^total:/ && $$3 + 0 < 90 { print "Go coverage must be at least 90%"; exit 1 }'
 
+.PHONY: format-rust
+format-rust: ## Format the Rust crate
+	cd packages/rust && cargo fmt
+
+.PHONY: lint-rust
+lint-rust: ## Lint the Rust crate
+	cd packages/rust && cargo fmt --check
+	cd packages/rust && cargo clippy --all-targets --locked -- -D warnings
+	cd packages/rust && cargo clippy --all-targets --locked --no-default-features -- -D warnings
+
+.PHONY: test-rust
+test-rust: ## Test the Rust crate; fails below 95% line coverage
+	cd packages/rust && cargo llvm-cov --locked --fail-under-lines 95
+	cd packages/rust && cargo test --locked --no-default-features
+
 .PHONY: all
-all: build package-data format format-go lint lint-go typecheck testcov test-js test-go ## Run all builds, checks, and tests
+all: build package-data format format-go format-rust lint lint-go lint-rust typecheck testcov test-js test-go test-rust ## Run all builds, checks, and tests
 
 .PHONY: help
 help: ## Show this help (usage: make help)

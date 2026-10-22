@@ -120,3 +120,11 @@ repos:
         types: [go]
         language: system
         pass_filenames: false
+      - id: format-rust
+        name: format rust
+        entry: make
+        args: [format-rust]
+        files: "packages/rust/"
+        types: [rust]
+        language: system
+        pass_filenames: false

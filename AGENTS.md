@@ -9,9 +9,9 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 
 - **Price Data**: YAML files in `prices/providers/` with pricing information for 30+ LLM providers
 - **Unit Registry**: `prices/units.yml` defines every billable unit and its price key
-- **Packages**: `packages/python/` (PyPI `genai-prices`), `packages/js/` (npm `@pydantic/genai-prices`) and
-  `packages/go/` (Go module `github.com/pydantic/genai-prices/packages/go`) — three implementations that must stay
-  behaviourally identical (see "Python/JS/Go parity")
+- **Packages**: `packages/python/` (PyPI `genai-prices`), `packages/js/` (npm `@pydantic/genai-prices`),
+  `packages/go/` (Go module `github.com/pydantic/genai-prices/packages/go`) and `packages/rust/` (crate
+  `genai-prices`) — four implementations that must stay behaviourally identical (see "Python/JS/Go/Rust parity")
 - **Data Pipeline**: Tools to build JSON schemas, validate data, and update from external sources
 - **Price Sources**: Integration with Helicone, OpenRouter, LiteLLM, and other pricing sources
 
@@ -23,8 +23,8 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 2. **Unit Registry** (`prices/units.yml`): the vocabulary of billable units — every valid price key and
    extractor destination is derived from it
 3. **Data Pipeline** (`prices/src/prices/`): Python modules that build, validate, and process pricing data
-4. **Packages** (`packages/python/`, `packages/js/`, `packages/go/`): published libraries for end users to calculate
-   costs
+4. **Packages** (`packages/python/`, `packages/js/`, `packages/go/`, `packages/rust/`): published libraries for end
+   users to calculate costs
 5. **External Data Integration**: Tools to pull and compare prices from external sources
 
 ### Key Directories
@@ -35,10 +35,11 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
   - `src/prices/`: Python package for data processing
   - `new_data/v2/`: the **live** published data — `data.json`, `data_slim.json` and their schemas (generated)
   - `data.json`, `data_slim.json` + schemas: **frozen v1** compatibility snapshots (see "Pricing Data")
-- `packages/python/`, `packages/js/`, `packages/go/`: published packages. Their provider data (`data.py`, `data.ts`,
-  `internal/data/prices.json`) and unit data (`data_units.py`, `dataUnits.ts`, `data_units.go`) are generated — never
-  hand-edit them
-- `tests/`: Python test suite; JS tests live in `packages/js/src/__tests__/`, Go tests in `packages/go/*_test.go`
+- `packages/python/`, `packages/js/`, `packages/go/`, `packages/rust/`: published packages. Their provider data
+  (`data.py`, `data.ts`, `internal/data/prices.json`, `data/prices.json`) and unit data (`data_units.py`,
+  `dataUnits.ts`, `data_units.go`, `src/data_units.rs`) are generated — never hand-edit them
+- `tests/`: Python test suite; JS tests live in `packages/js/src/__tests__/`, Go tests in `packages/go/*_test.go`,
+  Rust tests in `packages/rust/tests/`
 - `specs/data-driven-unit-registry/`: authoritative design docs for the unit registry and the v1/v2/v3
   contract rules. Read these before changing anything about units or published artifacts
 - `scratch/`: Development/testing files IGNORE THESE FILES
@@ -58,28 +59,32 @@ make sync         # Update local packages and uv.lock
 make format       # Format code with ruff
 make lint         # Check code style and linting
 make typecheck    # Run static type checking with basedpyright
-make test         # Run the Python tests with coverage (does NOT run the JS or Go suites)
+make test         # Run the Python tests with coverage (does NOT run the JS, Go or Rust suites)
 make testcov      # Run tests and generate HTML coverage report
 npm run ci        # Build and test the JS package
 make format-go    # Format the Go package with gofmt
 make lint-go      # Lint the Go package with golangci-lint
 make test-go      # Run the Go tests with the race detector; fails below 90% coverage
+make format-rust  # Format the Rust crate with rustfmt
+make lint-rust    # Check rustfmt and run clippy with warnings as errors
+make test-rust    # Run the Rust tests with cargo-llvm-cov; fails below 95% line coverage
 ```
 
-`make all` covers Python, JavaScript and Go. Run `npm run ci` directly to verify only JavaScript, and `make test-go`
-to verify only Go.
+`make all` covers Python, JavaScript, Go and Rust. Run `npm run ci` directly to verify only JavaScript, `make test-go`
+to verify only Go, and `make test-rust` to verify only Rust.
 
 ### Building and Data Processing
 
 ```bash
 make build        # build-prices + package-data + inject-providers — use this one
 make build-prices # Validate providers and write prices/new_data/v2/* + prices/providers/.schema.json
-make package-data # Regenerate the bundled data in packages/python/, packages/js/ and packages/go/
+make package-data # Regenerate the bundled data in packages/python/, packages/js/, packages/go/ and packages/rust/
 ```
 
 Always run `make build`, not `make build-prices` alone. The installed packages read their **bundled**
-data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`, `packages/go/internal/data/prices.json`),
-which only `package-data` regenerates — so a `calc_price` check run after `build-prices` verifies stale data.
+data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`, `packages/go/internal/data/prices.json`,
+`packages/rust/data/prices.json`), which only `package-data` regenerates — so a `calc_price` check run after
+`build-prices` verifies stale data.
 
 ### Price Data Management
 
@@ -136,7 +141,7 @@ models than the importer's `MIN_MODEL_COUNT`.
   The rates a variant lists are absolute; omitted keys inherit standard prices for that date. Preserve existing
   variant entries and prepend dated entries for changed tier rates: variants use the first matching
   value per price key. Record a source confirming any tier whose rates stayed unchanged, and test
-  each affected context before and after the change in Python, JavaScript and Go.
+  each affected context before and after the change in Python, JavaScript, Go and Rust.
 - The importers do this automatically through `ProviderYaml.upsert_models`
   (`prices/src/prices/variants.py`). When a standard rate changes, a variant whose rates are all one share
   of the standard rates gets a dated entry at that share of the new rates. A 50% batch discount and a 2x
@@ -175,26 +180,30 @@ closure rules.
 
 ### Development Workflow
 
-- Use `uv` for dependency management (not pip/conda), `npm` for the JS workspace, and `go` modules for `packages/go/`
-- `make build` needs a Go toolchain on `PATH`: `package-data` runs `gofmt` on the generated `data_units.go`
-- The pre-commit `build` hook fires on any change under `prices/` and rewrites **twelve** paths:
+- Use `uv` for dependency management (not pip/conda), `npm` for the JS workspace, `go` modules for `packages/go/`
+  and `cargo` for `packages/rust/`
+- `make build` needs a Go toolchain on `PATH`: `package-data` runs `gofmt` on the generated `data_units.go`. It does
+  not need a Rust toolchain: the generated `data_units.rs` is excluded from rustfmt
+- The pre-commit `build` hook fires on any change under `prices/` and rewrites **fourteen** paths:
   `prices/providers/.schema.json`, the four `prices/new_data/v2/*` files, `data.py`, `data_units.py`,
-  `data.ts`, `dataUnits.ts`, `packages/go/internal/data/prices.json`, `packages/go/data_units.go`, plus
-  `README.md` (provider list). Your first `git commit` will abort after it rewrites them — re-stage the
-  regenerated files and commit again. Never reach for `--no-verify`: that hook is the only thing keeping the
-  published data in sync with the YAML.
+  `data.ts`, `dataUnits.ts`, `packages/go/internal/data/prices.json`, `packages/go/data_units.go`,
+  `packages/rust/data/prices.json`, `packages/rust/src/data_units.rs`, plus `README.md` (provider list). Your first
+  `git commit` will abort after it rewrites them — re-stage the regenerated files and commit again. Never reach
+  for `--no-verify`: that hook is the only thing keeping the published data in sync with the YAML.
 - Run `make build` after editing anything under `prices/`
 - Always run the full test suite before submitting changes
 
 ### Testing
 
 - Python tests use pytest and are in `tests/`; JS tests are in `packages/js/src/__tests__/` and run
-  via `npm run ci`; Go tests are `packages/go/*_test.go` and run via `make test-go`
+  via `npm run ci`; Go tests are `packages/go/*_test.go` and run via `make test-go`; Rust tests are
+  `packages/rust/tests/*.rs` and run via `make test-rust`
 - CI and local `make test` enforce **100% coverage** across `packages/python/**`, `prices/src/**`,
-  and `tests/**`. CI and local `make test-go` enforce **90% coverage** of `packages/go/`.
+  and `tests/**`. CI and local `make test-go` enforce **90% coverage** of `packages/go/`, and `make test-rust`
+  **95% line coverage** of `packages/rust/`.
 - **Never hand-edit `tests/dataset/usages.json` or add synthetic feature cases to it.** It is the
   cross-language golden dataset generated by `tests/dataset/extract_usages.py` from recorded raw bodies;
-  synthetic behavior belongs in focused Python, JavaScript and Go tests. `tests/test_dataset.py` compares in
+  synthetic behavior belongs in focused Python, JavaScript, Go and Rust tests. `tests/test_dataset.py` compares in
   memory and fails if the file is stale; regenerate with `python tests/dataset/extract_usages.py` and
   commit the diff.
 - Price changes are pinned by assertions in `tests/test_price_calc.py`, `tests/test_price_regressions.py`,
@@ -202,18 +211,26 @@ closure rules.
   the assertion.
 - Use `make test-all-python` to test across Python 3.11-3.15
 
-### Python/JS/Go parity
+### Python/JS/Go/Rust parity
 
-The three packages are independent implementations of the same behaviour and are the easiest place to
-introduce drift. Any change to pricing, extraction, matching or unit handling must land in all three. The
+The four packages are independent implementations of the same behaviour and are the easiest place to
+introduce drift. Any change to pricing, extraction, matching or unit handling must land in all four. The
 runtime data updater and the CLI exist only in Python and JS; Go callers load fresh data with
-`NewCalculatorFromJSON`.
-`tests/dataset/usages.json` is generated by Python and asserted by JS and Go (`packages/go/dataset_test.go`),
+`NewCalculatorFromJSON` and Rust callers with `Calculator::from_json`.
+`tests/dataset/usages.json` is generated by Python and asserted by JS, Go (`packages/go/dataset_test.go`) and Rust
+(`packages/rust/tests/dataset.rs`),
 so it catches arithmetic drift on the models real data covers — but it pins a single UTC instant and only the
 units shipped prices use, so it does not catch constraint-resolution, matching, warning or error-shape divergence.
 `packages/go/parity_test.go` covers matching, constraint resolution, tiered pricing, usage decomposition and
 usage extraction for Go against synthetic provider data. It asserts hardcoded expectations, not the other
 engines' output, so update it together with the matching Python and JS tests.
+`packages/rust/tests/parity.rs` is a port of it; keep the two in step. Where the engines disagree, Rust follows
+Python, the reference: it does not trim model references, looks up a provider ID or API URL that is set but blank,
+lets a provider ID win over an API URL, and only routes LiteLLM for an untrimmed `litellm` ID, all unlike Go.
+The Rust tests mark each of these where they differ from `parity_test.go`. Rust ports the Go price
+pins that exercise engine behaviour (tier and batch variants, long-context boundaries, API-URL matching, array-match
+extraction) in `packages/rust/tests/price_context.rs` and `packages/rust/tests/api.rs`, but not the per-model pins;
+when a ported pin's price changes, update the Go and Rust expectations together.
 
 ### Code Style
 
