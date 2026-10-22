@@ -22690,6 +22690,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'minimax/minimax-m3.1-flash',
+        name: 'MiniMax M3.1 Flash',
+        match: {
+          equals: 'minimax/minimax-m3.1-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'minimaxai/minimax-m1-80k',
         name: 'MiniMax M1',
         match: {

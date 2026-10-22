@@ -67,7 +67,7 @@ The following providers are currently supported:
 - [Mistral](prices/providers/mistral.yml) - 49 models
 - [Modal](prices/providers/modal.yml) - 9 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
-- [Novita](prices/providers/novita.yml) - 109 models
+- [Novita](prices/providers/novita.yml) - 110 models
 - [OpenAI](prices/providers/openai.yml) - 110 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 894 models
