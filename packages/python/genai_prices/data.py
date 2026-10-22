@@ -13154,6 +13154,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='minimax/minimax-m3.1-flash',
+                match=ClauseEquals(equals='minimax/minimax-m3.1-flash'),
+                name='MiniMax M3.1 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
                 id='minimaxai/minimax-m1-80k',
                 match=ClauseEquals(equals='minimaxai/minimax-m1-80k'),
                 name='MiniMax M1',
