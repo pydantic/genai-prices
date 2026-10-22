@@ -5074,7 +5074,7 @@ providers: list[Provider] = [
     Provider(
         id='elevenlabs',
         name='ElevenLabs',
-        api_pattern='https://api\\.(?:(?:us|eu\\.residency|in\\.residency|sg\\.residency)\\.)?elevenlabs\\.io',
+        api_pattern='https://api\\.(?:(?:us|eu\\.residency|in\\.residency|sg\\.residency)\\.)?elevenlabs\\.io(?:/|$)',
         pricing_urls=['https://elevenlabs.io/pricing/api'],
         price_comments='The Realtime API is OpenAI Realtime-compatible (https://elevenlabs.io/docs/eleven-agents/guides/openai-realtime-compatibility) and bills each session per minute of connected audio plus tokens. The per-minute rate counts wall-clock connection time, not speech, and is priced here as `audio_hours`. The Realtime API sends no usage in `response.done` (observed `null` on both models, 2026-10-21), so no extractor is mapped; the totals are only available after the call from the conversation details endpoint (https://elevenlabs.io/docs/api-reference/conversations/get, `metadata.charging`).',
         model_match=ClauseStartsWith(starts_with='eleven_'),

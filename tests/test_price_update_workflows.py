@@ -207,8 +207,8 @@ def test_provider_allowlist_matches_manifest() -> None:
     allowed = source['safe-outputs']['create-pull-request']['allowed-files']
     manifest_files = {provider['file'] for provider in manifest['providers']}
     assert manifest_files <= {path for path in allowed if path.endswith('.yml')}
-    assert len(manifest['providers']) == 25
-    assert len({provider['file'] for provider in manifest['providers']}) == 25
+    assert len(manifest['providers']) == 26
+    assert len({provider['file'] for provider in manifest['providers']}) == 26
     provider_names = {provider['name'] for provider in manifest['providers']}
     required_names = {
         'OpenAI',
@@ -220,6 +220,7 @@ def test_provider_allowlist_matches_manifest() -> None:
         'Z.AI',
         'Meta',
         'Modal',
+        'ElevenLabs',
     }
     assert required_names <= provider_names
     assert 'QuickSilver Pro' not in provider_names

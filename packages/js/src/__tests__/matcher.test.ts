@@ -775,3 +775,37 @@ describe('Claude Haiku 5.5', () => {
     expect(price!.total_price).toBeCloseTo(expected, 10)
   })
 })
+
+describe('ElevenLabs Realtime', () => {
+  const usage = { audio_seconds: 60, cache_read_tokens: 500_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }
+  const timestamp = new Date('2026-10-22T00:00:00Z')
+
+  it.each([
+    ['eleven_realtime_v1_max', 10.07],
+    ['eleven_realtime_v1_mini', 6.28],
+    ['ELEVEN_REALTIME_V1_MAX', 10.07],
+  ])('prices %s by provider ID, API URL and model namespace', (model, expectedTotal) => {
+    for (const options of [
+      { providerId: 'elevenlabs' },
+      { providerApiUrl: 'https://api.elevenlabs.io' },
+      { providerApiUrl: 'https://api.us.elevenlabs.io/v1/convai' },
+      { providerApiUrl: 'https://api.eu.residency.elevenlabs.io/v1/convai' },
+      {},
+    ]) {
+      const result = calcPrice(usage, model, { ...options, timestamp })
+      expect(result?.provider.id).toBe('elevenlabs')
+      expect(result?.total_price).toBeCloseTo(expectedTotal, 10)
+    }
+  })
+
+  it.each(['https://api.elevenlabs.io.evil.example/v1', 'https://api.elevenlabs.ioevil.example/v1'])(
+    'rejects the spoofed API URL %s',
+    (providerApiUrl) => {
+      expect(calcPrice({ input_tokens: 1 }, 'eleven_realtime_v1_max', { providerApiUrl, timestamp })).toBeNull()
+    }
+  )
+
+  it('does not price other models in its namespace', () => {
+    expect(calcPrice({ input_tokens: 1 }, 'eleven_multilingual_v2', { providerId: 'elevenlabs', timestamp })).toBeNull()
+  })
+})

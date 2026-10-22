@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check'
-description: 'Check twenty-five provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
+description: 'Check twenty-six provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
   schedule:

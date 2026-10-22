@@ -3,7 +3,7 @@ name: ElevenLabs
 id: elevenlabs
 pricing_urls:
   - https://elevenlabs.io/pricing/api
-api_pattern: 'https://api\.(?:(?:us|eu\.residency|in\.residency|sg\.residency)\.)?elevenlabs\.io'
+api_pattern: 'https://api\.(?:(?:us|eu\.residency|in\.residency|sg\.residency)\.)?elevenlabs\.io(?:/|$)'
 model_match:
   starts_with: eleven_
 provider_match:

@@ -1132,3 +1132,52 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		}
 	}
 }
+
+func TestElevenLabsRealtimeProviderSelectionAndPricing(t *testing.T) {
+	timestamp := time.Date(2026, 10, 22, 0, 0, 0, 0, time.UTC)
+	usage := genai_prices.Usage{
+		genai_prices.UsageAudioSeconds:    60,
+		genai_prices.UsageInputTokens:     1_000_000,
+		genai_prices.UsageCacheReadTokens: 500_000,
+		genai_prices.UsageOutputTokens:    1_000_000,
+	}
+	for _, test := range []struct {
+		model string
+		want  float64
+	}{
+		{"eleven_realtime_v1_max", 10.07},
+		{"eleven_realtime_v1_mini", 6.28},
+		{"ELEVEN_REALTIME_V1_MAX", 10.07},
+	} {
+		for _, selection := range []genai_prices.PriceRequest{
+			{ProviderID: "elevenlabs"},
+			{ProviderAPIURL: "https://api.elevenlabs.io"},
+			{ProviderAPIURL: "https://api.us.elevenlabs.io/v1/convai"},
+			{ProviderAPIURL: "https://api.eu.residency.elevenlabs.io/v1/convai"},
+			{},
+		} {
+			selection.Model = test.model
+			selection.Usage = usage
+			selection.Timestamp = timestamp
+			calculation, err := genai_prices.Calculate(selection)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if calculation.ProviderID != "elevenlabs" || math.Abs(calculation.TotalPrice-test.want) > 1e-9 {
+				t.Fatalf("%#v resolved to %q at %g, want elevenlabs at %g", selection, calculation.ProviderID, calculation.TotalPrice, test.want)
+			}
+		}
+	}
+
+	for _, request := range []genai_prices.PriceRequest{
+		{Model: "eleven_realtime_v1_max", ProviderAPIURL: "https://api.elevenlabs.io.evil.example/v1"},
+		{Model: "eleven_realtime_v1_max", ProviderAPIURL: "https://api.elevenlabs.ioevil.example/v1"},
+		{Model: "eleven_multilingual_v2", ProviderID: "elevenlabs"},
+	} {
+		request.Usage = genai_prices.Usage{genai_prices.UsageInputTokens: 1}
+		request.Timestamp = timestamp
+		if calculation, err := genai_prices.Calculate(request); err == nil {
+			t.Fatalf("%#v unexpectedly priced as %#v", request, calculation)
+		}
+	}
+}

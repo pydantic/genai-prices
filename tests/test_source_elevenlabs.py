@@ -3,14 +3,12 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_elevenlabs
 from prices.prices_types import ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
 
 PAGE = """\
 <html><script>var Realtime = 1;</script><body>
@@ -64,14 +62,32 @@ def test_elevenlabs_rejects_unexpected_page_shapes(page: str, error: str) -> Non
         source_elevenlabs.parse_pricing_page(page)
 
 
+PROVIDER_YAML = """\
+id: elevenlabs
+name: ElevenLabs
+api_pattern: 'https://api\\.elevenlabs\\.io(?:/|$)'
+models:
+  - id: eleven_realtime_v1_max
+    name: Eleven Realtime v1 Max
+    match:
+      equals: eleven_realtime_v1_max
+    prices_checked: 2026-01-01
+    prices:
+      audio_hours: 4.8
+      input_mtok: 1.8
+      cache_read_mtok: 0.18
+      output_mtok: 9
+"""
+
+
 @pytest.mark.vcr()
 def test_elevenlabs_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     provider_path = tmp_path / 'elevenlabs.yml'
-    copyfile(package_dir / 'providers/elevenlabs.yml', provider_path)
+    provider_path.write_text(PROVIDER_YAML)
 
     source_elevenlabs.main(provider_path)
 
-    assert capsys.readouterr().out == 'ElevenLabs prices updated: 0 added, 2 updated\n'
+    assert capsys.readouterr().out == 'ElevenLabs prices updated: 1 added, 1 updated\n'
     provider = ProviderYaml(provider_path).provider
     max_model = provider.find_model('eleven_realtime_v1_max')
     assert max_model is not None
@@ -82,4 +98,9 @@ def test_elevenlabs_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: p
             'cache_read_mtok': Decimal('0.18'),
             'output_mtok': Decimal('9'),
         }
+    )
+    mini_model = provider.find_model('eleven_realtime_v1_mini')
+    assert mini_model is not None
+    assert mini_model.prices == ModelPrice.model_validate(
+        {'audio_hours': Decimal('4.8'), 'input_mtok': Decimal('0.2'), 'output_mtok': Decimal('6')}
     )
