@@ -18,6 +18,7 @@ from .source_cloudflare import get_cloudflare_prices
 from .source_cursor import get_cursor_prices
 from .source_databricks import get_databricks_prices
 from .source_doubleword import get_doubleword_prices
+from .source_elevenlabs import get_elevenlabs_prices
 from .source_fireworks import get_fireworks_prices
 from .source_github_copilot import get_github_copilot_prices
 from .source_google import get_google_prices
@@ -61,6 +62,7 @@ def main():
         get_cursor_prices,
         get_databricks_prices,
         get_doubleword_prices,
+        get_elevenlabs_prices,
         get_fireworks_prices,
         get_github_copilot_prices,
         get_google_prices,

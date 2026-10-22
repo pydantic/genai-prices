@@ -32,6 +32,7 @@ network:
     - docs.voyageai.com
     - docs.x.ai
     - docs.z.ai
+    - elevenlabs.io
     - fireworks.ai
     - help.openai.com
     - huggingface.co

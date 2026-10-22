@@ -1,7 +1,7 @@
 ---
 emoji: '🏷️'
 name: 'Price Check'
-description: 'Check twenty-five provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
+description: 'Check twenty-six provider records against official pricing sources, propose verified price updates in a PR, and notify Slack.'
 on:
   workflow_dispatch:
   schedule:
@@ -83,6 +83,7 @@ safe-outputs:
       - prices/providers/databricks.yml
       - prices/providers/deepseek.yml
       - prices/providers/doubleword.yml
+      - prices/providers/elevenlabs.yml
       - prices/providers/fireworks.yml
       - prices/providers/github_copilot.yml
       - prices/providers/google.yml

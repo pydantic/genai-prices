@@ -8705,6 +8705,51 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'elevenlabs',
+    name: 'ElevenLabs',
+    pricing_urls: ['https://elevenlabs.io/pricing/api'],
+    api_pattern: 'https://api\\.(?:(?:us|eu\\.residency|in\\.residency|sg\\.residency)\\.)?elevenlabs\\.io(?:/|$)',
+    price_comments:
+      'The Realtime API is OpenAI Realtime-compatible (https://elevenlabs.io/docs/eleven-agents/guides/openai-realtime-compatibility) and bills each session per minute of connected audio plus tokens. The per-minute rate counts wall-clock connection time, not speech, and is priced here as `audio_hours`. The Realtime API sends no usage in `response.done` (observed `null` on both models, 2026-10-21), so no extractor is mapped; the totals are only available after the call from the conversation details endpoint (https://elevenlabs.io/docs/api-reference/conversations/get, `metadata.charging`).',
+    model_match: {
+      starts_with: 'eleven_',
+    },
+    provider_match: {
+      contains: 'elevenlabs',
+    },
+    models: [
+      {
+        id: 'eleven_realtime_v1_max',
+        name: 'Eleven Realtime v1 Max',
+        match: {
+          equals: 'eleven_realtime_v1_max',
+        },
+        price_comments:
+          '$0.08 per connected minute ($4.80 per hour), $1.80/M input and $9.00/M output tokens: https://elevenlabs.io/pricing/api. The page lists no cached input rate; $0.18/M cached input (10% of input) is what the conversation details endpoint charged on 2026-10-21.',
+        prices: {
+          input_mtok: 1.8,
+          cache_read_mtok: 0.18,
+          output_mtok: 9,
+          audio_hours: 4.8,
+        },
+      },
+      {
+        id: 'eleven_realtime_v1_mini',
+        name: 'Eleven Realtime v1 Mini',
+        match: {
+          equals: 'eleven_realtime_v1_mini',
+        },
+        price_comments:
+          '$0.08 per connected minute ($4.80 per hour), $0.20/M input and $6.00/M output tokens: https://elevenlabs.io/pricing/api.',
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 6,
+          audio_hours: 4.8,
+        },
+      },
+    ],
+  },
+  {
     id: 'fireworks',
     name: 'Fireworks',
     pricing_urls: ['https://fireworks.ai/pricing'],

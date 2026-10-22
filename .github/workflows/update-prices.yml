@@ -39,7 +39,7 @@ jobs:
         importer: >-
           ${{ fromJSON((github.event.schedule == '47 6 * * 1' || inputs.weekly) && '["huggingface", "openrouter-provider"]' || '[
             "anthropic", "arcee", "avian", "azure", "aws", "baseten", "cerebras", "cloudflare", "cursor",
-            "databricks", "doubleword", "fireworks", "github-copilot", "google", "groq", "meta", "minimax",
+            "databricks", "doubleword", "elevenlabs", "fireworks", "github-copilot", "google", "groq", "meta", "minimax",
             "mistral", "modal", "moonshotai", "novita", "openai", "openai-decisions", "ovhcloud",
             "perplexity", "quicksilverpro", "together", "typesafe", "voyageai", "xai", "zai"
           ]') }}
