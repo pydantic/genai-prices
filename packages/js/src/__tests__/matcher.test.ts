@@ -790,6 +790,8 @@ describe('ElevenLabs Realtime', () => {
       { providerApiUrl: 'https://api.elevenlabs.io' },
       { providerApiUrl: 'https://api.us.elevenlabs.io/v1/convai' },
       { providerApiUrl: 'https://api.eu.residency.elevenlabs.io/v1/convai' },
+      { providerApiUrl: 'https://api.in.residency.elevenlabs.io/v1/convai' },
+      { providerApiUrl: 'https://api.sg.residency.elevenlabs.io/v1/convai' },
       {},
     ]) {
       const result = calcPrice(usage, model, { ...options, timestamp })

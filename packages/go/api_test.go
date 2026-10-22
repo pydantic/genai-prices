@@ -1154,6 +1154,8 @@ func TestElevenLabsRealtimeProviderSelectionAndPricing(t *testing.T) {
 			{ProviderAPIURL: "https://api.elevenlabs.io"},
 			{ProviderAPIURL: "https://api.us.elevenlabs.io/v1/convai"},
 			{ProviderAPIURL: "https://api.eu.residency.elevenlabs.io/v1/convai"},
+			{ProviderAPIURL: "https://api.in.residency.elevenlabs.io/v1/convai"},
+			{ProviderAPIURL: "https://api.sg.residency.elevenlabs.io/v1/convai"},
 			{},
 		} {
 			selection.Model = test.model

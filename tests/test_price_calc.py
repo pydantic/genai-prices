@@ -270,6 +270,8 @@ def test_elevenlabs_realtime_prices(model_ref: str, expected_total_price: Decima
         'https://api.elevenlabs.io',
         'https://api.us.elevenlabs.io/v1/convai',
         'https://api.eu.residency.elevenlabs.io/v1/convai',
+        'https://api.in.residency.elevenlabs.io/v1/convai',
+        'https://api.sg.residency.elevenlabs.io/v1/convai',
     ],
 )
 def test_elevenlabs_realtime_selected_by_api_url(provider_api_url: str):
