@@ -5199,6 +5199,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4p1-flash-1017-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-1017-us'),
+                name='DeepSeek V4.1 Flash 1017 US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.009'), output_mtok=Decimal('1.8')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-v4p1-flash-us',
                 match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-us'),
                 name='DeepSeek V4.1 Flash US',
