@@ -48047,6 +48047,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'MiniMaxAI/MiniMax-M3.1-Flash',
+        name: 'Minimax M3.1 Flash',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M3.1-Flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'Nexusflow/NexusRaven-V2-13B',
         match: {
           equals: 'Nexusflow/NexusRaven-V2-13B',

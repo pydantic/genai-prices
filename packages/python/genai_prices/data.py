@@ -27365,6 +27365,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='MiniMaxAI/MiniMax-M3.1-Flash',
+                match=ClauseEquals(equals='MiniMaxAI/MiniMax-M3.1-Flash'),
+                name='Minimax M3.1 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
                 id='Nexusflow/NexusRaven-V2-13B',
                 match=ClauseEquals(equals='Nexusflow/NexusRaven-V2-13B'),
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.3')),
