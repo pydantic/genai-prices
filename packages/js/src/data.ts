@@ -8896,6 +8896,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash-1017-us',
+        name: 'DeepSeek V4.1 Flash 1017 US',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-us',
+        },
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.009,
+          output_mtok: 1.8,
+        },
+      },
+      {
         id: 'deepseek-v4p1-flash-us',
         name: 'DeepSeek V4.1 Flash US',
         match: {
