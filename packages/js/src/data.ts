@@ -47624,6 +47624,32 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro-highspeed',
+        name: 'Kimi K3.1 Pro Highspeed',
+        match: {
+          equals: 'kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'mimo-v2.5',
         name: 'MiMo-V2.5',
         match: {

@@ -27081,6 +27081,20 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='kimi-k3.1-pro',
+                match=ClauseEquals(equals='kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='kimi-k3.1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
                 id='mimo-v2.5',
                 match=ClauseEquals(equals='mimo-v2.5'),
                 name='MiMo-V2.5',
