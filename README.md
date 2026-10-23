@@ -73,7 +73,7 @@ The following providers are currently supported:
 - [OpenRouter](prices/providers/openrouter.yml) - 894 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
-- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 71 models
+- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 73 models
 - [Together AI](prices/providers/together.yml) - 93 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
