@@ -13246,6 +13246,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='moonshotai/kimi-k3.1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
                 id='nousresearch/hermes-2-pro-llama-3-8b',
                 match=ClauseEquals(equals='nousresearch/hermes-2-pro-llama-3-8b'),
                 name='Hermes 2 Pro Llama 3 8B',

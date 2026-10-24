@@ -22844,6 +22844,32 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro-highspeed',
+        name: 'Kimi K3.1 Pro Highspeed',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'nousresearch/hermes-2-pro-llama-3-8b',
         name: 'Hermes 2 Pro Llama 3 8B',
         match: {
