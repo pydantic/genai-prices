@@ -49143,14 +49143,7 @@ export const data: Provider[] = [
         id: 'jev-1.13.0',
         name: 'Jev 1.13.0',
         match: {
-          or: [
-            {
-              equals: 'jev-1.13.0',
-            },
-            {
-              equals: 'jev-latest',
-            },
-          ],
+          equals: 'jev-1.13.0',
         },
         context_window: 32000,
         prices: {
@@ -49167,6 +49160,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'jev-preview',
+            },
+            {
+              equals: 'jev-latest',
             },
           ],
         },
