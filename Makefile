@@ -265,6 +265,15 @@ test-go: ## Test the Go package with the race detector and coverage
 		awk '/^total:/ && $$3 + 0 < 90 { print "Go coverage must be at least 90%"; exit 1 }'
 
 .PHONY: all
+.PHONY: test-java
+test-java: ## Generate the Java client from its OpenAPI document and test it
+	cd packages/java && mvn -B verify
+
+.PHONY: java-openapi
+java-openapi: ## Refresh the Java client's OpenAPI document from the live API
+	curl -sf https://genai-prices.pydantic.dev/openapi.json -o packages/java/openapi.json
+	npx prettier --write packages/java/openapi.json
+
 all: build package-data format format-go lint lint-go typecheck testcov test-js test-go ## Run all builds, checks, and tests
 
 .PHONY: help

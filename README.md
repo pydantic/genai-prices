@@ -97,6 +97,10 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 See the [Go README](packages/go/README.md) for instructions on how to install and use the Go package.
 
+### Java Client
+
+See the [Java README](packages/java/README.md) for the Java client of the genai-prices API. The build generates it from the API's OpenAPI document.
+
 ### Download data
 
 Price data is available in the following files:
