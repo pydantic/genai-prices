@@ -948,6 +948,33 @@ def test_aws_gpt_6_context_boundary(
         assert price.input_price == rate * tokens / 1_000_000
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'input_rate', 'cache_read_rate', 'cache_write_rate', 'output_rate'),
+    [
+        ('global.zai.glm-5.3', 'global.zai.glm-5.3', '1.68', '0.312', '2.1', '5.28'),
+        ('us.zai.glm-5.3', 'regional.zai.glm-5.3', '1.848', '0.3432', '2.31', '5.808'),
+    ],
+)
+def test_aws_glm_5_3(
+    model_ref: str,
+    model_id: str,
+    input_rate: str,
+    cache_read_rate: str,
+    cache_write_rate: str,
+    output_rate: str,
+) -> None:
+    """GLM 5.3 is cross-Region only: `global.` is the global profile and `us.` is the US Geo profile."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+
+    assert price.model.id == model_id
+    assert price.model.context_window == 1_000_000
+    assert price.model_price.input_mtok == Decimal(input_rate)
+    assert price.model_price.cache_read_mtok == Decimal(cache_read_rate)
+    assert price.model_price.cache_write_mtok == Decimal(cache_write_rate)
+    assert price.model_price.output_mtok == Decimal(output_rate)
+    assert price.total_price == Decimal(input_rate)
+
+
 def test_aws_titan_embed_text_v2_price() -> None:
     price = calc_price(
         Usage(input_tokens=1_000_000),

@@ -2972,6 +2972,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.zai.glm-5.3',
+        name: 'GLM 5.3 (global)',
+        match: {
+          contains: 'global.zai.glm-5.3',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Launched on Bedrock 2026-10-05. Global cross-Region inference, 10% below the US Geo profile. GLM 5.3 is available through cross-Region inference only, so there is no In-Region endpoint. Cache writes use the 30-minute TTL and are billed at 1.25x the input rate. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html, https://aws.amazon.com/bedrock/pricing/',
+        prices: {
+          input_mtok: 1.68,
+          cache_write_mtok: 2.1,
+          cache_read_mtok: 0.312,
+          output_mtok: 5.28,
+        },
+      },
+      {
         id: 'google.gemma-3-12b-it',
         name: 'Gemma 3 12B IT',
         match: {
@@ -4864,6 +4880,22 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'regional.zai.glm-5.3',
+        name: 'GLM 5.3 (regional)',
+        match: {
+          contains: 'us.zai.glm-5.3',
+        },
+        context_window: 1000000,
+        price_comments:
+          'US Geo cross-Region inference (`us.`), 10% above global. GLM 5.3 is available through cross-Region inference only, so `us.zai.glm-5.3` is the only regional profile; AWS offers no In-Region, `eu.` or `apac.` profile. Cache writes use the 30-minute TTL and are billed at 1.25x the input rate. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html',
+        prices: {
+          input_mtok: 1.848,
+          cache_write_mtok: 2.31,
+          cache_read_mtok: 0.3432,
+          output_mtok: 5.808,
         },
       },
       {
