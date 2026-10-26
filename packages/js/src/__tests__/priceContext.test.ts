@@ -50,6 +50,9 @@ it.each([
   ['gpt-5-mini', 'flex', 1.096875],
   ['gpt-6.1-sol', 'fast', 36.1],
   ['gpt-6.1-sol', 'priority', 36.1],
+  ['gpt-6.1-terra', 'flex', 4.5125],
+  ['gpt-6.1-terra', 'fast', 18.05],
+  ['gpt-6.1-terra', 'priority', 18.05],
 ] as const)('prices OpenAI %s %s', (model, tier, total) => {
   expect(
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {

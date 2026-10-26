@@ -67,7 +67,8 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		{"o3", "flex", 4.8125}, {"o3", "priority", 16.84375},
 		{"o4-mini", "flex", 2.647}, {"o4-mini", "priority", 9.625},
 		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
-		{"gpt-6.1-sol", "priority", 36.1},
+		{"gpt-6.1-sol", "priority", 36.1}, {"gpt-6.1-terra", "flex", 4.5125},
+		{"gpt-6.1-terra", "fast", 18.05}, {"gpt-6.1-terra", "priority", 18.05},
 	} {
 		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{

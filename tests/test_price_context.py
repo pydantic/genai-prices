@@ -58,6 +58,9 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
         ('gpt-5-mini', 'flex', '1.096875'),
         ('gpt-6.1-sol', 'fast', '36.1'),
         ('gpt-6.1-sol', 'priority', '36.1'),
+        ('gpt-6.1-terra', 'flex', '4.5125'),
+        ('gpt-6.1-terra', 'fast', '18.05'),
+        ('gpt-6.1-terra', 'priority', '18.05'),
     ],
 )
 def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
