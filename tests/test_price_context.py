@@ -68,7 +68,7 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
         model,
         provider_id='openai',
-        genai_request_timestamp=datetime(2026, 10, 12),
+        genai_request_timestamp=datetime(2026, 10, 26),
         price_context={'service_tier': tier},
     )
     assert result.total_price == Decimal(total)

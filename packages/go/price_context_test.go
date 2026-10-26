@@ -73,7 +73,7 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
 				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
-				Model: test.model, ProviderID: "openai", Timestamp: time.Date(2026, 10, 12, 0, 0, 0, 0, time.UTC),
+				Model: test.model, ProviderID: "openai", Timestamp: time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC),
 				PriceContext: map[string]string{"service_tier": test.tier},
 			})
 			if err != nil {

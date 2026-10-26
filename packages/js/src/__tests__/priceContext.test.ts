@@ -58,7 +58,7 @@ it.each([
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
       priceContext: { service_tier: tier },
       providerId: 'openai',
-      timestamp: new Date('2026-10-12T00:00:00Z'),
+      timestamp: new Date('2026-10-26T00:00:00Z'),
     })?.total_price
   ).toBeCloseTo(total, 12)
 })
