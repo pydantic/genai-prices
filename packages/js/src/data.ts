@@ -28221,6 +28221,244 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        description: 'Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              regex: '^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing. Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($2.50) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-terra, https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.025,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.05,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.75,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.025,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.05,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.75,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
         id: 'gpt-audio',
         name: 'GPT Audio',
         description:

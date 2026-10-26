@@ -15801,6 +15801,98 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6.1-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-6.1-terra'),
+                        ClauseRegex(regex='^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='GPT-6.1 Terra',
+                description='Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.',
+                context_window=1050000,
+                price_comments='Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing. Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($2.50) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-terra, https://developers.openai.com/api/docs/changelog',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.625'), tiers=[Tier(start=272000, price=Decimal('1.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.025'), tiers=[Tier(start=272000, price=Decimal('0.05'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('3.75'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.625'), tiers=[Tier(start=272000, price=Decimal('1.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.025'), tiers=[Tier(start=272000, price=Decimal('0.05'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('3.75'))]
+                            ),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
                 id='gpt-audio',
                 match=ClauseOr(
                     or_=[
