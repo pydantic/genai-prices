@@ -22,6 +22,8 @@ Options:
   --cache-audio-read-tokens <number>
   --output-audio-tokens <number>
   --provider <id>
+  --price-context <key=value>   Select price variants, e.g. service_tier=flex or
+                                processing=batch; repeat for several keys
   --auto-update                 Enable auto-update from GitHub
   --timestamp <RFC3339>
   -v, --version                 Show version number
@@ -39,6 +41,7 @@ const PARSE_ARGS_CONFIG = {
     'input-tokens': { type: 'string' },
     'output-audio-tokens': { type: 'string' },
     'output-tokens': { type: 'string' },
+    'price-context': { multiple: true, type: 'string' },
     provider: { type: 'string' },
     timestamp: { type: 'string' },
     version: { short: 'v', type: 'boolean' },
@@ -58,6 +61,27 @@ function parseCliArgs(): ReturnType<typeof parseArgs<typeof PARSE_ARGS_CONFIG>> 
     printHelp()
     process.exit(1)
   }
+}
+
+function parsePriceContext(pairs: string[] | undefined): Record<string, string> {
+  // A null-prototype object keeps keys such as `__proto__` and `constructor` ordinary own keys.
+  const context = Object.create(null) as Record<string, string>
+  // Match the Python CLI, which splits list values on commas and trims each item, so both accept `a=1, b=2`.
+  for (const pair of (pairs ?? []).flatMap((value) => value.split(',').map((item) => item.trim()))) {
+    const separator = pair.indexOf('=')
+    const key = pair.slice(0, separator)
+    const value = pair.slice(separator + 1)
+    if (separator <= 0 || value === '') {
+      console.error(`Error: Invalid --price-context '${pair}', expected key=value`)
+      process.exit(1)
+    }
+    if (Object.prototype.hasOwnProperty.call(context, key)) {
+      console.error(`Error: Duplicate --price-context '${key}', it was already set to '${context[key]}'`)
+      process.exit(1)
+    }
+    context[key] = value
+  }
+  return context
 }
 
 function main(): never {
@@ -110,6 +134,7 @@ function main(): never {
       output_tokens: values['output-tokens'] === undefined ? undefined : Number(values['output-tokens']),
     }
     const timestamp = values.timestamp ? new Date(values.timestamp) : undefined
+    const priceContext = parsePriceContext(values['price-context'])
     let hadError = false
     for (const modelArg of models) {
       let providerId: string | undefined
@@ -118,7 +143,7 @@ function main(): never {
         ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
       }
       try {
-        const result = calcPrice(usage, modelId, { providerId, timestamp })
+        const result = calcPrice(usage, modelId, { priceContext, providerId, timestamp })
         if (!result) {
           hadError = true
           console.error(`No price found for model ${modelArg}`)

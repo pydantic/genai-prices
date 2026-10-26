@@ -170,6 +170,11 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('k', 'keep-going'),
         description='Whether to continue if a model is not found.',
     )
+    price_context: list[str] = Field(
+        [],
+        validation_alias=AliasChoices('price-context'),
+        description='Request context used to select price variants, as "key=value", e.g. "service_tier=flex" or "processing=batch". Repeat for several keys.',
+    )
     input_tokens: int | None = Field(
         None,
         validation_alias=AliasChoices('i', 'input-tokens'),
@@ -318,6 +323,14 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
     console = Console(soft_wrap=True)
     err_console = Console(stderr=True, soft_wrap=True)
     use_color = not args.no_color
+    try:
+        price_context = _parse_price_context(args.price_context)
+    except ValueError as exc:
+        if plain:
+            print(f'Error: {exc}', file=sys.stderr)
+        else:
+            err_console.print(f'Error: {escape(str(exc))}', highlight=False)
+        return 1
     tables: list[Table] = []
     summary_results: list[PriceCalculation] = []
     seen_models: set[tuple[str, str]] = set()
@@ -336,6 +349,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
                 model_ref=model,
                 provider_id=provider_id,
                 genai_request_timestamp=args.timestamp,
+                price_context=price_context,
             )
         except LookupError as exc:
             had_error = True
@@ -387,6 +401,18 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
         else:
             _render_calc_tables(console, tables)
     return 1 if had_error else 0
+
+
+def _parse_price_context(pairs: Sequence[str]) -> dict[str, str]:
+    context: dict[str, str] = {}
+    for pair in pairs:
+        key, separator, value = pair.partition('=')
+        if not (key and separator and value):
+            raise ValueError(f"Invalid --price-context '{pair}', expected key=value")
+        if key in context:
+            raise ValueError(f"Duplicate --price-context '{key}', it was already set to '{context[key]}'")
+        context[key] = value
+    return context
 
 
 def list_models(args: ListCLI, *, plain: bool) -> int:
