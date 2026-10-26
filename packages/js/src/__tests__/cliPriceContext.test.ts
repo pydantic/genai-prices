@@ -21,9 +21,11 @@ describe('--price-context', () => {
     [[], '$10'],
     [['service_tier=flex'], '$5'],
     [['processing=batch'], '$5'],
-    [['service_tier=flex', 'processing=batch'], '$5'],
-    [['service_tier=flex,processing=batch'], '$5'],
-    [[' service_tier=flex , processing=batch '], '$5'],
+    // `region` selects no variant, so each case costs $5 only if the `service_tier` pair, first or last, reaches the calculation.
+    [['service_tier=flex', 'region=eu'], '$5'],
+    [['region=eu', 'service_tier=flex'], '$5'],
+    [['region=eu,service_tier=flex'], '$5'],
+    [[' service_tier=flex , region=eu '], '$5'],
   ])('prices openai:o3 with %j', (pairs, totalPrice) => {
     const result = runCli(
       'calc',
