@@ -21628,6 +21628,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.005,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'meta-models/Muse-Spark-Open-816B-A42B',
         name: 'Muse Spark Open',
         match: {

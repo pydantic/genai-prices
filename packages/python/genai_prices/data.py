@@ -12506,6 +12506,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                name='DeepSeek V4.1 Flash 1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('1')
+                ),
+            ),
+            ModelInfo(
                 id='meta-models/Muse-Spark-Open-816B-A42B',
                 match=ClauseEquals(equals='meta-models/Muse-Spark-Open-816B-A42B'),
                 name='Muse Spark Open',
